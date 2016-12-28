@@ -19,6 +19,7 @@ public class SampleProcessor implements TacHandler<List<Map<String, Object>>> {
 		// 获取设备信息
 		context.getUserInfo().getUserId();
 		
+		
 		List<Map<String,Object>> resultList = new ArrayList<Map<String,Object>>();
 		
         Map<String,Object> dataMap = new HashMap<String, Object>();
