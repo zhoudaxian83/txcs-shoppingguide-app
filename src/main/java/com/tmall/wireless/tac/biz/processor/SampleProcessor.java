@@ -1,16 +1,24 @@
 package com.tmall.wireless.tac.biz.processor;
 
-import com.tmall.wireless.tac.client.ProcessContext;
-import com.tmall.wireless.tac.client.ProcessHandler;
-import com.tmall.wireless.tac.client.ProcessResult;
+import java.util.List;
+import java.util.Map;
 
-public class SampleProcessor implements ProcessHandler {
+import com.tmall.wireless.tac.client.common.TacResult;
+import com.tmall.wireless.tac.client.domain.Context;
+import com.tmall.wireless.tac.client.handler.TacHandler;
 
-	public ProcessResult execute(ProcessContext context) throws Exception {
-		ProcessResult processResult = new ProcessResult();
-		System.out.print("Hello Word TAC!!!");
-		// TODO Auto-generated method stub
-		return processResult;
+
+
+public class SampleProcessor implements TacHandler<List<Map<String,Object>>> {
+
+	public TacResult<List<Map<String,Object>>> execute(Context context)
+			throws Exception {
+		// 获取用户信息
+		context.getUserInfo().getUserId();
+		// 获取设备信息
+		context.getUserInfo().getUserId();
+		return null;
 	}
+	 
 
 }
