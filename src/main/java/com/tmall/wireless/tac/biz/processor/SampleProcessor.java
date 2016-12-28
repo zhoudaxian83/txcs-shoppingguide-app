@@ -13,6 +13,7 @@ public class SampleProcessor implements TacHandler<List<Map<String,Object>>> {
 
 	public TacResult<List<Map<String,Object>>> execute(Context context)
 			throws Exception {
+		
 		// 获取用户信息
 		context.getUserInfo().getUserId();
 		// 获取设备信息
