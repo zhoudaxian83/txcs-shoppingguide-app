@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.tmall.wireless.tac</groupId>
-  <artifactId>sample</artifactId>
+  <artifactId>txcs-shoppingguide-app</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
@@ -19,13 +19,11 @@
           <groupId>com.tmall.recommend</groupId>
           <artifactId>recommend-spi</artifactId>
           <version>1.0.0-txcs-SNAPSHOT</version>
-          <scope>provided</scope>
       </dependency>
       <dependency>
           <groupId>com.tmall.recommend</groupId>
           <artifactId>recommend-common</artifactId>
           <version>1.0.0-txcs-SNAPSHOT</version>
-          <scope>provided</scope>
       </dependency>
       <dependency>
           <groupId>org.springframework</groupId>
