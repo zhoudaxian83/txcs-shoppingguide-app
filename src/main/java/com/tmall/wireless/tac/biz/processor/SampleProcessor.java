@@ -49,7 +49,7 @@ public class SampleProcessor implements TacHandler<List<Map<String, Object>>> {
 //            tacLogger.error("execute error:",ex);
 //        }
 //
-//		List<Map<String,Object>> resultList = new ArrayList<Map<String,Object>>();
+		List<Map<String,Object>> resultList = new ArrayList<Map<String,Object>>();
         Map<String,Object> dataMap = new HashMap<String, Object>();
         dataMap.put("imgUrl", "http://www.tmall.com/1.jpg");
         dataMap.put("imgUrl2", "http://www.tmall.com/2.jpg");
