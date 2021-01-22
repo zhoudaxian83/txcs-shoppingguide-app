@@ -8,10 +8,6 @@ import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
-
 @Component
 public class SampleProcessor extends RpmReactiveHandler<String> {
 
