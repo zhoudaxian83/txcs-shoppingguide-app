@@ -17,7 +17,8 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
     @Override
     public Flowable<TacResult<String>> rpmExecuteFlowable(RpmRequestContext rpmRequestContext) throws Exception {
 
-        return Flowable.just(TacResult.newResult(testService.colaTest()));
+        Object scenario = rpmRequestContext.getParamMap().get("scenario");
+        return Flowable.just(TacResult.newResult(testService.colaTest(scenario == null ? "" : scenario.toString())));
 
     }
 }
