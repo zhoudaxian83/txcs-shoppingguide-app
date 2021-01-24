@@ -21,7 +21,7 @@ public class AppColaBootstrap extends Bootstrap {
 
 
     @Autowired
-    Set<ExtensionPointI> appExtPts;
+    List<ExtensionPointI> appExtPts;
 //    @Autowired
 //    AppRanderExtPt appRanderExtPt;
     @Getter
