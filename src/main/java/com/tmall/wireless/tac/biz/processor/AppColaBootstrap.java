@@ -23,6 +23,8 @@ public class AppColaBootstrap {
 
     @Autowired
     AppRanderExtPt appRanderExtPt;
+    @Autowired
+    DefaultRanderExtPt defaultRanderExtPt;
 
     @Autowired
     public List<ExtensionPointI> appExtPts;
