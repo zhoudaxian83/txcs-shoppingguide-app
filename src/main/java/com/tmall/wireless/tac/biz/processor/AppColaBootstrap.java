@@ -41,10 +41,10 @@ public class AppColaBootstrap {
 //        registerBeans(classSet);
 //        registerBeans(Sets.newHashSet(appRanderExtPt.getClass()));
 
-        appExtPts.stream().map (pt -> getClass().getName() + " " +
-        pt.getClass().getClassLoader().getClass().getName()).collect(Collectors.toSet());
+        Set<String> collect = appExtPts.stream().map(pt -> getClass().getName() + " " +
+                pt.getClass().getClassLoader().getClass().getName()).collect(Collectors.toSet());
 
-        rpmOptLogger.error("appExtPts:" + JSON.toJSONString(appExtPts));
+        rpmOptLogger.error("appExtPts:" + JSON.toJSONString(collect));
 
         if (CollectionUtils.isNotEmpty(appExtPts)) {
             appExtPts.forEach(pt -> registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet())));
