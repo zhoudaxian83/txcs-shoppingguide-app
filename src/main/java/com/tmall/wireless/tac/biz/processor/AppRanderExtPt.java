@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.ext;
+package com.tmall.wireless.tac.biz.processor;
 
 import com.alibaba.cola.extension.Extension;
 import com.tmall.recommend.framework.ItemRanderExtPt;

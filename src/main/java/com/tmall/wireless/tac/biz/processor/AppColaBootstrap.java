@@ -5,7 +5,6 @@ import com.alibaba.cola.exception.framework.ColaException;
 import com.alibaba.cola.extension.ExtensionPointI;
 import com.alibaba.fastjson.JSON;
 import com.tmall.recommend.biz.RpmOptLogger;
-import com.tmall.wireless.tac.biz.processor.ext.AppRanderExtPt;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
@@ -50,6 +49,7 @@ public class AppColaBootstrap {
         if (CollectionUtils.isNotEmpty(appExtPts)) {
             registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
         }
+
     }
 
     /**
