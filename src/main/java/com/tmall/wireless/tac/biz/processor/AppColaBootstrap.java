@@ -3,6 +3,8 @@ package com.tmall.wireless.tac.biz.processor;
 import com.alibaba.cola.boot.*;
 import com.alibaba.cola.exception.framework.ColaException;
 import com.alibaba.cola.extension.ExtensionPointI;
+import com.google.common.collect.Sets;
+import com.tmall.wireless.tac.biz.processor.ext.AppRanderExtPt;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
@@ -21,9 +23,11 @@ import java.util.stream.Collectors;
 public class AppColaBootstrap extends Bootstrap {
 
 
+//    @Autowired
+//    @Getter
+//    Set<ExtensionPointI> appExtPts;
     @Autowired
-    @Getter
-    Set<ExtensionPointI> appExtPts;
+    AppRanderExtPt appRanderExtPt;
     @Getter
     @Setter
     private List<String> packages;
@@ -36,9 +40,10 @@ public class AppColaBootstrap extends Bootstrap {
     public void init() {
         Set<Class<?>> classSet = scanConfiguredPackages();
         registerBeans(classSet);
-        if (CollectionUtils.isNotEmpty(appExtPts)) {
-            appExtPts.forEach(pt -> registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet())));
-        }
+        registerBeans(Sets.newHashSet(appRanderExtPt.getClass()));
+//        if (CollectionUtils.isNotEmpty(appExtPts)) {
+//            appExtPts.forEach(pt -> registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet())));
+//        }
     }
 
     /**
