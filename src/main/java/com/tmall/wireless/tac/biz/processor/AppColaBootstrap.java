@@ -3,14 +3,11 @@ package com.tmall.wireless.tac.biz.processor;
 import com.alibaba.cola.boot.*;
 import com.alibaba.cola.exception.framework.ColaException;
 import com.alibaba.cola.extension.ExtensionPointI;
-import com.google.common.collect.Sets;
-import com.tmall.wireless.tac.biz.processor.ext.AppRanderExtPt;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
