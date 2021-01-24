@@ -10,4 +10,9 @@
     <context:annotation-config />
     <context:component-scan base-package="com.tmall.wireless.tac" />
 
+
+    <context:component-scan base-package="com.alibaba.cola" />
+    <bean class="com.alibaba.cola.boot.Bootstrap" init-method="init">
+        <property name="packages" value="com.tmall.recommend.framework" />
+    </bean>
 </beans>
