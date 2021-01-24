@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * Created by yangqing.byq on 2021/1/24.
  */
 
-public class AppColaBootstrap extends Bootstrap {
+public class AppColaBootstrap {
 
 
     @Autowired
