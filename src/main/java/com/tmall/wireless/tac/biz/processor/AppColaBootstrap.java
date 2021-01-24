@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 
 public class AppColaBootstrap {
 
+    @Autowired
+    DefaultRanderExtPt defaultRanderExtPt;
 
     @Autowired
     public List<ExtensionPointI> appExtPts;
