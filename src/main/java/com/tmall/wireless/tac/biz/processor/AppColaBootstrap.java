@@ -47,7 +47,7 @@ public class AppColaBootstrap {
         rpmOptLogger.error("appExtPts:" + JSON.toJSONString(collect));
 
         if (CollectionUtils.isNotEmpty(appExtPts)) {
-            appExtPts.forEach(pt -> registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet())));
+            registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
         }
     }
 
