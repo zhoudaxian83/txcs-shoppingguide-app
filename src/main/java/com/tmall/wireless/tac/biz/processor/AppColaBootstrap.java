@@ -3,6 +3,8 @@ package com.tmall.wireless.tac.biz.processor;
 import com.alibaba.cola.boot.*;
 import com.alibaba.cola.exception.framework.ColaException;
 import com.alibaba.cola.extension.ExtensionPointI;
+import com.alibaba.fastjson.JSON;
+import com.tmall.recommend.biz.RpmOptLogger;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
@@ -31,12 +33,19 @@ public class AppColaBootstrap {
 
     @Autowired
     private RegisterFactory registerFactory;
-
+    @Autowired
+    private RpmOptLogger rpmOptLogger;
 
     public void init() {
 //        Set<Class<?>> classSet = scanConfiguredPackages();
 //        registerBeans(classSet);
 //        registerBeans(Sets.newHashSet(appRanderExtPt.getClass()));
+
+        appExtPts.stream().map (pt -> getClass().getName() + " " +
+        pt.getClass().getClassLoader().getClass().getName()).collect(Collectors.toSet());
+
+        rpmOptLogger.error("appExtPts:" + JSON.toJSONString(appExtPts));
+
         if (CollectionUtils.isNotEmpty(appExtPts)) {
             appExtPts.forEach(pt -> registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet())));
         }
