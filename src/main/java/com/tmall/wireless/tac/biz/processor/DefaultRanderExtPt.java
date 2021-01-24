@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by yangqing.byq on 2021/1/24.
  */
+@Extension(scenario = "s4")
 @Component
 public class DefaultRanderExtPt implements ItemRanderExtPt<Object> {
     @Override
