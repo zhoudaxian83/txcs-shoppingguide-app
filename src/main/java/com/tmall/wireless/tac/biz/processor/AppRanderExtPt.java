@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
  * Created by yangqing.byq on 2021/1/24.
  */
 @Extension(scenario = "s3")
-@Service
+@Service("appRanderExtPt")
 public class AppRanderExtPt implements ItemRanderExtPt<Object> {
     @Override
     public Object renderItems(Object o) {
