@@ -23,11 +23,10 @@ import java.util.stream.Collectors;
 public class AppColaBootstrap extends Bootstrap {
 
 
-//    @Autowired
-//    @Getter
-//    Set<ExtensionPointI> appExtPts;
     @Autowired
-    AppRanderExtPt appRanderExtPt;
+    Set<ExtensionPointI> appExtPts;
+//    @Autowired
+//    AppRanderExtPt appRanderExtPt;
     @Getter
     @Setter
     private List<String> packages;
@@ -38,12 +37,12 @@ public class AppColaBootstrap extends Bootstrap {
 
 
     public void init() {
-        Set<Class<?>> classSet = scanConfiguredPackages();
-        registerBeans(classSet);
-        registerBeans(Sets.newHashSet(appRanderExtPt.getClass()));
-//        if (CollectionUtils.isNotEmpty(appExtPts)) {
-//            appExtPts.forEach(pt -> registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet())));
-//        }
+//        Set<Class<?>> classSet = scanConfiguredPackages();
+//        registerBeans(classSet);
+//        registerBeans(Sets.newHashSet(appRanderExtPt.getClass()));
+        if (CollectionUtils.isNotEmpty(appExtPts)) {
+            appExtPts.forEach(pt -> registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet())));
+        }
     }
 
     /**
