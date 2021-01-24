@@ -22,6 +22,9 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
     @Autowired
     AppColaBootstrap appColaBootstrap;
 
+    @Autowired
+    DefaultRanderExtPt defaultRanderExtPt;
+
     @Override
     public Flowable<TacResult<String>> rpmExecuteFlowable(RpmRequestContext rpmRequestContext) throws Exception {
         Set<String> collect = appColaBootstrap.appExtPts.stream().map(pt -> pt.getClass().getName() + " " +
