@@ -29,7 +29,7 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
 
         Object scenario = rpmRequestContext.getParamMap().get("scenario");
 
-        return Flowable.just(TacResult.newResult( testService.colaTest(scenario == null ? "" : scenario.toString()) + JSON.toJSONString(collect)));
+        return Flowable.just(TacResult.newResult( testService.colaTest(scenario == null ? "" : scenario.toString()) ));
 
     }
 }
