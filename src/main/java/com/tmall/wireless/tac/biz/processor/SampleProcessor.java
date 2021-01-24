@@ -18,20 +18,20 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
 
     @Autowired
     TestService testService;
-//
-//    @Autowired
-//    AppColaBootstrap appColaBootstrap;
+
+    @Autowired
+    AppColaBootstrap appColaBootstrap;
 
     @Override
     public Flowable<TacResult<String>> rpmExecuteFlowable(RpmRequestContext rpmRequestContext) throws Exception {
-//        Set<String> collect = appColaBootstrap.appExtPts.stream().map(pt -> pt.getClass().getName() + " " +
-//                pt.getClass().getClassLoader().getClass().getName()).collect(Collectors.toSet());
+        Set<String> collect = appColaBootstrap.appExtPts.stream().map(pt -> pt.getClass().getName() + " " +
+                pt.getClass().getClassLoader().getClass().getName()).collect(Collectors.toSet());
 
         Object scenario = rpmRequestContext.getParamMap().get("scenario");
 
         return Flowable.just(TacResult.newResult(
                 testService.colaTest(scenario == null ? "" : scenario.toString())
-//        + JSON.toJSONString(collect)
+        + JSON.toJSONString(collect)
         ));
 
     }
