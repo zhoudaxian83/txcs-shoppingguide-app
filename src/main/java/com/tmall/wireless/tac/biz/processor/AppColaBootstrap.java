@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class AppColaBootstrap {
 
-    @Autowired
+    @Autowired(required = false)
     public List<ExtensionPointI> appExtPts;
 
     @Getter
