@@ -4,7 +4,6 @@ import com.alibaba.cola.boot.*;
 import com.alibaba.cola.exception.framework.ColaException;
 import com.alibaba.cola.extension.ExtensionPointI;
 import com.alibaba.fastjson.JSON;
-import com.tmall.recommend.biz.RpmOptLogger;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
@@ -22,11 +21,6 @@ import java.util.stream.Collectors;
 public class AppColaBootstrap {
 
     @Autowired
-    AppRanderExtPt appRanderExtPt;
-    @Autowired
-    DefaultRanderExtPt defaultRanderExtPt;
-
-    @Autowired
     public List<ExtensionPointI> appExtPts;
 
     @Getter
@@ -36,8 +30,7 @@ public class AppColaBootstrap {
 
     @Autowired
     private RegisterFactory registerFactory;
-    @Autowired
-    private RpmOptLogger rpmOptLogger;
+
 
     public void init() {
 //        Set<Class<?>> classSet = scanConfiguredPackages();
@@ -46,8 +39,6 @@ public class AppColaBootstrap {
 
         Set<String> collect = appExtPts.stream().map(pt -> pt.getClass().getName() + " " +
                 pt.getClass().getClassLoader().getClass().getName()).collect(Collectors.toSet());
-
-        rpmOptLogger.error("appExtPts:" + JSON.toJSONString(collect));
 
         if (CollectionUtils.isNotEmpty(appExtPts)) {
             registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
