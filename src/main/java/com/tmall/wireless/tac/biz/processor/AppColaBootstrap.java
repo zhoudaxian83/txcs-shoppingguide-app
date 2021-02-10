@@ -37,12 +37,12 @@ public class AppColaBootstrap {
 //        registerBeans(classSet);
 //        registerBeans(Sets.newHashSet(appRanderExtPt.getClass()));
 
-        Set<String> collect = appExtPts.stream().map(pt -> pt.getClass().getName() + " " +
-                pt.getClass().getClassLoader().getClass().getName()).collect(Collectors.toSet());
-
-        if (CollectionUtils.isNotEmpty(appExtPts)) {
-            registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
-        }
+//        Set<String> collect = appExtPts.stream().map(pt -> pt.getClass().getName() + " " +
+//                pt.getClass().getClassLoader().getClass().getName()).collect(Collectors.toSet());
+//
+//        if (CollectionUtils.isNotEmpty(appExtPts)) {
+//            registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
+//        }
 
     }
 
