@@ -39,12 +39,6 @@ public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAw
     @Getter
     @Setter
     private List<String> packages;
-    private ClassPathScanHandler handler;
-
-    @Autowired
-    private RegisterFactory registerFactory;
-
-
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
