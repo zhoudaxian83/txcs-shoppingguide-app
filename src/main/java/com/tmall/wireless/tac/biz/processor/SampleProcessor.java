@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor;
 
+import com.alibaba.cola.extension.ExtensionPointI;
 import com.alibaba.fastjson.JSON;
 
 
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,8 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
 
     @Autowired
     SgFrameworkServiceMix sgFrameworkServiceMix;
+    @Autowired
+    AppColaBootstrap appColaBootstrap;
 
     @Override
     public Flowable<TacResult<String>> executeFlowable(Context context) throws Exception {
@@ -36,6 +40,9 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
         sgFrameworkContextMix.setSceneInfo(sceneInfo);
         SgFrameworkResponse<EntityVO> sgFrameworkResponse = sgFrameworkServiceMix.recommend(sgFrameworkContextMix);
 
+        List<ExtensionPointI> appExtPts = appColaBootstrap.appExtPts;
+
+        int size = appExtPts.size();
         return Flowable.just(TacResult.newResult(
                 JSON.toJSONString(sgFrameworkResponse)
         ));
