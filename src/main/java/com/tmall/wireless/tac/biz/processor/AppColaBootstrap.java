@@ -20,6 +20,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -42,6 +43,8 @@ public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAw
 
 
     public void init() {
+        Map<String, ExtensionPointI> beansOfType =
+                applicationContext.getBeansOfType(ExtensionPointI.class);
         if (CollectionUtils.isNotEmpty(appExtPts)) {
             registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
         }
