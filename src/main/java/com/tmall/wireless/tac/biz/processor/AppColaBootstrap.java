@@ -32,6 +32,8 @@ public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAw
 
     @Autowired
     public List<ExtensionPointI> appExtPts;
+    @Autowired
+    private ExtensionRepository extensionRepository;
 
     private static ApplicationContext applicationContext;
     @Getter
@@ -51,9 +53,6 @@ public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAw
     }
 
     public void init() {
-        Set<String> collect = appExtPts.stream().map(pt -> pt.getClass().getName() + " " +
-                pt.getClass().getClassLoader().getClass().getName()).collect(Collectors.toSet());
-
         if (CollectionUtils.isNotEmpty(appExtPts)) {
             registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
         }
@@ -63,32 +62,19 @@ public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAw
      * @param classSet
      */
     private void registerBeans(Set<Class<?>> classSet) {
+
+
         for (Class<?> targetClz : classSet) {
-            RegisterI register = registerFactory.getRegister(targetClz);
-            if (null != register) {
-                register.doRegistration(targetClz);
+
+            Extension extensionAnn = targetClz.getDeclaredAnnotation(Extension.class);
+            if (extensionAnn != null) {
+                doRegistration(targetClz);
             }
+
         }
 
     }
 
-    /**
-     * Scan the packages configured in Spring xml
-     *
-     * @return
-     */
-    private Set<Class<?>> scanConfiguredPackages() {
-        if (packages == null) throw new ColaException("Command packages is not specified");
-
-        String[] pkgs = new String[packages.size()];
-        handler = new ClassPathScanHandler(packages.toArray(pkgs));
-
-        Set<Class<?>> classSet = new TreeSet<>(new ClassNameComparator());
-        for (String pakName : packages) {
-            classSet.addAll(handler.getPackageAllClasses(pakName, true));
-        }
-        return classSet;
-    }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -118,5 +104,29 @@ public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAw
         return AppColaBootstrap.applicationContext.getBean(claz);
     }
 
+
+    public void doRegistration(Class<?> targetClz) {
+        ExtensionPointI extension = (ExtensionPointI) AppColaBootstrap.getBean(targetClz);
+        Extension extensionAnn = targetClz.getDeclaredAnnotation(Extension.class);
+        String extPtClassName = calculateExtensionPoint(targetClz);
+        BizScenario bizScenario = BizScenario.valueOf(extensionAnn.bizId(), extensionAnn.useCase(), extensionAnn.scenario());
+        ExtensionCoordinate extensionCoordinate = new ExtensionCoordinate(extPtClassName, bizScenario.getUniqueIdentity());
+        ExtensionPointI preVal = extensionRepository.getExtensionRepo().put(extensionCoordinate, extension);
+        if (preVal != null) {
+            throw new ColaException("Duplicate registration is not allowed for :" + extensionCoordinate);
+        }
+    }
+
+    private String calculateExtensionPoint(Class<?> targetClz) {
+        Class[] interfaces = targetClz.getInterfaces();
+        if (ArrayUtils.isEmpty(interfaces))
+            throw new ColaException("Please assign a extension point interface for "+targetClz);
+        for (Class intf : interfaces) {
+            String extensionPoint = intf.getSimpleName();
+            if (StringUtils.contains(extensionPoint, ColaConstant.EXTENSION_EXTPT_NAMING))
+                return intf.getName();
+        }
+        throw new ColaException("Your name of ExtensionPoint for "+targetClz+" is not valid, must be end of "+ ColaConstant.EXTENSION_EXTPT_NAMING);
+    }
 
 }
