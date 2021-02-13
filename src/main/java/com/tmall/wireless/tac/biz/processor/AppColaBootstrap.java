@@ -40,11 +40,6 @@ public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAw
     @Setter
     private List<String> packages;
 
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        init();
-        return bean;
-    }
 
     public void init() {
         if (CollectionUtils.isNotEmpty(appExtPts)) {
