@@ -8,6 +8,7 @@ import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextMix;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceMix;
+import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
@@ -30,6 +31,8 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
     public Flowable<TacResult<String>> executeFlowable(Context context) throws Exception {
         SgFrameworkContextMix sgFrameworkContextMix = new SgFrameworkContextMix();
 
+        SceneInfo sceneInfo = new SceneInfo();
+        sceneInfo.setScene("gul");
         SgFrameworkResponse<EntityVO> sgFrameworkResponse = sgFrameworkServiceMix.recommend(sgFrameworkContextMix);
 
         return Flowable.just(TacResult.newResult(
