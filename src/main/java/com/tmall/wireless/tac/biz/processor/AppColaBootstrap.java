@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -45,8 +46,10 @@ public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAw
     public void init() {
         Map<String, ExtensionPointI> beansOfType =
                 applicationContext.getBeansOfType(ExtensionPointI.class);
-        if (CollectionUtils.isNotEmpty(appExtPts)) {
-            registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
+        if (MapUtils.isEmpty(beansOfType)) {
+            if (CollectionUtils.isNotEmpty(appExtPts)) {
+                registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
+            }
         }
     }
 
