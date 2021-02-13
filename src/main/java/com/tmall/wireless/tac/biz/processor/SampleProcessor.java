@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,9 +43,11 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
 
         List<ExtensionPointI> appExtPts = appColaBootstrap.appExtPts;
 
+        Map<String, ExtensionPointI> beansOfType =
+                AppColaBootstrap.applicationContext.getBeansOfType(ExtensionPointI.class);
         int size = appExtPts.size();
         return Flowable.just(TacResult.newResult(
-                JSON.toJSONString(sgFrameworkResponse)
+                beansOfType.size() + "  " + size
         ));
     }
 

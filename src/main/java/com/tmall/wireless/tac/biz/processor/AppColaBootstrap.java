@@ -37,7 +37,7 @@ public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAw
     @Autowired
     private ExtensionRepository extensionRepository;
 
-    private static ApplicationContext applicationContext;
+    public static ApplicationContext applicationContext;
     @Getter
     @Setter
     private List<String> packages;
