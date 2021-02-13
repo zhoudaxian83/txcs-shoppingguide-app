@@ -22,7 +22,9 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
 
     @Override
     public Flowable<TacResult<String>> executeFlowable(Context context) throws Exception {
-        return null;
+        return Flowable.just(TacResult.newResult(
+                "success"
+        ));
     }
 
 }
