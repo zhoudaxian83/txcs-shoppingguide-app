@@ -33,6 +33,7 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
 
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setScene("gul");
+        sgFrameworkContextMix.setSceneInfo(sceneInfo);
         SgFrameworkResponse<EntityVO> sgFrameworkResponse = sgFrameworkServiceMix.recommend(sgFrameworkContextMix);
 
         return Flowable.just(TacResult.newResult(
