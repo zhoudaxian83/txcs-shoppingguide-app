@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 
 import java.util.List;
 import java.util.Set;
@@ -18,9 +19,9 @@ import java.util.stream.Collectors;
  * Created by yangqing.byq on 2021/1/24.
  */
 
-public class AppColaBootstrap {
+public class AppColaBootstrap implements BeanPostProcessor {
 
-    @Autowired(required = false)
+    @Autowired
     public List<ExtensionPointI> appExtPts;
 
     @Getter
@@ -33,17 +34,12 @@ public class AppColaBootstrap {
 
 
     public void init() {
-//        Set<Class<?>> classSet = scanConfiguredPackages();
-//        registerBeans(classSet);
-//        registerBeans(Sets.newHashSet(appRanderExtPt.getClass()));
+        Set<String> collect = appExtPts.stream().map(pt -> pt.getClass().getName() + " " +
+                pt.getClass().getClassLoader().getClass().getName()).collect(Collectors.toSet());
 
-//        Set<String> collect = appExtPts.stream().map(pt -> pt.getClass().getName() + " " +
-//                pt.getClass().getClassLoader().getClass().getName()).collect(Collectors.toSet());
-//
-//        if (CollectionUtils.isNotEmpty(appExtPts)) {
-//            registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
-//        }
-
+        if (CollectionUtils.isNotEmpty(appExtPts)) {
+            registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
+        }
     }
 
     /**
