@@ -37,7 +37,7 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
         SgFrameworkResponse<EntityVO> sgFrameworkResponse = sgFrameworkServiceMix.recommend(sgFrameworkContextMix);
 
         return Flowable.just(TacResult.newResult(
-                "success"
+                JSON.toJSONString(sgFrameworkResponse)
         ));
     }
 
