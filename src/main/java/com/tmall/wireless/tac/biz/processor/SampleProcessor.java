@@ -10,6 +10,7 @@ import com.tmall.txcs.gs.framework.model.SgFrameworkContextMix;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceMix;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
+import com.tmall.wireless.tac.biz.processor.ext.GulContextCheckExtPt;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
@@ -31,6 +32,8 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
     SgFrameworkServiceMix sgFrameworkServiceMix;
     @Autowired
     AppColaBootstrap appColaBootstrap;
+    @Autowired
+    GulContextCheckExtPt gulContextCheckExtPt;
 
     @Override
     public Flowable<TacResult<String>> executeFlowable(Context context) throws Exception {
