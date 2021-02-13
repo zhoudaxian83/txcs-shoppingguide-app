@@ -9,7 +9,7 @@
     <context:component-scan base-package="com.tmall.txcs.gs.framework" />
 
     <context:component-scan base-package="com.alibaba.cola" />
-    <bean class="com.tmall.wireless.tac.biz.processor.AppColaBootstrap" init-method="init">
+    <bean class="com.tmall.wireless.tac.biz.processor.AppColaBootstrap">
         <property name="packages" >
             <list>
                 <value>com.tmall.recommend.framework</value>

@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
@@ -32,6 +33,13 @@ public class AppColaBootstrap implements BeanPostProcessor {
     @Autowired
     private RegisterFactory registerFactory;
 
+
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        init();
+        return bean;
+    }
 
     public void init() {
         Set<String> collect = appExtPts.stream().map(pt -> pt.getClass().getName() + " " +
