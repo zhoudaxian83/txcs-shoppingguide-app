@@ -32,8 +32,6 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
     SgFrameworkServiceMix sgFrameworkServiceMix;
     @Autowired
     AppColaBootstrap appColaBootstrap;
-    @Autowired
-    GulContextCheckExtPt gulContextCheckExtPt;
 
     @Override
     public Flowable<TacResult<String>> executeFlowable(Context context) throws Exception {
