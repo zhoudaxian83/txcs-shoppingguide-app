@@ -17,12 +17,5 @@
             </list>
         </property>
     </bean>
-<!--    <bean class="com.alibaba.cola.boot.Bootstrap" init-method="init">-->
-<!--        <property name="packages" >-->
-<!--            <list>-->
-<!--                <value>com.tmall.txcs.gs.framework</value>-->
-<!--                <value>com.tmall.wireless.tac.biz.processor.ext</value>-->
-<!--            </list>-->
-<!--        </property>-->
-<!--    </bean>-->
+    <bean class="com.tmall.wireless.tac.biz.processor.ext.GulContextCheckExtPt"/>
 </beans>

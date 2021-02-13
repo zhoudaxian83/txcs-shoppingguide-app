@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
  * Created by yangqing.byq on 2021/2/13.
  */
 @Extension(bizId = "txcs", useCase = "B2C", scenario = "gul")
-@Service
 public class GulContextCheckExtPt implements ContextCheckExtPt<SgFrameworkContextMix> {
 
     @Override
