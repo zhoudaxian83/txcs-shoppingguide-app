@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor;
 
 import com.alibaba.cola.extension.ExtensionPointI;
+import com.alibaba.fastjson.JSON;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextMix;
@@ -41,8 +42,8 @@ public class SampleProcessor extends RpmReactiveHandler<String> {
                 AppColaBootstrap.applicationContext.getBeansOfType(ExtensionPointI.class);
         int size = appExtPts.size();
         return Flowable.just(TacResult.newResult(
-                beansOfType.size() + "  " + size
-        ));
+                beansOfType.size() + "  " + size + "  " + JSON.toJSONString(sgFrameworkResponse)
+         ));
     }
 
 }
