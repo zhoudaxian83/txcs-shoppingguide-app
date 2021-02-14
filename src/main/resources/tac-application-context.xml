@@ -17,5 +17,5 @@
             </list>
         </property>
     </bean>
-    <bean id="gulContextCheckExtPt" class="com.tmall.wireless.tac.biz.processor.ext.GulContextCheckExtPt"/>
+<!--    <bean id="gulContextCheckExtPt" class="com.tmall.wireless.tac.biz.processor.ext.GulContextCheckExtPt"/>-->
 </beans>
