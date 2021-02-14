@@ -47,9 +47,10 @@ public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAw
         Map<String, ExtensionPointI> beansOfType =
                 applicationContext.getBeansOfType(ExtensionPointI.class);
         if (MapUtils.isEmpty(beansOfType)) {
-            if (CollectionUtils.isNotEmpty(appExtPts)) {
-                registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
-            }
+
+        }
+        if (CollectionUtils.isNotEmpty(appExtPts)) {
+            registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
         }
     }
 
