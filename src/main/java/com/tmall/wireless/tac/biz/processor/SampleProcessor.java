@@ -4,6 +4,7 @@ import com.alibaba.cola.extension.ExtensionPointI;
 import com.alibaba.fastjson.JSON;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.*;
+import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceMix;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
@@ -39,6 +40,8 @@ public class SampleProcessor extends RpmReactiveHandler<SgFrameworkResponse<Item
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         SceneInfo sceneInfo = new SceneInfo();
+        sceneInfo.setBiz(ScenarioConstant.ENTITY_TYPE_ITEM);
+        sceneInfo.setSubBiz(ScenarioConstant.BIZ_TYPE_B2C);
         sceneInfo.setScene("gul");
         sgFrameworkContextItem.setSceneInfo(sceneInfo);
 
