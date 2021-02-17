@@ -4,6 +4,7 @@ import com.alibaba.cola.extension.Extension;
 import com.tmall.txcs.gs.framework.extensions.paramcheck.ContextCheckExtPt;
 import com.tmall.txcs.gs.framework.extensions.paramcheck.ContextCheckResult;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextMix;
 import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import org.springframework.stereotype.Service;
@@ -15,13 +16,12 @@ import org.springframework.stereotype.Service;
         useCase = ScenarioConstant.BIZ_TYPE_B2C,
         scenario = "gul")
 @Service
-public class GulContextCheckExtPt implements ContextCheckExtPt<SgFrameworkContextMix> {
+public class GulContextCheckExtPt implements ContextCheckExtPt<SgFrameworkContextItem> {
 
     @Override
-    public ContextCheckResult check(SgFrameworkContextMix contextMix) {
+    public ContextCheckResult check(SgFrameworkContextItem contextMix) {
         ContextCheckResult contextCheckResult = new ContextCheckResult();
-        contextCheckResult.setSuccess(false);
-        contextCheckResult.setErrorMsg("ss");
+        contextCheckResult.setSuccess(true);
         return contextCheckResult;
     }
 }
