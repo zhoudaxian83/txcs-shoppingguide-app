@@ -40,13 +40,11 @@ public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAw
     public static ApplicationContext applicationContext;
 
 
+    public Map<String, ExtensionPointI> queryExtMap() {
+        return applicationContext.getBeansOfType(ExtensionPointI.class);
+    }
 
     public void init() {
-        Map<String, ExtensionPointI> beansOfType =
-                applicationContext.getBeansOfType(ExtensionPointI.class);
-        if (MapUtils.isEmpty(beansOfType)) {
-
-        }
         if (CollectionUtils.isNotEmpty(appExtPts)) {
             registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
         }
