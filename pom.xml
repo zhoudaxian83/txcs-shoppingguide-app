@@ -21,6 +21,12 @@
           <groupId>com.tmall.txcs</groupId>
           <artifactId>txcs-sg-framework</artifactId>
           <version>${common.rpm.version}</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>org.jboss.logging</groupId>
+                  <artifactId>jboss-logging</artifactId>
+              </exclusion>
+          </exclusions>
       </dependency>
 
 
