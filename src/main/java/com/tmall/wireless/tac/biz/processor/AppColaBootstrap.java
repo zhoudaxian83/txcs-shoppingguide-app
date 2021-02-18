@@ -1,17 +1,13 @@
 package com.tmall.wireless.tac.biz.processor;
 
-import com.alibaba.cola.boot.*;
-import com.alibaba.cola.common.ApplicationContextHelper;
 import com.alibaba.cola.common.ColaConstant;
 import com.alibaba.cola.exception.SysException;
 import com.alibaba.cola.exception.framework.BasicErrorCode;
 import com.alibaba.cola.exception.framework.ColaException;
 import com.alibaba.cola.extension.*;
-import com.alibaba.fastjson.JSON;
-import lombok.Getter;
-import lombok.Setter;
+import com.taobao.middleware.logger.Logger;
+import com.taobao.middleware.logger.LoggerFactory;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -23,7 +19,6 @@ import org.springframework.context.ApplicationContextAware;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +26,7 @@ import java.util.stream.Collectors;
  */
 
 public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAware {
+    Logger LOGGER = LoggerFactory.getLogger(AppColaBootstrap.class);
 
     @Autowired
     public List<ExtensionPointI> appExtPts;
@@ -48,6 +44,17 @@ public class AppColaBootstrap implements BeanPostProcessor, ApplicationContextAw
         if (CollectionUtils.isNotEmpty(appExtPts)) {
             registerBeans(appExtPts.stream().map(Object::getClass).collect(Collectors.toSet()));
         }
+        logExtensionPoints();
+    }
+
+    private void logExtensionPoints() {
+        Map<ExtensionCoordinate, ExtensionPointI> extensionRepo = extensionRepository.getExtensionRepo();
+        StringBuilder sb = new StringBuilder();
+        for (ExtensionCoordinate extensionCoordinate : extensionRepo.keySet()) {
+            sb.append(extensionCoordinate.toString()).append(":").append(extensionRepo.get(extensionCoordinate).getClass().getName()).append(";");
+        }
+        LOGGER.warn("colaExtensionPoints:{}", sb.toString());
+
     }
 
     /**

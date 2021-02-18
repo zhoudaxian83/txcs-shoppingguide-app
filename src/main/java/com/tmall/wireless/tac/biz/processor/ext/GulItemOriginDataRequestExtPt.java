@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 @Extension(bizId = ScenarioConstant.ENTITY_TYPE_ITEM,
         useCase = ScenarioConstant.BIZ_TYPE_B2C,
         scenario = "gul")
-@Service
 public class GulItemOriginDataRequestExtPt extends DefaultItemOriginDataRequestExtPt {
     @Override
     public TppRequest processOriginDataRequest(SgFrameworkContextItem sgFrameworkContextItem) {
