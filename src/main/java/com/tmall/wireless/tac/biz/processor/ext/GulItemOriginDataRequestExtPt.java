@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.ext;
 
 import com.alibaba.cola.extension.Extension;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.DefaultItemOriginDataRequestExtPt;
+import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import com.tmall.txcs.gs.service.model.TppRequest;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Extension(bizId = ScenarioConstant.ENTITY_TYPE_ITEM,
         useCase = ScenarioConstant.BIZ_TYPE_B2C,
         scenario = "gul")
-public class GulItemOriginDataRequestExtPt extends DefaultItemOriginDataRequestExtPt {
+public class GulItemOriginDataRequestExtPt extends DefaultItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
     @Override
     public TppRequest processOriginDataRequest(SgFrameworkContextItem sgFrameworkContextItem) {
         TppRequest tppRequest = super.processOriginDataRequest(sgFrameworkContextItem);
