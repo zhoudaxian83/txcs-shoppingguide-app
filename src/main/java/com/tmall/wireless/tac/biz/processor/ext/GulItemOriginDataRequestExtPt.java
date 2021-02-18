@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 /**
  * Created by yangqing.byq on 2021/2/18.
  */
-@Extension(bizId = ScenarioConstant.ENTITY_TYPE_ITEM,
+@Extension  (bizId = ScenarioConstant.ENTITY_TYPE_ITEM,
         useCase = ScenarioConstant.BIZ_TYPE_B2C,
         scenario = "gul")
 @Service
