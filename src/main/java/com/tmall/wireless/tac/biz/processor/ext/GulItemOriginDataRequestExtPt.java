@@ -20,6 +20,7 @@ public class GulItemOriginDataRequestExtPt extends DefaultItemOriginDataRequestE
         TppRequest tppRequest = super.processOriginDataRequest(sgFrameworkContextItem);
         tppRequest.getParams().put("pageId", "cainixihuan1");
         tppRequest.getParams().put("moduleId", "153");
+        tppRequest.setAppId(18611L);
         return tppRequest;
     }
 
