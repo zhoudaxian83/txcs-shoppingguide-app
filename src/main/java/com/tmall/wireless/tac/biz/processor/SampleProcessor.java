@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class SampleProcessor extends RpmReactiveHandler<SgFrameworkResponse<ItemEntityVO>> {
+public class SampleProcessor extends RpmReactiveHandler<SgFrameworkResponse<EntityVO>> {
 
     Logger LOGGER = LoggerFactory.getLogger(SyncFacade.class);
 
@@ -36,7 +36,7 @@ public class SampleProcessor extends RpmReactiveHandler<SgFrameworkResponse<Item
     AppColaBootstrap appColaBootstrap;
 
     @Override
-    public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
+    public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
 //        SgFrameworkContextMix sgFrameworkContextMix = new SgFrameworkContextMix();
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
@@ -55,7 +55,7 @@ public class SampleProcessor extends RpmReactiveHandler<SgFrameworkResponse<Item
         locParams.setRt1HourStoreId(233930371L);
         locParams.setRtHalfDayStoreId(239228193L);
         locParams.setSmAreaId(360111);
-        locParams.setLogicAreaIdList(Lists.newArrayList(107L));
+        locParams.setRegionCode(107L);
         sgFrameworkContextItem.setLocParams(locParams);
 
         EntitySetParams entitySetParams = new EntitySetParams();
