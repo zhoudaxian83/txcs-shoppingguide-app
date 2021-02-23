@@ -13,7 +13,6 @@ import java.util.Map;
 /**
  * Created by yangqing.byq on 2021/2/23.
  */
-@Service
 public class ItemInfoBySourceProcessorFactoryImpl implements ItemInfoBySourceProcessorFactory, InitializingBean {
 
     @Autowired

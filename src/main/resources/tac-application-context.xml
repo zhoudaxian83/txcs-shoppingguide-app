@@ -12,5 +12,5 @@
     <bean class="com.tmall.wireless.tac.biz.processor.AppColaBootstrap" init-method="init"/>
 <!--    <bean id="gulContextCheckExtPt" class="com.tmall.wireless.tac.biz.processor.ext.GulContextCheckExtPt"/>-->
     <bean id="gulItemOriginDataRequestExtPt" class="com.tmall.wireless.tac.biz.processor.ext.GulItemOriginDataRequestExtPt"/>
-
+    <bean id="itemInfoBySourceProcessorFactoryImpl" class="com.tmall.wireless.tac.biz.processor.iteminfo.ItemInfoBySourceProcessorFactoryImpl"/>
 </beans>
