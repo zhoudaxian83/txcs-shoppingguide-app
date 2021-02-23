@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.iteminfo;
 
+import com.google.common.collect.Maps;
 import com.tmall.txcs.gs.framework.support.itemInfo.bysource.ItemInfoBySourceProcessorFactory;
 import com.tmall.txcs.gs.framework.support.itemInfo.bysource.ItemInfoBySourceProcessorI;
 import com.tmall.txcs.gs.framework.support.itemInfo.bysource.captain.ItemInfoBySourceProcessorCaptain;
@@ -21,6 +22,7 @@ public class ItemInfoBySourceProcessorFactoryImpl implements ItemInfoBySourcePro
     private Map<String, ItemInfoBySourceProcessorI> itemInfoBySourceProcessorIMap;
 
     private void init() {
+        itemInfoBySourceProcessorIMap = Maps.newHashMap();
         itemInfoBySourceProcessorIMap.putIfAbsent(ItemInfoSource.SM_ASELf_CAPTAIN.name(), itemInfoBySourceProcessorCaptain);
     }
     @Override
