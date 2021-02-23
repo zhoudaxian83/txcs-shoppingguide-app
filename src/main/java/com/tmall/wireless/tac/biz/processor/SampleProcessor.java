@@ -10,6 +10,7 @@ import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceMix;
 import com.tmall.txcs.gs.model.biz.context.*;
 import com.tmall.txcs.gs.service.facade.SyncFacade;
+import com.tmall.wireless.tac.biz.processor.iteminfo.constant.ItemInfoSource;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
@@ -57,6 +58,9 @@ public class SampleProcessor extends RpmReactiveHandler<SgFrameworkResponse<Enti
         locParams.setSmAreaId(360111);
         locParams.setRegionCode(107L);
         sgFrameworkContextItem.setLocParams(locParams);
+
+        MetaInfo metaInfo = new MetaInfo();
+        metaInfo.setItemInfoSourceList(Lists.newArrayList(ItemInfoSource.SM_ASELf_CAPTAIN.name()));
 
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetSource("crm");
