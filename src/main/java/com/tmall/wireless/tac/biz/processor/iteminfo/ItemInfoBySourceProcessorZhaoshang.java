@@ -33,6 +33,7 @@ public class ItemInfoBySourceProcessorZhaoshang implements ItemInfoBySourceProce
                 .map(map -> {
                     Response<Map<ItemUniqueId, ItemInfoBySourceDTO>> response = new Response<>();
                     response.setValue(map);
+                    response.setSuccess(true);
                     return response;
                 });
 
