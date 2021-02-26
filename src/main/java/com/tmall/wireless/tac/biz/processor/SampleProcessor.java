@@ -60,7 +60,8 @@ public class SampleProcessor extends RpmReactiveHandler<SgFrameworkResponse<Enti
         sgFrameworkContextItem.setLocParams(locParams);
 
         MetaInfo metaInfo = new MetaInfo();
-        metaInfo.setItemInfoSourceList(Lists.newArrayList(ItemInfoSource.SM_ASELf_CAPTAIN.name()));
+        metaInfo.setItemInfoSourceList(Lists.newArrayList(ItemInfoSource.SM_ASELf_CAPTAIN.name(),
+                ItemInfoSource.SM_ZHAOSHANG.name()));
         sgFrameworkContextItem.setMetaInfo(metaInfo);
 
         EntitySetParams entitySetParams = new EntitySetParams();

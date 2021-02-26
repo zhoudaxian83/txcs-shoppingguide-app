@@ -19,11 +19,15 @@ public class ItemInfoBySourceProcessorFactoryImpl implements ItemInfoBySourcePro
     @Autowired
     ItemInfoBySourceProcessorCaptain itemInfoBySourceProcessorCaptain;
 
+    @Autowired
+    ItemInfoBySourceProcessorZhaoshang itemInfoBySourceProcessorZhaoshang;
+
     private Map<String, ItemInfoBySourceProcessorI> itemInfoBySourceProcessorIMap;
 
     private void init() {
         itemInfoBySourceProcessorIMap = Maps.newHashMap();
         itemInfoBySourceProcessorIMap.putIfAbsent(ItemInfoSource.SM_ASELf_CAPTAIN.name(), itemInfoBySourceProcessorCaptain);
+        itemInfoBySourceProcessorIMap.putIfAbsent(ItemInfoSource.SM_ZHAOSHANG.name(), itemInfoBySourceProcessorZhaoshang);
     }
     @Override
     public ItemInfoBySourceProcessorI get(String s) {
