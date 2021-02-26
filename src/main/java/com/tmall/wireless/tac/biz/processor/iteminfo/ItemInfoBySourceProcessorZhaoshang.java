@@ -54,7 +54,8 @@ public class ItemInfoBySourceProcessorZhaoshang implements ItemInfoBySourceProce
     @Override
     public Map<String, Object> convert(ItemInfoBySourceDTO itemInfoBySourceDTO) {
         Map<String, Object> result = Maps.newHashMap();
-        result.put("res", itemInfoBySourceDTO.getItemInfoSource());
+        ItemInfoBySourceDTOZhaoshang itemInfoBySourceDTOZhaoshang = (ItemInfoBySourceDTOZhaoshang) itemInfoBySourceDTO;
+        result.put("res", itemInfoBySourceDTOZhaoshang.getZhaoshangInfo());
         return result;
     }
 }
