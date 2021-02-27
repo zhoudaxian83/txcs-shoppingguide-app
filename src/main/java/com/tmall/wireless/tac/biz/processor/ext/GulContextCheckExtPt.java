@@ -16,10 +16,12 @@ import org.springframework.stereotype.Service;
         useCase = ScenarioConstant.BIZ_TYPE_B2C,
         scenario = "gul")
 @Service
-public class GulContextCheckExtPt implements ContextCheckExtPt<SgFrameworkContextItem> {
+public class GulContextCheckExtPt implements ContextCheckExtPt {
+
 
     @Override
-    public ContextCheckResult check(SgFrameworkContextItem contextMix) {
+    public ContextCheckResult process(SgFrameworkContext sgFrameworkContext) {
+
         ContextCheckResult contextCheckResult = new ContextCheckResult();
         contextCheckResult.setSuccess(true);
         return contextCheckResult;

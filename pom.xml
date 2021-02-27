@@ -19,7 +19,7 @@
   <dependencies>
       <dependency>
           <groupId>com.tmall.txcs</groupId>
-          <artifactId>txcs-sg-framework</artifactId>
+          <artifactId>txcs-sg-biz</artifactId>
           <version>${common.rpm.version}</version>
           <exclusions>
               <exclusion>

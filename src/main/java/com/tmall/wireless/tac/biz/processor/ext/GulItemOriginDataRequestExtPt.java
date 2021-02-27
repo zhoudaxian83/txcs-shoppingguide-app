@@ -25,7 +25,7 @@ import java.util.Optional;
         scenario = "gul")
 public class GulItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
     @Override
-    public TppRequest processOriginDataRequest(SgFrameworkContextItem sgFrameworkContextItem) {
+    public TppRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
         TppRequest tppRequest = new TppRequest();
 
 //        https://tui.taobao.com/recommend?closeSls=0
@@ -56,5 +56,6 @@ public class GulItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
 
         return tppRequest;
     }
+
 
 }
