@@ -27,10 +27,6 @@ public class SampleProcessor extends RpmReactiveHandler<SgFrameworkResponse<Enti
 
     Logger LOGGER = LoggerFactory.getLogger(SyncFacade.class);
 
-
-    @Autowired
-    SgFrameworkServiceMix sgFrameworkServiceMix;
-
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
     @Autowired
