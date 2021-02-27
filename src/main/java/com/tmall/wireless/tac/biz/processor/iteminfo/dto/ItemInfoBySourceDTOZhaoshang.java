@@ -6,7 +6,16 @@ import lombok.Data;
 /**
  * Created by yangqing.byq on 2021/2/26.
  */
-@Data
+
 public class ItemInfoBySourceDTOZhaoshang extends ItemInfoBySourceDTO {
     String zhaoshangInfo;
+
+
+    public String getZhaoshangInfo() {
+        return zhaoshangInfo;
+    }
+
+    public void setZhaoshangInfo(String zhaoshangInfo) {
+        this.zhaoshangInfo = zhaoshangInfo;
+    }
 }
