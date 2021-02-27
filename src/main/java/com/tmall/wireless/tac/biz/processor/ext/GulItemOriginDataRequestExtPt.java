@@ -39,12 +39,12 @@ public class GulItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
 //        isFirstPage=true
 
         Map<String, String> params = Maps.newHashMap();
-        List<Long> itemSetIds = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getEntitySetParams).map(EntitySetParams::getItemSetIdList).orElse(Lists.newArrayList());
+        List<Long> itemSetIds = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getEntitySetParams).map(EntitySetParams::getItemSetIdList).orElse(Lists.newArrayList());
         params.put("itemSetIdList", Joiner.on(",").join(itemSetIds));
         params.put("pageSize", "1");
         params.put("rt1HourStoreId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L).toString());
         params.put("rtHalfDayStoreId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getRtNextDayStoreId).orElse(0L).toString());
-        params.put("itemSetIdSource", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getEntitySetParams).map(EntitySetParams::getItemSetSource).orElse(""));
+        params.put("itemSetIdSource", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getEntitySetParams).map(EntitySetParams::getItemSetSource).orElse(""));
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         params.put("isFirstPage", "true");
         params.put("itemBusinessType","NextDay,HalfDay,OneHour,B2C");
