@@ -32,7 +32,7 @@ public class ItemInfoBySourceProcessorFactoryImpl implements ItemInfoBySourcePro
 
     @Override
     public ItemInfoBySourceProcessorI getDefault() {
-        return itemInfoBySourceProcessorCaptain;
+        return null;
     }
 
     @Override
