@@ -7,6 +7,7 @@ import com.tmall.txcs.gs.framework.support.itemInfo.bysource.ItemInfoBySourcePro
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,18 +15,15 @@ import java.util.Map;
  */
 public class ItemInfoBySourceProcessorFactoryImpl implements ItemInfoBySourceProcessorFactory, InitializingBean {
 
-    @Autowired
-    ItemInfoBySourceProcessorCaptain itemInfoBySourceProcessorCaptain;
 
     @Autowired
-    ItemInfoBySourceProcessorZhaoshang itemInfoBySourceProcessorZhaoshang;
+    List<ItemInfoBySourceProcessorI> itemInfoBySourceProcessorIList;
 
     private Map<String, ItemInfoBySourceProcessorI> itemInfoBySourceProcessorIMap;
 
     private void init() {
         itemInfoBySourceProcessorIMap = Maps.newHashMap();
-        itemInfoBySourceProcessorIMap.putIfAbsent(itemInfoBySourceProcessorCaptain.getItemSetSource(), itemInfoBySourceProcessorCaptain);
-        itemInfoBySourceProcessorIMap.putIfAbsent(itemInfoBySourceProcessorZhaoshang.getItemSetSource(), itemInfoBySourceProcessorZhaoshang);
+        itemInfoBySourceProcessorIList.forEach(processor -> itemInfoBySourceProcessorIMap.putIfAbsent(processor.getItemSetSource(), processor));
     }
     @Override
     public ItemInfoBySourceProcessorI get(String s) {
