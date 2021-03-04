@@ -78,7 +78,7 @@ public class SampleProcessor extends RpmReactiveHandler<SgFrameworkResponse<Enti
 
 
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoSmartUi.setSourceName("captain");
+        itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 
         metaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
