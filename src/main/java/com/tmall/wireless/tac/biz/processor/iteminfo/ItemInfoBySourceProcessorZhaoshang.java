@@ -3,6 +3,8 @@ package com.tmall.wireless.tac.biz.processor.iteminfo;
 import com.alibaba.reactive.support.FlowLifts;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
+import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
+import com.tmall.txcs.gs.framework.support.itemInfo.ItemInfoRequest;
 import com.tmall.txcs.gs.framework.support.itemInfo.bysource.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.framework.support.itemInfo.bysource.ItemInfoBySourceProcessorI;
 import com.tmall.txcs.gs.framework.support.itemInfo.sm.ItemInfoRequestSm;
@@ -27,9 +29,11 @@ public class ItemInfoBySourceProcessorZhaoshang implements ItemInfoBySourceProce
         return "招商";
     }
 
+
     @Override
-    public Flowable<Response<Map<ItemUniqueId, ItemInfoBySourceDTO>>> process(SgFrameworkContextItem sgFrameworkContextItem, ItemInfoRequestSm itemInfoRequestSm) {
-        return FlowLifts.liftReturnEmptyIfNull(() -> getMap(sgFrameworkContextItem, itemInfoRequestSm))
+    public Flowable<Response<Map<ItemUniqueId, ItemInfoBySourceDTO>>> process(SgFrameworkContextItem sgFrameworkContextItem, ItemInfoRequest itemInfoRequest, ItemInfoSourceMetaInfo itemInfoSourceMetaInfo) {
+
+        return FlowLifts.liftReturnEmptyIfNull(() -> getMap(sgFrameworkContextItem, (ItemInfoRequestSm) itemInfoRequest))
                 .map(map -> {
                     Response<Map<ItemUniqueId, ItemInfoBySourceDTO>> response = new Response<>();
                     response.setValue(map);
