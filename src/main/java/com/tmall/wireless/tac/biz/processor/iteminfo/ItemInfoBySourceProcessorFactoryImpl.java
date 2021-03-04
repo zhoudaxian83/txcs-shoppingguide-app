@@ -26,8 +26,8 @@ public class ItemInfoBySourceProcessorFactoryImpl implements ItemInfoBySourcePro
 
     private void init() {
         itemInfoBySourceProcessorIMap = Maps.newHashMap();
-        itemInfoBySourceProcessorIMap.putIfAbsent(ItemInfoSource.SM_ASELf_CAPTAIN.name(), itemInfoBySourceProcessorCaptain);
-        itemInfoBySourceProcessorIMap.putIfAbsent(ItemInfoSource.SM_ZHAOSHANG.name(), itemInfoBySourceProcessorZhaoshang);
+        itemInfoBySourceProcessorIMap.putIfAbsent(itemInfoBySourceProcessorCaptain.getItemSetSource(), itemInfoBySourceProcessorCaptain);
+        itemInfoBySourceProcessorIMap.putIfAbsent(itemInfoBySourceProcessorZhaoshang.getItemSetSource(), itemInfoBySourceProcessorZhaoshang);
     }
     @Override
     public ItemInfoBySourceProcessorI get(String s) {
