@@ -6,6 +6,9 @@ import com.google.common.collect.Lists;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.*;
 import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
+import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
+import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
+import com.tmall.txcs.gs.framework.model.meta.MetaInfo;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 
 import com.tmall.txcs.gs.model.biz.context.*;
@@ -36,6 +39,8 @@ public class SampleProcessor extends RpmReactiveHandler<SgFrameworkResponse<Enti
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
 //        SgFrameworkContextMix sgFrameworkContextMix = new SgFrameworkContextMix();
 
+        context.getParams();
+
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstant.ENTITY_TYPE_ITEM);
@@ -56,8 +61,24 @@ public class SampleProcessor extends RpmReactiveHandler<SgFrameworkResponse<Enti
         sgFrameworkContextItem.setLocParams(locParams);
 
         MetaInfo metaInfo = new MetaInfo();
-        metaInfo.setItemInfoSourceList(Lists.newArrayList(ItemInfoSource.SM_ASELf_CAPTAIN.name(),
-                ItemInfoSource.SM_ZHAOSHANG.name()));
+        List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
+        ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
+        itemGroupMetaInfoList.add(itemGroupMetaInfo);
+        itemGroupMetaInfo.setGroupName("sm_B2C");
+        List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
+        itemGroupMetaInfo.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoSmartUi = new ItemInfoSourceMetaInfo();
+        itemInfoSourceMetaInfoSmartUi.setSourceName("smartui");
+        itemInfoSourceMetaInfoSmartUi.setStrategyPackageId("502_8499");
+        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoSmartUi);
+
+
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
+        itemInfoSourceMetaInfoSmartUi.setSourceName("captain");
+        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
+
+        metaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         sgFrameworkContextItem.setMetaInfo(metaInfo);
 
         EntitySetParams entitySetParams = new EntitySetParams();
