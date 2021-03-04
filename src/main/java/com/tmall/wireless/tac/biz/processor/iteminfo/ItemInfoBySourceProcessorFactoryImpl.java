@@ -1,9 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.iteminfo;
 
 import com.google.common.collect.Maps;
+import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceProcessorCaptain;
 import com.tmall.txcs.gs.framework.support.itemInfo.bysource.ItemInfoBySourceProcessorFactory;
 import com.tmall.txcs.gs.framework.support.itemInfo.bysource.ItemInfoBySourceProcessorI;
-import com.tmall.txcs.gs.framework.support.itemInfo.bysource.captain.ItemInfoBySourceProcessorCaptain;
 import com.tmall.wireless.tac.biz.processor.iteminfo.constant.ItemInfoSource;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
