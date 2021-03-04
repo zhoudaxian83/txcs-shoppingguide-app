@@ -73,7 +73,7 @@ public class SampleProcessor extends RpmReactiveHandler<SgFrameworkResponse<Enti
 
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoSmartUi = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoSmartUi.setSourceName("smartui");
-        itemInfoSourceMetaInfoSmartUi.setStrategyPackageId("502_8499");
+        itemInfoSourceMetaInfoSmartUi.setStrategyPackageId("508_8608");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoSmartUi);
 
 
