@@ -11,7 +11,8 @@ import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import com.tmall.txcs.gs.model.biz.context.EntitySetParams;
 import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
-import com.tmall.txcs.gs.service.model.TppRequest;
+import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
+
 
 import java.util.List;
 import java.util.Map;
@@ -25,18 +26,8 @@ import java.util.Optional;
         scenario = "gul")
 public class GulItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
     @Override
-    public TppRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
-        TppRequest tppRequest = new TppRequest();
-
-//        https://tui.taobao.com/recommend?closeSls=0
-//        itemSetIdList=212229
-//        pageSize=100
-//        rt1HourStoreId=233930157
-//        itemSetIdSource=crm
-//        smAreaId=330402
-//        userid=2856722021
-//        itemBusinessType=OneHour
-//        isFirstPage=true
+    public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
+        RecommendRequest tppRequest = new RecommendRequest();
 
         Map<String, String> params = Maps.newHashMap();
         List<Long> itemSetIds = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getEntitySetParams).map(EntitySetParams::getItemSetIdList).orElse(Lists.newArrayList());
