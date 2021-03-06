@@ -43,6 +43,7 @@ public class CommonItemRecommendHandler extends RpmReactiveHandler<SgFrameworkRe
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
 //        SgFrameworkContextMix sgFrameworkContextMix = new SgFrameworkContextMix();
 
+        LOGGER.error("ITEM_REQUEST:{}", JSON.toJSONString(context));
         context.getParams();
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
