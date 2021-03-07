@@ -10,7 +10,7 @@ import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
 import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
-import com.tmall.txcs.gs.framework.model.meta.MetaInfo;
+import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 import com.tmall.txcs.gs.model.biz.context.EntitySetParams;
 import com.tmall.txcs.gs.model.biz.context.LocParams;
@@ -65,7 +65,7 @@ public class CommonItemRecommendHandler extends RpmReactiveHandler<SgFrameworkRe
         locParams.setRegionCode(107L);
         sgFrameworkContextItem.setLocParams(locParams);
 
-        MetaInfo metaInfo = new MetaInfo();
+        ItemMetaInfo metaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo);
@@ -84,7 +84,7 @@ public class CommonItemRecommendHandler extends RpmReactiveHandler<SgFrameworkRe
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 
         metaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
-        sgFrameworkContextItem.setMetaInfo(metaInfo);
+        sgFrameworkContextItem.setItemMetaInfo(metaInfo);
 
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetSource("crm");
