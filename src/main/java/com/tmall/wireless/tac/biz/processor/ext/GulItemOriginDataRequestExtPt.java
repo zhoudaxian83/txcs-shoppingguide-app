@@ -39,6 +39,7 @@ public class GulItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         params.put("isFirstPage", "true");
         params.put("itemBusinessType","NextDay,HalfDay,OneHour,B2C");
+        params.put("itemBusinessType","B2C");
 
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
