@@ -48,7 +48,7 @@ public class ItemInfoBySourceProcessorZhaoshang implements ItemInfoBySourceProce
         Map<ItemUniqueId, ItemInfoBySourceDTO> map = Maps.newHashMap();
         String o2oType = itemInfoRequestSm.getO2oType();
         list.forEach(itemEntity -> {
-            ItemUniqueId itemUniqueId = ItemUniqueId.ofItemIdAndO2oType(itemEntity.getId(), O2oType.from(o2oType));
+            ItemUniqueId itemUniqueId = ItemUniqueId.ofItemIdAndO2oType(itemEntity.getItemId(), O2oType.from(o2oType));
             ItemInfoBySourceDTOZhaoshang itemInfoBySourceDTOZhaoshang = new ItemInfoBySourceDTOZhaoshang();
             itemInfoBySourceDTOZhaoshang.setZhaoshangInfo("efdf");
             map.put(itemUniqueId, itemInfoBySourceDTOZhaoshang);
