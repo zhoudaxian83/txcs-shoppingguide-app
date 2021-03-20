@@ -10,4 +10,7 @@
     <context:component-scan base-package="com.tmall.txcs.biz.supermarket" />
 
     <context:component-scan base-package="com.alibaba.cola" />
+
+    <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendItemOriginDataRequestExtPt"/>
 </beans>
