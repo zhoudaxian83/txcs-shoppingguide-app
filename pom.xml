@@ -29,6 +29,11 @@
           </exclusions>
       </dependency>
 
+      <dependency>
+          <groupId>com.tmall.txcs</groupId>
+          <artifactId>txcs-sg-base</artifactId>
+          <version>${common.rpm.version}</version>
+      </dependency>
 
 
       <dependency>
