@@ -14,4 +14,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.TestItemInfoBySourceProcessor"/>
+
+
+    <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoOriginDataItemQueryExtPt"/>
 </beans>
