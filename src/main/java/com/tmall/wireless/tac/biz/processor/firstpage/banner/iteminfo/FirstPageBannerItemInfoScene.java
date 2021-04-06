@@ -1,13 +1,13 @@
 package com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
-import com.tmall.txcs.gs.framework.model.EntityVO;
-import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
-import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
+import com.tmall.txcs.gs.framework.model.*;
 import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
@@ -17,17 +17,24 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.BannerItemDTO;
+import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.BannerItemVO;
+import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.BannerVO;
+import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.uitl.BannerUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -42,12 +49,17 @@ public class FirstPageBannerItemInfoScene {
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
-    public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
+    public Flowable<TacResult<Map<String, BannerVO>>> recommend(Context context) {
 
         LOGGER.error("ITEM_REQUEST:{}", JSON.toJSONString(context));
 
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
+        String bannerInfo = MapUtil.getStringWithDefault(
+                context.getParams(),
+                RequestKeyConstantApp.BANNER_INFO,
+                "");
+
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
 
@@ -65,7 +77,7 @@ public class FirstPageBannerItemInfoScene {
         sgFrameworkContextItem.setUserDO(userDO);
 
         sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
-        sgFrameworkContextItem.setItemMetaInfo(this.getBannerItemMetaInfo());
+        sgFrameworkContextItem.setItemMetaInfo(getBannerItemMetaInfo());
 
 
         PageInfoDO pageInfoDO = new PageInfoDO();
@@ -74,9 +86,72 @@ public class FirstPageBannerItemInfoScene {
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+                .map(response -> convertResult(response, bannerInfo))
                 .map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
 
+    }
+
+    private Map<String, BannerVO> convertResult(SgFrameworkResponse<EntityVO> response, String bannerInfo) {
+        Map<String, BannerVO> result = Maps.newHashMap();
+
+        Map<String, EntityVO> itemEntityVOMap = buildItemEntityVoMap(response);
+
+        Map<String, List<BannerItemDTO>> bannerIndex2ItemList = BannerUtil.parseBannerItem(bannerInfo);
+
+        bannerIndex2ItemList.keySet().forEach(key -> {
+            BannerVO bannerVO = new BannerVO();
+            List<BannerItemDTO> bannerItemDTOList = bannerIndex2ItemList.get(key);
+            if (CollectionUtils.isEmpty(bannerItemDTOList)) {
+                return;
+            }
+
+            List<Long> failItemList = Lists.newArrayList();
+            List<Long> itemIdList = Lists.newArrayList();
+            List<BannerItemVO> items = Lists.newArrayList();
+
+            for (BannerItemDTO bannerItemDTO : bannerItemDTOList) {
+                Long itemId = bannerItemDTO.getItemId();
+                String locType = bannerItemDTO.getLocType();
+                String s = locType + "_" + itemId;
+                EntityVO entityVO = itemEntityVOMap.get(s);
+                if (entityVO == null) {
+                    failItemList.add(itemId);
+                } else {
+                    itemIdList.add(itemId);
+                    BannerItemVO bannerItemVO = new BannerItemVO();
+                    bannerItemVO.setItemId(itemId);
+                    bannerItemVO.setLocType(locType);
+                    bannerItemVO.setItemImg(entityVO.getString("itemImg"));
+                    items.add(bannerItemVO);
+                }
+            }
+            bannerVO.setFailItemList(failItemList);
+            bannerVO.setItems(items);
+            bannerVO.setEntryItems(Joiner.on(",").join(itemIdList));
+            bannerVO.setItemIdList(itemIdList);
+            result.put(key, bannerVO);
+        });
+
+        return result;
+    }
+
+    private Map<String, EntityVO> buildItemEntityVoMap(SgFrameworkResponse<EntityVO> response) {
+        Map<String, EntityVO> itemEntityVOMap = Maps.newHashMap();
+
+        if (response == null || CollectionUtils.isEmpty(response.getItemAndContentList())) {
+           return itemEntityVOMap;
+        }
+
+        response.getItemAndContentList().stream().forEach(i -> {
+            if (i instanceof ItemEntityVO) {
+                Long itemId = i.getLong("itemId");
+                String locType = i.getString("locType");
+                String key = locType + "_" + itemId;
+                itemEntityVOMap.put(key, i);
+            }
+        });
+        return itemEntityVOMap;
     }
 
 
