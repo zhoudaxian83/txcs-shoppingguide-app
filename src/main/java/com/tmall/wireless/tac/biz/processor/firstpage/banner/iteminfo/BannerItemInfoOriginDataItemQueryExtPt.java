@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
         scenario = ScenarioConstantApp.SCENARIO_FIRST_PAGE_BANNER_ITEM)
 public class BannerItemInfoOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
+    public static final String defaultBizType = "sm";
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem sgFrameworkContextItem) {
 
@@ -73,6 +74,7 @@ public class BannerItemInfoOriginDataItemQueryExtPt implements OriginDataItemQue
                 ItemEntity itemEntity = new ItemEntity();
                 itemEntity.setItemId(bannerItemDTO.getItemId());
                 itemEntity.setO2oType(bannerItemDTO.getLocType());
+                itemEntity.setBizType(defaultBizType);
                 return itemEntity;
             }).collect(Collectors.toList());
             result.addAll(itemEntityList);
