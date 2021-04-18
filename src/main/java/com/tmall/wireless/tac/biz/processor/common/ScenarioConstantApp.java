@@ -9,4 +9,7 @@ public class ScenarioConstantApp extends ScenarioConstant {
 
 
     public static final String SCENARIO_FIRST_PAGE_BANNER_ITEM = "FIRST_PAGE_BANNER_ITEM";
+    public static final String SCENARIO_GCS_FEEDS = "GCS_FEEDS";
+
+
 }
