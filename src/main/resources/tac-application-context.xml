@@ -19,5 +19,7 @@
 
 
     <bean class="com.tmall.wireless.tac.biz.processor.gcsfeeds.GcsfeedsContentOriginDataRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gcsfeeds.GcsfeedsContentOriginDataFailProcessorExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gcsfeeds.GcsfeedsContentInfoQueryExtPt"/>
 
 </beans>
