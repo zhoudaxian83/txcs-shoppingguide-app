@@ -5,8 +5,15 @@ import lombok.Data;
 /**
  * Created by yangqing.byq on 2021/4/6.
  */
-@Data
 public class BannerItemDTO {
     Long itemId;
     String locType;
+
+    public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
 }
