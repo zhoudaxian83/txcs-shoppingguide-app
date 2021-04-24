@@ -16,4 +16,12 @@ public class BannerItemDTO {
     public void setItemId(Long itemId) {
         this.itemId = itemId;
     }
+
+    public String getLocType() {
+        return locType;
+    }
+
+    public void setLocType(String locType) {
+        this.locType = locType;
+    }
 }
