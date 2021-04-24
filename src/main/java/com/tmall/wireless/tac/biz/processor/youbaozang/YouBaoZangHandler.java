@@ -14,9 +14,11 @@ import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
+import com.tmall.txcs.gs.model.biz.context.EntitySetParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -38,7 +40,8 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
     @Override
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
 
-        Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
+        Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.SMAREAID, 330100L);
+        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID, 0L);
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
 
@@ -54,6 +57,10 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
         userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
         sgFrameworkContextItem.setUserDO(userDO);
+
+
+        EntitySetParams entitySetParams = new EntitySetParams();
+        entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
 
         sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextItem.setItemMetaInfo(this.getItemMetaInfo());
