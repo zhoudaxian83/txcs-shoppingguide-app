@@ -16,7 +16,7 @@ import java.util.Map;
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.SCENARIO_GCS_FEEDS)
-public class GcsfeedsContentInfoQueryExtPt extends ContentInfoQueryExtPt {
+public class GcsfeedsContentInfoQueryExtPt implements ContentInfoQueryExtPt {
     @Override
     public Flowable<Response<Map<Long, ContentDTO>>> process(ContentInfoQueryRequest contentInfoQueryRequest) {
         return Flowable.just(Response.fail(""));
