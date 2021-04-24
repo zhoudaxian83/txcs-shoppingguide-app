@@ -7,6 +7,7 @@ import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.model.content.ContentDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import io.reactivex.Flowable;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import java.util.Map;
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.SCENARIO_GCS_FEEDS)
+@Service
 public class GcsfeedsContentInfoQueryExtPt implements ContentInfoQueryExtPt {
     @Override
     public Flowable<Response<Map<Long, ContentDTO>>> process(ContentInfoQueryRequest contentInfoQueryRequest) {

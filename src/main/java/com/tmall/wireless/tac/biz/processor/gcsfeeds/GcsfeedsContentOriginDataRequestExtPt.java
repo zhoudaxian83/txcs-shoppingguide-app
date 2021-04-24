@@ -9,6 +9,7 @@ import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.SCENARIO_GCS_FEEDS)
+@Service
 public class GcsfeedsContentOriginDataRequestExtPt implements ContentOriginDataRequestExtPt {
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
