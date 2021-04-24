@@ -13,6 +13,7 @@ import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
+import com.tmall.txcs.gs.framework.model.meta.ItemRecommendMetaInfo;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 import com.tmall.txcs.gs.model.biz.context.EntitySetParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
@@ -103,6 +104,9 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
+
+        ItemRecommendMetaInfo itemRecommendMetaInfo = new ItemRecommendMetaInfo();
+        itemRecommendMetaInfo.setAppId(18611L);
 
 
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
