@@ -94,7 +94,7 @@ public class ItemInfoBySourceProcessorInventory implements ItemInfoBySourceProce
 
                         ItemInfoBySourceDTOInv itemInfoBySourceDTOInv = new ItemInfoBySourceDTOInv();
                         if (itemDTO != null) {
-                            itemInfoBySourceDTOInv.setCanBuy(itemDTO.isCanBuy());
+                            itemInfoBySourceDTOInv.setCanBuy(itemDTO.isCanBuy() || !itemDTO.isSoldout());
                         } else {
                             itemInfoBySourceDTOInv.setCanBuy(true);
                         }
