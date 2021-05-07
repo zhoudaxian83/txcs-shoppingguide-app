@@ -62,6 +62,7 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
 
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
+        sgFrameworkContextItem.setEntitySetParams(entitySetParams);
 
         sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextItem.setItemMetaInfo(this.getItemMetaInfo());
