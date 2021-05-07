@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by yangqing.byq on 2021/3/9.
  */
-@Component
+
 public class YoubaozangHandler extends RpmReactiveHandler<SgFrameworkResponse<EntityVO>> {
     @Autowired
     YoubaozangScene youbaozangScene;

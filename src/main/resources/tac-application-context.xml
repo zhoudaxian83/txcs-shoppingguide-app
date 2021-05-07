@@ -21,4 +21,6 @@
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoOriginDataItemQueryExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoBuildItemVOExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.tacHandler.YoubaozangHandler"/>
 </beans>
