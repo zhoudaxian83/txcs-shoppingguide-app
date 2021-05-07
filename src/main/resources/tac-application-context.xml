@@ -22,4 +22,12 @@
     <bean class="com.tmall.wireless.tac.biz.processor.gcsfeeds.GcsfeedsContentOriginDataFailProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gcsfeeds.GcsfeedsContentInfoQueryExtPt"/>
 
+
+    <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.ItemInfoBySourceProcessorInventory"/>
+
+
+
+    <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoBuildItemVOExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.tacHandler.YoubaozangHandler"/>
 </beans>

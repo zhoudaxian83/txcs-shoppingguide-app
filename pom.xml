@@ -35,6 +35,19 @@
           <version>${common.rpm.version}</version>
       </dependency>
 
+      <dependency>
+          <groupId>com.tmall.txcs</groupId>
+          <artifactId>txcs-sg-spi</artifactId>
+          <version>${common.rpm.version}</version>
+      </dependency>
+
+
+      <dependency>
+          <groupId>com.tmall.txcs</groupId>
+          <artifactId>txcs-sg-service</artifactId>
+          <version>${common.rpm.version}</version>
+      </dependency>
+
 
       <dependency>
           <groupId>org.springframework</groupId>
