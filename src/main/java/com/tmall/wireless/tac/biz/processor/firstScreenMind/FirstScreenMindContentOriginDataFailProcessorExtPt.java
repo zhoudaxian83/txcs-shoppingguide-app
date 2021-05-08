@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
 @Service
-public class FSMindContentOriginDataFailProcessorExtPt implements ContentOriginDataFailProcessorExtPt {
+public class FirstScreenMindContentOriginDataFailProcessorExtPt implements ContentOriginDataFailProcessorExtPt {
 
     @Override
     public OriginDataDTO<ContentEntity> process(ContentFailProcessorRequest contentFailProcessorRequest) {

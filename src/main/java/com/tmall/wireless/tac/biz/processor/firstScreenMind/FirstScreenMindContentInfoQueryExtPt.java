@@ -29,9 +29,9 @@ import java.util.Map;
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
 @Service
-public class FSMindContentInfoQueryExtPt implements ContentInfoQueryExtPt {
+public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExtPt {
 
-    Logger LOGGER = LoggerFactory.getLogger(FSMindContentInfoQueryExtPt.class);
+    Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindContentInfoQueryExtPt.class);
 
     @Autowired
     TacLoggerImpl tacLogger;
