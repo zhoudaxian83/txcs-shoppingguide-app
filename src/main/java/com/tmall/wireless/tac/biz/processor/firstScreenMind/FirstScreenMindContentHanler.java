@@ -15,12 +15,8 @@ public class FirstScreenMindContentHanler extends RpmReactiveHandler<FacadeResul
     @Autowired
     FirstScreenMindContentScene visitSupermarketItemScene;
 
-    @Autowired
-    TacLogger tacLogger;
-
     @Override
     public Flowable<TacResult<FacadeResult>> executeFlowable(Context context) throws Exception {
-        tacLogger.info("FirstScreenMindContentHanler in");
         return visitSupermarketItemScene.recommend(context);
     }
 }

@@ -19,8 +19,11 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.model.FacadeResult;
 import com.tmall.wireless.tac.client.common.TacResult;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
+import com.tmall.wireless.tac.dataservice.log.TacLogConsts;
+import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,14 +36,15 @@ import java.util.Optional;
 
 @Service
 public class FirstScreenMindContentScene {
-    Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindContentScene.class);
 
     @Autowired
     SgFrameworkServiceContent sgFrameworkServiceContent;
+    @Autowired
+    TacLogger  tacLogger;
 
     public Flowable<TacResult<FacadeResult>> recommend(Context context) {
 
-        LOGGER.info("VisitSupermarketScene context:"+ JSON.toJSONString(context));
+        tacLogger.info("VisitSupermarketScene context:"+ JSON.toJSONString(context));
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
         SgFrameworkContextContent sgFrameworkContextContent = new SgFrameworkContextContent();
@@ -58,7 +62,7 @@ public class FirstScreenMindContentScene {
         pageInfoDO.setIndex(0);
         pageInfoDO.setPageSize(20);
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
-
+        tacLogger.info("sgFrameworkContextContent:"+sgFrameworkContextContent);
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> convertResult(response))
                 .map(TacResult::newResult)

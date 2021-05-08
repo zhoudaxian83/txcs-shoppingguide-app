@@ -12,7 +12,9 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,8 +24,14 @@ import java.util.*;
         scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
 @Service
 public class FirstScreenMindContentOriginDataRequestExPt implements ContentOriginDataRequestExtPt {
+
+    @Autowired
+    TacLogger tacLogger;
+
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
+
+        tacLogger.info("FirstScreenMindContentOriginDataRequestExPt sgFrameworkContextContent:"+sgFrameworkContextContent);
 
         RecommendRequest tppRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
@@ -60,7 +68,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
-
+        tacLogger.info("FirstScreenMindContentOriginDataRequestExPt tppRequest:"+tppRequest);
         return tppRequest;
     }
 }
