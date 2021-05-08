@@ -1,0 +1,70 @@
+package com.tmall.wireless.tac.biz.processor.firstScreenMind;
+
+import com.alibaba.cola.extension.Extension;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
+import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
+import com.tmall.txcs.gs.model.biz.context.LocParams;
+import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
+import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderConvertUtil;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+
+@Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+        scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT
+)
+
+public class FirstScreenMindContentOriginDataRequestExPt implements ContentOriginDataRequestExtPt {
+    @Override
+    public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
+
+        RecommendRequest tppRequest = new RecommendRequest();
+        Map<String, String> params = Maps.newHashMap();
+        Map requestParams = sgFrameworkContextContent.getRequestParams();
+        if(requestParams == null || requestParams.isEmpty()){
+            return null;
+        }
+        //获取心智场景和普通场景内容集id
+        String contentSetIds = (String) requestParams.get("contentSetIds");
+        if(StringUtils.isNotEmpty(contentSetIds)){
+            params.put("contentSetIdList",contentSetIds);
+        }
+        params.put("pageSize", "20");
+        //逛超市TPP内容召回每个内容挂载的商品数量
+        params.put("itemCountPerContent", "10");
+        params.put("contentType", "7");
+        params.put("contentSetSource", "intelligentCombinationItems");
+        //未登陆用户唯一身份ID，确认是否必须
+        //params.put("exposureDataUserId", "");
+        tppRequest.setParams(params);
+        params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
+        params.put("logicAreaId", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
+        Integer index = Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getIndex).orElse(0);
+        params.put("isFirstPage", index > 0 ? "false" : "true");
+        Boolean isFixPositionBanner = (Boolean) requestParams.get("isFixPositionBanner");
+        //首次isFixPositionBanner为空或true，标识查询心智场景
+        if(isFixPositionBanner == null || isFixPositionBanner){
+            tppRequest.setAppId(24696L);//todo  心智场景
+        }else{
+            tppRequest.setAppId(24696L);//todo 普通场景
+        }
+
+
+        tppRequest.setParams(params);
+        tppRequest.setLogResult(true);
+        tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
+
+        return tppRequest;
+    }
+}

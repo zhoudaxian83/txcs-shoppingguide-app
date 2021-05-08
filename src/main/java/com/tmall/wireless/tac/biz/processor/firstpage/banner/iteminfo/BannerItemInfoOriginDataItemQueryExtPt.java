@@ -1,9 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo;
 
 import com.alibaba.cola.extension.Extension;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.platform.buc.sso.common.constants.ReqCodeConstants;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -11,7 +8,6 @@ import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
-import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -21,9 +17,6 @@ import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
