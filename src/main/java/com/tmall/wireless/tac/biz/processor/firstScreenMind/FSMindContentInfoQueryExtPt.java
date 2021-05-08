@@ -12,10 +12,12 @@ import com.tmall.txcs.gs.model.content.ContentDTO;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderErrorEnum;
+import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -31,6 +33,9 @@ public class FSMindContentInfoQueryExtPt implements ContentInfoQueryExtPt {
 
     Logger LOGGER = LoggerFactory.getLogger(FSMindContentInfoQueryExtPt.class);
 
+    @Autowired
+    TacLoggerImpl tacLogger;
+
     @Resource
     private MultiClusterTairManager multiClusterTairManager;
 
@@ -38,6 +43,8 @@ public class FSMindContentInfoQueryExtPt implements ContentInfoQueryExtPt {
 
     @Override
     public Flowable<Response<Map<Long, ContentDTO>>> process(ContentInfoQueryRequest contentInfoQueryRequest) {
+
+        tacLogger.info("***contentInfoQueryRequest***:"+contentInfoQueryRequest);
         /*场景详情缓存前缀*/
         String sceneLabelDetail = "txcs_scene_detail_v1";
         String pKey = sceneLabelDetail;
@@ -81,7 +88,7 @@ public class FSMindContentInfoQueryExtPt implements ContentInfoQueryExtPt {
             LOGGER.info(RenderErrorEnum.contentBatchTairExc.getCode(), RenderErrorEnum.contentBatchTairExc.getMessage());
             return Flowable.just(Response.fail(RenderErrorEnum.contentBatchTairExc.getCode()));
         }
-
+        tacLogger.info("****contentDTOMap*****:"+contentDTOMap);
         return Flowable.just(Response.success(contentDTOMap));
     }
 

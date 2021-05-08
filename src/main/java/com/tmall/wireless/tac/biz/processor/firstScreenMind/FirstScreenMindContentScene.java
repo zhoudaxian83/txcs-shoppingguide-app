@@ -62,7 +62,7 @@ public class FirstScreenMindContentScene {
         pageInfoDO.setIndex(0);
         pageInfoDO.setPageSize(20);
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
-        tacLogger.info("sgFrameworkContextContent:"+sgFrameworkContextContent);
+        tacLogger.info("*****sgFrameworkContextContent***:"+sgFrameworkContextContent);
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> convertResult(response))
                 .map(TacResult::newResult)
