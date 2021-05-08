@@ -1,27 +1,31 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
+import com.alibaba.cola.extension.Extension;
+import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
-import com.tmall.aselfcommon.model.gcs.domain.GcsTairSceneDTO;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryRequest;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.model.content.ContentDTO;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderErrorEnum;
-import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderCheckUtil;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+@Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+        scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT
+)
 @Service
 public class FSMindContentInfoQueryExtPt implements ContentInfoQueryExtPt {
 
@@ -37,6 +41,7 @@ public class FSMindContentInfoQueryExtPt implements ContentInfoQueryExtPt {
         /*场景详情缓存前缀*/
         String sceneLabelDetail = "txcs_scene_detail_v1";
         String pKey = sceneLabelDetail;
+        Map<Long, ContentDTO> contentDTOMap = Maps.newHashMap();
         try {
             List<ContentEntity> contentEntities = contentInfoQueryRequest.getContentEntities();
             List<String> sKeyList = new ArrayList<>();
@@ -50,7 +55,6 @@ public class FSMindContentInfoQueryExtPt implements ContentInfoQueryExtPt {
             }
             Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
             //循环遍历获取结果
-            Map<String, GcsTairSceneDTO> tairSceneDTOMap = new HashMap<>();
             for (Object sKey : resultMap.keySet()) {
                 Result<DataEntry> result = resultMap.get(sKey);
                 if (!result.isSuccess()) {
@@ -63,16 +67,13 @@ public class FSMindContentInfoQueryExtPt implements ContentInfoQueryExtPt {
                     return Flowable.just(Response.fail(RenderErrorEnum.contentSingleTairValueNull.getCode()));
                 }
                 //单个内容类型转换
-                @SuppressWarnings("unchecked")
-                GcsTairSceneDTO labelSceneContentInfo = (GcsTairSceneDTO) dataEntry.getValue();
-                if (RenderCheckUtil.objectEmpty(labelSceneContentInfo)) {
-                    LOGGER.info(RenderErrorEnum.contentSingleContentNull.getCode(), RenderErrorEnum.contentSingleContentNull.getMessage());
-                    return Flowable.just(Response.fail(RenderErrorEnum.contentSingleContentNull.getCode()));
-                }
-                tairSceneDTOMap.put(String.valueOf(sKey), labelSceneContentInfo);
+                ContentDTO contentDTO = new ContentDTO();
+                contentDTO.setContentId((Long) sKey);
+                contentDTO.setContentInfo((Map<String, Object>) dataEntry.getValue());
+                contentDTOMap.put(((Long) sKey),contentDTO);
             }
             //结果判空
-            if (MapUtils.isEmpty(tairSceneDTOMap)) {
+            if (MapUtils.isEmpty(contentDTOMap)) {
                 LOGGER.info(RenderErrorEnum.contentBatchTairValueNull.getCode(), RenderErrorEnum.contentBatchTairValueNull.getMessage());
                 return Flowable.just(Response.fail(RenderErrorEnum.contentBatchTairValueNull.getCode()));
             }
@@ -80,7 +81,8 @@ public class FSMindContentInfoQueryExtPt implements ContentInfoQueryExtPt {
             LOGGER.info(RenderErrorEnum.contentBatchTairExc.getCode(), RenderErrorEnum.contentBatchTairExc.getMessage());
             return Flowable.just(Response.fail(RenderErrorEnum.contentBatchTairExc.getCode()));
         }
-        return Flowable.just(Response.fail(""));
+
+        return Flowable.just(Response.success(contentDTOMap));
     }
 
 
