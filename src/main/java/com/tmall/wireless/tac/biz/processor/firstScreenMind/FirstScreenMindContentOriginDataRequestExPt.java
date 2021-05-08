@@ -19,8 +19,7 @@ import java.util.*;
 
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT
-)
+        scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
 @Service
 public class FirstScreenMindContentOriginDataRequestExPt implements ContentOriginDataRequestExtPt {
     @Override

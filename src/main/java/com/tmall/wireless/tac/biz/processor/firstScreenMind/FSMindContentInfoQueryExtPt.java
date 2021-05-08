@@ -16,7 +16,6 @@ import io.reactivex.Flowable;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +23,7 @@ import java.util.Map;
 
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT
-)
-@Service
+        scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
 public class FSMindContentInfoQueryExtPt implements ContentInfoQueryExtPt {
 
     Logger LOGGER = LoggerFactory.getLogger(FSMindContentInfoQueryExtPt.class);

@@ -6,13 +6,10 @@ import com.tmall.txcs.gs.framework.extensions.failprocessor.ContentOriginDataFai
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import org.springframework.stereotype.Service;
 
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT
-)
-@Service
+        scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
 public class FSMindContentOriginDataFailProcessorExtPt implements ContentOriginDataFailProcessorExtPt {
 
     @Override
