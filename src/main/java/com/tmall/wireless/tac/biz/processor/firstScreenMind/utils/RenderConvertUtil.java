@@ -1,11 +1,13 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind.utils;
 
 import com.taobao.util.CollectionUtil;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Component
 public class RenderConvertUtil {
 
     /**把"1,2,3,4" 转换成 [1L,2L,3L,4L]*/

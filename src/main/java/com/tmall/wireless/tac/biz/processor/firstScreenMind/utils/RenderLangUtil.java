@@ -1,6 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind.utils;
 
+import org.springframework.stereotype.Component;
 
+@Component
 public class RenderLangUtil {
 	
 	public static String safeString(Object val){

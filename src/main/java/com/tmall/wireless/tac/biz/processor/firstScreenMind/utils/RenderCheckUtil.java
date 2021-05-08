@@ -1,7 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind.utils;
 
-import java.util.Map;
+import org.springframework.stereotype.Component;
 
+import java.util.Map;
+@Component
 public class RenderCheckUtil {
 
     public static boolean MapKeyValueNotEmpty(Map<String,String> map,String key){
