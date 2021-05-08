@@ -25,11 +25,13 @@ import io.reactivex.Flowable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Service
 public class FirstScreenMindContentScene {
     Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindContentScene.class);
 
@@ -82,9 +84,9 @@ public class FirstScreenMindContentScene {
     public ContentMetaInfo getContentMetaInfo() {
         ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
+        /*ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
+        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);*/
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);

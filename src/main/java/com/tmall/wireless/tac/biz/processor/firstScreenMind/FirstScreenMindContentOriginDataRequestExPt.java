@@ -17,6 +17,7 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderConvertU
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -24,7 +25,7 @@ import java.util.*;
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT
 )
-
+@Service
 public class FirstScreenMindContentOriginDataRequestExPt implements ContentOriginDataRequestExtPt {
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
