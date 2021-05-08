@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FirstScreenMindContentHanler extends RpmReactiveHandler<FacadeResult> {
+public class FirstScreenMindContentHandler extends RpmReactiveHandler<FacadeResult> {
 
     @Autowired
     FirstScreenMindContentScene visitSupermarketItemScene;
