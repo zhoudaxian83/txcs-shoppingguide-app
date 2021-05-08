@@ -18,6 +18,8 @@
 
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoOriginDataItemQueryExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FSMindContentInfoQueryExtPt"/>
+
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentOriginDataRequestExPt"/>
 </beans>
