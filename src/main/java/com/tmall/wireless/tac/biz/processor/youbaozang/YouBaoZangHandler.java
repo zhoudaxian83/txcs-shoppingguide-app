@@ -22,6 +22,7 @@ import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,12 +36,12 @@ import java.util.stream.Collectors;
 @Component
 public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<EntityVO>> {
 
-    static List<String> keys = Lists.newArrayList(
-            "shortTile",
-            "coverUrl",
-            "videoUrl",
-            "effectiveTime",
-            "expirationTime"
+    static List<Pair<String, String>> dataTubeKeyList = Lists.newArrayList(
+            Pair.of("zsShortTitle","shortTile"),
+            Pair.of("zsCoverUrl","coverUrl"),
+            Pair.of("zsVideoUrl","videoUrl"),
+            Pair.of("zsEffectiveTime","effectiveTime"),
+            Pair.of("zsExpirationTime","expirationTime")
     );
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
@@ -129,10 +130,10 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
         DataTubeMateInfo dataTubeMateInfo = new DataTubeMateInfo();
         dataTubeMateInfo.setActivityId("301746");
         dataTubeMateInfo.setChannelName("itemExtLdb");
-        dataTubeMateInfo.setDataKeyList(keys.stream().map(k -> {
+        dataTubeMateInfo.setDataKeyList(dataTubeKeyList.stream().map(k -> {
             DataTubeKey dataTubeKey = new DataTubeKey();
-            dataTubeKey.setDataKey(k);
-            dataTubeKey.setVoKey(k);
+            dataTubeKey.setDataKey(k.getRight());
+            dataTubeKey.setVoKey(k.getLeft());
             return dataTubeKey;
         }).collect(Collectors.toList()));
         return dataTubeMateInfo;
