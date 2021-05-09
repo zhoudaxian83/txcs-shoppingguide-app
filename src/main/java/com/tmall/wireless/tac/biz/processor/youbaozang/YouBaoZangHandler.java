@@ -10,10 +10,7 @@ import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
 import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
-import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
-import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
-import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
-import com.tmall.txcs.gs.framework.model.meta.ItemRecommendMetaInfo;
+import com.tmall.txcs.gs.framework.model.meta.*;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 import com.tmall.txcs.gs.model.biz.context.EntitySetParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
@@ -30,12 +27,21 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by yangqing.byq on 2021/3/9.
  */
 @Component
 public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<EntityVO>> {
+
+    static List<String> keys = Lists.newArrayList(
+            "shortTile",
+            "coverUrl",
+            "videoUrl",
+            "effectiveTime",
+            "expirationTime"
+    );
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
     @Override
@@ -101,6 +107,7 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         itemInfoSourceMetaInfoCaptain.setSceneCode("youbaozang_item");
+        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo());
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
@@ -114,5 +121,20 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         itemMetaInfo.setItemRecommendMetaInfo(itemRecommendMetaInfo);
         return itemMetaInfo;
+    }
+
+    private static DataTubeMateInfo buildDataTubeMateInfo() {
+
+
+        DataTubeMateInfo dataTubeMateInfo = new DataTubeMateInfo();
+        dataTubeMateInfo.setActivityId("301746");
+        dataTubeMateInfo.setChannelName("itemExtLdb");
+        dataTubeMateInfo.setDataKeyList(keys.stream().map(k -> {
+            DataTubeKey dataTubeKey = new DataTubeKey();
+            dataTubeKey.setDataKey(k);
+            dataTubeKey.setVoKey(k);
+            return dataTubeKey;
+        }).collect(Collectors.toList()));
+        return dataTubeMateInfo;
     }
 }
