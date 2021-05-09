@@ -132,8 +132,8 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
         dataTubeMateInfo.setChannelName("itemExtLdb");
         dataTubeMateInfo.setDataKeyList(dataTubeKeyList.stream().map(k -> {
             DataTubeKey dataTubeKey = new DataTubeKey();
-            dataTubeKey.setDataKey(k.getRight());
-            dataTubeKey.setVoKey(k.getLeft());
+            dataTubeKey.setDataKey(k.getLeft());
+            dataTubeKey.setVoKey(k.getRight());
             return dataTubeKey;
         }).collect(Collectors.toList()));
         return dataTubeMateInfo;
