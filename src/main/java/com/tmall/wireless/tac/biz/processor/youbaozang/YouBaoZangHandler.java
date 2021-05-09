@@ -37,12 +37,19 @@ import java.util.stream.Collectors;
 public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<EntityVO>> {
 
     static List<Pair<String, String>> dataTubeKeyList = Lists.newArrayList(
-            Pair.of("zsShortTitle","shortTile"),
-            Pair.of("zsCoverUrl","coverUrl"),
-            Pair.of("zsVideoUrl","videoUrl"),
-            Pair.of("zsEffectiveTime","effectiveTime"),
-            Pair.of("zsExpirationTime","expirationTime")
+            Pair.of("shortTile","shortTile"),
+            Pair.of("coverUrl","coverUrl"),
+            Pair.of("videoUrl","videoUrl"),
+            Pair.of("effectiveTime","effectiveTime"),
+            Pair.of("expirationTime","expirationTime")
     );
+//    static List<Pair<String, String>> dataTubeKeyList = Lists.newArrayList(
+//            Pair.of("zsShortTitle","shortTile"),
+//            Pair.of("zsCoverUrl","coverUrl"),
+//            Pair.of("zsVideoUrl","videoUrl"),
+//            Pair.of("zsEffectiveTime","effectiveTime"),
+//            Pair.of("zsExpirationTime","expirationTime")
+//    );
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
     @Override
