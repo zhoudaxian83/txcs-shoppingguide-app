@@ -59,7 +59,8 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         Boolean isFixPositionBanner = (Boolean) requestParams.get("isFixPositionBanner");
         //首次isFixPositionBanner为空或true，标识查询心智场景
         if(isFixPositionBanner == null || isFixPositionBanner){
-            tppRequest.setAppId(25379L);
+            //tppRequest.setAppId(25379L);
+            tppRequest.setAppId(23198L);
         }else{
             tppRequest.setAppId(25409L);
         }
