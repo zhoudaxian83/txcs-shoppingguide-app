@@ -22,4 +22,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentOriginDataRequestExPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentInfoQueryExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentOriginDataFailProcessorExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemOriginDataRequestExtPt"/>
 </beans>
