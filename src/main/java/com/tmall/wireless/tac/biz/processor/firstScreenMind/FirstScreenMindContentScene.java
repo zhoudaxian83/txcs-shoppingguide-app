@@ -61,10 +61,10 @@ public class FirstScreenMindContentScene {
         pageInfoDO.setIndex(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
         pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
-        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.getSceneInfo().toString()***:"+sgFrameworkContextContent.getSceneInfo().toString());
+        /*tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.getSceneInfo().toString()***:"+sgFrameworkContextContent.getSceneInfo().toString());
         tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.getUserDO().toString()***:"+sgFrameworkContextContent.getUserDO().toString());
         tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.getLocParams().toString()***:"+sgFrameworkContextContent.getLocParams().toString());
-        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.getUserPageInfo().toString()***:"+sgFrameworkContextContent.getUserPageInfo().toString());
+        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.getUserPageInfo().toString()***:"+sgFrameworkContextContent.getUserPageInfo().toString());*/
         tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> convertResult(response))
