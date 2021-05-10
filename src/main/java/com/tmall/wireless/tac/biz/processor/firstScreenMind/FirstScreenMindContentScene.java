@@ -53,7 +53,7 @@ public class FirstScreenMindContentScene {
 
         sgFrameworkContextContent.setSceneInfo(getSceneInfo());
         sgFrameworkContextContent.setUserDO(getUserDO(context));
-
+        tacLogger.info("***context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA)***:"+ context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA).toString());
         sgFrameworkContextContent.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo());
 
