@@ -4,6 +4,7 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.taobao.eagleeye.EagleEye;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -72,8 +73,11 @@ public class FirstScreenMindContentScene {
                 .onErrorReturn(r -> TacResult.errorResult(""));
     }
     private FacadeResult  convertResult(SgFrameworkResponse<ContentVO> response) {
-
-        return null;
+        FacadeResult facadeResult = new FacadeResult();
+        facadeResult.setContentModel(response.getItemAndContentList());
+        facadeResult.setHasMore(response.isHasMore());
+        facadeResult.setTraceId(EagleEye.getTraceId());
+        return facadeResult;
     }
     public SceneInfo getSceneInfo(){
         SceneInfo sceneInfo = new SceneInfo();

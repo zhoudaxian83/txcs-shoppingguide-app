@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.google.common.collect.Lists;
+import com.taobao.eagleeye.EagleEye;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -65,8 +66,11 @@ public class FirstScreenMindItemScene {
     }
 
     private FacadeResult  convertResult(SgFrameworkResponse<EntityVO> response) {
-
-        return null;
+        FacadeResult facadeResult = new FacadeResult();
+        facadeResult.setContentModel(response.getItemAndContentList());
+        facadeResult.setHasMore(response.isHasMore());
+        facadeResult.setTraceId(EagleEye.getTraceId());
+        return facadeResult;
     }
 
     public SceneInfo getSceneInfo(){
