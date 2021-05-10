@@ -69,7 +69,7 @@
           <artifactId>tair-client</artifactId>
           <version>4.1.1</version>
       </dependency>
-      <dependency>
+<!--      <dependency>
           <groupId>com.tmall.aself</groupId>
           <artifactId>aselfcommon-model</artifactId>
           <version>2.4.43-SNAPSHOT</version>
@@ -87,7 +87,7 @@
                   <artifactId>xmp-core-client</artifactId>
               </exclusion>
           </exclusions>
-      </dependency>
+      </dependency>-->
 
 
     <dependency>
