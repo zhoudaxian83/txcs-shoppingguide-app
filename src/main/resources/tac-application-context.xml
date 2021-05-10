@@ -23,5 +23,4 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentOriginDataFailProcessorExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemOriginDataRequestExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemOriginDataFailProcessorExtPt"/>
 </beans>
