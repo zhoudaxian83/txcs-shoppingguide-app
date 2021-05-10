@@ -57,10 +57,10 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
             params.put("rt1HourStoreId", RenderLangUtil.safeString(rt1HourStoreId));
         }else if(rtHalfDayStoreCover){
             params.put("itemBusinessType", TppItemBusinessTypeEnum.HalfDay.getType());
-            params.put("rt1HourStoreId", RenderLangUtil.safeString(rtHalfDayStoreId));
+            params.put("rtHalfDayStoreId", RenderLangUtil.safeString(rtHalfDayStoreId));
         }else if(nextDayStoreCover){
             params.put("itemBusinessType", TppItemBusinessTypeEnum.NextDay.getType());
-            params.put("rt1HourStoreId", RenderLangUtil.safeString(rtNextDayStoreId));
+            params.put("rtNextDayStoreId", RenderLangUtil.safeString(rtNextDayStoreId));
         }
 
         tppRequest.setAppId(23410L);
