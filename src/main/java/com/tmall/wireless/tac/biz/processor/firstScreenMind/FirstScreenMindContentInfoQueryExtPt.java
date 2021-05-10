@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
+import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryRequest;
 import com.tmall.txcs.gs.model.Response;
@@ -14,6 +15,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderErrorEnum;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,27 +48,38 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
 
         tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentInfoQueryRequest*******:"+contentInfoQueryRequest);
         /*场景详情缓存前缀*/
-        String sceneLabelDetail = "txcs_scene_detail_v1";
+        String sceneLabelDetail = "txcs_scene_detail_v2";
         String pKey = sceneLabelDetail;
         Map<Long, ContentDTO> contentDTOMap = Maps.newHashMap();
         try {
             List<ContentEntity> contentEntities = contentInfoQueryRequest.getContentEntities();
             List<String> sKeyList = new ArrayList<>();
             for (ContentEntity contentEntity : contentEntities) {
-                sKeyList.add(String.valueOf(contentEntity.getContentId()));
+                sKeyList.add(pKey + "_" + String.valueOf(contentEntity.getContentId()));
             }
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt labelSceneNamespace*******:"+labelSceneNamespace);
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt pKey*******:"+pKey);
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt sKeyList*******:"+sKeyList);
-            Result<Map<Object, Result<DataEntry>>> labelSceneResult =
-                    multiClusterTairManager.prefixGets(labelSceneNamespace, pKey, sKeyList);
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt labelSceneResult*******:"+labelSceneResult);
-            if (!labelSceneResult.isSuccess()) {
+            /*Result<Map<Object, Result<DataEntry>>> labelSceneResult =
+                    multiClusterTairManager.mget(labelSceneNamespace, sKeyList);*/
+            Result<List<DataEntry>> mgetResult = multiClusterTairManager.mget(labelSceneNamespace, sKeyList);
+            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+mgetResult);
+            if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail(""));
             }
-            Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
+            List<DataEntry> dataEntryList = mgetResult.getValue();
+            Map<String, TairSceneDTO> tairResult = Maps.newHashMap();
             //循环遍历获取结果
-            for (Object sKey : resultMap.keySet()) {
+            dataEntryList.forEach(dataEntry -> {
+                    // txcs_scene_detail_v2_2020053172349
+                    Object tairKey = dataEntry.getKey();
+                    String tairKeyStr = String.valueOf(tairKey);
+                    String[] s = tairKeyStr.split("_");
+                    String contentId = s[s.length - 1];
+                    TairSceneDTO value = (TairSceneDTO) dataEntry.getValue();
+                    tairResult.put(contentId, value);
+            });
+            /*for (Object sKey : resultMap.keySet()) {
                 Result<DataEntry> result = resultMap.get(sKey);
                 if (!result.isSuccess()) {
                     LOGGER.info(RenderErrorEnum.contentSingleTairFail.getCode(), RenderErrorEnum.contentSingleTairFail.getMessage());
@@ -82,8 +95,8 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 contentDTO.setContentId((Long) sKey);
                 contentDTO.setContentInfo((Map<String, Object>) dataEntry.getValue());
                 contentDTOMap.put(((Long) sKey),contentDTO);
-            }
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentDTOMap*******:"+contentDTOMap);
+            }*/
+            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentDTOMap*******:"+tairResult);
             //结果判空
             if (MapUtils.isEmpty(contentDTOMap)) {
                 LOGGER.info(RenderErrorEnum.contentBatchTairValueNull.getCode(), RenderErrorEnum.contentBatchTairValueNull.getMessage());
