@@ -82,6 +82,14 @@ public class FirstScreenMindItemScene {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
+        itemInfoSourceMetaInfoCaptain.setSourceName("captain");
+        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
+        itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
+        itemInfoSourceMetaInfoTpp.setSourceName("tpp");
+        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
+
         ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo);
         itemGroupMetaInfo.setGroupName("sm_B2C");
@@ -98,18 +106,6 @@ public class FirstScreenMindItemScene {
         itemGroupMetaInfoList.add(itemGroupMetaInfo3);
         itemGroupMetaInfo3.setGroupName("sm_O2ONextDay");
         itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
-        itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoTpp.setSourceName("tpp");
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
-
-
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTest = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoTest.setSourceName("test");
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTest);
 
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         return itemMetaInfo;

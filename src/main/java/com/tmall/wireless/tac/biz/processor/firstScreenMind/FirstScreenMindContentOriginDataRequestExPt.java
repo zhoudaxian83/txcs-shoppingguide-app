@@ -51,7 +51,6 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         params.put("contentSetSource", "intelligentCombinationItems");
         //未登陆用户唯一身份ID，确认是否必须
         //params.put("exposureDataUserId", "");
-        tppRequest.setParams(params);
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         params.put("logicAreaId", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
         Integer index = Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getIndex).orElse(0);
@@ -63,8 +62,6 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         }else{
             tppRequest.setAppId(25409L);
         }
-
-
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));

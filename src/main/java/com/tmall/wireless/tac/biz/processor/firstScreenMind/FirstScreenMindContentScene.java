@@ -88,12 +88,12 @@ public class FirstScreenMindContentScene {
     public ContentMetaInfo getContentMetaInfo() {
         ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
-        /*ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);*/
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
+        /*ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
+        itemInfoSourceMetaInfoCaptain.setSourceName("captain");
+        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);*/
 
         ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
         itemGroupMetaInfo.setGroupName("sm_B2C");
