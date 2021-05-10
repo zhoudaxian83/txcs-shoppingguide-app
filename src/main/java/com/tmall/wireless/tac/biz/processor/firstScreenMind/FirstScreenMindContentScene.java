@@ -53,14 +53,13 @@ public class FirstScreenMindContentScene {
 
         sgFrameworkContextContent.setSceneInfo(getSceneInfo());
         sgFrameworkContextContent.setUserDO(getUserDO(context));
-        tacLogger.info("***context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA)***:"+ context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA).toString());
         sgFrameworkContextContent.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo());
 
 
         PageInfoDO pageInfoDO = new PageInfoDO();
-        pageInfoDO.setIndex(0);
-        pageInfoDO.setPageSize(20);
+        pageInfoDO.setIndex(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
+        pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
         tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent***:"+sgFrameworkContextContent);
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)

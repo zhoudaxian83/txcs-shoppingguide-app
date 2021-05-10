@@ -31,7 +31,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
 
-        tacLogger.info("FirstScreenMindContentOriginDataRequestExPt sgFrameworkContextContent:"+sgFrameworkContextContent);
+        tacLogger.info("****FirstScreenMindContentOriginDataRequestExPt sgFrameworkContextContent***:"+sgFrameworkContextContent);
 
         RecommendRequest tppRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
@@ -65,7 +65,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
-        tacLogger.info("FirstScreenMindContentOriginDataRequestExPt tppRequest:"+tppRequest);
+        tacLogger.info("****FirstScreenMindContentOriginDataRequestExPt tppRequest***:"+tppRequest);
         return tppRequest;
     }
 }
