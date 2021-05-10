@@ -33,7 +33,7 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
 
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info("****FirstScreenMindItemOriginDataRequestExtPt sgFrameworkContextItem****:"+sgFrameworkContextItem);
+        tacLogger.info("****FirstScreenMindItemOriginDataRequestExtPt sgFrameworkContextItem****:"+sgFrameworkContextItem.toString());
 
         RecommendRequest tppRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();

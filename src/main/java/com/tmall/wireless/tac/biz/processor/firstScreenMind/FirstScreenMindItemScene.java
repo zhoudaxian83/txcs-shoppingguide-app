@@ -38,6 +38,7 @@ public class FirstScreenMindItemScene {
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
     public Flowable<TacResult<FacadeResult>> recommend(Context context) {
+        tacLogger.info("***FirstScreenMindItemScene context.toString():***"+context.toString());
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
@@ -54,6 +55,7 @@ public class FirstScreenMindItemScene {
         pageInfoDO.setIndex(0);
         pageInfoDO.setPageSize(20);
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
+        tacLogger.info("***FirstScreenMindItemScene sgFrameworkContextItem.toString()***:"+sgFrameworkContextItem.toString());
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(response -> convertResult(response))
