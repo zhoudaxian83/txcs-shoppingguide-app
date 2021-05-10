@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
+import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
@@ -16,6 +17,7 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.model.FacadeResult;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -33,7 +35,7 @@ public class FirstScreenMindItemScene {
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
-    public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
+    public Flowable<TacResult<FacadeResult>> recommend(Context context) {
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
@@ -52,10 +54,17 @@ public class FirstScreenMindItemScene {
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+                .map(response -> convertResult(response))
                 .map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
 
     }
+
+    private FacadeResult  convertResult(SgFrameworkResponse<EntityVO> response) {
+
+        return null;
+    }
+
     public SceneInfo getSceneInfo(){
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
