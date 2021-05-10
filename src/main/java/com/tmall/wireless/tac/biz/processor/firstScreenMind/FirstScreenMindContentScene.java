@@ -61,7 +61,11 @@ public class FirstScreenMindContentScene {
         pageInfoDO.setIndex(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
         pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
-        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent***:"+sgFrameworkContextContent);
+        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent***:"+sgFrameworkContextContent.getSceneInfo().toString());
+        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent***:"+sgFrameworkContextContent.getUserDO().toString());
+        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent***:"+sgFrameworkContextContent.getLocParams().toString());
+        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent***:"+sgFrameworkContextContent.getUserPageInfo().toString());
+        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent***:"+sgFrameworkContextContent.toString());
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> convertResult(response))
                 .map(TacResult::newResult)
