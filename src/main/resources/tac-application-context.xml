@@ -8,7 +8,6 @@
     <context:component-scan base-package="com.tmall.wireless.tac.biz.processor" />
     <context:component-scan base-package="com.tmall.txcs.gs.framework" />
     <context:component-scan base-package="com.tmall.txcs.biz.supermarket" />
-    <context:component-scan base-package="com.tmall.aselfcommon.model.scene.domain"/>
 
     <context:component-scan base-package="com.alibaba.cola" />
 

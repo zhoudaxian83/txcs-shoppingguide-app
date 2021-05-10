@@ -73,20 +73,6 @@
           <groupId>com.tmall.aself</groupId>
           <artifactId>aselfcommon-model</artifactId>
           <version>2.4.43-SNAPSHOT</version>
-          <exclusions>
-              <exclusion>
-                  <groupId>com.taobao.kfc</groupId>
-                  <artifactId>kfc-client</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>com.taobao.xmp</groupId>
-                  <artifactId>xmp-common-client</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>com.taobao.xmp</groupId>
-                  <artifactId>xmp-core-client</artifactId>
-              </exclusion>
-          </exclusions>
       </dependency>
 
 
