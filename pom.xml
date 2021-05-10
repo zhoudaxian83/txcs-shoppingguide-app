@@ -12,7 +12,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <common.rpm.version>1.0.1-txcs-SNAPSHOT</common.rpm.version>
+    <common.rpm.version>1.0.2-txcs-SNAPSHOT</common.rpm.version>
   </properties>
 
 
@@ -73,6 +73,20 @@
           <groupId>com.tmall.aself</groupId>
           <artifactId>aselfcommon-model</artifactId>
           <version>2.4.43-SNAPSHOT</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>com.taobao.kfc</groupId>
+                  <artifactId>kfc-client</artifactId>
+              </exclusion>
+              <exclusion>
+                  <groupId>com.taobao.xmp</groupId>
+                  <artifactId>xmp-common-client</artifactId>
+              </exclusion>
+              <exclusion>
+                  <groupId>com.taobao.xmp</groupId>
+                  <artifactId>xmp-core-client</artifactId>
+              </exclusion>
+          </exclusions>
       </dependency>
 
 
