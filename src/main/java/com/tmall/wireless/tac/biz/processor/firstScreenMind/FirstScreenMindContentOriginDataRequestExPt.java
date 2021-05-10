@@ -49,6 +49,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         params.put("itemCountPerContent", "10");
         params.put("contentType", "7");
         params.put("contentSetSource", "intelligentCombinationItems");
+        params.put("sceneSet","intelligentCombinationItems_114002");
         //未登陆用户唯一身份ID，确认是否必须
         //params.put("exposureDataUserId", "");
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
