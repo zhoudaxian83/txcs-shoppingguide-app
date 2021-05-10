@@ -69,7 +69,7 @@ public class FirstScreenMindItemScene {
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
         sceneInfo.setSubBiz(ScenarioConstantApp.LOC_TYPE_B2C);
-        sceneInfo.setScene(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT);
+        sceneInfo.setScene(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM);
         return sceneInfo;
     }
     public UserDO getUserDO(Context context){
