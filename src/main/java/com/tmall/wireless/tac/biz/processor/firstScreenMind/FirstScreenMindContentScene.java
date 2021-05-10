@@ -44,7 +44,7 @@ public class FirstScreenMindContentScene {
 
     public Flowable<TacResult<FacadeResult>> recommend(Context context) {
 
-        tacLogger.info("VisitSupermarketScene context:"+ JSON.toJSONString(context));
+        tacLogger.info("***FirstScreenMindContentScene context***:"+ JSON.toJSONString(context));
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
         SgFrameworkContextContent sgFrameworkContextContent = new SgFrameworkContextContent();
@@ -62,7 +62,7 @@ public class FirstScreenMindContentScene {
         pageInfoDO.setIndex(0);
         pageInfoDO.setPageSize(20);
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
-        tacLogger.info("*****sgFrameworkContextContent***:"+sgFrameworkContextContent);
+        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent***:"+sgFrameworkContextContent);
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> convertResult(response))
                 .map(TacResult::newResult)

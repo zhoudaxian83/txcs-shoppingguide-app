@@ -44,7 +44,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
     @Override
     public Flowable<Response<Map<Long, ContentDTO>>> process(ContentInfoQueryRequest contentInfoQueryRequest) {
 
-        tacLogger.info("***contentInfoQueryRequest***:"+contentInfoQueryRequest);
+        tacLogger.info("***FirstScreenMindContentInfoQueryExtPt contentInfoQueryRequest***:"+contentInfoQueryRequest);
         /*场景详情缓存前缀*/
         String sceneLabelDetail = "txcs_scene_detail_v1";
         String pKey = sceneLabelDetail;
@@ -88,7 +88,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             LOGGER.info(RenderErrorEnum.contentBatchTairExc.getCode(), RenderErrorEnum.contentBatchTairExc.getMessage());
             return Flowable.just(Response.fail(RenderErrorEnum.contentBatchTairExc.getCode()));
         }
-        tacLogger.info("****contentDTOMap*****:"+contentDTOMap);
+        tacLogger.info("****FirstScreenMindContentInfoQueryExtPt contentDTOMap*****:"+contentDTOMap);
         return Flowable.just(Response.success(contentDTOMap));
     }
 
