@@ -44,7 +44,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         if(StringUtils.isNotEmpty(contentSetIds)){
             params.put("contentSetIdList",contentSetIds);
         }
-        params.put("pageSize", "20");
+        params.put("pageSize", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getPageSize).orElse(20).toString());
         //逛超市TPP内容召回每个内容挂载的商品数量
         params.put("itemCountPerContent", "10");
         params.put("contentType", "7");
