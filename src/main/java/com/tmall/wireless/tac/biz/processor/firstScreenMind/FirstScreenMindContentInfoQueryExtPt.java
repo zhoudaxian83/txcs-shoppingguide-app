@@ -59,7 +59,6 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             for (ContentEntity contentEntity : contentEntities) {
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
             }
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt sKeyList*******:"+sKeyList);
             Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+mgetResult.toString());
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
@@ -77,7 +76,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     TairSceneDTO value = (TairSceneDTO) dataEntry.getValue();
                     tairResult.put(contentId, value);
             });
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentDTOMap*******:"+tairResult.toString());
+            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairResult*******:"+tairResult.toString());
             for(ContentEntity contentEntity : contentEntities){
                Long contentId = contentEntity.getContentId();
                TairSceneDTO tairSceneDTO = tairResult.get(contentId);
@@ -102,7 +101,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             LOGGER.info(RenderErrorEnum.contentBatchTairExc.getCode(), RenderErrorEnum.contentBatchTairExc.getMessage());
             return Flowable.just(Response.fail(RenderErrorEnum.contentBatchTairExc.getCode()));
         }
-        tacLogger.info("****FirstScreenMindContentInfoQueryExtPt contentDTOMap*****:"+contentDTOMap);
+        tacLogger.info("****FirstScreenMindContentInfoQueryExtPt contentDTOMap*****:"+contentDTOMap.toString());
         return Flowable.just(Response.success(contentDTOMap));
     }
 
