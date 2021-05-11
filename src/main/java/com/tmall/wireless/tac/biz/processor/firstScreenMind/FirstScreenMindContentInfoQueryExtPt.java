@@ -47,7 +47,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
 
         tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentInfoQueryRequest*******:"+contentInfoQueryRequest);
         /*场景详情缓存前缀*/
-        String sceneLabelDetailPkey = "txcs_scene_detail_v2";
+        String sceneLabelDetailPkey = "txcs_scene_detail_v1";
         Map<Long, ContentDTO> contentDTOMap = Maps.newHashMap();
         try {
             List<String> sKeyList = new ArrayList<>();
