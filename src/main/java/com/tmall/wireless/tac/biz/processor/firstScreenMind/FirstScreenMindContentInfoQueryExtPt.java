@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
-import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryRequest;
@@ -20,7 +19,6 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderErrorEnu
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +92,17 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     itemInfoDTOList.add(itemInfoDTO);
                 }
                 contentDTO.setItemInfoDTOList(itemInfoDTOList);
+                Map<String, Object> contentInfo = Maps.newHashMap();
+                contentInfo.put("contentId",tairSceneDTO.getId());
+                contentInfo.put("contentTitle",tairSceneDTO.getTitle());
+                //contentInfo.put("",tairSceneDTO.getSubtitle();
+                contentInfo.put("contentType",tairSceneDTO.getType());
+                //contentInfo.put("",tairSceneDTO.getMarketChannel());
+                contentInfo.put("itemSetIds",tairSceneDTO.getItemsetIds());
+                contentInfo.put("property",tairSceneDTO.getProperty());
+                //contentInfo.put("",tairSceneDTO.getChannels());
+                //contentInfo.put("",tairSceneDTO.getDetails());
+                contentDTO.setContentInfo(contentInfo);
                 contentDTOMap.put(contentId,contentDTO);
             }
         }catch (Exception e){

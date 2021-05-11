@@ -69,12 +69,10 @@ public class FirstScreenMindContentScene {
                 .onErrorReturn(r -> TacResult.errorResult(""));
     }
     private FacadeResult  convertResult(SgFrameworkResponse<ContentVO> response) {
-        tacLogger.info("****FirstScreenMindContentScene response.getItemAndContentList().toString()******"+response.getItemAndContentList().toString());
         FacadeResult facadeResult = new FacadeResult();
         facadeResult.setContentModel(response.getItemAndContentList());
         facadeResult.setHasMore(response.isHasMore());
         facadeResult.setTraceId(EagleEye.getTraceId());
-        tacLogger.info("****FirstScreenMindContentScene facadeResult.toString()******"+facadeResult.toString());
         return facadeResult;
     }
     public SceneInfo getSceneInfo(){
