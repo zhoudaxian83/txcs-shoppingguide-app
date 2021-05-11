@@ -58,14 +58,6 @@ public class FirstScreenMindContentScene {
                 .map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
     }
-/*    private FacadeResult  convertResult(SgFrameworkResponse<ContentVO> response) {
-        FacadeResult facadeResult = new FacadeResult();
-        facadeResult.setContentModel(response.getItemAndContentList());
-        facadeResult.setHasMore(response.isHasMore());
-        facadeResult.setTraceId(EagleEye.getTraceId());
-        facadeResult.setSuccess(true);
-        return facadeResult;
-    }*/
     public SceneInfo getSceneInfo(){
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
@@ -87,6 +79,7 @@ public class FirstScreenMindContentScene {
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("captain");
+        //captain SceneCode场景code
         itemInfoSourceMetaInfoTpp.setSceneCode("visitSupermarket.main");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 

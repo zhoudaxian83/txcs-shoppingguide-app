@@ -5,6 +5,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
+import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
+import com.tmall.aselfcommon.model.gcs.enums.GcsSceneType;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryRequest;
@@ -15,7 +17,10 @@ import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderErrorEnum;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderCheckUtil;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
@@ -85,23 +90,51 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 ContentDTO contentDTO = new ContentDTO();
                 contentDTO.setContentId(contentId);
                 contentDTO.setContentEntity(contentEntity);
-                /*List<ItemInfoDTO> itemInfoDTOList = Lists.newArrayList();
-                for(ItemEntity itemEntity : contentEntity.getItems()){
-                    ItemInfoDTO itemInfoDTO = new ItemInfoDTO();
-                    itemInfoDTO.setItemEntity(itemEntity);
-                    itemInfoDTOList.add(itemInfoDTO);
-                }*/
-                //contentDTO.setItemInfoDTOList(itemInfoDTOList);
                 Map<String, Object> contentInfo = Maps.newHashMap();
                 contentInfo.put("contentId",tairSceneDTO.getId());
                 contentInfo.put("contentTitle",tairSceneDTO.getTitle());
-                //contentInfo.put("",tairSceneDTO.getSubtitle();
-                contentInfo.put("contentType",tairSceneDTO.getType());
-                //contentInfo.put("",tairSceneDTO.getMarketChannel());
-                contentInfo.put("itemSetIds",tairSceneDTO.getItemsetIds());
-                contentInfo.put("property",tairSceneDTO.getProperty());
-                //contentInfo.put("",tairSceneDTO.getChannels());
-                //contentInfo.put("",tairSceneDTO.getDetails());
+                contentInfo.put("contentSubtitle",tairSceneDTO.getSubtitle());
+                Map<String, Object> tairPropertyMap = tairSceneDTO.getProperty();
+                //前后端映射
+                for(FrontBackMapEnum frontBackMapEnum : FrontBackMapEnum.values()){
+                    contentInfo.put(frontBackMapEnum.getFront(),tairPropertyMap.get(frontBackMapEnum.getBack()));
+                }
+                /**内容类型*/
+                String type = GcsSceneType.of(tairSceneDTO.getType()).name();
+                String marketChannel = GcsMarketChannel.of(tairSceneDTO.getMarketChannel()).name();
+                /**后台没有类型，那么就直接返回普通场景打底*/
+                if(RenderCheckUtil.StringEmpty(type) || RenderCheckUtil.StringEmpty(marketChannel)){
+                    contentInfo.put("contentType",RenderContentTypeEnum.getBottomContentType());
+                }
+                //b2c普通场景
+                if(marketChannel.equals(GcsMarketChannel.B2C.name()) && type.equals(GcsSceneType.NORMAL.name())){
+                    contentInfo.put("contentType",RenderContentTypeEnum.b2cNormalContent.getType());
+                    //b2c组合场景
+                }else if(marketChannel.equals(GcsMarketChannel.B2C.name()) && type.equals(GcsSceneType.COMBINE.name())){
+                    contentInfo.put("contentType",RenderContentTypeEnum.b2cCombineContent.getType());
+//            buildSubContentBaseInfo(contentModel,labelSceneContentInfo);
+                    //b2c品牌场景
+                }else if(marketChannel.equals(GcsMarketChannel.B2C.name()) && type.equals(GcsSceneType.BRAND.name())){
+                    contentInfo.put("contentType",RenderContentTypeEnum.b2cBrandContent.getType());
+                    //o2o组合场景
+                }else if(marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(GcsSceneType.NORMAL.name())){
+                    contentInfo.put("contentType",RenderContentTypeEnum.o2oNormalContent.getType());
+                    //o2o品牌场景
+                }else if(marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(GcsSceneType.COMBINE.name())){
+                    contentInfo.put("contentType",RenderContentTypeEnum.o2oCombineContent.getType());
+//            buildSubContentBaseInfo(contentModel,labelSceneContentInfo);
+                    //o2o品牌场景
+                }else if(marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(GcsSceneType.BRAND.name())){
+                    contentInfo.put("contentType",RenderContentTypeEnum.o2oBrandContent.getType());
+                } else if (type.equals(GcsSceneType.RECIPE.name())) {
+                    contentInfo.put("contentType",RenderContentTypeEnum.recipeContent.getType());
+                } else if (type.equals(GcsSceneType.MEDIA.name())) {
+                    contentInfo.put("contentType",RenderContentTypeEnum.mediaContent.getType());
+                } else {
+                    //默认打底-普通场景
+                    contentInfo.put("contentType",RenderContentTypeEnum.getBottomContentType());
+                }
+
                 contentDTO.setContentInfo(contentInfo);
                 contentDTOMap.put(contentId,contentDTO);
             }
