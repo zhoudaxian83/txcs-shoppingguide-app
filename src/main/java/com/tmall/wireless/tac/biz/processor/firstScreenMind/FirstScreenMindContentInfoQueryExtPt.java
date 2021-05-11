@@ -96,6 +96,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     itemInfoDTOList.add(itemInfoDTO);
                 }
                 contentDTO.setItemInfoDTOList(itemInfoDTOList);
+                tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentDTO*******:"+contentDTO.toString());
                 contentDTOMap.put(contentId,contentDTO);
             }
         }catch (Exception e){
