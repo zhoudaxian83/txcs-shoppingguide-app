@@ -69,7 +69,7 @@ public class FirstScreenMindContentScene {
                 .onErrorReturn(r -> TacResult.errorResult(""));
     }
     private FacadeResult  convertResult(SgFrameworkResponse<ContentVO> response) {
-        tacLogger.info("****FirstScreenMindContentScene response.toString()******"+response.toString());
+        tacLogger.info("****FirstScreenMindContentScene response.getItemAndContentList().toString()******"+response.getItemAndContentList().toString());
         FacadeResult facadeResult = new FacadeResult();
         facadeResult.setContentModel(response.getItemAndContentList());
         facadeResult.setHasMore(response.isHasMore());
