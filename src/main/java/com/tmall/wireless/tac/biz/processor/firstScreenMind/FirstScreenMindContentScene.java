@@ -85,6 +85,10 @@ public class FirstScreenMindContentScene {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
+        itemInfoSourceMetaInfoTpp.setSourceName("captain");
+        itemInfoSourceMetaInfoTpp.setSceneCode("visitSupermarket.main");
+        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 
         ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
         itemGroupMetaInfo.setGroupName("sm_B2C");
