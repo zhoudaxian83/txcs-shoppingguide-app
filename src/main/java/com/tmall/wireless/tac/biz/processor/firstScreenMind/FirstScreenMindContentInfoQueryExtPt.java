@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.cola.extension.Extension;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
@@ -11,6 +12,8 @@ import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryRequest;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.model.content.ContentDTO;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
+import com.tmall.txcs.gs.model.model.dto.ItemEntity;
+import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderErrorEnum;
@@ -75,10 +78,25 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     tairResult.put(contentId, value);
             });
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentDTOMap*******:"+tairResult.toString());
-            //结果判空
-            if (MapUtils.isEmpty(contentDTOMap)) {
-                LOGGER.info(RenderErrorEnum.contentBatchTairValueNull.getCode(), RenderErrorEnum.contentBatchTairValueNull.getMessage());
-                return Flowable.just(Response.fail(RenderErrorEnum.contentBatchTairValueNull.getCode()));
+            for(ContentEntity contentEntity : contentEntities){
+               Long contentId = contentEntity.getContentId();
+               TairSceneDTO tairSceneDTO = tairResult.get(contentId);
+                /**如果内容后台返回的补全内容为空，那么把这个内容过滤掉，并且日志记录*/
+                if(!tairResult.containsKey(contentId) || tairSceneDTO == null){
+                    tacLogger.info("批量补全内容中心信息返回为空contentId:" + contentId +",tairResult:"+tairResult);
+                    continue;
+                }
+                ContentDTO contentDTO = new ContentDTO();
+                contentDTO.setContentId(contentId);
+                contentDTO.setContentEntity(contentEntity);
+                List<ItemInfoDTO> itemInfoDTOList = Lists.newArrayList();
+                for(ItemEntity itemEntity : contentEntity.getItems()){
+                    ItemInfoDTO itemInfoDTO = new ItemInfoDTO();
+                    itemInfoDTO.setItemEntity(itemEntity);
+                    itemInfoDTOList.add(itemInfoDTO);
+                }
+                contentDTO.setItemInfoDTOList(itemInfoDTOList);
+                contentDTOMap.put(contentId,contentDTO);
             }
         }catch (Exception e){
             LOGGER.info(RenderErrorEnum.contentBatchTairExc.getCode(), RenderErrorEnum.contentBatchTairExc.getMessage());
