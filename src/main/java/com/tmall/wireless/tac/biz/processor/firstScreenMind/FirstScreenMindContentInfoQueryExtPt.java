@@ -11,6 +11,7 @@ import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryRequest;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.model.content.ContentDTO;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
+import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderErrorEnum;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
@@ -37,9 +38,11 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
     @Autowired
     TacLoggerImpl tacLogger;
 
-    @Resource
-    private MultiClusterTairManager multiClusterTairManager;
+    /*@Resource
+    private MultiClusterTairManager multiClusterTairManager;*/
 
+    @Resource
+    TairFactorySpi tairFactorySpi;
     private static final int labelSceneNamespace = 184;
 
     @Override
@@ -59,9 +62,8 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             }
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt labelSceneNamespace*******:"+labelSceneNamespace);
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt sKeyList*******:"+sKeyList);
-            /*Result<Map<Object, Result<DataEntry>>> labelSceneResult =
-                    multiClusterTairManager.mget(labelSceneNamespace, sKeyList);*/
-            Result<List<DataEntry>> mgetResult = multiClusterTairManager.mget(labelSceneNamespace, sKeyList);
+            Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
+            //Result<List<DataEntry>> mgetResult = multiClusterTairManager.mget(labelSceneNamespace, sKeyList);
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+mgetResult);
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail(""));
