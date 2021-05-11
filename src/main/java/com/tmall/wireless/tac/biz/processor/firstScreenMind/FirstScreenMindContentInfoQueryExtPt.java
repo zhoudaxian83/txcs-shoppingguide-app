@@ -38,9 +38,6 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
     @Autowired
     TacLoggerImpl tacLogger;
 
-    /*@Resource
-    private MultiClusterTairManager multiClusterTairManager;*/
-
     @Resource
     TairFactorySpi tairFactorySpi;
     private static final int labelSceneNamespace = 184;
@@ -50,8 +47,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
 
         tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentInfoQueryRequest*******:"+contentInfoQueryRequest);
         /*场景详情缓存前缀*/
-        String sceneLabelDetail = "txcs_scene_detail_v2";
-        String pKey = sceneLabelDetail;
+        String pKey = "txcs_scene_detail_v2";
         Map<Long, ContentDTO> contentDTOMap = Maps.newHashMap();
         try {
             List<ContentEntity> contentEntities = contentInfoQueryRequest.getContentEntities();
@@ -60,11 +56,9 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             for (ContentEntity contentEntity : contentEntities) {
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
             }
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt labelSceneNamespace*******:"+labelSceneNamespace);
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt sKeyList*******:"+sKeyList);
             Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-            //Result<List<DataEntry>> mgetResult = multiClusterTairManager.mget(labelSceneNamespace, sKeyList);
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+mgetResult);
+            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+mgetResult.toString());
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail(""));
             }
@@ -97,7 +91,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 contentDTO.setContentInfo((Map<String, Object>) dataEntry.getValue());
                 contentDTOMap.put(((Long) sKey),contentDTO);
             }*/
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentDTOMap*******:"+tairResult);
+            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentDTOMap*******:"+tairResult.toString());
             //结果判空
             if (MapUtils.isEmpty(contentDTOMap)) {
                 LOGGER.info(RenderErrorEnum.contentBatchTairValueNull.getCode(), RenderErrorEnum.contentBatchTairValueNull.getMessage());
