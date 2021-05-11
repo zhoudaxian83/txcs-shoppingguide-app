@@ -30,4 +30,5 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoBuildItemVOExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.youbaozang.YouBaoZangHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.youbaozang.YouBaoZangBuildItemVOExtPtImpl"/>
 </beans>

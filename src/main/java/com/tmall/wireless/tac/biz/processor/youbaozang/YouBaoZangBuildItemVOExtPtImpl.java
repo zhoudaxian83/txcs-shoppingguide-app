@@ -22,6 +22,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.formula.functions.Na;
+import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 import java.util.List;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.SCENARIO_YOU_BAO_ZANG)
+@Service
 public class YouBaoZangBuildItemVOExtPtImpl implements BuildItemVOExtPt {
 
 
@@ -114,9 +116,7 @@ public class YouBaoZangBuildItemVOExtPtImpl implements BuildItemVOExtPt {
         Object treasureManPoint = Optional.ofNullable(itemInfoBySourceDTOMain)
                 .map(ItemInfoBySourceDTOMain::getItemDTO)
                 .map(ItemDataDTO::getAttachment)
-                .map(att -> {
-                    return att.get("treasureManPoint");
-                })
+                .map(att -> att.get("treasureManPoint"))
                 .orElse(null);
         if (treasureManPoint == null) {
             return null;
