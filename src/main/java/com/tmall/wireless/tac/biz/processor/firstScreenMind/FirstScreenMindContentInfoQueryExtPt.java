@@ -47,13 +47,18 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
 
         tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentInfoQueryRequest*******:"+contentInfoQueryRequest);
         /*场景详情缓存前缀*/
-        String sceneLabelDetailPkey = "txcs_scene_detail_v1";
+        String sceneLabelDetail = "txcs_scene_detail_v2";
+        String pKey = sceneLabelDetail;
         Map<Long, ContentDTO> contentDTOMap = Maps.newHashMap();
         try {
+            List<ContentEntity> contentEntities = contentInfoQueryRequest.getContentEntities();
+
             List<String> sKeyList = new ArrayList<>();
-            sKeyList.add(sceneLabelDetailPkey + "_" + contentInfoQueryRequest.getContext().getRequestParams().get("moduleId"));
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentInfoQueryRequest.getContext().getRequestParams()*******:"+contentInfoQueryRequest.getContext().getRequestParams());
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt sKeyList*******:"+sKeyList.toString());
+            for (ContentEntity contentEntity : contentEntities) {
+                sKeyList.add(pKey + "_" + contentEntity.getContentId());
+            }
+            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt labelSceneNamespace*******:"+labelSceneNamespace);
+            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt sKeyList*******:"+sKeyList);
             /*Result<Map<Object, Result<DataEntry>>> labelSceneResult =
                     multiClusterTairManager.mget(labelSceneNamespace, sKeyList);*/
             Result<List<DataEntry>> mgetResult = multiClusterTairManager.mget(labelSceneNamespace, sKeyList);
