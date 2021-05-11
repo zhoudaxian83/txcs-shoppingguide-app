@@ -38,7 +38,7 @@ public class FirstScreenMindItemScene {
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
-    public Flowable<TacResult<FacadeResult>> recommend(Context context) {
+    public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
         tacLogger.info("***FirstScreenMindItemScene context.toString():***"+context.toString());
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
@@ -59,19 +59,18 @@ public class FirstScreenMindItemScene {
         tacLogger.info("***FirstScreenMindItemScene sgFrameworkContextItem.toString()***:"+sgFrameworkContextItem.toString());
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-                .map(response -> convertResult(response))
                 .map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
 
     }
 
-    private FacadeResult  convertResult(SgFrameworkResponse<EntityVO> response) {
+/*    private FacadeResult  convertResult(SgFrameworkResponse<EntityVO> response) {
         FacadeResult facadeResult = new FacadeResult();
         facadeResult.setContentModel(response.getItemAndContentList());
         facadeResult.setHasMore(response.isHasMore());
         facadeResult.setTraceId(EagleEye.getTraceId());
         return facadeResult;
-    }
+    }*/
 
     public SceneInfo getSceneInfo(){
         SceneInfo sceneInfo = new SceneInfo();

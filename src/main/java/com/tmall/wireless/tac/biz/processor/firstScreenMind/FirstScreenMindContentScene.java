@@ -43,7 +43,7 @@ public class FirstScreenMindContentScene {
     @Autowired
     TacLogger  tacLogger;
 
-    public Flowable<TacResult<FacadeResult>> recommend(Context context) {
+    public Flowable<TacResult<SgFrameworkResponse<ContentVO>>> recommend(Context context) {
 
         tacLogger.info("***FirstScreenMindContentScene context***:"+ JSON.toJSONString(context));
 
@@ -64,17 +64,17 @@ public class FirstScreenMindContentScene {
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
         tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
-                .map(response -> convertResult(response))
                 .map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
     }
-    private FacadeResult  convertResult(SgFrameworkResponse<ContentVO> response) {
+/*    private FacadeResult  convertResult(SgFrameworkResponse<ContentVO> response) {
         FacadeResult facadeResult = new FacadeResult();
         facadeResult.setContentModel(response.getItemAndContentList());
         facadeResult.setHasMore(response.isHasMore());
         facadeResult.setTraceId(EagleEye.getTraceId());
+        facadeResult.setSuccess(true);
         return facadeResult;
-    }
+    }*/
     public SceneInfo getSceneInfo(){
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
