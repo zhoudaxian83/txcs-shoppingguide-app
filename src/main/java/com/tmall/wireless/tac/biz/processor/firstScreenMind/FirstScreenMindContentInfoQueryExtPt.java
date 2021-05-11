@@ -52,7 +52,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
         try {
             List<String> sKeyList = new ArrayList<>();
             sKeyList.add(sceneLabelDetailPkey + "_" + contentInfoQueryRequest.getContext().getRequestParams().get("moduleId"));
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt labelSceneNamespace*******:"+labelSceneNamespace);
+            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentInfoQueryRequest.getContext().getRequestParams()*******:"+contentInfoQueryRequest.getContext().getRequestParams());
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt sceneLabelDetailPkey*******:"+sceneLabelDetailPkey);
             /*Result<Map<Object, Result<DataEntry>>> labelSceneResult =
                     multiClusterTairManager.mget(labelSceneNamespace, sKeyList);*/
