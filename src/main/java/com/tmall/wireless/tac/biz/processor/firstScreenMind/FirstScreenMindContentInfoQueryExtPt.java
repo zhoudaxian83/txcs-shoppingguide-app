@@ -74,23 +74,6 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     TairSceneDTO value = (TairSceneDTO) dataEntry.getValue();
                     tairResult.put(contentId, value);
             });
-            /*for (Object sKey : resultMap.keySet()) {
-                Result<DataEntry> result = resultMap.get(sKey);
-                if (!result.isSuccess()) {
-                    LOGGER.info(RenderErrorEnum.contentSingleTairFail.getCode(), RenderErrorEnum.contentSingleTairFail.getMessage());
-                    return Flowable.just(Response.fail(RenderErrorEnum.contentSingleTairFail.getCode()));
-                }
-                DataEntry dataEntry = result.getValue();
-                if (dataEntry == null || dataEntry.getValue() == null) {
-                    LOGGER.info(RenderErrorEnum.contentSingleTairValueNull.getCode(), RenderErrorEnum.contentSingleTairValueNull.getMessage());
-                    return Flowable.just(Response.fail(RenderErrorEnum.contentSingleTairValueNull.getCode()));
-                }
-                //单个内容类型转换
-                ContentDTO contentDTO = new ContentDTO();
-                contentDTO.setContentId((Long) sKey);
-                contentDTO.setContentInfo((Map<String, Object>) dataEntry.getValue());
-                contentDTOMap.put(((Long) sKey),contentDTO);
-            }*/
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentDTOMap*******:"+tairResult.toString());
             //结果判空
             if (MapUtils.isEmpty(contentDTOMap)) {

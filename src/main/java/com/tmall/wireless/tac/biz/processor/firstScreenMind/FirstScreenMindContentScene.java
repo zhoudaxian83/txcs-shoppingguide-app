@@ -62,10 +62,6 @@ public class FirstScreenMindContentScene {
         pageInfoDO.setIndex(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
         pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
-        /*tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.getSceneInfo().toString()***:"+sgFrameworkContextContent.getSceneInfo().toString());
-        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.getUserDO().toString()***:"+sgFrameworkContextContent.getUserDO().toString());
-        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.getLocParams().toString()***:"+sgFrameworkContextContent.getLocParams().toString());
-        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.getUserPageInfo().toString()***:"+sgFrameworkContextContent.getUserPageInfo().toString());*/
         tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> convertResult(response))
@@ -73,10 +69,12 @@ public class FirstScreenMindContentScene {
                 .onErrorReturn(r -> TacResult.errorResult(""));
     }
     private FacadeResult  convertResult(SgFrameworkResponse<ContentVO> response) {
+        tacLogger.info("****FirstScreenMindContentScene response.toString()******"+response.toString());
         FacadeResult facadeResult = new FacadeResult();
         facadeResult.setContentModel(response.getItemAndContentList());
         facadeResult.setHasMore(response.isHasMore());
         facadeResult.setTraceId(EagleEye.getTraceId());
+        tacLogger.info("****FirstScreenMindContentScene facadeResult.toString()******"+facadeResult.toString());
         return facadeResult;
     }
     public SceneInfo getSceneInfo(){
@@ -98,9 +96,6 @@ public class FirstScreenMindContentScene {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
-        /*ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);*/
 
         ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
         itemGroupMetaInfo.setGroupName("sm_B2C");
