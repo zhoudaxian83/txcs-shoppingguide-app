@@ -56,9 +56,17 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         params.put("logicAreaId", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
         Integer index = Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getIndex).orElse(0);
         params.put("isFirstPage", index > 0 ? "false" : "true");
-        Boolean isFixPositionBanner = (Boolean) requestParams.get("isFixPositionBanner");
+        Object isFixPositionBanner = requestParams.get("isFixPositionBanner");
+        Boolean isMind = false;
+        if(isFixPositionBanner == null || "".equals(isFixPositionBanner)){
+            isMind = true;
+        } else if(isFixPositionBanner instanceof Boolean){
+            isMind = (Boolean) isFixPositionBanner;
+        }else if(isFixPositionBanner instanceof String && "true".equals(isFixPositionBanner)){
+            isMind = true;
+        }
         //首次isFixPositionBanner为空或true，标识查询心智场景
-        if(isFixPositionBanner == null || isFixPositionBanner){
+        if(isMind){
             //tppRequest.setAppId(25379L);
             tppRequest.setAppId(23198L);
         }else{
