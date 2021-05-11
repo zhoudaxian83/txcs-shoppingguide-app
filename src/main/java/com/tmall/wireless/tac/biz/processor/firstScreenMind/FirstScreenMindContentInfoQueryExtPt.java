@@ -80,7 +80,9 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentEntities*******:"+contentEntities.toString());
             for(ContentEntity contentEntity : contentEntities){
                Long contentId = contentEntity.getContentId();
-               TairSceneDTO tairSceneDTO = tairResult.get(contentId);
+                tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentId*******:"+contentId);
+                TairSceneDTO tairSceneDTO = tairResult.get(contentId);
+                tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairSceneDTO*******:"+tairSceneDTO.toString());
                 tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairResult.containsKey(contentId) *******:"+tairResult.containsKey(contentId));
                 tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairSceneDTO == null *******:"+(tairSceneDTO == null));
                 /**如果内容后台返回的补全内容为空，那么把这个内容过滤掉，并且日志记录*/
