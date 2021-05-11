@@ -85,13 +85,13 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 ContentDTO contentDTO = new ContentDTO();
                 contentDTO.setContentId(contentId);
                 contentDTO.setContentEntity(contentEntity);
-                List<ItemInfoDTO> itemInfoDTOList = Lists.newArrayList();
+                /*List<ItemInfoDTO> itemInfoDTOList = Lists.newArrayList();
                 for(ItemEntity itemEntity : contentEntity.getItems()){
                     ItemInfoDTO itemInfoDTO = new ItemInfoDTO();
                     itemInfoDTO.setItemEntity(itemEntity);
                     itemInfoDTOList.add(itemInfoDTO);
-                }
-                contentDTO.setItemInfoDTOList(itemInfoDTOList);
+                }*/
+                //contentDTO.setItemInfoDTOList(itemInfoDTOList);
                 Map<String, Object> contentInfo = Maps.newHashMap();
                 contentInfo.put("contentId",tairSceneDTO.getId());
                 contentInfo.put("contentTitle",tairSceneDTO.getTitle());

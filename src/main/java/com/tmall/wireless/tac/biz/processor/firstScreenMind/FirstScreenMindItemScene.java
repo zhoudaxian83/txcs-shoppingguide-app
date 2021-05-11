@@ -60,14 +60,6 @@ public class FirstScreenMindItemScene {
 
     }
 
-/*    private FacadeResult  convertResult(SgFrameworkResponse<EntityVO> response) {
-        FacadeResult facadeResult = new FacadeResult();
-        facadeResult.setContentModel(response.getItemAndContentList());
-        facadeResult.setHasMore(response.isHasMore());
-        facadeResult.setTraceId(EagleEye.getTraceId());
-        return facadeResult;
-    }*/
-
     public SceneInfo getSceneInfo(){
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
