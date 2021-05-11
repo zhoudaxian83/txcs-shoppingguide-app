@@ -79,8 +79,10 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairResult*******:"+tairResult.toString());
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentEntities*******:"+contentEntities.toString());
             for(ContentEntity contentEntity : contentEntities){
-               Long contentId = contentEntity.getContentId();
+                Long contentId = contentEntity.getContentId();
                 tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentId*******:"+contentId);
+                tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairResult.keySet().toString())*******:"+tairResult.keySet().toString());
+                tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairResult.keySet().contains(contentId)*******:"+tairResult.keySet().contains(contentId));
                 TairSceneDTO tairSceneDTO = tairResult.get(contentId);
                 tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairSceneDTO*******:"+tairSceneDTO.toString());
                 tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairResult.containsKey(contentId) *******:"+tairResult.containsKey(contentId));
