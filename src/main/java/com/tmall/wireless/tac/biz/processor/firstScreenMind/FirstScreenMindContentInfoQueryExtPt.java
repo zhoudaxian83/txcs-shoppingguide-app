@@ -65,7 +65,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 return Flowable.just(Response.fail(""));
             }
             List<DataEntry> dataEntryList = mgetResult.getValue();
-            Map<String, TairSceneDTO> tairResult = Maps.newHashMap();
+            Map<Long, TairSceneDTO> tairResult = Maps.newHashMap();
             //循环遍历获取结果
             dataEntryList.forEach(dataEntry -> {
                     // txcs_scene_detail_v2_2020053172349
@@ -74,19 +74,11 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     String[] s = tairKeyStr.split("_");
                     String contentId = s[s.length - 1];
                     TairSceneDTO value = (TairSceneDTO) dataEntry.getValue();
-                    tairResult.put(contentId, value);
-            });
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairResult*******:"+tairResult.toString());
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentEntities*******:"+contentEntities.toString());
+                    tairResult.put(Long.valueOf(contentId), value);
+            });;
             for(ContentEntity contentEntity : contentEntities){
                 Long contentId = contentEntity.getContentId();
-                tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentId*******:"+contentId);
-                tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairResult.keySet().toString())*******:"+tairResult.keySet().toString());
-                tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairResult.keySet().contains(contentId)*******:"+tairResult.keySet().contains(contentId));
-                TairSceneDTO tairSceneDTO = tairResult.get(String.valueOf(contentId));
-                tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairSceneDTO*******:"+tairSceneDTO.toString());
-                tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairResult.containsKey(contentId) *******:"+tairResult.containsKey(contentId));
-                tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt tairSceneDTO == null *******:"+(tairSceneDTO == null));
+                TairSceneDTO tairSceneDTO = tairResult.get(contentId);
                 /**如果内容后台返回的补全内容为空，那么把这个内容过滤掉，并且日志记录*/
                 if(!tairResult.containsKey(contentId) || tairSceneDTO == null){
                     tacLogger.info("批量补全内容中心信息返回为空contentId:" + contentId +",tairResult:"+tairResult);
@@ -102,7 +94,6 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     itemInfoDTOList.add(itemInfoDTO);
                 }
                 contentDTO.setItemInfoDTOList(itemInfoDTOList);
-                tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt contentDTO*******:"+contentDTO.toString());
                 contentDTOMap.put(contentId,contentDTO);
             }
         }catch (Exception e){
