@@ -20,8 +20,9 @@ public enum FrontBackMapEnum {
     contentAuthor("contentAuthor","author","作者菜谱场景作者"),
     contentSeeCount("contentSeeCount","seeCount","查看人数菜谱场景查看人数"),
     contentCustomLink("contentCustomLink","linkUrl","场景自定义承接页链接"),
-    contentTitle("contentTitle","title","场景主标题tair提供"),
-    contentSubtitle("contentSubtitle","subtitle","场景副标题tair提供");
+//    contentTitle("contentTitle","title","场景主标题tair提供"),
+//    contentSubtitle("contentSubtitle","subtitle","场景副标题tair提供")
+    ;
 
     @Getter
     private String front ;
