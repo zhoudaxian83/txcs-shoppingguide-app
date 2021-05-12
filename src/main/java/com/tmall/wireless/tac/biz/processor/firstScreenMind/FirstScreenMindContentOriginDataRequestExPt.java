@@ -44,9 +44,9 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             return null;
         }
         List<Long> contentSetIdList = getContentSetIdList(requestParams);
-        if(CollectionUtils.isEmpty(contentSetIdList)){
-            params.put("contentSetIdList",Joiner.on(",").join(contentSetIdList));
-        }
+
+
+        params.put("contentSetIdList",Joiner.on(",").join(contentSetIdList));
 
         // 新版本的内容集id
         List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id).collect(Collectors.toList());
