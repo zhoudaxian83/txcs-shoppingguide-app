@@ -11,11 +11,13 @@ import com.tmall.txcs.gs.framework.support.itemInfo.bysource.ItemInfoBySourceRes
 import com.tmall.txcs.gs.model.item.ItemUniqueId;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import io.reactivex.Flowable;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by yangqing.byq on 2021/3/20.
  */
 
+@Component
 public class WuZheTianItemInfoBySourceProcessor implements ItemInfoBySourceProcessorI {
     @Override
     public String getItemSetSource() {
