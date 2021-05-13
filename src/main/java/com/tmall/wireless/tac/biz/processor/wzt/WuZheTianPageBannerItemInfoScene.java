@@ -40,7 +40,9 @@ public class WuZheTianPageBannerItemInfoScene {
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
-        LOGGER.info("WuZheTianPageBannerItemInfoScene测试");
+        LOGGER.debug("WuZheTianPageBannerItemInfoScene测试debug");
+        LOGGER.info("WuZheTianPageBannerItemInfoScene测试info");
+        System.out.println("日志不打印");
         Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 0L);
         Long index = MapUtil.getLongWithDefault(context.getParams(), "index", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getParams(), "pageSize", 20L);
