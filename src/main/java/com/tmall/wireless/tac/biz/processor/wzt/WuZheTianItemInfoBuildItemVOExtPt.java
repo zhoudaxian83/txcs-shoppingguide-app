@@ -7,6 +7,7 @@ import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVOExtPt;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVoRequest;
 import com.tmall.txcs.gs.framework.model.ErrorCode;
 import com.tmall.txcs.gs.framework.model.ItemEntityVO;
+import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.WU_ZHE_TIAN)
+        scenario = ScenarioConstant.SCENARIO_GUL_SUB_TAB)
 @Service
 public class WuZheTianItemInfoBuildItemVOExtPt implements BuildItemVOExtPt {
     @Override
