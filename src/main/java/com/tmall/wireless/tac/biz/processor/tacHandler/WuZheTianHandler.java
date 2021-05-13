@@ -3,8 +3,8 @@ package com.tmall.wireless.tac.biz.processor.tacHandler;
 import java.util.Map;
 
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
-import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.FirstPageBannerItemInfoScene;
 import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.BannerVO;
+import com.tmall.wireless.tac.biz.processor.wzt.WuZheTianPageBannerItemInfoScene;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
@@ -22,10 +22,10 @@ public class WuZheTianHandler extends RpmReactiveHandler<Map<String, BannerVO>> 
     GulSubTabScene gulSubTabScene;*/
 
     @Autowired
-    FirstPageBannerItemInfoScene firstPageBannerItemInfoScene;
+    WuZheTianPageBannerItemInfoScene wuZheTianPageBannerItemInfoScene;
 
     @Override
     public Flowable<TacResult<Map<String, BannerVO>>> executeFlowable(Context context) throws Exception {
-        return firstPageBannerItemInfoScene.recommend(context);
+        return wuZheTianPageBannerItemInfoScene.recommend(context);
     }
 }
