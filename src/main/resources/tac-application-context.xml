@@ -11,16 +11,16 @@
 
     <context:component-scan base-package="com.alibaba.cola" />
 
-    <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendItemOriginDataRequestExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.browsrec.TestItemInfoBySourceProcessor"/>
+<!--    <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene"/>-->
+<!--    <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendItemOriginDataRequestExtPt"/>-->
+<!--    <bean class="com.tmall.wireless.tac.biz.processor.browsrec.TestItemInfoBySourceProcessor"/>-->
 
 
-    <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.ItemInfoBySourceProcessorInventory"/>
+<!--    <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.ItemInfoBySourceProcessorInventory"/>-->
 
 
-    <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoOriginDataItemQueryExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoBuildItemVOExtPt"/>
+<!--    <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoOriginDataItemQueryExtPt"/>-->
+<!--    <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoBuildItemVOExtPt"/>-->
 
-    <bean class="com.tmall.wireless.tac.biz.processor.tacHandler.YoubaozangHandler"/>
+<!--    <bean class="com.tmall.wireless.tac.biz.processor.tacHandler.YoubaozangHandler"/>-->
 </beans>
