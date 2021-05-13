@@ -1,10 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.tacHandler;
 
-import java.util.Map;
-
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
-import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.BannerVO;
-import com.tmall.wireless.tac.biz.processor.wzt.WuZheTianPageBannerItemInfoScene;
+import com.tmall.txcs.gs.framework.model.EntityVO;
+import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
+import com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
@@ -16,16 +15,13 @@ import org.springframework.stereotype.Component;
  * @Date: 2021/5/13 18:02
  */
 @Component
-public class WuZheTianHandler extends RpmReactiveHandler<Map<String, BannerVO>> {
-
-/*    @Autowired
-    GulSubTabScene gulSubTabScene;*/
+public class WuZheTianHandler extends RpmReactiveHandler<SgFrameworkResponse<EntityVO>> {
 
     @Autowired
-    WuZheTianPageBannerItemInfoScene wuZheTianPageBannerItemInfoScene;
+    BrowseRecommendScene browseRecommendScene;
 
     @Override
-    public Flowable<TacResult<Map<String, BannerVO>>> executeFlowable(Context context) throws Exception {
-        return wuZheTianPageBannerItemInfoScene.recommend(context);
+    public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
+        return browseRecommendScene.recommend(context);
     }
 }
