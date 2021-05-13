@@ -34,20 +34,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class WuZheTianPageBannerItemInfoScene {
 
-
-
     Logger LOGGER = LoggerFactory.getLogger(WuZheTianPageBannerItemInfoScene.class);
 
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
-
+        LOGGER.info("WuZheTianPageBannerItemInfoScene测试");
         Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 0L);
         Long index = MapUtil.getLongWithDefault(context.getParams(), "index", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getParams(), "pageSize", 20L);
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
-
 
         LOGGER.error("ITEM_REQUEST:{}", JSON.toJSONString(context));
 
@@ -68,7 +65,8 @@ public class WuZheTianPageBannerItemInfoScene {
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
         sgFrameworkContextItem.setUserDO(userDO);
 
-        sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA),smAreaId));
+        sgFrameworkContextItem.setLocParams(
+            CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextItem.setItemMetaInfo(MetaInfoUtil.getGulSubTabItemMetaInfo());
 
         EntitySetParams entitySetParams = new EntitySetParams();
