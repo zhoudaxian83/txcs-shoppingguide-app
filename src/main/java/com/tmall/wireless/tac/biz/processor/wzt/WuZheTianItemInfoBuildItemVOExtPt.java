@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstant.SCENARIO_GUL_SUB_TAB)
+        scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianItemInfoBuildItemVOExtPt implements BuildItemVOExtPt {
     @Override

@@ -19,6 +19,7 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.PmtParams;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
@@ -43,6 +44,7 @@ public class WuZheTianPageBannerItemInfoScene {
         LOGGER.debug("WuZheTianPageBannerItemInfoScene测试debug");
         LOGGER.info("WuZheTianPageBannerItemInfoScene测试info");
         System.out.println("日志不打印");
+
         Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 0L);
         Long index = MapUtil.getLongWithDefault(context.getParams(), "index", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getParams(), "pageSize", 20L);
@@ -59,7 +61,7 @@ public class WuZheTianPageBannerItemInfoScene {
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstant.BIZ_TYPE_SUPERMARKET);
         sceneInfo.setSubBiz(ScenarioConstant.LOC_TYPE_B2C);
-        sceneInfo.setScene(ScenarioConstant.SCENARIO_GUL_SUB_TAB);
+        sceneInfo.setScene(ScenarioConstantApp.WU_ZHE_TIAN);
         sgFrameworkContextItem.setSceneInfo(sceneInfo);
 
         UserDO userDO = new UserDO();
