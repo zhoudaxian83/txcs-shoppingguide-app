@@ -23,4 +23,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoBuildItemVOExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.tacHandler.YoubaozangHandler"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.wzt.YouBaoZangBuildItemVOExtPtImpl"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.tacHandler.WuZheTianHandler"/>
 </beans>
