@@ -124,7 +124,7 @@ public class YouBaoZangBuildItemVOExtPtImpl implements BuildItemVOExtPt {
 
         JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(treasureManPoint));
 
-        return jsonObject.getString("content");
+        return Splitter.on(";").trimResults().omitEmptyStrings().splitToList(jsonObject.getString("content"));
     }
 
 
