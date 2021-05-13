@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 /**
  * @author luojunchong
  * 请求参数构建
@@ -43,9 +42,8 @@ public class WuZheTianRecommendScene {
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
-
+        LOGGER.info("WuZheTianRecommendScene");
         LOGGER.error("ITEM_REQUEST:{}", JSON.toJSONString(context));
-
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
@@ -64,9 +62,9 @@ public class WuZheTianRecommendScene {
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
         sgFrameworkContextItem.setUserDO(userDO);
 
-        sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
+        sgFrameworkContextItem.setLocParams(
+            CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextItem.setItemMetaInfo(getBrowseRecommendItemMetaInfo());
-
 
         PageInfoDO pageInfoDO = new PageInfoDO();
         pageInfoDO.setIndex(0);
@@ -74,11 +72,10 @@ public class WuZheTianRecommendScene {
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-                .map(TacResult::newResult)
-                .onErrorReturn(r -> TacResult.errorResult("测试"));
+            .map(TacResult::newResult)
+            .onErrorReturn(r -> TacResult.errorResult("测试"));
 
     }
-
 
     public static ItemMetaInfo getBrowseRecommendItemMetaInfo() {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
@@ -107,7 +104,6 @@ public class WuZheTianRecommendScene {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
-
 
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTest = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTest.setSourceName("test");
