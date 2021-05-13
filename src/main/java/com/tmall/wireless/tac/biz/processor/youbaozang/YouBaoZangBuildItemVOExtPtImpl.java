@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.origindate.ItemInfoBySourceDTOOrigin;
@@ -113,18 +114,23 @@ public class YouBaoZangBuildItemVOExtPtImpl implements BuildItemVOExtPt {
     }
 
     private Object getTreasureManPoint(ItemInfoBySourceDTOMain itemInfoBySourceDTOMain) {
-        Object treasureManPoint = Optional.ofNullable(itemInfoBySourceDTOMain)
-                .map(ItemInfoBySourceDTOMain::getItemDTO)
-                .map(ItemDataDTO::getAttachment)
-                .map(att -> att.get("treasureManPoint"))
-                .orElse(null);
-        if (treasureManPoint == null) {
-            return null;
+        try {
+            Object treasureManPoint = Optional.ofNullable(itemInfoBySourceDTOMain)
+                    .map(ItemInfoBySourceDTOMain::getItemDTO)
+                    .map(ItemDataDTO::getAttachment)
+                    .map(att -> att.get("treasureManPoint"))
+                    .orElse(null);
+            if (treasureManPoint == null) {
+                return null;
+            }
+
+            JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(treasureManPoint));
+
+            return Splitter.on(";").trimResults().omitEmptyStrings().splitToList(jsonObject.getString("content"));
+        } catch (Exception e) {
+            LOGGER.error("getTreasureManPoint error,", e);
         }
-
-        JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(treasureManPoint));
-
-        return Splitter.on(";").trimResults().omitEmptyStrings().splitToList(jsonObject.getString("content"));
+        return Lists.newArrayList();
     }
 
 
