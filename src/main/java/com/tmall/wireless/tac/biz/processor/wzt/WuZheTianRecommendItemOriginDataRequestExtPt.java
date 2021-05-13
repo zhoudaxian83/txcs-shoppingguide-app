@@ -18,16 +18,16 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 
 /**
  * @author luojunchong
- *
  */
 @Extension(bizId = ScenarioConstant.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstant.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.WU_ZHE_TIAN)
+    useCase = ScenarioConstant.LOC_TYPE_B2C,
+    scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianRecommendItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
 
@@ -35,44 +35,46 @@ public class WuZheTianRecommendItemOriginDataRequestExtPt implements ItemOriginD
     public static final Long APPID_B2C = 23376L;
     public static final Long APPID_O2O = 23375L;
 
-
-//    https://tuipre.taobao.com/recommend?
-//    appid=24696&
-//    detailItemIdList=638358005687&
-//    pageSize=200&
-//    index=0&
-//    smAreaId=330110&
-//    logicAreaId=107
+    Logger LOGGER = LoggerFactory.getLogger(WuZheTianItemInfoBuildItemVOExtPt.class);
+    //    https://tuipre.taobao.com/recommend?
+    //    appid=24696&
+    //    detailItemIdList=638358005687&
+    //    pageSize=200&
+    //    index=0&
+    //    smAreaId=330110&
+    //    logicAreaId=107
 
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
         RecommendRequest tppRequest = new RecommendRequest();
 
-
+        LOGGER.info("WuZheTianRecommendItemOriginDataRequestExtPt");
         Map<String, String> params = Maps.newHashMap();
         params.put("pageSize", "20");
-        params.put("smAreaId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
-        params.put("logicAreaId", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
-        params.put("itemBusinessType","B2C");
+        params.put("smAreaId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(
+            LocParams::getSmAreaId).orElse(0L).toString());
+        params.put("logicAreaId", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextItem).map(
+            SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
+        params.put("itemBusinessType", "B2C");
         params.put("detailItemIdList", MapUtil.getStringWithDefault(
-                Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getRequestParams).orElse(Maps.newHashMap()),
-                "detailItemIdList",
-                ""
+            Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getRequestParams)
+                .orElse(Maps.newHashMap()),
+            "detailItemIdList",
+            ""
         ));
 
-
-        Integer index = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getIndex).orElse(0);
+        Integer index = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserPageInfo).map(
+            PageInfoDO::getIndex).orElse(0);
         params.put("isFirstPage", index > 0 ? "true" : "false");
 
         tppRequest.setAppId(24696L);
 
-
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
-        tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
+        tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO)
+            .map(UserDO::getUserId).orElse(0L));
 
         return tppRequest;
     }
-
 
 }

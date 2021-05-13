@@ -11,12 +11,15 @@ import com.tmall.txcs.gs.framework.support.itemInfo.bysource.ItemInfoBySourceRes
 import com.tmall.txcs.gs.model.item.ItemUniqueId;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import io.reactivex.Flowable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-/**
- * Created by yangqing.byq on 2021/3/20.
- */
 
+
+/**
+ * @author luojunchong
+ */
 @Component
 public class WuZheTianItemInfoBySourceProcessor implements ItemInfoBySourceProcessorI {
     @Override
@@ -24,8 +27,11 @@ public class WuZheTianItemInfoBySourceProcessor implements ItemInfoBySourceProce
         return "test";
     }
 
+    Logger LOGGER = LoggerFactory.getLogger(WuZheTianItemInfoBuildItemVOExtPt.class);
+
     @Override
     public Flowable<ItemInfoBySourceResponse> process(SgFrameworkContextItem sgFrameworkContextItem, ItemInfoRequest itemInfoRequest, ItemInfoSourceMetaInfo itemInfoSourceMetaInfo) {
+        LOGGER.info("WuZheTianItemInfoBySourceProcessor");
         Map<ItemUniqueId, ItemInfoBySourceDTO> result = Maps.newHashMap();
         itemInfoRequest.getList().forEach(itemEntity -> {
             ItemInfoBySourceDTO itemInfoBySourceDTO = new ItemInfoBySourceDTO();

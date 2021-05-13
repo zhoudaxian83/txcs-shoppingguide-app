@@ -75,7 +75,7 @@ public class WuZheTianRecommendScene {
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(TacResult::newResult)
-                .onErrorReturn(r -> TacResult.errorResult(""));
+                .onErrorReturn(r -> TacResult.errorResult("测试"));
 
     }
 

@@ -12,18 +12,23 @@ import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.ItemInfoBySourceDTOInv;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+
 /**
- * Created by yangqing.byq on 2021/5/1.
+ * @author luojunchong
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianItemInfoBuildItemVOExtPt implements BuildItemVOExtPt {
+    Logger LOGGER = LoggerFactory.getLogger(WuZheTianItemInfoBuildItemVOExtPt.class);
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
+        LOGGER.info("WuZheTianItemInfoBuildItemVOExtPt");
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
         boolean hasMainSource = false;
