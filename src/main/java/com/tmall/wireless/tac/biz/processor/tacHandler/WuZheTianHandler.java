@@ -18,11 +18,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class WuZheTianHandler extends RpmReactiveHandler<SgFrameworkResponse<EntityVO>> {
+    //
+    //@Autowired
+    //WuZheTianRecommendScene wuZheTianRecommendScene;
+
     @Autowired
-    WuZheTianRecommendScene wuZheTianRecommendScene;
+    BrowseRecommendScene browseRecommendScene;
 
     @Override
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
-        return wuZheTianRecommendScene.recommend(context);
+        return browseRecommendScene.recommend(context);
     }
 }
