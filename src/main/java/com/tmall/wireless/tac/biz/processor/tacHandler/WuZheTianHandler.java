@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.tacHandler;
 
+import com.tmall.txcs.biz.supermarket.scene.gul.GulSubTabScene;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
@@ -16,12 +17,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class WuZheTianHandler extends RpmReactiveHandler<SgFrameworkResponse<EntityVO>> {
-
     @Autowired
-    BrowseRecommendScene browseRecommendScene;
+    GulSubTabScene gulSubTabScene;
 
     @Override
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
-        return browseRecommendScene.recommend(context);
+        return gulSubTabScene.recommend(context);
     }
 }
