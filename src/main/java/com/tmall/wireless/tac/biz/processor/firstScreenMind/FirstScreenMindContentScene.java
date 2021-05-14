@@ -78,9 +78,9 @@ public class FirstScreenMindContentScene {
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoTpp.setSourceName("captain");
+        itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         //captain SceneCode场景code
-        itemInfoSourceMetaInfoTpp.setSceneCode("visitSupermarket.main");
+        itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 
         ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
