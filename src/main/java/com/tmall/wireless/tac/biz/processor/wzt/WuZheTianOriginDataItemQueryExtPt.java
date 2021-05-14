@@ -47,8 +47,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     TairFactorySpi tairFactorySpi;
     private static final int labelSceneNamespace = 184;
 
-    @Autowired
-    TodayCrazyLimitFacade todayCrazyLimitFacade;
+/*    @Autowired
+    TodayCrazyLimitFacade todayCrazyLimitFacade;*/
 
     @Autowired
     RecommendSpi recommendSpi;
@@ -57,18 +57,18 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         tacLogger.info("WuZheTianOriginDataItemQueryExtPt");
         tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] context={}" + JSON.toJSONString(context));
-        UserControlParams userControlParams = context.getUserControlParams();
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
+        originDataDTO.setResult(buildItemList());
 
         RecommendRequest recommendRequest = new RecommendRequest();
         Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
             .recommendItem(recommendRequest);
 
-        ItemLimitInfoQuery var1 = new ItemLimitInfoQuery();
+       /* ItemLimitInfoQuery var1 = new ItemLimitInfoQuery();
         //var1.setItemIdList(context.g);
         var1.setUserId(context.getUserDO().getUserId());
-        ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(var1);
-        originDataDTO.setResult(buildItemList());
+        ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(var1);*/
+
 
         List<String> sKeyList = new ArrayList<>();
         sKeyList.add("test");
