@@ -1,19 +1,14 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import com.alibaba.boot.hsf.annotation.HSFConsumer;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
-import com.tmall.aself.shoppingguide.client.todaycrazyv2.TodayCrazyLimitFacade;
-import com.tmall.aself.shoppingguide.client.todaycrazyv2.query.ItemLimitInfoQuery;
-import com.tmall.aself.shoppingguide.client.todaycrazyv2.result.ItemLimitResult;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -45,9 +40,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     TairFactorySpi tairFactorySpi;
     private static final int labelSceneNamespace = 184;
+    /*
 
     @HSFConsumer(serviceVersion = "1.0.0")
     private TodayCrazyLimitFacade todayCrazyLimitFacade;
+    */
 
     @Autowired
     RecommendSpi recommendSpi;
@@ -75,12 +72,12 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
             .recommendItem(recommendRequest);
 
-        //获取限购信息
+        /*//获取限购信息
         ItemLimitInfoQuery itemLimitInfoQuery = new ItemLimitInfoQuery();
         itemLimitInfoQuery.setUserId(0L);
         itemLimitInfoQuery.setItemIdList(Arrays.asList(600819862645L, 623789407071L));
         ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(itemLimitInfoQuery);
-        tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] itemLimitResult=" + JSON.toJSONString(itemLimitResult));
+        tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] itemLimitResult=" + JSON.toJSONString(itemLimitResult));*/
         return Flowable.just(originDataDTO);
     }
 
