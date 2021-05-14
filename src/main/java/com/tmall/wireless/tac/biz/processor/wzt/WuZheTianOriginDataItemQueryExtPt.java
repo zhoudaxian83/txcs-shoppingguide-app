@@ -3,22 +3,16 @@ package com.tmall.wireless.tac.biz.processor.wzt;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
-import com.tmall.aself.shoppingguide.client.todaycrazyv2.TodayCrazyLimitFacade;
-import com.tmall.aself.shoppingguide.client.todaycrazyv2.query.ItemLimitInfoQuery;
-import com.tmall.aself.shoppingguide.client.todaycrazyv2.result.ItemLimitResult;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.Response;
-import com.tmall.txcs.gs.model.biz.context.UserControlParams;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
 import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
