@@ -40,11 +40,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     TairFactorySpi tairFactorySpi;
     private static final int labelSceneNamespace = 184;
-    /*
 
-    @HSFConsumer(serviceVersion = "1.0.0")
-    private TodayCrazyLimitFacade todayCrazyLimitFacade;
-    */
+    //@HSFConsumer(serviceVersion = "1.0.0")
+    //private TodayCrazyLimitFacade todayCrazyLimitFacade;
 
     @Autowired
     RecommendSpi recommendSpi;
@@ -72,13 +70,14 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
             .recommendItem(recommendRequest);
 
-        /*//获取限购信息
-        ItemLimitInfoQuery itemLimitInfoQuery = new ItemLimitInfoQuery();
-        itemLimitInfoQuery.setUserId(0L);
-        itemLimitInfoQuery.setItemIdList(Arrays.asList(600819862645L, 623789407071L));
-        ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(itemLimitInfoQuery);
-        tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] itemLimitResult=" + JSON.toJSONString(itemLimitResult));*/
-        return Flowable.just(originDataDTO);
+        //获取限购信息
+        //ItemLimitInfoQuery itemLimitInfoQuery = new ItemLimitInfoQuery();
+        //itemLimitInfoQuery.setUserId(0L);
+        //itemLimitInfoQuery.setItemIdList(Arrays.asList(600819862645L, 623789407071L));
+        //ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(itemLimitInfoQuery);
+        //
+        //tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] itemLimitResult=" + JSON.toJSONString(itemLimitResult));
+        return Flowable.just(originDataDTO).defaultIfEmpty(originDataDTO);
     }
 
     private List<ItemEntity> buildItemList() {
