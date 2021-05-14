@@ -22,6 +22,10 @@ import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.model.biz.context.UserControlParams;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
+import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
+import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
+import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
+import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.BannerItemDTO;
@@ -53,17 +57,26 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Resource
     private TodayCrazyLimitFacade todayCrazyLimitFacade;
 
+    @Resource
+    private RecommendSpi recommendSpi;
+
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         tacLogger.info("WuZheTianOriginDataItemQueryExtPt");
         tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] context={}" + JSON.toJSONString(context));
         UserControlParams userControlParams = context.getUserControlParams();
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
+
+        RecommendRequest recommendRequest =new RecommendRequest();
+        Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable =recommendSpi.recommendItem(recommendRequest);
+
         ItemLimitInfoQuery var1 = new ItemLimitInfoQuery();
         //var1.setItemIdList(context.g);
         var1.setUserId(context.getUserDO().getUserId());
-        ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(var1)
+        ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(var1);
         originDataDTO.setResult(buildItemList());
+
+
         List<String> sKeyList = new ArrayList<>();
         sKeyList.add("test");
         Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager()
