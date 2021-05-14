@@ -21,6 +21,7 @@ import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
@@ -34,23 +35,20 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class WuZheTianPageBannerItemInfoScene {
-
-    Logger LOGGER = LoggerFactory.getLogger(WuZheTianPageBannerItemInfoScene.class);
+    @Autowired
+    TacLogger tacLogger;
 
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
-        LOGGER.debug("WuZheTianPageBannerItemInfoScene测试debug");
-        LOGGER.info("WuZheTianPageBannerItemInfoScene测试info");
-        System.out.println("日志不打印");
+
+        tacLogger.info("WuZheTianPageBannerItemInfoScene测试info");
 
         Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 0L);
         Long index = MapUtil.getLongWithDefault(context.getParams(), "index", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getParams(), "pageSize", 20L);
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
-
-        LOGGER.error("ITEM_REQUEST:{}", JSON.toJSONString(context));
 
         context.getParams();
 

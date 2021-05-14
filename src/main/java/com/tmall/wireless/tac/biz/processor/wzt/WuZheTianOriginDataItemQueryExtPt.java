@@ -13,9 +13,11 @@ import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
 import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,12 +29,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
-    Logger LOGGER = LoggerFactory.getLogger(WuZheTianOriginDataItemQueryExtPt.class);
+
+    @Autowired
+    TacLogger tacLogger;
+
+    //Logger LOGGER = LoggerFactory.getLogger(WuZheTianOriginDataItemQueryExtPt.class);
 
 
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
+        tacLogger.info("WuZheTianOriginDataItemQueryExtPt");
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         originDataDTO.setScm("test");
        /* RecommendRequest recommendRequest = sgExtensionExecutor.execute(
