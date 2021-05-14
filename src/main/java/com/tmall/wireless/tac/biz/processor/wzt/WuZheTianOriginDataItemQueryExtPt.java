@@ -77,7 +77,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(itemLimitInfoQuery);
         //
         //tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] itemLimitResult=" + JSON.toJSONString(itemLimitResult));
-        return Flowable.just(originDataDTO).defaultIfEmpty(originDataDTO);
+        return Flowable.just(originDataDTO).defaultIfEmpty(null);
     }
 
     private List<ItemEntity> buildItemList() {
