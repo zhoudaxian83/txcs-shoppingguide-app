@@ -61,8 +61,9 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
+
         tacLogger.info("WuZheTianBuildItemVOExtPt执行完成");
-        tacLogger.info("[WuZheTianBuildItemVOExtPt] itemEntityVO={}", JSON.toJSONString(itemEntityVO);
+        tacLogger.info("[WuZheTianBuildItemVOExtPt] itemEntityVO={}" + JSON.toJSONString(itemEntityVO));
         return Response.success(itemEntityVO);
     }
 }
