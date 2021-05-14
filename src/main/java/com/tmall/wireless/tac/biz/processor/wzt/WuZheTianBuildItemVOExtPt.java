@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
 
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVOExtPt;
@@ -12,6 +13,8 @@ import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.ItemInfoBySourceDTOInv;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,8 +26,12 @@ import org.springframework.stereotype.Service;
     scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
+    @Autowired
+    TacLogger tacLogger;
+
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
+        tacLogger.info("WuZheTianBuildItemVOExtPt执行了");
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
         boolean hasMainSource = false;
@@ -54,7 +61,8 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
+        tacLogger.info("WuZheTianBuildItemVOExtPt执行完成");
+        tacLogger.info("[WuZheTianBuildItemVOExtPt] itemEntityVO={}", JSON.toJSONString(itemEntityVO);
         return Response.success(itemEntityVO);
-
     }
 }
