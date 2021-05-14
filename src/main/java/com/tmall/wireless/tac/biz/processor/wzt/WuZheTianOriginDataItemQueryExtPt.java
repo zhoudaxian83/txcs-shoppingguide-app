@@ -1,45 +1,27 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.alibaba.cola.extension.Extension;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
-import com.tmall.txcs.biz.supermarket.extpt.origindata.DefaultOriginDataItemQueryExtPt;
-import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
-import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
-import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVOExtPt;
-import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVoRequest;
 import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
-import com.tmall.txcs.gs.framework.model.ErrorCode;
-import com.tmall.txcs.gs.framework.model.ItemEntityVO;
-import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
-import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
-import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
 import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
-import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
-import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
-import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.ItemInfoBySourceDTOInv;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +35,6 @@ import org.springframework.stereotype.Service;
     scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
-
 
     Logger LOGGER = LoggerFactory.getLogger(WuZheTianOriginDataItemQueryExtPt.class);
 
@@ -74,8 +55,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
-
-        RecommendRequest recommendRequest = sgExtensionExecutor.execute(
+        OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
+        originDataDTO.setScm("test");
+       /* RecommendRequest recommendRequest = sgExtensionExecutor.execute(
             ItemOriginDataRequestExtPt.class,
             context.getBizScenario(),
             pt -> pt.process0(context));
@@ -89,9 +71,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                     return new OriginDataDTO<>();
                 }
                 return convert(recommendResponseEntityResponse.getValue());
-            });
+            });*/
+        return Flowable.just(originDataDTO);
     }
-
 
     private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
