@@ -43,14 +43,14 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     TacLogger tacLogger;
 
-    @Resource
+    @Autowired
     TairFactorySpi tairFactorySpi;
     private static final int labelSceneNamespace = 184;
 
-    @Resource
+    @Autowired
     private TodayCrazyLimitFacade todayCrazyLimitFacade;
 
-    @Resource
+    @Autowired
     private RecommendSpi recommendSpi;
 
     @Override
