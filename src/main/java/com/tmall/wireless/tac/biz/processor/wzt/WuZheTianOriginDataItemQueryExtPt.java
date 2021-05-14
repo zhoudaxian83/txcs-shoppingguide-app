@@ -55,10 +55,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             List<String> sKeyList = new ArrayList<>();
             sKeyList.add("test");
             Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+mgetResult.toString());
+            tacLogger.info("mgetResult:"+mgetResult.toString());
+            return Flowable.just(originDataDTO);
         }catch (Exception e){
             tacLogger.info("WuZheTianOriginDataItemQueryExtPt-Exception:"+e.getStackTrace());
-            return Flowable.just(originDataDTO);
+
         }
 
         tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] originDataDTO={}" + JSON.toJSONString(originDataDTO));
