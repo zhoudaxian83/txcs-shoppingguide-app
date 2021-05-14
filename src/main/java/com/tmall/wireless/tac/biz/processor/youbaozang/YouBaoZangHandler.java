@@ -123,7 +123,7 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
 
         ItemRecommendMetaInfo itemRecommendMetaInfo = new ItemRecommendMetaInfo();
-        itemRecommendMetaInfo.setAppId(18611L);
+        itemRecommendMetaInfo.setAppId(22171L);
 
 
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
