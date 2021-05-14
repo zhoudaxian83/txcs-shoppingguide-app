@@ -29,13 +29,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
-
     @Autowired
     TacLogger tacLogger;
 
     //Logger LOGGER = LoggerFactory.getLogger(WuZheTianOriginDataItemQueryExtPt.class);
-
-
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
@@ -57,7 +54,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 }
                 return convert(recommendResponseEntityResponse.getValue());
             });*/
-        return Flowable.just(originDataDTO);
+        return Flowable.just(originDataDTO).defaultIfEmpty(null);
     }
 
     private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {

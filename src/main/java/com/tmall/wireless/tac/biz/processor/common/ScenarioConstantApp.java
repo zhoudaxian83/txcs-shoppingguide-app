@@ -19,4 +19,11 @@ public class ScenarioConstantApp extends ScenarioConstant {
      */
     public static final String WU_ZHE_TIAN = "WU_ZHE_TIAN";
 
+
+    /**
+     * 五折天
+     */
+    public static final String SCENE_FIRST_SCREEN_MIND_CONTENT = "SCENE_FIRST_SCREEN_MIND_CONTENT";
+
+
 }
