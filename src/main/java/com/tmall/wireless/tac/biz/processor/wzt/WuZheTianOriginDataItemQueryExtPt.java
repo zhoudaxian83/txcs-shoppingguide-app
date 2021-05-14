@@ -4,13 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
+import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.BannerItemDTO;
 import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.uitl.BannerUtil;
@@ -34,11 +38,16 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     TacLogger tacLogger;
 
+    @Resource
+    TairFactorySpi tairFactorySpi;
+    private static final int labelSceneNamespace = 184;
+
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         tacLogger.info("WuZheTianOriginDataItemQueryExtPt");
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         originDataDTO.setResult(buildItemList());
+        tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] originDataDTO={}" + JSON.toJSONString(originDataDTO));
         return Flowable.just(originDataDTO);
     }
 
@@ -50,7 +59,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         result.add(itemEntity);
 
         ItemEntity itemEntity2 = new ItemEntity();
-        itemEntity2.setItemId(123L);
+        itemEntity2.setItemId(12L);
         itemEntity2.setO2oType("TEST2");
         result.add(itemEntity2);
         return result;
