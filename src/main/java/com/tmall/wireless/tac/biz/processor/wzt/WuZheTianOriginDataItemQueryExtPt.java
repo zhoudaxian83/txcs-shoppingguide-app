@@ -15,6 +15,7 @@ import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.tmall.aself.shoppingguide.client.todaycrazyv2.TodayCrazyLimitFacade;
 import com.tmall.aself.shoppingguide.client.todaycrazyv2.query.ItemLimitInfoQuery;
+import com.tmall.aself.shoppingguide.client.todaycrazyv2.result.ItemLimitResult;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -55,12 +56,12 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         tacLogger.info("WuZheTianOriginDataItemQueryExtPt");
-        tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] SgFrameworkContextItem={}" + JSON.toJSONString(SgFrameworkContextItem));
-        UserControlParams userControlParams = context.getUserControlParams()
+        tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] context={}" + JSON.toJSONString(context));
+        UserControlParams userControlParams = context.getUserControlParams();
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         ItemLimitInfoQuery var1 = new ItemLimitInfoQuery();
-        var1.setItemIdList();
-        var1.setUserId(userControlParams.getid);
+        //var1.setItemIdList(context.g);
+        var1.setUserId(context.getUserDO().getUserId());
         ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(var1)
         originDataDTO.setResult(buildItemList());
         List<String> sKeyList = new ArrayList<>();
