@@ -71,7 +71,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         sKeyList.add("wuZheTian_XN_pre");
         Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager()
             .mget(labelSceneNamespace, sKeyList);
-        tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] sKeyList=" + JSON.toJSONString(sKeyList));
+        tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] mgetResult=" + JSON.toJSONString(mgetResult));
         return Flowable.just(originDataDTO);
     }
 
