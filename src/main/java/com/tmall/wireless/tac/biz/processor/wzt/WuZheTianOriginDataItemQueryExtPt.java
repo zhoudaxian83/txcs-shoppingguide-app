@@ -63,12 +63,15 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         var1.setUserId(context.getUserDO().getUserId());
         ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(var1);*/
 
-
         List<String> sKeyList = new ArrayList<>();
-        sKeyList.add("test");
+        sKeyList.add("wuZheTian_HD_pre");
+        sKeyList.add("wuZheTian_HB_pre");
+        sKeyList.add("wuZheTian_HN_pre");
+        sKeyList.add("wuZheTian_HZ_pre");
+        sKeyList.add("wuZheTian_XN_pre");
         Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager()
             .mget(labelSceneNamespace, sKeyList);
-        tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] originDataDTO={}" + JSON.toJSONString(originDataDTO));
+        tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] sKeyList=" + JSON.toJSONString(sKeyList));
         return Flowable.just(originDataDTO);
     }
 
