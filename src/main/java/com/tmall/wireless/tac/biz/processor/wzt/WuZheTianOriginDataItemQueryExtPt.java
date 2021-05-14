@@ -13,10 +13,13 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
+import com.tmall.aself.shoppingguide.client.todaycrazyv2.TodayCrazyLimitFacade;
+import com.tmall.aself.shoppingguide.client.todaycrazyv2.query.ItemLimitInfoQuery;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.Response;
+import com.tmall.txcs.gs.model.biz.context.UserControlParams;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -46,22 +49,24 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     TairFactorySpi tairFactorySpi;
     private static final int labelSceneNamespace = 184;
 
+    @Resource
+    private TodayCrazyLimitFacade todayCrazyLimitFacade;
+
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         tacLogger.info("WuZheTianOriginDataItemQueryExtPt");
+        tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] SgFrameworkContextItem={}" + JSON.toJSONString(SgFrameworkContextItem));
+        UserControlParams userControlParams = context.getUserControlParams()
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
+        ItemLimitInfoQuery var1 = new ItemLimitInfoQuery();
+        var1.setItemIdList();
+        var1.setUserId(userControlParams.getid);
+        ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(var1)
         originDataDTO.setResult(buildItemList());
-        try {
-            List<String> sKeyList = new ArrayList<>();
-            sKeyList.add("test");
-            Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-            tacLogger.info("mgetResult:"+mgetResult.toString());
-            return Flowable.just(originDataDTO);
-        }catch (Exception e){
-            tacLogger.info("WuZheTianOriginDataItemQueryExtPt-Exception:"+e.getStackTrace());
-
-        }
-
+        List<String> sKeyList = new ArrayList<>();
+        sKeyList.add("test");
+        Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager()
+            .mget(labelSceneNamespace, sKeyList);
         tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] originDataDTO={}" + JSON.toJSONString(originDataDTO));
         return Flowable.just(originDataDTO);
     }
