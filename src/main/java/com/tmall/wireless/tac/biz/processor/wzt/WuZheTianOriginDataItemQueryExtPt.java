@@ -35,8 +35,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         tacLogger.info("WuZheTianOriginDataItemQueryExtPt");
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         originDataDTO.setScm("test");
-        return Flowable.just(originDataDTO);
-    }
+        return Flowable.just(convert);
+    }A
 
     private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
