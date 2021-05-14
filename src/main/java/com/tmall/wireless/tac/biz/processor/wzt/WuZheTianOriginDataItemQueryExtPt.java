@@ -48,10 +48,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private static final int labelSceneNamespace = 184;
 
     @Autowired
-    private TodayCrazyLimitFacade todayCrazyLimitFacade;
+    TodayCrazyLimitFacade todayCrazyLimitFacade;
 
     @Autowired
-    private RecommendSpi recommendSpi;
+    RecommendSpi recommendSpi;
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
@@ -60,15 +60,15 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         UserControlParams userControlParams = context.getUserControlParams();
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
 
-        RecommendRequest recommendRequest =new RecommendRequest();
-        Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable =recommendSpi.recommendItem(recommendRequest);
+        RecommendRequest recommendRequest = new RecommendRequest();
+        Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
+            .recommendItem(recommendRequest);
 
         ItemLimitInfoQuery var1 = new ItemLimitInfoQuery();
         //var1.setItemIdList(context.g);
         var1.setUserId(context.getUserDO().getUserId());
         ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(var1);
         originDataDTO.setResult(buildItemList());
-
 
         List<String> sKeyList = new ArrayList<>();
         sKeyList.add("test");
