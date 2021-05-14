@@ -1,30 +1,21 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.alibaba.cola.extension.Extension;
 
-import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
-import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
-import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
-import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
 import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
-import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
-import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import io.reactivex.Flowable;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,20 +29,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     Logger LOGGER = LoggerFactory.getLogger(WuZheTianOriginDataItemQueryExtPt.class);
 
-    @Autowired
-    RecommendSpi recommendSpi;
-    @Autowired
-    private SgExtensionExecutor sgExtensionExecutor;
 
-    private static Map<String, String> tppO2oTypeConvertMap;
-
-    static {
-        tppO2oTypeConvertMap = Maps.newHashMap();
-        tppO2oTypeConvertMap.putIfAbsent("one_hour", O2oType.O2OOneHour.name());
-        tppO2oTypeConvertMap.putIfAbsent("half_day", O2oType.O2OHalfDay.name());
-        tppO2oTypeConvertMap.putIfAbsent("next_day", O2oType.O2ONextDay.name());
-        tppO2oTypeConvertMap.putIfAbsent("B2C", O2oType.B2C.name());
-    }
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
