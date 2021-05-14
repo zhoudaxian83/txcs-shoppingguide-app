@@ -32,29 +32,12 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     TacLogger tacLogger;
 
-    //Logger LOGGER = LoggerFactory.getLogger(WuZheTianOriginDataItemQueryExtPt.class);
-
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         tacLogger.info("WuZheTianOriginDataItemQueryExtPt");
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         originDataDTO.setScm("test");
-       /* RecommendRequest recommendRequest = sgExtensionExecutor.execute(
-            ItemOriginDataRequestExtPt.class,
-            context.getBizScenario(),
-            pt -> pt.process0(context));
-
-        return recommendSpi.recommendItem(recommendRequest)
-            .map(recommendResponseEntityResponse -> {
-                // tpp 返回失败
-                if (!recommendResponseEntityResponse.isSuccess()
-                    || recommendResponseEntityResponse.getValue() == null
-                    || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
-                    return new OriginDataDTO<>();
-                }
-                return convert(recommendResponseEntityResponse.getValue());
-            });*/
-        return Flowable.just(originDataDTO).defaultIfEmpty(null);
+        return Flowable.just(originDataDTO);
     }
 
     private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
