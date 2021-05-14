@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,9 +11,12 @@ import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
+import com.taobao.tair.DataEntry;
+import com.taobao.tair.Result;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
+import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -47,6 +51,16 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         tacLogger.info("WuZheTianOriginDataItemQueryExtPt");
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         originDataDTO.setResult(buildItemList());
+        try {
+            List<String> sKeyList = new ArrayList<>();
+            sKeyList.add("test");
+            Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
+            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+mgetResult.toString());
+        }catch (Exception e){
+            tacLogger.info("WuZheTianOriginDataItemQueryExtPt-Exception:"+e.getStackTrace());
+            return Flowable.just(originDataDTO);
+        }
+
         tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] originDataDTO={}" + JSON.toJSONString(originDataDTO));
         return Flowable.just(originDataDTO);
     }
