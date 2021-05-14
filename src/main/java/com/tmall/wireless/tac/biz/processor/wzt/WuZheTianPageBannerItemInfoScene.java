@@ -87,7 +87,7 @@ public class WuZheTianPageBannerItemInfoScene {
         pageInfoDO.setIndex(index.intValue());
         pageInfoDO.setPageSize(pageSize.intValue());
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
-
+        tacLogger.info("WuZheTianPageBannerItemInfoScene测试info-2");
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)
             .onErrorReturn(r -> TacResult.errorResult(""));
