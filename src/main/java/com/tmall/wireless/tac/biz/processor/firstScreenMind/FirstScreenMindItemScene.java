@@ -64,7 +64,11 @@ public class FirstScreenMindItemScene {
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(response -> {
                     Map<String, Object> contentInfo = queryContentInfo(sgFrameworkContextItem);
-                    response.put("contentModel", contentInfo);
+
+                    if (response.getExtInfos() == null) {
+                        response.setExtInfos(Maps.newHashMap());
+                    }
+                    response.getExtInfos().put("contentModel", contentInfo);
                     return response;
                 })
                 .map(TacResult::newResult)
