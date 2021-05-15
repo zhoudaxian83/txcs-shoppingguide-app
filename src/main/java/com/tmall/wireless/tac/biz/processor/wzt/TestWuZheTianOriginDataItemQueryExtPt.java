@@ -38,7 +38,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TestWuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
-    Logger LOGGER = LoggerFactory.getLogger(DefaultOriginDataItemQueryExtPt.class);
+    Logger LOGGER = LoggerFactory.getLogger(TestWuZheTianOriginDataItemQueryExtPt.class);
 
     @Autowired
     RecommendSpi recommendSpi;
