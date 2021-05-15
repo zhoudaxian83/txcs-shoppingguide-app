@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
     useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-    scenario = ScenarioConstantApp.WU_ZHE_TIAN)
+    scenario = ScenarioConstantApp.WU_ZHE_TIAN+"test")
 @Service
 public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     @Autowired
