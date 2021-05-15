@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -15,15 +16,18 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -33,6 +37,9 @@ public class FirstScreenMindItemScene {
     TacLogger tacLogger;
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
+
+    @Autowired
+    ContentInfoSupport contentInfoSupport;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
         tacLogger.info("***FirstScreenMindItemScene context.toString():***"+context.toString());
@@ -55,9 +62,25 @@ public class FirstScreenMindItemScene {
         tacLogger.info("***FirstScreenMindItemScene sgFrameworkContextItem.toString()***:"+sgFrameworkContextItem.toString());
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+                .map(response -> {
+                    Map<String, Object> contentInfo = queryContentInfo(sgFrameworkContextItem);
+                    response.put("contentModel", contentInfo);
+                    return response;
+                })
                 .map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
 
+    }
+
+    private Map<String, Object> queryContentInfo(SgFrameworkContextItem sgFrameworkContextItem) {
+        Map<String, Object> contentInfo = Maps.newHashMap();
+        Long moduleId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "moduleId", 0L);
+        if (moduleId <= 0) {
+            return contentInfo;
+        }
+        Map<Long, Map<String, Object>> contentIdToContentInfoMap = contentInfoSupport.queryContentInfoByContentIdList(Lists.newArrayList(moduleId));
+
+        return Optional.ofNullable(contentIdToContentInfoMap).map(map -> map.get(moduleId)).orElse(Maps.newHashMap());
     }
 
     public SceneInfo getSceneInfo(){
