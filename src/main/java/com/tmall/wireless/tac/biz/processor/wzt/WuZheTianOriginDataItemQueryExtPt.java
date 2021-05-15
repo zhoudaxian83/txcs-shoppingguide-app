@@ -49,6 +49,17 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
+        /**
+         * 1、tair获取商品列表
+         * 2、tpp渲染个性化排序
+         * 3、排序商品存入tair供下次使用
+         * 4、获取前20作为当前页数据
+         * 5、查询限购信息
+         * 6、captain获取商品数据
+         * 7、处理过滤逻辑
+         * 8、转换为vo给前端展示
+         *
+         */
         tacLogger.info("WuZheTianOriginDataItemQueryExtPt");
         tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] context={}" + JSON.toJSONString(context));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
