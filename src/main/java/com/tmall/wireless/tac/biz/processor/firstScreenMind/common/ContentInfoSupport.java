@@ -40,7 +40,7 @@ public class ContentInfoSupport {
     public Map<Long, Map<String, Object>> queryContentInfoByContentIdList(List<Long> contentIdList) {
         List<String> sKeyList = new ArrayList<>();
 
-        Map<Long, Object> contentInfoMap = Maps.newHashMap();
+        Map<Long, Map<String, Object>> contentInfoMap = Maps.newHashMap();
         for (Long contentId : contentIdList) {
             sKeyList.add(CONTENT_TAIR_INFO_KEY + contentId);
         }
