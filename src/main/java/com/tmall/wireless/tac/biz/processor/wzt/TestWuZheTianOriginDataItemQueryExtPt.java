@@ -8,7 +8,6 @@ import com.alibaba.cola.extension.Extension;
 
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
-import com.tmall.txcs.biz.supermarket.extpt.origindata.DefaultOriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
