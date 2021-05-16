@@ -94,6 +94,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 contentInfo.put("contentId",tairSceneDTO.getId());
                 contentInfo.put("contentTitle",tairSceneDTO.getTitle());
                 contentInfo.put("contentSubtitle",tairSceneDTO.getSubtitle());
+                contentInfo.put("itemSetIds", "5233");
                 Map<String, Object> tairPropertyMap = tairSceneDTO.getProperty();
                 //前后端映射
                 for(FrontBackMapEnum frontBackMapEnum : FrontBackMapEnum.values()){
