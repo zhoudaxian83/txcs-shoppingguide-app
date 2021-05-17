@@ -109,13 +109,13 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<ItemEntity> result = Lists.newArrayList();
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setItemId(591228976713L);
-        //itemEntity.setO2oType(defaultO2oType);
+        itemEntity.setO2oType(defaultO2oType);
         itemEntity.setBizType(defaultBizType);
         result.add(itemEntity);
 
         ItemEntity itemEntity2 = new ItemEntity();
         itemEntity2.setItemId(591228976713L);
-        //itemEntity2.setO2oType(defaultO2oType);
+        itemEntity2.setO2oType(defaultO2oType);
         itemEntity2.setBizType(defaultBizType);
         result.add(itemEntity2);
         return result;
