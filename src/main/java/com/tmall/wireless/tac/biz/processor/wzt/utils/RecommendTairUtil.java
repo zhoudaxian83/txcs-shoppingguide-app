@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  * @Date: 2021/5/17 15:48
  */
 @Component
-public class TairUtil {
+public class RecommendTairUtil {
     @Resource
     private MultiClusterTairManager multiClusterTairManager;
 

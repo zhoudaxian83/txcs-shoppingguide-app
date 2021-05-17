@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
@@ -26,7 +27,8 @@ import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
+import com.tmall.wireless.tac.biz.processor.wzt.enums.LogicalArea;
+import com.tmall.wireless.tac.biz.processor.wzt.utils.RecommendTairUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +47,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     TacLogger tacLogger;
 
     @Resource
-    TairUtil tairUtil;
+    RecommendTairUtil recommendTairUtil;
 
     @Autowired
     TairFactorySpi tairFactorySpi;
@@ -76,21 +78,26 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
          * 8、转换为vo给前端展示
          *
          */
-        tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] context={}" + JSON.toJSONString(context));
-        OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
+        tacLogger.info("context=" + JSON.toJSONString(context));
+        Long smAreaId = MapUtil.getLongWithDefault(context.getRequestParams(), "smAreaId", 330100L);
+        LogicalArea logicalArea =LogicalArea.ofCoreCityCode(smAreaId);
+        String cacheKey = logicalArea.getCacheKey();
+        String resultString = recommendTairUtil.queryPromotionFromCache(cacheKey);
 
+
+        OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         originDataDTO.setResult(buildItemList());
 
-        //获取商品排期列表
-        List<String> sKeyList = new ArrayList<>();
-        sKeyList.add("wuZheTian_HD_pre");
-        sKeyList.add("wuZheTian_HB_pre");
-        sKeyList.add("wuZheTian_HN_pre");
-        sKeyList.add("wuZheTian_HZ_pre");
-        sKeyList.add("wuZheTian_XN_pre");
-        Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager()
-            .mget(labelSceneNamespace, sKeyList);
-        tacLogger.info("mgetResult=" + JSON.toJSONString(mgetResult));
+        ////获取商品排期列表
+        //List<String> sKeyList = new ArrayList<>();
+        //sKeyList.add("wuZheTian_HD_pre");
+        //sKeyList.add("wuZheTian_HB_pre");
+        //sKeyList.add("wuZheTian_HN_pre");
+        //sKeyList.add("wuZheTian_HZ_pre");
+        //sKeyList.add("wuZheTian_XN_pre");
+        //Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager()
+        //    .mget(labelSceneNamespace, sKeyList);
+        //tacLogger.info("mgetResult=" + JSON.toJSONString(mgetResult));
 
         //tpp获取个性化排序规则
         RecommendRequest recommendRequest = sgExtensionExecutor.execute(
@@ -115,14 +122,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 return recommendResponseEntityResponse;
             });
         tacLogger.info("responseFlowable=" + JSON.toJSONString(responseFlowable));
-        Boolean aBoolean = tairUtil.updateItemDetailPromotionCache(originDataDTO, "TEST");
-        tacLogger.info("缓存返回结果=" + tairUtil.queryPromotionFromCache("TEST"));
-        tacLogger.info("缓存返回结果wuZheTian_HD_pre=" + tairUtil.queryPromotionFromCache("wuZheTian_HD_pre"));
-        tacLogger.info("缓存返回结果wuZheTian_HB_pre=" + tairUtil.queryPromotionFromCache("wuZheTian_HB_pre"));
-        tacLogger.info("缓存返回结果wuZheTian_HN_pre=" + tairUtil.queryPromotionFromCache("wuZheTian_HN_pre"));
-        tacLogger.info("缓存返回结果wuZheTian_HZ_pre=" + tairUtil.queryPromotionFromCache("wuZheTian_HZ_pre"));
-        tacLogger.info("缓存返回结果wuZheTian_XN_pre=" + tairUtil.queryPromotionFromCache("wuZheTian_XN_pre"));
-        tacLogger.info("responseFlowable=" + JSON.toJSONString(responseFlowable));
+        Boolean aBoolean = recommendTairUtil.updateItemDetailPromotionCache(originDataDTO, "TEST");
+        tacLogger.info("缓存返回结果=" + recommendTairUtil.queryPromotionFromCache("TEST"));
         return Flowable.just(originDataDTO);
     }
 
