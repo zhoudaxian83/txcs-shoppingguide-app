@@ -83,7 +83,6 @@ public class FirstScreenMindItemScene {
             return contentInfo;
         }
         Map<Long, Map<String, Object>> contentIdToContentInfoMap = contentInfoSupport.queryContentInfoByContentIdList(Lists.newArrayList(moduleId));
-        tacLogger.info("***FirstScreenMindItemScene contentIdToContentInfoMap***:"+contentIdToContentInfoMap.toString());
         return Optional.ofNullable(contentIdToContentInfoMap).map(map -> map.get(moduleId)).orElse(Maps.newHashMap());
     }
 
