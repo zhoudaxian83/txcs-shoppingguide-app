@@ -105,8 +105,8 @@ public class FirstScreenMindItemScene {
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
+        itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();

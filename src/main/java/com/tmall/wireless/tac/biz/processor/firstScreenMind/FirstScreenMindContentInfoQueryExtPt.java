@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.cola.extension.Extension;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
@@ -8,6 +9,7 @@ import com.taobao.tair.Result;
 import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
 import com.tmall.aselfcommon.model.gcs.enums.GcsSceneType;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
+import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryRequest;
 import com.tmall.txcs.gs.model.Response;
@@ -32,6 +34,8 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
@@ -94,7 +98,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 contentInfo.put("contentId",tairSceneDTO.getId());
                 contentInfo.put("contentTitle",tairSceneDTO.getTitle());
                 contentInfo.put("contentSubtitle",tairSceneDTO.getSubtitle());
-                contentInfo.put("itemSetIds", "5233");
+                contentInfo.put("itemSetIds", getItemSetIds(tairSceneDTO));
                 Map<String, Object> tairPropertyMap = tairSceneDTO.getProperty();
                 //前后端映射
                 for(FrontBackMapEnum frontBackMapEnum : FrontBackMapEnum.values()){
@@ -145,6 +149,21 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
         }
         tacLogger.info("****FirstScreenMindContentInfoQueryExtPt contentDTOMap*****:"+contentDTOMap.toString());
         return Flowable.just(Response.success(contentDTOMap));
+    }
+
+    private static String getItemSetIds(TairSceneDTO labelSceneContentInfo) {
+
+        List<SceneDetailValue> sceneDetailValues = Optional.ofNullable(labelSceneContentInfo)
+                .map(TairSceneDTO::getDetails)
+                .orElse(Lists.newArrayList());
+
+        if (CollectionUtils.isEmpty(sceneDetailValues)) {
+            return "";
+        }
+
+        List<Long> itemSetIds = sceneDetailValues.stream().map(SceneDetailValue::getItemsetId).collect(Collectors.toList());
+        return Joiner.on(",").join(itemSetIds);
+
     }
 
 
