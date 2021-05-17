@@ -81,7 +81,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
          */
         tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] context={}" + JSON.toJSONString(context));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-        //originDataDTO.setResult(buildItemList());
+        originDataDTO.setResult(buildItemList());
 
         //获取商品排期列表
         List<String> sKeyList = new ArrayList<>();
@@ -118,18 +118,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 return recommendResponseEntityResponse;
             });
         tacLogger.info("responseFlowable=" + JSON.toJSONString(responseFlowable));
-        //return Flowable.just(originDataDTO);
-
-        return recommendSpi.recommendItem(recommendRequest)
-            .map(recommendResponseEntityResponse -> {
-                // tpp 返回失败
-                if (!recommendResponseEntityResponse.isSuccess()
-                    || recommendResponseEntityResponse.getValue() == null
-                    || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
-                    return new OriginDataDTO<>();
-                }
-                return convert(recommendResponseEntityResponse.getValue());
-            });
+        return Flowable.just(originDataDTO);
     }
 
     /**
@@ -152,20 +141,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         itemEntity2.setBizType(defaultBizType);
         result.add(itemEntity2);
         return result;
-    }
-
-    private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
-        OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-        //originDataDTO.setResult(recommendResponseEntity
-        //    .getResult()
-        //    .stream()
-        //    .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
-        tacLogger.info("recommendResponseEntity=" + JSON.toJSONString(recommendResponseEntity
-            .getResult()
-            .stream()
-            .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList())));
-        originDataDTO.setResult(this.buildItemList());
-        return originDataDTO;
     }
 
 }
