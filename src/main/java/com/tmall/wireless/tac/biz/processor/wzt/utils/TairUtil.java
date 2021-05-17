@@ -10,7 +10,6 @@ import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
-import com.tcls.mkt.atmosphere.model.promotion.ItemPromotionDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -29,9 +28,7 @@ public class TairUtil {
     @Autowired
     TacLogger tacLogger;
 
-    public static class ItemPromotionTair {
-        public static int NAME_SPACE = 184;
-    }
+    public static int NAME_SPACE = 184;
 
     /**
      * 通过get方法获取key值对应的缓存
@@ -43,7 +40,7 @@ public class TairUtil {
                 Lists.newArrayList("ITEM", "PROM", "TEST", itemId),
                 "_");
             //调用get方法获取key值对应的缓存
-            Result<DataEntry> result = tairMdbManager184.get(ItemPromotionTair.NAME_SPACE, cacheKey);
+            Result<DataEntry> result = tairMdbManager184.get(NAME_SPACE, cacheKey);
             if (null == result || !result.isSuccess()
                 || ResultCode.DATANOTEXSITS.equals(result.getRc())
                 || null == result.getValue()
@@ -67,7 +64,7 @@ public class TairUtil {
             Lists.newArrayList("ITEM", "PROM", "TEST", itemId),
             "_");
         //更新超返数据到tair，过期时间2分钟
-        ResultCode resultCode = tairMdbManager184.put(ItemPromotionTair.NAME_SPACE, cacheKey,
+        ResultCode resultCode = tairMdbManager184.put(NAME_SPACE, cacheKey,
             JSON.toJSONString(czmfItem), 0, 120);
         if (resultCode == null || !resultCode.isSuccess()) {
             tacLogger.info("[CzmfInfoManage]Failed to update item detail promotion cache, cacheKey: " + cacheKey);

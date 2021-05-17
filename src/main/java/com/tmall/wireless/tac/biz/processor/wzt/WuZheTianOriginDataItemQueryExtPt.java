@@ -45,7 +45,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     TacLogger tacLogger;
 
-    @Autowired
+    @Resource
     TairUtil tairUtil;
 
     @Autowired
