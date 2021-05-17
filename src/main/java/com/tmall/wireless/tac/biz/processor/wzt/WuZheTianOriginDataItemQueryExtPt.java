@@ -104,11 +104,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         params.put("itemIds", "591228976713,615075644541");
         recommendRequest.setParams(params);
         tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
-        Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
-            .recommendItem(recommendRequest).map(recommendResponseEntityResponse -> {
-                tacLogger.info("responseFlowable=" + JSON.toJSONString(recommendResponseEntityResponse));
-                return recommendResponseEntityResponse;
-            });
 
         //获取限购信息
         //ItemLimitInfoQuery itemLimitInfoQuery = new ItemLimitInfoQuery();
@@ -117,7 +112,23 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(itemLimitInfoQuery);
         //
         //tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] itemLimitResult=" + JSON.toJSONString(itemLimitResult));
-        return Flowable.just(originDataDTO);
+
+        Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
+            .recommendItem(recommendRequest).map(recommendResponseEntityResponse -> {
+                return recommendResponseEntityResponse;
+            });
+        tacLogger.info("responseFlowable=" + JSON.toJSONString(responseFlowable));
+        //return Flowable.just(originDataDTO);
+        return recommendSpi.recommendItem(recommendRequest)
+            .map(recommendResponseEntityResponse -> {
+                // tpp 返回失败
+                if (!recommendResponseEntityResponse.isSuccess()
+                    || recommendResponseEntityResponse.getValue() == null
+                    || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
+                    return new OriginDataDTO<>();
+                }
+                return convert(recommendResponseEntityResponse.getValue());
+            });
     }
 
     /**
@@ -142,6 +153,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     }
 
     private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
+        tacLogger.info("recommendResponseEntity=" + JSON.toJSONString(recommendResponseEntity));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
 
         originDataDTO.setHasMore(recommendResponseEntity.isHasMore());
