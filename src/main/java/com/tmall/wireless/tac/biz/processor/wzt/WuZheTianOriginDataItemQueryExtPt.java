@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
@@ -11,6 +13,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
+import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
@@ -24,6 +27,7 @@ import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +44,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     @Autowired
     TacLogger tacLogger;
+
+    @Autowired
+    TairUtil tairUtil;
 
     @Autowired
     TairFactorySpi tairFactorySpi;
@@ -108,6 +115,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             .recommendItem(recommendRequest).map(recommendResponseEntityResponse -> {
                 return recommendResponseEntityResponse;
             });
+        tacLogger.info("responseFlowable=" + JSON.toJSONString(responseFlowable));
+        Boolean aBoolean = tairUtil.updateItemDetailPromotionCache(originDataDTO, 123L);
+        tacLogger.info("缓存返回结果=" + tairUtil.queryPromotionFromCache(123L));
         tacLogger.info("responseFlowable=" + JSON.toJSONString(responseFlowable));
         return Flowable.just(originDataDTO);
     }
