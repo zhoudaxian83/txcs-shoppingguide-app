@@ -45,6 +45,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     TairFactorySpi tairFactorySpi;
     private static final int labelSceneNamespace = 184;
 
+    public static final String defaultBizType = "sm";
+    public static final String defaultO2oType = "B2C";
+
     //@HSFConsumer(serviceVersion = "1.0.0")
     //private TodayCrazyLimitFacade todayCrazyLimitFacade;
 
@@ -97,18 +100,23 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         return Flowable.just(originDataDTO);
     }
 
+    /**
+     * 商品列表入参那构建
+     *
+     * @return
+     */
     private List<ItemEntity> buildItemList() {
         List<ItemEntity> result = Lists.newArrayList();
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setItemId(591228976713L);
-        itemEntity.setO2oType("B2C");
-        itemEntity.setBizType("sm");
+        itemEntity.setO2oType(defaultO2oType);
+        itemEntity.setBizType(defaultBizType);
         result.add(itemEntity);
 
         ItemEntity itemEntity2 = new ItemEntity();
         itemEntity2.setItemId(591228976713L);
-        itemEntity2.setO2oType("B2C");
-        itemEntity2.setBizType("sm");
+        itemEntity2.setO2oType(defaultO2oType);
+        itemEntity2.setBizType(defaultBizType);
         result.add(itemEntity2);
         return result;
     }
