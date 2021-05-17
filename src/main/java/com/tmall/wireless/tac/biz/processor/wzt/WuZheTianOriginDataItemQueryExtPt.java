@@ -81,7 +81,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
          */
         tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] context={}" + JSON.toJSONString(context));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-        originDataDTO.setResult(buildItemList());
+        //originDataDTO.setResult(buildItemList());
 
         //获取商品排期列表
         List<String> sKeyList = new ArrayList<>();
@@ -119,9 +119,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             });
         tacLogger.info("responseFlowable=" + JSON.toJSONString(responseFlowable));
         //return Flowable.just(originDataDTO);
+
         return recommendSpi.recommendItem(recommendRequest)
             .map(recommendResponseEntityResponse -> {
-                tacLogger.info("tpp返回=" + JSON.toJSONString(recommendResponseEntityResponse));
                 // tpp 返回失败
                 if (!recommendResponseEntityResponse.isSuccess()
                     || recommendResponseEntityResponse.getValue() == null
@@ -138,6 +138,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @return
      */
     private List<ItemEntity> buildItemList() {
+
         List<ItemEntity> result = Lists.newArrayList();
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setItemId(591228976713L);
@@ -154,7 +155,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     }
 
     private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
-        tacLogger.info("recommendResponseEntity=" + JSON.toJSONString(recommendResponseEntity));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
 
         originDataDTO.setHasMore(recommendResponseEntity.isHasMore());
@@ -163,10 +163,15 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         originDataDTO.setScm(recommendResponseEntity.getScm());
         originDataDTO.setTppBuckets(recommendResponseEntity.getTppBuckets());
 
-        originDataDTO.setResult(recommendResponseEntity
+        //originDataDTO.setResult(recommendResponseEntity
+        //    .getResult()
+        //    .stream()
+        //    .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
+        tacLogger.info("recommendResponseEntity=" + JSON.toJSONString(recommendResponseEntity
             .getResult()
             .stream()
-            .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
+            .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList())));
+        originDataDTO.setResult(this.buildItemList());
         return originDataDTO;
     }
 
