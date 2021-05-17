@@ -121,6 +121,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //return Flowable.just(originDataDTO);
         return recommendSpi.recommendItem(recommendRequest)
             .map(recommendResponseEntityResponse -> {
+                tacLogger.info("tpp返回=" + JSON.toJSONString(recommendResponseEntityResponse));
                 // tpp 返回失败
                 if (!recommendResponseEntityResponse.isSuccess()
                     || recommendResponseEntityResponse.getValue() == null
