@@ -47,6 +47,8 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         tacLogger.info("执行了扩展VO");
+        tacLogger.info("执行了扩展VO-VO入参数据：" + JSON.toJSONString(buildItemVoRequest));
+
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
         boolean hasMainSource = false;
