@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -11,9 +12,13 @@ import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.taobao.hsf.app.spring.util.annotation.HSFConsumer;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
+import com.tmall.aself.shoppingguide.client.todaycrazyv2.TodayCrazyLimitFacade;
+import com.tmall.aself.shoppingguide.client.todaycrazyv2.query.ItemLimitInfoQuery;
+import com.tmall.aself.shoppingguide.client.todaycrazyv2.result.ItemLimitResult;
 import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
@@ -57,6 +62,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     //@HSFConsumer(serviceVersion = "1.0.0")
     //private TodayCrazyLimitFacade todayCrazyLimitFacade;
+
+    @Autowired
+    TodayCrazyLimitFacade todayCrazyLimitFacade;
 
     @Autowired
     RecommendSpi recommendSpi;
@@ -104,20 +112,20 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         recommendRequest.setParams(params);
         tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
 
-        ////获取限购信息
-        //ItemLimitInfoQuery itemLimitInfoQuery = new ItemLimitInfoQuery();
-        //itemLimitInfoQuery.setUserId(0L);
-        //itemLimitInfoQuery.setItemIdList(Arrays.asList(591228976713L, 615075644541L));
-        //ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(itemLimitInfoQuery);
-        //tacLogger.info("itemLimitResult=" + JSON.toJSONString(itemLimitResult));
+        //获取限购信息
+        ItemLimitInfoQuery itemLimitInfoQuery = new ItemLimitInfoQuery();
+        itemLimitInfoQuery.setUserId(0L);
+        itemLimitInfoQuery.setItemIdList(Arrays.asList(591228976713L, 615075644541L));
+        ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(itemLimitInfoQuery);
+        tacLogger.info("itemLimitResult=" + JSON.toJSONString(itemLimitResult));
 
         Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
             .recommendItem(recommendRequest).map(recommendResponseEntityResponse -> {
                 return recommendResponseEntityResponse;
             });
         tacLogger.info("responseFlowable=" + JSON.toJSONString(responseFlowable));
-        Boolean aBoolean = tairUtil.updateItemDetailPromotionCache(originDataDTO, 123L);
-        tacLogger.info("缓存返回结果=" + tairUtil.queryPromotionFromCache(123L));
+        Boolean aBoolean = tairUtil.updateItemDetailPromotionCache(originDataDTO, "TEST");
+        tacLogger.info("缓存返回结果=" + tairUtil.queryPromotionFromCache("TEST"));
         tacLogger.info("responseFlowable=" + JSON.toJSONString(responseFlowable));
         return Flowable.just(originDataDTO);
     }
