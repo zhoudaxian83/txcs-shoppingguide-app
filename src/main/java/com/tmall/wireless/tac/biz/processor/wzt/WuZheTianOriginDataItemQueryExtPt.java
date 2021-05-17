@@ -100,13 +100,15 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             context.getBizScenario(),
             pt -> pt.process0(context));
         Map<String, String> params = Maps.newHashMap();
-        recommendRequest.setAppId(24501L);
+        recommendRequest.setAppId(2021051300L);
         params.put("itemIds", "591228976713,615075644541");
         recommendRequest.setParams(params);
         tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
         Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
-            .recommendItem(recommendRequest);
-        tacLogger.info("responseFlowable=" + JSON.toJSONString(responseFlowable));
+            .recommendItem(recommendRequest).map(recommendResponseEntityResponse -> {
+                tacLogger.info("responseFlowable=" + JSON.toJSONString(recommendResponseEntityResponse));
+                return recommendResponseEntityResponse;
+            });
 
         //获取限购信息
         //ItemLimitInfoQuery itemLimitInfoQuery = new ItemLimitInfoQuery();
