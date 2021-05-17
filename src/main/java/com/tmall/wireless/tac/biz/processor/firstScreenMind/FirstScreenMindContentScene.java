@@ -60,7 +60,7 @@ public class FirstScreenMindContentScene {
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
         tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
-                .map(response -> {
+                /*.map(response -> {
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
                     tacLogger.info("*******requestParams:"+ requestParams);
                     if(requestParams == null || requestParams.isEmpty()){
@@ -84,7 +84,7 @@ public class FirstScreenMindContentScene {
                     tacLogger.info("*******propertyMap:"+propertyMap);
                     response.getExtInfos().put("propertyMap", propertyMap);
                     return response;
-                })
+                })*/
                 .map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
     }
