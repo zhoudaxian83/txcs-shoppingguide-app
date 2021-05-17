@@ -22,8 +22,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TairUtil {
-    @Resource(name = "tairMdbManager184")
-    private MultiClusterTairManager tairMdbManager184;
+    @Resource
+    private MultiClusterTairManager multiClusterTairManager;
 
     @Autowired
     TacLogger tacLogger;
@@ -40,7 +40,7 @@ public class TairUtil {
                 Lists.newArrayList("ITEM", "PROM", "TEST", itemId),
                 "_");
             //调用get方法获取key值对应的缓存
-            Result<DataEntry> result = tairMdbManager184.get(NAME_SPACE, cacheKey);
+            Result<DataEntry> result = multiClusterTairManager.get(NAME_SPACE, cacheKey);
             if (null == result || !result.isSuccess()
                 || ResultCode.DATANOTEXSITS.equals(result.getRc())
                 || null == result.getValue()
@@ -64,7 +64,7 @@ public class TairUtil {
             Lists.newArrayList("ITEM", "PROM", "TEST", itemId),
             "_");
         //更新超返数据到tair，过期时间2分钟
-        ResultCode resultCode = tairMdbManager184.put(NAME_SPACE, cacheKey,
+        ResultCode resultCode = multiClusterTairManager.put(NAME_SPACE, cacheKey,
             JSON.toJSONString(czmfItem), 0, 120);
         if (resultCode == null || !resultCode.isSuccess()) {
             tacLogger.info("[CzmfInfoManage]Failed to update item detail promotion cache, cacheKey: " + cacheKey);
