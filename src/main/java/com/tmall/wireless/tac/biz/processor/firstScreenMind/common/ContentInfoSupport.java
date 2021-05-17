@@ -150,7 +150,7 @@ public class ContentInfoSupport {
             SubContentModel sub = new SubContentModel();
             sub.setSubContentId(detail.getDetailId());
             sub.setSubContentTitle(detail.getTitle());
-            if(StringUtil.isNotEmpty(String.valueOf(contentInfo.get("subContentType")))){
+            if(contentInfo.get("subContentType") != null && StringUtil.isNotEmpty(String.valueOf(contentInfo.get("subContentType")))){
                 sub.setSubContentType(String.valueOf(contentInfo.get("subContentType")));
             }
             sub.setItemSetIds(RenderLangUtil.safeString(detail.getItemsetId()));
