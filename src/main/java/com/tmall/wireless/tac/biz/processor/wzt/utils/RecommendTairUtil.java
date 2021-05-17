@@ -32,23 +32,22 @@ public class RecommendTairUtil {
     /**
      * 通过get方法获取key值对应的缓存
      */
-    public String queryPromotionFromCache(String cacheKey) {
+    public Object queryPromotionFromCache(String cacheKey) {
+        cacheKey = ACHE_NAME_PREFIX + cacheKey;
         try {
-            ////约定好的key值
-            //String cacheKey = StringUtils.join(
-            //    Lists.newArrayList("ITEM", "PROM", "TEST", itemId),
-            //    "_");
             //调用get方法获取key值对应的缓存
-            Result<DataEntry> result = multiClusterTairManager.get(NAME_SPACE, ACHE_NAME_PREFIX+cacheKey);
+            Result<DataEntry> result = multiClusterTairManager.get(NAME_SPACE, cacheKey);
             if (null == result || !result.isSuccess()
                 || ResultCode.DATANOTEXSITS.equals(result.getRc())
                 || null == result.getValue()
                 || null == result.getValue().getValue()) {
                 return null;
             }
-            return String.valueOf(result.getValue().getValue());
+            tacLogger.info("tair缓存取出" + cacheKey + String.valueOf(result.getValue().getValue()));
+            return result.getValue().getValue();
         } catch (Exception e) {
-            tacLogger.error("[CzmfInfoManage] get item promotion from cache failed, itemId: " + ACHE_NAME_PREFIX+cacheKey, e);
+            tacLogger.error(
+                "[CzmfInfoManage] get item promotion from cache failed, itemId: " + cacheKey, e);
             return null;
         }
     }
@@ -56,17 +55,14 @@ public class RecommendTairUtil {
     /**
      * 调用put方法将ItemPromotionDTO对象存到NAME_SPACE下，key值为cacheKey
      */
-    public Boolean updateItemDetailPromotionCache(OriginDataDTO<ItemEntity> czmfItem,
+    public Boolean updateItemDetailPromotionCache(Object data,
         String cacheKey) {
-        ////约定好的key值
-        //String cacheKey = StringUtils.join(
-        //    Lists.newArrayList("ITEM", "PROM", "TEST", itemId),
-        //    "_");
         //更新超返数据到tair，过期时间2分钟
         ResultCode resultCode = multiClusterTairManager.put(NAME_SPACE, cacheKey,
-            JSON.toJSONString(czmfItem), 0, 120);
+            JSON.toJSONString(data), 0, 60 * 10);
         if (resultCode == null || !resultCode.isSuccess()) {
-            tacLogger.info("[CzmfInfoManage]Failed to update item detail promotion cache, cacheKey: " + ACHE_NAME_PREFIX+cacheKey);
+            tacLogger.info("[CzmfInfoManage]Failed to update item detail promotion cache, cacheKey: " + ACHE_NAME_PREFIX
+                + cacheKey);
             return false;
         }
         return true;

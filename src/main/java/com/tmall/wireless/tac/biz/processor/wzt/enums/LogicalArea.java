@@ -9,11 +9,11 @@ import com.ali.com.google.common.base.Strings;
  * @Date: 2021/5/17 16:49
  */
 public enum LogicalArea implements Serializable {
-    HD("107", "HD", "华东", 310100L,"wuZheTian_HD_pre"),
-    HB("108", "HB", "华北", 110100L,"wuZheTian_HB_pre"),
-    HN("109", "HN", "华南", 440100L,"wuZheTian_HN_pre"),
-    HZ("111", "HZ", "华中", 420100L,"wuZheTian_HZ_pre"),
-    XN("112", "XN", "西南/西北", 510100L,"wuZheTian_XN_pre");
+    HD("107", "HD", "华东", 310100L, "wuZheTian_HD"),
+    HB("108", "HB", "华北", 110100L, "wuZheTian_HB"),
+    HN("109", "HN", "华南", 440100L, "wuZheTian_HN"),
+    HZ("111", "HZ", "华中", 420100L, "wuZheTian_HZ"),
+    XN("112", "XN", "西南/西北", 510100L, "wuZheTian_XN");
 
     private final String code;
     private final String shorthand;
@@ -21,7 +21,7 @@ public enum LogicalArea implements Serializable {
     private final long coreCityCode;
     private final String cacheKey;
 
-    private LogicalArea(String code, String shorthand, String name, long coreCityCode,String cacheKey) {
+    private LogicalArea(String code, String shorthand, String name, long coreCityCode, String cacheKey) {
         this.code = code;
         this.shorthand = shorthand;
         this.name = name;
@@ -86,9 +86,9 @@ public enum LogicalArea implements Serializable {
     }
 
     public static LogicalArea ofCoreCityCode(Long coreCityCode) {
-        for (LogicalArea s : LogicalArea.values()) {
-            if (s.getCoreCityCode() == coreCityCode) {
-                return s;
+        for (LogicalArea area : LogicalArea.values()) {
+            if (area.getCoreCityCode() == coreCityCode) {
+                return area;
             }
         }
         return null;
