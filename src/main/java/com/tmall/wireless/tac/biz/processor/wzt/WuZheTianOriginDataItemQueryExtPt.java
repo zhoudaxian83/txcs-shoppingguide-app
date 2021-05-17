@@ -86,12 +86,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //tair获取推荐商品
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairData(smAreaId);
         //tpp获取个性化排序规则
-        RecommendRequest recommendRequest = sgExtensionExecutor.execute(
-            ItemOriginDataRequestExtPt.class,
-            context.getBizScenario(),
-            pt -> pt.process0(context));
+        RecommendRequest recommendRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
         params.put("itemIds", "591228976713,615075644541");
+        params.put("userId", userId + "");
+        params.put("smAreaId", smAreaId + "");
         recommendRequest.setParams(params);
         tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
 
@@ -113,6 +112,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 //    || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
                 //    return new OriginDataDTO<>();
                 //}
+
                 return convert(recommendResponseEntityResponse.getValue());
             });
     }
