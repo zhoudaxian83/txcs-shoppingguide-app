@@ -91,11 +91,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         tacLogger.info("mgetResult=" + JSON.toJSONString(mgetResult));
 
         //tpp获取个性化排序规则
-        RecommendRequest recommendRequest = sgExtensionExecutor.execute(
-            ItemOriginDataRequestExtPt.class,
-            context.getBizScenario(),
-            pt -> pt.process0(context));
-        tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
+        //RecommendRequest recommendRequest = sgExtensionExecutor.execute(
+        //    ItemOriginDataRequestExtPt.class,
+        //    context.getBizScenario(),
+        //    pt -> pt.process0(context));
+        //tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
         //Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
         //    .recommendItem(recommendRequest);
 
