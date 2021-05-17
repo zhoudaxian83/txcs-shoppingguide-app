@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -21,9 +22,13 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -55,6 +60,29 @@ public class FirstScreenMindContentScene {
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
         tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
+                .map(response -> {
+                    Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
+                    if(requestParams == null || requestParams.isEmpty()){
+                        return null;
+                    }
+                    Object isFixPositionBanner = requestParams.get("isFixPositionBanner");
+                    Map<String,Object> propertyMap = Maps.newHashMap();
+
+                    propertyMap.put("index",response.getIndex());
+                    if((null == isFixPositionBanner) || ("".equals(isFixPositionBanner)) || StringUtils.equalsIgnoreCase("true",String.valueOf(isFixPositionBanner))){
+                        if (response.isHasMore()) {
+                            propertyMap.put("isFixPositionBanner", true);
+                        } else {
+                            propertyMap.put("isFixPositionBanner", false);
+                            response.setHasMore(true);
+                        }
+                    } else if(StringUtils.equalsIgnoreCase("false",String.valueOf(isFixPositionBanner))){
+                        propertyMap.put("isFixPositionBanner", false);
+                    }
+
+                    response.getExtInfos().put("propertyMap", propertyMap);
+                    return response;
+                })
                 .map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
     }
