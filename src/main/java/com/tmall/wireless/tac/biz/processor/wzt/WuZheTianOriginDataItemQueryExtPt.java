@@ -79,38 +79,18 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             RequestKeyConstantApp.BANNER_INFO,
             "");
         tacLogger.info("WuZheTianOriginDataItemQueryExtPt-test1");
-        if (StringUtils.isEmpty(bannerInfo)) {
-            return Flowable.just(originDataDTO);
-        }
-
         originDataDTO.setResult(buildItemList(bannerInfo));
-        tacLogger.info("WuZheTianOriginDataItemQueryExtPt-test2");
         return Flowable.just(originDataDTO);
     }
 
     private List<ItemEntity> buildItemList(String bannerInfo) {
         List<ItemEntity> result = Lists.newArrayList();
-        Map<String, List<BannerItemDTO>> bannerIndex2ItemList = BannerUtil.parseBannerItem(bannerInfo);
-
-        if (MapUtils.isEmpty(bannerIndex2ItemList)) {
-            return result;
-        }
-
-        bannerIndex2ItemList.keySet().forEach(key -> {
-            List<BannerItemDTO> bannerItemDTOList = bannerIndex2ItemList.get(key);
-            if (CollectionUtils.isEmpty(bannerItemDTOList)) {
-                return;
-            }
-            List<ItemEntity> itemEntityList = bannerItemDTOList.stream().map(bannerItemDTO -> {
-                ItemEntity itemEntity = new ItemEntity();
-                itemEntity.setItemId(bannerItemDTO.getItemId());
-                itemEntity.setO2oType(bannerItemDTO.getLocType());
-                itemEntity.setBizType(defaultBizType);
-                return itemEntity;
-            }).collect(Collectors.toList());
-            result.addAll(itemEntityList);
-        });
-
+        List<ItemEntity> itemEntityList = Lists.newArrayList();
+        ItemEntity itemEntity = new ItemEntity();
+        itemEntity.setItemId(591228976713L);
+        itemEntity.setO2oType("B2C");
+        itemEntity.setBizType(defaultBizType);
+        result.addAll(itemEntityList);
         return result;
     }
 
