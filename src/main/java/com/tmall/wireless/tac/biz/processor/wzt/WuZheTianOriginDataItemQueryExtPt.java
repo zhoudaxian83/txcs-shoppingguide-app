@@ -156,13 +156,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-
-        originDataDTO.setHasMore(recommendResponseEntity.isHasMore());
-        originDataDTO.setIndex(recommendResponseEntity.getIndex());
-        originDataDTO.setPvid("test");
-        originDataDTO.setScm(recommendResponseEntity.getScm());
-        originDataDTO.setTppBuckets(recommendResponseEntity.getTppBuckets());
-
         //originDataDTO.setResult(recommendResponseEntity
         //    .getResult()
         //    .stream()
