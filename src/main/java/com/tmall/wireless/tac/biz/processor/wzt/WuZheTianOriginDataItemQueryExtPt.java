@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
@@ -18,8 +20,10 @@ import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.Response;
+import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
@@ -95,6 +99,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             ItemOriginDataRequestExtPt.class,
             context.getBizScenario(),
             pt -> pt.process0(context));
+        Map<String, String> params = Maps.newHashMap();
+        recommendRequest.setAppId(24501L);
+        params.put("itemIds", "591228976713,615075644541");
+        recommendRequest.setParams(params);
         tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
         Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
             .recommendItem(recommendRequest);
@@ -124,7 +132,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         result.add(itemEntity);
 
         ItemEntity itemEntity2 = new ItemEntity();
-        itemEntity2.setItemId(591228976713L);
+        itemEntity2.setItemId(615075644541L);
         itemEntity2.setO2oType(defaultO2oType);
         itemEntity2.setBizType(defaultBizType);
         result.add(itemEntity2);
