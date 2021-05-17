@@ -101,11 +101,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //ItemLimitResult itemLimitInfoQuery = this.getItemLimitInfo(userId, mockItems);
         //tacLogger.info("itemLimitResult=" + JSON.toJSONString(itemLimitInfoQuery));
 
-        Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
-            .recommendItem(recommendRequest).map(recommendResponseEntityResponse -> {
-                return recommendResponseEntityResponse;
-            });
-        tacLogger.info("responseFlowable=" + JSON.toJSONString(responseFlowable));
         //return Flowable.just(this.convert());
         return recommendSpi.recommendItem(recommendRequest)
             .map(recommendResponseEntityResponse -> {
