@@ -8,7 +8,6 @@ import com.alibaba.fastjson.JSON;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
-import com.tmall.txcs.biz.supermarket.extpt.buildvo.DefaultBuildItemVOExtPt;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.origindate.ItemInfoBySourceDTOOrigin;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVOExtPt;
@@ -20,7 +19,6 @@ import com.tmall.txcs.gs.model.spi.model.ItemDataDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.ItemInfoBySourceDTOInv;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -46,9 +44,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
-        tacLogger.info("执行了扩展VO");
         tacLogger.info("执行了扩展VO-VO入参数据：" + JSON.toJSONString(buildItemVoRequest));
-
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
         boolean hasMainSource = false;
@@ -99,7 +95,6 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
         tacLogger.info("执行了扩展VO-结果打印：" + JSON.toJSONString(itemEntityVO));
-        tacLogger.info("执行了扩展VO-执行完毕");
         return Response.success(itemEntityVO);
     }
 
