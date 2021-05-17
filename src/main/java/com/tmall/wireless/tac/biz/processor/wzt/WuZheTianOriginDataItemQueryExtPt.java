@@ -159,7 +159,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
         originDataDTO.setHasMore(recommendResponseEntity.isHasMore());
         originDataDTO.setIndex(recommendResponseEntity.getIndex());
-        originDataDTO.setPvid("");
+        originDataDTO.setPvid("test");
         originDataDTO.setScm(recommendResponseEntity.getScm());
         originDataDTO.setTppBuckets(recommendResponseEntity.getTppBuckets());
 
