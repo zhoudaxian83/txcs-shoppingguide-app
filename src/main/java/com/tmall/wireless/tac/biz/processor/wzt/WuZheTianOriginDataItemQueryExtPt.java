@@ -89,9 +89,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] mgetResult=" + JSON.toJSONString(mgetResult));
 
         //tpp获取个性化排序规则
-        //RecommendRequest recommendRequest = new RecommendRequest();
-        //Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
-        //    .recommendItem(recommendRequest);
+        RecommendRequest recommendRequest = new RecommendRequest();
+        Flowable<Response<RecommendResponseEntity<RecommendItemEntityDTO>>> responseFlowable = recommendSpi
+            .recommendItem(recommendRequest);
 
         //获取限购信息
         //ItemLimitInfoQuery itemLimitInfoQuery = new ItemLimitInfoQuery();
@@ -100,10 +100,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(itemLimitInfoQuery);
         //
         //tacLogger.info("[WuZheTianOriginDataItemQueryExtPt] itemLimitResult=" + JSON.toJSONString(itemLimitResult));
-        RecommendRequest recommendRequest = sgExtensionExecutor.execute(
-            ItemOriginDataRequestExtPt.class,
-            context.getBizScenario(),
-            pt -> pt.process0(context));
 
         return recommendSpi.recommendItem(recommendRequest)
             .map(recommendResponseEntityResponse -> {
