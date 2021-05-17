@@ -84,13 +84,25 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Long smAreaId = MapUtil.getLongWithDefault(context.getRequestParams(), "smAreaId", 330100L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         //tair获取推荐商品
-        //List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairData(smAreaId);
+        List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairData(smAreaId);
         //tpp获取个性化排序规则
         RecommendRequest recommendRequest = new RecommendRequest();
+        recommendRequest.setAppId(23198L);
+        recommendRequest.setLogResult(true);
         Map<String, String> params = Maps.newHashMap();
         params.put("itemIds", "591228976713,615075644541");
         params.put("userId", userId + "");
         params.put("smAreaId", smAreaId + "");
+        params.put("contentSetIdList","30002,17002,7002");
+        params.put("pageSize","2");
+        params.put("contentSetSource","intelligentCombinationItems");
+        params.put("itemCountPerContent","2");
+        params.put("regionCode","111");
+        params.put("contentType","7");
+        params.put("logicAreaId","111");
+        params.put("itemBusinessType","B2C");
+        params.put("topContentCount","1");
+        params.put("isFirstPage","true");
         recommendRequest.setParams(params);
         tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
 
@@ -133,6 +145,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     private List<PmtRuleDataItemRuleDTO> getTairData(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
+        if (logicalArea == null) {
+            return null;
+        }
         String cacheKey = logicalArea.getCacheKey();
         if (RpmContants.enviroment.isPreline()) {
             cacheKey = cacheKey + "_pre";
