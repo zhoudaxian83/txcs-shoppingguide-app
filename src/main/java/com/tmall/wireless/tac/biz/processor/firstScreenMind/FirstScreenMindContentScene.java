@@ -62,6 +62,7 @@ public class FirstScreenMindContentScene {
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> {
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
+                    tacLogger.info("*******requestParams:"+ requestParams);
                     if(requestParams == null || requestParams.isEmpty()){
                         return null;
                     }
@@ -69,6 +70,7 @@ public class FirstScreenMindContentScene {
                     Map<String,Object> propertyMap = Maps.newHashMap();
 
                     propertyMap.put("index",response.getIndex());
+                    tacLogger.info("*******isFixPositionBanner:"+ isFixPositionBanner);
                     if((null == isFixPositionBanner) || ("".equals(isFixPositionBanner)) || StringUtils.equalsIgnoreCase("true",String.valueOf(isFixPositionBanner))){
                         if (response.isHasMore()) {
                             propertyMap.put("isFixPositionBanner", true);
@@ -79,7 +81,7 @@ public class FirstScreenMindContentScene {
                     } else if(StringUtils.equalsIgnoreCase("false",String.valueOf(isFixPositionBanner))){
                         propertyMap.put("isFixPositionBanner", false);
                     }
-
+                    tacLogger.info("*******propertyMap:"+propertyMap);
                     response.getExtInfos().put("propertyMap", propertyMap);
                     return response;
                 })
