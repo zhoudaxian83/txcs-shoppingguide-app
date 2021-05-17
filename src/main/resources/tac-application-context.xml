@@ -25,6 +25,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.tacHandler.YoubaozangHandler"/>-->
 
     <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianOriginDataItemQueryExtPt"/>
-<!--    <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianOriginDataItemQueryExtPt"/>-->
     <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianBuildItemVOExtPt"/>
+    <bean class="com.taobao.tair.impl.mc.MultiClusterTairManager"/>
 </beans>
