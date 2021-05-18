@@ -114,6 +114,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         dataContext.setIndex(index);
         dataContext.setPageSize(pageSize);
         //tair获取推荐商品
+        //tairFactorySpi.getMerchantsTair());
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
         tacLogger.info("tair推荐商品=" + JSON.toJSONString(pmtRuleDataItemRuleDTOS));
 
@@ -209,8 +210,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         if (!RpmContants.enviroment.isOnline()) {
             cacheKey = cacheKey + "_pre";
         }
-        //tacLogger.warn("当前环境校验：" + RpmContants.enviroment.isPreline() + "|" + RpmContants.enviroment.isDaily() + "|"
-        //    + RpmContants.enviroment.isOnline());
+
         Object o = tairUtil.queryPromotionFromCache(cacheKey);
         if (Objects.isNull(o)) {
             return null;
