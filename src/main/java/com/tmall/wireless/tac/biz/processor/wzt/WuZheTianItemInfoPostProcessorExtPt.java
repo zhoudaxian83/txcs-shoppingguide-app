@@ -1,5 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
@@ -7,8 +10,10 @@ import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessor
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorResp;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.Response;
+import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +29,24 @@ import org.springframework.stereotype.Service;
 public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcessorExtPt {
 
     @Autowired
+    RpcSpi rpcSpi;
+
+    @Autowired
     TacLogger tacLogger;
 
     @Override
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
         tacLogger.info("ItemInfoPostProcessorExtPt扩展点测试=" + JSON.toJSONString(sgFrameworkContextItem));
+        Map<String, Object> paramsValue = new HashMap<>(16);
+        paramsValue.put("name", "itemLimitInfoQuery");
+        paramsValue.put("type", "com.tmall.aself.shoppingguide.client.todaycrazyv2.query.ItemLimitInfoQuery");
+        paramsValue.put("nullable", "false");
+        try {
+            Object o = rpcSpi.invokeHsf("todayCrazyLimit", paramsValue);
+            tacLogger.info("测试返回结果=" + JSON.toJSONString(o));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ItemInfoPostProcessorResp itemInfoPostProcessorResp = new ItemInfoPostProcessorResp();
         return Response.success(itemInfoPostProcessorResp);
     }
