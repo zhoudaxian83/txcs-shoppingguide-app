@@ -209,6 +209,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         }
 
         Object o = tairUtil.queryPromotionFromCache(cacheKey);
+        // TODO
+        tairUtil.getCache(cacheKey);
         if (Objects.isNull(o)) {
             return null;
         }
@@ -256,6 +258,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             index = 1L;
         }
         if (index * pageSize > originalList.size()) {
+            tacLogger.warn("getPage中页数小于获取页数据条数，总页数；" + originalList.size());
             return Lists.newArrayList();
         }
         tacLogger.info("分页信息" + index + pageSize);
