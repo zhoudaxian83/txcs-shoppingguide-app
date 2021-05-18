@@ -3,13 +3,10 @@ package com.tmall.wireless.tac.biz.processor.wzt;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alibaba.boot.hsf.annotation.HSFConsumer;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
-import com.tmall.aself.shoppingguide.client.todaycrazyv2.TodayCrazyLimitFacade;
 import com.tmall.aself.shoppingguide.client.todaycrazyv2.query.ItemLimitInfoQuery;
-import com.tmall.aself.shoppingguide.client.todaycrazyv2.result.ItemLimitResult;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorExtPt;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorResp;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -17,7 +14,6 @@ import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
