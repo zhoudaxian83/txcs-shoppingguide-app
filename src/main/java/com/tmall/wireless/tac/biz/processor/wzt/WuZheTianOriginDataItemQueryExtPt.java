@@ -11,18 +11,14 @@ import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
-import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
-import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.model.constant.RpmContants;
-import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
 import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
@@ -31,6 +27,7 @@ import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.enums.LogicalArea;
+import com.tmall.wireless.tac.biz.processor.wzt.model.DataContext;
 import com.tmall.wireless.tac.biz.processor.wzt.model.PmtRuleDataItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.RecommendTairUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -98,9 +95,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Long smAreaId = MapUtil.getLongWithDefault(context.getRequestParams(), "smAreaId", 330100L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         //tair获取推荐商品
-        List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairData(smAreaId);
+        List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
         tacLogger.info("tair推荐商品=" + JSON.toJSONString(pmtRuleDataItemRuleDTOS));
-
+        DataContext dataContext = new DataContext();
         //tpp获取个性化排序规则
         RecommendRequest recommendRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
@@ -111,6 +108,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //params.put("userId", userId + "");
         //params.put("smAreaId", smAreaId + "");
         recommendRequest.setLogResult(true);
+        recommendRequest.setUserId(userId);
         recommendRequest.setAppId(21431L);
         params.put("RecItemIds",
             "536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,"
@@ -135,19 +133,32 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //ItemLimitResult itemLimitInfoQuery = this.getItemLimitInfo(userId, mockItems);
         //tacLogger.info("itemLimitResult=" + JSON.toJSONString(itemLimitInfoQuery));
 
-        //return Flowable.just(this.convert());
-        return recommendSpi.recommendItem(recommendRequest)
-            .map(recommendResponseEntityResponse -> {
-                tacLogger.info("recommendResponseEntityResponse=" + JSON.toJSONString(recommendResponseEntityResponse));
-                // tpp 返回失败
-                //if (!recommendResponseEntityResponse.isSuccess()
-                //    || recommendResponseEntityResponse.getValue() == null
-                //    || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
-                //    return new OriginDataDTO<>();
-                //}
+        List<Long> areaItems = getItemToCacheOfArea(smAreaId);
+        if (areaItems == null) {
+            return recommendSpi.recommendItem(recommendRequest)
+                .map(recommendResponseEntityResponse -> {
+                    tacLogger.info(
+                        "recommendResponseEntityResponse=" + JSON.toJSONString(recommendResponseEntityResponse));
+                    // tpp 返回失败
+                    //if (!recommendResponseEntityResponse.isSuccess()
+                    //    || recommendResponseEntityResponse.getValue() == null
+                    //    || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
+                    //    return new OriginDataDTO<>();
+                    //}
 
-                return convert(recommendResponseEntityResponse.getValue());
-            });
+                    return this.convert(dataContext);
+                });
+        } else {
+            return Flowable.just(this.convert(dataContext));
+        }
+    }
+
+    private OriginDataDTO<ItemEntity> convert(DataContext dataContext) {
+        List<Long> items = dataContext.getItems();
+        tacLogger.info("items=" + JSON.toJSONString(items));
+        OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
+        originDataDTO.setResult(buildItemList());
+        return originDataDTO;
     }
 
     /**
@@ -156,15 +167,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @param list
      * @return
      */
-    private List<Long> convert(List<PmtRuleDataItemRuleDTO> list) {
+    private List<Long> itemsDataConvert(List<PmtRuleDataItemRuleDTO> list) {
         return mockItems;
-    }
-
-    private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
-        tacLogger.info("recommendResponseEntity=" + JSON.toJSONString(recommendResponseEntity));
-        OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-        originDataDTO.setResult(buildItemList());
-        return originDataDTO;
     }
 
     //private ItemLimitResult getItemLimitInfo(Long userId, List<Long> itemIds) {
@@ -174,7 +178,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     //    return todayCrazyLimitFacade.query(itemLimitInfoQuery);
     //}
 
-    private List<PmtRuleDataItemRuleDTO> getTairData(Long smAreaId) {
+    private List<PmtRuleDataItemRuleDTO> getTairItems(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
             tacLogger.warn("getTairData大区id未匹配：smAreaId：" + smAreaId);
