@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.wzt.utils;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Resource;
@@ -13,6 +14,7 @@ import com.taobao.tair.ResultCode;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
+import com.tmall.wireless.tac.biz.processor.wzt.model.PmtRuleDataItemRuleDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -73,7 +75,7 @@ public class TairUtil {
         return true;
     }
 
-    public JSONObject getCache(String cacheKey) {
+    public List<PmtRuleDataItemRuleDTO> getCache(String cacheKey) {
         try {
             TairManager smartUiTair = tairFactorySpi.getSmartUiTair();
             if (smartUiTair == null || smartUiTair.getMultiClusterTairManager() == null
@@ -83,9 +85,8 @@ public class TairUtil {
             Result<DataEntry> dataEntryResult = smartUiTair.getMultiClusterTairManager().get(smartUiTair.getNameSpace(),
                 cacheKey);
             tacLogger.info("getCache获取json结果: " + JSON.toJSONString(dataEntryResult));
-            String s = Optional.ofNullable(dataEntryResult).map(Result::getValue).map(DataEntry::getValue).map(
-                Object::toString).orElse("");
-            return JSON.parseObject(s);
+            List<PmtRuleDataItemRuleDTO> result = (List<PmtRuleDataItemRuleDTO>)dataEntryResult.getValue();
+            return result;
         } catch (Exception e) {
             tacLogger.info("getCache获取json结果: " + e);
         }
