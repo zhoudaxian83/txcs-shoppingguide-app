@@ -115,9 +115,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             "536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,"
                 + "617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617836325106,"
                 + "540271599415,587516703876,634661347726,536708195821,582396352306");
-        params.put("logicAreaId", "107");
-        params.put("index", "0");
-        params.put("pageSize", "20");
+        //params.put("logicAreaId", "107");
+        //params.put("index", "0");
+        //params.put("pageSize", "20");
         //params.put("itemLayers", "浅爆,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,爆品,超爆,爆品,爆品,超爆");
         //params.put("smAreaId", "330100");
         //params.put("relativePrices",
