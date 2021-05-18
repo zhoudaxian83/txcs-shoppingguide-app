@@ -206,11 +206,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             return null;
         }
         String cacheKey = logicalArea.getCacheKey();
-        if (RpmContants.enviroment.isPreline()) {
+        if (!RpmContants.enviroment.isOnline()) {
             cacheKey = cacheKey + "_pre";
         }
-        tacLogger.warn("当前环境校验：" + RpmContants.enviroment.isPreline() + "|" + RpmContants.enviroment.isDaily() + "|"
-            + RpmContants.enviroment.isOnline());
+        //tacLogger.warn("当前环境校验：" + RpmContants.enviroment.isPreline() + "|" + RpmContants.enviroment.isDaily() + "|"
+        //    + RpmContants.enviroment.isOnline());
         Object o = tairUtil.queryPromotionFromCache(cacheKey);
         if (Objects.isNull(o)) {
             return null;
