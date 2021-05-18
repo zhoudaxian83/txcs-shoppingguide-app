@@ -83,7 +83,6 @@ public class FirstScreenMindItemScene {
             return contentInfo;
         }
         Map<Long, Map<String, Object>> contentIdToContentInfoMap = contentInfoSupport.queryContentInfoByContentIdList(Lists.newArrayList(moduleId));
-
         return Optional.ofNullable(contentIdToContentInfoMap).map(map -> map.get(moduleId)).orElse(Maps.newHashMap());
     }
 
@@ -105,8 +104,8 @@ public class FirstScreenMindItemScene {
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
+        itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();

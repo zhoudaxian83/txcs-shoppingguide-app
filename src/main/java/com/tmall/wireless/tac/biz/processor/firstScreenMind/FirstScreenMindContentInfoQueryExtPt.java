@@ -1,6 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.common.lang.StringUtil;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
@@ -8,6 +10,7 @@ import com.taobao.tair.Result;
 import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
 import com.tmall.aselfcommon.model.gcs.enums.GcsSceneType;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
+import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryRequest;
 import com.tmall.txcs.gs.model.Response;
@@ -20,7 +23,9 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderErrorEnum;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.model.content.SubContentModel;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderCheckUtil;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,6 +37,8 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
@@ -94,7 +101,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 contentInfo.put("contentId",tairSceneDTO.getId());
                 contentInfo.put("contentTitle",tairSceneDTO.getTitle());
                 contentInfo.put("contentSubtitle",tairSceneDTO.getSubtitle());
-                contentInfo.put("itemSetIds", "5233");
+                contentInfo.put("itemSetIds", getItemSetIds(tairSceneDTO));
                 Map<String, Object> tairPropertyMap = tairSceneDTO.getProperty();
                 //前后端映射
                 for(FrontBackMapEnum frontBackMapEnum : FrontBackMapEnum.values()){
@@ -113,7 +120,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     //b2c组合场景
                 }else if(marketChannel.equals(GcsMarketChannel.B2C.name()) && type.equals(GcsSceneType.COMBINE.name())){
                     contentInfo.put("contentType",RenderContentTypeEnum.b2cCombineContent.getType());
-//            buildSubContentBaseInfo(contentModel,labelSceneContentInfo);
+                    contentInfo.put("subContentModelList",buildSubContentBaseInfoV2(contentInfo,tairSceneDTO));
                     //b2c品牌场景
                 }else if(marketChannel.equals(GcsMarketChannel.B2C.name()) && type.equals(GcsSceneType.BRAND.name())){
                     contentInfo.put("contentType",RenderContentTypeEnum.b2cBrandContent.getType());
@@ -123,7 +130,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     //o2o品牌场景
                 }else if(marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(GcsSceneType.COMBINE.name())){
                     contentInfo.put("contentType",RenderContentTypeEnum.o2oCombineContent.getType());
-//            buildSubContentBaseInfo(contentModel,labelSceneContentInfo);
+                    contentInfo.put("subContentModelList",buildSubContentBaseInfoV2(contentInfo,tairSceneDTO));
                     //o2o品牌场景
                 }else if(marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(GcsSceneType.BRAND.name())){
                     contentInfo.put("contentType",RenderContentTypeEnum.o2oBrandContent.getType());
@@ -145,6 +152,39 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
         }
         tacLogger.info("****FirstScreenMindContentInfoQueryExtPt contentDTOMap*****:"+contentDTOMap.toString());
         return Flowable.just(Response.success(contentDTOMap));
+    }
+
+    private static String getItemSetIds(TairSceneDTO labelSceneContentInfo) {
+
+        List<SceneDetailValue> sceneDetailValues = Optional.ofNullable(labelSceneContentInfo)
+                .map(TairSceneDTO::getDetails)
+                .orElse(Lists.newArrayList());
+
+        if (CollectionUtils.isEmpty(sceneDetailValues)) {
+            return "";
+        }
+
+        List<Long> itemSetIds = sceneDetailValues.stream().map(SceneDetailValue::getItemsetId).collect(Collectors.toList());
+        return Joiner.on(",").join(itemSetIds);
+
+    }
+    private static List<SubContentModel> buildSubContentBaseInfoV2(Map<String, Object> contentInfo, TairSceneDTO labelSceneContentInfo){
+
+        List<SceneDetailValue> details = labelSceneContentInfo.getDetails();
+
+        List<SubContentModel> subContentModelList = new ArrayList<>();
+        for (SceneDetailValue detail : details) {
+
+            SubContentModel sub = new SubContentModel();
+            sub.setSubContentId(detail.getDetailId());
+            sub.setSubContentTitle(detail.getTitle());
+            if(contentInfo.get("subContentType") != null && StringUtil.isNotEmpty(String.valueOf(contentInfo.get("subContentType")))){
+                sub.setSubContentType(String.valueOf(contentInfo.get("subContentType")));
+            }
+            sub.setItemSetIds(RenderLangUtil.safeString(detail.getItemsetId()));
+            subContentModelList.add(sub);
+        }
+        return subContentModelList;
     }
 
 
