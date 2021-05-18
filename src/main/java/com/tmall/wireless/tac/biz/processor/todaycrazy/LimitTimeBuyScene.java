@@ -30,6 +30,8 @@ public class LimitTimeBuyScene {
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
         tacLogger.info("***LimitTimeBuyScene context****:"+context);
+        tacLogger.info("***LimitTimeBuyScene context.toString()****:"+context.toString());
+        tacLogger.info("***LimitTimeBuyScene context.getParams().toString()****:"+context.getParams().toString());
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
         String bannerInfo = MapUtil.getStringWithDefault(
