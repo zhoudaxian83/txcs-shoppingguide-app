@@ -268,14 +268,17 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @return 分页后结果
      */
     public <T> List<T> getPage(List<T> originalList, Long pageNum, Long pageSize) {
+        if (pageNum < 1) {
+            pageNum = 1L;
+        }
+        if (pageNum * pageSize > originalList.size()) {
+            return Lists.newArrayList();
+        }
         tacLogger.info("分页信息" + pageNum + pageSize);
-        // 如果页码为空或者每页数量为空
-        pageNum = pageNum == null ? 0 : pageNum;
-        pageSize = pageSize == null ? 0 : pageSize;
         // 分页后的结果
         List<T> resultList = new ArrayList<>();
         // 如果需要进行分页
-        if (pageNum > 0 && pageSize > 0) {
+        if (pageSize > 0) {
             // 获取起点
             long pageStart = (pageNum - 1) * pageSize;
             // 获取终点
