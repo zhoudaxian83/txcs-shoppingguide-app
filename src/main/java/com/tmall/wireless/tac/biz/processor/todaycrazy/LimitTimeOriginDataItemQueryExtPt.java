@@ -10,6 +10,7 @@ import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapSortUtil;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TairUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
@@ -75,10 +76,10 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * 时间段排序
      * @return
      */
-    public Map<String,Object> sortMap(Map<String,Object> map){
+    public Map<String,String> sortMap(Map<String,String> map){
+        Map<String,String> rsMap = MapSortUtil.sortMapByValue(map);
 
-
-        return null;
+        return rsMap;
     }
 
 }

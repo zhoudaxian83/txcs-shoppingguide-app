@@ -13,17 +13,17 @@ public class MapSortUtil {
      * @param oriMap
      * @return
      */
-    public static Map<String, Float> sortMapByValue(Map<String, Float> oriMap) {
+    public static Map<String, String> sortMapByValue(Map<String, String> oriMap) {
         if (oriMap == null || oriMap.isEmpty()) {
             return null;
         }
-        Map<String, Float> sortedMap = new LinkedHashMap<String, Float>();
-        List<Map.Entry<String, Float>> entryList = new ArrayList<Map.Entry<String, Float>>(
+        Map<String, String> sortedMap = new LinkedHashMap<String, String>();
+        List<Map.Entry<String, String>> entryList = new ArrayList<Map.Entry<String, String>>(
                 oriMap.entrySet());
         Collections.sort(entryList, new MapValueComparatorUtil());
 
-        Iterator<Map.Entry<String, Float>> iter = entryList.iterator();
-        Map.Entry<String, Float> tmpEntry = null;
+        Iterator<Map.Entry<String, String>> iter = entryList.iterator();
+        Map.Entry<String, String> tmpEntry = null;
         while (iter.hasNext()) {
             tmpEntry = iter.next();
             sortedMap.put(tmpEntry.getKey(), tmpEntry.getValue());
