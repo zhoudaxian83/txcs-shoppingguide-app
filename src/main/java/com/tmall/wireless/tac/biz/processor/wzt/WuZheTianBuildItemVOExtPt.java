@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     Logger LOGGER = LoggerFactory.getLogger(WuZheTianBuildItemVOExtPt.class);
+    private static final String ITEM_URL_SUB = "https://detail.tmall.com/item.htm?id=";
 
     @Autowired
     TacLogger tacLogger;
@@ -90,6 +91,8 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
+
+        itemEntityVO.put("test","测试");
 
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
