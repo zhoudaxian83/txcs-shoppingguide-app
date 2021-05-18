@@ -73,7 +73,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     TairFactorySpi tairFactorySpi;
 
     private static final int labelSceneNamespace = 184;
-    public static final Long APPID_O2O = 23375L;
+
     //分大区个性化排序后商品缓存后缀
     private static final String areaSortSuffix = "AREA_SORT";
 
@@ -121,7 +121,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Map<String, String> params = Maps.newHashMap();
         recommendRequest.setLogResult(true);
         recommendRequest.setUserId(userId);
-        recommendRequest.setAppId(APPID_O2O);
+        recommendRequest.setAppId(21431L);
         params.put("userItemIdList", Joiner.on(",").join(mockItems));
         recommendRequest.setParams(params);
         tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
