@@ -115,7 +115,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         dataContext.setPageSize(pageSize);
         //tair获取推荐商品
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
-        tacLogger.info("tair推荐商品=" +pmtRuleDataItemRuleDTOS.size()+ JSON.toJSONString(pmtRuleDataItemRuleDTOS));
+        tacLogger.info("tair推荐商品=" + JSON.toJSONString(pmtRuleDataItemRuleDTOS));
 
         //tpp获取个性化排序规则
         RecommendRequest recommendRequest = new RecommendRequest();
@@ -216,8 +216,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         return (List<PmtRuleDataItemRuleDTO>)recommendTairUtil.queryPromotionFromCache(cacheKey);
     }
 
-
-
     /**
      * 缓存个性化排序后的商品信息，区分大区
      *
@@ -250,7 +248,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * 手动分页
      *
      * @param originalList 分页前数据
-     * @param index      页码
+     * @param index        页码
      * @param pageSize     每页数量
      * @return 分页后结果
      */
