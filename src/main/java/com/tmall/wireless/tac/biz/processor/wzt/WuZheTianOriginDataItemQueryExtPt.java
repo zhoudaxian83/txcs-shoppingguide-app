@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -164,6 +165,58 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         itemEntity2.setBizType(defaultBizType);
         result.add(itemEntity2);
         return result;
+    }
+
+    /**
+     * 缓存个性化排序后的商品信息，区分大区
+     *
+     * @return
+     */
+    private Boolean setItemToCacheOfArea() {
+
+        return false;
+    }
+
+    private List<Long> getItemToCacheOfArea() {
+
+        return null;
+    }
+
+    /**
+     * 手动分页
+     *
+     * @param originList 分页前数据
+     * @param pageNum    页码
+     * @param pageSize   每页数量
+     * @return 分页后结果
+     */
+    public static <T> List<T> getPage(List<T> originList, Integer pageNum, Integer pageSize) {
+        // 如果页码为空或者每页数量为空
+        pageNum = pageNum == null ? 0 : pageNum;
+        pageSize = pageSize == null ? 0 : pageSize;
+        // 分页后的结果
+        List<T> resultList = new ArrayList<>();
+        // 如果需要进行分页
+        if (pageNum > 0 && pageSize > 0) {
+            // 获取起点
+            int pageStart = (pageNum - 1) * pageSize;
+            // 获取终点
+            int pageStop = pageStart + pageSize;
+            // 开始遍历
+            while (pageStart < pageStop) {
+                // 考虑到最后一页可能不够pageSize
+                if (pageStart == originList.size()) {
+                    break;
+                }
+                resultList.add(originList.get(pageStart++));
+            }
+        }
+        // 如果不进行分页
+        else {
+            // 显示所有数据
+            resultList = originList;
+        }
+        return resultList;
     }
 
 }
