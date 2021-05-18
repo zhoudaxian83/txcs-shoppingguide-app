@@ -11,10 +11,13 @@ import javax.annotation.Resource;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 
 import com.ali.com.google.common.base.Joiner;
+import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
@@ -100,7 +103,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
          * 6、captain获取商品数据
          * 7、处理过滤逻辑
          * 8、转换为vo给前端展示
-         *
          */
 
         tacLogger.info("context=" + JSON.toJSONString(context));
@@ -129,33 +131,67 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //ItemLimitResult itemLimitInfoQuery = this.getItemLimitInfo(userId, mockItems);
         //tacLogger.info("itemLimitResult=" + JSON.toJSONString(itemLimitInfoQuery));
 
-        List<Long> areaItems = getItemToCacheOfArea(smAreaId);
-        if (areaItems == null) {
+        OriginDataDTO<ItemEntity> cacheOriginDataDTO = getItemToCacheOfArea(smAreaId);
+        if (cacheOriginDataDTO == null) {
             return recommendSpi.recommendItem(recommendRequest)
                 .map(recommendResponseEntityResponse -> {
                     tacLogger.info(
-                        "recommendResponseEntityResponse=" + JSON.toJSONString(recommendResponseEntityResponse));
-                    // tpp 返回失败
-                    //if (!recommendResponseEntityResponse.isSuccess()
-                    //    || recommendResponseEntityResponse.getValue() == null
-                    //    || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
-                    //    return new OriginDataDTO<>();
-                    //}
-
-                    return this.convert(dataContext);
+                        "recommendResponseEntityResponse.getValue()=" + JSON
+                            .toJSONString(recommendResponseEntityResponse.getValue().getResult()));
+                    if (!recommendResponseEntityResponse.isSuccess()
+                        || recommendResponseEntityResponse.getValue() == null
+                        || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
+                        return new OriginDataDTO<>();
+                    }
+                    //需要做缓存
+                    OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
+                    this.setItemToCacheOfArea(originDataDTO, smAreaId);
+                    return this.getItemPage(originDataDTO, dataContext);
                 });
         } else {
+
             return Flowable.just(this.convert(dataContext));
         }
     }
 
-    private OriginDataDTO<ItemEntity> convert(DataContext dataContext) {
-        List<Long> items = dataContext.getItems();
-        List<Long> resultItems = this.getPage(dataContext.getItems(), dataContext.getIndex(),
-            dataContext.getPageSize());
-        tacLogger.info("items=" + JSON.toJSONString(items));
+    private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
+        originDataDTO.setResult(
+            this.getPage(originDataDTO.getResult(), dataContext.getIndex(), dataContext.getPageSize()));
+        return originDataDTO;
+    }
+
+    /**
+     * 未缓存前
+     *
+     * @param recommendResponseEntity
+     * @return
+     */
+    private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-        originDataDTO.setResult(buildItemList(resultItems));
+        originDataDTO.setHasMore(recommendResponseEntity.isHasMore());
+        originDataDTO.setIndex(recommendResponseEntity.getIndex());
+        originDataDTO.setPvid(recommendResponseEntity.getPvid());
+        originDataDTO.setScm(recommendResponseEntity.getScm());
+        originDataDTO.setTppBuckets(recommendResponseEntity.getTppBuckets());
+        originDataDTO.setResult(recommendResponseEntity
+            .getResult()
+            .stream()
+            .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
+        return originDataDTO;
+    }
+
+    /**
+     * 缓存后
+     *
+     * @param dataContext
+     * @return
+     */
+    private OriginDataDTO<ItemEntity> convert(DataContext dataContext) {
+        OriginDataDTO<ItemEntity> originDataDTO = dataContext.getOriginDataDTO();
+        List<ItemEntity> result = this.getPage(originDataDTO.getResult(), dataContext.getIndex(),
+            dataContext.getPageSize());
+        originDataDTO.setResult(result);
+        tacLogger.info("originDataDTO缓存结果数据=" + JSON.toJSONString(originDataDTO));
         return originDataDTO;
     }
 
@@ -213,24 +249,27 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      *
      * @return
      */
-    private Boolean setItemToCacheOfArea(List<Long> itemIds, Long smAreaId) {
+    private Boolean setItemToCacheOfArea(OriginDataDTO<ItemEntity> originDataDTO, Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
             tacLogger.warn("setItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
             return false;
         }
-        return recommendTairUtil.updateItemDetailPromotionCache(itemIds,
+        return recommendTairUtil.updateItemDetailPromotionCache(originDataDTO,
             logicalArea.getCoreCityCode() + areaSortSuffix);
     }
 
-    private List<Long> getItemToCacheOfArea(Long smAreaId) {
+    private OriginDataDTO<ItemEntity> getItemToCacheOfArea(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
             tacLogger.warn("getItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
             return null;
         }
         Object o = recommendTairUtil.queryPromotionFromCache(logicalArea.getCoreCityCode() + areaSortSuffix);
-        return o == null ? null : JSONObject.parseArray(String.valueOf(o), Long.class);
+        if (o == null) {
+            return null;
+        }
+        return JSON.parseObject((String)o, new TypeReference<OriginDataDTO<ItemEntity>>() {});
     }
 
     /**
