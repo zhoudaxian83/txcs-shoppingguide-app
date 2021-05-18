@@ -43,8 +43,6 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         //itemLimitInfoQuery.addSku(600819862645L, 623789407071L);
         Map<String, Object> paramsValue = new HashMap<>(16);
         paramsValue.put("itemLimitInfoQuery", itemLimitInfoQuery);
-        paramsValue.put("type", "com.tmall.aself.shoppingguide.client.todaycrazyv2.query.ItemLimitInfoQuery");
-        paramsValue.put("nullable", "false");
         try {
             tacLogger.info("测试返回结果begin");
             Object o = rpcSpi.invokeHsf("todayCrazyLimit", paramsValue);
