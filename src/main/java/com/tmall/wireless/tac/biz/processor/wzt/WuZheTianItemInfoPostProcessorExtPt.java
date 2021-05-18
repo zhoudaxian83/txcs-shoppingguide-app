@@ -38,9 +38,6 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
     @Autowired
     TacLogger tacLogger;
 
-    @HSFConsumer(serviceVersion = "1.0.0")
-    private TodayCrazyLimitFacade todayCrazyLimitFacade;
-
     @Override
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
         tacLogger.info("ItemInfoPostProcessorExtPt扩展点测试=" + JSON.toJSONString(sgFrameworkContextItem));
@@ -48,11 +45,8 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         ItemLimitInfoQuery itemLimitInfoQuery = new ItemLimitInfoQuery();
         itemLimitInfoQuery.setUserId(1681359525L);
         itemLimitInfoQuery.addSku(600819862645L, 623789407071L);
-        ItemLimitResult itemLimitResult = todayCrazyLimitFacade.query(itemLimitInfoQuery);
-        tacLogger.info("itemLimitInfoQuery返回结果=" + JSON.toJSONString(itemLimitResult));
-
         Map<String, Object> paramsValue = new HashMap<>(16);
-        paramsValue.put("name", "itemLimitInfoQuery");
+        paramsValue.put("itemLimitInfoQuery", itemLimitInfoQuery);
         paramsValue.put("type", "com.tmall.aself.shoppingguide.client.todaycrazyv2.query.ItemLimitInfoQuery");
         paramsValue.put("nullable", "false");
         try {
