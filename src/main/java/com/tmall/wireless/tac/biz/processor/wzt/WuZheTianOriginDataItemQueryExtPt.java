@@ -10,7 +10,6 @@ import javax.annotation.Resource;
 
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 
 import com.ali.com.google.common.base.Joiner;
@@ -156,8 +155,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     }
 
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
-        originDataDTO.setResult(
-            this.getPage(originDataDTO.getResult(), dataContext.getIndex(), dataContext.getPageSize()));
+        List<ItemEntity> itemEntities = this.getPage(originDataDTO.getResult(), dataContext.getIndex(),
+            dataContext.getPageSize());
+        tacLogger.info("分页后数据" + JSON.toJSONString(itemEntities));
+        originDataDTO.setResult(itemEntities);
         return originDataDTO;
     }
 
@@ -261,12 +262,13 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     /**
      * 手动分页
      *
-     * @param originList 分页前数据
-     * @param pageNum    页码
-     * @param pageSize   每页数量
+     * @param originalList 分页前数据
+     * @param pageNum      页码
+     * @param pageSize     每页数量
      * @return 分页后结果
      */
-    public <T> List<T> getPage(List<T> originList, Long pageNum, Long pageSize) {
+    public <T> List<T> getPage(List<T> originalList, Long pageNum, Long pageSize) {
+        tacLogger.info("分页信息" + pageNum + pageSize);
         // 如果页码为空或者每页数量为空
         pageNum = pageNum == null ? 0 : pageNum;
         pageSize = pageSize == null ? 0 : pageSize;
@@ -281,16 +283,16 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             // 开始遍历
             while (pageStart < pageStop) {
                 // 考虑到最后一页可能不够pageSize
-                if (pageStart == originList.size()) {
+                if (pageStart == originalList.size()) {
                     break;
                 }
-                resultList.add(originList.get(Math.toIntExact(pageStart++)));
+                resultList.add(originalList.get(Math.toIntExact(pageStart++)));
             }
         }
         // 如果不进行分页
         else {
             // 显示所有数据
-            resultList = originList;
+            resultList = originalList;
         }
         return resultList;
     }
