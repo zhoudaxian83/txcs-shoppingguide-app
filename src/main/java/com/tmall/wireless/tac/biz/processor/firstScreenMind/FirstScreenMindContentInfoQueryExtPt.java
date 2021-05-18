@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.cola.extension.Extension;
-import com.alibaba.common.lang.StringUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -29,6 +28,7 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,7 +178,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             SubContentModel sub = new SubContentModel();
             sub.setSubContentId(detail.getDetailId());
             sub.setSubContentTitle(detail.getTitle());
-            if(contentInfo.get("subContentType") != null && StringUtil.isNotEmpty(String.valueOf(contentInfo.get("subContentType")))){
+            if(contentInfo.get("subContentType") != null && StringUtils.isNotEmpty(String.valueOf(contentInfo.get("subContentType")))){
                 sub.setSubContentType(String.valueOf(contentInfo.get("subContentType")));
             }
             sub.setItemSetIds(RenderLangUtil.safeString(detail.getItemsetId()));

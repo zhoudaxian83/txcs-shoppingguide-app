@@ -37,6 +37,8 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
 
+        boolean isMind = isMind(sgFrameworkContextContent.getRequestParams());
+
         ContentRecommendMetaInfo contentRecommendMetaInfo = Optional.of(sgFrameworkContextContent)
                 .map(SgFrameworkContextContent::getContentMetaInfo)
                 .map(ContentMetaInfo::getContentRecommendMetaInfo)
@@ -49,8 +51,13 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         if(requestParams == null || requestParams.isEmpty()){
             return null;
         }
+
         List<Long> contentSetIdList = getContentSetIdList(requestParams);
 
+
+        if (isMind) {
+            contentSetIdList = getMindContentSetIdList(requestParams);
+        }
 
         params.put("contentSetIdList",Joiner.on(",").join(contentSetIdList));
 
@@ -69,15 +76,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         params.put("logicAreaId", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
         Integer index = Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getIndex).orElse(0);
         params.put("isFirstPage", index > 0 ? "false" : "true");
-        Object isFixPositionBanner = requestParams.get("isFixPositionBanner");
-        Boolean isMind = false;
-        if(isFixPositionBanner == null || "".equals(isFixPositionBanner)){
-            isMind = true;
-        } else if(isFixPositionBanner instanceof Boolean){
-            isMind = (Boolean) isFixPositionBanner;
-        }else if(isFixPositionBanner instanceof String && "true".equals(isFixPositionBanner)){
-            isMind = true;
-        }
+
         //首次isFixPositionBanner为空或true，标识查询心智场景
         if(isMind){
             tppRequest.setAppId(25379L);
@@ -93,6 +92,29 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
         tacLogger.info("****FirstScreenMindContentOriginDataRequestExPt tppRequest***:"+tppRequest.toString());
         return tppRequest;
+    }
+
+    private boolean isMind(Map<String, Object> requestParams) {
+
+        Object isFixPositionBanner = requestParams.get("isFixPositionBanner");
+
+        Boolean isMind = false;
+        if(isFixPositionBanner == null || "".equals(isFixPositionBanner)){
+            isMind = true;
+        } else if(isFixPositionBanner instanceof Boolean){
+            isMind = (Boolean) isFixPositionBanner;
+        }else if(isFixPositionBanner instanceof String && "true".equals(isFixPositionBanner)){
+            isMind = true;
+        }
+        return isMind;
+    }
+
+    private List<Long> getMindContentSetIdList(Map<String, Object>  requestParams) {
+
+        List<Long> result = Lists.newArrayList();
+        result.add(MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_MIND, 0L));
+
+        return result.stream().filter(contentSetId -> contentSetId > 0).collect(Collectors.toList());
     }
 
     private List<Long> getContentSetIdList(Map<String, Object>  requestParams) {
