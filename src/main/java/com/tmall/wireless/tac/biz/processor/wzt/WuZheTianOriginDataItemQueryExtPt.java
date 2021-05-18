@@ -94,6 +94,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
         tacLogger.info("context=" + JSON.toJSONString(context));
         DataContext dataContext = new DataContext();
+        dataContext.setItems(mockItems);
         Long smAreaId = MapUtil.getLongWithDefault(context.getRequestParams(), "smAreaId", 330100L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
