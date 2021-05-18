@@ -209,6 +209,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         if (RpmContants.enviroment.isPreline()) {
             cacheKey = cacheKey + "_pre";
         }
+        tacLogger.warn("当前环境校验：" + RpmContants.enviroment.isPreline() + "|" + RpmContants.enviroment.isDaily() + "|"
+            + RpmContants.enviroment.isOnline());
         Object o = tairUtil.queryPromotionFromCache(cacheKey);
         if (Objects.isNull(o)) {
             return null;
