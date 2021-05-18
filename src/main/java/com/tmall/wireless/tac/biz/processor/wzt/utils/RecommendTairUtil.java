@@ -57,7 +57,7 @@ public class RecommendTairUtil {
         String cacheKey) {
         cacheKey = cacheKey + ACHE_NAME_SUFFIX;
         ResultCode resultCode = multiClusterTairManager.put(NAME_SPACE, cacheKey,
-            JSON.toJSONString(data), 0, 60 * 60 * 24 * 7);
+            JSON.toJSONString(data), 0, 60 * 30);
         if (resultCode == null || !resultCode.isSuccess()) {
             tacLogger.info("[updateItemDetailPromotionCache]Failed to update item detail promotion cache, cacheKey: "
                 + ACHE_NAME_SUFFIX

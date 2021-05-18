@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.wzt.model;
 
 import java.util.List;
 
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import lombok.Data;
 
 /**
@@ -11,5 +12,8 @@ import lombok.Data;
  */
 @Data
 public class DataContext {
-    List<Long> items;
+    private List<Long> items;
+    private Long index;
+    private Long pageSize;
+
 }

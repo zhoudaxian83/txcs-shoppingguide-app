@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -92,36 +93,35 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
          */
 
         tacLogger.info("context=" + JSON.toJSONString(context));
+        DataContext dataContext = new DataContext();
         Long smAreaId = MapUtil.getLongWithDefault(context.getRequestParams(), "smAreaId", 330100L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
+        Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
+        Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
+        dataContext.setIndex(index);
+        dataContext.setPageSize(pageSize);
         //tair获取推荐商品
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
         tacLogger.info("tair推荐商品=" + JSON.toJSONString(pmtRuleDataItemRuleDTOS));
-        DataContext dataContext = new DataContext();
+
         //tpp获取个性化排序规则
         RecommendRequest recommendRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
-        //recommendRequest.setAppId(23198L);
-        //recommendRequest.setLogResult(true);
-
-        //params.put("itemIds", Joiner.on(",").join(mockItems));
-        //params.put("userId", userId + "");
-        //params.put("smAreaId", smAreaId + "");
         recommendRequest.setLogResult(true);
         recommendRequest.setUserId(userId);
         recommendRequest.setAppId(21431L);
-        params.put("RecItemIds",
-            "536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,"
-                + "617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617836325106,"
-                + "540271599415,587516703876,634661347726,536708195821,582396352306");
-        params.put("logicAreaId", "107");
-        params.put("index", "0");
-        params.put("pageSize", "20");
-        params.put("itemLayers", "浅爆,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,爆品,超爆,爆品,爆品,超爆");
-        params.put("smAreaId", "330100");
-        params.put("relativePrices",
-            "0.600,0.100,0.100,0.900,0.700,0.100,1.000,0.100,0.100,0.900,0.700,0.100,1.000,0.100,0.700,0.600,0.100,0"
-                + ".700,1.000,0.100");
+        //params.put("RecItemIds",
+        //    "536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,"
+        //        + "617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617836325106,"
+        //        + "540271599415,587516703876,634661347726,536708195821,582396352306");
+        //params.put("logicAreaId", "107");
+        //params.put("index", "0");
+        //params.put("pageSize", "20");
+        //params.put("itemLayers", "浅爆,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,爆品,超爆,爆品,爆品,超爆");
+        //params.put("smAreaId", "330100");
+        //params.put("relativePrices",
+        //    "0.600,0.100,0.100,0.900,0.700,0.100,1.000,0.100,0.100,0.900,0.700,0.100,1.000,0.100,0.700,0.600,0.100,0"
+        //        + ".700,1.000,0.100");
         params.put("appid", "21431");
         params.put("userItemIdList",
             "536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,"
@@ -155,9 +155,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     private OriginDataDTO<ItemEntity> convert(DataContext dataContext) {
         List<Long> items = dataContext.getItems();
+        List<Long> resultItems = this.getPage(dataContext.getItems(), dataContext.getIndex(),
+            dataContext.getPageSize());
         tacLogger.info("items=" + JSON.toJSONString(items));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-        originDataDTO.setResult(buildItemList());
+        originDataDTO.setResult(buildItemList(resultItems));
         return originDataDTO;
     }
 
@@ -200,20 +202,14 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      *
      * @return
      */
-    private List<ItemEntity> buildItemList() {
-        List<ItemEntity> result = Lists.newArrayList();
-        ItemEntity itemEntity = new ItemEntity();
-        itemEntity.setItemId(591228976713L);
-        itemEntity.setO2oType(defaultO2oType);
-        itemEntity.setBizType(defaultBizType);
-        result.add(itemEntity);
-
-        ItemEntity itemEntity2 = new ItemEntity();
-        itemEntity2.setItemId(615075644541L);
-        itemEntity2.setO2oType(defaultO2oType);
-        itemEntity2.setBizType(defaultBizType);
-        result.add(itemEntity2);
-        return result;
+    private List<ItemEntity> buildItemList(List<Long> items) {
+        return items.stream().map(item -> {
+            ItemEntity itemEntity = new ItemEntity();
+            itemEntity.setItemId(item);
+            itemEntity.setO2oType(defaultO2oType);
+            itemEntity.setBizType(defaultBizType);
+            return itemEntity;
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -249,7 +245,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @param pageSize   每页数量
      * @return 分页后结果
      */
-    public static <T> List<T> getPage(List<T> originList, Integer pageNum, Integer pageSize) {
+    public <T> List<T> getPage(List<T> originList, Long pageNum, Long pageSize) {
         // 如果页码为空或者每页数量为空
         pageNum = pageNum == null ? 0 : pageNum;
         pageSize = pageSize == null ? 0 : pageSize;
@@ -258,16 +254,16 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         // 如果需要进行分页
         if (pageNum > 0 && pageSize > 0) {
             // 获取起点
-            int pageStart = (pageNum - 1) * pageSize;
+            long pageStart = (pageNum - 1) * pageSize;
             // 获取终点
-            int pageStop = pageStart + pageSize;
+            long pageStop = pageStart + pageSize;
             // 开始遍历
             while (pageStart < pageStop) {
                 // 考虑到最后一页可能不够pageSize
                 if (pageStart == originList.size()) {
                     break;
                 }
-                resultList.add(originList.get(pageStart++));
+                resultList.add(originList.get(Math.toIntExact(pageStart++)));
             }
         }
         // 如果不进行分页
