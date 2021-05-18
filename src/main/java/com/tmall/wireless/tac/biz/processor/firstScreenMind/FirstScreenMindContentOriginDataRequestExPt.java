@@ -8,6 +8,8 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
+import com.tmall.txcs.gs.framework.model.meta.ContentMetaInfo;
+import com.tmall.txcs.gs.framework.model.meta.ContentRecommendMetaInfo;
 import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
@@ -35,6 +37,10 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
 
+        ContentRecommendMetaInfo contentRecommendMetaInfo = Optional.of(sgFrameworkContextContent)
+                .map(SgFrameworkContextContent::getContentMetaInfo)
+                .map(ContentMetaInfo::getContentRecommendMetaInfo)
+                .orElse(null);
         tacLogger.info("****FirstScreenMindContentOriginDataRequestExPt sgFrameworkContextContent***:"+sgFrameworkContextContent.toString());
 
         RecommendRequest tppRequest = new RecommendRequest();
@@ -74,9 +80,12 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         }
         //首次isFixPositionBanner为空或true，标识查询心智场景
         if(isMind){
-            //tppRequest.setAppId(25379L);
-            tppRequest.setAppId(23198L);
+            tppRequest.setAppId(25379L);
+//            tppRequest.setAppId(23198L);
         }else{
+            if (contentRecommendMetaInfo != null) {
+                contentRecommendMetaInfo.setUseRecommendSpiV2(false);
+            }
             tppRequest.setAppId(25409L);
         }
         tppRequest.setParams(params);
