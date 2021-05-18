@@ -12,6 +12,7 @@ import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import com.ali.com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -50,6 +51,16 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     static {
         mockItems.add(591228976713L);
         mockItems.add(615075644541L);
+        mockItems.add(536427844454L);
+        mockItems.add(538818102072L);
+        mockItems.add(617524588202L);
+        mockItems.add(586978507246L);
+        mockItems.add(536708195821L);
+        mockItems.add(634661347726L);
+        mockItems.add(587516703876L);
+        mockItems.add(633753044261L);
+        mockItems.add(617836325106L);
+
     }
 
     @Autowired
@@ -110,24 +121,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Map<String, String> params = Maps.newHashMap();
         recommendRequest.setLogResult(true);
         recommendRequest.setUserId(userId);
-        recommendRequest.setAppId(21431L);
-        //params.put("RecItemIds",
-        //    "536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,"
-        //        + "617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617836325106,"
-        //        + "540271599415,587516703876,634661347726,536708195821,582396352306");
-        //params.put("logicAreaId", "107");
-        //params.put("index", "0");
-        //params.put("pageSize", "20");
-        //params.put("itemLayers", "浅爆,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,爆品,超爆,爆品,爆品,超爆");
-        //params.put("smAreaId", "330100");
-        //params.put("relativePrices",
-        //    "0.600,0.100,0.100,0.900,0.700,0.100,1.000,0.100,0.100,0.900,0.700,0.100,1.000,0.100,0.700,0.600,0.100,0"
-        //        + ".700,1.000,0.100");
-        //params.put("appid", "21431");
-        params.put("userItemIdList",
-            "536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,"
-                + "617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617836325106,"
-                + "540271599415,587516703876,634661347726,536708195821,582396352306");
+        //recommendRequest.setAppId(21431L);
+        params.put("userItemIdList", Joiner.on(",").join(mockItems));
         recommendRequest.setParams(params);
         tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
         //获取限购信息
