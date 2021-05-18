@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @Date: 2021/5/17 15:48
  */
 @Component
-public class RecommendTairUtil {
+public class TairUtil {
     @Resource
     private MultiClusterTairManager multiClusterTairManager;
 
@@ -37,6 +37,7 @@ public class RecommendTairUtil {
                 || ResultCode.DATANOTEXSITS.equals(result.getRc())
                 || null == result.getValue()
                 || null == result.getValue().getValue()) {
+                tacLogger.info("缓存数据为空");
                 return null;
             }
             tacLogger.info("tair缓存取出" + cacheKey + String.valueOf(result.getValue().getValue()));

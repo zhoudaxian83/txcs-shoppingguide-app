@@ -33,7 +33,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.enums.LogicalArea;
 import com.tmall.wireless.tac.biz.processor.wzt.model.DataContext;
 import com.tmall.wireless.tac.biz.processor.wzt.model.PmtRuleDataItemRuleDTO;
-import com.tmall.wireless.tac.biz.processor.wzt.utils.RecommendTairUtil;
+import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +69,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     TacLogger tacLogger;
 
     @Resource
-    RecommendTairUtil recommendTairUtil;
+    TairUtil tairUtil;
 
     @Autowired
     TairFactorySpi tairFactorySpi;
@@ -77,7 +77,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private static final int labelSceneNamespace = 184;
 
     //分大区个性化排序后商品缓存后缀
-    private static final String areaSortSuffix = "AREA_SORT";
+    private static final String AREA_SORT_SUFFIX = "AREA_SORT";
 
     public static final String defaultBizType = "sm";
     public static final String defaultO2oType = "B2C";
@@ -209,11 +209,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         if (RpmContants.enviroment.isPreline()) {
             cacheKey = cacheKey + "_pre";
         }
-        Object o = recommendTairUtil.queryPromotionFromCache(cacheKey);
+        Object o = tairUtil.queryPromotionFromCache(cacheKey);
         if (Objects.isNull(o)) {
             return null;
         }
-        return (List<PmtRuleDataItemRuleDTO>)recommendTairUtil.queryPromotionFromCache(cacheKey);
+        return (List<PmtRuleDataItemRuleDTO>)tairUtil.queryPromotionFromCache(cacheKey);
     }
 
     /**
@@ -227,8 +227,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             tacLogger.warn("setItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
             return false;
         }
-        return recommendTairUtil.updateItemDetailPromotionCache(originDataDTO,
-            logicalArea.getCoreCityCode() + areaSortSuffix);
+        return tairUtil.updateItemDetailPromotionCache(originDataDTO,
+            logicalArea.getCacheKey() + AREA_SORT_SUFFIX);
     }
 
     private OriginDataDTO<ItemEntity> getItemToCacheOfArea(Long smAreaId) {
@@ -237,7 +237,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             tacLogger.warn("getItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
             return null;
         }
-        Object o = recommendTairUtil.queryPromotionFromCache(logicalArea.getCoreCityCode() + areaSortSuffix);
+        Object o = tairUtil.queryPromotionFromCache(logicalArea.getCacheKey() + AREA_SORT_SUFFIX);
         if (o == null) {
             return null;
         }
