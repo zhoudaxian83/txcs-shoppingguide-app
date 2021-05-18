@@ -135,9 +135,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         if (cacheOriginDataDTO == null) {
             return recommendSpi.recommendItem(recommendRequest)
                 .map(recommendResponseEntityResponse -> {
-                    tacLogger.info(
-                        "recommendResponseEntityResponse.getValue()=" + JSON
-                            .toJSONString(recommendResponseEntityResponse.getValue().getResult()));
                     if (!recommendResponseEntityResponse.isSuccess()
                         || recommendResponseEntityResponse.getValue() == null
                         || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
