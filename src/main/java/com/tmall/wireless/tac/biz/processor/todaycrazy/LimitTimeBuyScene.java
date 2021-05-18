@@ -41,12 +41,6 @@ public class LimitTimeBuyScene {
         LOGGER.info("***LimitTimeBuyScene context.getParams().toString()****:"+context.getParams().toString());
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
-        String bannerInfo = MapUtil.getStringWithDefault(
-                context.getParams(),
-                RequestKeyConstantApp.BANNER_INFO,
-                "");
-
-
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
 
         sgFrameworkContextItem.setRequestParams(context.getParams());
@@ -54,7 +48,7 @@ public class LimitTimeBuyScene {
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
         sceneInfo.setSubBiz(ScenarioConstantApp.LOC_TYPE_B2C);
-        sceneInfo.setScene(ScenarioConstantApp.SCENARIO_FIRST_PAGE_BANNER_ITEM);
+        sceneInfo.setScene(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY);
         sgFrameworkContextItem.setSceneInfo(sceneInfo);
 
         UserDO userDO = new UserDO();

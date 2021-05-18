@@ -43,6 +43,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         /*String index = params.get("index");*/
         //ald排期信息
         Map<String, Object> contextObj = (Map<String, Object>)params.get(ALD_CONTEXT);
+
         /*return (List<Map<String, Object>>)contextObj.get("static_schedule_data");*/
 
         DataEntry dataEntry = getCacheData();
@@ -70,5 +71,14 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         return dataEntry;
     }
 
+    /**
+     * 时间段排序
+     * @return
+     */
+    public Map<String,Object> sortMap(Map<String,Object> map){
+
+
+        return null;
+    }
 
 }
