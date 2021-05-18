@@ -42,6 +42,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         paramsValue.put("type", "com.tmall.aself.shoppingguide.client.todaycrazyv2.query.ItemLimitInfoQuery");
         paramsValue.put("nullable", "false");
         try {
+            tacLogger.info("测试返回结果begin");
             Object o = rpcSpi.invokeHsf("todayCrazyLimit", paramsValue);
             tacLogger.info("测试返回结果=" + JSON.toJSONString(o));
         } catch (Exception e) {
