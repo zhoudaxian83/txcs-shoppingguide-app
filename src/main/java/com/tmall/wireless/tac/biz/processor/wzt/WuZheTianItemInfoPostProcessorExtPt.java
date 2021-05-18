@@ -40,7 +40,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
 
         ItemLimitInfoQuery itemLimitInfoQuery = new ItemLimitInfoQuery();
         itemLimitInfoQuery.setUserId(1681359525L);
-        itemLimitInfoQuery.addSku(600819862645L, 623789407071L);
+        //itemLimitInfoQuery.addSku(600819862645L, 623789407071L);
         Map<String, Object> paramsValue = new HashMap<>(16);
         paramsValue.put("itemLimitInfoQuery", itemLimitInfoQuery);
         paramsValue.put("type", "com.tmall.aself.shoppingguide.client.todaycrazyv2.query.ItemLimitInfoQuery");

@@ -49,11 +49,9 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
         boolean hasMainSource = false;
-
         if (buildItemVoRequest == null || buildItemVoRequest.getItemInfoDTO() == null) {
             return Response.fail(ErrorCode.PARAMS_ERROR);
         }
-
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
 
         String originScm = "";
