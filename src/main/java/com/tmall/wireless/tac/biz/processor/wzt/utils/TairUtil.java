@@ -84,8 +84,8 @@ public class TairUtil {
             }
             Result<DataEntry> dataEntryResult = smartUiTair.getMultiClusterTairManager().get(smartUiTair.getNameSpace(),
                 cacheKey);
-            tacLogger.info("getCache获取json结果: " + JSON.toJSONString(dataEntryResult));
             List<PmtRuleDataItemRuleDTO> result = (List<PmtRuleDataItemRuleDTO>)dataEntryResult.getValue();
+            tacLogger.info("getCache获取json结果: " + JSON.toJSONString(result));
             return result;
         } catch (Exception e) {
             tacLogger.info("getCache获取json结果: " + e);
