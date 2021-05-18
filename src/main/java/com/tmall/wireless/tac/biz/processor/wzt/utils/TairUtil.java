@@ -33,6 +33,7 @@ public class TairUtil {
         try {
             //调用get方法获取key值对应的缓存
             Result<DataEntry> result = multiClusterTairManager.get(NAME_SPACE, cacheKey);
+            tacLogger.info("缓存原始数据" + cacheKey + JSON.toJSONString(result));
             if (null == result || !result.isSuccess()
                 || ResultCode.DATANOTEXSITS.equals(result.getRc())
                 || null == result.getValue()
