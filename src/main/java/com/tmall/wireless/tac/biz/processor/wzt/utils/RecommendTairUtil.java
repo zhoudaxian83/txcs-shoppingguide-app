@@ -8,8 +8,6 @@ import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
-import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
-import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,13 +25,13 @@ public class RecommendTairUtil {
     TacLogger tacLogger;
 
     public static int NAME_SPACE = 184;
-    public static String ACHE_NAME_PREFIX = "WUZHETIAN_";
+    public static String ACHE_NAME_SUFFIX = "WUZHETIAN";
 
     /**
      * 通过get方法获取key值对应的缓存
      */
     public Object queryPromotionFromCache(String cacheKey) {
-        cacheKey = ACHE_NAME_PREFIX + cacheKey;
+        cacheKey = cacheKey + ACHE_NAME_SUFFIX;
         try {
             //调用get方法获取key值对应的缓存
             Result<DataEntry> result = multiClusterTairManager.get(NAME_SPACE, cacheKey);
@@ -47,7 +45,7 @@ public class RecommendTairUtil {
             return result.getValue().getValue();
         } catch (Exception e) {
             tacLogger.error(
-                "[CzmfInfoManage] get item promotion from cache failed, itemId: " + cacheKey, e);
+                "[queryPromotionFromCache] get item promotion from cache failed, itemId: " + cacheKey, e);
             return null;
         }
     }
@@ -57,11 +55,12 @@ public class RecommendTairUtil {
      */
     public Boolean updateItemDetailPromotionCache(Object data,
         String cacheKey) {
-        //更新超返数据到tair，过期时间2分钟
+        cacheKey = cacheKey + ACHE_NAME_SUFFIX;
         ResultCode resultCode = multiClusterTairManager.put(NAME_SPACE, cacheKey,
-            JSON.toJSONString(data), 0, 60 * 10);
+            JSON.toJSONString(data), 0, 60 * 60 * 24 * 7);
         if (resultCode == null || !resultCode.isSuccess()) {
-            tacLogger.info("[CzmfInfoManage]Failed to update item detail promotion cache, cacheKey: " + ACHE_NAME_PREFIX
+            tacLogger.info("[updateItemDetailPromotionCache]Failed to update item detail promotion cache, cacheKey: "
+                + ACHE_NAME_SUFFIX
                 + cacheKey);
             return false;
         }

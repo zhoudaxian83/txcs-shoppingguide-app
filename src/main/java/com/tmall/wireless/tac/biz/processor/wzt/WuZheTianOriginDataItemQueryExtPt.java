@@ -9,7 +9,9 @@ import javax.annotation.Resource;
 
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -20,6 +22,7 @@ import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataR
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.model.constant.RpmContants;
+import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
 import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
@@ -44,6 +47,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
+    private static List<Long> mockItems = Lists.newArrayList();
+
+    static {
+        mockItems.add(591228976713L);
+        mockItems.add(615075644541L);
+    }
+
     @Autowired
     TacLogger tacLogger;
 
@@ -52,7 +62,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     @Autowired
     TairFactorySpi tairFactorySpi;
+
     private static final int labelSceneNamespace = 184;
+
+    //分大区个性化排序后商品缓存后缀
+    private static final String areaSortSuffix = "AREA_SORT";
 
     public static final String defaultBizType = "sm";
     public static final String defaultO2oType = "B2C";
@@ -81,23 +95,34 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
          */
 
         tacLogger.info("context=" + JSON.toJSONString(context));
-        List<Long> mockItems = Lists.newArrayList();
         Long smAreaId = MapUtil.getLongWithDefault(context.getRequestParams(), "smAreaId", 330100L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         //tair获取推荐商品
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairData(smAreaId);
         tacLogger.info("tair推荐商品=" + JSON.toJSONString(pmtRuleDataItemRuleDTOS));
+
         //tpp获取个性化排序规则
         RecommendRequest recommendRequest = new RecommendRequest();
-        recommendRequest.setAppId(23198L);
-        recommendRequest.setLogResult(true);
         Map<String, String> params = Maps.newHashMap();
-        params.put("itemIds", "591228976713,615075644541");
-        params.put("userId", userId + "");
-        params.put("smAreaId", smAreaId + "");
+        //recommendRequest.setAppId(23198L);
+        //recommendRequest.setLogResult(true);
+
+        //params.put("itemIds", Joiner.on(",").join(mockItems));
+        //params.put("userId", userId + "");
+        //params.put("smAreaId", smAreaId + "");
+        recommendRequest.setLogResult(true);
+        recommendRequest.setAppId(21431L);
+        params.put("RecItemIds","536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617836325106,540271599415,587516703876,634661347726,536708195821,582396352306");
+        params.put("logicAreaId","107");
+        params.put("index","0");
+        params.put("pageSize","20");
+        params.put("itemLayers","浅爆,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,爆品,超爆,爆品,爆品,超爆");
+        params.put("smAreaId","330100");
+        params.put("relativePrices","0.600,0.100,0.100,0.900,0.700,0.100,1.000,0.100,0.100,0.900,0.700,0.100,1.000,0.100,0.700,0.600,0.100,0.700,1.000,0.100");
+        params.put("appid","21431");
+        params.put("userItemIdList","536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617836325106,540271599415,587516703876,634661347726,536708195821,582396352306");
         recommendRequest.setParams(params);
         tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
-
         //获取限购信息
         //ItemLimitResult itemLimitInfoQuery = this.getItemLimitInfo(userId, mockItems);
         //tacLogger.info("itemLimitResult=" + JSON.toJSONString(itemLimitInfoQuery));
@@ -114,6 +139,16 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
                 return convert(recommendResponseEntityResponse.getValue());
             });
+    }
+
+    /**
+     * 转换成需要的数据格式，
+     *
+     * @param list
+     * @return
+     */
+    private List<Long> convert(List<PmtRuleDataItemRuleDTO> list) {
+        return mockItems;
     }
 
     private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
@@ -133,6 +168,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private List<PmtRuleDataItemRuleDTO> getTairData(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
+            tacLogger.warn("getTairData大区id未匹配：smAreaId：" + smAreaId);
             return null;
         }
         String cacheKey = logicalArea.getCacheKey();
@@ -172,14 +208,24 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      *
      * @return
      */
-    private Boolean setItemToCacheOfArea() {
-
-        return false;
+    private Boolean setItemToCacheOfArea(List<Long> itemIds, Long smAreaId) {
+        LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
+        if (logicalArea == null) {
+            tacLogger.warn("setItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
+            return false;
+        }
+        return recommendTairUtil.updateItemDetailPromotionCache(itemIds,
+            logicalArea.getCoreCityCode() + areaSortSuffix);
     }
 
-    private List<Long> getItemToCacheOfArea() {
-
-        return null;
+    private List<Long> getItemToCacheOfArea(Long smAreaId) {
+        LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
+        if (logicalArea == null) {
+            tacLogger.warn("getItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
+            return null;
+        }
+        Object o = recommendTairUtil.queryPromotionFromCache(logicalArea.getCoreCityCode() + areaSortSuffix);
+        return o == null ? null : JSONObject.parseArray(String.valueOf(o), Long.class);
     }
 
     /**
