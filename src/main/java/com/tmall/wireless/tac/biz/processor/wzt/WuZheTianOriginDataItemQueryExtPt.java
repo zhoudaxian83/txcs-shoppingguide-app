@@ -112,15 +112,23 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //params.put("smAreaId", smAreaId + "");
         recommendRequest.setLogResult(true);
         recommendRequest.setAppId(21431L);
-        params.put("RecItemIds","536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617836325106,540271599415,587516703876,634661347726,536708195821,582396352306");
-        params.put("logicAreaId","107");
-        params.put("index","0");
-        params.put("pageSize","20");
-        params.put("itemLayers","浅爆,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,爆品,超爆,爆品,爆品,超爆");
-        params.put("smAreaId","330100");
-        params.put("relativePrices","0.600,0.100,0.100,0.900,0.700,0.100,1.000,0.100,0.100,0.900,0.700,0.100,1.000,0.100,0.700,0.600,0.100,0.700,1.000,0.100");
-        params.put("appid","21431");
-        params.put("userItemIdList","536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617836325106,540271599415,587516703876,634661347726,536708195821,582396352306");
+        params.put("RecItemIds",
+            "536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,"
+                + "617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617836325106,"
+                + "540271599415,587516703876,634661347726,536708195821,582396352306");
+        params.put("logicAreaId", "107");
+        params.put("index", "0");
+        params.put("pageSize", "20");
+        params.put("itemLayers", "浅爆,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,浅爆,爆品,浅爆,爆品,超爆,爆品,爆品,超爆,爆品,爆品,超爆");
+        params.put("smAreaId", "330100");
+        params.put("relativePrices",
+            "0.600,0.100,0.100,0.900,0.700,0.100,1.000,0.100,0.100,0.900,0.700,0.100,1.000,0.100,0.700,0.600,0.100,0"
+                + ".700,1.000,0.100");
+        params.put("appid", "21431");
+        params.put("userItemIdList",
+            "536427844454,582396352306,617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,"
+                + "617524588202,538818102072,586978507246,633753044261,536708195821,582396352306,617836325106,"
+                + "540271599415,587516703876,634661347726,536708195821,582396352306");
         recommendRequest.setParams(params);
         tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
         //获取限购信息
@@ -130,6 +138,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //return Flowable.just(this.convert());
         return recommendSpi.recommendItem(recommendRequest)
             .map(recommendResponseEntityResponse -> {
+                tacLogger.info("recommendResponseEntityResponse=" + JSON.toJSONString(recommendResponseEntityResponse));
                 // tpp 返回失败
                 //if (!recommendResponseEntityResponse.isSuccess()
                 //    || recommendResponseEntityResponse.getValue() == null
