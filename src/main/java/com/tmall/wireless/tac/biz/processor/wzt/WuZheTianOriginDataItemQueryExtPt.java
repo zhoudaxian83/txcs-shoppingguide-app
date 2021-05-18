@@ -115,7 +115,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         dataContext.setPageSize(pageSize);
         //tair获取推荐商品
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
-        tacLogger.info("tair推荐商品=" + JSON.toJSONString(pmtRuleDataItemRuleDTOS));
+        tacLogger.info("tair推荐商品=" +pmtRuleDataItemRuleDTOS.size()+ JSON.toJSONString(pmtRuleDataItemRuleDTOS));
 
         //tpp获取个性化排序规则
         RecommendRequest recommendRequest = new RecommendRequest();
@@ -216,20 +216,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         return (List<PmtRuleDataItemRuleDTO>)recommendTairUtil.queryPromotionFromCache(cacheKey);
     }
 
-    /**
-     * 商品列表入参那构建
-     *
-     * @return
-     */
-    private List<ItemEntity> buildItemList(List<Long> items) {
-        return items.stream().map(item -> {
-            ItemEntity itemEntity = new ItemEntity();
-            itemEntity.setItemId(item);
-            itemEntity.setO2oType(defaultO2oType);
-            itemEntity.setBizType(defaultBizType);
-            return itemEntity;
-        }).collect(Collectors.toList());
-    }
+
 
     /**
      * 缓存个性化排序后的商品信息，区分大区
@@ -263,24 +250,24 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * 手动分页
      *
      * @param originalList 分页前数据
-     * @param pageNum      页码
+     * @param index      页码
      * @param pageSize     每页数量
      * @return 分页后结果
      */
-    public <T> List<T> getPage(List<T> originalList, Long pageNum, Long pageSize) {
-        if (pageNum < 1) {
-            pageNum = 1L;
+    public <T> List<T> getPage(List<T> originalList, Long index, Long pageSize) {
+        if (index < 1) {
+            index = 1L;
         }
-        if (pageNum * pageSize > originalList.size()) {
+        if (index * pageSize > originalList.size()) {
             return Lists.newArrayList();
         }
-        tacLogger.info("分页信息" + pageNum + pageSize);
+        tacLogger.info("分页信息" + index + pageSize);
         // 分页后的结果
         List<T> resultList = new ArrayList<>();
         // 如果需要进行分页
         if (pageSize > 0) {
             // 获取起点
-            long pageStart = (pageNum - 1) * pageSize;
+            long pageStart = (index - 1) * pageSize;
             // 获取终点
             long pageStop = pageStart + pageSize;
             // 开始遍历

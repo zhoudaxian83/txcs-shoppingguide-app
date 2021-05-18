@@ -25,13 +25,11 @@ public class RecommendTairUtil {
     TacLogger tacLogger;
 
     public static int NAME_SPACE = 184;
-    public static String ACHE_NAME_SUFFIX = "WUZHETIAN";
 
     /**
      * 通过get方法获取key值对应的缓存
      */
     public Object queryPromotionFromCache(String cacheKey) {
-        cacheKey = cacheKey + ACHE_NAME_SUFFIX;
         try {
             //调用get方法获取key值对应的缓存
             Result<DataEntry> result = multiClusterTairManager.get(NAME_SPACE, cacheKey);
@@ -55,12 +53,10 @@ public class RecommendTairUtil {
      */
     public Boolean updateItemDetailPromotionCache(Object data,
         String cacheKey) {
-        cacheKey = cacheKey + ACHE_NAME_SUFFIX;
         ResultCode resultCode = multiClusterTairManager.put(NAME_SPACE, cacheKey,
             JSON.toJSONString(data), 0, 60 * 30);
         if (resultCode == null || !resultCode.isSuccess()) {
             tacLogger.info("[updateItemDetailPromotionCache]Failed to update item detail promotion cache, cacheKey: "
-                + ACHE_NAME_SUFFIX
                 + cacheKey);
             return false;
         }
