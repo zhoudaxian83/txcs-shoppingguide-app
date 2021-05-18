@@ -7,10 +7,7 @@ import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.*;
-import com.tmall.txcs.gs.framework.model.meta.ContentMetaInfo;
-import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
-import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
-import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
+import com.tmall.txcs.gs.framework.model.meta.*;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceContent;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
@@ -106,6 +103,9 @@ public class FirstScreenMindContentScene {
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
 
         contentMetaInfo.setItemMetaInfo(itemMetaInfo);
+        ContentRecommendMetaInfo contentRecommendMetaInfo = new ContentRecommendMetaInfo();
+        contentRecommendMetaInfo.setUseRecommendSpiV2(true);
+        contentMetaInfo.setContentRecommendMetaInfo(contentRecommendMetaInfo);
         return contentMetaInfo;
     }
 }
