@@ -3,7 +3,6 @@ package com.tmall.wireless.tac.biz.processor.todaycrazy;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +63,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         int index = MapUtil.getIntWithDefault(params,"index",0);
         //ald排期信息
         Map<String,String> map = getAldInfo(params);
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt buildTime befor***");
         LinkedHashMap<Long,Long> linkedHashMap = buildTime(map);
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt linkedHashMap***"+linkedHashMap);
         List<LimitBuyDto> limitBuyDtos = Lists.newArrayList();
