@@ -9,7 +9,6 @@ import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.tmall.aself.shoppingguide.client.todaycrazyv2.result.ItemLimitResult;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorExtPt;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorResp;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -55,8 +54,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         try {
             tacLogger.info("测试返回结果begin");
             Object o = rpcSpi.invokeHsf("todayCrazyLimit", paramsValue);
-            ItemLimitResult itemLimitResult = (ItemLimitResult)o;
-            tacLogger.info("测试返回结果=" + JSON.toJSONString(itemLimitResult));
+
             tacLogger.info("测试返回结果=" + JSON.toJSONString(o));
         } catch (Exception e) {
             tacLogger.error("测试返回结果-异常", e);
