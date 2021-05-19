@@ -68,10 +68,13 @@ public class LimitTimeBuyScene {
         pageInfoDO.setIndex(0);
         pageInfoDO.setPageSize(20);
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
-        LOGGER.info("***LimitTimeBuyScene sgFrameworkContextItem.getRequestParams()****:"+sgFrameworkContextItem.getRequestParams());
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-                .map(TacResult::newResult)
+                .map(response -> {
+                    LOGGER.info("LimitTimeBuyScene response.getItemAndContentList().size():"+response.getItemAndContentList().size());
+                    LOGGER.info("LimitTimeBuyScene response.getItemAndContentList():"+response.getItemAndContentList());
+                    return response;
+                }).map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
 
     }

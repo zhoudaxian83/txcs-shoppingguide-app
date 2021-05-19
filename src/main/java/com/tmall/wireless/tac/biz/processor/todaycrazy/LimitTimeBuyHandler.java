@@ -26,8 +26,6 @@ public class LimitTimeBuyHandler extends RpmReactiveHandler {
 
     @Override
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
-        tacLogger.info("***tacLogger LimitTimeBuyHandler context.getParams()****:"+context.getParams());
-        LOGGER.info("***LOGGER LimitTimeBuyHandler context.getParams()****:"+context.getParams());
         return limitTimeBuyScene.recommend(context);
     }
 }

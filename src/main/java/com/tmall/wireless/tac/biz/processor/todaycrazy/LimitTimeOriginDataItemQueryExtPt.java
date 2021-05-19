@@ -54,8 +54,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info("****LimitTimeOriginDataItemQueryExtPt sgFrameworkContextItem.getRequestParams()***"+sgFrameworkContextItem.getRequestParams());
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt sgFrameworkContextItem.getRequestParams()***"+sgFrameworkContextItem.getRequestParams());
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
 
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
@@ -64,7 +62,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //ald排期信息
         Map<String,String> map = getAldInfo(params);
         LinkedHashMap<Long,Long> linkedHashMap = buildTime(map);
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt linkedHashMap***"+linkedHashMap);
         List<LimitBuyDto> limitBuyDtos = Lists.newArrayList();
         //打标命中的时间段
         buildNowTime(linkedHashMap,index,limitBuyDtos);
@@ -72,11 +69,9 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Long hitEndTime = 0L;
 
         for(LimitBuyDto limitBuyDto:limitBuyDtos){
-            LOGGER.info("****LimitTimeOriginDataItemQueryExtPt limitBuyDto***:"+limitBuyDto);
             if(limitBuyDto.getIsHit()){
                 hitStartTime = limitBuyDto.getStartTime();
                 hitEndTime = limitBuyDto.getEndTime();
-                LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitStartTime+hitEndTime***:"+hitStartTime+":"+hitEndTime);
             }
         }
 
@@ -88,17 +83,11 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             for(ColumnCenterDataSetItemRuleDTO item : itemList){
                 Long startTime = item.getDataRule().getItemScheduleStartTime().getTime()/1000;
                 Long endTime = item.getDataRule().getItemScheduleEndTime().getTime()/1000;
-                LOGGER.info("****LimitTimeOriginDataItemQueryExtPt startTime+hitStartTime***:"+startTime+":"+hitStartTime+","+endTime+":"+hitEndTime);
-                Boolean boolean1 = startTime <= hitStartTime;
-                Boolean boolean2 = endTime >= hitEndTime;
-                LOGGER.info("****LimitTimeOriginDataItemQueryExtPt boolean1:boolean2***:"+boolean1 +":"+ boolean2);
                 if(startTime <= hitStartTime && endTime >= (hitEndTime-1)){
                     hitpmtRuleDataItemRuleDTOList.add(item);
                 }
             }
         }
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitpmtRuleDataItemRuleDTOList.size()***"+hitpmtRuleDataItemRuleDTOList.size());
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitpmtRuleDataItemRuleDTOList***"+hitpmtRuleDataItemRuleDTOList);
         originDataDTO.setResult(buildItemList(hitpmtRuleDataItemRuleDTOList));
         tacLogger.info("****LimitTimeOriginDataItemQueryExtPt originDataDTO.getResult()***"+originDataDTO.getResult());
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt originDataDTO.getResult()***"+originDataDTO.getResult());
@@ -113,7 +102,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             Map<String, Object> contextObj = (Map<String, Object>)params.get(ALD_CONTEXT);
             if(contextObj.get(STATIC_SCHEDULE_DATA) != null && contextObj.get(STATIC_SCHEDULE_DATA) instanceof List){
                 List<Map<String,Object>> staticScheduleData = (List<Map<String, Object>>)contextObj.get(STATIC_SCHEDULE_DATA);
-                LOGGER.info("***LimitTimeOriginDataItemQueryExtPt staticScheduleData.toString()***:"+staticScheduleData.toString());
                 staticScheduleData.forEach(scheduleData -> {
                     String default_numberValue = MapUtil.getStringWithDefault(scheduleData,"default_numberValue","1");
                     String startTimeAld = MapUtil.getStringWithDefault(scheduleData,"startTime","");
@@ -147,8 +135,8 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      */
     public List<PmtRuleDataItemRuleDTO>  getCacheData(){
         List<PmtRuleDataItemRuleDTO> pmtRuleList = Lists.newArrayList();
+        //5个key里面一样的
         String normalTairKey = TairUtil.formatHotTairKey();
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt normalTairKey***"+normalTairKey);
         Result<DataEntry> rst = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().get(NAME_SPACE,normalTairKey);
         if(rst == null || !rst.isSuccess() || rst.getValue() == null || rst.getValue().getValue() == null){
             return pmtRuleList;
@@ -171,7 +159,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Long nowTime = date.getTime()/1000;
         //最多取三段 map有序
         int m = 0;
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt buildNowTime nowTime***"+nowTime);
         for(Map.Entry entry : allTime.entrySet()){
             if((nowTime >= (Long)entry.getKey() && nowTime < (Long)entry.getValue()) || (nowTime <= (Long)entry.getKey() && m < 3)){
                 LimitBuyDto limitBuyDto = new LimitBuyDto();
