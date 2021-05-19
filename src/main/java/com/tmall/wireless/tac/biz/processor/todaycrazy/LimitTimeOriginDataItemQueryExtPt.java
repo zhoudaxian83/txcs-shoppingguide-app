@@ -193,6 +193,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         }
         //时间段排序
         Map<String,String> rsMap = MapSortUtil.sortMapByValue(map);
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt rsMap***"+rsMap);
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdf  =   new  SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
@@ -226,8 +227,10 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             }
         }catch (ParseException e) {
             tacLogger.info("LimitTimeOriginDataItemQueryExtPt buildTime构建时间段错误：" + e.getMessage());
+            LOGGER.info("LimitTimeOriginDataItemQueryExtPt buildTime构建时间段错误：" + e.getMessage());
             e.printStackTrace();
         }
+        LOGGER.info("LimitTimeOriginDataItemQueryExtPt scheduleTimeMap：" + scheduleTimeMap);
         return scheduleTimeMap;
     }
 
