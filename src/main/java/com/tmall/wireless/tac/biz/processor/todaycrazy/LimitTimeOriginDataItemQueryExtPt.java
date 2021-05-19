@@ -200,13 +200,17 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdf  =   new  SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
         String[] values = (String[])rsMap.values().toArray();
+        LOGGER.info("LimitTimeOriginDataItemQueryExtPt values：" + values);
         try {
             Long scheduleDateStart = null;
             Long scheduleDateEnd = null;
             //预告明天第一场时间段
             scheduleDateStart = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[0] + ":00").getTime()/1000;
+            LOGGER.info("LimitTimeOriginDataItemQueryExtPt scheduleDateStart：" + scheduleDateStart);
             scheduleDateEnd = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[1] + ":00").getTime()/1000;
+            LOGGER.info("LimitTimeOriginDataItemQueryExtPt scheduleDateEnd：" + scheduleDateEnd);
             scheduleTimeMap.put(scheduleDateStart,scheduleDateEnd);
+            LOGGER.info("LimitTimeOriginDataItemQueryExtPt scheduleTimeMap：" + scheduleTimeMap);
             //预告明天第二场时间段
             scheduleDateStart = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[1] + ":00").getTime()/1000;
             scheduleDateEnd = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[2] + ":00").getTime()/1000;
