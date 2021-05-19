@@ -14,7 +14,9 @@ import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorExtPt;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorResp;
+import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
+import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -59,7 +61,9 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         tacLogger.info("getItemMetaInfo=" + JSON.toJSONString(sgFrameworkContextItem.getItemMetaInfo()));
         JSONObject getItemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
         stringObjectMap.put("post-test-getItemLimitResult", getItemLimitResult);
-        sgFrameworkContextItem.getEntityVOSgFrameworkResponse().setExtInfos(stringObjectMap);
+        SgFrameworkResponse<EntityVO> entityVOSgFrameworkResponse = new SgFrameworkResponse<EntityVO>();
+        entityVOSgFrameworkResponse.setExtInfos(stringObjectMap);
+        sgFrameworkContextItem.setEntityVOSgFrameworkResponse(entityVOSgFrameworkResponse);
         if (getItemLimitResult != null) {
 
         } else {
