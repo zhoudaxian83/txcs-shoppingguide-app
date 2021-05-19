@@ -92,7 +92,6 @@ public class TairUtil {
                 cacheKey);
             if (dataEntryResult.isSuccess()) {
                 JSONObject jsonObject = (JSONObject)JSON.toJSON(dataEntryResult.getValue());
-                tacLogger.info(LOG_PREFIX + "缓存返回结果: " + JSON.toJSONString(jsonObject) + "|cacheKey:" + cacheKey);
                 pmtRuleDataItemRuleDTOS = (List<PmtRuleDataItemRuleDTO>)dataEntryResult.getValue().getValue();
                 tacLogger.info(
                     LOG_PREFIX + "缓存返回结果: " + JSON.toJSONString(pmtRuleDataItemRuleDTOS) + "|cacheKey:" + cacheKey);

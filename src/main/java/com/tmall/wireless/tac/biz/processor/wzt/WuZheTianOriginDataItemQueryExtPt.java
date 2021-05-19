@@ -48,22 +48,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
-    private static List<Long> mockItems = Lists.newArrayList();
-
-    static {
-        mockItems.add(591228976713L);
-        mockItems.add(615075644541L);
-        mockItems.add(536427844454L);
-        mockItems.add(538818102072L);
-        mockItems.add(617524588202L);
-        mockItems.add(586978507246L);
-        mockItems.add(536708195821L);
-        mockItems.add(634661347726L);
-        mockItems.add(587516703876L);
-        mockItems.add(633753044261L);
-        mockItems.add(617836325106L);
-
-    }
+    //private static List<Long> mockItems = Lists.newArrayList();
+    //
+    //static {
+    //    mockItems.add(591228976713L);
+    //    mockItems.add(615075644541L);
+    //    mockItems.add(536427844454L);
+    //    mockItems.add(538818102072L);
+    //    mockItems.add(617524588202L);
+    //    mockItems.add(586978507246L);
+    //    mockItems.add(536708195821L);
+    //    mockItems.add(634661347726L);
+    //    mockItems.add(587516703876L);
+    //    mockItems.add(633753044261L);
+    //    mockItems.add(617836325106L);
+    //
+    //}
 
     @Autowired
     TacLogger tacLogger;
@@ -105,31 +105,20 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
         tacLogger.info("context=" + JSON.toJSONString(context));
         DataContext dataContext = new DataContext();
-        dataContext.setItems(mockItems);
+
         Long smAreaId = MapUtil.getLongWithDefault(context.getRequestParams(), "smAreaId", 330100L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         dataContext.setIndex(index);
         dataContext.setPageSize(pageSize);
-        //tair获取推荐商品
-        //tairFactorySpi.getMerchantsTair());
-        List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
-        tacLogger.info("tair推荐商品=" + JSON.toJSONString(pmtRuleDataItemRuleDTOS));
-
-        //tpp获取个性化排序规则
-        RecommendRequest recommendRequest = new RecommendRequest();
-        Map<String, String> params = Maps.newHashMap();
-        recommendRequest.setLogResult(true);
-        recommendRequest.setUserId(userId);
-        recommendRequest.setAppId(21431L);
-        params.put("userItemIdList", Joiner.on(",").join(mockItems));
-        recommendRequest.setParams(params);
-        tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
 
         OriginDataDTO<ItemEntity> cacheOriginDataDTO = getItemToCacheOfArea(smAreaId);
         if (cacheOriginDataDTO == null) {
-            return recommendSpi.recommendItem(recommendRequest)
+            //tair获取推荐商品
+            List<Long> tairItems = this.getOriginalRecommend(smAreaId);
+            dataContext.setItems(tairItems);
+            return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, tairItems))
                 .map(recommendResponseEntityResponse -> {
                     if (!recommendResponseEntityResponse.isSuccess()
                         || recommendResponseEntityResponse.getValue() == null
@@ -146,6 +135,38 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         } else {
             tacLogger.info("缓存生效-是缓存中的数据" + JSON.toJSONString(cacheOriginDataDTO));
             return Flowable.just(this.getItemPage(cacheOriginDataDTO, dataContext));
+        }
+    }
+
+    /**
+     * tpp获取个性化排序规则参数构建
+     *
+     * @param userId
+     * @param ItemIds
+     * @return
+     */
+    private RecommendRequest buildRecommendRequestParam(Long userId, List<Long> ItemIds) {
+        RecommendRequest recommendRequest = new RecommendRequest();
+        recommendRequest.setLogResult(true);
+        recommendRequest.setUserId(userId);
+        recommendRequest.setAppId(21431L);
+        Map<String, String> params = Maps.newHashMap();
+        params.put("userItemIdList", Joiner.on(",").join(ItemIds));
+        recommendRequest.setParams(params);
+        return recommendRequest;
+    }
+
+    private List<Long> getOriginalRecommend(Long smAreaId) {
+        List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
+        if (pmtRuleDataItemRuleDTOS == null) {
+            return null;
+        } else {
+            List<Long> items = pmtRuleDataItemRuleDTOS.get(0).getDataSetItemRuleDTOList().stream().map(
+                pmtRuleDataItemRuleDTO -> {
+                    return pmtRuleDataItemRuleDTO.getItemId();
+                }).collect(Collectors.toList());
+            tacLogger.warn(LOG_PREFIX + "getOriginalRecommend获取tair原始items：" + JSON.toJSONString(items));
+            return items;
         }
     }
 
@@ -177,27 +198,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         return originDataDTO;
     }
 
-    /**
-     * 转换成需要的数据格式，
-     *
-     * @param list
-     * @return
-     */
-    private List<Long> itemsDataConvert(List<PmtRuleDataItemRuleDTO> list) {
-        return mockItems;
-    }
-
-    //private ItemLimitResult getItemLimitInfo(Long userId, List<Long> itemIds) {
-    //    ItemLimitInfoQuery itemLimitInfoQuery = new ItemLimitInfoQuery();
-    //    itemLimitInfoQuery.setUserId(0L);
-    //    itemLimitInfoQuery.setItemIdList(itemIds);
-    //    return todayCrazyLimitFacade.query(itemLimitInfoQuery);
-    //}
-
     private List<PmtRuleDataItemRuleDTO> getTairItems(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
-            tacLogger.warn(LOG_PREFIX+"getTairItems大区id未匹配：smAreaId：" + smAreaId);
+            tacLogger.warn(LOG_PREFIX + "getTairItems大区id未匹配：smAreaId：" + smAreaId);
             return null;
         }
         String cacheKey = logicalArea.getCacheKey();
@@ -222,6 +226,12 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             logicalArea.getCacheKey() + AREA_SORT_SUFFIX);
     }
 
+    /**
+     * 区分大区缓存获取推荐信息
+     *
+     * @param smAreaId
+     * @return
+     */
     private OriginDataDTO<ItemEntity> getItemToCacheOfArea(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
@@ -251,7 +261,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             tacLogger.warn("getPage中页数小于获取页数据条数，总页数；" + originalList.size());
             return Lists.newArrayList();
         }
-        tacLogger.info("分页信息" + index + pageSize);
         // 分页后的结果
         List<T> resultList = new ArrayList<>();
         // 如果需要进行分页
@@ -269,9 +278,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 resultList.add(originalList.get(Math.toIntExact(pageStart++)));
             }
         }
-        // 如果不进行分页
+        // 如果不进行分页，显示所有数据
         else {
-            // 显示所有数据
             resultList = originalList;
         }
         return resultList;
