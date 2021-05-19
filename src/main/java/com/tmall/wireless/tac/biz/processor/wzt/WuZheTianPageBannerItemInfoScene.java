@@ -84,9 +84,9 @@ public class WuZheTianPageBannerItemInfoScene {
         pageInfoDO.setPageSize(pageSize.intValue());
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
 
-        Map<String, Object> userParams = Maps.newConcurrentMap();
-        userParams.put("scene-test-1", "scene-test-1");
-        sgFrameworkContextItem.setUserParams(userParams);
+//        Map<String, Object> userParams = Maps.newConcurrentMap();
+//        userParams.put("scene-test-1", "scene-test-1");
+        sgFrameworkContextItem.setUserParams(context.getParams());
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)
             .onErrorReturn(r -> TacResult.errorResult(""));
