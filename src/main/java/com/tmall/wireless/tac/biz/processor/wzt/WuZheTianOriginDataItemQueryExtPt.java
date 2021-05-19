@@ -48,23 +48,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
-    //private static List<Long> mockItems = Lists.newArrayList();
-    //
-    //static {
-    //    mockItems.add(591228976713L);
-    //    mockItems.add(615075644541L);
-    //    mockItems.add(536427844454L);
-    //    mockItems.add(538818102072L);
-    //    mockItems.add(617524588202L);
-    //    mockItems.add(586978507246L);
-    //    mockItems.add(536708195821L);
-    //    mockItems.add(634661347726L);
-    //    mockItems.add(587516703876L);
-    //    mockItems.add(633753044261L);
-    //    mockItems.add(617836325106L);
-    //
-    //}
-
     @Autowired
     TacLogger tacLogger;
 
@@ -163,7 +146,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             return null;
         } else {
             try {
-                PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = pmtRuleDataItemRuleDTOS.get(0);
+                tacLogger.warn(LOG_PREFIX + "验证返回异常" + JSON.toJSONString(pmtRuleDataItemRuleDTOS.get(0)));
+                PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = (PmtRuleDataItemRuleDTO)pmtRuleDataItemRuleDTOS.get(0);
                 items = pmtRuleDataItemRuleDTO.getDataSetItemRuleDTOList().stream().map(ItemEntity -> {
                     return ItemEntity.getItemId();
                 }).collect(Collectors.toList());
