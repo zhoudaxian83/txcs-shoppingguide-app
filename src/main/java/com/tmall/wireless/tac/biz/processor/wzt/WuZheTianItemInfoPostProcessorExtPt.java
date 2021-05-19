@@ -9,7 +9,6 @@ import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-import com.ali.com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -44,7 +43,11 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
 
     @Override
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info("ItemInfoPostProcessorExtPt扩展点测试=" + JSON.toJSONString(sgFrameworkContextItem));
+        tacLogger.info("ItemInfoPostProcessorExtPt扩展点测试=" + JSON.toJSONString(sgFrameworkContextItem.getItemMetaInfo()));
+        tacLogger.info("getEntityVOSgFrameworkResponse=" + JSON.toJSONString(sgFrameworkContextItem.getEntityVOSgFrameworkResponse()));
+        tacLogger.info("getItemEntityOriginDataDTO=" + JSON.toJSONString(sgFrameworkContextItem.getItemEntityOriginDataDTO()));
+        tacLogger.info("getItemInfoGroupResponseMap=" + JSON.toJSONString(sgFrameworkContextItem.getItemInfoGroupResponseMap()));
+        tacLogger.info("getItemMetaInfo=" + JSON.toJSONString(sgFrameworkContextItem.getItemMetaInfo()));
         JSONObject getItemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
         if (getItemLimitResult != null) {
 

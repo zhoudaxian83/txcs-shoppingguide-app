@@ -88,20 +88,20 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
-        //skuId;
-        itemEntityVO.put("skuId","测试");
-
-        //总体限购
-        itemEntityVO.put("totalLimit","测试");
-
-        //已经售卖的件数
-        itemEntityVO.put("usedCount","测试");
-
-        //用户限购信息
-        itemEntityVO.put("userLimit","测试");
-
-        //用户已经消费
-        itemEntityVO.put("userUsedCount","测试");
+        ////skuId;
+        //itemEntityVO.put("skuId","测试");
+        //
+        ////总体限购
+        //itemEntityVO.put("totalLimit","测试");
+        //
+        ////已经售卖的件数
+        //itemEntityVO.put("usedCount","测试");
+        //
+        ////用户限购信息
+        //itemEntityVO.put("userLimit","测试");
+        //
+        ////用户已经消费
+        //itemEntityVO.put("userUsedCount","测试");
 
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
