@@ -200,7 +200,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private List<PmtRuleDataItemRuleDTO> getTairItems(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
-            tacLogger.warn("getTairData大区id未匹配：smAreaId：" + smAreaId);
+            tacLogger.warn("getTairItems大区id未匹配：smAreaId：" + smAreaId);
             return null;
         }
         String cacheKey = logicalArea.getCacheKey();
@@ -212,6 +212,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         // TODO
         tairUtil.getCache(cacheKey);
         if (Objects.isNull(o)) {
+            tacLogger.warn("getTairItems,o is null");
             return null;
         }
         return (List<PmtRuleDataItemRuleDTO>)tairUtil.queryPromotionFromCache(cacheKey);

@@ -77,11 +77,13 @@ public class TairUtil {
 
     public List<PmtRuleDataItemRuleDTO> getCache(String cacheKey) {
         try {
-            TairManager smartUiTair = tairFactorySpi.getSmartUiTair();
+            TairManager smartUiTair = tairFactorySpi.getDefaultTair();
             if (smartUiTair == null || smartUiTair.getMultiClusterTairManager() == null
                 || smartUiTair.getNameSpace() == 0) {
+                tacLogger.info("1-getCache nameSpace: " + smartUiTair.getNameSpace());
                 return null;
             }
+            tacLogger.info("2-getCache nameSpace: " + smartUiTair.getNameSpace());
             Result<DataEntry> dataEntryResult = smartUiTair.getMultiClusterTairManager().get(smartUiTair.getNameSpace(),
                 cacheKey);
             List<PmtRuleDataItemRuleDTO> result = (List<PmtRuleDataItemRuleDTO>)dataEntryResult.getValue();
