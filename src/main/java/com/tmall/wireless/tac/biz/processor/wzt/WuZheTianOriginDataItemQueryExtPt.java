@@ -31,6 +31,7 @@ import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.enums.LogicalArea;
+import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.DataContext;
 import com.tmall.wireless.tac.biz.processor.wzt.model.PmtRuleDataItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
@@ -146,11 +147,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             return null;
         } else {
             try {
-                tacLogger.warn(LOG_PREFIX + "验证返回异常" + JSON.toJSONString(pmtRuleDataItemRuleDTOS.get(0)));
-                PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = (PmtRuleDataItemRuleDTO)pmtRuleDataItemRuleDTOS.get(0);
-                items = pmtRuleDataItemRuleDTO.getDataSetItemRuleDTOList().stream().map(ItemEntity -> {
-                    return ItemEntity.getItemId();
-                }).collect(Collectors.toList());
+                PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = JSON.parseObject(
+                    JSON.toJSON(pmtRuleDataItemRuleDTOS.get(0)).toString(), PmtRuleDataItemRuleDTO.class);
+                items = pmtRuleDataItemRuleDTO.getDataSetItemRuleDTOList().stream().map(
+                    ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
                 tacLogger.warn(LOG_PREFIX + "getOriginalRecommend获取tair原始items：" + JSON.toJSONString(items));
                 return items;
 
