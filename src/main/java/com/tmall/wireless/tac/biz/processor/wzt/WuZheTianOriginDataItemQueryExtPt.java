@@ -96,7 +96,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         dataContext.setIndex(index);
         dataContext.setPageSize(pageSize);
-
         OriginDataDTO<ItemEntity> cacheOriginDataDTO = getItemToCacheOfArea(smAreaId);
         if (cacheOriginDataDTO == null) {
             //tair获取推荐商品
@@ -210,7 +209,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private Boolean setItemToCacheOfArea(OriginDataDTO<ItemEntity> originDataDTO, Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
-            tacLogger.warn("setItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
+            tacLogger.warn(LOG_PREFIX + "setItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
             return false;
         }
         return tairUtil.setCache(originDataDTO,
@@ -226,7 +225,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private OriginDataDTO<ItemEntity> getItemToCacheOfArea(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
-            tacLogger.warn("getItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
+            tacLogger.warn(LOG_PREFIX + "getItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
             return null;
         }
         Object o = tairUtil.queryPromotionFromCache(logicalArea.getCacheKey() + AREA_SORT_SUFFIX);

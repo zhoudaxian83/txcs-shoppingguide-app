@@ -1,10 +1,12 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
+import java.util.Map;
 import java.util.Optional;
 
 import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -44,18 +46,13 @@ public class WuZheTianPageBannerItemInfoScene {
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
 
         tacLogger.info("WuZheTianPageBannerItemInfoScene测试info");
-
         Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 0L);
         Long index = MapUtil.getLongWithDefault(context.getParams(), "index", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getParams(), "pageSize", 20L);
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
-        context.getParams();
-
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
-
         sgFrameworkContextItem.setRequestParams(context.getParams());
-
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstant.BIZ_TYPE_SUPERMARKET);
         sceneInfo.setSubBiz(ScenarioConstant.LOC_TYPE_B2C);
@@ -66,7 +63,6 @@ public class WuZheTianPageBannerItemInfoScene {
         userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
         sgFrameworkContextItem.setUserDO(userDO);
-
         sgFrameworkContextItem.setLocParams(
             CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextItem.setItemMetaInfo(MetaInfoUtil.getGulSubTabItemMetaInfo());
@@ -78,8 +74,8 @@ public class WuZheTianPageBannerItemInfoScene {
 
         PmtParams pmtParams = new PmtParams();
         pmtParams.setPmtSource("sm_manager");
-        pmtParams.setPmtName("guessULike");
-        pmtParams.setPageId("cainixihuan1");
+        pmtParams.setPmtName("wuZheTian");
+        pmtParams.setPageId("wuZheTian");
         pmtParams.setModuleId(level1Id.toString());
         sgFrameworkContextItem.setPmtParams(pmtParams);
 
@@ -87,7 +83,10 @@ public class WuZheTianPageBannerItemInfoScene {
         pageInfoDO.setIndex(index.intValue());
         pageInfoDO.setPageSize(pageSize.intValue());
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
-        tacLogger.info("WuZheTianPageBannerItemInfoScene测试info-2");
+
+        Map<String, Object> userParams = Maps.newConcurrentMap();
+        userParams.put("scene-test-1", "scene-test-1");
+        sgFrameworkContextItem.setUserParams(userParams);
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)
             .onErrorReturn(r -> TacResult.errorResult(""));
