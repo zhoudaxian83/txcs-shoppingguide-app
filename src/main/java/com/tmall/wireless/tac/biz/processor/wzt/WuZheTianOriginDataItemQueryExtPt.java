@@ -213,7 +213,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             tacLogger.warn("setItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
             return false;
         }
-        return tairUtil.updateItemDetailPromotionCache(originDataDTO,
+        return tairUtil.setCache(originDataDTO,
             logicalArea.getCacheKey() + AREA_SORT_SUFFIX);
     }
 

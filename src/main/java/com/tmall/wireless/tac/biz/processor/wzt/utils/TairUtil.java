@@ -1,12 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.wzt.utils;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
@@ -58,50 +56,64 @@ public class TairUtil {
             return result.getValue().getValue();
         } catch (Exception e) {
             tacLogger.error(
-                "[queryPromotionFromCache] get item promotion from cache failed, itemId: " + cacheKey, e);
+                LOG_PREFIX + "queryPromotionFromCache 缓存获取失败，cacheKey：" + cacheKey, e);
             return null;
         }
     }
 
-    /**
-     * 调用put方法将ItemPromotionDTO对象存到NAME_SPACE下，key值为cacheKey
-     */
-    public Boolean updateItemDetailPromotionCache(Object data,
-        String cacheKey) {
-        ResultCode resultCode = multiClusterTairManager.put(NAME_SPACE, cacheKey,
-            JSON.toJSONString(data), 0, 60 * 30);
-        if (resultCode == null || !resultCode.isSuccess()) {
-            tacLogger.info("[updateItemDetailPromotionCache]Failed to update item detail promotion cache, cacheKey: "
-                + cacheKey);
-            return false;
-        }
-        return true;
-    }
+    //public Boolean updateItemDetailPromotionCache(Object data,
+    //    String cacheKey) {
+    //    ResultCode resultCode = multiClusterTairManager.put(NAME_SPACE, cacheKey,
+    //        JSON.toJSONString(data), 0, 60 * 30);
+    //    if (resultCode == null || !resultCode.isSuccess()) {
+    //        tacLogger.info(LOG_PREFIX + "updateItemDetailPromotionCache 缓存失败，cacheKey：" + cacheKey);
+    //        return false;
+    //    }
+    //    return true;
+    //}
 
     public List<PmtRuleDataItemRuleDTO> getCache(String cacheKey) {
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = Lists.newArrayList();
         try {
             TairManager defaultTair = tairFactorySpi.getDefaultTair();
-            if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null
-                || defaultTair.getNameSpace() == 0) {
+            if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null) {
                 tacLogger.warn(
-                    LOG_PREFIX + "缓存异常， nameSpace: " + defaultTair.getNameSpace() + "|cacheKey" + cacheKey);
+                    LOG_PREFIX + "缓存异常，cacheKey: " + cacheKey);
                 return null;
             }
-            Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(defaultTair.getNameSpace(),
+            Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(NAME_SPACE,
                 cacheKey);
             if (dataEntryResult.isSuccess()) {
-                JSONObject jsonObject = (JSONObject)JSON.toJSON(dataEntryResult.getValue());
                 pmtRuleDataItemRuleDTOS = (List<PmtRuleDataItemRuleDTO>)dataEntryResult.getValue().getValue();
-                tacLogger.info(
-                    LOG_PREFIX + "缓存返回结果: " + JSON.toJSONString(pmtRuleDataItemRuleDTOS) + "|cacheKey:" + cacheKey);
             } else {
                 tacLogger.info(LOG_PREFIX + "获取缓存失败，cacheKey: " + cacheKey);
             }
             return pmtRuleDataItemRuleDTOS;
         } catch (Exception e) {
-            tacLogger.info("getCache获取json结果: " + e);
+            tacLogger.error(LOG_PREFIX + "getCache获取缓存失败,cacheKey:" + cacheKey, e);
         }
         return null;
     }
+
+    public Boolean setCache(Object data, String cacheKey) {
+        try {
+            TairManager defaultTair = tairFactorySpi.getDefaultTair();
+            if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null) {
+                tacLogger.warn(LOG_PREFIX + "缓存异常， cacheKey: " + cacheKey);
+                return false;
+            }
+            ResultCode resultCode = defaultTair.getMultiClusterTairManager().put(NAME_SPACE,
+                cacheKey, JSON.toJSONString(data), 0, 60 * 30);
+            if (resultCode.isSuccess()) {
+                return true;
+            } else {
+                tacLogger.info(LOG_PREFIX + "setCache缓存失败，cacheKey: " + cacheKey);
+            }
+            return true;
+        } catch (Exception e) {
+            tacLogger.error(LOG_PREFIX + "setCache缓存异常,cacheKey:" + cacheKey, e);
+        }
+        return false;
+    }
 }
+
