@@ -7,16 +7,15 @@ import java.util.Map;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.aself.shoppingguide.client.todaycrazyv2.result.ItemLimitResult;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorExtPt;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorResp;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
