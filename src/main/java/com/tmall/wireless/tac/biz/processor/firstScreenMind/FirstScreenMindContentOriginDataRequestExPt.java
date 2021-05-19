@@ -79,7 +79,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
 
         //首次isFixPositionBanner为空或true，标识查询心智场景
         if(isMind){
-            params.put("commerce","B2C")
+            params.put("commerce","B2C");
             tppRequest.setAppId(25379L);
 //            tppRequest.setAppId(23198L);
         }else{
