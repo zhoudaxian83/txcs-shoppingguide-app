@@ -173,7 +173,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         int m = 0;
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt buildNowTime nowTime***"+nowTime);
         for(Map.Entry entry : allTime.entrySet()){
-            if((nowTime >= (Long)entry.getKey() && nowTime < (Long)entry.getValue()) || (nowTime >= (Long)entry.getValue() && m < 3)){
+            if((nowTime >= (Long)entry.getKey() && nowTime < (Long)entry.getValue()) || (nowTime <= (Long)entry.getKey() && m < 3)){
                 LimitBuyDto limitBuyDto = new LimitBuyDto();
                 limitBuyDto.setStartTime((Long)entry.getKey());
                 limitBuyDto.setEndTime((Long)entry.getValue());
