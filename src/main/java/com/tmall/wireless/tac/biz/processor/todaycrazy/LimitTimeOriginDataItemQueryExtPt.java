@@ -30,8 +30,6 @@ import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
-import static com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoOriginDataItemQueryExtPt.defaultBizType;
-
 /**
  * @author guijian
  */
@@ -49,6 +47,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private static final int NAME_SPACE = 184;
     public static final String ALD_CONTEXT = "ald_context";
     public static final String STATIC_SCHEDULE_DATA = "static_schedule_data";
+    public static final String defaultBizType = "sm";
 
 
     @Override
