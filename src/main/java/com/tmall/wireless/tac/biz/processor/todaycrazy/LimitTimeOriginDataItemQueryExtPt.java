@@ -89,6 +89,8 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             }
         }
         originDataDTO.setResult(buildItemList(hitpmtRuleDataItemRuleDTOList));
+        tacLogger.info("****LimitTimeOriginDataItemQueryExtPt originDataDTO.getResult()***"+originDataDTO.getResult());
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt originDataDTO.getResult()***"+originDataDTO.getResult());
         return Flowable.just(originDataDTO);
     }
     public Map<String,String> getAldInfo(Map<String, Object> params){
@@ -101,12 +103,14 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             if(contextObj.get(STATIC_SCHEDULE_DATA) != null && contextObj.get(STATIC_SCHEDULE_DATA) instanceof List){
                 List<Map<String,Object>> staticScheduleData = (List<Map<String, Object>>)contextObj.get(STATIC_SCHEDULE_DATA);
                 LOGGER.info("***LimitTimeOriginDataItemQueryExtPt staticScheduleData.toString()***:"+staticScheduleData.toString());
+                staticScheduleData.forEach(scheduleData -> {
+                    String default_numberValue = MapUtil.getStringWithDefault(scheduleData,"default_numberValue","1");
+                    String startTimeAld = MapUtil.getStringWithDefault(scheduleData,"startTime","");
+                    map.put(default_numberValue,startTimeAld);
+                });
             }
         }
-
-
-
-        return null;
+        return map;
     }
     private List<ItemEntity> buildItemList(List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS)  {
         List<ItemEntity> result = Lists.newArrayList();
