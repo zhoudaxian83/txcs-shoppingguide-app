@@ -82,6 +82,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     public static final String defaultBizType = "sm";
     public static final String defaultO2oType = "B2C";
 
+    private static final String LOG_PREFIX = "WuZheTianOriginDataItemQueryExtPt-";
+
     @Autowired
     RecommendSpi recommendSpi;
 
@@ -195,22 +197,14 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private List<PmtRuleDataItemRuleDTO> getTairItems(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
-            tacLogger.warn("getTairItems大区id未匹配：smAreaId：" + smAreaId);
+            tacLogger.warn(LOG_PREFIX+"getTairItems大区id未匹配：smAreaId：" + smAreaId);
             return null;
         }
         String cacheKey = logicalArea.getCacheKey();
         if (!RpmContants.enviroment.isOnline()) {
             cacheKey = cacheKey + "_pre";
         }
-
-        Object o = tairUtil.queryPromotionFromCache(cacheKey);
-        // TODO
-        tairUtil.getCache(cacheKey);
-        if (Objects.isNull(o)) {
-            tacLogger.warn("getTairItems,o is null");
-            return null;
-        }
-        return (List<PmtRuleDataItemRuleDTO>)tairUtil.queryPromotionFromCache(cacheKey);
+        return tairUtil.getCache(cacheKey);
     }
 
     /**

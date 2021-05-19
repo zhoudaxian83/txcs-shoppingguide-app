@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
@@ -35,6 +36,8 @@ public class TairUtil {
     TacLogger tacLogger;
 
     public static int NAME_SPACE = 184;
+
+    private static final String LOG_PREFIX = "TairUtil-";
 
     /**
      * 通过get方法获取key值对应的缓存
@@ -76,21 +79,27 @@ public class TairUtil {
     }
 
     public List<PmtRuleDataItemRuleDTO> getCache(String cacheKey) {
+        List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = Lists.newArrayList();
         try {
             TairManager defaultTair = tairFactorySpi.getDefaultTair();
             if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null
                 || defaultTair.getNameSpace() == 0) {
-                tacLogger.info("1-getCache nameSpace: " + defaultTair.getNameSpace());
+                tacLogger.warn(
+                    LOG_PREFIX + "缓存异常， nameSpace: " + defaultTair.getNameSpace() + "|cacheKey" + cacheKey);
                 return null;
             }
-            tacLogger.info("2-getCache nameSpace: " + defaultTair.getNameSpace());
             Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(defaultTair.getNameSpace(),
                 cacheKey);
-            tacLogger.info("缓存返回结果: " + dataEntryResult);
-            tacLogger.info("缓存返回结果: " + dataEntryResult.getValue());
-            List<PmtRuleDataItemRuleDTO> result = (List<PmtRuleDataItemRuleDTO>)dataEntryResult.getValue();
-            tacLogger.info("getCache获取json结果: " + JSON.toJSONString(result) + "|cacheKey:" + cacheKey);
-            return result;
+            if (dataEntryResult.isSuccess()) {
+                JSONObject jsonObject = (JSONObject)JSON.toJSON(dataEntryResult.getValue());
+                tacLogger.info(LOG_PREFIX + "缓存返回结果: " + JSON.toJSONString(jsonObject) + "|cacheKey:" + cacheKey);
+                pmtRuleDataItemRuleDTOS = (List<PmtRuleDataItemRuleDTO>)dataEntryResult.getValue();
+                tacLogger.info(
+                    LOG_PREFIX + "缓存返回结果: " + JSON.toJSONString(pmtRuleDataItemRuleDTOS) + "|cacheKey:" + cacheKey);
+            } else {
+                tacLogger.info(LOG_PREFIX + "获取缓存失败，cacheKey: " + cacheKey);
+            }
+            return pmtRuleDataItemRuleDTOS;
         } catch (Exception e) {
             tacLogger.info("getCache获取json结果: " + e);
         }
