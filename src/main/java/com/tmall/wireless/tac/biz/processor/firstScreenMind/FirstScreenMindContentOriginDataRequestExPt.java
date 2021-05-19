@@ -13,10 +13,12 @@ import com.tmall.txcs.gs.framework.model.meta.ContentRecommendMetaInfo;
 import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import com.tmall.wireless.tac.client.domain.Enviroment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +68,9 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             params.put("commerce", "B2C");
             params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
             params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
-
+            if (Enviroment.PRE.equals(RpmContants.enviroment)) {
+                params.put("_devEnv_", "1");
+            }
             return tppRequest;
         }
 
