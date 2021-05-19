@@ -43,10 +43,14 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
 
     @Override
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info("ItemInfoPostProcessorExtPt扩展点测试=" + JSON.toJSONString(sgFrameworkContextItem.getItemMetaInfo()));
-        tacLogger.info("getEntityVOSgFrameworkResponse=" + JSON.toJSONString(sgFrameworkContextItem.getEntityVOSgFrameworkResponse()));
-        tacLogger.info("getItemEntityOriginDataDTO=" + JSON.toJSONString(sgFrameworkContextItem.getItemEntityOriginDataDTO()));
-        tacLogger.info("getItemInfoGroupResponseMap=" + JSON.toJSONString(sgFrameworkContextItem.getItemInfoGroupResponseMap()));
+        tacLogger.info(
+            "ItemInfoPostProcessorExtPt扩展点测试=" + JSON.toJSONString(sgFrameworkContextItem.getItemMetaInfo()));
+        tacLogger.info("getEntityVOSgFrameworkResponse=" + JSON
+            .toJSONString(sgFrameworkContextItem.getEntityVOSgFrameworkResponse()));
+        tacLogger.info(
+            "getItemEntityOriginDataDTO=" + JSON.toJSONString(sgFrameworkContextItem.getItemEntityOriginDataDTO()));
+        tacLogger.info(
+            "getItemInfoGroupResponseMap=" + JSON.toJSONString(sgFrameworkContextItem.getItemInfoGroupResponseMap()));
         tacLogger.info("getItemMetaInfo=" + JSON.toJSONString(sgFrameworkContextItem.getItemMetaInfo()));
         JSONObject getItemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
         if (getItemLimitResult != null) {
@@ -79,24 +83,23 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
     }
 
     private JSONObject getItemLimitResult(Map<String, Object> paramsValue) {
-        Object o = null;
+        Object o;
         try {
             o = rpcSpi.invokeHsf("todayCrazyLimit", paramsValue);
+            JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
+            if ((Boolean)jsonObject.get("success")) {
+                JSONObject itemLimitResult = (JSONObject)jsonObject.get("limitInfo");
+                return itemLimitResult;
+            } else {
+                tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
+                return null;
+            }
         } catch (Exception e) {
             tacLogger.error(LOG_PREFIX + "获取限购信息异常", e);
             e.printStackTrace();
         }
-        if (o == null) {
-            tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
-            return null;
-        }
-        JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
-        if ((Boolean)jsonObject.get("success")) {
-            JSONObject itemLimitResult = (JSONObject)jsonObject.get("limitInfo");
-            return itemLimitResult;
-        } else {
-            return null;
-        }
+        return null;
+
     }
 
 }
