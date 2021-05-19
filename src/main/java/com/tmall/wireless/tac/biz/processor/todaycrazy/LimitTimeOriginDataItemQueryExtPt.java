@@ -16,6 +16,8 @@ import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDT
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
+import com.tmall.txcs.gs.model.item.BizType;
+import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -78,6 +80,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList = Lists.newArrayList();
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = getCacheData();
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt pmtRuleDataItemRuleDTOList.size()***"+pmtRuleDataItemRuleDTOList.size());
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt pmtRuleDataItemRuleDTOList***"+pmtRuleDataItemRuleDTOList);
         for(PmtRuleDataItemRuleDTO pmtRule : pmtRuleDataItemRuleDTOList){
             List<ColumnCenterDataSetItemRuleDTO> itemList = pmtRule.getDataSetItemRuleDTOList();
             for(ColumnCenterDataSetItemRuleDTO item : itemList){
@@ -121,8 +124,9 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         columnCenterDataSetItemRuleDTOS.forEach(columnCenterDataSetItemRuleDTO -> {
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(columnCenterDataSetItemRuleDTO.getItemId());
-            itemEntity.setO2oType(columnCenterDataSetItemRuleDTO.getItemType());
-            itemEntity.setBizType(defaultBizType);
+            itemEntity.setO2oType(O2oType.B2C.name());
+            itemEntity.setBizType(BizType.SM.getCode());
+            itemEntity.setBusinessType(O2oType.B2C.name());
             result.add(itemEntity);
         });
 
