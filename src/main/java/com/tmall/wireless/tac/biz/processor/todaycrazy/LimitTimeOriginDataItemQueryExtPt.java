@@ -27,6 +27,8 @@ import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TairUtil;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TimeUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
@@ -37,6 +39,7 @@ import org.springframework.util.CollectionUtils;
     useCase = ScenarioConstantApp.LOC_TYPE_B2C,
     scenario = ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
 public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
+    Logger LOGGER = LoggerFactory.getLogger(LimitTimeBuyScene.class);
 
     @Autowired
     TairFactorySpi tairFactorySpi;
