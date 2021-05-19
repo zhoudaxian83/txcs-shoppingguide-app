@@ -7,11 +7,14 @@ import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LimitTimeBuyHandler extends RpmReactiveHandler {
+    Logger LOGGER = LoggerFactory.getLogger(LimitTimeBuyHandler.class);
 
     @Autowired
     LimitTimeBuyScene limitTimeBuyScene;
@@ -20,8 +23,10 @@ public class LimitTimeBuyHandler extends RpmReactiveHandler {
 
     @Override
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
-        tacLogger.info("***LimitTimeBuyHandler context.getParams()****:"+context.getParams());
-        tacLogger.info("***LimitTimeBuyHandler context.getParams().toString()****:"+context.getParams().toString());
+        tacLogger.info("***tacLogger LimitTimeBuyHandler context.getParams()****:"+context.getParams());
+        tacLogger.info("***tacLogger LimitTimeBuyHandler context.getParams().toString()****:"+context.getParams().toString());
+        LOGGER.info("***LOGGER LimitTimeBuyHandler context.getParams()****:"+context.getParams());
+        LOGGER.info("***LOGGER LimitTimeBuyHandler context.getParams().toString()****:"+context.getParams().toString());
         return limitTimeBuyScene.recommend(context);
     }
 }
