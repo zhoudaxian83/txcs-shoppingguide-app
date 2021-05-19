@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.common.lang.StringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 
@@ -76,6 +77,18 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
+
+        if (context.getUserParams().get("mockTpp") != null) {
+            ItemEntity itemEntity = new ItemEntity();
+            itemEntity.setBizType("sm");
+            itemEntity.setBusinessType("B2C");
+            itemEntity.setO2oType("B2C");
+            itemEntity.setItemId(583088863304L);
+            OriginDataDTO<ItemEntity> originDataDTO1 = new OriginDataDTO<>();
+            originDataDTO1.setResult(Lists.newArrayList(itemEntity));
+            return Flowable.just(originDataDTO1);
+        }
+
         /**
          * 1、tair获取商品列表
          * 2、tpp渲染个性化排序
