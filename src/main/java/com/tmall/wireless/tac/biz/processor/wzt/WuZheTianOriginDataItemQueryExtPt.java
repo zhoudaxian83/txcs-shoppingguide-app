@@ -157,17 +157,24 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     }
 
     private List<Long> getOriginalRecommend(Long smAreaId) {
+        List<Long> items = null;
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
         if (pmtRuleDataItemRuleDTOS == null) {
             return null;
         } else {
-            PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = pmtRuleDataItemRuleDTOS.get(0);
-            List<Long> items = pmtRuleDataItemRuleDTO.getDataSetItemRuleDTOList().stream().map(ItemEntity -> {
-                return ItemEntity.getItemId();
-            }).collect(Collectors.toList());
-            tacLogger.warn(LOG_PREFIX + "getOriginalRecommend获取tair原始items：" + JSON.toJSONString(items));
-            return items;
+            try {
+                PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = pmtRuleDataItemRuleDTOS.get(0);
+                items = pmtRuleDataItemRuleDTO.getDataSetItemRuleDTOList().stream().map(ItemEntity -> {
+                    return ItemEntity.getItemId();
+                }).collect(Collectors.toList());
+                tacLogger.warn(LOG_PREFIX + "getOriginalRecommend获取tair原始items：" + JSON.toJSONString(items));
+                return items;
+
+            } catch (Exception e) {
+                tacLogger.error(LOG_PREFIX + "getOriginalRecommend获取tair原始items异常：" + JSON.toJSONString(items), e);
+            }
         }
+        return items;
     }
 
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
