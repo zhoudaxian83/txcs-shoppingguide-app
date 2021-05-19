@@ -70,13 +70,16 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         buildNowTime(linkedHashMap,index,limitBuyDtos);
         Long hitStartTime = 0L;
         Long hitEndTime = 0L;
+
         for(LimitBuyDto limitBuyDto:limitBuyDtos){
+            LOGGER.info("****LimitTimeOriginDataItemQueryExtPt limitBuyDto***:"+limitBuyDto);
             if(limitBuyDto.getIsHit()){
                 hitStartTime = limitBuyDto.getStartTime();
                 hitEndTime = limitBuyDto.getEndTime();
+                LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitStartTime+hitEndTime***:"+hitStartTime+":"+hitEndTime);
             }
         }
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitStartTime+hitEndTime***:"+hitStartTime+":"+hitEndTime);
+
         List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList = Lists.newArrayList();
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = getCacheData();
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt pmtRuleDataItemRuleDTOList***"+pmtRuleDataItemRuleDTOList);
