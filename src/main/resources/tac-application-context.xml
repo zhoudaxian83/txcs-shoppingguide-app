@@ -25,5 +25,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.tacHandler.YoubaozangHandler"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyScene"/>
     <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeOriginDataItemQueryExtPt"/>
 </beans>
