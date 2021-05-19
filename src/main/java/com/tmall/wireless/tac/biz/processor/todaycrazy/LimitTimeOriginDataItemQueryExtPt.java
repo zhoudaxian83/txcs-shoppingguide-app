@@ -92,7 +92,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 Boolean boolean1 = startTime <= hitStartTime;
                 Boolean boolean2 = endTime >= hitEndTime;
                 LOGGER.info("****LimitTimeOriginDataItemQueryExtPt boolean1:boolean2***:"+boolean1 +":"+ boolean2);
-                if(startTime <= hitStartTime && endTime >= hitEndTime){
+                if(startTime <= hitStartTime && endTime >= (hitEndTime-1)){
                     hitpmtRuleDataItemRuleDTOList.add(item);
                 }
             }
