@@ -65,12 +65,13 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //ald排期信息
         Map<String,String> map = getAldInfo(params);
         LinkedHashMap<Long,Long> linkedHashMap = buildTime(map);
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt linkedHashMap***"+linkedHashMap);
         List<LimitBuyDto> limitBuyDtos = Lists.newArrayList();
         //打标命中的时间段
         buildNowTime(linkedHashMap,index,limitBuyDtos);
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt limitBuyDtos***"+limitBuyDtos);
         Long hitStartTime = 0L;
         Long hitEndTime = 0L;
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt limitBuyDtos***"+limitBuyDtos);
         for(LimitBuyDto limitBuyDto:limitBuyDtos){
             if(limitBuyDto.getIsHit()){
                 hitStartTime = limitBuyDto.getStartTime();
