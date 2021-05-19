@@ -110,6 +110,8 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 });
             }
         }
+        tacLogger.info("****LimitTimeOriginDataItemQueryExtPt map***"+map);
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt map***"+map);
         return map;
     }
     private List<ItemEntity> buildItemList(List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS)  {
