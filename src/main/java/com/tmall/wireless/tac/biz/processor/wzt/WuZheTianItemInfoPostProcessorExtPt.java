@@ -42,7 +42,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
 
         Map<String, Object> paramsValue = new HashMap<>(16);
         Map paramMap = Maps.newHashMap();
-        paramsValue.put("itemLimitInfoQuery",paramMap);
+        paramsValue.put("ItemLimitInfoQuery",paramMap);
 
         paramMap.put("userId",1681359525L);
         List<Map> skuList = Lists.newArrayList();
