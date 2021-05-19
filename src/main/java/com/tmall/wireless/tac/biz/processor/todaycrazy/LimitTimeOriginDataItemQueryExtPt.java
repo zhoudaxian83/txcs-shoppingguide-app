@@ -201,7 +201,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         SimpleDateFormat sdf  =   new  SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
         LOGGER.info("LimitTimeOriginDataItemQueryExtPt rsMap.values()：" + rsMap.values());
         LOGGER.info("LimitTimeOriginDataItemQueryExtPt rsMap.values().toArray()：" + rsMap.values().toArray());
-        String[] values = (String[])rsMap.values().toArray();
+        Object[] values = rsMap.values().toArray();
         LOGGER.info("LimitTimeOriginDataItemQueryExtPt values：" + values);
         try {
             Long scheduleDateStart = null;
