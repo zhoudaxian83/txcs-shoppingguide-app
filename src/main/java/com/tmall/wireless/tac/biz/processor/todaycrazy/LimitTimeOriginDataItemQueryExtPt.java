@@ -183,6 +183,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * 构建时间段
      */
     public LinkedHashMap<Long,Long> buildTime(Map<String,String> map){
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt buildTime in***");
         LinkedHashMap<Long,Long> scheduleTimeMap = Maps.newLinkedHashMap();
         if(CollectionUtils.isEmpty(map)){
             return scheduleTimeMap;
@@ -192,6 +193,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             return scheduleTimeMap;
         }
         //时间段排序
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt buildTime map***"+map);
         Map<String,String> rsMap = MapSortUtil.sortMapByValue(map);
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt rsMap***"+rsMap);
         Date date = new Date();
