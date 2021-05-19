@@ -161,10 +161,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         if (pmtRuleDataItemRuleDTOS == null) {
             return null;
         } else {
-            List<Long> items = pmtRuleDataItemRuleDTOS.get(0).getDataSetItemRuleDTOList().stream().map(
-                pmtRuleDataItemRuleDTO -> {
-                    return pmtRuleDataItemRuleDTO.getItemId();
-                }).collect(Collectors.toList());
+            PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = pmtRuleDataItemRuleDTOS.get(0);
+            List<Long> items = pmtRuleDataItemRuleDTO.getDataSetItemRuleDTOList().stream().map(ItemEntity -> {
+                return ItemEntity.getItemId();
+            }).collect(Collectors.toList());
             tacLogger.warn(LOG_PREFIX + "getOriginalRecommend获取tair原始items：" + JSON.toJSONString(items));
             return items;
         }
