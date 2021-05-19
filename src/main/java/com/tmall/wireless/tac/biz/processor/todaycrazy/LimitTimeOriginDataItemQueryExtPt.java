@@ -166,7 +166,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             if((nowTime >= (Long)entry.getKey() && nowTime < (Long)entry.getValue()) || (nowTime >= (Long)entry.getValue() && m < 3)){
                 LimitBuyDto limitBuyDto = new LimitBuyDto();
                 limitBuyDto.setStartTime((Long)entry.getKey());
-                limitBuyDto.setStartTime((Long)entry.getValue());
+                limitBuyDto.setEndTime((Long)entry.getValue());
                 if(index == m){
                     limitBuyDto.setIsHit(true);
                 }else{
