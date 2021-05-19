@@ -77,17 +77,17 @@ public class TairUtil {
 
     public List<PmtRuleDataItemRuleDTO> getCache(String cacheKey) {
         try {
-            TairManager smartUiTair = tairFactorySpi.getDefaultTair();
-            if (smartUiTair == null || smartUiTair.getMultiClusterTairManager() == null
-                || smartUiTair.getNameSpace() == 0) {
-                tacLogger.info("1-getCache nameSpace: " + smartUiTair.getNameSpace());
+            TairManager defaultTair = tairFactorySpi.getDefaultTair();
+            if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null
+                || defaultTair.getNameSpace() == 0) {
+                tacLogger.info("1-getCache nameSpace: " + defaultTair.getNameSpace());
                 return null;
             }
-            tacLogger.info("2-getCache nameSpace: " + smartUiTair.getNameSpace());
-            Result<DataEntry> dataEntryResult = smartUiTair.getMultiClusterTairManager().get(smartUiTair.getNameSpace(),
+            tacLogger.info("2-getCache nameSpace: " + defaultTair.getNameSpace());
+            Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(defaultTair.getNameSpace(),
                 cacheKey);
             List<PmtRuleDataItemRuleDTO> result = (List<PmtRuleDataItemRuleDTO>)dataEntryResult.getValue();
-            tacLogger.info("getCache获取json结果: " + JSON.toJSONString(result));
+            tacLogger.info("getCache获取json结果: " + JSON.toJSONString(result) + "|cacheKey:" + cacheKey);
             return result;
         } catch (Exception e) {
             tacLogger.info("getCache获取json结果: " + e);
