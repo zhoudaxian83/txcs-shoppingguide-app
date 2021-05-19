@@ -45,8 +45,6 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
                 .orElse(null);
         tacLogger.info("****FirstScreenMindContentOriginDataRequestExPt sgFrameworkContextContent***:"+sgFrameworkContextContent.toString());
 
-        RecommendRequest tppRequest = new RecommendRequest();
-        Map<String, String> params = Maps.newHashMap();
         Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
         if(requestParams == null || requestParams.isEmpty()){
             return null;
@@ -56,9 +54,24 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
 
 
         if (isMind) {
-            contentSetIdList = getMindContentSetIdList(requestParams);
+            RecommendRequest tppRequest = new RecommendRequest();
+            Map<String, String> params = Maps.newHashMap();
+            tppRequest.setParams(params);
+            tppRequest.setLogResult(true);
+            tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
+            tppRequest.setAppId(25379L);
+            contentSetIdList = getMindContentSetIdList(requestParams);// 新版本的内容集id
+            List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id).collect(Collectors.toList());
+            params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
+            params.put("commerce", "B2C");
+            params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
+            params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
+
+            return tppRequest;
         }
 
+        RecommendRequest tppRequest = new RecommendRequest();
+        Map<String, String> params = Maps.newHashMap();
         params.put("contentSetIdList",Joiner.on(",").join(contentSetIdList));
 
         // 新版本的内容集id
@@ -78,15 +91,10 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         params.put("isFirstPage", index > 0 ? "false" : "true");
 
         //首次isFixPositionBanner为空或true，标识查询心智场景
-        if(isMind){
-            tppRequest.setAppId(25379L);
-//            tppRequest.setAppId(23198L);
-        }else{
-            if (contentRecommendMetaInfo != null) {
-                contentRecommendMetaInfo.setUseRecommendSpiV2(false);
-            }
-            tppRequest.setAppId(25409L);
+        if (contentRecommendMetaInfo != null) {
+            contentRecommendMetaInfo.setUseRecommendSpiV2(false);
         }
+        tppRequest.setAppId(25409L);
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
