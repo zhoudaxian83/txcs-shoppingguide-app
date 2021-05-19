@@ -60,6 +60,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
             tacLogger.info("测试返回结果=" + JSON.toJSONString(itemLimitResult));
             tacLogger.info("测试返回结果=" + JSON.toJSONString(o));
         } catch (Exception e) {
+            tacLogger.error("测试返回结果-异常", e);
             e.printStackTrace();
         }
         ItemInfoPostProcessorResp itemInfoPostProcessorResp = new ItemInfoPostProcessorResp();
