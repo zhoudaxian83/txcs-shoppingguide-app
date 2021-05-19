@@ -76,6 +76,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 hitEndTime = limitBuyDto.getEndTime();
             }
         }
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitStartTime+hitEndTime***:"+hitStartTime+":"+hitEndTime);
         List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList = Lists.newArrayList();
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = getCacheData();
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt pmtRuleDataItemRuleDTOList***"+pmtRuleDataItemRuleDTOList);
@@ -85,7 +86,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 Long startTime = item.getDataRule().getItemScheduleStartTime().getTime()/1000;
                 Long endTime = item.getDataRule().getItemScheduleEndTime().getTime()/1000;
                 LOGGER.info("****LimitTimeOriginDataItemQueryExtPt startTime+endTime***:"+startTime+":"+endTime);
-                LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitStartTime+hitEndTime***:"+hitStartTime+":"+hitEndTime);
                 if(startTime <= hitStartTime && endTime >= hitEndTime){
                     hitpmtRuleDataItemRuleDTOList.add(item);
                 }
