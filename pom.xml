@@ -72,13 +72,7 @@
             <artifactId>cola-common</artifactId>
             <version>2.0.4</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.tmall.aself</groupId>
-            <artifactId>aselfshoppingguide-client</artifactId>
-            <version>1.5.18-SNAPSHOT</version>
-        </dependency>
-
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

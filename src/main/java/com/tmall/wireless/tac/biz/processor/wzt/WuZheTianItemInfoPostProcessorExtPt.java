@@ -6,8 +6,8 @@ import java.util.Map;
 
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorExtPt;
@@ -41,6 +41,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
     @Override
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
         tacLogger.info("ItemInfoPostProcessorExtPt扩展点测试=" + JSON.toJSONString(sgFrameworkContextItem));
+
         Map<String, Object> paramsValue = new HashMap<>(16);
         Map paramMap = Maps.newHashMap();
         paramsValue.put("itemLimitInfoQuery", paramMap);
