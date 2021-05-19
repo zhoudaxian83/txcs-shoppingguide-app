@@ -84,7 +84,7 @@ public class TairUtil {
                 return null;
             }
             tacLogger.info("2-getCache nameSpace: " + defaultTair.getNameSpace());
-            Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(defaultTair.getNameSpace(),
+            Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(184,
                 cacheKey);
             tacLogger.info("缓存返回结果: " + dataEntryResult);
             tacLogger.info("缓存返回结果: " + dataEntryResult.getValue());
