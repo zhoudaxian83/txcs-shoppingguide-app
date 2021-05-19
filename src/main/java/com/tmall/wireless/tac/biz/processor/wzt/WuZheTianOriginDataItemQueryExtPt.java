@@ -84,8 +84,13 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             itemEntity.setBusinessType("B2C");
             itemEntity.setO2oType("B2C");
             itemEntity.setItemId(583088863304L);
+            ItemEntity itemEntity2 = new ItemEntity();
+            itemEntity2.setBizType("sm");
+            itemEntity2.setBusinessType("B2C");
+            itemEntity2.setO2oType("B2C");
+            itemEntity2.setItemId(525790658171L);
             OriginDataDTO<ItemEntity> originDataDTO1 = new OriginDataDTO<>();
-            originDataDTO1.setResult(Lists.newArrayList(itemEntity));
+            originDataDTO1.setResult(Lists.newArrayList(itemEntity, itemEntity2));
             return Flowable.just(originDataDTO1);
         }
 
