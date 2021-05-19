@@ -63,7 +63,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         int index = MapUtil.getIntWithDefault(params,"index",0);
         //ald排期信息
         Map<String,String> map = getAldInfo(params);
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt buildTime befor***");
         LinkedHashMap<Long,Long> linkedHashMap = buildTime(map);
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt linkedHashMap***"+linkedHashMap);
         List<LimitBuyDto> limitBuyDtos = Lists.newArrayList();
@@ -183,7 +182,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * 构建时间段
      */
     public LinkedHashMap<Long,Long> buildTime(Map<String,String> map){
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt buildTime in***");
         LinkedHashMap<Long,Long> scheduleTimeMap = Maps.newLinkedHashMap();
         if(CollectionUtils.isEmpty(map)){
             return scheduleTimeMap;
@@ -193,30 +191,14 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             return scheduleTimeMap;
         }
         //时间段排序
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt buildTime map***"+map);
         Map<String,String> rsMap = MapSortUtil.sortMapByValue(map);
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt rsMap***"+rsMap);
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdf  =   new  SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        LOGGER.info("LimitTimeOriginDataItemQueryExtPt rsMap.values()：" + rsMap.values());
-        LOGGER.info("LimitTimeOriginDataItemQueryExtPt rsMap.values().toArray()：" + rsMap.values().toArray());
         Object[] values = rsMap.values().toArray();
-        LOGGER.info("LimitTimeOriginDataItemQueryExtPt values：" + values);
         try {
             Long scheduleDateStart = null;
             Long scheduleDateEnd = null;
-            //预告明天第一场时间段
-            scheduleDateStart = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[0] + ":00").getTime()/1000;
-            LOGGER.info("LimitTimeOriginDataItemQueryExtPt scheduleDateStart：" + scheduleDateStart);
-            scheduleDateEnd = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[1] + ":00").getTime()/1000;
-            LOGGER.info("LimitTimeOriginDataItemQueryExtPt scheduleDateEnd：" + scheduleDateEnd);
-            scheduleTimeMap.put(scheduleDateStart,scheduleDateEnd);
-            LOGGER.info("LimitTimeOriginDataItemQueryExtPt scheduleTimeMap：" + scheduleTimeMap);
-            //预告明天第二场时间段
-            scheduleDateStart = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[1] + ":00").getTime()/1000;
-            scheduleDateEnd = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[2] + ":00").getTime()/1000;
-            scheduleTimeMap.put(scheduleDateStart,scheduleDateEnd);
             for(int i=0;i<=values.length;i++){
                 if(i == 0){
                     //获取昨天日期开始时间
@@ -233,6 +215,14 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 }
                 scheduleTimeMap.put(scheduleDateStart,scheduleDateEnd);
             }
+            //预告明天第一场时间段
+            scheduleDateStart = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[0] + ":00").getTime()/1000;
+            scheduleDateEnd = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[1] + ":00").getTime()/1000;
+            scheduleTimeMap.put(scheduleDateStart,scheduleDateEnd);
+            //预告明天第二场时间段
+            scheduleDateStart = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[1] + ":00").getTime()/1000;
+            scheduleDateEnd = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[2] + ":00").getTime()/1000;
+            scheduleTimeMap.put(scheduleDateStart,scheduleDateEnd);
         }catch (ParseException e) {
             tacLogger.info("LimitTimeOriginDataItemQueryExtPt buildTime构建时间段错误：" + e.getMessage());
             LOGGER.info("LimitTimeOriginDataItemQueryExtPt buildTime构建时间段错误：" + e.getMessage());
