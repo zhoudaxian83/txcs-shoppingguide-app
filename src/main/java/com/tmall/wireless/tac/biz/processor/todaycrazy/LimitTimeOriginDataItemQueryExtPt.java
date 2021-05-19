@@ -176,6 +176,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 m++;
             }
         }
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt buildNowTime limitBuyDtos***"+limitBuyDtos);
     }
     /**
      * 构建时间段
