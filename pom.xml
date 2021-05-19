@@ -78,6 +78,11 @@
             <artifactId>aselfshoppingguide-client</artifactId>
             <version>1.5.18-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.tmall.aself</groupId>
+            <artifactId>aselfmanager-client</artifactId>
+            <version>1.0.32</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
