@@ -6,8 +6,8 @@ import java.util.Map;
 
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorExtPt;
@@ -16,7 +16,6 @@ import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,8 +57,8 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
             Object o = rpcSpi.invokeHsf("todayCrazyLimit", paramsValue);
             // java中Object转JsonObject
             JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
-            tacLogger.info("1-测试返回结果=" + JSON.toJSONString(jsonObject));
-            tacLogger.info("2-测试返回结果=" + JSON.toJSONString(o));
+            tacLogger.info("1-测试返回结果=" + JSON.toJSONString(o));
+            tacLogger.info("2-测试返回结果=" + JSON.toJSONString(jsonObject));
         } catch (Exception e) {
             tacLogger.error("测试返回结果-异常", e);
             e.printStackTrace();
