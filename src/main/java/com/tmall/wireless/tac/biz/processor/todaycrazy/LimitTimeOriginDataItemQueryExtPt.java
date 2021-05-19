@@ -47,25 +47,21 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     TacLogger tacLogger;
 
     private static final int NAME_SPACE = 184;
-    public static final String ALD_CONTEXT = "aldContext";
+    public static final String ALD_CONTEXT = "ald_context";
+    public static final String STATIC_SCHEDULE_DATA = "static_schedule_data";
 
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info("****LimitTimeOriginDataItemQueryExtPt sgFrameworkContextItem***"+sgFrameworkContextItem);
-        tacLogger.info("****LimitTimeOriginDataItemQueryExtPt sgFrameworkContextItem***"+sgFrameworkContextItem.toString());
-        tacLogger.info("****LimitTimeOriginDataItemQueryExtPt sgFrameworkContextItem***"+sgFrameworkContextItem.getRequestParams());
-
+        tacLogger.info("****LimitTimeOriginDataItemQueryExtPt sgFrameworkContextItem.getRequestParams()***"+sgFrameworkContextItem.getRequestParams());
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt sgFrameworkContextItem.getRequestParams()***"+sgFrameworkContextItem.getRequestParams());
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
 
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
         //第几个时间段
         int index = MapUtil.getIntWithDefault(params,"index",0);
         //ald排期信息
-        Map<String, Object> contextObj = (Map<String, Object>)params.get(ALD_CONTEXT);
-
-        /*return (List<Map<String, Object>>)contextObj.get("static_schedule_data");*/
-        Map<String,String> map = Maps.newHashMap();
+        Map<String,String> map = getAldInfo(params);
         LinkedHashMap<Long,Long> linkedHashMap = buildTime(map);
         List<LimitBuyDto> limitBuyDtos = Lists.newArrayList();
         //打标命中的时间段
@@ -93,6 +89,23 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         originDataDTO.setResult(buildItemList(hitpmtRuleDataItemRuleDTOList));
         return Flowable.just(originDataDTO);
     }
+    public Map<String,String> getAldInfo(Map<String, Object> params){
+        Map<String,String> map = Maps.newHashMap();
+        if(CollectionUtils.isEmpty(params)){
+            return map;
+        }
+        if(params.get(ALD_CONTEXT) != null && params.get(ALD_CONTEXT) instanceof Map){
+            Map<String, Object> contextObj = (Map<String, Object>)params.get(ALD_CONTEXT);
+            if(contextObj.get(STATIC_SCHEDULE_DATA) != null && contextObj.get(STATIC_SCHEDULE_DATA) instanceof List){
+                List<Map<String,Object>> staticScheduleData = (List<Map<String, Object>>)contextObj.get(STATIC_SCHEDULE_DATA);
+                LOGGER.info("***LimitTimeOriginDataItemQueryExtPt staticScheduleData.toString()***:"+staticScheduleData.toString());
+            }
+        }
+
+
+
+        return null;
+    }
     private List<ItemEntity> buildItemList(List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS)  {
         List<ItemEntity> result = Lists.newArrayList();
         if (CollectionUtils.isEmpty(columnCenterDataSetItemRuleDTOS)) {
@@ -108,7 +121,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
         return result;
     }
-
 
     /**
      * 获取缓存数据

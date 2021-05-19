@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author guijian
+ */
 @Component
 public class LimitTimeBuyHandler extends RpmReactiveHandler {
     Logger LOGGER = LoggerFactory.getLogger(LimitTimeBuyHandler.class);
@@ -24,9 +27,7 @@ public class LimitTimeBuyHandler extends RpmReactiveHandler {
     @Override
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
         tacLogger.info("***tacLogger LimitTimeBuyHandler context.getParams()****:"+context.getParams());
-        tacLogger.info("***tacLogger LimitTimeBuyHandler context.getParams().toString()****:"+context.getParams().toString());
         LOGGER.info("***LOGGER LimitTimeBuyHandler context.getParams()****:"+context.getParams());
-        LOGGER.info("***LOGGER LimitTimeBuyHandler context.getParams().toString()****:"+context.getParams().toString());
         return limitTimeBuyScene.recommend(context);
     }
 }

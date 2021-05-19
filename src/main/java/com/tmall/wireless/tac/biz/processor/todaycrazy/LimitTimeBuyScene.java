@@ -14,8 +14,6 @@ import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
-import com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene;
-import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -30,6 +28,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author guijian
+ */
 @Service
 public class LimitTimeBuyScene {
     Logger LOGGER = LoggerFactory.getLogger(LimitTimeBuyScene.class);
@@ -40,10 +41,8 @@ public class LimitTimeBuyScene {
     TacLogger tacLogger;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
-        tacLogger.info("***LimitTimeBuyScene context****:"+context);
-        tacLogger.info("***LimitTimeBuyScene context.toString()****:"+context.toString());
-        tacLogger.info("***LimitTimeBuyScene context.getParams().toString()****:"+context.getParams().toString());
-        LOGGER.info("***LimitTimeBuyScene context.getParams().toString()****:"+context.getParams().toString());
+        tacLogger.info("***LimitTimeBuyScene context.getParams()****:"+context.getParams());
+        LOGGER.info("***LimitTimeBuyScene context.getParams()****:"+context.getParams());
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
