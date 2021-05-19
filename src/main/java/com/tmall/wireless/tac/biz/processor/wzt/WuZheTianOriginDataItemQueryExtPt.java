@@ -82,9 +82,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     public static final String defaultBizType = "sm";
     public static final String defaultO2oType = "B2C";
 
-    //@HSFConsumer(serviceVersion = "1.0.0")
-    //private TodayCrazyLimitFacade todayCrazyLimitFacade;
-
     @Autowired
     RecommendSpi recommendSpi;
 
@@ -127,9 +124,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         params.put("userItemIdList", Joiner.on(",").join(mockItems));
         recommendRequest.setParams(params);
         tacLogger.info("recommendRequest=" + JSON.toJSONString(recommendRequest));
-        //获取限购信息
-        //ItemLimitResult itemLimitInfoQuery = this.getItemLimitInfo(userId, mockItems);
-        //tacLogger.info("itemLimitResult=" + JSON.toJSONString(itemLimitInfoQuery));
 
         OriginDataDTO<ItemEntity> cacheOriginDataDTO = getItemToCacheOfArea(smAreaId);
         if (cacheOriginDataDTO == null) {
@@ -138,6 +132,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                     if (!recommendResponseEntityResponse.isSuccess()
                         || recommendResponseEntityResponse.getValue() == null
                         || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
+                        tacLogger.info("tpp个性化排序返回异常：" + JSON.toJSONString(recommendResponseEntityResponse));
                         return new OriginDataDTO<>();
                     }
                     //需要做缓存
