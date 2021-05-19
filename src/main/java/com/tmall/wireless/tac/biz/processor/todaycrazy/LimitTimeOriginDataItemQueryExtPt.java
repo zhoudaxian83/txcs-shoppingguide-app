@@ -70,6 +70,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         buildNowTime(linkedHashMap,index,limitBuyDtos);
         Long hitStartTime = 0L;
         Long hitEndTime = 0L;
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt limitBuyDtos***"+limitBuyDtos);
         for(LimitBuyDto limitBuyDto:limitBuyDtos){
             if(limitBuyDto.getIsHit()){
                 hitStartTime = limitBuyDto.getStartTime();
@@ -78,6 +79,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         }
         List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList = Lists.newArrayList();
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = getCacheData();
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt pmtRuleDataItemRuleDTOList***"+pmtRuleDataItemRuleDTOList);
         for(PmtRuleDataItemRuleDTO pmtRule : pmtRuleDataItemRuleDTOList){
             List<ColumnCenterDataSetItemRuleDTO> itemList = pmtRule.getDataSetItemRuleDTOList();
             for(ColumnCenterDataSetItemRuleDTO item : itemList){
@@ -136,8 +138,8 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      */
     public List<PmtRuleDataItemRuleDTO>  getCacheData(){
         List<PmtRuleDataItemRuleDTO> pmtRuleList = Lists.newArrayList();
-        Map<String, List<ColumnCenterDataSetItemRuleDTO>> todayCrazyItemMap = new HashMap<>();
         String normalTairKey = TairUtil.formatHotTairKey();
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt normalTairKey***"+normalTairKey);
         Result<DataEntry> rst = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().get(NAME_SPACE,normalTairKey);
         if(rst == null || !rst.isSuccess() || rst.getValue() == null || rst.getValue().getValue() == null){
             return pmtRuleList;
