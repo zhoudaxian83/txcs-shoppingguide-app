@@ -56,7 +56,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         try {
             tacLogger.info("测试返回结果begin");
             Object o = rpcSpi.invokeHsf("todayCrazyLimit", paramsValue);
-            ItemLimitResult itemLimitResult = new ObjectMapper().convertValue(o, ItemLimitResult.class);
+            ItemLimitResult itemLimitResult = (ItemLimitResult)o;
             tacLogger.info("测试返回结果=" + JSON.toJSONString(itemLimitResult));
             tacLogger.info("测试返回结果=" + JSON.toJSONString(o));
         } catch (Exception e) {
