@@ -68,7 +68,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<LimitBuyDto> limitBuyDtos = Lists.newArrayList();
         //打标命中的时间段
         buildNowTime(linkedHashMap,index,limitBuyDtos);
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt limitBuyDtos***"+limitBuyDtos);
         Long hitStartTime = 0L;
         Long hitEndTime = 0L;
         for(LimitBuyDto limitBuyDto:limitBuyDtos){
@@ -90,6 +89,8 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 }
             }
         }
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitpmtRuleDataItemRuleDTOList.size()***"+hitpmtRuleDataItemRuleDTOList.size());
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitpmtRuleDataItemRuleDTOList***"+hitpmtRuleDataItemRuleDTOList);
         originDataDTO.setResult(buildItemList(hitpmtRuleDataItemRuleDTOList));
         tacLogger.info("****LimitTimeOriginDataItemQueryExtPt originDataDTO.getResult()***"+originDataDTO.getResult());
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt originDataDTO.getResult()***"+originDataDTO.getResult());
