@@ -54,17 +54,17 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
             .getItemInfoGroupResponseMap();
         sgFrameworkContextItem.getItemEntityOriginDataDTO().getResult().forEach(itemEntity -> {
             ItemGroup itemGroup = new ItemGroup(itemEntity.getBizType(), itemEntity.getO2oType());
-            Map<Object,Object > map = new HashMap(16);
+            Map<Object, Object> map = new HashMap(16);
             map.put("id", itemEntity.getItemId());
             map.put("type", itemEntity.getO2oType());
             tacLogger.info(
                 "打印验证入参，itemGroup=" + JSON.toJSONString(itemGroup));
 
-
-       List<ItemInfoDTO>  itemInfoDTOS = (List<ItemInfoDTO>)itemGroupItemInfoGroupResponseMap.get(itemGroup).getValue().values();
+            //List<ItemInfoDTO>  itemInfoDTOS = (List<ItemInfoDTO>)itemGroupItemInfoGroupResponseMap.get(itemGroup)
+            // .getValue().values();
             tacLogger.info(
-                "打印验证getValue=" + JSON.toJSONString(itemInfoDTOS));
-
+                "打印验证getValue=" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(itemGroup).getValue()
+                    .values()));
 
             JSONObject jsonObject = (JSONObject)JSONObject.toJSON(itemGroupItemInfoGroupResponseMap.get(itemGroup)
                 .getValue());
@@ -72,7 +72,6 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
 
             tacLogger.info(
                 "打印验证jsonObject=" + JSON.toJSONString(jsonObject));
-
 
         });
 
