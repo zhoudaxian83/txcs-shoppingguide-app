@@ -56,7 +56,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
         boolean hasMainSource = false;
-        if (buildItemVoRequest == null || buildItemVoRequest.getItemInfoDTO() == null) {
+        if (buildItemVoRequest.getItemInfoDTO() == null) {
             return Response.fail(ErrorCode.PARAMS_ERROR);
         }
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
@@ -140,6 +140,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         }
         List<ItemLimitDTO> itemLimitDTOS = limitResult.get(itemEntityVO.getItemId());
         if (CollectionUtils.isEmpty(itemLimitDTOS)) {
+            tacLogger.info("获取限购信息itemLimitDTOSt为空：" );
             return;
         }
         /**
@@ -153,6 +154,8 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         if (limitResult != null) {
             return limitResult;
         }
+        tacLogger.info("获取限购信息getLimitResult为空：" );
+
         return null;
     }
 }
