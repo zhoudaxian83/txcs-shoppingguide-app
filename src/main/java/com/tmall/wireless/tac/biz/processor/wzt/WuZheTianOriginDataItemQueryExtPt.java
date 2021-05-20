@@ -78,21 +78,21 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
 
-        if (context.getUserParams().get("mockTpp") != null) {
-            ItemEntity itemEntity = new ItemEntity();
-            itemEntity.setBizType("sm");
-            itemEntity.setBusinessType("B2C");
-            itemEntity.setO2oType("B2C");
-            itemEntity.setItemId(583088863304L);
-            ItemEntity itemEntity2 = new ItemEntity();
-            itemEntity2.setBizType("sm");
-            itemEntity2.setBusinessType("B2C");
-            itemEntity2.setO2oType("B2C");
-            itemEntity2.setItemId(525790658171L);
-            OriginDataDTO<ItemEntity> originDataDTO1 = new OriginDataDTO<>();
-            originDataDTO1.setResult(Lists.newArrayList(itemEntity, itemEntity2));
-            return Flowable.just(originDataDTO1);
-        }
+        //if (context.getUserParams().get("mockTpp") != null) {
+        //    ItemEntity itemEntity = new ItemEntity();
+        //    itemEntity.setBizType("sm");
+        //    itemEntity.setBusinessType("B2C");
+        //    itemEntity.setO2oType("B2C");
+        //    itemEntity.setItemId(583088863304L);
+        //    ItemEntity itemEntity2 = new ItemEntity();
+        //    itemEntity2.setBizType("sm");
+        //    itemEntity2.setBusinessType("B2C");
+        //    itemEntity2.setO2oType("B2C");
+        //    itemEntity2.setItemId(525790658171L);
+        //    OriginDataDTO<ItemEntity> originDataDTO1 = new OriginDataDTO<>();
+        //    originDataDTO1.setResult(Lists.newArrayList(itemEntity, itemEntity2));
+        //    return Flowable.just(originDataDTO1);
+        //}
 
         /**
          * 1、tair获取商品列表
