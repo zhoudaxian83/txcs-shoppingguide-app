@@ -55,7 +55,8 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
             ItemGroup itemGroup = new ItemGroup(itemEntity.getBizType(), itemEntity.getO2oType());
             tacLogger.info(
                 "打印验证入参，itemGroup=" + JSON.toJSONString(itemGroup));
-
+            tacLogger.info(
+                "打印验证=" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(itemGroup).getValue().get(itemGroup)));
             JSONObject jsonObject = (JSONObject)JSONObject.toJSON(itemGroupItemInfoGroupResponseMap.get(itemGroup).getValue().get(itemGroup));
                 //.getValue().get(itemGroup).getItemInfos());
 
