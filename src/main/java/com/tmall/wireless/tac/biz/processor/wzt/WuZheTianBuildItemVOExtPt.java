@@ -140,7 +140,9 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         }
         List<ItemLimitDTO> itemLimitDTOS = limitResult.get(itemEntityVO.getItemId());
         if (CollectionUtils.isEmpty(itemLimitDTOS)) {
-            tacLogger.info("获取限购信息itemLimitDTOSt为空：" );
+            tacLogger.info(
+                "获取限购信息itemLimitDTOSt为空,itemId：" + itemEntityVO.getItemId() + "|" + JSON.toJSONString(itemLimitDTOS)
+                    + "|" + limitResult);
             return;
         }
         /**
@@ -154,7 +156,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         if (limitResult != null) {
             return limitResult;
         }
-        tacLogger.info("获取限购信息getLimitResult为空：" );
+        tacLogger.info("获取限购信息getLimitResult为空：");
 
         return null;
     }
