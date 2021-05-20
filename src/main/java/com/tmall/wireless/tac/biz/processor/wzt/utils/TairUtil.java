@@ -43,10 +43,12 @@ public class TairUtil {
             }
             Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(NAME_SPACE,
                 cacheKey);
-            if (dataEntryResult.isSuccess()) {
+            if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
+                && dataEntryResult.getValue().getValue() != null) {
                 return dataEntryResult.getValue().getValue();
             } else {
-                tacLogger.info(LOG_PREFIX + "getCache获取缓存失败，cacheKey: " + cacheKey);
+                tacLogger.info(LOG_PREFIX + "getCache获取缓存为空，cacheKey: " + cacheKey);
+                return null;
             }
         } catch (Exception e) {
             tacLogger.error(LOG_PREFIX + "getCache获取缓存异常,cacheKey:" + cacheKey, e);
