@@ -42,7 +42,7 @@ public enum RenderContentTypeEnum {
 
     /**判断当前内容是否是O2O内容类型*/
     private static final Set<String> o2o_contentType_collection =
-        Sets.newHashSet(o2oNormalContent.getType(),o2oCombineContent.getType(),o2oBrandContent.getType());
+        Sets.newHashSet(o2oNormalContent.getType(),o2oCombineContent.getType(),o2oBrandContent.getType(),recipeContent.getType());
 
     public static boolean checkO2OContentType(String contentType) {
         if(RenderCheckUtil.StringEmpty(contentType)){

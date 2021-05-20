@@ -4,6 +4,7 @@ import com.alibaba.cola.extension.Extension;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
@@ -25,12 +26,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
 @Service
 public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
+
 
     @Autowired
     TacLogger tacLogger;
@@ -57,16 +60,18 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
         Long rtHalfDayStoreId = RenderAddressUtil.getRtHalfDayStoreId(csa);
         Long rtNextDayStoreId = RenderAddressUtil.getRtNextDayStoreId(csa);
         //默认优先级 一小时达 > 半日达 > 外仓
-        List<String> itemBusinessTypeList = Lists.newArrayList(TppItemBusinessTypeEnum.B2C.getType());
-        if(rt1HourStoreCover){
-            params.put("itemBusinessType", TppItemBusinessTypeEnum.OneHour.getType());
-            params.put("rt1HourStoreId", RenderLangUtil.safeString(rt1HourStoreId));
-        }else if(rtHalfDayStoreCover){
-            params.put("itemBusinessType", TppItemBusinessTypeEnum.HalfDay.getType());
-            params.put("rtHalfDayStoreId", RenderLangUtil.safeString(rtHalfDayStoreId));
-        }else if(nextDayStoreCover){
-            params.put("itemBusinessType", TppItemBusinessTypeEnum.NextDay.getType());
-            params.put("rtNextDayStoreId", RenderLangUtil.safeString(rtNextDayStoreId));
+        if (isO2o) {
+            if(rt1HourStoreCover){
+                params.put("itemBusinessType", TppItemBusinessTypeEnum.OneHour.getType());
+                params.put("rt1HourStoreId", RenderLangUtil.safeString(rt1HourStoreId));
+            } else if(rtHalfDayStoreCover){
+                params.put("itemBusinessType", TppItemBusinessTypeEnum.HalfDay.getType());
+                params.put("rtHalfDayStoreId", RenderLangUtil.safeString(rtHalfDayStoreId));
+            } else {
+                params.put("itemBusinessType", TppItemBusinessTypeEnum.B2C.getType());
+            }
+        } else {
+            params.put("itemBusinessType", TppItemBusinessTypeEnum.B2C.getType());
         }
 
         tppRequest.setAppId(23410L);
@@ -85,8 +90,8 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
 
     private boolean isO2oScene(SgFrameworkContextItem sgFrameworkContextItem) {
 
-        MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType())
-
+        String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
+        return RenderContentTypeEnum.checkO2OContentType(contentType);
     }
 
 
