@@ -4,19 +4,21 @@ import com.alibaba.cola.extension.Extension;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
 import com.tmall.txcs.gs.framework.model.meta.ContentMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ContentRecommendMetaInfo;
+import com.tmall.txcs.gs.model.biz.context.LocParams;
+import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Enviroment;
-import org.apache.commons.collections.MapUtils;
-import org.apache.ecs.html.S;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +60,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             Map<String, String> params = Maps.newHashMap();
             tppRequest.setParams(params);
             tppRequest.setLogResult(true);
-            tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
+            tppRequest.setUserId(Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
             tppRequest.setAppId(25379L);
             contentSetIdList = getMindContentSetIdList(requestParams);// 新版本的内容集id
             List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id).collect(Collectors.toList());
@@ -109,6 +111,12 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
     }
 
     private boolean isMind(Map<String, Object> requestParams) {
+
+        Long mindContentCode = MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_MIND, 0L);
+
+        if (mindContentCode <= 0) {
+            return false;
+        }
 
         Object isFixPositionBanner = requestParams.get("isFixPositionBanner");
 
