@@ -1,18 +1,14 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind.common;
 
-import com.alibaba.common.lang.StringUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
-import com.tmall.aselfcommon.model.gcs.enums.GcsSceneType;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
+import com.tmall.aselfcommon.model.scene.enums.SceneType;
 import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
-import com.tmall.txcs.gs.model.Response;
-import com.tmall.txcs.gs.model.content.ContentDTO;
-import com.tmall.txcs.gs.model.model.dto.ContentEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
@@ -20,10 +16,9 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.model.content.SubCon
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderCheckUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
-import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -87,36 +82,38 @@ public class ContentInfoSupport {
                 contentInfo.put(frontBackMapEnum.getFront(),tairPropertyMap.get(frontBackMapEnum.getBack()));
             }
             /**内容类型*/
-            String type = GcsSceneType.of(tairSceneDTO.getType()).name();
+            String type = SceneType.of(tairSceneDTO.getType()).name();
             String marketChannel = GcsMarketChannel.of(tairSceneDTO.getMarketChannel()).name();
             /**后台没有类型，那么就直接返回普通场景打底*/
             if(RenderCheckUtil.StringEmpty(type) || RenderCheckUtil.StringEmpty(marketChannel)){
                 contentInfo.put("contentType", RenderContentTypeEnum.getBottomContentType());
             }
             //b2c普通场景
-            if(marketChannel.equals(GcsMarketChannel.B2C.name()) && type.equals(GcsSceneType.NORMAL.name())){
+            if(marketChannel.equals(GcsMarketChannel.B2C.name()) && type.equals(SceneType.NORMAL.name())){
                 contentInfo.put("contentType",RenderContentTypeEnum.b2cNormalContent.getType());
                 //b2c组合场景
-            }else if(marketChannel.equals(GcsMarketChannel.B2C.name()) && type.equals(GcsSceneType.COMBINE.name())){
+            }else if(marketChannel.equals(GcsMarketChannel.B2C.name()) && type.equals(SceneType.COMBINE.name())){
                 contentInfo.put("contentType",RenderContentTypeEnum.b2cCombineContent.getType());
                 contentInfo.put("subContentModelList",buildSubContentBaseInfoV2(contentInfo,tairSceneDTO));
                 //b2c品牌场景
-            }else if(marketChannel.equals(GcsMarketChannel.B2C.name()) && type.equals(GcsSceneType.BRAND.name())){
+            }else if(marketChannel.equals(GcsMarketChannel.B2C.name()) && type.equals(SceneType.BRAND.name())){
                 contentInfo.put("contentType",RenderContentTypeEnum.b2cBrandContent.getType());
                 //o2o组合场景
-            }else if(marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(GcsSceneType.NORMAL.name())){
+            }else if(marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(SceneType.NORMAL.name())){
                 contentInfo.put("contentType",RenderContentTypeEnum.o2oNormalContent.getType());
                 //o2o品牌场景
-            }else if(marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(GcsSceneType.COMBINE.name())){
+            }else if(marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(SceneType.COMBINE.name())){
                 contentInfo.put("contentType",RenderContentTypeEnum.o2oCombineContent.getType());
                 contentInfo.put("subContentModelList",buildSubContentBaseInfoV2(contentInfo,tairSceneDTO));
                 //o2o品牌场景
-            }else if(marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(GcsSceneType.BRAND.name())){
+            }else if(marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(SceneType.BRAND.name())){
                 contentInfo.put("contentType",RenderContentTypeEnum.o2oBrandContent.getType());
-            } else if (type.equals(GcsSceneType.RECIPE.name())) {
+            } else if (type.equals(SceneType.RECIPE.name())) {
                 contentInfo.put("contentType",RenderContentTypeEnum.recipeContent.getType());
-            } else if (type.equals(GcsSceneType.MEDIA.name())) {
+            } else if (type.equals(SceneType.MEDIA.name())) {
                 contentInfo.put("contentType",RenderContentTypeEnum.mediaContent.getType());
+            } else if (type.equals(SceneType.BOARD.name())) {
+                contentInfo.put("contentType",RenderContentTypeEnum.bangdanContent.getType());
             } else {
                 //默认打底-普通场景
                 contentInfo.put("contentType",RenderContentTypeEnum.getBottomContentType());
@@ -150,7 +147,7 @@ public class ContentInfoSupport {
             SubContentModel sub = new SubContentModel();
             sub.setSubContentId(detail.getDetailId());
             sub.setSubContentTitle(detail.getTitle());
-            if(contentInfo.get("subContentType") != null && StringUtil.isNotEmpty(String.valueOf(contentInfo.get("subContentType")))){
+            if(contentInfo.get("subContentType") != null && StringUtils.isNotEmpty(String.valueOf(contentInfo.get("subContentType")))){
                 sub.setSubContentType(String.valueOf(contentInfo.get("subContentType")));
             }
             sub.setItemSetIds(RenderLangUtil.safeString(detail.getItemsetId()));

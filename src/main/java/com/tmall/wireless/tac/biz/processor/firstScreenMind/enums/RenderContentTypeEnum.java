@@ -16,8 +16,9 @@ public enum RenderContentTypeEnum {
     b2cCombineContent("b2cCombineContent","b2c组合场景","b2cCombineContent"),
     b2cBrandContent("b2cBrandContent","b2c品牌场景","b2cBrandContent"),
 
-    recipeContent("recipeContent","b2c品牌场景","b2cBrandContent"),
-    mediaContent("mediaContent","b2c品牌场景","b2cBrandContent"),
+    recipeContent("recipeContent","b2c品牌场景","recipeContent"),
+    mediaContent("mediaContent","b2c品牌场景","mediaContent"),
+    bangdanContent("bangdanContent","榜单场景","bangdanContent"),
 
     ;
 

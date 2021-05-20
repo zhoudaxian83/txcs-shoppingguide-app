@@ -15,4 +15,10 @@ public class RequestKeyConstantApp {
     public static final String FIRST_SCREEN_SCENE_CONTENT_SET_MIND = "mindContentSetIds";
     public static final String FIRST_SCREEN_SCENE_CONTENT_SET_O2O = "o2oContentSetIds";
     public static final String FIRST_SCREEN_SCENE_CONTENT_SET_B2C = "b2cContentSetIds";
+
+
+    public static final String CONTENT_TYPE = "contentType";
+
+
+
 }

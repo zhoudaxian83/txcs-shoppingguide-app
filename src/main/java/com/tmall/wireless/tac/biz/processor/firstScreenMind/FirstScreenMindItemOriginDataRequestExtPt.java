@@ -4,6 +4,7 @@ import com.alibaba.cola.extension.Extension;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -11,7 +12,9 @@ import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderAddressUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
@@ -19,6 +22,7 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,6 +38,8 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
         tacLogger.info("****FirstScreenMindItemOriginDataRequestExtPt sgFrameworkContextItem****:"+sgFrameworkContextItem.toString());
+
+        boolean isO2o = isO2oScene(sgFrameworkContextItem);
 
         RecommendRequest tppRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
@@ -51,6 +57,7 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
         Long rtHalfDayStoreId = RenderAddressUtil.getRtHalfDayStoreId(csa);
         Long rtNextDayStoreId = RenderAddressUtil.getRtNextDayStoreId(csa);
         //默认优先级 一小时达 > 半日达 > 外仓
+        List<String> itemBusinessTypeList = Lists.newArrayList(TppItemBusinessTypeEnum.B2C.getType());
         if(rt1HourStoreCover){
             params.put("itemBusinessType", TppItemBusinessTypeEnum.OneHour.getType());
             params.put("rt1HourStoreId", RenderLangUtil.safeString(rt1HourStoreId));
@@ -74,6 +81,12 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
         tacLogger.info("****FirstScreenMindItemOriginDataRequestExtPt tppRequest****:"+tppRequest.toString());
         return tppRequest;
+    }
+
+    private boolean isO2oScene(SgFrameworkContextItem sgFrameworkContextItem) {
+
+        MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType())
+
     }
 
 
