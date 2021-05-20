@@ -49,7 +49,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
         tacLogger.info(
             "ItemInfoPostProcessorExtPt扩展点测试sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
-        Map<String, Object> userParams = Maps.newConcurrentMap();
+        Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
         userParams.put("userParams-test-1", "userParams-test-1");
         JSONObject itemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
 
@@ -58,7 +58,6 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         } else {
             tacLogger.warn(LOG_PREFIX + "获取限购数据为空");
         }
-        sgFrameworkContextItem.setUserParams(userParams);
         ItemInfoPostProcessorResp itemInfoPostProcessorResp = new ItemInfoPostProcessorResp();
         return Response.success(itemInfoPostProcessorResp);
     }
