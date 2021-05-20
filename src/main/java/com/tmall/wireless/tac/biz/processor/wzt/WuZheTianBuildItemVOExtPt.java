@@ -89,12 +89,12 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
+        this.buildLimit(itemEntityVO, userParams);
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
         //补全限购信息
-        this.buildLimit(itemEntityVO, userParams);
-        tacLogger.info("执行了扩展VO-结果打印：" + JSON.toJSONString(itemEntityVO));
+
         return Response.success(itemEntityVO);
     }
 
@@ -129,15 +129,14 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     }
 
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
+        List<ItemLimitDTO> itemLimitDTOS;
         Long itemId = (Long)itemEntityVO.get("itemId");
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
         if (limitResult == null) {
+            itemEntityVO.put("limit", null);
             return;
         }
-        List<ItemLimitDTO> itemLimitDTOS = limitResult.get(itemId);
-        if (CollectionUtils.isEmpty(itemLimitDTOS)) {
-            return;
-        }
+        itemLimitDTOS = limitResult.get(itemId);
         /**
          * 限购信息
          */
