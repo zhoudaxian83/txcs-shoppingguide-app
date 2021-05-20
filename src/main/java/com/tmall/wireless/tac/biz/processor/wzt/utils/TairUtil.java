@@ -33,7 +33,6 @@ public class TairUtil {
 
     private static final String LOG_PREFIX = "TairUtil-";
 
-
     public Object getCache(String cacheKey) {
         try {
             TairManager defaultTair = tairFactorySpi.getDefaultTair();

@@ -120,7 +120,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setLogResult(true);
         recommendRequest.setUserId(userId);
-        recommendRequest.setAppId(23376L);
+        recommendRequest.setAppId(21431L);
         Map<String, String> params = Maps.newHashMap();
         params.put("userItemIdList", Joiner.on(",").join(itemIds));
         recommendRequest.setParams(params);
