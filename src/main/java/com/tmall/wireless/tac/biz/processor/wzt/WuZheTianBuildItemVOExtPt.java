@@ -8,6 +8,7 @@ import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.origindate.ItemInfoBySourceDTOOrigin;
@@ -133,15 +134,17 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
         tacLogger.info("itemEntityVO结果数据：" + JSON.toJSONString(itemEntityVO));
+        Long itemId = (Long)itemEntityVO.get("itemId");
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
         if (limitResult == null) {
             return;
         }
-        List<ItemLimitDTO> itemLimitDTOS = limitResult.get(itemEntityVO.getItemId());
+        List<ItemLimitDTO> itemLimitDTOS = limitResult.get(itemId);
         if (CollectionUtils.isEmpty(itemLimitDTOS)) {
             tacLogger.info(
-                "获取限购信息itemLimitDTOSt为空,itemId：" + itemEntityVO.getItemId() + "|" + JSON.toJSONString(itemLimitDTOS)
+                "获取限购信息itemLimitDTOSt为空,itemId：" + itemId + "|" + JSON.toJSONString(itemLimitDTOS)
                     + "|" + limitResult);
+            itemEntityVO.put("limit", Lists.newArrayList());
             return;
         }
         /**
