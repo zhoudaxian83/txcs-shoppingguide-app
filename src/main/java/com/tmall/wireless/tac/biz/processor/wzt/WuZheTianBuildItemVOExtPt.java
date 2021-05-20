@@ -46,8 +46,8 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
-        JSONObject getItemLimitResult = (JSONObject)buildItemVoRequest.getContext().getUserParams().get("getItemLimitResult");
-        tacLogger.info("VO拿到的限购数据：" + JSON.toJSONString(getItemLimitResult));
+        //JSONObject getItemLimitResult = (JSONObject)buildItemVoRequest.getContext().getUserParams().get("getItemLimitResult");
+        //tacLogger.info("VO拿到的限购数据：" + JSON.toJSONString(getItemLimitResult));
         tacLogger.info("执行了扩展VO-VO入参数据：" + JSON.toJSONString(buildItemVoRequest));
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
