@@ -96,7 +96,6 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
         //补全限购信息
         this.buildLimit(itemEntityVO, userParams);
-
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
@@ -137,33 +136,26 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
         if (limitResult == null) {
+            tacLogger.info("VO获取限购信息limitResult：" + JSON.toJSONString(limitResult));
             return;
         }
         List<ItemLimitDTO> itemLimitDTOS = limitResult.get(itemEntityVO.getItemId());
         if (CollectionUtils.isEmpty(itemLimitDTOS)) {
+            tacLogger.info("VO获取限购信息itemLimitDTOS：" + JSON.toJSONString(itemLimitDTOS));
             return;
         }
         /**
          * 限购信息
          */
         itemEntityVO.put("limit", itemLimitDTOS);
-        //ItemLimitDTO itemLimitDTO = itemLimitDTOS.get(0);
-        ////总体限购
-        //itemEntityVO.put("totalLimit", itemLimitDTO.getTotalLimit());
-        ////已经售卖的件数
-        //itemEntityVO.put("usedCount", itemLimitDTO.getUsedCount());
-        ////用户限购信息
-        //itemEntityVO.put("userLimit", itemLimitDTO.getUserLimit());
-        ////用户已经消费
-        //itemEntityVO.put("userUsedCount", itemLimitDTO.getUserUsedCount());
     }
 
     private Map<Long, List<ItemLimitDTO>> getLimitResult(Map<String, Object> userParams) {
-        Map<Long, List<ItemLimitDTO>> itemLimitResult = null;
         JSONObject jsonObject = (JSONObject)userParams.get("itemLimitResult");
         if (jsonObject != null) {
             return JSONObject.toJavaObject((JSONObject)jsonObject.get("limitInfo"), Map.class);
         }
+        tacLogger.info("VO获取限购信息为空");
         return null;
     }
 }
