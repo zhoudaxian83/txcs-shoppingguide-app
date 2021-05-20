@@ -68,6 +68,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             params.put("commerce", "B2C");
             params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
             params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
+            params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUtdid).orElse(""));
             if (Enviroment.PRE.equals(RpmContants.enviroment)) {
                 params.put("_devEnv_", "1");
             }
@@ -102,6 +103,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
         tacLogger.info("****FirstScreenMindContentOriginDataRequestExPt tppRequest***:"+tppRequest.toString());
+        LOGGER.info("****FirstScreenMindContentOriginDataRequestExPt tppRequest***:"+tppRequest.toString());
         return tppRequest;
     }
 
