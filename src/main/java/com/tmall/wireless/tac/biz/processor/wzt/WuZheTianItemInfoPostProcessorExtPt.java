@@ -15,8 +15,11 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorExtPt;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorResp;
 import com.tmall.txcs.gs.framework.model.EntityVO;
+import com.tmall.txcs.gs.framework.model.ItemGroup;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
+import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
+import com.tmall.txcs.gs.framework.support.itemInfo.ItemInfoGroupResponse;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -45,10 +48,25 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
 
     @Override
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
+        Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
+            .getItemInfoGroupResponseMap();
+        sgFrameworkContextItem.getItemEntityOriginDataDTO().getResult().forEach(itemEntity -> {
+            ItemGroup itemGroup = new ItemGroup(itemEntity.getBizType(), itemEntity.getO2oType());
+            tacLogger.info(
+                "打印验证入参，itemGroup=" + JSON.toJSONString(itemGroup));
+            tacLogger.info(
+                "打印验证=" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(itemGroup)));
+            ItemInfoGroupResponse itemGroupMetaInfo = itemGroupItemInfoGroupResponseMap.get(itemGroup);
+            tacLogger.info(
+                "打印验证，itemGroupMetaInfo=" + JSON
+                    .toJSONString(itemGroupItemInfoGroupResponseMap.get(itemGroupMetaInfo)));
+
+        });
+
         tacLogger.info(
             "ItemInfoPostProcessorExtPt扩展点测试sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
         Map<String, Object> userParams = Maps.newConcurrentMap();
-        userParams.put("userParams-test-1","userParams-test-1");
+        userParams.put("userParams-test-1", "userParams-test-1");
         sgFrameworkContextItem.setUserParams(userParams);
 
         JSONObject getItemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
