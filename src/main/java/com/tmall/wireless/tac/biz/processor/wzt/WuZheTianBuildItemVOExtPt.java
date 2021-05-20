@@ -136,12 +136,10 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
         if (limitResult == null) {
-            tacLogger.info("VO获取限购信息limitResult：" + JSON.toJSONString(limitResult));
             return;
         }
         List<ItemLimitDTO> itemLimitDTOS = limitResult.get(itemEntityVO.getItemId());
         if (CollectionUtils.isEmpty(itemLimitDTOS)) {
-            tacLogger.info("VO获取限购信息itemLimitDTOS：" + JSON.toJSONString(itemLimitDTOS));
             return;
         }
         /**
@@ -151,14 +149,10 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     }
 
     private Map<Long, List<ItemLimitDTO>> getLimitResult(Map<String, Object> userParams) {
-        JSONObject jsonObject = (JSONObject)userParams.get("itemLimitResult");
-        if (jsonObject != null) {
-            Map<Long, List<ItemLimitDTO>> longListMap = JSONObject.toJavaObject((JSONObject)jsonObject.get("limitInfo"),
-                Map.class);
-            tacLogger.info("VO-getLimitResult：" + longListMap);
-            return JSONObject.toJavaObject((JSONObject)jsonObject.get("limitInfo"), Map.class);
+        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>)userParams.get("itemLimitResult");
+        if (limitResult != null) {
+            return limitResult;
         }
-        tacLogger.info("VO获取限购信息为空userParams：" + userParams);
         return null;
     }
 }
