@@ -46,6 +46,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
+        tacLogger.info("VO拿到自定义数据-getContext：" + JSON.toJSONString(buildItemVoRequest.getContext()));
         Map<String, Object> userParams = buildItemVoRequest.getContext().getUserParams();
         tacLogger.info("VO拿到自定义数据：" + JSON.toJSONString(userParams));
         tacLogger.info("执行了扩展VO-VO入参数据：" + JSON.toJSONString(buildItemVoRequest));
