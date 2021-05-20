@@ -77,7 +77,7 @@ public class FirstScreenMindContentScene {
                             propertyMap.put("isFixPositionBanner", false);
                             propertyMap.put("index", 0);
                             response.setHasMore(true);
-                            response.setIndex(0);
+//                            response.setIndex(0);
                         }
                     } else if(StringUtils.equalsIgnoreCase("false",String.valueOf(isFixPositionBanner))){
                         propertyMap.put("isFixPositionBanner", false);
