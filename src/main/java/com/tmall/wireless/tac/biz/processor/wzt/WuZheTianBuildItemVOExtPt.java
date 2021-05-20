@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,7 +21,9 @@ import com.tmall.txcs.gs.model.spi.model.ItemDataDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -46,10 +49,10 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
-        tacLogger.info("VO拿到自定义数据-getContext：" + JSON.toJSONString(buildItemVoRequest.getContext()));
+        tacLogger.info("执行了扩展VO-VO入参数据：" + JSON.toJSONString(buildItemVoRequest));
         Map<String, Object> userParams = buildItemVoRequest.getContext().getUserParams();
         tacLogger.info("VO拿到自定义数据：" + JSON.toJSONString(userParams));
-        tacLogger.info("执行了扩展VO-VO入参数据：" + JSON.toJSONString(buildItemVoRequest));
+
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
         boolean hasMainSource = false;
@@ -57,10 +60,8 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
             return Response.fail(ErrorCode.PARAMS_ERROR);
         }
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
-
         String originScm = "";
         String itemUrl = "";
-
         Map<String, String> trackPoint = Maps.newHashMap();
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
@@ -92,20 +93,9 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
-        ////skuId;
-        //itemEntityVO.put("skuId","测试");
-        //
-        ////总体限购
-        //itemEntityVO.put("totalLimit","测试");
-        //
-        ////已经售卖的件数
-        //itemEntityVO.put("usedCount","测试");
-        //
-        ////用户限购信息
-        //itemEntityVO.put("userLimit","测试");
-        //
-        ////用户已经消费
-        //itemEntityVO.put("userUsedCount","测试");
+
+        //补全限购信息
+        this.buildLimit(itemEntityVO, userParams);
 
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
@@ -142,5 +132,38 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
             LOGGER.error("scmConvertError", e);
             return scm;
         }
+    }
+
+    private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
+        Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
+        if (limitResult == null) {
+            return;
+        }
+        List<ItemLimitDTO> itemLimitDTOS = limitResult.get(itemEntityVO.getItemId());
+        if (CollectionUtils.isEmpty(itemLimitDTOS)) {
+            return;
+        }
+        /**
+         * 限购信息
+         */
+        itemEntityVO.put("limit", itemLimitDTOS);
+        //ItemLimitDTO itemLimitDTO = itemLimitDTOS.get(0);
+        ////总体限购
+        //itemEntityVO.put("totalLimit", itemLimitDTO.getTotalLimit());
+        ////已经售卖的件数
+        //itemEntityVO.put("usedCount", itemLimitDTO.getUsedCount());
+        ////用户限购信息
+        //itemEntityVO.put("userLimit", itemLimitDTO.getUserLimit());
+        ////用户已经消费
+        //itemEntityVO.put("userUsedCount", itemLimitDTO.getUserUsedCount());
+    }
+
+    private Map<Long, List<ItemLimitDTO>> getLimitResult(Map<String, Object> userParams) {
+        Map<Long, List<ItemLimitDTO>> itemLimitResult = null;
+        JSONObject jsonObject = (JSONObject)userParams.get("itemLimitResult");
+        if (jsonObject != null) {
+            return JSONObject.toJavaObject((JSONObject)jsonObject.get("limitInfo"), Map.class);
+        }
+        return null;
     }
 }

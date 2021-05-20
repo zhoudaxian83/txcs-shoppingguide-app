@@ -19,6 +19,7 @@ import com.tmall.txcs.gs.framework.support.itemInfo.ItemInfoGroupResponse;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemInfoDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -50,9 +51,10 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
             "ItemInfoPostProcessorExtPt扩展点测试sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
         Map<String, Object> userParams = Maps.newConcurrentMap();
         userParams.put("userParams-test-1", "userParams-test-1");
-        JSONObject getItemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
-        if (getItemLimitResult != null) {
-            userParams.put("getItemLimitResult", getItemLimitResult);
+        JSONObject itemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
+
+        if (itemLimitResult != null) {
+            userParams.put("itemLimitResult", itemLimitResult);
         } else {
             tacLogger.warn(LOG_PREFIX + "获取限购数据为空");
         }
@@ -72,7 +74,6 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
             ItemDTO itemDTO = itemInfoDTO.getItemInfos().get("captain").getItemDTO();
             Map skuMap = Maps.newHashMap();
-            Long i = itemDTO.getItemId() == null ? 0L : itemDTO.getItemId();
             skuMap.put("skuId", itemDTO.getSkuId() == null ? 0L : itemDTO.getSkuId());
             skuMap.put("itemId", itemDTO.getItemId() == null ? 0L : itemDTO.getItemId());
             return skuMap;
@@ -93,8 +94,6 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
             JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
             if ((Boolean)jsonObject.get("success")) {
                 JSONObject itemLimitResult = (JSONObject)jsonObject.get("limitInfo");
-                tacLogger.warn(LOG_PREFIX + "限购数据打印o:" + JSON.toJSONString(o));
-                tacLogger.warn(LOG_PREFIX + "限购数据打印jsonObject：" + JSON.toJSONString(jsonObject));
                 tacLogger.warn(LOG_PREFIX + "限购数据打印itemLimitResult：" + JSON.toJSONString(itemLimitResult));
                 return itemLimitResult;
             } else {
