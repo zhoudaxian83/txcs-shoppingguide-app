@@ -80,17 +80,6 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         Map<String, Object> paramsValue = new HashMap<>(16);
         Map paramMap = Maps.newHashMap();
         paramMap.put("userId", userId);
-
-        //Map skuMap = Maps.newHashMap();
-        //skuMap.put("skuId", 4637368768647L);
-        //skuMap.put("itemId", 643897236869L);
-        //skuList.add(skuMap);
-        //
-        //Map skuMap2 = Maps.newHashMap();
-        //skuMap2.put("skuId", 0L);
-        //skuMap2.put("itemId", 605659349023L);
-        //skuList.add(skuMap2);
-
         paramMap.put("itemIdList", skuList);
         paramsValue.put("itemLimitInfoQuery", paramMap);
         tacLogger.warn(LOG_PREFIX + "限购入参paramsValue:" + JSON.toJSONString(paramsValue));
