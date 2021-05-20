@@ -65,9 +65,9 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         entityVOSgFrameworkResponse.setExtInfos(stringObjectMap);
         sgFrameworkContextItem.setEntityVOSgFrameworkResponse(entityVOSgFrameworkResponse);
         if (getItemLimitResult != null) {
-
+            tacLogger.warn(LOG_PREFIX + "限购数据打印" + JSON.toJSONString(getItemLimitResult));
         } else {
-            tacLogger.info(LOG_PREFIX + "获取限购数据为空");
+            tacLogger.warn(LOG_PREFIX + "获取限购数据为空");
         }
         ItemInfoPostProcessorResp itemInfoPostProcessorResp = new ItemInfoPostProcessorResp();
         return Response.success(itemInfoPostProcessorResp);
@@ -86,7 +86,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         paramMap.put("userId", userId);
         List<Map> skuList = Lists.newArrayList();
         Map skuMap = Maps.newHashMap();
-        skuMap.put("skuId", 4637368768647L);
+        //skuMap.put("skuId", 4637368768647L);
         skuMap.put("itemId", 643897236869L);
         skuList.add(skuMap);
         paramMap.put("itemIdList", skuList);
