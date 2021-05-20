@@ -68,7 +68,6 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             params.put("commerce", "B2C");
             params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
             params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
-            LOGGER.info("****FirstScreenMindContentOriginDataRequestExPt sgFrameworkContextContent.getUserDO().getUtdid()***:"+sgFrameworkContextContent.getUserDO().getUtdid());
             params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUtdid).orElse(""));
             if (Enviroment.PRE.equals(RpmContants.enviroment)) {
                 params.put("_devEnv_", "1");
