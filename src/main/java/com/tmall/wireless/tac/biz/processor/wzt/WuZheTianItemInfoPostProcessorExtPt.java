@@ -55,7 +55,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         entityVOSgFrameworkResponse.setExtInfos(stringObjectMap);
         sgFrameworkContextItem.setEntityVOSgFrameworkResponse(entityVOSgFrameworkResponse);
         if (getItemLimitResult != null) {
-            tacLogger.warn(LOG_PREFIX + "限购数据打印" + JSON.toJSONString(getItemLimitResult));
+
         } else {
             tacLogger.warn(LOG_PREFIX + "获取限购数据为空");
         }
@@ -98,6 +98,9 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
             JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
             if ((Boolean)jsonObject.get("success")) {
                 JSONObject itemLimitResult = (JSONObject)jsonObject.get("limitInfo");
+                tacLogger.warn(LOG_PREFIX + "限购数据打印o:" + JSON.toJSONString(o));
+                tacLogger.warn(LOG_PREFIX + "限购数据打印jsonObject：" + JSON.toJSONString(jsonObject));
+                tacLogger.warn(LOG_PREFIX + "限购数据打印itemLimitResult：" + JSON.toJSONString(itemLimitResult));
                 return itemLimitResult;
             } else {
                 tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
