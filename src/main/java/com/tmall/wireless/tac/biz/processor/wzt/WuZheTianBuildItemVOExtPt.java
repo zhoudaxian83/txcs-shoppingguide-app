@@ -153,6 +153,9 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     private Map<Long, List<ItemLimitDTO>> getLimitResult(Map<String, Object> userParams) {
         JSONObject jsonObject = (JSONObject)userParams.get("itemLimitResult");
         if (jsonObject != null) {
+            Map<Long, List<ItemLimitDTO>> longListMap = JSONObject.toJavaObject((JSONObject)jsonObject.get("limitInfo"),
+                Map.class);
+            tacLogger.info("VO-getLimitResult：" + longListMap);
             return JSONObject.toJavaObject((JSONObject)jsonObject.get("limitInfo"), Map.class);
         }
         tacLogger.info("VO获取限购信息为空userParams：" + userParams);
