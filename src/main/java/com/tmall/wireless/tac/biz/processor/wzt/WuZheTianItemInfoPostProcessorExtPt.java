@@ -19,7 +19,6 @@ import com.tmall.txcs.gs.framework.support.itemInfo.ItemInfoGroupResponse;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemInfoDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -47,12 +46,8 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
 
     @Override
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info(
-            "ItemInfoPostProcessorExtPt扩展点测试sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
         Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
-        userParams.put("userParams-test-1", "userParams-test-1");
         JSONObject itemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
-
         if (itemLimitResult != null) {
             userParams.put("itemLimitResult", itemLimitResult);
         } else {
@@ -72,17 +67,16 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
             .values()), ItemInfoDTO.class);
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
             ItemDTO itemDTO = itemInfoDTO.getItemInfos().get("captain").getItemDTO();
-            Map skuMap = Maps.newHashMap();
+            Map<String, Object> skuMap = Maps.newHashMap();
             skuMap.put("skuId", itemDTO.getSkuId() == null ? 0L : itemDTO.getSkuId());
             skuMap.put("itemId", itemDTO.getItemId() == null ? 0L : itemDTO.getItemId());
             return skuMap;
         }).collect(Collectors.toList());
         Map<String, Object> paramsValue = new HashMap<>(16);
-        Map paramMap = Maps.newHashMap();
+        Map<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("userId", userId);
         paramMap.put("itemIdList", skuList);
         paramsValue.put("itemLimitInfoQuery", paramMap);
-        tacLogger.warn(LOG_PREFIX + "限购入参paramsValue:" + JSON.toJSONString(paramsValue));
         return paramsValue;
     }
 
@@ -91,7 +85,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         try {
             o = rpcSpi.invokeHsf("todayCrazyLimit", paramsValue);
             JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
-            if ((Boolean)jsonObject.get("success")) {
+            if ((boolean)jsonObject.get("success")) {
                 JSONObject itemLimitResult = (JSONObject)jsonObject.get("limitInfo");
                 tacLogger.warn(LOG_PREFIX + "限购数据打印itemLimitResult：" + JSON.toJSONString(itemLimitResult));
                 return itemLimitResult;

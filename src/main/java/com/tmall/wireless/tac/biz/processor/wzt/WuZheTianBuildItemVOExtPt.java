@@ -8,7 +8,6 @@ import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.origindate.ItemInfoBySourceDTOOrigin;
@@ -49,10 +48,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
-        tacLogger.info("执行了扩展VO-VO入参数据：" + JSON.toJSONString(buildItemVoRequest));
         Map<String, Object> userParams = buildItemVoRequest.getContext().getUserParams();
-        tacLogger.info("VO拿到自定义数据：" + JSON.toJSONString(userParams));
-
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
         boolean hasMainSource = false;
@@ -133,7 +129,6 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     }
 
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
-        tacLogger.info("itemEntityVO结果数据：" + JSON.toJSONString(itemEntityVO));
         Long itemId = (Long)itemEntityVO.get("itemId");
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
         if (limitResult == null) {
@@ -141,10 +136,6 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         }
         List<ItemLimitDTO> itemLimitDTOS = limitResult.get(itemId);
         if (CollectionUtils.isEmpty(itemLimitDTOS)) {
-            tacLogger.info(
-                "获取限购信息itemLimitDTOSt为空,itemId：" + itemId + "|" + JSON.toJSONString(itemLimitDTOS)
-                    + "|" + limitResult);
-            itemEntityVO.put("limit", Lists.newArrayList());
             return;
         }
         /**
@@ -158,7 +149,6 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         if (limitResult != null) {
             return limitResult;
         }
-        tacLogger.info("获取限购信息getLimitResult为空：");
         return null;
     }
 }

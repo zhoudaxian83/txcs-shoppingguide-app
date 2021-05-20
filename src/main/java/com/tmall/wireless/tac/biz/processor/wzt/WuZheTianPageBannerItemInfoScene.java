@@ -44,8 +44,6 @@ public class WuZheTianPageBannerItemInfoScene {
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
-
-        tacLogger.info("WuZheTianPageBannerItemInfoScene测试info");
         Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 0L);
         Long index = MapUtil.getLongWithDefault(context.getParams(), "index", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getParams(), "pageSize", 20L);
@@ -83,9 +81,6 @@ public class WuZheTianPageBannerItemInfoScene {
         pageInfoDO.setIndex(index.intValue());
         pageInfoDO.setPageSize(pageSize.intValue());
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
-
-//        Map<String, Object> userParams = Maps.newConcurrentMap();
-//        userParams.put("scene-test-1", "scene-test-1");
         sgFrameworkContextItem.setUserParams(context.getParams());
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)

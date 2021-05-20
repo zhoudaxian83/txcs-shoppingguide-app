@@ -33,30 +33,6 @@ public class TairUtil {
 
     private static final String LOG_PREFIX = "TairUtil-";
 
-    /**
-     * 通过get方法获取key值对应的缓存
-     */
-    //public Object queryPromotionFromCache(String cacheKey) {
-    //    try {
-    //        //调用get方法获取key值对应的缓存
-    //        Result<DataEntry> result = multiClusterTairManager.get(NAME_SPACE, cacheKey);
-    //        tacLogger.info("缓存原始数据" + cacheKey + JSON.toJSONString(result));
-    //        if (null == result || !result.isSuccess()
-    //            || ResultCode.DATANOTEXSITS.equals(result.getRc())
-    //            || null == result.getValue()
-    //            || null == result.getValue().getValue()) {
-    //            tacLogger.info("缓存数据为空");
-    //            return null;
-    //        }
-    //        tacLogger.info("tair缓存取出" + cacheKey + String.valueOf(result.getValue().getValue()));
-    //        return result.getValue().getValue();
-    //    } catch (Exception e) {
-    //        tacLogger.error(
-    //            LOG_PREFIX + "queryPromotionFromCache 缓存获取失败，cacheKey：" + cacheKey, e);
-    //        return null;
-    //    }
-    //}
-
 
     public Object getCache(String cacheKey) {
         try {

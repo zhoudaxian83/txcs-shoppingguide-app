@@ -77,37 +77,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
-
-        //if (context.getUserParams().get("mockTpp") != null) {
-        //    ItemEntity itemEntity = new ItemEntity();
-        //    itemEntity.setBizType("sm");
-        //    itemEntity.setBusinessType("B2C");
-        //    itemEntity.setO2oType("B2C");
-        //    itemEntity.setItemId(583088863304L);
-        //    ItemEntity itemEntity2 = new ItemEntity();
-        //    itemEntity2.setBizType("sm");
-        //    itemEntity2.setBusinessType("B2C");
-        //    itemEntity2.setO2oType("B2C");
-        //    itemEntity2.setItemId(525790658171L);
-        //    OriginDataDTO<ItemEntity> originDataDTO1 = new OriginDataDTO<>();
-        //    originDataDTO1.setResult(Lists.newArrayList(itemEntity, itemEntity2));
-        //    return Flowable.just(originDataDTO1);
-        //}
-
-        /**
-         * 1、tair获取商品列表
-         * 2、tpp渲染个性化排序
-         * 3、排序商品存入tair供下次使用
-         * 4、获取前20作为当前页数据
-         * 5、查询限购信息
-         * 6、captain获取商品数据
-         * 7、处理过滤逻辑
-         * 8、转换为vo给前端展示
-         */
-
-        tacLogger.info("context=" + JSON.toJSONString(context));
         DataContext dataContext = new DataContext();
-
         Long smAreaId = MapUtil.getLongWithDefault(context.getRequestParams(), "smAreaId", 330100L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
@@ -143,16 +113,16 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * tpp获取个性化排序规则参数构建
      *
      * @param userId
-     * @param ItemIds
+     * @param itemIds
      * @return
      */
-    private RecommendRequest buildRecommendRequestParam(Long userId, List<Long> ItemIds) {
+    private RecommendRequest buildRecommendRequestParam(Long userId, List<Long> itemIds) {
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setLogResult(true);
         recommendRequest.setUserId(userId);
         recommendRequest.setAppId(21431L);
         Map<String, String> params = Maps.newHashMap();
-        params.put("userItemIdList", Joiner.on(",").join(ItemIds));
+        params.put("userItemIdList", Joiner.on(",").join(itemIds));
         recommendRequest.setParams(params);
         return recommendRequest;
     }
@@ -161,7 +131,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<Long> items = null;
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
         if (pmtRuleDataItemRuleDTOS == null) {
-            return null;
+            return Lists.newArrayList();
         } else {
             try {
                 PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = JSON.parseObject(
@@ -209,7 +179,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
             tacLogger.warn(LOG_PREFIX + "getTairItems大区id未匹配：smAreaId：" + smAreaId);
-            return null;
+            return Lists.newArrayList();
         }
         String cacheKey = logicalArea.getCacheKey();
         if (!RpmContants.enviroment.isOnline()) {
@@ -220,7 +190,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         } catch (Exception e) {
             tacLogger.error(LOG_PREFIX + "getTairItems数据转换异常：smAreaId：" + smAreaId, e);
         }
-        return null;
+        return Lists.newArrayList();
     }
 
     /**
@@ -228,7 +198,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      *
      * @return
      */
-    private Boolean setItemToCacheOfArea(OriginDataDTO<ItemEntity> originDataDTO, Long smAreaId) {
+    private boolean setItemToCacheOfArea(OriginDataDTO<ItemEntity> originDataDTO, Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
             tacLogger.warn(LOG_PREFIX + "setItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
