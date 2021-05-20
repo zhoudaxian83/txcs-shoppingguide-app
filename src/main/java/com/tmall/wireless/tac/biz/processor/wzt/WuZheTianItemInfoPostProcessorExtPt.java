@@ -47,18 +47,8 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<String, Object> stringObjectMap = new HashMap<>(16);
         stringObjectMap.put("post-test-1", "post-test-1");
-        stringObjectMap.put("post-test-2", "post-test-2");
-        stringObjectMap.put("post-test-3", "post-test-3");
-
         tacLogger.info(
-            "ItemInfoPostProcessorExtPt扩展点测试=" + JSON.toJSONString(sgFrameworkContextItem.getItemMetaInfo()));
-        tacLogger.info("getEntityVOSgFrameworkResponse=" + JSON
-            .toJSONString(sgFrameworkContextItem.getEntityVOSgFrameworkResponse()));
-        tacLogger.info(
-            "getItemEntityOriginDataDTO=" + JSON.toJSONString(sgFrameworkContextItem.getItemEntityOriginDataDTO()));
-        tacLogger.info(
-            "getItemInfoGroupResponseMap=" + JSON.toJSONString(sgFrameworkContextItem.getItemInfoGroupResponseMap()));
-        tacLogger.info("getItemMetaInfo=" + JSON.toJSONString(sgFrameworkContextItem.getItemMetaInfo()));
+            "ItemInfoPostProcessorExtPt扩展点测试sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
         JSONObject getItemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
         stringObjectMap.put("post-test-getItemLimitResult", getItemLimitResult);
         SgFrameworkResponse<EntityVO> entityVOSgFrameworkResponse = new SgFrameworkResponse<EntityVO>();
