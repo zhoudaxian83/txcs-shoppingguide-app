@@ -45,6 +45,9 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
 
     @Override
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
+         Map<String, Object> userParams = Maps.newConcurrentMap();
+        userParams.put("userParams-test-1","userParams-test-1");
+        sgFrameworkContextItem.setUserParams(userParams);
         Map<String, Object> stringObjectMap = new HashMap<>(16);
         stringObjectMap.put("post-test-1", "post-test-1");
         tacLogger.info(
