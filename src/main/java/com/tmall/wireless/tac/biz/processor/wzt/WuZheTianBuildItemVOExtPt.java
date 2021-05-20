@@ -155,7 +155,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         if (jsonObject != null) {
             return JSONObject.toJavaObject((JSONObject)jsonObject.get("limitInfo"), Map.class);
         }
-        tacLogger.info("VO获取限购信息为空");
+        tacLogger.info("VO获取限购信息为空userParams：" + userParams);
         return null;
     }
 }
