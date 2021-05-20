@@ -45,18 +45,13 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
 
     @Override
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
-         Map<String, Object> userParams = Maps.newConcurrentMap();
-        userParams.put("userParams-test-1","userParams-test-1");
-        sgFrameworkContextItem.setUserParams(userParams);
-        Map<String, Object> stringObjectMap = new HashMap<>(16);
-        stringObjectMap.put("post-test-1", "post-test-1");
         tacLogger.info(
             "ItemInfoPostProcessorExtPt扩展点测试sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
+        Map<String, Object> userParams = Maps.newConcurrentMap();
+        userParams.put("userParams-test-1","userParams-test-1");
+        sgFrameworkContextItem.setUserParams(userParams);
+
         JSONObject getItemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
-        stringObjectMap.put("post-test-getItemLimitResult", getItemLimitResult);
-        SgFrameworkResponse<EntityVO> entityVOSgFrameworkResponse = new SgFrameworkResponse<EntityVO>();
-        entityVOSgFrameworkResponse.setExtInfos(stringObjectMap);
-        sgFrameworkContextItem.setEntityVOSgFrameworkResponse(entityVOSgFrameworkResponse);
         if (getItemLimitResult != null) {
 
         } else {
