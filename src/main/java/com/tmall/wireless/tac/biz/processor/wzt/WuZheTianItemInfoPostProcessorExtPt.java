@@ -56,9 +56,9 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
                 "打印验证入参，itemGroup=" + JSON.toJSONString(itemGroup));
             tacLogger.info(
                 "打印验证=" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(itemGroup)));
-            Map<String, Object> stringObjectMap = itemGroupItemInfoGroupResponseMap.get(itemGroup).getPageInfoVO();
+            itemGroupItemInfoGroupResponseMap.get(itemGroup).getValue();
             tacLogger.info(
-                "打印验证=" + JSON.toJSONString(stringObjectMap));
+                "打印验证getValue=" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(itemGroup).getValue()));
 
         });
 
