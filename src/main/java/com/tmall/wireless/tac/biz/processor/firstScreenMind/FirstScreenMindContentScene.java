@@ -72,6 +72,7 @@ public class FirstScreenMindContentScene {
                         } else {
                             propertyMap.put("isFixPositionBanner", false);
                             response.setHasMore(true);
+                            response.setIndex(0);
                         }
                     } else if(StringUtils.equalsIgnoreCase("false",String.valueOf(isFixPositionBanner))){
                         propertyMap.put("isFixPositionBanner", false);
