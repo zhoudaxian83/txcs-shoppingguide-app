@@ -75,10 +75,17 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         Map paramMap = Maps.newHashMap();
         paramMap.put("userId", userId);
         List<Map> skuList = Lists.newArrayList();
+
         Map skuMap = Maps.newHashMap();
-        //skuMap.put("skuId", 4637368768647L);
+        skuMap.put("skuId", 4637368768647L);
         skuMap.put("itemId", 643897236869L);
         skuList.add(skuMap);
+
+        Map skuMap2 = Maps.newHashMap();
+        //skuMap.put("skuId", 4637368768647L);
+        skuMap.put("itemId", 605659349023L);
+        skuList.add(skuMap2);
+
         paramMap.put("itemIdList", skuList);
         paramsValue.put("itemLimitInfoQuery", paramMap);
         return paramsValue;
