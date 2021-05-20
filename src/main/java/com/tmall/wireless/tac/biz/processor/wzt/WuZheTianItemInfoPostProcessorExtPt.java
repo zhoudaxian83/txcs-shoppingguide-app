@@ -82,8 +82,8 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         skuList.add(skuMap);
 
         Map skuMap2 = Maps.newHashMap();
-        skuMap.put("skuId", 0L);
-        skuMap.put("itemId", 605659349023L);
+        skuMap2.put("skuId", 0L);
+        skuMap2.put("itemId", 605659349023L);
         skuList.add(skuMap2);
 
         paramMap.put("itemIdList", skuList);
