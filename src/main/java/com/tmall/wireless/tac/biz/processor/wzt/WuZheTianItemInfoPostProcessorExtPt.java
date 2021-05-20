@@ -21,6 +21,7 @@ import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
 import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.txcs.gs.framework.support.itemInfo.ItemInfoGroupResponse;
 import com.tmall.txcs.gs.model.Response;
+import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -54,11 +55,15 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
             ItemGroup itemGroup = new ItemGroup(itemEntity.getBizType(), itemEntity.getO2oType());
             tacLogger.info(
                 "打印验证入参，itemGroup=" + JSON.toJSONString(itemGroup));
+
+            JSONObject jsonObject = (JSONObject)JSONObject.toJSON(itemGroupItemInfoGroupResponseMap.get(itemGroup)
+                .getValue().get(itemGroup).getItemInfos());
+
             tacLogger.info(
-                "打印验证=" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(itemGroup)));
-            itemGroupItemInfoGroupResponseMap.get(itemGroup).getValue();
+                "打印验证jsonObject=" + JSON.toJSONString(jsonObject));
+
             tacLogger.info(
-                "打印验证getValue=" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(itemGroup).getValue()));
+                "打印验证captain=" + JSON.toJSONString(jsonObject.get("captain")));
 
         });
 
