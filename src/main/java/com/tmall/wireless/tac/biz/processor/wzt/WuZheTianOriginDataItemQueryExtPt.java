@@ -100,11 +100,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                     //需要做缓存
                     OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
                     this.setItemToCacheOfArea(originDataDTO, smAreaId);
-                    tacLogger.info("缓存生效-非缓存中的数据" + JSON.toJSONString(originDataDTO));
+                    tacLogger.info("tpp排序后数据" + JSON.toJSONString(originDataDTO));
                     return this.getItemPage(originDataDTO, dataContext);
                 });
         } else {
-            tacLogger.info("缓存生效-是缓存中的数据" + JSON.toJSONString(cacheOriginDataDTO));
             return Flowable.just(this.getItemPage(cacheOriginDataDTO, dataContext));
         }
     }
@@ -150,6 +149,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
         List<ItemEntity> itemEntities = this.getPage(originDataDTO.getResult(), dataContext.getIndex(),
             dataContext.getPageSize());
+        tacLogger.info("分页前总数据" + JSON.toJSONString(originDataDTO.getResult()));
         tacLogger.info("分页后数据" + JSON.toJSONString(itemEntities));
         originDataDTO.setResult(itemEntities);
         return originDataDTO;
