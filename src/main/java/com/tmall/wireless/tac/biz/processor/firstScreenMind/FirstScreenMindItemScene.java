@@ -97,9 +97,16 @@ public class FirstScreenMindItemScene {
         UserDO userDO = new UserDO();
         userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
+        if (MapUtils.isNotEmpty(context.getParams())) {
+            Object cookies = context.getParams().get("cookies");
+            if (cookies != null && cookies instanceof Map) {
+                String cna = (String)((Map)cookies).get("cna");
+                userDO.setCna(cna);
+            }
+        }
         return userDO;
     }
-    public static ItemMetaInfo getRecommendItemMetaInfo() {
+    public ItemMetaInfo getRecommendItemMetaInfo() {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();

@@ -66,11 +66,10 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id).collect(Collectors.toList());
             params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
             params.put("commerce", "B2C");
-
             params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
             params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
-            params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUtdid).orElse(""));
-
+            params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getCna).orElse(""));
+            params.put("pageSize",Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getPageSize).orElse(20).toString());
             if (Enviroment.PRE.equals(RpmContants.enviroment)) {
                 params.put("_devEnv_", "1");
             }
@@ -87,18 +86,17 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id).collect(Collectors.toList());
         params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
 
-        params.put("pageSize", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getPageSize).orElse(20).toString());
+        params.put("pageSize", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getPageSize).orElse(4).toString());
         //逛超市TPP内容召回每个内容挂载的商品数量
         params.put("itemCountPerContent", "10");
         params.put("contentType", "7");
         params.put("contentSetSource", "intelligentCombinationItems");
         //未登陆用户唯一身份ID，确认是否必须
-        //params.put("exposureDataUserId", "");
+        params.put("exposureDataUserId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getCna).orElse(""));
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         params.put("logicAreaId", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
         Integer index = Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getIndex).orElse(0);
         params.put("isFirstPage", index > 0 ? "false" : "true");
-        params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUtdid).orElse(""));
 
         if (contentRecommendMetaInfo != null) {
             contentRecommendMetaInfo.setUseRecommendSpiV2(false);
@@ -153,6 +151,18 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         result.add(MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, 0L));
 
         return result.stream().filter(contentSetId -> contentSetId > 0).collect(Collectors.toList());
+    }
+    private String getCna(Map<String, Object>  requestParams){
+        String cna = "";
+        if(MapUtils.isNotEmpty(requestParams) && requestParams.get(MtopContextKey.COOKIES) != null && requestParams.get(MtopContextKey.COOKIES) instanceof Map){
+            Map<String,String> cookies = (Map<String, String>)requestParams.get(MtopContextKey.COOKIES);
+            if(MapUtils.isNotEmpty(cookies)){
+                cna = cookies.get()
+            }
+
+        }
+
+
     }
 
 
