@@ -103,10 +103,10 @@ public class FirstScreenMindContentScene {
         userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
         userDO.setUtdid(Optional.of(context).map(Context::getDeviceInfo).map(DeviceInfo::getUtdid).orElse(""));
-        tacLogger.info("****FirstScreenMindContentScene context.getDeviceInfo()***:"+context.getDeviceInfo());
-        LOGGER.info("****FirstScreenMindContentScene context.getDeviceInfo()***:"+context.getDeviceInfo());
-        tacLogger.info("****FirstScreenMindContentScene userDO***:"+userDO);
-        LOGGER.info("****FirstScreenMindContentScene userDO***:"+userDO);
+        tacLogger.info("****FirstScreenMindContentScene context.getDeviceInfo()***:"+context.getDeviceInfo().getUtdid());
+        LOGGER.info("****FirstScreenMindContentScene context.getDeviceInfo()***:"+context.getDeviceInfo().getUtdid());
+        tacLogger.info("****FirstScreenMindContentScene userDO***:"+userDO.getUtdid());
+        LOGGER.info("****FirstScreenMindContentScene userDO***:"+userDO.getUtdid());
         return userDO;
     }
     public ContentMetaInfo getContentMetaInfo() {
