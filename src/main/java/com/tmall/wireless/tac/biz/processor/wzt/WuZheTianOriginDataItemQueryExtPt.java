@@ -170,7 +170,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                     ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
                 tacLogger.warn(LOG_PREFIX + "getOriginalRecommend获取tair原始items：" + JSON.toJSONString(items));
                 return items;
-
             } catch (Exception e) {
                 tacLogger.error(LOG_PREFIX + "getOriginalRecommend获取tair原始items异常：" + JSON.toJSONString(items), e);
             }
@@ -216,7 +215,12 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         if (!RpmContants.enviroment.isOnline()) {
             cacheKey = cacheKey + "_pre";
         }
-        return tairUtil.getCache(cacheKey);
+        try {
+            return (List<PmtRuleDataItemRuleDTO>)tairUtil.getCache(cacheKey);
+        } catch (Exception e) {
+            tacLogger.error(LOG_PREFIX + "getTairItems数据转换异常：smAreaId：" + smAreaId, e);
+        }
+        return null;
     }
 
     /**
@@ -246,7 +250,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             tacLogger.warn(LOG_PREFIX + "getItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
             return null;
         }
-        Object o = tairUtil.queryPromotionFromCache(logicalArea.getCacheKey() + AREA_SORT_SUFFIX);
+        Object o = tairUtil.getCache(logicalArea.getCacheKey() + AREA_SORT_SUFFIX);
         if (o == null) {
             return null;
         }
