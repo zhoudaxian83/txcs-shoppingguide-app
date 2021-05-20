@@ -59,6 +59,8 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
         Long rt1HourStoreId = RenderAddressUtil.getRt1HourStoreId(csa);
         Long rtHalfDayStoreId = RenderAddressUtil.getRtHalfDayStoreId(csa);
         Long rtNextDayStoreId = RenderAddressUtil.getRtNextDayStoreId(csa);
+
+
         //默认优先级 一小时达 > 半日达 > 外仓
         if (isO2o) {
             if(rt1HourStoreCover){
