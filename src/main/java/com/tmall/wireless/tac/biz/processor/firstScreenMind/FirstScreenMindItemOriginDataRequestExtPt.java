@@ -75,7 +75,8 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
         } else {
             params.put("itemBusinessType", TppItemBusinessTypeEnum.B2C.getType());
         }
-
+        params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextItem).map(
+            SgFrameworkContext::getUserDO).map(UserDO::getCna).orElse(""));
         tppRequest.setAppId(23410L);
         /***TPP相关常量*/
         params.put("itemSetIdSource","crm");

@@ -20,6 +20,7 @@ import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.DeviceInfo;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +103,13 @@ public class FirstScreenMindContentScene {
         UserDO userDO = new UserDO();
         userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
-        userDO.setUtdid(Optional.of(context).map(Context::getDeviceInfo).map(DeviceInfo::getUtdid).orElse(""));
+        if (MapUtils.isNotEmpty(context.getParams())) {
+            Object cookies = context.getParams().get("cookies");
+            if (cookies != null && cookies instanceof Map) {
+                String cna = (String)((Map)cookies).get("cna");
+                userDO.setCna(cna);
+            }
+        }
         return userDO;
     }
     public ContentMetaInfo getContentMetaInfo() {
