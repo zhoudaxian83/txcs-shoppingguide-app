@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import com.alibaba.cola.extension.Extension;
-import com.ali.com.google.common.base.Joiner;
-import com.ali.com.google.common.collect.Lists;
-import com.ali.com.google.common.collect.Maps;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
@@ -21,6 +21,8 @@ import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Enviroment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,8 +89,27 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             return tppRequest;
         }
 
+
+
         RecommendRequest tppRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
+
+        Long oneHour = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
+        Long halfDay = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getRtHalfDayStoreId).orElse(0L);
+
+        List<String> itemBusinessTypeList = Lists.newArrayList(TppItemBusinessTypeEnum.B2C.getType());
+        if (oneHour > 0) {
+            itemBusinessTypeList.add(TppItemBusinessTypeEnum.OneHour.getType());
+            params.put("rt1HourStoreId", RenderLangUtil.safeString(oneHour));
+        } else if (halfDay >= 0){
+            itemBusinessTypeList.add(TppItemBusinessTypeEnum.HalfDay.getType());
+            params.put("rtHalfDayStoreId", RenderLangUtil.safeString(halfDay));
+        }
+        params.put("itemBusinessType", Joiner.on(",").join(itemBusinessTypeList));
+
+
+
+
         params.put("contentSetIdList", Joiner.on(",").join(contentSetIdList));
 
         // 新版本的内容集id
