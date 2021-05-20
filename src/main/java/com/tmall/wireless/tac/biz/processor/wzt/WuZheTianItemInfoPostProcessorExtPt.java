@@ -88,6 +88,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
 
         paramMap.put("itemIdList", skuList);
         paramsValue.put("itemLimitInfoQuery", paramMap);
+        tacLogger.warn(LOG_PREFIX + "限购入参paramsValue:" + JSON.toJSONString(paramsValue));
         return paramsValue;
     }
 
