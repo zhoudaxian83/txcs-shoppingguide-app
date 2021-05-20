@@ -17,9 +17,12 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
+import com.tmall.wireless.tac.client.domain.DeviceInfo;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,7 @@ import java.util.Optional;
 
 @Service
 public class FirstScreenMindContentScene {
+    Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindContentScene.class);
 
     @Autowired
     SgFrameworkServiceContent sgFrameworkServiceContent;
@@ -98,6 +102,7 @@ public class FirstScreenMindContentScene {
         UserDO userDO = new UserDO();
         userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
+        userDO.setUtdid(Optional.of(context).map(Context::getDeviceInfo).map(DeviceInfo::getUtdid).orElse(""));
         return userDO;
     }
     public ContentMetaInfo getContentMetaInfo() {

@@ -66,11 +66,16 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id).collect(Collectors.toList());
             params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
             params.put("commerce", "B2C");
-            params.put("regionCode", Joiner.on(",").join(Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
-            params.put("smAreaId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
+
+            params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
+            params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
+            params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUtdid).orElse(""));
+
             if (Enviroment.PRE.equals(RpmContants.enviroment)) {
                 params.put("_devEnv_", "1");
             }
+            tacLogger.info("****FirstScreenMindContentOriginDataRequestExPt tppRequest***:"+tppRequest.toString());
+            LOGGER.info("****FirstScreenMindContentOriginDataRequestExPt tppRequest***:"+tppRequest.toString());
             return tppRequest;
         }
 
@@ -93,6 +98,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         params.put("logicAreaId", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
         Integer index = Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getIndex).orElse(0);
         params.put("isFirstPage", index > 0 ? "false" : "true");
+        params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUtdid).orElse(""));
 
         if (contentRecommendMetaInfo != null) {
             contentRecommendMetaInfo.setUseRecommendSpiV2(false);
@@ -102,6 +108,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
         tacLogger.info("****FirstScreenMindContentOriginDataRequestExPt tppRequest***:"+tppRequest.toString());
+        LOGGER.info("****FirstScreenMindContentOriginDataRequestExPt tppRequest***:"+tppRequest.toString());
         return tppRequest;
     }
 
