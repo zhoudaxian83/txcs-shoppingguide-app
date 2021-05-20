@@ -9,22 +9,18 @@ import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorExtPt;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorResp;
-import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.ItemGroup;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
-import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
-import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.txcs.gs.framework.support.itemInfo.ItemInfoGroupResponse;
 import com.tmall.txcs.gs.model.Response;
-import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
-import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemDTO;
+import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemInfoDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,69 +46,50 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
 
     @Override
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
-        Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
-            .getItemInfoGroupResponseMap();
-        sgFrameworkContextItem.getItemEntityOriginDataDTO().getResult().forEach(itemEntity -> {
-            ItemGroup itemGroup = new ItemGroup(itemEntity.getBizType(), itemEntity.getO2oType());
-            Map<Object, Object> map = new HashMap(16);
-            map.put("id", itemEntity.getItemId());
-            map.put("type", itemEntity.getO2oType());
-            tacLogger.info(
-                "打印验证入参，itemGroup=" + JSON.toJSONString(itemGroup));
-
-            //List<ItemInfoDTO>  itemInfoDTOS = (List<ItemInfoDTO>)itemGroupItemInfoGroupResponseMap.get(itemGroup)
-            // .getValue().values();
-            tacLogger.info(
-                "打印验证getValue=" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(itemGroup).getValue()
-                    .values()));
-
-            JSONObject jsonObject = (JSONObject)JSONObject.toJSON(itemGroupItemInfoGroupResponseMap.get(itemGroup)
-                .getValue());
-            //.getValue().get(itemGroup).getItemInfos());
-
-            tacLogger.info(
-                "打印验证jsonObject=" + JSON.toJSONString(jsonObject));
-
-        });
-
         tacLogger.info(
             "ItemInfoPostProcessorExtPt扩展点测试sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
         Map<String, Object> userParams = Maps.newConcurrentMap();
         userParams.put("userParams-test-1", "userParams-test-1");
-        sgFrameworkContextItem.setUserParams(userParams);
-
         JSONObject getItemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
         if (getItemLimitResult != null) {
-
+            userParams.put("getItemLimitResult", "getItemLimitResult");
         } else {
             tacLogger.warn(LOG_PREFIX + "获取限购数据为空");
         }
+        sgFrameworkContextItem.setUserParams(userParams);
         ItemInfoPostProcessorResp itemInfoPostProcessorResp = new ItemInfoPostProcessorResp();
         return Response.success(itemInfoPostProcessorResp);
     }
 
     private Map<String, Object> buildGetItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
-        //获取itemId和sku
-
-        List<Long> items = sgFrameworkContextItem.getItemEntityOriginDataDTO().getResult().stream().map(item -> {
-            return item.getItemId();
-        }).collect(Collectors.toList());
-
         Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
+        Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
+            .getItemInfoGroupResponseMap();
+        ItemGroup itemGroup = new ItemGroup("sm", "B2C");
+        List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
+            itemGroup).getValue()
+            .values()), ItemInfoDTO.class);
+        List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
+            ItemDTO itemDTO = itemInfoDTO.getItemInfos().get("captain").getItemDTO();
+            Map skuMap = Maps.newHashMap();
+            Long i = itemDTO.getItemId() == null ? 0L : itemDTO.getItemId();
+            skuMap.put("skuId", itemDTO.getSkuId() == null ? 0L : itemDTO.getSkuId());
+            skuMap.put("itemId", itemDTO.getItemId() == null ? 0L : itemDTO.getItemId());
+            return skuMap;
+        }).collect(Collectors.toList());
         Map<String, Object> paramsValue = new HashMap<>(16);
         Map paramMap = Maps.newHashMap();
         paramMap.put("userId", userId);
-        List<Map> skuList = Lists.newArrayList();
 
-        Map skuMap = Maps.newHashMap();
-        skuMap.put("skuId", 4637368768647L);
-        skuMap.put("itemId", 643897236869L);
-        skuList.add(skuMap);
-
-        Map skuMap2 = Maps.newHashMap();
-        skuMap2.put("skuId", 0L);
-        skuMap2.put("itemId", 605659349023L);
-        skuList.add(skuMap2);
+        //Map skuMap = Maps.newHashMap();
+        //skuMap.put("skuId", 4637368768647L);
+        //skuMap.put("itemId", 643897236869L);
+        //skuList.add(skuMap);
+        //
+        //Map skuMap2 = Maps.newHashMap();
+        //skuMap2.put("skuId", 0L);
+        //skuMap2.put("itemId", 605659349023L);
+        //skuList.add(skuMap2);
 
         paramMap.put("itemIdList", skuList);
         paramsValue.put("itemLimitInfoQuery", paramMap);
