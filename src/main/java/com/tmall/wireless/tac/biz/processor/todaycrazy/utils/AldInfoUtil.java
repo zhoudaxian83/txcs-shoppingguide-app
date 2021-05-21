@@ -31,13 +31,12 @@ public class AldInfoUtil {
     public static final String defaultBizType = "sm";
 
     public Map<String,String> getAldInfo(Map<String, Object> params){
-        tacLogger.info("****AldInfoUtil getAldInfo in ***");
-        LOGGER.info("****AldInfoUtil getAldInfo in***");
         Map<String,String> map = Maps.newHashMap();
         if(CollectionUtils.isEmpty(params)){
             return map;
         }
         if(params.get(ALD_CONTEXT) != null && params.get(ALD_CONTEXT) instanceof Map){
+            LOGGER.info("****AldInfoUtil getAldInfo***"+params.get(ALD_CONTEXT));
             Map<String, Object> contextObj = (Map<String, Object>)params.get(ALD_CONTEXT);
             if(contextObj.get(STATIC_SCHEDULE_DATA) != null && contextObj.get(STATIC_SCHEDULE_DATA) instanceof List){
                 List<Map<String,Object>> staticScheduleData = (List<Map<String, Object>>)contextObj.get(STATIC_SCHEDULE_DATA);
