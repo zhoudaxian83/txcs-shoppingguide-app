@@ -58,8 +58,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     TairFactorySpi tairFactorySpi;
 
-    //分大区个性化排序后商品缓存后缀
-    private static final String AREA_SORT_SUFFIX = "AREA_SORT";
+    /**
+     * 分大区个性化排序后商品缓存后缀
+     */
+    private static final String AREA_SORT_SUFFIX = "_AREA_SORT";
 
     private static final String LOG_PREFIX = "WuZheTianOriginDataItemQueryExtPt-";
 
@@ -74,7 +76,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         DataContext dataContext = new DataContext();
-        Long smAreaId = MapUtil.getLongWithDefault(context.getRequestParams(), "smAreaId", 330100L);
+        Long smAreaId = MapUtil.getLongWithDefault(context.getRequestParams(), "smAreaId", 310100L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 1L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
