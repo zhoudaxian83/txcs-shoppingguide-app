@@ -72,16 +72,16 @@
           <artifactId>cola-common</artifactId>
           <version>2.0.4</version>
       </dependency>
-      <!--<dependency>
-          <groupId>com.tmall.aself</groupId>
-          <artifactId>aselfmanager-client</artifactId>
-          <version>1.0.26-RELEASE</version>
-      </dependency>-->
       <dependency>
           <groupId>com.tmall.aself</groupId>
           <artifactId>aselfmanager-client</artifactId>
-          <version>1.0.32</version>
+          <version>1.0.26-RELEASE</version>
       </dependency>
+      <!--<dependency>
+          <groupId>com.tmall.aself</groupId>
+          <artifactId>aselfmanager-client</artifactId>
+          <version>1.0.32</version>
+      </dependency>-->
 
 
      <dependency>
