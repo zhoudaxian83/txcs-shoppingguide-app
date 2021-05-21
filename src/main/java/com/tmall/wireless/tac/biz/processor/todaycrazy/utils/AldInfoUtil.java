@@ -53,6 +53,7 @@ public class AldInfoUtil {
         return map;
     }
     public List<ItemEntity> buildItemList(List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS)  {
+        LOGGER.info("****AldInfoUtil buildItemList***"+columnCenterDataSetItemRuleDTOS.size());
         List<ItemEntity> result = Lists.newArrayList();
         if (CollectionUtils.isEmpty(columnCenterDataSetItemRuleDTOS)) {
             return result;
