@@ -137,7 +137,9 @@ public class LimitTimeBuyScene {
         }
         itemAndContentList.forEach(itemEntityVO -> {
             Long itemId = itemEntityVO.getItemId();
+            LOGGER.info("***LimitTimeBuyScene itemId****:"+itemId);
             if(itemId != null){
+                LOGGER.info("***LimitTimeBuyScene userParams****:"+userParams);
                 Object object = userParams.get(String.valueOf(itemId));
                 LOGGER.info("***LimitTimeBuyScene object****:"+object);
                 if(itemEntityVO != null && itemEntityVO instanceof Map && object != null){
