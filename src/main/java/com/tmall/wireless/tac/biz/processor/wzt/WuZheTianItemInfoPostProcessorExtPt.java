@@ -46,10 +46,9 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
 
     @Override
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
-        Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
         JSONObject itemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
         if (itemLimitResult != null) {
-            userParams.put("itemLimitResult", itemLimitResult);
+            sgFrameworkContextItem.getUserParams().put("itemLimitResult", itemLimitResult);
         } else {
             tacLogger.warn(LOG_PREFIX + "获取限购数据为空");
         }

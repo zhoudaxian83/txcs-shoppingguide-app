@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.alibaba.cola.extension.Extension;
-import com.alibaba.fastjson.JSON;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -22,7 +21,6 @@ import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -93,8 +91,6 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
-        //补全限购信息
-
         return Response.success(itemEntityVO);
     }
 
@@ -127,6 +123,15 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
             return scm;
         }
     }
+
+    /**
+     * 返回结果优化
+     * @param itemEntityVO
+     */
+    private void perfect(ItemEntityVO itemEntityVO){
+
+    }
+
 
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
         List<ItemLimitDTO> itemLimitDTOS;

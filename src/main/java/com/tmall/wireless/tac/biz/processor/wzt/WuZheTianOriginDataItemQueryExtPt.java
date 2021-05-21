@@ -97,13 +97,15 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                         tacLogger.info("tpp个性化排序返回异常：" + JSON.toJSONString(recommendResponseEntityResponse));
                         return new OriginDataDTO<>();
                     }
-                    //需要做缓存
                     OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
+                    //给前端总条数
+                    context.getUserParams().put("count", originDataDTO.getResult().size());
                     this.setItemToCacheOfArea(originDataDTO, smAreaId);
                     tacLogger.info("tpp排序后数据" + JSON.toJSONString(originDataDTO));
                     return this.getItemPage(originDataDTO, dataContext);
                 });
         } else {
+            context.getUserParams().put("count", cacheOriginDataDTO.getResult().size());
             return Flowable.just(this.getItemPage(cacheOriginDataDTO, dataContext));
         }
     }
@@ -238,6 +240,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     public <T> List<T> getPage(List<T> originalList, Long index, Long pageSize) {
         if (index < 1) {
             index = 1L;
+        }
+        //第一页，每页数据大于总数据时全部返回
+        if (index == 1 && pageSize > originalList.size()) {
+            return originalList;
         }
         if (index * pageSize > originalList.size()) {
             tacLogger.warn("getPage中页数小于获取页数据条数，总页数；" + originalList.size());
