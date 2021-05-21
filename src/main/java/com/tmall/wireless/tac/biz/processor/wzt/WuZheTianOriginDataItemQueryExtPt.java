@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
 import com.alibaba.cola.extension.Extension;
-import com.alibaba.common.lang.StringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 
@@ -59,15 +58,12 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     TairFactorySpi tairFactorySpi;
 
-    private static final int labelSceneNamespace = 184;
-
     //分大区个性化排序后商品缓存后缀
     private static final String AREA_SORT_SUFFIX = "AREA_SORT";
 
-    public static final String defaultBizType = "sm";
-    public static final String defaultO2oType = "B2C";
-
     private static final String LOG_PREFIX = "WuZheTianOriginDataItemQueryExtPt-";
+
+    private static final Long APPID_B2C = 23376L;
 
     @Autowired
     RecommendSpi recommendSpi;
@@ -80,7 +76,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         DataContext dataContext = new DataContext();
         Long smAreaId = MapUtil.getLongWithDefault(context.getRequestParams(), "smAreaId", 330100L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
-        Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
+        Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 1L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         dataContext.setIndex(index);
         dataContext.setPageSize(pageSize);
@@ -101,7 +97,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                     //给前端总条数
                     context.getUserParams().put("count", originDataDTO.getResult().size());
                     this.setItemToCacheOfArea(originDataDTO, smAreaId);
-                    tacLogger.info("tpp排序后数据" + JSON.toJSONString(originDataDTO));
                     return this.getItemPage(originDataDTO, dataContext);
                 });
         } else {
@@ -121,7 +116,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setLogResult(true);
         recommendRequest.setUserId(userId);
-        recommendRequest.setAppId(21431L);
+        recommendRequest.setAppId(APPID_B2C);
         Map<String, String> params = Maps.newHashMap();
         params.put("userItemIdList", Joiner.on(",").join(itemIds));
         recommendRequest.setParams(params);
@@ -151,8 +146,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
         List<ItemEntity> itemEntities = this.getPage(originDataDTO.getResult(), dataContext.getIndex(),
             dataContext.getPageSize());
-        tacLogger.info("分页前总数据" + JSON.toJSONString(originDataDTO.getResult()));
-        tacLogger.info("分页后数据" + JSON.toJSONString(itemEntities));
         originDataDTO.setResult(itemEntities);
         return originDataDTO;
     }

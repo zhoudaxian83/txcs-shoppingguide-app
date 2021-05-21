@@ -19,6 +19,7 @@ import com.tmall.txcs.gs.framework.support.itemInfo.ItemInfoGroupResponse;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemInfoDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -48,7 +49,7 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
         JSONObject itemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
         if (itemLimitResult != null) {
-            sgFrameworkContextItem.getUserParams().put("itemLimitResult", itemLimitResult);
+            sgFrameworkContextItem.getUserParams().put(Constant.ITEM_LIMIT_RESULT, itemLimitResult);
         } else {
             tacLogger.warn(LOG_PREFIX + "获取限购数据为空");
         }
@@ -76,19 +77,16 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         paramMap.put("userId", userId);
         paramMap.put("itemIdList", skuList);
         paramsValue.put("itemLimitInfoQuery", paramMap);
-        tacLogger.warn(LOG_PREFIX + "限购入参，paramMap：" + JSON.toJSONString(paramMap));
         return paramsValue;
     }
 
     private JSONObject getItemLimitResult(Map<String, Object> paramsValue) {
         Object o;
         try {
-            o = rpcSpi.invokeHsf("todayCrazyLimit", paramsValue);
+            o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramsValue);
             JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
-            if ((boolean)jsonObject.get("success")) {
-                JSONObject itemLimitResult = (JSONObject)jsonObject.get("limitInfo");
-                tacLogger.warn(LOG_PREFIX + "限购结果，itemLimitResult：" + JSON.toJSONString(itemLimitResult));
-                return itemLimitResult;
+            if ((boolean)jsonObject.get(Constant.SUCCESS)) {
+                return (JSONObject)jsonObject.get(Constant.LIMIT_INFO);
             } else {
                 tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
                 return null;

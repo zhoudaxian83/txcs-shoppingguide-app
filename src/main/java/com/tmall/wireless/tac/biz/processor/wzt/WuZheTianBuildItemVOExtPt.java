@@ -19,6 +19,7 @@ import com.tmall.txcs.gs.model.spi.model.ItemDataDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.MapUtils;
@@ -39,7 +40,6 @@ import org.springframework.stereotype.Service;
 public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     Logger LOGGER = LoggerFactory.getLogger(WuZheTianBuildItemVOExtPt.class);
-    private static final String ITEM_URL_SUB = "https://detail.tmall.com/item.htm?id=";
 
     @Autowired
     TacLogger tacLogger;
@@ -84,10 +84,10 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
-
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         this.buildLimit(itemEntityVO, userParams);
+        this.perfect(itemEntityVO);
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
@@ -125,7 +125,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     }
 
     /**
-     * 返回结果优化
+     * 返回结果优化，clear多余数据
      * @param itemEntityVO
      */
     private void perfect(ItemEntityVO itemEntityVO){
@@ -149,7 +149,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     }
 
     private Map<Long, List<ItemLimitDTO>> getLimitResult(Map<String, Object> userParams) {
-        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>)userParams.get("itemLimitResult");
+        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>)userParams.get(Constant.ITEM_LIMIT_RESULT);
         if (limitResult != null) {
             return limitResult;
         }
