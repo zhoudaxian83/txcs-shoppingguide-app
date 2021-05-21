@@ -83,7 +83,7 @@ public class AldInfoUtil {
             return ;
         }
         Date date = new Date();
-        Long nowTime = date.getTime();
+        Long nowTime = date.getTime()/1000;
         //最多取三段 map有序
         int m = 0;
         for(Map.Entry entry : allTime.entrySet()){
