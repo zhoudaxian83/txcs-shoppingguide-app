@@ -28,6 +28,7 @@ import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.management.ObjectName;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -131,22 +134,21 @@ public class LimitTimeBuyScene {
      * @param sgFrameworkResponse
      */
     public void perfect(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
-        LOGGER.info("***LimitTimeBuyScene itemAndContentList****:"+ JSON.toJSONString(sgFrameworkResponse.getItemAndContentList()));
-        List<ItemEntityVO> itemAndContentList = sgFrameworkResponse.getItemAndContentList();
-        Map<String,Object> userParams = sgFrameworkContextItem.getUserParams();
-        if(CollectionUtils.isEmpty(itemAndContentList) || MapUtils.isEmpty(userParams)){
+        if(sgFrameworkResponse == null || sgFrameworkResponse.getItemAndContentList() == null
+            || sgFrameworkContextItem == null && sgFrameworkContextItem.getUserParams() == null){
             return;
         }
-        itemAndContentList.forEach(itemEntityVO -> {
-            Long itemId = itemEntityVO.getItemId();
-            LOGGER.info("***LimitTimeBuyScene itemEntityVO****:"+itemEntityVO);
+        List<ItemEntityVO> itemEntityVOS = sgFrameworkResponse.getItemAndContentList();
+        Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
+        LOGGER.info("***LimitTimeBuyScene userParams****:"+userParams);
+        itemEntityVOS.forEach(itemEntityVO -> {
+            String itemId = itemEntityVO.getString("itemId");
             LOGGER.info("***LimitTimeBuyScene itemId****:"+itemId);
-            if(itemId != null){
-                LOGGER.info("***LimitTimeBuyScene userParams****:"+userParams);
-                Object object = userParams.get(String.valueOf(itemId));
+            if(StringUtils.isNotEmpty(itemId)){
+                Object object = userParams.get(itemId);
                 LOGGER.info("***LimitTimeBuyScene object****:"+object);
-                if(itemEntityVO != null && itemEntityVO instanceof Map && object != null){
-                    itemEntityVO.putAll(JSONObject.parseObject(object.toString()));
+                if(object != null && object instanceof Map){
+                    itemEntityVO.putAll((Map<String,Object>)object);
                 }
             }
         });
