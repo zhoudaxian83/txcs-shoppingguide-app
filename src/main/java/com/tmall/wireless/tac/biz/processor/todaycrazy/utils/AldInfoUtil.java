@@ -75,7 +75,9 @@ public class AldInfoUtil {
         if(params.get(ALD_PARAM) != null && params.get(ALD_PARAM) instanceof Map){
             LOGGER.info("****AldInfoUtil getAldInfo ALD_PARAM***"+params.get(ALD_PARAM));
             Map<String, Object> paramObj = (Map<String, Object>)params.get(ALD_PARAM);
+            LOGGER.info("****AldInfoUtil getAldInfo paramObj***"+paramObj);
             if(paramObj.get(EXTPARAM) != null && paramObj.get(EXTPARAM) instanceof Map){
+                LOGGER.info("****AldInfoUtil paramObj.get(EXTPARAM)***"+paramObj.get(EXTPARAM));
                 index = MapUtil.getIntWithDefault((Map<String, Object>)paramObj.get(EXTPARAM),INDEX,0);
             }
         }
