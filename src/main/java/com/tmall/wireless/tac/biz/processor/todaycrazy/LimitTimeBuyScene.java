@@ -1,9 +1,12 @@
 package com.tmall.wireless.tac.biz.processor.todaycrazy;
 
 import com.google.common.collect.Lists;
+import com.google.gson.JsonObject;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
+import com.tmall.txcs.gs.framework.model.EntityVO;
+import com.tmall.txcs.gs.framework.model.ItemEntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
 import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
@@ -23,6 +26,8 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author guijian
@@ -91,6 +98,7 @@ public class LimitTimeBuyScene {
 
     }
     public List<AldVO> buildAldVO(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
+        perfect(sgFrameworkResponse,sgFrameworkContextItem);
         List<AldVO> aldVOS = new ArrayList<>();
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
         //第几个时间段
@@ -116,10 +124,29 @@ public class LimitTimeBuyScene {
         LOGGER.info("***LimitTimeBuyScene aldVOS****:"+aldVOS);
         return aldVOS;
     }
- /*   public List<T> perfect(SgFrameworkResponse sgFrameworkResponse){
 
-        return null;
-    }*/
+    /**
+     * 完善限购信息
+     * @param sgFrameworkResponse
+     */
+    public void perfect(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
+        List<ItemEntityVO> itemAndContentList = sgFrameworkResponse.getItemAndContentList();
+        Map<String,Object> userParams = sgFrameworkContextItem.getUserParams();
+        if(CollectionUtils.isEmpty(itemAndContentList) || MapUtils.isEmpty(userParams)){
+            return;
+        }
+        itemAndContentList.forEach(itemEntityVO -> {
+            Long itemId = itemEntityVO.getItemId();
+            if(itemId != null){
+                Object object = userParams.get(String.valueOf(itemId));
+                LOGGER.info("***LimitTimeBuyScene object****:"+object);
+                if(itemEntityVO != null && itemEntityVO instanceof Map && object != null){
+                    itemEntityVO.putAll(JSONObject.parseObject(object.toString()));
+                }
+            }
+        });
+
+    }
     public static ItemMetaInfo getItemMetaInfo() {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
