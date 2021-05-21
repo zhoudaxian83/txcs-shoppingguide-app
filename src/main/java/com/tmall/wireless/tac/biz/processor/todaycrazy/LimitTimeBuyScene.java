@@ -51,6 +51,8 @@ public class LimitTimeBuyScene {
     @Autowired
     TacLogger tacLogger;
 
+    private static final String SceneCode = "superMarket_todayCrazy";
+
     public Flowable<TacResult<List<AldVO>>> recommend(Context context) {
         tacLogger.info("***LimitTimeBuyScene context.getParams()****:"+context.getParams());
         LOGGER.info("***LimitTimeBuyScene context.getParams()****:"+context.getParams());
@@ -135,6 +137,7 @@ public class LimitTimeBuyScene {
         itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
+        itemInfoSourceMetaInfoCaptain.setSceneCode(SceneCode);
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
