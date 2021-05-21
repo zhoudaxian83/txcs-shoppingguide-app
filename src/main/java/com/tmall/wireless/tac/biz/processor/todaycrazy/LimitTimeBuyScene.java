@@ -146,10 +146,12 @@ public class LimitTimeBuyScene {
             String itemId = itemEntityVO.getString("itemId");
             LOGGER.info("***LimitTimeBuyScene itemId****:"+itemId);
             if(StringUtils.isNotEmpty(itemId)){
-                Object object = userParams.get(itemId);
-                LOGGER.info("***LimitTimeBuyScene object****:"+object);
+                Object object = userParams.get("itemLimitResult");
                 if(object != null && object instanceof Map){
-                    itemEntityVO.putAll((Map<String,Object>)object);
+                    Object itemIdMap = ((Map<String, Object>)object).get(itemId);
+                    if(object != null && itemIdMap instanceof Map){
+                        itemEntityVO.putAll((Map<String,Object>)itemIdMap);
+                    }
                 }
             }
         });
