@@ -101,8 +101,8 @@ public class LimitTimeBuyScene {
         limitBuyDtos.forEach(limitBuyDto -> {
             AldVO aldVO = new AldVO();
             aldVO.setIsHit(limitBuyDto.getIsHit());
+            aldVO.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
             if(limitBuyDto.getIsHit()){
-                aldVO.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
                 aldVO.setItemAndContentList(sgFrameworkResponse.getItemAndContentList());
             }
             aldVOS.add(aldVO);
