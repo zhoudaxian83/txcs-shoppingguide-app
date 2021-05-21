@@ -132,7 +132,7 @@ public class LimitTimeBuyScene {
     public void perfect(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
         List<ItemEntityVO> itemAndContentList = sgFrameworkResponse.getItemAndContentList();
         LOGGER.info("***LimitTimeBuyScene itemAndContentList.size()****:"+itemAndContentList.size());
-        LOGGER.info("***LimitTimeBuyScene itemAndContentList****:"+itemAndContentList);
+        LOGGER.info("***LimitTimeBuyScene itemAndContentList****:"+sgFrameworkResponse.getItemAndContentList());
         Map<String,Object> userParams = sgFrameworkContextItem.getUserParams();
         if(CollectionUtils.isEmpty(itemAndContentList) || MapUtils.isEmpty(userParams)){
             return;
