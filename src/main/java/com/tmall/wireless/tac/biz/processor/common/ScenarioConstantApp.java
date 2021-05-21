@@ -7,9 +7,7 @@ import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
  */
 public class ScenarioConstantApp extends ScenarioConstant {
 
-
     public static final String SCENARIO_FIRST_PAGE_BANNER_ITEM = "FIRST_PAGE_BANNER_ITEM";
-
 
     /**
      * 分会场猜你喜欢
@@ -17,4 +15,16 @@ public class ScenarioConstantApp extends ScenarioConstant {
     public static final String SCENARIO_SUB_PROMOTION_PAGE = "SUB_PROMOTION_PAGE";
 
     public static final String SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY = "TODAY_CRAZY_LIMIT_TIME_BUY";
+    /**
+     * 五折天
+     */
+    public static final String WU_ZHE_TIAN = "WU_ZHE_TIAN";
+
+
+    /**
+     * 五折天
+     */
+    public static final String SCENE_FIRST_SCREEN_MIND_CONTENT = "SCENE_FIRST_SCREEN_MIND_CONTENT";
+
+
 }
