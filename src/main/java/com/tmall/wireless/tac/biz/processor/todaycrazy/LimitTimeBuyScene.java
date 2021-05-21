@@ -87,6 +87,7 @@ public class LimitTimeBuyScene {
 
     }
     public List<AldVO> buildAldVO(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
+        LOGGER.info("***LimitTimeBuyScene buildAldVO in ****:");
         List<AldVO> aldVOS = new ArrayList<>();
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
         //第几个时间段

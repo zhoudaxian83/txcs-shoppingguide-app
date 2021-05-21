@@ -32,6 +32,8 @@ public class AldInfoUtil {
     public static final String defaultBizType = "sm";
 
     public Map<String,String> getAldInfo(Map<String, Object> params){
+        tacLogger.info("****AldInfoUtil getAldInfo in ***");
+        LOGGER.info("****AldInfoUtil getAldInfo in***");
         Map<String,String> map = Maps.newHashMap();
         if(CollectionUtils.isEmpty(params)){
             return map;
@@ -47,8 +49,8 @@ public class AldInfoUtil {
                 });
             }
         }
-        tacLogger.info("****LimitTimeOriginDataItemQueryExtPt map***"+map);
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt map***"+map);
+        tacLogger.info("****AldInfoUtil map***"+map);
+        LOGGER.info("****AldInfoUtil map***"+map);
         return map;
     }
     public List<ItemEntity> buildItemList(List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS)  {
