@@ -151,13 +151,15 @@ public class LimitTimeBuyScene {
                 if(itemLimitResult != null && itemLimitResult instanceof Map){
                     Object itemIdMap = ((Map<String, Object>)itemLimitResult).get(itemId);
                     LOGGER.info("***LimitTimeBuyScene itemIdMap****:"+itemIdMap);
+                    LOGGER.info("***LimitTimeBuyScene itemIdMap instanceof List****:"+(itemIdMap instanceof List));
+                    LOGGER.info("***LimitTimeBuyScene itemIdMap instanceof Map****:"+(itemIdMap instanceof Map));
                     if(itemIdMap != null && itemIdMap instanceof Map){
                         itemEntityVO.putAll((Map<String,Object>)itemIdMap);
                     }
                 }
             }
         });
-        LOGGER.info("***LimitTimeBuyScene itemEntityVOS****:"+itemEntityVOS);
+        LOGGER.info("***LimitTimeBuyScene itemEntityVOS****:"+JSON.toJSONString(itemEntityVOS));
 
     }
     public static ItemMetaInfo getItemMetaInfo() {
