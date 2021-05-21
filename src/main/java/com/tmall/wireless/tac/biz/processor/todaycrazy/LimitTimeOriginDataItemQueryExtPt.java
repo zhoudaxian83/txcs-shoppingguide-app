@@ -1,14 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.todaycrazy;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import com.alibaba.cola.extension.Extension;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
@@ -16,17 +12,13 @@ import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDT
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
-import com.tmall.txcs.gs.model.item.BizType;
-import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.model.LimitBuyDto;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil;
-import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapSortUtil;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TairUtil;
-import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TimeUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.slf4j.Logger;
@@ -59,7 +51,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
         //第几个时间段
         int index = MapUtil.getIntWithDefault(params,"index",0);
-        tacLogger.info("****LimitTimeOriginDataItemQueryExtPt index***"+index);
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt index***"+index);
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt aldInfoUtil***"+aldInfoUtil);
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt aldInfoUtil***"+aldInfoUtil);
         //ald排期信息

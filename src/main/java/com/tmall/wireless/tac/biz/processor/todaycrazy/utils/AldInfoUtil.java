@@ -77,6 +77,7 @@ public class AldInfoUtil {
      * @return
      */
     public void buildNowTime(LinkedHashMap<Long,Long> allTime,int index,List<LimitBuyDto> limitBuyDtos){
+        LOGGER.info("****AldInfoUtil buildNowTime allTime***"+allTime);
         if(CollectionUtils.isEmpty(allTime)){
             return ;
         }
@@ -98,7 +99,7 @@ public class AldInfoUtil {
                 m++;
             }
         }
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt buildNowTime limitBuyDtos***"+limitBuyDtos);
+        LOGGER.info("****AldInfoUtil buildNowTime limitBuyDtos***"+limitBuyDtos);
     }
     /**
      * 构建时间段
