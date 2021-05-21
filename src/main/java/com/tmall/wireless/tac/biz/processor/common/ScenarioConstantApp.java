@@ -18,6 +18,6 @@ public class ScenarioConstantApp extends ScenarioConstant {
 
     public static final String SCENE_FIRST_SCREEN_MIND_CONTENT = "FIRST_SCREEN_MIND_CONTENT";
 
-    public static final String SCENE_FIRST_SCREEN_MIND_ITEM = "FIRST_SCREEN_MIND_CONTENT";
+    public static final String SCENE_FIRST_SCREEN_MIND_ITEM = "FIRST_SCREEN_MIND_ITEM";
 
 }
