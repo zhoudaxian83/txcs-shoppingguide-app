@@ -34,6 +34,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author guijian
@@ -97,10 +98,12 @@ public class LimitTimeBuyScene {
         List<LimitBuyDto> limitBuyDtos = Lists.newArrayList();
         //打标命中的时间段
         aldInfoUtil.buildNowTime(linkedHashMap,index,limitBuyDtos);
+        AtomicInteger i = new AtomicInteger();
         limitBuyDtos.forEach(limitBuyDto -> {
             AldVO aldVO = new AldVO();
             aldVO.setIsHit(limitBuyDto.getIsHit());
             aldVO.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
+            aldVO.set__pos__(i.getAndIncrement());
             if(limitBuyDto.getIsHit()){
                 aldVO.setItemAndContentList(sgFrameworkResponse.getItemAndContentList());
             }
