@@ -59,6 +59,9 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
         //第几个时间段
         int index = MapUtil.getIntWithDefault(params,"index",0);
+        tacLogger.info("****LimitTimeOriginDataItemQueryExtPt index***"+index);
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt aldInfoUtil***"+aldInfoUtil);
+        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt aldInfoUtil***"+aldInfoUtil);
         //ald排期信息
         Map<String,String> map = aldInfoUtil.getAldInfo(params);
         LinkedHashMap<Long,Long> linkedHashMap = aldInfoUtil.buildTime(map);
