@@ -1,7 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.wzt.utils;
 
-import javax.annotation.Resource;
-
 import com.alibaba.fastjson.JSON;
 
 import com.taobao.tair.DataEntry;
@@ -20,7 +18,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TairUtil {
-    @Resource
+    @Autowired
     private MultiClusterTairManager multiClusterTairManager;
 
     @Autowired
