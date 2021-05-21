@@ -78,12 +78,9 @@ public class AldInfoUtil {
             LOGGER.info("****AldInfoUtil getAldInfo ALD_PARAM***"+params.get(ALD_PARAM));
             Map<String, Object> paramObj = (Map<String, Object>)params.get(ALD_PARAM);
 
-            LOGGER.info("****AldInfoUtil getAldInfo paramObj.get(\"smAreaId\")***"+paramObj.get("smAreaId"));
-            LOGGER.info("****AldInfoUtil getAldInfo paramObj.get(EXTPARAM)***"+paramObj.get(EXTPARAM));
-            LOGGER.info("****AldInfoUtil getAldInfo paramObj.get(EXTPARAM) instanceof Map***" + (paramObj.get(EXTPARAM) instanceof Map));
-            if(paramObj.get(EXTPARAM) != null && paramObj.get(EXTPARAM) instanceof Map){
-                LOGGER.info("****AldInfoUtil paramObj.get(EXTPARAM)***"+paramObj.get(EXTPARAM));
-                index = MapUtil.getIntWithDefault((Map<String, Object>)paramObj.get(EXTPARAM),INDEX,0);
+            if(paramObj.get(EXTPARAM) != null){
+                JSONObject jsonObject = JSONObject.parseObject((String)paramObj.get(EXTPARAM));
+                index = MapUtil.getIntWithDefault((Map<String, Object>)jsonObject.get(EXTPARAM),INDEX,0);
             }
         }
         LOGGER.info("****AldInfoUtil index:***"+index);
