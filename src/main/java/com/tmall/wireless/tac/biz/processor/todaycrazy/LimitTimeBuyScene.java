@@ -100,9 +100,11 @@ public class LimitTimeBuyScene {
         aldInfoUtil.buildNowTime(linkedHashMap,index,limitBuyDtos);
         limitBuyDtos.forEach(limitBuyDto -> {
             AldVO aldVO = new AldVO();
-            aldVO.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
-            aldVO.setItemAndContentList(sgFrameworkResponse.getItemAndContentList());
             aldVO.setIsHit(limitBuyDto.getIsHit());
+            if(limitBuyDto.getIsHit()){
+                aldVO.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
+                aldVO.setItemAndContentList(sgFrameworkResponse.getItemAndContentList());
+            }
             aldVOS.add(aldVO);
         });
         LOGGER.info("***LimitTimeBuyScene aldVOS****:"+aldVOS);

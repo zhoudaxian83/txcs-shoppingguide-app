@@ -21,4 +21,5 @@ public class LimitBuyDto {
     @Getter @Setter
     private Boolean isHit;
 
+
 }
