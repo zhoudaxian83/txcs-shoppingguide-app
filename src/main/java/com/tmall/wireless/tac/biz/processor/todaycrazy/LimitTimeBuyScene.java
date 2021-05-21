@@ -94,7 +94,7 @@ public class LimitTimeBuyScene {
         List<AldVO> aldVOS = new ArrayList<>();
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
         //第几个时间段
-        int index = com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil.getIntWithDefault(params,"index",0);
+        int index = aldInfoUtil.getIndex(params);
         //ald排期信息
         Map<String,String> map = aldInfoUtil.getAldInfo(params);
         LinkedHashMap<Long,Long> linkedHashMap = aldInfoUtil.buildTime(map);

@@ -32,6 +32,7 @@ public class AldInfoUtil {
     private static final String EXTPARAM = "extParam";
     private static final String INDEX = "index";
     private static final String defaultBizType = "sm";
+    private static final int limitBuyNum = 3;
 
     /**
      * 解析ald的排期信息
@@ -60,6 +61,12 @@ public class AldInfoUtil {
         LOGGER.info("****AldInfoUtil map***"+map);
         return map;
     }
+
+    /**
+     * 获取预告序号
+     * @param params
+     * @return
+     */
     public Integer getIndex(Map<String, Object> params){
         int index = 0;
         if(CollectionUtils.isEmpty(params)){
@@ -110,7 +117,7 @@ public class AldInfoUtil {
         //最多取三段 map有序
         int m = 0;
         for(Map.Entry entry : allTime.entrySet()){
-            if((nowTime >= (Long)entry.getKey() && nowTime < (Long)entry.getValue()) || (nowTime <= (Long)entry.getKey() && m < 3)){
+            if((nowTime >= (Long)entry.getKey() && nowTime < (Long)entry.getValue()) || (nowTime <= (Long)entry.getKey() && m < limitBuyNum)){
                 LimitBuyDto limitBuyDto = new LimitBuyDto();
                 limitBuyDto.setStartTime((Long)entry.getKey());
                 limitBuyDto.setEndTime((Long)entry.getValue());
