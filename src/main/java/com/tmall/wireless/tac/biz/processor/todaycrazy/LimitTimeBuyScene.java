@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
-import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
 import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
@@ -15,6 +14,9 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.model.AldVO;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.model.LimitBuyDto;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -25,7 +27,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -38,9 +45,12 @@ public class LimitTimeBuyScene {
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
     @Autowired
+    AldInfoUtil aldInfoUtil;
+
+    @Autowired
     TacLogger tacLogger;
 
-    public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
+    public Flowable<TacResult<List<AldVO>>> recommend(Context context) {
         tacLogger.info("***LimitTimeBuyScene context.getParams()****:"+context.getParams());
         LOGGER.info("***LimitTimeBuyScene context.getParams()****:"+context.getParams());
 
@@ -70,14 +80,34 @@ public class LimitTimeBuyScene {
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-                .map(response -> {
-                    LOGGER.info("LimitTimeBuyScene response.getItemAndContentList().size():"+response.getItemAndContentList().size());
-                    LOGGER.info("LimitTimeBuyScene response.getItemAndContentList():"+response.getItemAndContentList());
-                    return response;
-                }).map(TacResult::newResult)
+                .map(response ->
+                    buildAldVO(response,sgFrameworkContextItem)
+                ).map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
 
     }
+    public List<AldVO> buildAldVO(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
+        List<AldVO> aldVOS = new ArrayList<>();
+        Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
+        //第几个时间段
+        int index = com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil.getIntWithDefault(params,"index",0);
+        //ald排期信息
+        Map<String,String> map = aldInfoUtil.getAldInfo(params);
+        LinkedHashMap<Long,Long> linkedHashMap = aldInfoUtil.buildTime(map);
+        List<LimitBuyDto> limitBuyDtos = Lists.newArrayList();
+        //打标命中的时间段
+        aldInfoUtil.buildNowTime(linkedHashMap,index,limitBuyDtos);
+        limitBuyDtos.forEach(limitBuyDto -> {
+            AldVO aldVO = new AldVO();
+            aldVO.setStartTime(new SimpleDateFormat("HH:mm").format(new Date(limitBuyDto.getStartTime())));
+            aldVO.setItemAndContentList(sgFrameworkResponse.getItemAndContentList());
+            aldVO.setIsHit(limitBuyDto.getIsHit());
+            aldVOS.add(aldVO);
+        });
+        LOGGER.info("***LimitTimeBuyScene aldVOS****:"+aldVOS);
+        return aldVOS;
+    }
+
     public static ItemMetaInfo getItemMetaInfo() {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();

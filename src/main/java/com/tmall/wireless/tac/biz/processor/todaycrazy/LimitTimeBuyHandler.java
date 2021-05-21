@@ -1,8 +1,11 @@
 package com.tmall.wireless.tac.biz.processor.todaycrazy;
 
+import java.util.List;
+
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.model.AldVO;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -25,7 +28,7 @@ public class LimitTimeBuyHandler extends RpmReactiveHandler {
     TacLogger tacLogger;
 
     @Override
-    public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
+    public Flowable<TacResult<List<AldVO>>> executeFlowable(Context context) throws Exception {
         return limitTimeBuyScene.recommend(context);
     }
 }
