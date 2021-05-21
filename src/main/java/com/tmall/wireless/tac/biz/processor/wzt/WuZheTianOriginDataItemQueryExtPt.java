@@ -63,7 +63,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     private static final String LOG_PREFIX = "WuZheTianOriginDataItemQueryExtPt-";
 
-    private static final Long APPID_B2C = 23376L;
+    private static final Long APP_ID = 21431L;
 
     @Autowired
     RecommendSpi recommendSpi;
@@ -116,7 +116,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setLogResult(true);
         recommendRequest.setUserId(userId);
-        recommendRequest.setAppId(APPID_B2C);
+        recommendRequest.setAppId(APP_ID);
         Map<String, String> params = Maps.newHashMap();
         params.put("userItemIdList", Joiner.on(",").join(itemIds));
         recommendRequest.setParams(params);
