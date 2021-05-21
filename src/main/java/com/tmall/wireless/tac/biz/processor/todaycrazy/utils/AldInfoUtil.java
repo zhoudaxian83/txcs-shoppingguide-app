@@ -27,6 +27,7 @@ public class AldInfoUtil {
     TacLogger tacLogger;
 
     public static final String ALD_CONTEXT = "ald_context";
+    public static final String ALD_PARAM = "ald_param";
     public static final String STATIC_SCHEDULE_DATA = "static_schedule_data";
     public static final String defaultBizType = "sm";
 
@@ -37,6 +38,7 @@ public class AldInfoUtil {
         }
         if(params.get(ALD_CONTEXT) != null && params.get(ALD_CONTEXT) instanceof Map){
             LOGGER.info("****AldInfoUtil getAldInfo***"+params.get(ALD_CONTEXT));
+            LOGGER.info("****AldInfoUtil getAldInfo ALD_PARAM***"+params.get(ALD_PARAM));
             Map<String, Object> contextObj = (Map<String, Object>)params.get(ALD_CONTEXT);
             if(contextObj.get(STATIC_SCHEDULE_DATA) != null && contextObj.get(STATIC_SCHEDULE_DATA) instanceof List){
                 List<Map<String,Object>> staticScheduleData = (List<Map<String, Object>>)contextObj.get(STATIC_SCHEDULE_DATA);
