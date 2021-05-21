@@ -13,7 +13,9 @@ public class ScenarioConstantApp extends ScenarioConstant {
      * 分会场猜你喜欢
      */
     public static final String SCENARIO_SUB_PROMOTION_PAGE = "SUB_PROMOTION_PAGE";
-
+    /**
+     * 今日疯抢-限时抢购
+     */
     public static final String SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY = "TODAY_CRAZY_LIMIT_TIME_BUY";
     /**
      * 五折天

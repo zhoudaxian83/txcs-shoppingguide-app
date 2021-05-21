@@ -17,6 +17,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.model.AldVO;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.model.LimitBuyDto;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil;
+import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -111,6 +112,7 @@ public class LimitTimeBuyScene {
             }
             aldVOS.add(aldVO);
         });
+        LOGGER.info("***LimitTimeBuyScene sgFrameworkContextItem.getUserParams()****:"+sgFrameworkContextItem.getUserParams().get(Constant.ITEM_LIMIT_RESULT));
         LOGGER.info("***LimitTimeBuyScene aldVOS****:"+aldVOS);
         return aldVOS;
     }
