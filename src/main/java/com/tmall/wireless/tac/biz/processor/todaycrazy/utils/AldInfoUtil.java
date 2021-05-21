@@ -79,8 +79,11 @@ public class AldInfoUtil {
             Map<String, Object> paramObj = (Map<String, Object>)params.get(ALD_PARAM);
 
             if(paramObj.get(EXTPARAM) != null){
+                LOGGER.info("****AldInfoUtil paramObj.get(EXTPARAM):***"+paramObj.get(EXTPARAM));
                 JSONObject jsonObject = JSONObject.parseObject((String)paramObj.get(EXTPARAM));
-                index = MapUtil.getIntWithDefault((Map<String, Object>)jsonObject.get(EXTPARAM),INDEX,0);
+                LOGGER.info("****AldInfoUtil jsonObject:***"+jsonObject);
+                LOGGER.info("****AldInfoUtil jsonObject.get(INDEX):***"+jsonObject.get(INDEX));
+                index = MapUtil.getIntWithDefault(jsonObject,INDEX,0);
             }
         }
         LOGGER.info("****AldInfoUtil index:***"+index);
