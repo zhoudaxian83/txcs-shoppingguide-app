@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
@@ -75,8 +77,9 @@ public class AldInfoUtil {
         if(params.get(ALD_PARAM) != null && params.get(ALD_PARAM) instanceof Map){
             LOGGER.info("****AldInfoUtil getAldInfo ALD_PARAM***"+params.get(ALD_PARAM));
             Map<String, Object> paramObj = (Map<String, Object>)params.get(ALD_PARAM);
-            LOGGER.info("****AldInfoUtil getAldInfo paramObj***"+paramObj);
-            LOGGER.info("****AldInfoUtil getAldInfo paramObj***"+paramObj.get(EXTPARAM));
+
+            LOGGER.info("****AldInfoUtil getAldInfo paramObj.get(\"smAreaId\")***"+paramObj.get("smAreaId"));
+            LOGGER.info("****AldInfoUtil getAldInfo paramObj.get(EXTPARAM)***"+paramObj.get(EXTPARAM));
             LOGGER.info("****AldInfoUtil getAldInfo paramObj.get(EXTPARAM) instanceof Map***" + (paramObj.get(EXTPARAM) instanceof Map));
             if(paramObj.get(EXTPARAM) != null && paramObj.get(EXTPARAM) instanceof Map){
                 LOGGER.info("****AldInfoUtil paramObj.get(EXTPARAM)***"+paramObj.get(EXTPARAM));
