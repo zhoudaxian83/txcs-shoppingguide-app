@@ -120,13 +120,13 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
     }
 
     private boolean isFirstPage(SgFrameworkContextItem contextItem) {
-        Long index = MapUtil.getLongWithDefault(contextItem.getRequestParams(), "index", 0L);
+        Long index = MapUtil.getLongWithDefault(contextItem.getRequestParams(), "pageStartPosition", 0L);
         return index <= 0L;
     }
 
     private List<Long> getItemIdList(SgFrameworkContextItem contextItem) {
 
-        String entryItemIds = Optional.of(contextItem).map(SgFrameworkContext::getUserParams).map(map -> map.get("entryItemIds")).map(Object::toString).orElse("");
+        String entryItemIds = Optional.of(contextItem).map(SgFrameworkContext::getRequestParams).map(map -> map.get("entryItemIds")).map(Object::toString).orElse("");
         if (StringUtils.isEmpty(entryItemIds)) {
             return Lists.newArrayList();
         }
