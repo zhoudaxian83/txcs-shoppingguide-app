@@ -116,7 +116,10 @@ public class LimitTimeBuyScene {
         LOGGER.info("***LimitTimeBuyScene aldVOS****:"+aldVOS);
         return aldVOS;
     }
+ /*   public List<T> perfect(SgFrameworkResponse sgFrameworkResponse){
 
+        return null;
+    }*/
     public static ItemMetaInfo getItemMetaInfo() {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();

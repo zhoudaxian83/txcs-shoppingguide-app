@@ -26,11 +26,18 @@ public class AldInfoUtil {
     @Autowired
     TacLogger tacLogger;
 
-    public static final String ALD_CONTEXT = "ald_context";
-    public static final String ALD_PARAM = "ald_param";
-    public static final String STATIC_SCHEDULE_DATA = "static_schedule_data";
-    public static final String defaultBizType = "sm";
+    private static final String ALD_CONTEXT = "ald_context";
+    private static final String ALD_PARAM = "ald_param";
+    private static final String STATIC_SCHEDULE_DATA = "static_schedule_data";
+    private static final String EXTPARAM = "extParam";
+    private static final String INDEX = "index";
+    private static final String defaultBizType = "sm";
 
+    /**
+     * 解析ald的排期信息
+     * @param params
+     * @return
+     */
     public Map<String,String> getAldInfo(Map<String, Object> params){
         Map<String,String> map = Maps.newHashMap();
         if(CollectionUtils.isEmpty(params)){
@@ -52,6 +59,21 @@ public class AldInfoUtil {
         tacLogger.info("****AldInfoUtil map***"+map);
         LOGGER.info("****AldInfoUtil map***"+map);
         return map;
+    }
+    public Integer getIndex(Map<String, Object> params){
+        int index = 0;
+        if(CollectionUtils.isEmpty(params)){
+            return index;
+        }
+        if(params.get(ALD_PARAM) != null && params.get(ALD_PARAM) instanceof Map){
+            LOGGER.info("****AldInfoUtil getAldInfo ALD_PARAM***"+params.get(ALD_PARAM));
+            Map<String, Object> paramObj = (Map<String, Object>)params.get(ALD_PARAM);
+            if(paramObj.get(EXTPARAM) != null && paramObj.get(EXTPARAM) instanceof Map){
+                index = MapUtil.getIntWithDefault((Map<String, Object>)paramObj.get(EXTPARAM),INDEX,0);
+            }
+        }
+        LOGGER.info("****AldInfoUtil index:***"+index);
+        return index;
     }
     public List<ItemEntity> buildItemList(List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS)  {
         LOGGER.info("****AldInfoUtil buildItemList***"+columnCenterDataSetItemRuleDTOS.size());
