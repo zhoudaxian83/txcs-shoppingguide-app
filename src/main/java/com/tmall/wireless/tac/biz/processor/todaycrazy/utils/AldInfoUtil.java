@@ -83,7 +83,7 @@ public class AldInfoUtil {
             return ;
         }
         Date date = new Date();
-        Long nowTime = date.getTime()/1000;
+        Long nowTime = date.getTime();
         //最多取三段 map有序
         int m = 0;
         for(Map.Entry entry : allTime.entrySet()){
@@ -126,26 +126,26 @@ public class AldInfoUtil {
             for(int i=0;i<=values.length;i++){
                 if(i == 0){
                     //获取昨天日期开始时间
-                    scheduleDateStart = sdf.parse(format.format(TimeUtil.getDate(date,-1)) + " " + values[values.length-1] + ":00").getTime()/1000;
-                    scheduleDateEnd = sdf.parse(format.format(date) + " " + values[i] + ":00").getTime()/1000;
+                    scheduleDateStart = sdf.parse(format.format(TimeUtil.getDate(date,-1)) + " " + values[values.length-1] + ":00").getTime();
+                    scheduleDateEnd = sdf.parse(format.format(date) + " " + values[i] + ":00").getTime();
 
                 }else if(i == values.length) {
-                    scheduleDateStart = sdf.parse(format.format(date)+ " " + values[i-1] + ":00").getTime()/1000;
+                    scheduleDateStart = sdf.parse(format.format(date)+ " " + values[i-1] + ":00").getTime();
                     //获取明天日期结束时间
-                    scheduleDateEnd = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[0] + ":00").getTime()/1000;
+                    scheduleDateEnd = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[0] + ":00").getTime();
                 }else{
-                    scheduleDateStart = sdf.parse(format.format(date)+ " " + values[i-1] + ":00").getTime()/1000;
-                    scheduleDateEnd = sdf.parse(format.format(date)+ " " + values[i] + ":00").getTime()/1000;
+                    scheduleDateStart = sdf.parse(format.format(date)+ " " + values[i-1] + ":00").getTime();
+                    scheduleDateEnd = sdf.parse(format.format(date)+ " " + values[i] + ":00").getTime();
                 }
                 scheduleTimeMap.put(scheduleDateStart,scheduleDateEnd);
             }
             //预告明天第一场时间段
-            scheduleDateStart = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[0] + ":00").getTime()/1000;
-            scheduleDateEnd = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[1] + ":00").getTime()/1000;
+            scheduleDateStart = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[0] + ":00").getTime();
+            scheduleDateEnd = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[1] + ":00").getTime();
             scheduleTimeMap.put(scheduleDateStart,scheduleDateEnd);
             //预告明天第二场时间段
-            scheduleDateStart = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[1] + ":00").getTime()/1000;
-            scheduleDateEnd = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[2] + ":00").getTime()/1000;
+            scheduleDateStart = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[1] + ":00").getTime();
+            scheduleDateEnd = sdf.parse(format.format(TimeUtil.getDate(date,1))+ " " + values[2] + ":00").getTime();
             scheduleTimeMap.put(scheduleDateStart,scheduleDateEnd);
         }catch (ParseException e) {
             tacLogger.info("LimitTimeOriginDataItemQueryExtPt buildTime构建时间段错误：" + e.getMessage());
