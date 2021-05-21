@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
-
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
@@ -16,6 +14,7 @@ import com.ali.com.google.common.base.Joiner;
 import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
@@ -52,7 +51,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     TacLogger tacLogger;
 
-    @Resource
+    @Autowired
     TairUtil tairUtil;
 
     @Autowired
@@ -76,7 +75,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         DataContext dataContext = new DataContext();
-        Long smAreaId = MapUtil.getLongWithDefault(context.getRequestParams(), "smAreaId", 310100L);
+        //csa默认只为了区分大区，如有其它作用请检查
+        String csa = MapUtil.getStringWithDefault(context.getRequestParams(), "csa",
+            "13278278282_0_38.066124.114.465406_0_0_0_130105_107_0_0_0_130105007_0");
+        Long smAreaId = this.getSmAreaId(AddressUtil.parseCSA(csa).getRegionCode());
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 1L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
@@ -266,6 +268,21 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             resultList = originalList;
         }
         return resultList;
+    }
+
+    /**
+     * 根据regionCode获取coreCityCode,华东打底
+     *
+     * @param regionCode
+     * @return
+     */
+    private Long getSmAreaId(String regionCode) {
+        LogicalArea logicalArea = LogicalArea.ofCode(regionCode);
+        if (logicalArea == null) {
+            return LogicalArea.HD.getCoreCityCode();
+        } else {
+            return logicalArea.getCoreCityCode();
+        }
     }
 
 }

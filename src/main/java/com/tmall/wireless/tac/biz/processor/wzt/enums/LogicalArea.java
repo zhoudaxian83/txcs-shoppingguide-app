@@ -2,8 +2,6 @@ package com.tmall.wireless.tac.biz.processor.wzt.enums;
 
 import java.io.Serializable;
 
-import com.ali.com.google.common.base.Strings;
-
 /**
  * @Author: luoJunChong
  * @Date: 2021/5/17 16:49
@@ -49,45 +47,18 @@ public enum LogicalArea implements Serializable {
         return this.cacheKey;
     }
 
-    public static LogicalArea parseByCode(String code) {
-        if (Strings.isNullOrEmpty(code)) {
-            return null;
-        } else {
-            LogicalArea[] var1 = values();
-            int var2 = var1.length;
-
-            for (int var3 = 0; var3 < var2; ++var3) {
-                LogicalArea area = var1[var3];
-                if (area.getCode().equals(code)) {
-                    return area;
-                }
-            }
-
-            return null;
-        }
-    }
-
-    public static LogicalArea parseByShorthand(String shorthand) {
-        if (Strings.isNullOrEmpty(shorthand)) {
-            return null;
-        } else {
-            LogicalArea[] var1 = values();
-            int var2 = var1.length;
-
-            for (int var3 = 0; var3 < var2; ++var3) {
-                LogicalArea area = var1[var3];
-                if (area.getShorthand().equals(shorthand)) {
-                    return area;
-                }
-            }
-
-            return null;
-        }
-    }
-
     public static LogicalArea ofCoreCityCode(Long coreCityCode) {
         for (LogicalArea area : LogicalArea.values()) {
             if (area.getCoreCityCode() == coreCityCode) {
+                return area;
+            }
+        }
+        return null;
+    }
+
+    public static LogicalArea ofCode(String code) {
+        for (LogicalArea area : LogicalArea.values()) {
+            if (area.getCode().equals(code)) {
                 return area;
             }
         }
