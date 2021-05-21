@@ -49,6 +49,8 @@ public class FirstPageBannerItemInfoScene {
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
+    private static final String SceneCode = "superMarket_todayCrazy";
+
     public Flowable<TacResult<Map<String, BannerVO>>> recommend(Context context) {
 
         LOGGER.error("ITEM_REQUEST:{}", JSON.toJSONString(context));
@@ -177,6 +179,7 @@ public class FirstPageBannerItemInfoScene {
         itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
+        itemInfoSourceMetaInfoCaptain.setSceneCode(SceneCode);
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
