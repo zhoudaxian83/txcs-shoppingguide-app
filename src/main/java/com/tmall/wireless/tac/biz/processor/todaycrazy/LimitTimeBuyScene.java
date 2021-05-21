@@ -134,6 +134,7 @@ public class LimitTimeBuyScene {
      * @param sgFrameworkResponse
      */
     public void perfect(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
+        LOGGER.info("***LimitTimeBuyScene sgFrameworkContextItem****:"+sgFrameworkContextItem);
         if(sgFrameworkResponse == null || sgFrameworkResponse.getItemAndContentList() == null
             || sgFrameworkContextItem == null && sgFrameworkContextItem.getUserParams() == null){
             return;
