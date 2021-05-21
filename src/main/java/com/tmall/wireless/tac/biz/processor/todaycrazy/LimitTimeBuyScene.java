@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -130,7 +131,7 @@ public class LimitTimeBuyScene {
      * @param sgFrameworkResponse
      */
     public void perfect(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
-        LOGGER.info("***LimitTimeBuyScene itemAndContentList****:"+sgFrameworkResponse.getItemAndContentList());
+        LOGGER.info("***LimitTimeBuyScene itemAndContentList****:"+ JSON.toJSONString(sgFrameworkResponse.getItemAndContentList()));
         List<ItemEntityVO> itemAndContentList = sgFrameworkResponse.getItemAndContentList();
         Map<String,Object> userParams = sgFrameworkContextItem.getUserParams();
         if(CollectionUtils.isEmpty(itemAndContentList) || MapUtils.isEmpty(userParams)){
