@@ -24,7 +24,6 @@ import io.reactivex.Flowable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 
 /**
  * @author guijian
@@ -51,14 +50,9 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
         //第几个时间段
         int index = MapUtil.getIntWithDefault(params,"index",0);
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt index***"+index);
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt aldInfoUtil***"+aldInfoUtil);
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt aldInfoUtil***"+aldInfoUtil);
         //ald排期信息
         Map<String,String> map = aldInfoUtil.getAldInfo(params);
         LinkedHashMap<Long,Long> linkedHashMap = aldInfoUtil.buildTime(map);
-        tacLogger.info("****LimitTimeOriginDataItemQueryExtPt map***"+map);
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt map***"+map);
         List<LimitBuyDto> limitBuyDtos = Lists.newArrayList();
         //打标命中的时间段
         aldInfoUtil.buildNowTime(linkedHashMap,index,limitBuyDtos);
@@ -76,7 +70,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList = Lists.newArrayList();
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = getCacheData();
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt pmtRuleDataItemRuleDTOList.size()***"+pmtRuleDataItemRuleDTOList.size());
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt pmtRuleDataItemRuleDTOList***"+pmtRuleDataItemRuleDTOList);
         for(PmtRuleDataItemRuleDTO pmtRule : pmtRuleDataItemRuleDTOList){
             List<ColumnCenterDataSetItemRuleDTO> itemList = pmtRule.getDataSetItemRuleDTOList();
             for(ColumnCenterDataSetItemRuleDTO item : itemList){
@@ -88,10 +81,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             }
         }
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitpmtRuleDataItemRuleDTOList.size()***"+hitpmtRuleDataItemRuleDTOList.size());
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitpmtRuleDataItemRuleDTOList***"+hitpmtRuleDataItemRuleDTOList);
         originDataDTO.setResult(aldInfoUtil.buildItemList(hitpmtRuleDataItemRuleDTOList));
-        tacLogger.info("****LimitTimeOriginDataItemQueryExtPt originDataDTO.getResult()***"+originDataDTO.getResult());
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt originDataDTO.getResult()***"+originDataDTO.getResult());
         return Flowable.just(originDataDTO);
     }
     /**
