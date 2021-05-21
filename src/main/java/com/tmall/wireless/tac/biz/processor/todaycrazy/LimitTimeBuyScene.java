@@ -146,15 +146,18 @@ public class LimitTimeBuyScene {
             String itemId = itemEntityVO.getString("itemId");
             LOGGER.info("***LimitTimeBuyScene itemId****:"+itemId);
             if(StringUtils.isNotEmpty(itemId)){
-                Object object = userParams.get("itemLimitResult");
-                if(object != null && object instanceof Map){
-                    Object itemIdMap = ((Map<String, Object>)object).get(itemId);
-                    if(object != null && itemIdMap instanceof Map){
+                Object itemLimitResult = userParams.get("itemLimitResult");
+                LOGGER.info("***LimitTimeBuyScene itemLimitResult****:"+itemLimitResult);
+                if(itemLimitResult != null && itemLimitResult instanceof Map){
+                    Object itemIdMap = ((Map<String, Object>)itemLimitResult).get(itemId);
+                    LOGGER.info("***LimitTimeBuyScene itemIdMap****:"+itemIdMap);
+                    if(itemIdMap != null && itemIdMap instanceof Map){
                         itemEntityVO.putAll((Map<String,Object>)itemIdMap);
                     }
                 }
             }
         });
+        LOGGER.info("***LimitTimeBuyScene itemEntityVOS****:"+itemEntityVOS);
 
     }
     public static ItemMetaInfo getItemMetaInfo() {
