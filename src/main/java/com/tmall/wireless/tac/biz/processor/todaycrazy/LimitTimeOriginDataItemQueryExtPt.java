@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
+import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterPmtRuleDataSetDTO;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
@@ -21,8 +22,10 @@ import com.tmall.wireless.tac.biz.processor.todaycrazy.model.LimitBuyDto;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TairUtil;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TodayCrazyUtils;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +80,12 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             List<ColumnCenterDataSetItemRuleDTO> itemList = pmtRule.getDataSetItemRuleDTOList();
             LOGGER.info("****LimitTimeOriginDataItemQueryExtPt itemList.size()***"+itemList.size());
             LOGGER.info("****LimitTimeOriginDataItemQueryExtPt JSON.toJSONString(itemList)***"+JSON.toJSONString(itemList));
-            /*pmtRule.getPmtRuleDataSetDTO().getExtension()*/
+            //设置captain
+            ColumnCenterPmtRuleDataSetDTO pmtRuleDataSetDTO = pmtRule.getPmtRuleDataSetDTO();
+            String promotionExtension = pmtRuleDataSetDTO.getExtension();
+            Map<String, Object> extensionMap = TodayCrazyUtils.parseExtension(promotionExtension, "\\|", "\\=", true);
+            String channelKey = MapUtil.getStringWithDefault(extensionMap, "channelKey","");
+
             for(ColumnCenterDataSetItemRuleDTO item : itemList){
                 Long startTime = item.getDataRule().getItemScheduleStartTime().getTime()/1000;
                 Long endTime = item.getDataRule().getItemScheduleEndTime().getTime()/1000;

@@ -43,12 +43,12 @@ public class LimitTimeBuyItemInfoPostProcessorExtPt implements ItemInfoPostProce
     TacLogger tacLogger;
     @Override
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
-        JSONObject itemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
+        /*JSONObject itemLimitResult = this.getItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
         if (itemLimitResult != null) {
             sgFrameworkContextItem.getUserParams().put(Constant.ITEM_LIMIT_RESULT, itemLimitResult);
         } else {
             tacLogger.warn(LOG_PREFIX + "获取限购数据为空");
-        }
+        }*/
         ItemInfoPostProcessorResp itemInfoPostProcessorResp = new ItemInfoPostProcessorResp();
         return Response.success(itemInfoPostProcessorResp);
     }
