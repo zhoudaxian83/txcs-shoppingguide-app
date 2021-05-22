@@ -141,18 +141,13 @@ public class LimitTimeBuyScene {
         }
         List<ItemEntityVO> itemEntityVOS = sgFrameworkResponse.getItemAndContentList();
         Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
-        LOGGER.info("***LimitTimeBuyScene userParams****:"+userParams);
         itemEntityVOS.forEach(itemEntityVO -> {
             String itemId = itemEntityVO.getString("itemId");
-            LOGGER.info("***LimitTimeBuyScene itemId****:"+itemId);
             Object itemLimitResult = userParams.get("itemLimitResult");
-            LOGGER.info("***LimitTimeBuyScene itemLimitResult****:"+itemLimitResult);
             if(StringUtils.isNotEmpty(itemId) && itemLimitResult != null && itemLimitResult instanceof Map){
                 Object itemIdLists = ((Map<String, Object>)itemLimitResult).get(itemId);
-                LOGGER.info("***LimitTimeBuyScene itemIdLists****:"+itemIdLists);
                 if(itemIdLists != null && itemIdLists instanceof List){
                     ((List<?>)itemIdLists).forEach(itemIdMap -> {
-                        LOGGER.info("***LimitTimeBuyScene itemIdMap instanceof Map****:"+(itemIdMap instanceof Map));
                         if(itemIdMap != null && itemIdMap instanceof Map){
                             itemEntityVO.putAll((Map<String,Object>)itemIdMap);
                         }

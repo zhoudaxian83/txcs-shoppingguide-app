@@ -75,17 +75,11 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList = Lists.newArrayList();
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = getCacheData();
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt pmtRuleDataItemRuleDTOList.size()***"+pmtRuleDataItemRuleDTOList.size());
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt JSON.toJSONString(pmtRuleDataItemRuleDTOList)***"+ JSON.toJSONString(pmtRuleDataItemRuleDTOList));
         for(PmtRuleDataItemRuleDTO pmtRule : pmtRuleDataItemRuleDTOList){
             List<ColumnCenterDataSetItemRuleDTO> itemList = pmtRule.getDataSetItemRuleDTOList();
             LOGGER.info("****LimitTimeOriginDataItemQueryExtPt itemList.size()***"+itemList.size());
             LOGGER.info("****LimitTimeOriginDataItemQueryExtPt JSON.toJSONString(itemList)***"+JSON.toJSONString(itemList));
-            //设置captain
-            ColumnCenterPmtRuleDataSetDTO pmtRuleDataSetDTO = pmtRule.getPmtRuleDataSetDTO();
-            String promotionExtension = pmtRuleDataSetDTO.getExtension();
-            Map<String, Object> extensionMap = TodayCrazyUtils.parseExtension(promotionExtension, "\\|", "\\=", true);
-            String channelKey = MapUtil.getStringWithDefault(extensionMap, "channelKey","");
-
+            setChannelKey(sgFrameworkContextItem,pmtRule);
             for(ColumnCenterDataSetItemRuleDTO item : itemList){
                 Long startTime = item.getDataRule().getItemScheduleStartTime().getTime()/1000;
                 Long endTime = item.getDataRule().getItemScheduleEndTime().getTime()/1000;
@@ -115,4 +109,26 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         return pmtRuleList;
     }
 
+    /**
+     * 设置captain channelKey  渠道立减
+     * @param sgFrameworkContextItem
+     * @param pmtRule
+     */
+    public void setChannelKey(SgFrameworkContextItem sgFrameworkContextItem,PmtRuleDataItemRuleDTO pmtRule){
+        ColumnCenterPmtRuleDataSetDTO pmtRuleDataSetDTO = pmtRule.getPmtRuleDataSetDTO();
+        String promotionExtension = pmtRuleDataSetDTO.getExtension();
+        Map<String, Object> extensionMap = TodayCrazyUtils.parseExtension(promotionExtension, "\\|", "\\=", true);
+        String channelKey = MapUtil.getStringWithDefault(extensionMap, "channelKey","panic_buying_today");
+        sgFrameworkContextItem.getItemMetaInfo().getItemGroupRenderInfoList().forEach(itemGroupMetaInfo -> {
+            itemGroupMetaInfo.getItemInfoSourceMetaInfos().forEach(itemInfoSourceMetaInfo -> {
+                if(itemInfoSourceMetaInfo.getSourceName() != null && "captain".equals(itemInfoSourceMetaInfo.getSourceName())){
+                    //todo 设置captain channelKey  渠道立减
+                    //priceRequest.setExtraParams(Collections.singletonMap("umpChannel", channelKey));
+                    //itemInfoSourceMetaInfo
+                }
+            });
+        });
+
+
+    }
 }
