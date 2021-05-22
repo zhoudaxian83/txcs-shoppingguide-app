@@ -72,6 +72,8 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt pmtRuleDataItemRuleDTOList.size()***"+pmtRuleDataItemRuleDTOList.size());
         for(PmtRuleDataItemRuleDTO pmtRule : pmtRuleDataItemRuleDTOList){
             List<ColumnCenterDataSetItemRuleDTO> itemList = pmtRule.getDataSetItemRuleDTOList();
+            LOGGER.info("****LimitTimeOriginDataItemQueryExtPt itemList.size()***"+itemList.size());
+            /*pmtRule.getPmtRuleDataSetDTO().getExtension()*/
             for(ColumnCenterDataSetItemRuleDTO item : itemList){
                 Long startTime = item.getDataRule().getItemScheduleStartTime().getTime()/1000;
                 Long endTime = item.getDataRule().getItemScheduleEndTime().getTime()/1000;
