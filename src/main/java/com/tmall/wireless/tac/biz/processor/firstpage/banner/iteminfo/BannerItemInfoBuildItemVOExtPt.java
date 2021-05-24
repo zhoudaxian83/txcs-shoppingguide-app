@@ -14,6 +14,8 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.ItemInfoBySourceDTOInv;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Created by yangqing.byq on 2021/5/1.
  */
@@ -39,10 +41,11 @@ public class BannerItemInfoBuildItemVOExtPt implements BuildItemVOExtPt {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOMain) {
                 hasMainSource = true;
+                canBuy = canBuy((ItemInfoBySourceDTOMain)itemInfoBySourceDTO);
             }
-            if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOInv) {
-                canBuy = ((ItemInfoBySourceDTOInv) itemInfoBySourceDTO).isCanBuy();
-            }
+//            if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOInv) {
+//                canBuy = ((ItemInfoBySourceDTOInv) itemInfoBySourceDTO).isCanBuy();
+//            }
             itemEntityVO.putAll(itemInfoBySourceDTO.getItemInfoVO());
         }
 
@@ -54,5 +57,9 @@ public class BannerItemInfoBuildItemVOExtPt implements BuildItemVOExtPt {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
         return Response.success(itemEntityVO);
+    }
+
+    private boolean canBuy(ItemInfoBySourceDTOMain itemInfoBySourceDTO) {
+        return Optional.of(itemInfoBySourceDTO).map(ItemInfoBySourceDTOMain::getItemDTO).map(ItemDataDTO::isCanBuy).orElse(true);
     }
 }
