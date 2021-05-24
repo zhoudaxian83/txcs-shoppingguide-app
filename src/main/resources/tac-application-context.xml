@@ -18,11 +18,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoOriginDataItemQueryExtPt"/>
 
 
-    <bean class="com.tmall.wireless.tac.biz.processor.gcsfeeds.GcsfeedsContentOriginDataRequestExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.gcsfeeds.GcsfeedsContentOriginDataFailProcessorExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.gcsfeeds.GcsfeedsContentInfoQueryExtPt"/>
-
-
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.ItemInfoBySourceProcessorInventory"/>
 
 
