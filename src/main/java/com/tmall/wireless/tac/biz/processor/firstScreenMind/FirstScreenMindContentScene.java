@@ -87,6 +87,7 @@ public class FirstScreenMindContentScene {
                         response.setExtInfos(Maps.newHashMap());
                     }
                     response.getExtInfos().put("propertyMap", propertyMap);
+                    LOGGER.info("FirstScreenMindContentScene JSON.toJSONString(response)"+JSON.toJSONString(response));
                     return response;
                 })
                 .map(TacResult::newResult)
