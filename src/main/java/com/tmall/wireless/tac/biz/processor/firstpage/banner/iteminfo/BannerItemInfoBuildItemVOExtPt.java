@@ -50,7 +50,7 @@ public class BannerItemInfoBuildItemVOExtPt implements BuildItemVOExtPt {
         }
 
         if (!canBuy) {
-            return Response.fail("ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE");
+            return Response.fail("ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F");
         }
 
         if (!hasMainSource) {
