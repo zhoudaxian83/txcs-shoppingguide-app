@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.youbaozang;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.taobao.config.client.utils.MapUtils;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -83,8 +84,8 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
 
 
         PageInfoDO pageInfoDO = new PageInfoDO();
-        pageInfoDO.setIndex(0);
-        pageInfoDO.setPageSize(20);
+        pageInfoDO.setIndex(MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, 0L).intValue());
+        pageInfoDO.setPageSize(MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.PAGE_SIZE, 0L).intValue());
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
