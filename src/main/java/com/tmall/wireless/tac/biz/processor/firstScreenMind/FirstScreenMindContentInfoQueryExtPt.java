@@ -67,9 +67,10 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
         /*场景详情缓存前缀*/
         String pKey = "txcs_scene_detail_v2";
         Map<Long, ContentInfoDTO> contentDTOMap = Maps.newHashMap();
+        LOGGER.info("***********FirstScreenMindContentInfoQueryExtPt sgFrameworkContextContent*******:"+sgFrameworkContextContent);
         try {
             List<ContentEntity> contentEntities  = Optional.of(sgFrameworkContextContent).map(SgFrameworkContextContent::getContentEntityOriginDataDTO).map(OriginDataDTO::getResult).orElse(Lists.newArrayList());
-
+            LOGGER.info("***********FirstScreenMindContentInfoQueryExtPt contentEntities*******:"+contentEntities);
             List<String> sKeyList = new ArrayList<>();
             for (ContentEntity contentEntity : contentEntities) {
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
