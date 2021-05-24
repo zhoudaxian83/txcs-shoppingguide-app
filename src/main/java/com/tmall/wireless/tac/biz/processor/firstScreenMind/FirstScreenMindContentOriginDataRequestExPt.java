@@ -75,7 +75,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
             params.put("commerce", "B2C");
             params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(
-                SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
+                SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList(107L))));
             params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams)
                 .map(
                     LocParams::getSmAreaId).orElse(0L).toString());
