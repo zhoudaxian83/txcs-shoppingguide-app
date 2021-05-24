@@ -74,11 +74,11 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
                     Collectors.toList());
             params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
             params.put("commerce", "B2C");
-            if(sgFrameworkContextContent.getUserDO().getUserId() == 0L){
-                sgFrameworkContextContent.getLocParams().setRegionCode(107L);
-            }
             params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(
                 SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
+            if(params.get("regionCode") == null || "".equals(params.get("regionCode") )){
+                params.put("regionCode","107");
+            }
             params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams)
                 .map(
                     LocParams::getSmAreaId).orElse(0L).toString());
