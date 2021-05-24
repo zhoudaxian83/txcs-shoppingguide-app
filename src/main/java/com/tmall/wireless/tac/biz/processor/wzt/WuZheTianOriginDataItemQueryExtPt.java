@@ -130,7 +130,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private List<Long> getOriginalRecommend(Long smAreaId) {
         List<Long> items = null;
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
-        if (pmtRuleDataItemRuleDTOS == null) {
+        if (CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOS)) {
+            tacLogger.info(LOG_PREFIX + "getOriginalRecommend获取tair原始数据为空，请检查tair数据源配置");
             return Lists.newArrayList();
         } else {
             try {
