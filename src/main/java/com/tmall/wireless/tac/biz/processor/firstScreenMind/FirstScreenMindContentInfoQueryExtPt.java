@@ -74,6 +74,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             for (ContentEntity contentEntity : contentEntities) {
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
             }
+            LOGGER.info("***********FirstScreenMindContentInfoQueryExtPt sKeyList*******:"+sKeyList);
             Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
             tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+ JSON.toJSONString(mgetResult));
             LOGGER.info("***********mgetResult.getValue().size()*******:"+mgetResult.getValue().size());
