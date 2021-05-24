@@ -25,6 +25,8 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusines
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Enviroment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,7 @@ import org.springframework.stereotype.Service;
         scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
 @Service
 public class FirstScreenMindContentOriginDataRequestExPt implements ContentOriginDataRequestExtPt {
+    Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindContentOriginDataRequestExPt.class);
 
     @Autowired
     TacLogger tacLogger;
