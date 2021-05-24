@@ -1,6 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -73,8 +75,8 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
             }
             Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+mgetResult.toString());
-            LOGGER.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+mgetResult.toString());
+            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+ JSON.toJSONString(mgetResult));
+            LOGGER.info("***********FirstScreenMindContentInfoQueryExtPt JSON.toJSONString(mgetResult))*******:"+JSON.toJSONString(mgetResult)));
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail(""));
             }
