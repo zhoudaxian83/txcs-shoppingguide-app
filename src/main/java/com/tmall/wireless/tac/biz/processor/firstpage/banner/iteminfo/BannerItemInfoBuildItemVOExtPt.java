@@ -60,6 +60,9 @@ public class BannerItemInfoBuildItemVOExtPt implements BuildItemVOExtPt {
     }
 
     private boolean canBuy(ItemInfoBySourceDTOMain itemInfoBySourceDTO) {
-        return Optional.of(itemInfoBySourceDTO).map(ItemInfoBySourceDTOMain::getItemDTO).map(ItemDataDTO::isCanBuy).orElse(true);
+        Boolean canBuy = Optional.of(itemInfoBySourceDTO).map(ItemInfoBySourceDTOMain::getItemDTO).map(ItemDataDTO::isCanBuy).orElse(true);
+        Boolean sellOut = Optional.of(itemInfoBySourceDTO).map(ItemInfoBySourceDTOMain::getItemDTO).map(ItemDataDTO::isSellOut).orElse(false);
+        return canBuy && !sellOut;
+
     }
 }
