@@ -17,6 +17,7 @@ import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -106,8 +107,17 @@ public class FirstScreenMindItemScene {
                 userDO.setCna(cna);
             }
         }
+        // 压测用户id
+        fixUserId4Test(userDO);
         return userDO;
     }
+
+    private void fixUserId4Test(UserDO userDO) {
+        if (PressureTestUtil.isFromTest()) {
+            userDO.setUserId(PressureTestUtil.pressureTestUserId());
+        }
+    }
+
     public ItemMetaInfo getRecommendItemMetaInfo() {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
