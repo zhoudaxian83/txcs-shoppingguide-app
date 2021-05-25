@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -80,7 +81,7 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
         sgFrameworkContextItem.setEntitySetParams(entitySetParams);
 
         sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
-        sgFrameworkContextItem.setItemMetaInfo(this.getItemMetaInfo());
+        sgFrameworkContextItem.setItemMetaInfo(this.getItemMetaInfo(itemSetId));
 
 
         PageInfoDO pageInfoDO = new PageInfoDO();
@@ -93,7 +94,7 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
                 .onErrorReturn(r -> TacResult.errorResult(""));
     }
 
-    public static ItemMetaInfo getItemMetaInfo() {
+    public static ItemMetaInfo getItemMetaInfo(Long itemSetId) {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
@@ -116,7 +117,7 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.treasure.common");
-        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo());
+        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(itemSetId));
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
@@ -132,11 +133,11 @@ public class YouBaoZangHandler extends RpmReactiveHandler<SgFrameworkResponse<En
         return itemMetaInfo;
     }
 
-    private static DataTubeMateInfo buildDataTubeMateInfo() {
+    private static DataTubeMateInfo buildDataTubeMateInfo(Long itemSetId) {
 
 
         DataTubeMateInfo dataTubeMateInfo = new DataTubeMateInfo();
-        dataTubeMateInfo.setActivityId("301746");
+        dataTubeMateInfo.setActivityId(String.valueOf(itemSetId));
         dataTubeMateInfo.setChannelName("itemExtLdb");
         dataTubeMateInfo.setDataKeyList(dataTubeKeyList.stream().map(k -> {
             DataTubeKey dataTubeKey = new DataTubeKey();
