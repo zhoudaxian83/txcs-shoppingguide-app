@@ -25,6 +25,8 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusines
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Enviroment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,7 @@ import org.springframework.stereotype.Service;
         scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
 @Service
 public class FirstScreenMindContentOriginDataRequestExPt implements ContentOriginDataRequestExtPt {
+    Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindContentOriginDataRequestExPt.class);
 
     @Autowired
     TacLogger tacLogger;
@@ -54,8 +57,13 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         if (requestParams == null || requestParams.isEmpty()) {
             return null;
         }
+        List<Long> contentSetIdList = Lists.newArrayList();
+        if(isItemFeeds(requestParams)){
+            contentSetIdList = getContentSetIdListItemFeeds(requestParams);
+        }else {
+            contentSetIdList = getContentSetIdList(requestParams);
+        }
 
-        List<Long> contentSetIdList = getContentSetIdList(requestParams);
 
         if (isMind) {
             RecommendRequest tppRequest = new RecommendRequest();
@@ -73,6 +81,9 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             params.put("commerce", "B2C");
             params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(
                 SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
+            if(params.get("regionCode") == null || "".equals(params.get("regionCode") )){
+                params.put("regionCode","107");
+            }
             params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams)
                 .map(
                     LocParams::getSmAreaId).orElse(0L).toString());
@@ -81,9 +92,10 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             params.put("pageSize", Optional.ofNullable(sgFrameworkContextContent).map(
                 SgFrameworkContext::getUserPageInfo).map(
                 PageInfoDO::getPageSize).orElse(20).toString());
-            params.put("index", Optional.ofNullable(sgFrameworkContextContent).map(
-                    SgFrameworkContext::getUserPageInfo).map(
-                    PageInfoDO::getIndex).orElse(0).toString());
+            Integer index = Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserPageInfo).map(
+                PageInfoDO::getIndex).orElse(0);
+            params.put("index", String.valueOf(index));
+            params.put("isFirstPage", index > 0 ? "false" : "true");
             if (Enviroment.PRE.equals(RpmContants.enviroment)) {
                 params.put("_devEnv_", "1");
             }
@@ -170,7 +182,18 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         } else if (isFixPositionBanner instanceof String && "true".equals(isFixPositionBanner)) {
             isMind = true;
         }
+        if(isItemFeeds(requestParams)){
+            isMind = false;
+        }
         return isMind;
+    }
+    private boolean isItemFeeds(Map<String, Object> requestParams){
+        Boolean isItemFeeds = false;
+        String requestFrom = MapUtil.getStringWithDefault(requestParams,"requestFrom","");
+        if("itemFeeds".equals(requestFrom)){
+            isItemFeeds = true;
+        }
+        return isItemFeeds;
     }
 
     private List<Long> getMindContentSetIdList(Map<String, Object> requestParams) {
@@ -189,6 +212,30 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             .getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING, 0L));
         result.add(
             MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RECIPE, 0L));
+        result.add(
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_BRAND, 0L));
+        result.add(
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_MIND, 0L));
+        result.add(
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_O2O, 0L));
+        result.add(
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, 0L));
+
+        return result.stream().filter(contentSetId -> contentSetId > 0).collect(Collectors.toList());
+    }
+
+    /**
+     * 承接页不出菜谱
+     * @param requestParams
+     * @return
+     */
+    private List<Long> getContentSetIdListItemFeeds(Map<String, Object> requestParams) {
+
+        List<Long> result = Lists.newArrayList();
+        result.add(MapUtil
+            .getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING, 0L));
+        /*result.add(
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RECIPE, 0L));*/
         result.add(
             MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_BRAND, 0L));
         result.add(

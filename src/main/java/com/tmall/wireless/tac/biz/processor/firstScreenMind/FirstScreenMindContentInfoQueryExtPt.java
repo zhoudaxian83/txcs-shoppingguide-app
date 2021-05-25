@@ -1,6 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -67,13 +69,13 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
         Map<Long, ContentInfoDTO> contentDTOMap = Maps.newHashMap();
         try {
             List<ContentEntity> contentEntities  = Optional.of(sgFrameworkContextContent).map(SgFrameworkContextContent::getContentEntityOriginDataDTO).map(OriginDataDTO::getResult).orElse(Lists.newArrayList());
-
             List<String> sKeyList = new ArrayList<>();
             for (ContentEntity contentEntity : contentEntities) {
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
             }
             Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-            tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+mgetResult.toString());
+            tacLogger.info("***********mgetResult.getValue().size()*******:"+mgetResult.getValue().size());
+            LOGGER.info("***********mgetResult.getValue().size()*******:"+mgetResult.getValue().size());
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail(""));
             }
@@ -111,7 +113,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     contentInfo.put(frontBackMapEnum.getFront(),tairPropertyMap.get(frontBackMapEnum.getBack()));
                 }
                 /**内容类型*/
-                String type = GcsSceneType.of(tairSceneDTO.getType()).name();
+                String type = SceneType.of(tairSceneDTO.getType()).name();
                 String marketChannel = GcsMarketChannel.of(tairSceneDTO.getMarketChannel()).name();
                 /**后台没有类型，那么就直接返回普通场景打底*/
                 if(RenderCheckUtil.StringEmpty(type) || RenderCheckUtil.StringEmpty(marketChannel)){

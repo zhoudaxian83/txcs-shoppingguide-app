@@ -56,10 +56,11 @@ public class FirstScreenMindContentScene {
 
 
         PageInfoDO pageInfoDO = new PageInfoDO();
-        pageInfoDO.setIndex(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
+        pageInfoDO.setIndex(Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
         pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
         tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
+        LOGGER.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> {
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
@@ -86,6 +87,7 @@ public class FirstScreenMindContentScene {
                         response.setExtInfos(Maps.newHashMap());
                     }
                     response.getExtInfos().put("propertyMap", propertyMap);
+                    LOGGER.info("FirstScreenMindContentScene JSON.toJSONString(response)"+JSON.toJSONString(response));
                     return response;
                 })
                 .map(TacResult::newResult)
@@ -102,6 +104,8 @@ public class FirstScreenMindContentScene {
         UserDO userDO = new UserDO();
         userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
+        tacLogger.info("****FirstScreenMindContentScene context.getParams().get(\"cookies\"))***:"+context.getParams().get("cookies"));
+        LOGGER.info("****FirstScreenMindContentScene context.getParams().get(\"cookies\"))***:"+context.getParams().get("cookies"));
         if (MapUtils.isNotEmpty(context.getParams())) {
             Object cookies = context.getParams().get("cookies");
             if (cookies != null && cookies instanceof Map) {
