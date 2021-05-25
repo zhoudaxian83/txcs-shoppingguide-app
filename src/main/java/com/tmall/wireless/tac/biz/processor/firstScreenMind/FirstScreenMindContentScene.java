@@ -14,10 +14,10 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
-import com.tmall.wireless.tac.client.domain.DeviceInfo;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.MapUtils;
@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -110,8 +109,18 @@ public class FirstScreenMindContentScene {
                 userDO.setCna(cna);
             }
         }
+        // 压测流量设置用户id
+        fixUserId4Test(userDO);
         return userDO;
     }
+
+    private void fixUserId4Test(UserDO userDO) {
+        if (PressureTestUtil.isFromTest()) {
+            userDO.setUserId(PressureTestUtil.pressureTestUserId());
+        }
+    }
+
+
     public ContentMetaInfo getContentMetaInfo() {
         ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
