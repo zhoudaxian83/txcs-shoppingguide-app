@@ -113,7 +113,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     contentInfo.put(frontBackMapEnum.getFront(),tairPropertyMap.get(frontBackMapEnum.getBack()));
                 }
                 /**内容类型*/
-                String type = GcsSceneType.of(tairSceneDTO.getType()).name();
+                String type = SceneType.of(tairSceneDTO.getType()).name();
                 String marketChannel = GcsMarketChannel.of(tairSceneDTO.getMarketChannel()).name();
                 /**后台没有类型，那么就直接返回普通场景打底*/
                 if(RenderCheckUtil.StringEmpty(type) || RenderCheckUtil.StringEmpty(marketChannel)){
