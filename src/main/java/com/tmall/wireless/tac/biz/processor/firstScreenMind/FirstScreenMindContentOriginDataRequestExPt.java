@@ -92,9 +92,10 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             params.put("pageSize", Optional.ofNullable(sgFrameworkContextContent).map(
                 SgFrameworkContext::getUserPageInfo).map(
                 PageInfoDO::getPageSize).orElse(20).toString());
-            params.put("index", Optional.ofNullable(sgFrameworkContextContent).map(
-                    SgFrameworkContext::getUserPageInfo).map(
-                    PageInfoDO::getIndex).orElse(0).toString());
+            Integer index = Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserPageInfo).map(
+                PageInfoDO::getIndex).orElse(0);
+            params.put("index", String.valueOf(index));
+            params.put("isFirstPage", index > 0 ? "false" : "true");
             if (Enviroment.PRE.equals(RpmContants.enviroment)) {
                 params.put("_devEnv_", "1");
             }
