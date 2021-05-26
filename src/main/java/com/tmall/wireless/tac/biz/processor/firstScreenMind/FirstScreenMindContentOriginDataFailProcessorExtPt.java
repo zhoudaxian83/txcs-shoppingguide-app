@@ -22,10 +22,11 @@ import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
-import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -39,6 +40,8 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
     Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindContentOriginDataFailProcessorExtPt.class);
     @Resource
     TairFactorySpi tairFactorySpi;
+    @Autowired
+    TacLogger tacLogger;
 
     /*场景内容兜底缓存前缀*/
     private static final String pKey = "txcs_scene_collection_v1";
@@ -47,6 +50,8 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
 
     @Override
     public OriginDataDTO<ContentEntity> process(ContentFailProcessorRequest contentFailProcessorRequest) {
+        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():" + contentFailProcessorRequest.getContentEntityOriginDataDTO());
+        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():"+contentFailProcessorRequest.getContentEntityOriginDataDTO());
         Map<String, Object> requestParams = contentFailProcessorRequest.getSgFrameworkContextContent().getRequestParams();
         OriginDataDTO<ContentEntity> originDataDTO = contentFailProcessorRequest.getContentEntityOriginDataDTO();
         boolean isSuccess = checkSuccess(originDataDTO);
@@ -92,6 +97,8 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             });
             originDataDTO.getResult().add(contentEntity);
         }
+        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt originDataDTO:"+originDataDTO);
+        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt originDataDTO:"+originDataDTO);
         return originDataDTO;
     }
 
