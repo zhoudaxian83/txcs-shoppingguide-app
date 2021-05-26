@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,15 +54,13 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():"+contentFailProcessorRequest.getContentEntityOriginDataDTO());
         Map<String, Object> requestParams = contentFailProcessorRequest.getSgFrameworkContextContent().getRequestParams();
         OriginDataDTO<ContentEntity> originDataDTO = contentFailProcessorRequest.getContentEntityOriginDataDTO();
-        /*boolean isSuccess = checkSuccess(originDataDTO);
+        boolean isSuccess = checkSuccess(originDataDTO);
         if(isSuccess){
             return originDataDTO;
-        }*/
+        }
         List<String> sKeyList = new ArrayList<>();
         sKeyList = getContentSetIdList(requestParams);
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
-        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt multiClusterTairManager:"+multiClusterTairManager);
-        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt multiClusterTairManager"+multiClusterTairManager);
         Result<Map<Object, Result<DataEntry>>> labelSceneResult = null;
         try{
             labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
@@ -72,14 +69,11 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt e.getMessage():"+e.getMessage());
         }
 
-        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt JSON.toJSONString(labelSceneResult):" + labelSceneResult);
-        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt JSON.toJSONString(labelSceneResult):"+labelSceneResult);
-        if(!labelSceneResult.isSuccess()){
+        if(labelSceneResult == null || !labelSceneResult.isSuccess()){
             LOGGER.error("FirstScreenMindContentOriginDataFailProcessorExtPt sKeyList:"+sKeyList+",labelSceneResult:"+ JSON.toJSONString(labelSceneResult));
             tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt sKeyList:"+sKeyList+",labelSceneResult:"+ JSON.toJSONString(labelSceneResult));
             return contentFailProcessorRequest.getContentEntityOriginDataDTO();
         }
-        Map<String,List<GcsTairContentDTO>> tairSceneDTOMap = new HashMap<>();
         Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
         //内容集list-圈品集list-商品
         for(Object sKey : resultMap.keySet()) {
