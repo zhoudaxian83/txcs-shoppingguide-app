@@ -64,11 +64,14 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt multiClusterTairManager:"+multiClusterTairManager);
         tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt multiClusterTairManager"+multiClusterTairManager);
-        Result<Map<Object, Result<DataEntry>>> labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
+        Result<Map<Object, Result<DataEntry>>> labelSceneResult = null;
+        try{
+            labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
+        }catch (Exception e){
+            LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt e.getMessage():"+e.getMessage());
+            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt e.getMessage():"+e.getMessage());
+        }
 
-
-        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt JSON.toJSONString(labelSceneResult) in:");
-        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt JSON.toJSONString(labelSceneResult) in:");
         LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt JSON.toJSONString(labelSceneResult):" + labelSceneResult);
         tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt JSON.toJSONString(labelSceneResult):"+labelSceneResult);
         if(!labelSceneResult.isSuccess()){
