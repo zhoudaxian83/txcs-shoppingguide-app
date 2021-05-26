@@ -61,6 +61,8 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         List<String> sKeyList = new ArrayList<>();
         sKeyList = getContentSetIdList(requestParams);
         Result<Map<Object, Result<DataEntry>>> labelSceneResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().prefixGets(labelSceneNamespace, pKey,sKeyList);
+        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt JSON.toJSONString(labelSceneResult):" + JSON.toJSONString(labelSceneResult));
+        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt JSON.toJSONString(labelSceneResult):"+JSON.toJSONString(labelSceneResult));
         if(!labelSceneResult.isSuccess()){
             LOGGER.error("FirstScreenMindContentOriginDataFailProcessorExtPt sKeyList:"+sKeyList+",labelSceneResult:"+ JSON.toJSONString(labelSceneResult));
             return contentFailProcessorRequest.getContentEntityOriginDataDTO();
