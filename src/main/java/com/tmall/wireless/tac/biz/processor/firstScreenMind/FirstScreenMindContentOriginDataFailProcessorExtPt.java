@@ -123,7 +123,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_O2O, ""));
         result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, ""));
 
-        return result.stream().filter(contentSetId -> contentSetId != "" && contentSetId != "0").collect(Collectors.toList());
+        return result.stream().filter(contentSetId -> !("".equals(contentSetId) || "0".equals(contentSetId))).collect(Collectors.toList());
     }
     protected <T extends EntityDTO> boolean checkSuccess(OriginDataDTO<T> originDataDTO) {
         return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult());
