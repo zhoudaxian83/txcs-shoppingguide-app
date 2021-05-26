@@ -63,6 +63,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         sKeyList = getContentSetIdList(requestParams);
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt multiClusterTairManager:"+multiClusterTairManager);
+        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt multiClusterTairManager"+multiClusterTairManager);
         Result<Map<Object, Result<DataEntry>>> labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
 
 
