@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
+import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tmall.aselfcommon.model.gcs.domain.GcsTairContentDTO;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ContentFailProcessorRequest;
@@ -60,12 +61,18 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         }*/
         List<String> sKeyList = new ArrayList<>();
         sKeyList = getContentSetIdList(requestParams);
-        Result<Map<Object, Result<DataEntry>>> labelSceneResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().prefixGets(labelSceneNamespace, pKey,sKeyList);
+        MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
+        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt multiClusterTairManager:"+multiClusterTairManager);
+        Result<Map<Object, Result<DataEntry>>> labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
+
+
         LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt JSON.toJSONString(labelSceneResult) in:");
+        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt JSON.toJSONString(labelSceneResult) in:");
         LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt JSON.toJSONString(labelSceneResult):" + labelSceneResult);
         tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt JSON.toJSONString(labelSceneResult):"+labelSceneResult);
         if(!labelSceneResult.isSuccess()){
             LOGGER.error("FirstScreenMindContentOriginDataFailProcessorExtPt sKeyList:"+sKeyList+",labelSceneResult:"+ JSON.toJSONString(labelSceneResult));
+            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt sKeyList:"+sKeyList+",labelSceneResult:"+ JSON.toJSONString(labelSceneResult));
             return contentFailProcessorRequest.getContentEntityOriginDataDTO();
         }
         Map<String,List<GcsTairContentDTO>> tairSceneDTOMap = new HashMap<>();
