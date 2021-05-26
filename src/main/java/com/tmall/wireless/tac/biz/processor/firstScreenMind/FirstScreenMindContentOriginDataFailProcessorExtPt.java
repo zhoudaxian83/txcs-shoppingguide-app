@@ -54,10 +54,10 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():"+contentFailProcessorRequest.getContentEntityOriginDataDTO());
         Map<String, Object> requestParams = contentFailProcessorRequest.getSgFrameworkContextContent().getRequestParams();
         OriginDataDTO<ContentEntity> originDataDTO = contentFailProcessorRequest.getContentEntityOriginDataDTO();
-        boolean isSuccess = checkSuccess(originDataDTO);
+        /*boolean isSuccess = checkSuccess(originDataDTO);
         if(isSuccess){
             return originDataDTO;
-        }
+        }*/
         List<String> sKeyList = new ArrayList<>();
         sKeyList = getContentSetIdList(requestParams);
         Result<Map<Object, Result<DataEntry>>> labelSceneResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().prefixGets(labelSceneNamespace, pKey,sKeyList);
