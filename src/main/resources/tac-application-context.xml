@@ -4,12 +4,12 @@
        xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
-    <context:annotation-config />
-    <context:component-scan base-package="com.tmall.wireless.tac.biz.processor" />
-    <context:component-scan base-package="com.tmall.txcs.gs.framework" />
-    <context:component-scan base-package="com.tmall.txcs.biz.supermarket" />
+    <context:annotation-config/>
+    <context:component-scan base-package="com.tmall.wireless.tac.biz.processor"/>
+    <context:component-scan base-package="com.tmall.txcs.gs.framework"/>
+    <context:component-scan base-package="com.tmall.txcs.biz.supermarket"/>
 
-    <context:component-scan base-package="com.alibaba.cola" />
+    <context:component-scan base-package="com.alibaba.cola"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendItemOriginDataRequestExtPt"/>
@@ -19,7 +19,6 @@
 
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.ItemInfoBySourceProcessorInventory"/>
-
 
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoBuildItemVOExtPt"/>
@@ -37,8 +36,6 @@
 
     <!--猜你喜欢-->
     <bean class="com.tmall.wireless.tac.biz.processor.cnxh.CaiNiXiHuanOriginDataItemQueryExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.cnxh.CaiNiXiHuanItemInfoPostProcessorExtPt"/>
-
 
 
 </beans>

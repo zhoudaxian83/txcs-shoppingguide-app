@@ -59,6 +59,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         String o2oType = MapUtil.getStringWithDefault(context.getRequestParams(), "o2oType", "");
+        //两种分页模式，index优先page
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
         Long appId = this.getAppId(o2oType);
         tacLogger.info("入参o2oType：" + JSON.toJSONString(o2oType));
@@ -69,17 +70,9 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             pt -> pt.process0(context));
         recommendRequest.setAppId(appId);
         recommendRequest.getParams().put("index", index + "");
-        Boolean useRecommendSpiV2 = Optional.of(context)
-            .map(SgFrameworkContextItem::getItemMetaInfo)
-            .map(ItemMetaInfo::getItemRecommendMetaInfo)
-            .map(ItemRecommendMetaInfo::isUseRecommendSpiV2)
-            .orElse(false);
         tacLogger.info("tpp入参：" + JSON.toJSONString(recommendRequest));
-        tacLogger.info("useRecommendSpiV2：" + JSON.toJSONString(useRecommendSpiV2));
         long startTime = System.currentTimeMillis();
-        return (useRecommendSpiV2 ?
-            recommendSpiV2.recommendItem(recommendRequest) :
-            recommendSpi.recommendItem(recommendRequest))
+        return (recommendSpi.recommendItem(recommendRequest))
             .map(recommendResponseEntityResponse -> {
                 // tpp 返回失败
                 if (!recommendResponseEntityResponse.isSuccess()
