@@ -54,8 +54,8 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():" + JSON.toJSONString(contentFailProcessorRequest.getContentEntityOriginDataDTO()));
         Map<String, Object> requestParams = contentFailProcessorRequest.getSgFrameworkContextContent().getRequestParams();
         OriginDataDTO<ContentEntity> originDataDTO = contentFailProcessorRequest.getContentEntityOriginDataDTO();
-        boolean isSuccess = checkSuccess(originDataDTO);
-        /*if(isSuccess){
+        /*boolean isSuccess = checkSuccess(originDataDTO);
+        if(isSuccess){
             return originDataDTO;
         }*/
         List<String> sKeyList = new ArrayList<>();
