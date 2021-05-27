@@ -77,6 +77,7 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
         }
         params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextItem).map(
             SgFrameworkContext::getUserDO).map(UserDO::getCna).orElse(""));
+        params.put("sceneId", requestParams.map(entry -> entry.get("moduleId")).orElse("").toString());
         if(isBangdan(sgFrameworkContextItem)){
             tppRequest.setAppId(25399L);
         }else{
