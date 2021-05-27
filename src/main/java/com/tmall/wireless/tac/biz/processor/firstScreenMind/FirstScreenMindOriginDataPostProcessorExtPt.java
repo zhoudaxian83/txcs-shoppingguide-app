@@ -36,12 +36,17 @@ import java.util.stream.Collectors;
 public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPostProcessorExtPt {
     @Override
     public OriginDataDTO<ItemEntity> process(SgFrameworkContextItem contextItem) {
-        if (isFirstPage(contextItem)) {
+        if (isFirstPage(contextItem) && !isBangdan(contextItem)) {
             return processFirstPage(contextItem);
         } else {
             return contextItem.getItemEntityOriginDataDTO();
         }
 
+    }
+
+    private boolean isBangdan(SgFrameworkContextItem sgFrameworkContextItem) {
+        String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
+        return RenderContentTypeEnum.bangdanContent.getType().equals(contentType);
     }
 
     private OriginDataDTO<ItemEntity> processFirstPage(SgFrameworkContextItem contextItem) {
