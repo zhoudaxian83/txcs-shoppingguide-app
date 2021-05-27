@@ -15,14 +15,17 @@
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.TestItemInfoBySourceProcessor"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoOriginDataItemQueryExtPt"/>
+
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.ItemInfoBySourceProcessorInventory"/>
 
 
-    <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoOriginDataItemQueryExtPt"/>
+
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoBuildItemVOExtPt"/>
 
-    <bean class="com.tmall.wireless.tac.biz.processor.tacHandler.YoubaozangHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.youbaozang.YouBaoZangHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.youbaozang.YouBaoZangBuildItemVOExtPtImpl"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentOriginDataRequestExPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentInfoQueryExtPt"/>
