@@ -72,12 +72,12 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
-        Long o2oType = MapUtil.getLongWithDefault(context.getRequestParams(), "csa", 0L);
+        Long o2oType = MapUtil.getLongWithDefault(context.getRequestParams(), "o2oType", 0L);
         RecommendRequest recommendRequest = sgExtensionExecutor.execute(
             ItemOriginDataRequestExtPt.class,
             context.getBizScenario(),
             pt -> pt.process0(context));
-
+        tacLogger.info("入参context：" + JSON.toJSONString(context));
         //TODO 根据不同场景要做区分（小时达，半日达，全域生鲜）
         recommendRequest.setAppId(APP_ID);
         Boolean useRecommendSpiV2 = Optional.of(context)

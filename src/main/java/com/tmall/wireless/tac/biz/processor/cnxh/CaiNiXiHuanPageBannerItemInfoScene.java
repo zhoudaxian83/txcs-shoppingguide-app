@@ -50,8 +50,6 @@ public class CaiNiXiHuanPageBannerItemInfoScene {
         Long pageSize = MapUtil.getLongWithDefault(context.getParams(), "pageSize", 20L);
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
-        tacLogger.info("当前页码：" + index);
-
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         sgFrameworkContextItem.setRequestParams(context.getParams());
         SceneInfo sceneInfo = new SceneInfo();
