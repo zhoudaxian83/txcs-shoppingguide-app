@@ -55,9 +55,9 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         Map<String, Object> requestParams = contentFailProcessorRequest.getSgFrameworkContextContent().getRequestParams();
         OriginDataDTO<ContentEntity> originDataDTO = contentFailProcessorRequest.getContentEntityOriginDataDTO();
         boolean isSuccess = checkSuccess(originDataDTO);
-        if(isSuccess){
+        /*if(isSuccess){
             return originDataDTO;
-        }
+        }*/
         List<String> sKeyList = new ArrayList<>();
         sKeyList = getContentSetIdList(requestParams);
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
