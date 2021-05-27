@@ -10,7 +10,6 @@ import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
-import com.tmall.txcs.biz.supermarket.extpt.origindata.DefaultOriginDataItemQueryExtPt;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
@@ -27,6 +26,7 @@ import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpiV2;
+import com.tmall.wireless.tac.biz.processor.cnxh.enums.O2otTypeEnum;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
@@ -56,31 +56,18 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     @Autowired
     private SgExtensionExecutor sgExtensionExecutor;
 
-    private static Map<String, String> tppO2oTypeConvertMap;
-
-    static {
-        tppO2oTypeConvertMap = Maps.newHashMap();
-        tppO2oTypeConvertMap.putIfAbsent("one_hour", O2oType.O2OOneHour.name());
-        tppO2oTypeConvertMap.putIfAbsent("half_day", O2oType.O2OHalfDay.name());
-        tppO2oTypeConvertMap.putIfAbsent("next_day", O2oType.O2ONextDay.name());
-        tppO2oTypeConvertMap.putIfAbsent("B2C", O2oType.B2C.name());
-    }
-
-    private static final Long APP_ID = 21895L;
-    private static final Long o2oIconItemOneHourAppId = 20298L;
-    private static final Long o2oIconItemHalfDayAppId = 20528L;
-
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
-        Long o2oType = MapUtil.getLongWithDefault(context.getRequestParams(), "o2oType", 0L);
+        String o2oType = MapUtil.getStringWithDefault(context.getRequestParams(), "o2oType", "");
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
+        Long appId = this.getAppId(o2oType);
+        tacLogger.info("入参o2oType：" + JSON.toJSONString(o2oType));
+        tacLogger.info("入参appId：" + JSON.toJSONString(appId));
         RecommendRequest recommendRequest = sgExtensionExecutor.execute(
             ItemOriginDataRequestExtPt.class,
             context.getBizScenario(),
             pt -> pt.process0(context));
-        tacLogger.info("入参context：" + JSON.toJSONString(context));
-        //TODO 根据不同场景要做区分（小时达，半日达，全域生鲜）
-        recommendRequest.setAppId(APP_ID);
+        recommendRequest.setAppId(appId);
         recommendRequest.getParams().put("index", index + "");
         Boolean useRecommendSpiV2 = Optional.of(context)
             .map(SgFrameworkContextItem::getItemMetaInfo)
@@ -142,6 +129,21 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
         tacLogger.info("tpp结果集：" + JSON.toJSONString(originDataDTO));
         return originDataDTO;
+    }
+
+    /**
+     * 默认21896L
+     *
+     * @param code
+     * @return
+     */
+    private Long getAppId(String code) {
+        O2otTypeEnum o2otTypeEnum = O2otTypeEnum.ofCode(code);
+        if (o2otTypeEnum != null) {
+            o2otTypeEnum.getAppId();
+        }
+        return O2otTypeEnum.ALL_FRESH.getAppId();
+
     }
 
 }
