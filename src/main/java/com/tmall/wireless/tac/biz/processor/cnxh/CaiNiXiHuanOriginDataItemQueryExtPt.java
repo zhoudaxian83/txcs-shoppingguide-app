@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.DefaultOriginDataItemQueryExtPt;
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
@@ -66,10 +67,12 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     }
 
     private static final Long APP_ID = 21895L;
+    private static final Long o2oIconItemOneHourAppId = 20298L;
+    private static final Long o2oIconItemHalfDayAppId = 20528L;
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
-
+        Long o2oType = MapUtil.getLongWithDefault(context.getRequestParams(), "csa", 0L);
         RecommendRequest recommendRequest = sgExtensionExecutor.execute(
             ItemOriginDataRequestExtPt.class,
             context.getBizScenario(),
