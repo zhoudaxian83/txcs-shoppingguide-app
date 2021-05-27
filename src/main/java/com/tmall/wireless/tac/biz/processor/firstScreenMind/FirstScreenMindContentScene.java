@@ -67,7 +67,7 @@ public class FirstScreenMindContentScene {
         tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
         LOGGER.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
 
-        HadesLogUtil.stream(sgFrameworkContextContent.getBizScenario().getUniqueIdentity())
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                 .kv("step", "requestLog")
                 .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
                 .error();
@@ -98,7 +98,7 @@ public class FirstScreenMindContentScene {
                     }
                     response.getExtInfos().put("propertyMap", propertyMap);
                     LOGGER.info("FirstScreenMindContentScene JSON.toJSONString(response)"+JSON.toJSONString(response));
-                    HadesLogUtil.stream(sgFrameworkContextContent.getBizScenario().getUniqueIdentity())
+                    HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                             .kv("step", "requestLog")
                             .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
                             .kv("rt", String.valueOf(System.currentTimeMillis() - startTime))
