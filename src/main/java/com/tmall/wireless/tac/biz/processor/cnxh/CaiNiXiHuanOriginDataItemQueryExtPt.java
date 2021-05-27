@@ -27,6 +27,7 @@ import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpiV2;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -43,8 +44,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
-    Logger LOGGER = LoggerFactory.getLogger(DefaultOriginDataItemQueryExtPt.class);
+    Logger LOGGER = LoggerFactory.getLogger(CaiNiXiHuanOriginDataItemQueryExtPt.class);
 
+    @Autowired
+    TacLogger tacLogger;
     @Autowired
     RecommendSpi recommendSpi;
     @Autowired
@@ -71,15 +74,17 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             ItemOriginDataRequestExtPt.class,
             context.getBizScenario(),
             pt -> pt.process0(context));
+
+        //TODO 根据不同场景要做区分（小时达，半日达，全域生鲜）
         recommendRequest.setAppId(APP_ID);
         Boolean useRecommendSpiV2 = Optional.of(context)
             .map(SgFrameworkContextItem::getItemMetaInfo)
             .map(ItemMetaInfo::getItemRecommendMetaInfo)
             .map(ItemRecommendMetaInfo::isUseRecommendSpiV2)
             .orElse(false);
-
+        tacLogger.info("tpp入参：" + JSON.toJSONString(recommendRequest));
+        tacLogger.info("useRecommendSpiV2：" + JSON.toJSONString(useRecommendSpiV2));
         long startTime = System.currentTimeMillis();
-
         return (useRecommendSpiV2 ?
             recommendSpiV2.recommendItem(recommendRequest) :
             recommendSpi.recommendItem(recommendRequest))
@@ -121,17 +126,16 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
 
     private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-
         originDataDTO.setHasMore(recommendResponseEntity.isHasMore());
         originDataDTO.setIndex(recommendResponseEntity.getIndex());
         originDataDTO.setPvid(recommendResponseEntity.getPvid());
         originDataDTO.setScm(recommendResponseEntity.getScm());
         originDataDTO.setTppBuckets(recommendResponseEntity.getTppBuckets());
-
         originDataDTO.setResult(recommendResponseEntity
             .getResult()
             .stream()
             .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
+        tacLogger.info("tpp结果集：" + JSON.toJSONString(originDataDTO));
         return originDataDTO;
     }
 
