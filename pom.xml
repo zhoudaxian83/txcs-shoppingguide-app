@@ -34,7 +34,6 @@
           <artifactId>txcs-sg-base</artifactId>
           <version>${common.rpm.version}</version>
       </dependency>
-
       <dependency>
           <groupId>com.tmall.txcs</groupId>
           <artifactId>txcs-sg-spi</artifactId>
@@ -47,8 +46,6 @@
           <artifactId>txcs-sg-service</artifactId>
           <version>${common.rpm.version}</version>
       </dependency>
-
-
       <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-context</artifactId>
@@ -77,11 +74,11 @@
           <artifactId>tair-mc-client</artifactId>
           <version>4.0.7</version>
       </dependency>
-      <dependency>
+      <!--<dependency>
           <groupId>com.taobao.tair</groupId>
           <artifactId>tair-client</artifactId>
           <version>4.1.1</version>
-      </dependency>
+      </dependency>-->
 
 
     <dependency>

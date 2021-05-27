@@ -76,6 +76,8 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
             tacLogger.info("***********mgetResult.getValue().size()*******:"+mgetResult.getValue().size());
             LOGGER.info("***********mgetResult.getValue().size()*******:"+mgetResult.getValue().size());
+            tacLogger.info("***********mgetResult.getValue()*******:"+mgetResult.getValue());
+            LOGGER.info("***********mgetResult.getValue()*******:"+mgetResult.getValue());
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail(""));
             }

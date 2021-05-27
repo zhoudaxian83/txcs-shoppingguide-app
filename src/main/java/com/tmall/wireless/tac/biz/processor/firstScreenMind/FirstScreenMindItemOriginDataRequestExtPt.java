@@ -77,7 +77,12 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
         }
         params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextItem).map(
             SgFrameworkContext::getUserDO).map(UserDO::getCna).orElse(""));
-        tppRequest.setAppId(23410L);
+        params.put("sceneId", requestParams.map(entry -> entry.get("moduleId")).orElse("").toString());
+        if(isBangdan(sgFrameworkContextItem)){
+            tppRequest.setAppId(25399L);
+        }else{
+            tppRequest.setAppId(23410L);
+        }
         /***TPP相关常量*/
         params.put("itemSetIdSource","crm");
         Integer index = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getIndex).orElse(0);
@@ -95,6 +100,11 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
 
         String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
         return RenderContentTypeEnum.checkO2OContentType(contentType);
+    }
+
+    private boolean isBangdan(SgFrameworkContextItem sgFrameworkContextItem) {
+        String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
+        return RenderContentTypeEnum.bangdanContent.getType().equals(contentType);
     }
 
 
