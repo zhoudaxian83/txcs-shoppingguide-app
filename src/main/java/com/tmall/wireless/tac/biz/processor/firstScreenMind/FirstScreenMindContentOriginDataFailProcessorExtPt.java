@@ -50,8 +50,8 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
 
     @Override
     public OriginDataDTO<ContentEntity> process(ContentFailProcessorRequest contentFailProcessorRequest) {
-        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():" + contentFailProcessorRequest.getContentEntityOriginDataDTO());
-        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():"+contentFailProcessorRequest.getContentEntityOriginDataDTO());
+        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():" + JSON.toJSONString(contentFailProcessorRequest.getContentEntityOriginDataDTO()));
+        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():" + JSON.toJSONString(contentFailProcessorRequest.getContentEntityOriginDataDTO()));
         Map<String, Object> requestParams = contentFailProcessorRequest.getSgFrameworkContextContent().getRequestParams();
         OriginDataDTO<ContentEntity> originDataDTO = contentFailProcessorRequest.getContentEntityOriginDataDTO();
         boolean isSuccess = checkSuccess(originDataDTO);
@@ -64,6 +64,8 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         Result<Map<Object, Result<DataEntry>>> labelSceneResult = null;
         try{
             labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
+            LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt labelSceneResult:" + JSON.toJSONString(labelSceneResult));
+            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt labelSceneResult:" + JSON.toJSONString(labelSceneResult));
         }catch (Exception e){
             LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt e.getMessage():"+e.getMessage());
             tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt e.getMessage():"+e.getMessage());
