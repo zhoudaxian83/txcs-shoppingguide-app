@@ -34,4 +34,11 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindOriginDataPostProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport"/>
+
+    <!--猜你喜欢-->
+    <bean class="com.tmall.wireless.tac.biz.processor.cnxh.CaiNiXiHuanOriginDataItemQueryExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.cnxh.CaiNiXiHuanItemInfoPostProcessorExtPt"/>
+
+
+
 </beans>
