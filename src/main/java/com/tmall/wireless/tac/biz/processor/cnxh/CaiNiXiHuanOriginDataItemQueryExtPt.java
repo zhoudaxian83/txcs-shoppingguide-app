@@ -62,8 +62,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         //两种分页模式，index优先page
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
         Long appId = this.getAppId(o2oType);
-        tacLogger.info("入参o2oType：" + JSON.toJSONString(o2oType));
-        tacLogger.info("入参appId：" + JSON.toJSONString(appId));
         RecommendRequest recommendRequest = sgExtensionExecutor.execute(
             ItemOriginDataRequestExtPt.class,
             context.getBizScenario(),
@@ -120,7 +118,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             .getResult()
             .stream()
             .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
-        tacLogger.info("tpp结果集：" + JSON.toJSONString(originDataDTO));
         return originDataDTO;
     }
 
