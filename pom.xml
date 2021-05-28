@@ -63,6 +63,11 @@
           <artifactId>tair-mc-client</artifactId>
           <version>4.1.2</version>
       </dependency>
+      <dependency>
+          <groupId>com.esotericsoftware</groupId>
+          <artifactId>kryo</artifactId>
+          <version>3.0.3</version>
+      </dependency>
       <!--<dependency>
           <groupId>com.taobao.tair</groupId>
           <artifactId>tair-client</artifactId>
