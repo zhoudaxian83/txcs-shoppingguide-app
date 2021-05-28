@@ -1,14 +1,11 @@
 package com.tmall.wireless.tac.biz.processor.cnxh;
 
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
-import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
@@ -16,16 +13,12 @@ import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
-import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
-import com.tmall.txcs.gs.framework.model.meta.ItemRecommendMetaInfo;
 import com.tmall.txcs.gs.framework.support.LogUtil;
-import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
 import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
-import com.tmall.txcs.gs.spi.recommend.RecommendSpiV2;
 import com.tmall.wireless.tac.biz.processor.cnxh.enums.O2otTypeEnum;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -51,8 +44,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     TacLogger tacLogger;
     @Autowired
     RecommendSpi recommendSpi;
-    @Autowired
-    RecommendSpiV2 recommendSpiV2;
     @Autowired
     private SgExtensionExecutor sgExtensionExecutor;
 
