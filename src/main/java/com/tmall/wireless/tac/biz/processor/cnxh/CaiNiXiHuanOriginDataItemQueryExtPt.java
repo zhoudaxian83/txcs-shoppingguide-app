@@ -41,8 +41,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     Logger LOGGER = LoggerFactory.getLogger(CaiNiXiHuanOriginDataItemQueryExtPt.class);
 
     @Autowired
-    TacLogger tacLogger;
-    @Autowired
     RecommendSpi recommendSpi;
     @Autowired
     private SgExtensionExecutor sgExtensionExecutor;
@@ -59,7 +57,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             pt -> pt.process0(context));
         recommendRequest.setAppId(appId);
         recommendRequest.getParams().put("index", index + "");
-        tacLogger.info("tpp入参：" + JSON.toJSONString(recommendRequest));
         long startTime = System.currentTimeMillis();
         return (recommendSpi.recommendItem(recommendRequest))
             .map(recommendResponseEntityResponse -> {
