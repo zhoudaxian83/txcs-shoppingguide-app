@@ -1,9 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
+import java.util.List;
 import java.util.Map;
-
 import com.alibaba.fastjson.JSON;
-
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
@@ -40,10 +39,12 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
     public OriginDataDTO<ItemEntity> process(ItemFailProcessorRequest itemFailProcessorRequest) {
         Map<String, Object> requestParams = itemFailProcessorRequest.getSgFrameworkContextItem().getRequestParams();
         OriginDataDTO<ItemEntity> originDataDTO = itemFailProcessorRequest.getItemEntityOriginDataDTO();
-        boolean isSuccess = checkSuccess(originDataDTO);
+        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult():"+originDataDTO.getResult());
+        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult():"+originDataDTO.getResult());
+        /*boolean isSuccess = checkSuccess(originDataDTO);
         if(isSuccess){
             return originDataDTO;
-        }
+        }*/
         String sKey = MapUtil.getStringWithDefault(requestParams,"moduleId","");
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         Result<DataEntry> labelSceneResult = multiClusterTairManager.prefixGet(nameSpace,pKey,sKey);
@@ -54,11 +55,28 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
         if(dataEntry == null || dataEntry.getValue() == null){
             LOGGER.info("");
         }
+        List<Long> itemIdList = (List<Long>) dataEntry.getValue();
+        if(CollectionUtils.isNotEmpty(itemIdList)){
+            return originDataDTO;
+        }
+        buildOriginDataDTO(itemIdList,originDataDTO);
         tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry.getValue()"+JSON.toJSONString(dataEntry.getValue()));
         LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry.getValue()"+JSON.toJSONString(dataEntry.getValue()));
+
         return originDataDTO;
     }
+    public void buildOriginDataDTO(List<Long> itemIdList,OriginDataDTO<ItemEntity> originDataDTO){
+        List<ItemEntity> itemEntitys = originDataDTO.getResult();
+        itemIdList.forEach(itemId -> {
+            ItemEntity itemEntity = new ItemEntity();
+            itemEntity.setItemId(itemId);
+            itemEntitys.add(itemEntity);
+        });
+        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt 商品打底itemEntitys:"+itemEntitys);
+        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt 商品打底itemEntitys:"+itemEntitys);
+    }
     public boolean checkSuccess(OriginDataDTO<ItemEntity> originDataDTO){
+
         return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult());
     }
 }
