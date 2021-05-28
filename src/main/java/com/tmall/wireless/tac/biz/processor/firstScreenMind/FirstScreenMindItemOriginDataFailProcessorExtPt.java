@@ -2,6 +2,8 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import java.util.List;
 import java.util.Map;
+
+import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
@@ -12,15 +14,21 @@ import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemOriginDataFailPr
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author guijian
  */
+@Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+    scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+@Service
 public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOriginDataFailProcessorExtPt {
 
     Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindItemOriginDataFailProcessorExtPt.class);
