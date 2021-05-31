@@ -53,17 +53,17 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         RecommendRequest recommendRequest = this.buildTppParams(context);
         //TODO
-         Map<String, String> stringStringMap = new HashMap<>(16);
-        stringStringMap.put("itemSetIdList", "5233");
-        stringStringMap.put("logicAreaId", "107");
-        stringStringMap.put("pageSize", "10");
-        stringStringMap.put("index", "0");
-        stringStringMap.put("rt1HourStoreId", "233930371");
-        stringStringMap.put("itemSetIdSource", "crm");
-        stringStringMap.put("smAreaId", "360111");
-         stringStringMap.put("itemBusinessType", "OneHour");
-        stringStringMap.put("isFirstPage", "true");
-         recommendRequest.setParams(stringStringMap);
+        // Map<String, String> stringStringMap = new HashMap<>(16);
+        //stringStringMap.put("itemSetIdList", "5233");
+        //stringStringMap.put("logicAreaId", "107");
+        //stringStringMap.put("pageSize", "10");
+        //stringStringMap.put("index", "0");
+        //stringStringMap.put("rt1HourStoreId", "233930371");
+        //stringStringMap.put("itemSetIdSource", "crm");
+        //stringStringMap.put("smAreaId", "360111");
+        // stringStringMap.put("itemBusinessType", "OneHour");
+        //stringStringMap.put("isFirstPage", "true");
+        // recommendRequest.setParams(stringStringMap);
         tacLogger.info("tpp入参：" + JSON.toJSONString(recommendRequest));
 
         long startTime = System.currentTimeMillis();
@@ -97,11 +97,12 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         String pageId = "pageId";
         String itemBusinessType = "itemBusinessType";
         tacLogger.info("请求入参,context：" + JSON.toJSONString(context));
-        RecommendRequest recommendRequest = sgExtensionExecutor.execute(
+        RecommendRequest recommendRequest =new RecommendRequest();
+        Map<String, String> param1 = sgExtensionExecutor.execute(
             ItemOriginDataRequestExtPt.class,
             context.getBizScenario(),
-            pt -> pt.process0(context));
-        Map<String, String> params = recommendRequest.getParams();
+            pt -> pt.process0(context)).getParams();
+        Map<String, String> params = new HashMap<>(16);
         String o2oType = MapUtil.getStringWithDefault(context.getRequestParams(), "o2oType", "");
         Long appId = this.getAppId(o2oType);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
@@ -110,6 +111,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         Long itemSetId = MapUtil.getLongWithDefault(context.getRequestParams(), "itemSetId", 0L);
         Long smAreaId = context.getLocParams().getSmAreaId();
         Long logicAreaId = context.getLocParams().getRegionCode();
+        params.put("isFirstPage", param1.get("isFirstPage"));
         params.put("itemSetIdSource", "crm");
         params.put("pmtSource", "sm_manager");
         params.put("pmtName", "o2oGuessULike");
@@ -120,6 +122,8 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         params.put(pageId, appId + "");
         params.put("logicAreaId", logicAreaId + "");
         params.put("itemSetIdList", itemSetId + "");
+        params.remove("tagId");
+        params.remove("tagId");
         if (O2otTypeEnum.ONE_HOUR.getCode().equals(o2oType)) {
             params.put(pageId, "onehourcnxh");
             params.put(itemBusinessType, "OneHour");
