@@ -97,7 +97,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         String pageId = "pageId";
         String itemBusinessType = "itemBusinessType";
         tacLogger.info("请求入参,context：" + JSON.toJSONString(context));
-        RecommendRequest recommendRequest =new RecommendRequest();
+        RecommendRequest recommendRequest = new RecommendRequest();
         Map<String, String> param1 = sgExtensionExecutor.execute(
             ItemOriginDataRequestExtPt.class,
             context.getBizScenario(),
@@ -122,8 +122,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         params.put(pageId, appId + "");
         params.put("logicAreaId", logicAreaId + "");
         params.put("itemSetIdList", itemSetId + "");
-        params.remove("tagId");
-        params.remove("tagId");
         if (O2otTypeEnum.ONE_HOUR.getCode().equals(o2oType)) {
             params.put(pageId, "onehourcnxh");
             params.put(itemBusinessType, "OneHour");
@@ -139,6 +137,10 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             params.put("pageId", "onehourcnxh");
             params.put(itemBusinessType, "B2C");
         }
+        params.remove("tagId");
+        params.remove("pmtName");
+        params.remove("pmtSource");
+        params.remove("pageId");
         recommendRequest.setAppId(appId);
         recommendRequest.setLogResult(true);
         recommendRequest.setParams(params);
