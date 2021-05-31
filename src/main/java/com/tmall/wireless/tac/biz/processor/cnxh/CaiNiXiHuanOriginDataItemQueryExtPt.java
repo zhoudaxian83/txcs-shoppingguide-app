@@ -51,20 +51,9 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
-        String o2oType = MapUtil.getStringWithDefault(context.getRequestParams(), "o2oType", "");
-        //两种分页模式，index优先page
-        Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
-        Long appId = this.getAppId(o2oType);
-        RecommendRequest recommendRequest = sgExtensionExecutor.execute(
-            ItemOriginDataRequestExtPt.class,
-            context.getBizScenario(),
-            pt -> pt.process0(context));
-        recommendRequest.setAppId(appId);
-        recommendRequest.getParams().put("index", index + "");
-        tacLogger.info("tpp入参修改前：" + JSON.toJSONString(recommendRequest));
+        RecommendRequest recommendRequest = this.buildTppParams(context);
         //TODO
-        Map<String, String> stringStringMap = new HashMap<>();
-        stringStringMap.put("appid", appId + "");
+        Map<String, String> stringStringMap = new HashMap<>(16);
         //stringStringMap.put("itemSetIdList", "5233");
         stringStringMap.put("logicAreaId", "107");
         stringStringMap.put("pageSize", "10");
@@ -76,6 +65,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         stringStringMap.put("isFirstPage", "true");
         recommendRequest.setParams(stringStringMap);
         tacLogger.info("tpp入参修改后：" + JSON.toJSONString(recommendRequest));
+
         long startTime = System.currentTimeMillis();
         return (recommendSpi.recommendItem(recommendRequest))
             .map(recommendResponseEntityResponse -> {
@@ -101,6 +91,30 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
                 );
                 return convert(recommendResponseEntityResponse.getValue());
             });
+    }
+
+    private RecommendRequest buildTppParams(SgFrameworkContextItem context) {
+        tacLogger.info("请求入参,context：" + JSON.toJSONString(context));
+        RecommendRequest recommendRequest = new RecommendRequest();
+        Map<String, String> params = new HashMap<>(16);
+        String o2oType = MapUtil.getStringWithDefault(context.getRequestParams(), "o2oType", "");
+        Long appId = this.getAppId(o2oType);
+        Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
+        Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 0L);
+
+        params.put("pmtSource", "sm_manager");
+        params.put("pmtName", "o2oGuessULike");
+        //params.put("userId", String.valueOf(o2oRequest.getUserId()));
+        //params.put("smAreaId", o2oRequest.getSmAreaId());
+        //params.put("logicAreaId",
+        //    context.getAddressDto().getRegionCode() + "," + context.getAddressDto().getMajorCityCode());
+        recommendRequest.getParams().put("index", index + "");
+        recommendRequest.getParams().put("pageSize", pageSize + "");
+        recommendRequest.setAppId(appId);
+        recommendRequest.setLogResult(true);
+        recommendRequest.setParams(params);
+        return recommendRequest;
+
     }
 
     private String getTppLogInfo(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntityResponse) {
