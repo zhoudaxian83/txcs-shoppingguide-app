@@ -110,6 +110,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         Long itemSetId = MapUtil.getLongWithDefault(context.getRequestParams(), "itemSetId", 0L);
         Long smAreaId = context.getLocParams().getSmAreaId();
         Long logicAreaId = context.getLocParams().getRegionCode();
+        params.put("itemSetIdSource", "crm");
         params.put("pmtSource", "sm_manager");
         params.put("pmtName", "o2oGuessULike");
         params.put("smAreaId", smAreaId + "");
