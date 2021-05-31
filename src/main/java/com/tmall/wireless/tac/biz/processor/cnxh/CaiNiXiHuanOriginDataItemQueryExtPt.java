@@ -53,18 +53,18 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         RecommendRequest recommendRequest = this.buildTppParams(context);
         //TODO
-        Map<String, String> stringStringMap = new HashMap<>(16);
+        // Map<String, String> stringStringMap = new HashMap<>(16);
         //stringStringMap.put("itemSetIdList", "5233");
-        stringStringMap.put("logicAreaId", "107");
-        stringStringMap.put("pageSize", "10");
-        stringStringMap.put("index", "0");
+        //stringStringMap.put("logicAreaId", "107");
+        //stringStringMap.put("pageSize", "10");
+        //stringStringMap.put("index", "0");
         //stringStringMap.put("rt1HourStoreId", "233930371");
         //stringStringMap.put("itemSetIdSource", "crm");
-        stringStringMap.put("smAreaId", "360111");
-        stringStringMap.put("itemBusinessType", "OneHour");
-        stringStringMap.put("isFirstPage", "true");
-        recommendRequest.setParams(stringStringMap);
-        tacLogger.info("tpp入参修改后：" + JSON.toJSONString(recommendRequest));
+        //stringStringMap.put("smAreaId", "360111");
+        // stringStringMap.put("itemBusinessType", "OneHour");
+        //stringStringMap.put("isFirstPage", "true");
+        // recommendRequest.setParams(stringStringMap);
+        tacLogger.info("tpp入参：" + JSON.toJSONString(recommendRequest));
 
         long startTime = System.currentTimeMillis();
         return (recommendSpi.recommendItem(recommendRequest))
@@ -94,22 +94,41 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     }
 
     private RecommendRequest buildTppParams(SgFrameworkContextItem context) {
+        String pageId = "pageId";
+        String itemBusinessType = "itemBusinessType";
         tacLogger.info("请求入参,context：" + JSON.toJSONString(context));
-        RecommendRequest recommendRequest = new RecommendRequest();
-        Map<String, String> params = new HashMap<>(16);
+        RecommendRequest recommendRequest = sgExtensionExecutor.execute(
+            ItemOriginDataRequestExtPt.class,
+            context.getBizScenario(),
+            pt -> pt.process0(context));
+        Map<String, String> params = recommendRequest.getParams();
         String o2oType = MapUtil.getStringWithDefault(context.getRequestParams(), "o2oType", "");
         Long appId = this.getAppId(o2oType);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
+        Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 0L);
-
+        Long smAreaId = context.getLocParams().getSmAreaId();
+        Long logicAreaId = context.getLocParams().getRegionCode();
         params.put("pmtSource", "sm_manager");
         params.put("pmtName", "o2oGuessULike");
-        //params.put("userId", String.valueOf(o2oRequest.getUserId()));
-        //params.put("smAreaId", o2oRequest.getSmAreaId());
-        //params.put("logicAreaId",
-        //    context.getAddressDto().getRegionCode() + "," + context.getAddressDto().getMajorCityCode());
-        recommendRequest.getParams().put("index", index + "");
-        recommendRequest.getParams().put("pageSize", pageSize + "");
+        params.put("smAreaId", smAreaId + "");
+        params.put("userId", String.valueOf(userId));
+        params.put("index", index + "");
+        params.put("pageSize", pageSize + "");
+        params.put(pageId, appId + "");
+        params.put("logicAreaId", logicAreaId + "");
+        if (O2otTypeEnum.ONE_HOUR.getCode().equals(o2oType)) {
+            params.put(pageId, "onehourcnxh");
+            params.put(itemBusinessType, "OneHour");
+        } else if (O2otTypeEnum.HALF_DAY.getCode().equals(o2oType)) {
+            params.put(pageId, "halfdaycnxh");
+            params.put(itemBusinessType, "HalfDay");
+        } else if (O2otTypeEnum.NEXT_DAY.getCode().equals(o2oType)) {
+
+        } else if (O2otTypeEnum.ALL_FRESH.getCode().equals(o2oType)) {
+            params.put("pageId", "onehourcnxh");
+            params.put(itemBusinessType, "B2C");
+        }
         recommendRequest.setAppId(appId);
         recommendRequest.setLogResult(true);
         recommendRequest.setParams(params);
