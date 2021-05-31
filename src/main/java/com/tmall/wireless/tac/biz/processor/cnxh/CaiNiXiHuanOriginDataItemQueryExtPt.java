@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.cnxh;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -46,6 +48,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     private SgExtensionExecutor sgExtensionExecutor;
     @Autowired
     TacLogger tacLogger;
+
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         String o2oType = MapUtil.getStringWithDefault(context.getRequestParams(), "o2oType", "");
@@ -58,6 +61,24 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             pt -> pt.process0(context));
         recommendRequest.setAppId(appId);
         recommendRequest.getParams().put("index", index + "");
+        //TODO
+        Map<String, String> stringStringMap = new HashMap<>();
+        stringStringMap.put("appid", appId + "");
+        stringStringMap.put("itemSetIdList", "5233");
+        stringStringMap.put("logicAreaId", "107");
+        stringStringMap.put("pageSize", "20");
+        stringStringMap.put("index", "0");
+        stringStringMap.put("rt1HourStoreId", "233930371");
+        stringStringMap.put("itemSetIdSource", "crm");
+        stringStringMap.put("smAreaId", "360111");
+        stringStringMap.put("itemBusinessType", "OneHour");
+        stringStringMap.put("isFirstPage", "true");
+        stringStringMap.put("itemSetIdSource", "crm");
+        stringStringMap.put("smAreaId", "360111");
+        stringStringMap.put("itemBusinessType", "OneHour");
+        stringStringMap.put("isFirstPage", "true");
+        recommendRequest.setParams(stringStringMap);
+
         long startTime = System.currentTimeMillis();
         tacLogger.info("tpp入参：" + JSON.toJSONString(recommendRequest));
         return (recommendSpi.recommendItem(recommendRequest))
