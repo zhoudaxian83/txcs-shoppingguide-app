@@ -54,12 +54,8 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
             return originDataDTO;
         }*/
         String sKey = MapUtil.getStringWithDefault(requestParams,"moduleId","");
-        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt sKey："+sKey);
-        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt sKey："+sKey);
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         Result<DataEntry> labelSceneResult = multiClusterTairManager.prefixGet(nameSpace,pKey,sKey);
-        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt labelSceneResult："+labelSceneResult);
-        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt labelSceneResult："+labelSceneResult);
         if(!labelSceneResult.isSuccess()){
             LOGGER.info("");
         }
@@ -68,12 +64,12 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
             LOGGER.info("");
         }
         List<Long> itemIdList = (List<Long>) dataEntry.getValue();
-        if(CollectionUtils.isNotEmpty(itemIdList)){
+        if(CollectionUtils.isEmpty(itemIdList)){
             return originDataDTO;
         }
         buildOriginDataDTO(itemIdList,originDataDTO);
-        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry.getValue()"+dataEntry.getValue());
-        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry.getValue()"+dataEntry.getValue());
+        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult()"+originDataDTO.getResult());
+        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult()"+originDataDTO.getResult());
 
         return originDataDTO;
     }
@@ -84,8 +80,6 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
             itemEntity.setItemId(itemId);
             itemEntitys.add(itemEntity);
         });
-        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt 商品打底itemEntitys:"+itemEntitys);
-        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt 商品打底itemEntitys:"+itemEntitys);
     }
     public boolean checkSuccess(OriginDataDTO<ItemEntity> originDataDTO){
 
