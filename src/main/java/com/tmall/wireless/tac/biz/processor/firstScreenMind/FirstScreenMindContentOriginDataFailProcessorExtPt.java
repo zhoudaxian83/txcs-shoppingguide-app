@@ -77,6 +77,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
     }
     public OriginDataDTO<ContentEntity> buildOriginDataDTO(Map<Object, Result<DataEntry>> resultMap){
         OriginDataDTO<ContentEntity> originDataDTO = new OriginDataDTO<>();
+        List<ContentEntity> contentEntities = Lists.newArrayList();
         //内容集list-圈品集list-商品
         for(Object sKey : resultMap.keySet()) {
             Result<DataEntry> result = resultMap.get(sKey);
@@ -108,8 +109,9 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                 });
             });
             contentEntity.setItems(itemEntities);
-            originDataDTO.getResult().add(contentEntity);
+            contentEntities.add(contentEntity);
         }
+        originDataDTO.setResult(contentEntities);
         return originDataDTO;
     }
 
