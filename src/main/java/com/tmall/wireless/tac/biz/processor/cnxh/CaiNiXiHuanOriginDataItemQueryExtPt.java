@@ -84,7 +84,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     private RecommendRequest buildTppParams(SgFrameworkContextItem context) {
         String pageId = "pageId";
         String itemBusinessType = "itemBusinessType";
-        tacLogger.info("请求入参,context：" + JSON.toJSONString(context));
         RecommendRequest recommendRequest = new RecommendRequest();
         Map<String, String> params1 = sgExtensionExecutor.execute(
             ItemOriginDataRequestExtPt.class,
@@ -99,7 +98,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         Long itemSetId = MapUtil.getLongWithDefault(context.getRequestParams(), "itemSetId", 0L);
         Long smAreaId = context.getLocParams().getSmAreaId();
         Long logicAreaId = context.getLocParams().getRegionCode();
-        String csa = MapUtil.getStringWithDefault(context.getRequestParams(), "csa", "");
         params.put("itemSetIdSource", "crm");
         params.put("pmtSource", "sm_manager");
         params.put("pmtName", "o2oGuessULike");
@@ -126,12 +124,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             params.put("pageId", "onehourcnxh");
             params.put(itemBusinessType, "B2C");
         }
-        //TODO
-        //params.remove("tagId");
-        //params.remove("pmtName");
-        //params.remove("pmtSource");
-        //params.remove("pageId");
-        //params.put("rt1HourStoreId", "233930371");
         recommendRequest.setAppId(appId);
         recommendRequest.setLogResult(true);
         recommendRequest.setParams(params);
@@ -152,7 +144,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     }
 
     private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
-        tacLogger.info("tpp出参：" + JSON.toJSONString(recommendResponseEntity));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         originDataDTO.setHasMore(recommendResponseEntity.isHasMore());
         originDataDTO.setIndex(recommendResponseEntity.getIndex());
