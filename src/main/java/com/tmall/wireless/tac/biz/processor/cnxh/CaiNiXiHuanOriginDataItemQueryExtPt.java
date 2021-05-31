@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
+import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
+import com.tmall.aselfcommon.model.todaycrazy.enums.LogicalArea;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
@@ -91,13 +93,16 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             pt -> pt.process0(context)).getParams();
         Map<String, String> params = new HashMap<>(16);
         String o2oType = MapUtil.getStringWithDefault(context.getRequestParams(), "o2oType", "");
+        String csa = MapUtil.getStringWithDefault(context.getRequestParams(), "csa", "");
         Long appId = this.getAppId(o2oType);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         Long itemSetId = MapUtil.getLongWithDefault(context.getRequestParams(), "itemSetId", 0L);
-        Long smAreaId = context.getLocParams().getSmAreaId();
+        Long smAreaId = context.getLocParams().getSmAreaId() == 0 ? LogicalArea.parseByCode(
+            AddressUtil.parseCSA(csa).getRegionCode()).getCoreCityCode() : context.getLocParams().getSmAreaId();
         Long logicAreaId = context.getLocParams().getRegionCode();
+
         params.put("itemSetIdSource", "crm");
         params.put("pmtSource", "sm_manager");
         params.put("pmtName", "o2oGuessULike");
