@@ -55,17 +55,15 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
 
     @Override
     public OriginDataDTO<ContentEntity> process(ContentFailProcessorRequest contentFailProcessorRequest) {
-        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():" + JSON.toJSONString(contentFailProcessorRequest.getContentEntityOriginDataDTO()));
-        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():" + JSON.toJSONString(contentFailProcessorRequest.getContentEntityOriginDataDTO()));
         Map<String, Object> requestParams = contentFailProcessorRequest.getSgFrameworkContextContent().getRequestParams();
         OriginDataDTO<ContentEntity> originDataDTO = contentFailProcessorRequest.getContentEntityOriginDataDTO();
         needSize = Optional.ofNullable(contentFailProcessorRequest.getSgFrameworkContextContent()).map(
             SgFrameworkContext::getUserPageInfo).map(
             PageInfoDO::getPageSize).orElse(needSize);
-        /*boolean isSuccess = checkSuccess(originDataDTO);
+        boolean isSuccess = checkSuccess(originDataDTO);
         if(isSuccess){
             return originDataDTO;
-        }*/
+        }
         List<String> sKeyList = Lists.newArrayList();
         sKeyList = getContentSetIdList(requestParams);
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
@@ -74,9 +72,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
             if(MapUtils.isEmpty(resultMap)){
                 return originDataDTO;
-            }
-            LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt resultMap:"+JSON.toJSONString(resultMap));
-            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt resultMap:"+JSON.toJSONString(resultMap));
+            };
             OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap,needSize);
             LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
             tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
