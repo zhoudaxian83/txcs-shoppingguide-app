@@ -117,14 +117,18 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         params.put("pageSize", pageSize + "");
         params.put(pageId, appId + "");
         params.put("logicAreaId", logicAreaId + "");
+        params.put("itemSetIdList", "5233");
         if (O2otTypeEnum.ONE_HOUR.getCode().equals(o2oType)) {
             params.put(pageId, "onehourcnxh");
             params.put(itemBusinessType, "OneHour");
+            params.put("rt1HourStoreId", String.valueOf(context.getLocParams().getRt1HourStoreId()));
         } else if (O2otTypeEnum.HALF_DAY.getCode().equals(o2oType)) {
             params.put(pageId, "halfdaycnxh");
             params.put(itemBusinessType, "HalfDay");
+            params.put("rtHalfDayStoreId", String.valueOf(context.getLocParams().getRtHalfDayStoreId()));
         } else if (O2otTypeEnum.NEXT_DAY.getCode().equals(o2oType)) {
-
+            params.put(pageId, "nextdaycnxh");
+            params.put(itemBusinessType, "NextDay");
         } else if (O2otTypeEnum.ALL_FRESH.getCode().equals(o2oType)) {
             params.put("pageId", "onehourcnxh");
             params.put(itemBusinessType, "B2C");
