@@ -58,19 +58,23 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
         OriginDataDTO<ItemEntity> originDataDTO = itemFailProcessorRequest.getItemEntityOriginDataDTO();
         tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult().size()):"+originDataDTO.getResult().size());
         LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult().size()):"+originDataDTO.getResult().size());
-        /*boolean isSuccess = checkSuccess(originDataDTO);
+        boolean isSuccess = checkSuccess(originDataDTO);
         if(isSuccess){
             return originDataDTO;
-        }*/
+        }
         String sKey = MapUtil.getStringWithDefault(requestParams,"moduleId","");
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         Result<DataEntry> labelSceneResult = multiClusterTairManager.prefixGet(nameSpace,pKey,sKey);
         if(!labelSceneResult.isSuccess()){
-            LOGGER.info("");
+            LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt labelSceneResult:"+labelSceneResult);
+            tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt labelSceneResult:"+labelSceneResult);
+            return originDataDTO;
         }
         DataEntry dataEntry = labelSceneResult.getValue();
         if(dataEntry == null || dataEntry.getValue() == null){
-            LOGGER.info("");
+            LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry为空!");
+            tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry为空!");
+            return originDataDTO;
         }
         List<Long> itemIdList = (List<Long>) dataEntry.getValue();
         if(CollectionUtils.isEmpty(itemIdList)){

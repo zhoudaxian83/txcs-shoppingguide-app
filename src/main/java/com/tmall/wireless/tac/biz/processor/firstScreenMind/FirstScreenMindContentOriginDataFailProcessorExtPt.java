@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,6 +23,7 @@ import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,29 +54,30 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():" + JSON.toJSONString(contentFailProcessorRequest.getContentEntityOriginDataDTO()));
         Map<String, Object> requestParams = contentFailProcessorRequest.getSgFrameworkContextContent().getRequestParams();
         OriginDataDTO<ContentEntity> originDataDTO = contentFailProcessorRequest.getContentEntityOriginDataDTO();
-        boolean isSuccess = checkSuccess(originDataDTO);
+        /*boolean isSuccess = checkSuccess(originDataDTO);
         if(isSuccess){
             return originDataDTO;
-        }
-        List<String> sKeyList = new ArrayList<>();
+        }*/
+        List<String> sKeyList = Lists.newArrayList();
         sKeyList = getContentSetIdList(requestParams);
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
-        Result<Map<Object, Result<DataEntry>>> labelSceneResult = null;
-        try{
-            labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
-            LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt labelSceneResult:" + JSON.toJSONString(labelSceneResult));
-            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt labelSceneResult:" + JSON.toJSONString(labelSceneResult));
-        }catch (Exception e){
-            LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt e.getMessage():"+e.getMessage());
-            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt e.getMessage():"+e.getMessage());
-        }
-
+        Result<Map<Object, Result<DataEntry>>> labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
         if(labelSceneResult == null || !labelSceneResult.isSuccess()){
             LOGGER.error("FirstScreenMindContentOriginDataFailProcessorExtPt sKeyList:"+sKeyList+",labelSceneResult:"+ JSON.toJSONString(labelSceneResult));
             tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt sKeyList:"+sKeyList+",labelSceneResult:"+ JSON.toJSONString(labelSceneResult));
-            return contentFailProcessorRequest.getContentEntityOriginDataDTO();
+            return originDataDTO;
         }
         Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
+        if(MapUtils.isEmpty(resultMap)){
+            return originDataDTO;
+        }
+        OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap);
+        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
+        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
+        return baseOriginDataDTO;
+    }
+    public OriginDataDTO<ContentEntity> buildOriginDataDTO(Map<Object, Result<DataEntry>> resultMap){
+        OriginDataDTO<ContentEntity> originDataDTO = new OriginDataDTO<>();
         //内容集list-圈品集list-商品
         for(Object sKey : resultMap.keySet()) {
             Result<DataEntry> result = resultMap.get(sKey);
@@ -107,8 +108,6 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             });
             originDataDTO.getResult().add(contentEntity);
         }
-        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt originDataDTO:"+originDataDTO);
-        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt originDataDTO:"+originDataDTO);
         return originDataDTO;
     }
 
