@@ -62,19 +62,18 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         sKeyList = getContentSetIdList(requestParams);
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         Result<Map<Object, Result<DataEntry>>> labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
-        if(labelSceneResult == null || !labelSceneResult.isSuccess()){
-            LOGGER.error("FirstScreenMindContentOriginDataFailProcessorExtPt sKeyList:"+sKeyList+",labelSceneResult:"+ JSON.toJSONString(labelSceneResult));
-            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt sKeyList:"+sKeyList+",labelSceneResult:"+ JSON.toJSONString(labelSceneResult));
-            return originDataDTO;
+        if(labelSceneResult != null && labelSceneResult.getValue() !=null){
+            Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
+            if(MapUtils.isEmpty(resultMap)){
+                return originDataDTO;
+            }
+            OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap);
+            LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
+            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
+            return baseOriginDataDTO;
         }
-        Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
-        if(MapUtils.isEmpty(resultMap)){
-            return originDataDTO;
-        }
-        OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap);
-        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
-        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
-        return baseOriginDataDTO;
+        return originDataDTO;
+
     }
     public OriginDataDTO<ContentEntity> buildOriginDataDTO(Map<Object, Result<DataEntry>> resultMap){
         OriginDataDTO<ContentEntity> originDataDTO = new OriginDataDTO<>();
@@ -102,6 +101,8 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                 items.forEach(item -> {
                     ItemEntity itemEntity = new ItemEntity();
                     itemEntity.setItemId(item);
+                    itemEntity.setBizType("sm");
+                    itemEntity.setBusinessType(gcsTairContentDTO.getMarketChannel());
                     contentEntity.getItems().add(itemEntity);
                 });
 
