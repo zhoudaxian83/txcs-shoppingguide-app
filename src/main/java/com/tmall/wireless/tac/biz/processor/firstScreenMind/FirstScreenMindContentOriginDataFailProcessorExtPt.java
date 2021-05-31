@@ -99,11 +99,13 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                 LOGGER.error("FirstScreenMindContentOriginDataFailProcessorExtPt gcsTairContentDTOList:"+ JSON.toJSONString(gcsTairContentDTOList));
                 continue;
             }
-            ContentEntity contentEntity = new ContentEntity();
-            contentEntity.setContentId(Long.valueOf(String.valueOf(sKey)));
-            List<ItemEntity> itemEntities = Lists.newArrayList();
+
+
             gcsTairContentDTOList.forEach(gcsTairContentDTO -> {
+                ContentEntity contentEntity = new ContentEntity();
+                contentEntity.setContentId(Long.valueOf(gcsTairContentDTO.getSceneId()));
                 List<Long> items = gcsTairContentDTO.getItems();
+                List<ItemEntity> itemEntities = Lists.newArrayList();
                 items.forEach(item -> {
                     ItemEntity itemEntity = new ItemEntity();
                     itemEntity.setItemId(item);
@@ -112,14 +114,13 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                     itemEntity.setBusinessType(gcsTairContentDTO.getMarketChannel());
                     itemEntities.add(itemEntity);
                 });
+                if(itemEntities.size() > needSize){
+                    contentEntity.setItems(itemEntities.subList(0,needSize));
+                }else{
+                    contentEntity.setItems(itemEntities);
+                }
+                contentEntities.add(contentEntity);
             });
-            if(itemEntities.size() > needSize){
-                contentEntity.setItems(itemEntities.subList(0,needSize));
-            }else{
-                contentEntity.setItems(itemEntities);
-            }
-
-            contentEntities.add(contentEntity);
         }
         originDataDTO.setResult(contentEntities);
         return originDataDTO;
