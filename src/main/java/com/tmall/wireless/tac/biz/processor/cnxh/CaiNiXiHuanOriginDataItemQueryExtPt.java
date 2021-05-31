@@ -107,6 +107,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 0L);
+        Long itemSetId = MapUtil.getLongWithDefault(context.getRequestParams(), "itemSetId", 0L);
         Long smAreaId = context.getLocParams().getSmAreaId();
         Long logicAreaId = context.getLocParams().getRegionCode();
         params.put("pmtSource", "sm_manager");
@@ -117,7 +118,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         params.put("pageSize", pageSize + "");
         params.put(pageId, appId + "");
         params.put("logicAreaId", logicAreaId + "");
-        params.put("itemSetIdList", "5233");
+        params.put("itemSetIdList", itemSetId + "");
         if (O2otTypeEnum.ONE_HOUR.getCode().equals(o2oType)) {
             params.put(pageId, "onehourcnxh");
             params.put(itemBusinessType, "OneHour");
