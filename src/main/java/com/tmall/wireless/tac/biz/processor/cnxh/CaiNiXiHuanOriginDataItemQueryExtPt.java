@@ -141,6 +141,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         params.remove("pmtName");
         params.remove("pmtSource");
         params.remove("pageId");
+        params.put("rt1HourStoreId", "233930371");
         recommendRequest.setAppId(appId);
         recommendRequest.setLogResult(true);
         recommendRequest.setParams(params);
