@@ -95,7 +95,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                 continue;
             }
             ContentEntity contentEntity = new ContentEntity();
-            contentEntity.setContentId((Long)sKey);
+            contentEntity.setContentId(Long.valueOf(String.valueOf(sKey)));
             gcsTairContentDTOList.forEach(gcsTairContentDTO -> {
                 List<Long> items = gcsTairContentDTO.getItems();
                 items.forEach(item -> {
