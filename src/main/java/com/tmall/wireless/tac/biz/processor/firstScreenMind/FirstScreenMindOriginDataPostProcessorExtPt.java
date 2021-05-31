@@ -20,7 +20,6 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentT
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
