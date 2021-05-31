@@ -44,7 +44,8 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     RecommendSpi recommendSpi;
     @Autowired
     private SgExtensionExecutor sgExtensionExecutor;
-
+    @Autowired
+    TacLogger tacLogger;
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         String o2oType = MapUtil.getStringWithDefault(context.getRequestParams(), "o2oType", "");
@@ -58,6 +59,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         recommendRequest.setAppId(appId);
         recommendRequest.getParams().put("index", index + "");
         long startTime = System.currentTimeMillis();
+        tacLogger.info("tpp入参：" + JSON.toJSONString(recommendRequest));
         return (recommendSpi.recommendItem(recommendRequest))
             .map(recommendResponseEntityResponse -> {
                 // tpp 返回失败
@@ -96,6 +98,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     }
 
     private OriginDataDTO<ItemEntity> convert(RecommendResponseEntity<RecommendItemEntityDTO> recommendResponseEntity) {
+        tacLogger.info("tpp出参：" + JSON.toJSONString(recommendResponseEntity));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         originDataDTO.setHasMore(recommendResponseEntity.isHasMore());
         originDataDTO.setIndex(recommendResponseEntity.getIndex());
