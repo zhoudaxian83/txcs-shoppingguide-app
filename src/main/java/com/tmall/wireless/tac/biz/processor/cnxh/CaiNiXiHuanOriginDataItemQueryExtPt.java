@@ -85,12 +85,11 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         String pageId = "pageId";
         String itemBusinessType = "itemBusinessType";
         tacLogger.info("请求入参,context：" + JSON.toJSONString(context));
-        RecommendRequest recommendRequest = new RecommendRequest();
-        Map<String, String> param1 = sgExtensionExecutor.execute(
+        RecommendRequest recommendRequest = sgExtensionExecutor.execute(
             ItemOriginDataRequestExtPt.class,
             context.getBizScenario(),
-            pt -> pt.process0(context)).getParams();
-        Map<String, String> params = new HashMap<>(16);
+            pt -> pt.process0(context));
+        Map<String, String> params = recommendRequest.getParams();
         String o2oType = MapUtil.getStringWithDefault(context.getRequestParams(), "o2oType", "");
         Long appId = this.getAppId(o2oType);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
@@ -100,7 +99,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         Long smAreaId = context.getLocParams().getSmAreaId();
         Long logicAreaId = context.getLocParams().getRegionCode();
         String csa = MapUtil.getStringWithDefault(context.getRequestParams(), "csa","");
-        params.put("isFirstPage", param1.get("isFirstPage"));
         params.put("itemSetIdSource", "crm");
         params.put("pmtSource", "sm_manager");
         params.put("pmtName", "o2oGuessULike");
