@@ -6,10 +6,10 @@ package com.tmall.wireless.tac.biz.processor.cnxh.enums;
  * description:
  */
 public enum O2otTypeEnum {
-    ONE_HOUR("one_hour", "小时达", 21895L),
-    HALF_DAY("half_day", "半日达", 21896L),
-    NEXT_DAY("next_day", "次日达", 21896L),
-    ALL_FRESH("all_fresh", "全域生鲜", 21896L);
+    ONE_HOUR("oneHour", "小时达", 21895L),
+    HALF_DAY("halfDay", "半日达", 21896L),
+    NEXT_DAY("nextDay", "次日达", 21896L),
+    ALL_FRESH("allFresh", "全域生鲜", 21896L);
 
     private final String code;
     private final String name;

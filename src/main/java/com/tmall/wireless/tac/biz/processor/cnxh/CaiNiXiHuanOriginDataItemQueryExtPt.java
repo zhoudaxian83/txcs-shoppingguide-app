@@ -65,7 +65,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         //TODO
         Map<String, String> stringStringMap = new HashMap<>();
         stringStringMap.put("appid", appId + "");
-        stringStringMap.put("itemSetIdList", "5233");
+        //stringStringMap.put("itemSetIdList", "5233");
         stringStringMap.put("logicAreaId", "107");
         stringStringMap.put("pageSize", "10");
         stringStringMap.put("index", "0");
