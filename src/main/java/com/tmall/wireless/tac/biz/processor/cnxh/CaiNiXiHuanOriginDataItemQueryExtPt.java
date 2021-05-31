@@ -90,7 +90,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             ItemOriginDataRequestExtPt.class,
             context.getBizScenario(),
             pt -> pt.process0(context)).getParams();
-        Map<String, String> params = recommendRequest.getParams();
+        Map<String, String> params = new HashMap<>(16);
         String o2oType = MapUtil.getStringWithDefault(context.getRequestParams(), "o2oType", "");
         Long appId = this.getAppId(o2oType);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
