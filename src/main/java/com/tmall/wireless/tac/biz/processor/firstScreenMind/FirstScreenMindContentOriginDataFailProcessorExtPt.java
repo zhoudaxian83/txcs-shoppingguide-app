@@ -69,6 +69,8 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             if(MapUtils.isEmpty(resultMap)){
                 return originDataDTO;
             }
+            LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt resultMap:"+JSON.toJSONString(resultMap));
+            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt resultMap:"+JSON.toJSONString(resultMap));
             OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap);
             LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
             tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
