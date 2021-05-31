@@ -54,8 +54,12 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
             return originDataDTO;
         }*/
         String sKey = MapUtil.getStringWithDefault(requestParams,"moduleId","");
+        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt sKey："+sKey);
+        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt sKey："+sKey);
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         Result<DataEntry> labelSceneResult = multiClusterTairManager.prefixGet(nameSpace,pKey,sKey);
+        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt labelSceneResult："+labelSceneResult);
+        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt labelSceneResult："+labelSceneResult);
         if(!labelSceneResult.isSuccess()){
             LOGGER.info("");
         }
