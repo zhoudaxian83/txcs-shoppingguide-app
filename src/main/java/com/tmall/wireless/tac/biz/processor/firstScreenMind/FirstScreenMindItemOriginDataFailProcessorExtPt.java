@@ -109,8 +109,8 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(itemId);
             itemEntity.setBizType(bizType);
-            /*itemEntity.setBusinessType(businessType);
-            itemEntity.setO2oType(o2oType);*/
+            itemEntity.setBusinessType(businessType);
+            itemEntity.setO2oType(o2oType);
             return itemEntity;
         }).collect(Collectors.toList());
         originDataDTO.setResult(itemEntitys);
