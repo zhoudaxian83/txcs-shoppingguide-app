@@ -122,7 +122,11 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                 contentEntities.add(contentEntity);
             });
         }
-        originDataDTO.setResult(contentEntities);
+        if(contentEntities.size() > needSize){
+            originDataDTO.setResult(contentEntities.subList(0,needSize));
+        }else{
+            originDataDTO.setResult(contentEntities);
+        }
         return originDataDTO;
     }
 
