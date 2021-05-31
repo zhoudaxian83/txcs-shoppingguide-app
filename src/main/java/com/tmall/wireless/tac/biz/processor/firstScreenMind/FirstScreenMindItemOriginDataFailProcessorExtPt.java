@@ -68,8 +68,8 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
             return originDataDTO;
         }
         buildOriginDataDTO(itemIdList,originDataDTO);
-        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry.getValue()"+JSON.toJSONString(dataEntry.getValue()));
-        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry.getValue()"+JSON.toJSONString(dataEntry.getValue()));
+        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry.getValue()"+dataEntry.getValue());
+        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry.getValue()"+dataEntry.getValue());
 
         return originDataDTO;
     }
