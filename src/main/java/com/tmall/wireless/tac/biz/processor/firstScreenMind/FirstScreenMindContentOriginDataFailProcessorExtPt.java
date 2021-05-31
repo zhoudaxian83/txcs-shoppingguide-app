@@ -96,6 +96,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             }
             ContentEntity contentEntity = new ContentEntity();
             contentEntity.setContentId(Long.valueOf(String.valueOf(sKey)));
+            List<ItemEntity> itemEntities = Lists.newArrayList();
             gcsTairContentDTOList.forEach(gcsTairContentDTO -> {
                 List<Long> items = gcsTairContentDTO.getItems();
                 items.forEach(item -> {
@@ -103,10 +104,11 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                     itemEntity.setItemId(item);
                     itemEntity.setBizType("sm");
                     itemEntity.setBusinessType(gcsTairContentDTO.getMarketChannel());
+                    itemEntities.add(itemEntity);
                     contentEntity.getItems().add(itemEntity);
                 });
-
             });
+            contentEntity.setItems(itemEntities);
             originDataDTO.getResult().add(contentEntity);
         }
         return originDataDTO;
