@@ -23,6 +23,7 @@ import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.cnxh.enums.O2otTypeEnum;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderAddressUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
@@ -52,20 +53,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         RecommendRequest recommendRequest = this.buildTppParams(context);
-        //TODO
-        // Map<String, String> stringStringMap = new HashMap<>(16);
-        //stringStringMap.put("itemSetIdList", "5233");
-        //stringStringMap.put("logicAreaId", "107");
-        //stringStringMap.put("pageSize", "10");
-        //stringStringMap.put("index", "0");
-        //stringStringMap.put("rt1HourStoreId", "233930371");
-        //stringStringMap.put("itemSetIdSource", "crm");
-        //stringStringMap.put("smAreaId", "360111");
-        // stringStringMap.put("itemBusinessType", "OneHour");
-        //stringStringMap.put("isFirstPage", "true");
-        // recommendRequest.setParams(stringStringMap);
         tacLogger.info("tpp入参：" + JSON.toJSONString(recommendRequest));
-
         long startTime = System.currentTimeMillis();
         return (recommendSpi.recommendItem(recommendRequest))
             .map(recommendResponseEntityResponse -> {
@@ -111,6 +99,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         Long itemSetId = MapUtil.getLongWithDefault(context.getRequestParams(), "itemSetId", 0L);
         Long smAreaId = context.getLocParams().getSmAreaId();
         Long logicAreaId = context.getLocParams().getRegionCode();
+        String csa = MapUtil.getStringWithDefault(context.getRequestParams(), "csa","");
         params.put("isFirstPage", param1.get("isFirstPage"));
         params.put("itemSetIdSource", "crm");
         params.put("pmtSource", "sm_manager");
@@ -137,11 +126,12 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             params.put("pageId", "onehourcnxh");
             params.put(itemBusinessType, "B2C");
         }
-        params.remove("tagId");
-        params.remove("pmtName");
-        params.remove("pmtSource");
-        params.remove("pageId");
-        params.put("rt1HourStoreId", "233930371");
+        //TODO
+        //params.remove("tagId");
+        //params.remove("pmtName");
+        //params.remove("pmtSource");
+        //params.remove("pageId");
+        //params.put("rt1HourStoreId", "233930371");
         recommendRequest.setAppId(appId);
         recommendRequest.setLogResult(true);
         recommendRequest.setParams(params);
