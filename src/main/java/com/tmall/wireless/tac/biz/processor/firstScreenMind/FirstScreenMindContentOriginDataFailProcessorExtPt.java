@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import com.alibaba.cola.extension.Extension;
@@ -15,6 +16,8 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ContentFailProcessorRequest;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ContentOriginDataFailProcessorExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
+import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
 import com.tmall.txcs.gs.model.model.dto.EntityDTO;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
@@ -47,7 +50,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
     private static final String pKey = "txcs_scene_collection_v1";
     private static final int labelSceneNamespace = 184;
     /**打底商品最大数量**/
-    private static final int needSize = 10;
+    private static int needSize = 10;
 
 
     @Override
@@ -56,6 +59,9 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():" + JSON.toJSONString(contentFailProcessorRequest.getContentEntityOriginDataDTO()));
         Map<String, Object> requestParams = contentFailProcessorRequest.getSgFrameworkContextContent().getRequestParams();
         OriginDataDTO<ContentEntity> originDataDTO = contentFailProcessorRequest.getContentEntityOriginDataDTO();
+        needSize = Optional.ofNullable(contentFailProcessorRequest.getSgFrameworkContextContent()).map(
+            SgFrameworkContext::getUserPageInfo).map(
+            PageInfoDO::getPageSize).orElse(needSize);
         /*boolean isSuccess = checkSuccess(originDataDTO);
         if(isSuccess){
             return originDataDTO;
@@ -71,7 +77,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             }
             LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt resultMap:"+JSON.toJSONString(resultMap));
             tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt resultMap:"+JSON.toJSONString(resultMap));
-            OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap);
+            OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap,needSize);
             LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
             tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
             return baseOriginDataDTO;
@@ -79,7 +85,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         return originDataDTO;
 
     }
-    public OriginDataDTO<ContentEntity> buildOriginDataDTO(Map<Object, Result<DataEntry>> resultMap){
+    public OriginDataDTO<ContentEntity> buildOriginDataDTO(Map<Object, Result<DataEntry>> resultMap,int needSize){
         OriginDataDTO<ContentEntity> originDataDTO = new OriginDataDTO<>();
         List<ContentEntity> contentEntities = Lists.newArrayList();
         //内容集list-圈品集list-商品
@@ -110,8 +116,8 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                     ItemEntity itemEntity = new ItemEntity();
                     itemEntity.setItemId(item);
                     itemEntity.setBizType("sm");
-                    itemEntity.setO2oType(gcsTairContentDTO.getMarketChannel());
-                    itemEntity.setBusinessType(gcsTairContentDTO.getMarketChannel());
+                    /*itemEntity.setO2oType(gcsTairContentDTO.getMarketChannel());
+                    itemEntity.setBusinessType(gcsTairContentDTO.getMarketChannel());*/
                     itemEntities.add(itemEntity);
                 });
                 if(itemEntities.size() > needSize){
