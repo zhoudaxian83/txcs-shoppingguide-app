@@ -53,17 +53,17 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         RecommendRequest recommendRequest = this.buildTppParams(context);
         //TODO
-        // Map<String, String> stringStringMap = new HashMap<>(16);
-        //stringStringMap.put("itemSetIdList", "5233");
-        //stringStringMap.put("logicAreaId", "107");
-        //stringStringMap.put("pageSize", "10");
-        //stringStringMap.put("index", "0");
-        //stringStringMap.put("rt1HourStoreId", "233930371");
-        //stringStringMap.put("itemSetIdSource", "crm");
-        //stringStringMap.put("smAreaId", "360111");
-        // stringStringMap.put("itemBusinessType", "OneHour");
-        //stringStringMap.put("isFirstPage", "true");
-        // recommendRequest.setParams(stringStringMap);
+         Map<String, String> stringStringMap = new HashMap<>(16);
+        stringStringMap.put("itemSetIdList", "5233");
+        stringStringMap.put("logicAreaId", "107");
+        stringStringMap.put("pageSize", "10");
+        stringStringMap.put("index", "0");
+        stringStringMap.put("rt1HourStoreId", "233930371");
+        stringStringMap.put("itemSetIdSource", "crm");
+        stringStringMap.put("smAreaId", "360111");
+         stringStringMap.put("itemBusinessType", "OneHour");
+        stringStringMap.put("isFirstPage", "true");
+         recommendRequest.setParams(stringStringMap);
         tacLogger.info("tpp入参：" + JSON.toJSONString(recommendRequest));
 
         long startTime = System.currentTimeMillis();
