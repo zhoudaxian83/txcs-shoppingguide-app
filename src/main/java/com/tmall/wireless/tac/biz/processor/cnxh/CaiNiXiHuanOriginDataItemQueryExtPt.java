@@ -144,6 +144,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         recommendRequest.setAppId(appId);
         recommendRequest.setLogResult(true);
         recommendRequest.setParams(params);
+        recommendRequest.setUserId(userId);
         return recommendRequest;
 
     }
