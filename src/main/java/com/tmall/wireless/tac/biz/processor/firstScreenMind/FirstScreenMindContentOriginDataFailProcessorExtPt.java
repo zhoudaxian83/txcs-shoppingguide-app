@@ -43,9 +43,11 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
     @Autowired
     TacLogger tacLogger;
 
-    /*场景内容兜底缓存前缀*/
+    /**场景内容兜底缓存前缀**/
     private static final String pKey = "txcs_scene_collection_v1";
     private static final int labelSceneNamespace = 184;
+    /**打底商品最大数量**/
+    private static final int needSize = 10;
 
 
     @Override
@@ -108,7 +110,12 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                     itemEntities.add(itemEntity);
                 });
             });
-            contentEntity.setItems(itemEntities);
+            if(itemEntities.size() > needSize){
+                contentEntity.setItems(itemEntities.subList(0,needSize));
+            }else{
+                contentEntity.setItems(itemEntities);
+            }
+
             contentEntities.add(contentEntity);
         }
         originDataDTO.setResult(contentEntities);
