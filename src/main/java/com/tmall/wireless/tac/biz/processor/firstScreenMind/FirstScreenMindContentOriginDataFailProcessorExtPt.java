@@ -105,7 +105,6 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                     itemEntity.setBizType("sm");
                     itemEntity.setBusinessType(gcsTairContentDTO.getMarketChannel());
                     itemEntities.add(itemEntity);
-                    contentEntity.getItems().add(itemEntity);
                 });
             });
             contentEntity.setItems(itemEntities);
