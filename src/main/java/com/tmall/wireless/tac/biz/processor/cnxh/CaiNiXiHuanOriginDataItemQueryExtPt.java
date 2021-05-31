@@ -61,26 +61,22 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             pt -> pt.process0(context));
         recommendRequest.setAppId(appId);
         recommendRequest.getParams().put("index", index + "");
+        tacLogger.info("tpp入参修改前：" + JSON.toJSONString(recommendRequest));
         //TODO
         Map<String, String> stringStringMap = new HashMap<>();
         stringStringMap.put("appid", appId + "");
         stringStringMap.put("itemSetIdList", "5233");
         stringStringMap.put("logicAreaId", "107");
-        stringStringMap.put("pageSize", "20");
+        stringStringMap.put("pageSize", "10");
         stringStringMap.put("index", "0");
         stringStringMap.put("rt1HourStoreId", "233930371");
         stringStringMap.put("itemSetIdSource", "crm");
         stringStringMap.put("smAreaId", "360111");
         stringStringMap.put("itemBusinessType", "OneHour");
         stringStringMap.put("isFirstPage", "true");
-        stringStringMap.put("itemSetIdSource", "crm");
-        stringStringMap.put("smAreaId", "360111");
-        stringStringMap.put("itemBusinessType", "OneHour");
-        stringStringMap.put("isFirstPage", "true");
         recommendRequest.setParams(stringStringMap);
-
+        tacLogger.info("tpp入参修改后：" + JSON.toJSONString(recommendRequest));
         long startTime = System.currentTimeMillis();
-        tacLogger.info("tpp入参：" + JSON.toJSONString(recommendRequest));
         return (recommendSpi.recommendItem(recommendRequest))
             .map(recommendResponseEntityResponse -> {
                 // tpp 返回失败
