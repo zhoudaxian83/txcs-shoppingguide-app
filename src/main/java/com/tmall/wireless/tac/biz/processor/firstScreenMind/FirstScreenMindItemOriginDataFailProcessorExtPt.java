@@ -2,9 +2,13 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
+
+import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
@@ -12,9 +16,16 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemOriginDataFailProcessorExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
+import com.tmall.txcs.gs.model.biz.context.LocParams;
+import com.tmall.txcs.gs.model.item.BizType;
+import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -67,22 +78,61 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
         if(CollectionUtils.isEmpty(itemIdList)){
             return originDataDTO;
         }
-        buildOriginDataDTO(itemIdList,originDataDTO);
-        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult()"+originDataDTO.getResult());
-        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult()"+originDataDTO.getResult());
+        OriginDataDTO<ItemEntity> baseOriginDataDTO = buildOriginDataDTO(itemIdList,itemFailProcessorRequest.getSgFrameworkContextItem());
+        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt baseOriginDataDTO.getResult()"+baseOriginDataDTO.getResult());
+        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt baseOriginDataDTO.getResult()"+baseOriginDataDTO.getResult());
 
-        return originDataDTO;
+        return baseOriginDataDTO;
     }
-    public void buildOriginDataDTO(List<Long> itemIdList,OriginDataDTO<ItemEntity> originDataDTO){
-        List<ItemEntity> itemEntitys = originDataDTO.getResult();
-        itemIdList.forEach(itemId -> {
+    public OriginDataDTO<ItemEntity> buildOriginDataDTO(List<Long> itemIdList,SgFrameworkContextItem contextItem){
+        OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
+        boolean isO2oScene = isO2oScene(contextItem);
+
+        String businessType;
+        String bizType;
+        String o2oType;
+
+        if (isO2oScene) {
+            businessType = O2oType.O2O.name();
+            bizType = BizType.SM.getCode();
+            if (isOneHour(contextItem)) {
+                o2oType = O2oType.O2OOneHour.name();
+            } else {
+                o2oType = O2oType.O2OHalfDay.name();
+            }
+        } else {
+            businessType = O2oType.B2C.name();
+            bizType = BizType.SM.getCode();
+            o2oType = O2oType.B2C.name();
+        }
+        List<ItemEntity> itemEntitys = itemIdList.stream().map(itemId -> {
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(itemId);
-            itemEntitys.add(itemEntity);
-        });
+            itemEntity.setBizType(bizType);
+            itemEntity.setBusinessType(businessType);
+            itemEntity.setO2oType(o2oType);
+            return itemEntity;
+        }).collect(Collectors.toList());
+        originDataDTO.setResult(itemEntitys);
+        originDataDTO.setIndex(0);
+        originDataDTO.setHasMore(false);
+        originDataDTO.setPvid("");
+        originDataDTO.setScm("1007.0.0.0");
+        return originDataDTO;
     }
     public boolean checkSuccess(OriginDataDTO<ItemEntity> originDataDTO){
 
         return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult());
+    }
+    private boolean isOneHour(SgFrameworkContextItem contextItem) {
+        Long oneHourStore = Optional.of(contextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
+
+        return oneHourStore > 0;
+    }
+
+    private boolean isO2oScene(SgFrameworkContextItem contextItem) {
+        String contentType = MapUtil.getStringWithDefault(contextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
+
+        return RenderContentTypeEnum.checkO2OContentType(contentType);
     }
 }
