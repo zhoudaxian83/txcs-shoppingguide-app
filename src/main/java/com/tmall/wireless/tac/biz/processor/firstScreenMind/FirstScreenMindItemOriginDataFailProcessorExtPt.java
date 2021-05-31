@@ -4,11 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import com.alibaba.cola.extension.Extension;
-import com.alibaba.fastjson.JSON;
-
-import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
@@ -45,21 +41,23 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
     Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindItemOriginDataFailProcessorExtPt.class);
 
     @Autowired
-    TairFactorySpi tairFactorySpi;
-    @Autowired
     TacLogger tacLogger;
+    @Autowired
+    TairFactorySpi tairFactorySpi;
 
     private static final int nameSpace = 184;
-    /*场景商品兜底缓存前缀*/
+    /**场景商品兜底缓存前缀**/
     private static final String pKey = "txcs_scene_item_collection_v1";
+    /**打底商品最大数量**/
+    private static final int needSize = 50;
 
 
     @Override
     public OriginDataDTO<ItemEntity> process(ItemFailProcessorRequest itemFailProcessorRequest) {
         Map<String, Object> requestParams = itemFailProcessorRequest.getSgFrameworkContextItem().getRequestParams();
         OriginDataDTO<ItemEntity> originDataDTO = itemFailProcessorRequest.getItemEntityOriginDataDTO();
-        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult():"+originDataDTO.getResult());
-        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult():"+originDataDTO.getResult());
+        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult().size()):"+originDataDTO.getResult().size());
+        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult().size()):"+originDataDTO.getResult().size());
         /*boolean isSuccess = checkSuccess(originDataDTO);
         if(isSuccess){
             return originDataDTO;
@@ -79,8 +77,8 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
             return originDataDTO;
         }
         OriginDataDTO<ItemEntity> baseOriginDataDTO = buildOriginDataDTO(itemIdList,itemFailProcessorRequest.getSgFrameworkContextItem());
-        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt baseOriginDataDTO.getResult()"+baseOriginDataDTO.getResult());
-        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt baseOriginDataDTO.getResult()"+baseOriginDataDTO.getResult());
+        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt baseOriginDataDTO.getResult().size()"+baseOriginDataDTO.getResult().size());
+        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt baseOriginDataDTO.getResult().size()"+baseOriginDataDTO.getResult().size());
 
         return baseOriginDataDTO;
     }
@@ -113,7 +111,11 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
             itemEntity.setO2oType(o2oType);
             return itemEntity;
         }).collect(Collectors.toList());
-        originDataDTO.setResult(itemEntitys);
+        if(itemEntitys.size() > needSize){
+            originDataDTO.setResult(itemEntitys.subList(0,needSize));
+        }else{
+            originDataDTO.setResult(itemEntitys);
+        }
         originDataDTO.setIndex(0);
         originDataDTO.setHasMore(false);
         originDataDTO.setPvid("");
