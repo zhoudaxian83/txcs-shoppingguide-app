@@ -26,7 +26,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Created by yangqing.byq on 2021/5/21.
+ *
+ * @author yangqing.byq
+ * @date 2021/5/21
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
@@ -35,21 +37,68 @@ import java.util.stream.Collectors;
 public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPostProcessorExtPt {
     @Override
     public OriginDataDTO<ItemEntity> process(SgFrameworkContextItem contextItem) {
-        if (isFirstPage(contextItem)) {
-            return processFirstPage(contextItem);
-        } else {
-            return contextItem.getItemEntityOriginDataDTO();
+        OriginDataDTO<ItemEntity> originDataDTO = Optional.of(contextItem).map(SgFrameworkContextItem::getItemEntityOriginDataDTO).orElse(null);
+        /**榜单不需要所见及所得，无需特殊处理**/
+        if(isBangdan(contextItem)){
+            return originDataDTO;
         }
+        List<ItemEntity> itemEntityList = getItemEntityList(contextItem);
+
+        if(CollectionUtils.isEmpty(itemEntityList)){
+            return originDataDTO;
+        }
+
+        if (originDataDTO == null || originDataDTO.getResult() == null) {
+            originDataDTO = new OriginDataDTO<>();
+            originDataDTO.setHasMore(false);
+            originDataDTO.setIndex(itemEntityList.size());
+            originDataDTO.setResult(Lists.newArrayList());
+            contextItem.setItemEntityOriginDataDTO(originDataDTO);
+        }
+        List<ItemEntity> finalItemEntities = Lists.newArrayList();
+        Set<String> itemUniqueKeySet = Sets.newHashSet();
+        /**首页所见即所得置顶且去重，非首页去重**/
+        itemEntityList.forEach(itemEntity -> {
+            ItemUniqueId itemUniqueId = itemEntity.getItemUniqueId();
+            if (itemUniqueKeySet.contains(itemUniqueId.toString())) {
+                return;
+            }
+            itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
+            if(isFirstPage(contextItem)){
+                finalItemEntities.add(itemEntity);
+            }
+        });
+
+        originDataDTO.getResult().forEach(itemEntity -> {
+            ItemUniqueId itemUniqueId = itemEntity.getItemUniqueId();
+            if (itemUniqueKeySet.contains(itemUniqueId.toString())) {
+                return;
+            }
+            itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
+            finalItemEntities.add(itemEntity);
+
+        });
+        originDataDTO.setResult(finalItemEntities);
+        contextItem.setItemEntityOriginDataDTO(originDataDTO);
+        return originDataDTO;
 
     }
 
-    private OriginDataDTO<ItemEntity> processFirstPage(SgFrameworkContextItem contextItem) {
+    private boolean isBangdan(SgFrameworkContextItem sgFrameworkContextItem) {
+        String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
+        return RenderContentTypeEnum.bangdanContent.getType().equals(contentType);
+    }
 
-
+    /**
+     * 获取所见所得商品
+     * @param contextItem
+     * @return
+     */
+    private List<ItemEntity> getItemEntityList(SgFrameworkContextItem contextItem){
         List<Long> itemIdList = getItemIdList(contextItem);
 
         if (CollectionUtils.isEmpty(itemIdList)) {
-            return contextItem.getItemEntityOriginDataDTO();
+            return null;
         }
 
         boolean isO2oScene = isO2oScene(contextItem);
@@ -81,41 +130,7 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
             return itemEntity;
         }).collect(Collectors.toList());
 
-        OriginDataDTO<ItemEntity> originDataDTO = Optional.of(contextItem).map(SgFrameworkContextItem::getItemEntityOriginDataDTO).orElse(null);
-
-        if (originDataDTO == null || originDataDTO.getResult() == null) {
-            originDataDTO = new OriginDataDTO<>();
-            originDataDTO.setHasMore(false);
-            originDataDTO.setIndex(itemIdList.size());
-            originDataDTO.setResult(Lists.newArrayList());
-            contextItem.setItemEntityOriginDataDTO(originDataDTO);
-        }
-
-        List<ItemEntity> finalItemEntities = Lists.newArrayList();
-
-        Set<String> itemUniqueKeySet = Sets.newHashSet();
-
-        itemEntityList.forEach(itemEntity -> {
-            ItemUniqueId itemUniqueId = itemEntity.getItemUniqueId();
-            if (itemUniqueKeySet.contains(itemUniqueId.toString())) {
-                return;
-            }
-            itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
-            finalItemEntities.add(itemEntity);
-        });
-
-        originDataDTO.getResult().forEach(itemEntity -> {
-            ItemUniqueId itemUniqueId = itemEntity.getItemUniqueId();
-            if (itemUniqueKeySet.contains(itemUniqueId.toString())) {
-                return;
-            }
-            itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
-            finalItemEntities.add(itemEntity);
-        });
-
-        originDataDTO.setResult(finalItemEntities);
-        contextItem.setItemEntityOriginDataDTO(originDataDTO);
-        return originDataDTO;
+        return itemEntityList;
     }
 
     private boolean isFirstPage(SgFrameworkContextItem contextItem) {
