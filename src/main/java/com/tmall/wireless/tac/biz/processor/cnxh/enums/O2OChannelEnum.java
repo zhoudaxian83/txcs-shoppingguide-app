@@ -5,7 +5,7 @@ package com.tmall.wireless.tac.biz.processor.cnxh.enums;
  * @Date: 2021/5/27 14:08
  * description:
  */
-public enum O2otTypeEnum {
+public enum O2OChannelEnum {
     ONE_HOUR("oneHour", "小时达", 21895L),
     HALF_DAY("halfDay", "半日达", 21896L),
     NEXT_DAY("nextDay", "次日达", 21896L),
@@ -15,7 +15,7 @@ public enum O2otTypeEnum {
     private final String name;
     private final long appId;
 
-    private O2otTypeEnum(String code, String name, long appId) {
+    private O2OChannelEnum(String code, String name, long appId) {
         this.code = code;
         this.name = name;
         this.appId = appId;
@@ -33,8 +33,8 @@ public enum O2otTypeEnum {
         return this.appId;
     }
 
-    public static O2otTypeEnum ofCode(String code) {
-        for (O2otTypeEnum area : O2otTypeEnum.values()) {
+    public static O2OChannelEnum ofCode(String code) {
+        for (O2OChannelEnum area : O2OChannelEnum.values()) {
             if (area.getCode().equals(code)) {
                 return area;
             }

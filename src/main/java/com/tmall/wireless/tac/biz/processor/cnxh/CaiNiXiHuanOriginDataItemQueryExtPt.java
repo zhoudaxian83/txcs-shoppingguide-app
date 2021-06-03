@@ -23,9 +23,8 @@ import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
 import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
-import com.tmall.wireless.tac.biz.processor.cnxh.enums.O2otTypeEnum;
+import com.tmall.wireless.tac.biz.processor.cnxh.enums.O2OChannelEnum;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderAddressUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
@@ -92,9 +91,9 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             context.getBizScenario(),
             pt -> pt.process0(context)).getParams();
         Map<String, String> params = new HashMap<>(16);
-        String o2oType = MapUtil.getStringWithDefault(context.getRequestParams(), "o2oType", "");
+        String O2OChannel = MapUtil.getStringWithDefault(context.getRequestParams(), "O2OChannel", "");
         String csa = MapUtil.getStringWithDefault(context.getRequestParams(), "csa", "");
-        Long appId = this.getAppId(o2oType);
+        Long appId = this.getAppId(O2OChannel);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
@@ -114,18 +113,18 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         params.put("logicAreaId", logicAreaId + "");
         params.put("itemSetIdList", itemSetId + "");
         params.put("isFirstPage", params1.get("isFirstPage"));
-        if (O2otTypeEnum.ONE_HOUR.getCode().equals(o2oType)) {
+        if (O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)) {
             params.put(pageId, "onehourcnxh");
             params.put(itemBusinessType, "OneHour");
             params.put("rt1HourStoreId", String.valueOf(context.getLocParams().getRt1HourStoreId()));
-        } else if (O2otTypeEnum.HALF_DAY.getCode().equals(o2oType)) {
+        } else if (O2OChannelEnum.HALF_DAY.getCode().equals(O2OChannel)) {
             params.put(pageId, "halfdaycnxh");
             params.put(itemBusinessType, "HalfDay");
             params.put("rtHalfDayStoreId", String.valueOf(context.getLocParams().getRtHalfDayStoreId()));
-        } else if (O2otTypeEnum.NEXT_DAY.getCode().equals(o2oType)) {
+        } else if (O2OChannelEnum.NEXT_DAY.getCode().equals(O2OChannel)) {
             params.put(pageId, "nextdaycnxh");
             params.put(itemBusinessType, "NextDay");
-        } else if (O2otTypeEnum.ALL_FRESH.getCode().equals(o2oType)) {
+        } else if (O2OChannelEnum.ALL_FRESH.getCode().equals(O2OChannel)) {
             params.put("pageId", "onehourcnxh");
             params.put(itemBusinessType, "B2C");
         }
@@ -169,11 +168,11 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
      * @return
      */
     private Long getAppId(String code) {
-        O2otTypeEnum o2otTypeEnum = O2otTypeEnum.ofCode(code);
-        if (o2otTypeEnum != null) {
-            o2otTypeEnum.getAppId();
+        O2OChannelEnum o2OChannelEnum = O2OChannelEnum.ofCode(code);
+        if (o2OChannelEnum != null) {
+            o2OChannelEnum.getAppId();
         }
-        return O2otTypeEnum.ALL_FRESH.getAppId();
+        return O2OChannelEnum.ALL_FRESH.getAppId();
 
     }
 
