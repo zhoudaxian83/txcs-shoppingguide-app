@@ -20,6 +20,8 @@ import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
 import com.tmall.txcs.gs.model.Response;
 import com.tmall.txcs.gs.model.content.ContentDTO;
 import com.tmall.txcs.gs.model.content.ContentInfoDTO;
+import com.tmall.txcs.gs.model.item.BizType;
+import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
@@ -74,8 +76,6 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
             }
             Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-            tacLogger.info("***********mgetResult.getValue().size()*******:"+mgetResult.getValue().size());
-            LOGGER.info("***********mgetResult.getValue().size()*******:"+mgetResult.getValue().size());
             tacLogger.info("***********mgetResult.getValue()*******:"+mgetResult.getValue());
             LOGGER.info("***********mgetResult.getValue()*******:"+mgetResult.getValue());
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
@@ -92,7 +92,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 String contentId = s[s.length - 1];
                 TairSceneDTO value = (TairSceneDTO) dataEntry.getValue();
                 tairResult.put(Long.valueOf(contentId), value);
-            });;
+            });
             for(ContentEntity contentEntity : contentEntities){
                 Long contentId = contentEntity.getContentId();
                 TairSceneDTO tairSceneDTO = tairResult.get(contentId);
@@ -161,6 +161,26 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
         }
         tacLogger.info("****FirstScreenMindContentInfoQueryExtPt contentDTOMap*****:"+contentDTOMap.toString());
         return Flowable.just(Response.success(contentDTOMap));
+    }
+
+    /**
+     * 构造置顶商品-视频场景内
+     * @param topItemIds
+     */
+    public List<ItemEntity> buildTopItemEntityList(List<Long> topItemIds,String marketChannel){
+        if (CollectionUtils.isEmpty(topItemIds)) {
+            return null;
+        }
+        List<ItemEntity> itemEntityList = topItemIds.stream().map(itemId -> {
+            ItemEntity itemEntity = new ItemEntity();
+            itemEntity.setItemId(itemId);
+            itemEntity.setO2oType(marketChannel);
+            itemEntity.setBizType(marketChannel);
+            return itemEntity;
+        }).collect(Collectors.toList());
+
+        return itemEntityList;
+
     }
 
     private static String getItemSetIds(TairSceneDTO labelSceneContentInfo) {

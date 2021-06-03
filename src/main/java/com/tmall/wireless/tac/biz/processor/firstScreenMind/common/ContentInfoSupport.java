@@ -9,6 +9,8 @@ import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.aselfcommon.model.scene.enums.SceneType;
 import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
+import com.tmall.txcs.gs.model.Response;
+import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
@@ -16,6 +18,7 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.model.content.SubCon
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderCheckUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
+import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,35 @@ public class ContentInfoSupport {
     TacLoggerImpl tacLogger;
 
     private static final int labelSceneNamespace = 184;
+
+    /**
+     * 获取tair数据
+     * @param contentIdList
+     * @return
+     */
+    public Map<Long, TairSceneDTO> getTairData(List<Long> contentIdList){
+        List<String> sKeyList = Lists.newArrayList();
+        for (Long contentId : contentIdList) {
+            sKeyList.add(CONTENT_TAIR_INFO_KEY + contentId);
+        }
+        Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
+        Map<Long, TairSceneDTO> tairResult = Maps.newHashMap();
+        if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
+            return tairResult;
+        }
+        List<DataEntry> dataEntryList = mgetResult.getValue();
+        //循环遍历获取结果
+        dataEntryList.forEach(dataEntry -> {
+            // txcs_scene_detail_v2_2020053172349
+            Object tairKey = dataEntry.getKey();
+            String tairKeyStr = String.valueOf(tairKey);
+            String[] s = tairKeyStr.split("_");
+            String contentId = s[s.length - 1];
+            TairSceneDTO value = (TairSceneDTO) dataEntry.getValue();
+            tairResult.put(Long.valueOf(contentId), value);
+        });
+        return tairResult;
+    }
 
     public Map<Long, Map<String, Object>> queryContentInfoByContentIdList(List<Long> contentIdList) {
         List<String> sKeyList = new ArrayList<>();
@@ -123,6 +155,46 @@ public class ContentInfoSupport {
         }
         return contentInfoMap;
     }
+    /**
+     * 构造置顶商品-视频场景内
+     * @param topItemIds
+     */
+    public List<ItemEntity> buildTopItemEntityList(List<Long> topItemIds,String marketChannel){
+        if (CollectionUtils.isEmpty(topItemIds)) {
+            return null;
+        }
+        List<ItemEntity> itemEntityList = topItemIds.stream().map(itemId -> {
+            ItemEntity itemEntity = new ItemEntity();
+            itemEntity.setItemId(itemId);
+            itemEntity.setO2oType(marketChannel);
+            itemEntity.setBizType(marketChannel);
+            return itemEntity;
+        }).collect(Collectors.toList());
+
+        return itemEntityList;
+
+    }
+
+    /**
+     * 获取内容场景下的置顶商品--支持货架场景
+     * @param labelSceneContentInfo
+     * @return
+     */
+    public Map<Long,List<Long>> getTopItemIds(TairSceneDTO labelSceneContentInfo){
+        Map<Long,List<Long>> topItemIdMap = Maps.newHashMap();
+        List<SceneDetailValue> sceneDetailValues = Optional.ofNullable(labelSceneContentInfo)
+            .map(TairSceneDTO::getDetails)
+            .orElse(Lists.newArrayList());
+        if (CollectionUtils.isEmpty(sceneDetailValues)) {
+            return topItemIdMap;
+        }
+        sceneDetailValues.forEach(sceneDetailValue -> {
+            Long itemsetId = sceneDetailValue.getItemsetId();
+            List<Long> topItemIds = sceneDetailValue.getTopItemIds();
+            topItemIdMap.put(itemsetId,topItemIds);
+        });
+        return topItemIdMap;
+    }
     private static String getItemSetIds(TairSceneDTO labelSceneContentInfo) {
 
         List<SceneDetailValue> sceneDetailValues = Optional.ofNullable(labelSceneContentInfo)
@@ -137,6 +209,7 @@ public class ContentInfoSupport {
         return Joiner.on(",").join(itemSetIds);
 
     }
+
     private static List<SubContentModel> buildSubContentBaseInfoV2(Map<String, Object> contentInfo,TairSceneDTO labelSceneContentInfo){
 
         List<SceneDetailValue> details = labelSceneContentInfo.getDetails();
