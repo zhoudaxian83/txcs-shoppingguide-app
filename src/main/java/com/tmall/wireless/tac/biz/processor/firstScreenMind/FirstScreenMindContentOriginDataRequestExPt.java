@@ -72,7 +72,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
             tppRequest.setLogResult(true);
             tppRequest.setUserId(Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
                 .map(UserDO::getUserId).orElse(0L));
-            tppRequest.setAppId(25379123L);
+            tppRequest.setAppId(25379L);
             contentSetIdList = getMindContentSetIdList(requestParams);// 新版本的内容集id
             List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id)
                 .collect(
@@ -153,7 +153,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         if (contentRecommendMetaInfo != null) {
             contentRecommendMetaInfo.setUseRecommendSpiV2(false);
         }
-        tppRequest.setAppId(25409123L);
+        tppRequest.setAppId(25409L);
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
