@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
+import com.tmall.aselfcommon.model.scene.enums.SceneType;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.ContentOriginDataPostProcessorExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
@@ -24,6 +25,8 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentT
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +38,7 @@ import org.springframework.stereotype.Service;
     scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
 @Service
 public class FirstScreenMindContentOriginDataPostProcessorExtPt implements ContentOriginDataPostProcessorExtPt {
+    Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindContentOriginDataPostProcessorExtPt.class);
 
     @Autowired
     ContentInfoSupport contentInfoSupport;
@@ -46,8 +50,8 @@ public class FirstScreenMindContentOriginDataPostProcessorExtPt implements Conte
 
         List<ContentEntity> contentEntities  = Optional.of(sgFrameworkContextContent).map(SgFrameworkContextContent::getContentEntityOriginDataDTO).map(OriginDataDTO::getResult).orElse(
             Lists.newArrayList());
-        /**只适用视频场景**/
-        if(CollectionUtils.isEmpty(contentEntities) || !isMedia(sgFrameworkContextContent)){
+
+        if(CollectionUtils.isEmpty(contentEntities)){
             return sgFrameworkContextContent.getContentEntityOriginDataDTO();
         }
         List<Long> contentIds = contentEntities.stream().map(ContentEntity::getContentId).collect(Collectors.toList());
@@ -61,6 +65,11 @@ public class FirstScreenMindContentOriginDataPostProcessorExtPt implements Conte
             /**如果内容后台返回的补全内容为空，那么把这个内容过滤掉，并且日志记录*/
             if(!tairResult.containsKey(contentId) || tairSceneDTO == null){
                 tacLogger.info("批量补全内容中心信息返回为空contentId:" + contentId +",tairResult:"+tairResult);
+                continue;
+            }
+            String type = SceneType.of(tairSceneDTO.getType()).name();
+            /**非视频内容类型，则不做处理**/
+            if(type.equals(SceneType.MEDIA.name())){
                 continue;
             }
             /**itemSetId,list**/

@@ -1,33 +1,23 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.cola.extension.Extension;
-import com.alibaba.fastjson.JSON;
-
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
-import com.tmall.aselfcommon.model.gcs.enums.GcsSceneType;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.aselfcommon.model.scene.enums.SceneType;
 import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
-import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
-import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryRequest;
+import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
 import com.tmall.txcs.gs.model.Response;
-import com.tmall.txcs.gs.model.content.ContentDTO;
 import com.tmall.txcs.gs.model.content.ContentInfoDTO;
-import com.tmall.txcs.gs.model.item.BizType;
-import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
-import com.tmall.txcs.gs.model.model.dto.ItemEntity;
-import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderErrorEnum;
@@ -161,26 +151,6 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
         }
         tacLogger.info("****FirstScreenMindContentInfoQueryExtPt contentDTOMap*****:"+contentDTOMap.toString());
         return Flowable.just(Response.success(contentDTOMap));
-    }
-
-    /**
-     * 构造置顶商品-视频场景内
-     * @param topItemIds
-     */
-    public List<ItemEntity> buildTopItemEntityList(List<Long> topItemIds,String marketChannel){
-        if (CollectionUtils.isEmpty(topItemIds)) {
-            return null;
-        }
-        List<ItemEntity> itemEntityList = topItemIds.stream().map(itemId -> {
-            ItemEntity itemEntity = new ItemEntity();
-            itemEntity.setItemId(itemId);
-            itemEntity.setO2oType(marketChannel);
-            itemEntity.setBizType(marketChannel);
-            return itemEntity;
-        }).collect(Collectors.toList());
-
-        return itemEntityList;
-
     }
 
     private static String getItemSetIds(TairSceneDTO labelSceneContentInfo) {
