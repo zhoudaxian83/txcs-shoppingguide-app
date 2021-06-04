@@ -70,8 +70,10 @@ public class FirstScreenMindContentOriginDataPostProcessorExtPt implements Conte
                 continue;
             }
             String type = SceneType.of(tairSceneDTO.getType()).name();
+            LOGGER.info("FirstScreenMindContentOriginDataPostProcessorExtPt type:"+type);
+            tacLogger.info("FirstScreenMindContentOriginDataPostProcessorExtPt type:"+type);
             /**非视频内容类型，则不做处理**/
-            if(type.equals(SceneType.MEDIA.name())){
+            if(!type.equals(SceneType.MEDIA.name())){
                 continue;
             }
             /**itemSetId,list**/
