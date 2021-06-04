@@ -74,8 +74,8 @@ public class FirstScreenMindContentOriginDataPostProcessorExtPt implements Conte
             }
             /**itemSetId,list**/
             Map<Long,List<Long>> topItemIdMap = contentInfoSupport.getTopItemIds(tairSceneDTO);
-            LOGGER.info("FirstScreenMindContentOriginDataPostProcessorExtPt topItemIdMap:"+contentId+":"+type+":"topItemIdMap);
-            tacLogger.info("FirstScreenMindContentOriginDataPostProcessorExtPt topItemIdMap:"+contentId+":"+type+":"topItemIdMap);
+            LOGGER.info("FirstScreenMindContentOriginDataPostProcessorExtPt topItemIdMap:"+contentId+":"+type+":"+topItemIdMap);
+            tacLogger.info("FirstScreenMindContentOriginDataPostProcessorExtPt topItemIdMap:"+contentId+":"+type+":"+topItemIdMap);
             /**视频不存在货架，只有一个圈品集**/
             List<Long> itemIds = topItemIdMap.values().stream().findFirst().get();
             if(CollectionUtils.isEmpty(itemIds)){
