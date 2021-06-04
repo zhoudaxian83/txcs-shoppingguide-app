@@ -44,8 +44,8 @@ public class SmartBuyItemScene {
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
         sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(context.get("csa"), smAreaId));
-
         sgFrameworkContextItem.setRequestParams(context.getParams());
+        sgFrameworkContextItem.getRequestParams().put("appId",24501L);
         sgFrameworkContextItem.setSceneInfo(getSceneInfo());
         sgFrameworkContextItem.setUserDO(getUserDO(context));
         sgFrameworkContextItem.setUserPageInfo(getPageInfoDO(context));
