@@ -61,6 +61,8 @@ public class FirstScreenMindContentOriginDataPostProcessorExtPt implements Conte
         }
         for(ContentEntity contentEntity : contentEntities){
             Long contentId = contentEntity.getContentId();
+            LOGGER.info("FirstScreenMindContentOriginDataPostProcessorExtPt contentId:"+contentId);
+            tacLogger.info("FirstScreenMindContentOriginDataPostProcessorExtPt contentId:"+contentId);
             TairSceneDTO tairSceneDTO = tairResult.get(contentId);
             /**如果内容后台返回的补全内容为空，那么把这个内容过滤掉，并且日志记录*/
             if(!tairResult.containsKey(contentId) || tairSceneDTO == null){
@@ -74,6 +76,8 @@ public class FirstScreenMindContentOriginDataPostProcessorExtPt implements Conte
             }
             /**itemSetId,list**/
             Map<Long,List<Long>> topItemIdMap = contentInfoSupport.getTopItemIds(tairSceneDTO);
+            LOGGER.info("FirstScreenMindContentOriginDataPostProcessorExtPt topItemIdMap:"+topItemIdMap);
+            tacLogger.info("FirstScreenMindContentOriginDataPostProcessorExtPt topItemIdMap:"+topItemIdMap);
             /**视频不存在货架，只有一个圈品集**/
             List<Long> itemIds = topItemIdMap.values().stream().findFirst().get();
             if(CollectionUtils.isEmpty(itemIds)){
@@ -100,7 +104,11 @@ public class FirstScreenMindContentOriginDataPostProcessorExtPt implements Conte
                 finalItemEntitys.add(itemEntity);
             });
             contentEntity.setItems(finalItemEntitys);
+            LOGGER.info("FirstScreenMindContentOriginDataPostProcessorExtPt contentEntity:"+contentEntity);
+            tacLogger.info("FirstScreenMindContentOriginDataPostProcessorExtPt contentEntity:"+contentEntity);
         }
+        LOGGER.info("FirstScreenMindContentOriginDataPostProcessorExtPt contentEntities:"+contentEntities);
+        tacLogger.info("FirstScreenMindContentOriginDataPostProcessorExtPt contentEntities:"+contentEntities);
         sgFrameworkContextContent.getContentEntityOriginDataDTO().setResult(contentEntities);
         return sgFrameworkContextContent.getContentEntityOriginDataDTO();
     }
