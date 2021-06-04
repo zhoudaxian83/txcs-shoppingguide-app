@@ -167,7 +167,8 @@ public class ContentInfoSupport {
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(itemId);
             itemEntity.setO2oType(marketChannel);
-            itemEntity.setBizType(marketChannel);
+            itemEntity.setBizType("sm");
+            itemEntity.setBusinessType(marketChannel);
             return itemEntity;
         }).collect(Collectors.toList());
 
