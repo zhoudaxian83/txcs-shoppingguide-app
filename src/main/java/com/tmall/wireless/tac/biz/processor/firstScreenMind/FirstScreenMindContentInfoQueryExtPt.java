@@ -10,7 +10,7 @@ import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.aselfcommon.model.scene.enums.SceneType;
 import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
-import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt
+import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
 import com.tmall.txcs.gs.model.Response;
