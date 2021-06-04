@@ -56,8 +56,6 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
     public OriginDataDTO<ItemEntity> process(ItemFailProcessorRequest itemFailProcessorRequest) {
         Map<String, Object> requestParams = itemFailProcessorRequest.getSgFrameworkContextItem().getRequestParams();
         OriginDataDTO<ItemEntity> originDataDTO = itemFailProcessorRequest.getItemEntityOriginDataDTO();
-        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult().size()):"+originDataDTO.getResult().size());
-        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt originDataDTO.getResult().size()):"+originDataDTO.getResult().size());
         boolean isSuccess = checkSuccess(originDataDTO);
         if(isSuccess){
             return originDataDTO;
