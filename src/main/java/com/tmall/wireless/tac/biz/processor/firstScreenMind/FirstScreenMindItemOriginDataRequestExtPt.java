@@ -75,9 +75,9 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
             SgFrameworkContext::getUserDO).map(UserDO::getCna).orElse(""));
         params.put("sceneId", requestParams.map(entry -> entry.get("moduleId")).orElse("").toString());
         if(isBangdan(sgFrameworkContextItem)){
-            tppRequest.setAppId(25399L);
+            tppRequest.setAppId(25399123L);
         }else{
-            tppRequest.setAppId(23410L);
+            tppRequest.setAppId(23410123L);
         }
         /***TPP相关常量*/
         params.put("itemSetIdSource","crm");
