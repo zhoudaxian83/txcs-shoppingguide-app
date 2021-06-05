@@ -55,6 +55,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         RecommendRequest recommendRequest = this.buildTppParams(context);
         tacLogger.info("tpp入参：" + JSON.toJSONString(recommendRequest));
+        LOGGER.info("tppParam：" + JSON.toJSONString(recommendRequest));
         long startTime = System.currentTimeMillis();
         return (recommendSpi.recommendItem(recommendRequest))
             .map(recommendResponseEntityResponse -> {
@@ -92,6 +93,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             pt -> pt.process0(context)).getParams();
         Map<String, String> params = new HashMap<>(16);
         String O2OChannel = MapUtil.getStringWithDefault(context.getRequestParams(), "O2OChannel", "");
+        String moduleId = MapUtil.getStringWithDefault(context.getRequestParams(), "moduleId", "");
         String csa = MapUtil.getStringWithDefault(context.getRequestParams(), "csa", "");
         Long appId = this.getAppId(O2OChannel);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
@@ -101,7 +103,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         Long smAreaId = context.getLocParams().getSmAreaId() == 0 ? LogicalArea.parseByCode(
             AddressUtil.parseCSA(csa).getRegionCode()).getCoreCityCode() : context.getLocParams().getSmAreaId();
         Long logicAreaId = context.getLocParams().getRegionCode();
-
         params.put("itemSetIdSource", "crm");
         params.put("pmtSource", "sm_manager");
         params.put("pmtName", "o2oGuessULike");
@@ -113,14 +114,19 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         params.put("logicAreaId", logicAreaId + "");
         params.put("itemSetIdList", itemSetId + "");
         params.put("isFirstPage", params1.get("isFirstPage"));
+
         if (O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)) {
             params.put(pageId, "onehourcnxh");
             params.put(itemBusinessType, "OneHour");
             params.put("rt1HourStoreId", String.valueOf(context.getLocParams().getRt1HourStoreId()));
+            params.put("itemBusinessType", "OneHour");
+            params.put("moduleId", moduleId);
         } else if (O2OChannelEnum.HALF_DAY.getCode().equals(O2OChannel)) {
             params.put(pageId, "halfdaycnxh");
             params.put(itemBusinessType, "HalfDay");
             params.put("rtHalfDayStoreId", String.valueOf(context.getLocParams().getRtHalfDayStoreId()));
+            params.put("moduleId", moduleId);
+
         } else if (O2OChannelEnum.NEXT_DAY.getCode().equals(O2OChannel)) {
             params.put(pageId, "nextdaycnxh");
             params.put(itemBusinessType, "NextDay");
@@ -128,6 +134,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             params.put("pageId", "onehourcnxh");
             params.put(itemBusinessType, "B2C");
         }
+
         recommendRequest.setAppId(appId);
         recommendRequest.setLogResult(true);
         recommendRequest.setParams(params);
