@@ -102,7 +102,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         Long itemSetId = MapUtil.getLongWithDefault(context.getRequestParams(), "itemSetId", 0L);
         Long smAreaId = context.getLocParams().getSmAreaId() == 0 ? LogicalArea.parseByCode(
             AddressUtil.parseCSA(csa).getRegionCode()).getCoreCityCode() : context.getLocParams().getSmAreaId();
-        Long logicAreaId = context.getLocParams().getRegionCode();
+        String logicAreaId = AddressUtil.parseCSA(csa).getRegionCode();
         params.put("itemSetIdSource", "crm");
         params.put("pmtSource", "sm_manager");
         params.put("pmtName", "o2oGuessULike");
@@ -111,7 +111,7 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         params.put("index", index + "");
         params.put("pageSize", pageSize + "");
         params.put(pageId, appId + "");
-        params.put("logicAreaId", logicAreaId + "");
+        params.put("logicAreaId", logicAreaId);
         params.put("itemSetIdList", itemSetId + "");
         params.put("isFirstPage", params1.get("isFirstPage"));
 
