@@ -34,17 +34,21 @@ public class SmartBuyOriginDataItemQueryExtPt implements OriginDataItemQueryExtP
             Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getRequestParams).orElse(Maps.newHashMap()),
             RequestKeyConstantApp.ITEM_ID,
             "");
+        String o2oType = MapUtil.getStringWithDefault(
+            Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getRequestParams).orElse(Maps.newHashMap()),
+            RequestKeyConstantApp.O2O_TYPE,
+            O2oType.B2C.name());
         if (StringUtils.isEmpty(itemId)) {
             return Flowable.just(originDataDTO);
         }
-        originDataDTO.setResult(buildItemList(itemId));
+        originDataDTO.setResult(buildItemList(itemId,o2oType));
         return Flowable.just(originDataDTO);
     }
-    private List<ItemEntity> buildItemList(String itemId) {
+    private List<ItemEntity> buildItemList(String itemId,String o2oType) {
         List<ItemEntity> result = Lists.newArrayList();
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setItemId(Long.valueOf(itemId));
-        itemEntity.setO2oType(O2oType.B2C.name());
+        itemEntity.setO2oType(o2oType);
         itemEntity.setBizType(defaultBizType);
         result.add(itemEntity);
         return result;

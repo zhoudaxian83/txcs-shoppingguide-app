@@ -39,13 +39,14 @@ public class SmartBuyItemScene {
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
+    private static final Long appId = 25832L;
+
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
         sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(context.get("csa"), smAreaId));
         sgFrameworkContextItem.setRequestParams(context.getParams());
-        sgFrameworkContextItem.getRequestParams().put("appId",25832L);
         sgFrameworkContextItem.setSceneInfo(getSceneInfo());
         sgFrameworkContextItem.setUserDO(getUserDO(context));
         sgFrameworkContextItem.setUserPageInfo(getPageInfoDO(context));
@@ -103,6 +104,7 @@ public class SmartBuyItemScene {
         itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoSmartUi = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoSmartUi.setSourceName("smartui");
+        itemInfoSourceMetaInfoSmartUi.setAppId(appId);
         /**site_id(鲸幂site站点): 508 策略包ID: 9784**/
         itemInfoSourceMetaInfoSmartUi.setStrategyPackageId("575_9784");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoSmartUi);
