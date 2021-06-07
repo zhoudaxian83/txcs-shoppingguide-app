@@ -54,8 +54,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         RecommendRequest recommendRequest = this.buildTppParams(context);
-        tacLogger.info("tpp入参：" + JSON.toJSONString(recommendRequest));
-        LOGGER.info("tppParam：" + JSON.toJSONString(recommendRequest));
         long startTime = System.currentTimeMillis();
         return (recommendSpi.recommendItem(recommendRequest))
             .map(recommendResponseEntityResponse -> {
@@ -114,7 +112,6 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
         params.put("logicAreaId", logicAreaId);
         params.put("itemSetIdList", itemSetId + "");
         params.put("isFirstPage", params1.get("isFirstPage"));
-
         if (O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)) {
             params.put(pageId, "onehourcnxh");
             params.put(itemBusinessType, "OneHour");
