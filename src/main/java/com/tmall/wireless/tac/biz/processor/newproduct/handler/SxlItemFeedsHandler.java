@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.shangxinl.handler;
+package com.tmall.wireless.tac.biz.processor.newproduct.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
@@ -70,7 +70,7 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
         HadesLogUtil.debug("ITEM_REQUEST:{}"+JSON.toJSONString(context));
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
-        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID, 0L);
+        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID, 322385L);
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         EntitySetParams entitySetParams = new EntitySetParams();
@@ -159,9 +159,9 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
         response.getItemAndContentList().stream().forEach(i -> {
             if (i instanceof ItemEntityVO) {
                 Long itemId = i.getLong("itemId");
-                String locType = i.getString("locType");
-                String key = locType + "_" + itemId;
-                itemEntityVOMap.put(key, i);
+                //String locType = i.getString("locType");
+                //String key = locType + "_" + itemId;
+                //itemEntityVOMap.put(key, i);
             }
         });
         return itemEntityVOMap;
@@ -177,7 +177,7 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
         itemGroupMetaInfo1.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-        itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common\n");
+        itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
         itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(322385L));
 
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);

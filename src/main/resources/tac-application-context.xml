@@ -35,6 +35,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindOriginDataPostProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport"/>
 
-    <bean class="com.tmall.wireless.tac.biz.processor.shangxinl.handler.SxlItemFeedsHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.handler.SxlItemFeedsHandler"/>
 
 </beans>
