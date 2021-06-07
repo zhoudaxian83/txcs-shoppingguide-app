@@ -19,6 +19,7 @@ import com.tmall.txcs.gs.model.biz.context.EntitySetParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.BannerItemDTO;
 import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.BannerItemVO;
@@ -69,14 +70,12 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
         HadesLogUtil.debug("ITEM_REQUEST:{}"+JSON.toJSONString(context));
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
+        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID, 0L);
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetSource("crm");
-        Long itemSetId = (Long)context.getParams().get("itemSetId");
-        if(itemSetId !=null || itemSetId!=0){
-            entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
-        }
+        entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
         sgFrameworkContextItem.setRequestParams(context.getParams());
         sgFrameworkContextItem.setEntitySetParams(entitySetParams);
         SceneInfo sceneInfo = new SceneInfo();
