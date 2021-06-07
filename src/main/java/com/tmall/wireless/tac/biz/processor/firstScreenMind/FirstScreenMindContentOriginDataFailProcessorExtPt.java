@@ -1,8 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import com.alibaba.cola.extension.Extension;
@@ -16,6 +16,8 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ContentFailProcessorRequest;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ContentOriginDataFailProcessorExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
+import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
 import com.tmall.txcs.gs.model.model.dto.EntityDTO;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
@@ -24,6 +26,7 @@ import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,40 +46,44 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
     @Autowired
     TacLogger tacLogger;
 
-    /*场景内容兜底缓存前缀*/
+    /**场景内容兜底缓存前缀**/
     private static final String pKey = "txcs_scene_collection_v1";
     private static final int labelSceneNamespace = 184;
+    /**打底商品最大数量**/
+    private static int needSize = 10;
 
 
     @Override
     public OriginDataDTO<ContentEntity> process(ContentFailProcessorRequest contentFailProcessorRequest) {
-        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():" + JSON.toJSONString(contentFailProcessorRequest.getContentEntityOriginDataDTO()));
-        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt contentFailProcessorRequest.getContentEntityOriginDataDTO():" + JSON.toJSONString(contentFailProcessorRequest.getContentEntityOriginDataDTO()));
         Map<String, Object> requestParams = contentFailProcessorRequest.getSgFrameworkContextContent().getRequestParams();
         OriginDataDTO<ContentEntity> originDataDTO = contentFailProcessorRequest.getContentEntityOriginDataDTO();
+        needSize = Optional.ofNullable(contentFailProcessorRequest.getSgFrameworkContextContent()).map(
+            SgFrameworkContext::getUserPageInfo).map(
+            PageInfoDO::getPageSize).orElse(needSize);
         boolean isSuccess = checkSuccess(originDataDTO);
         if(isSuccess){
             return originDataDTO;
         }
-        List<String> sKeyList = new ArrayList<>();
+        List<String> sKeyList = Lists.newArrayList();
         sKeyList = getContentSetIdList(requestParams);
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
-        Result<Map<Object, Result<DataEntry>>> labelSceneResult = null;
-        try{
-            labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
-            LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt labelSceneResult:" + JSON.toJSONString(labelSceneResult));
-            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt labelSceneResult:" + JSON.toJSONString(labelSceneResult));
-        }catch (Exception e){
-            LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt e.getMessage():"+e.getMessage());
-            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt e.getMessage():"+e.getMessage());
+        Result<Map<Object, Result<DataEntry>>> labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
+        if(labelSceneResult != null && labelSceneResult.getValue() !=null){
+            Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
+            if(MapUtils.isEmpty(resultMap)){
+                return originDataDTO;
+            };
+            OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap,needSize);
+            LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
+            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
+            return baseOriginDataDTO;
         }
+        return originDataDTO;
 
-        if(labelSceneResult == null || !labelSceneResult.isSuccess()){
-            LOGGER.error("FirstScreenMindContentOriginDataFailProcessorExtPt sKeyList:"+sKeyList+",labelSceneResult:"+ JSON.toJSONString(labelSceneResult));
-            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt sKeyList:"+sKeyList+",labelSceneResult:"+ JSON.toJSONString(labelSceneResult));
-            return contentFailProcessorRequest.getContentEntityOriginDataDTO();
-        }
-        Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
+    }
+    public OriginDataDTO<ContentEntity> buildOriginDataDTO(Map<Object, Result<DataEntry>> resultMap,int needSize){
+        OriginDataDTO<ContentEntity> originDataDTO = new OriginDataDTO<>();
+        List<ContentEntity> contentEntities = Lists.newArrayList();
         //内容集list-圈品集list-商品
         for(Object sKey : resultMap.keySet()) {
             Result<DataEntry> result = resultMap.get(sKey);
@@ -94,21 +101,34 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                 LOGGER.error("FirstScreenMindContentOriginDataFailProcessorExtPt gcsTairContentDTOList:"+ JSON.toJSONString(gcsTairContentDTOList));
                 continue;
             }
-            ContentEntity contentEntity = new ContentEntity();
-            contentEntity.setContentId((Long)sKey);
+
+
             gcsTairContentDTOList.forEach(gcsTairContentDTO -> {
+                ContentEntity contentEntity = new ContentEntity();
+                contentEntity.setContentId(Long.valueOf(gcsTairContentDTO.getSceneId()));
                 List<Long> items = gcsTairContentDTO.getItems();
+                List<ItemEntity> itemEntities = Lists.newArrayList();
                 items.forEach(item -> {
                     ItemEntity itemEntity = new ItemEntity();
                     itemEntity.setItemId(item);
-                    contentEntity.getItems().add(itemEntity);
+                    itemEntity.setBizType("sm");
+                    itemEntity.setO2oType(gcsTairContentDTO.getMarketChannel());
+                    /*itemEntity.setBusinessType(gcsTairContentDTO.getMarketChannel());*/
+                    itemEntities.add(itemEntity);
                 });
-
+                if(itemEntities.size() > needSize){
+                    contentEntity.setItems(itemEntities.subList(0,needSize));
+                }else{
+                    contentEntity.setItems(itemEntities);
+                }
+                contentEntities.add(contentEntity);
             });
-            originDataDTO.getResult().add(contentEntity);
         }
-        LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt originDataDTO:"+originDataDTO);
-        tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt originDataDTO:"+originDataDTO);
+        if(contentEntities.size() > needSize){
+            originDataDTO.setResult(contentEntities.subList(0,needSize));
+        }else{
+            originDataDTO.setResult(contentEntities);
+        }
         return originDataDTO;
     }
 
