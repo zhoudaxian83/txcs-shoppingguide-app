@@ -74,7 +74,9 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetSource("crm");
         Long itemSetId = (Long)context.getParams().get("itemSetId");
-        entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
+        if(itemSetId !=null || itemSetId!=0){
+            entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
+        }
         sgFrameworkContextItem.setRequestParams(context.getParams());
         sgFrameworkContextItem.setEntitySetParams(entitySetParams);
         SceneInfo sceneInfo = new SceneInfo();
