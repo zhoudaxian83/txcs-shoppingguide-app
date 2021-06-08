@@ -31,7 +31,7 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
 
     private static final Long APPID = 24910L;
 
-    private static final int pageSize = 20;
+    private static final String pageSize = "20";
 
 
     @Override
@@ -44,16 +44,16 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         tppRequest.setAppId(APPID);
 
         sgFrameworkContextItem.getEntitySetParams().getContentSetIdList();
-        Map<String, Object> params = Maps.newHashMap();
+        Map<String, String> params = Maps.newHashMap();
         params.put("pageSize", pageSize);
         params.put("itemSets", "crm_322385");
 
         Integer index = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserPageInfo).map(
             PageInfoDO::getIndex).orElse(0);
-        params.put("index", index);
+        params.put("index", "0");
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
-
+        tppRequest.setParams(params);
         return tppRequest;
     }
 }
