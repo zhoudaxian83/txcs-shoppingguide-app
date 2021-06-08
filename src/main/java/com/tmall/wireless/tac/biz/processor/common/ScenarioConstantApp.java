@@ -26,5 +26,8 @@ public class ScenarioConstantApp extends ScenarioConstant {
 
     public static final String SCENARIO_SHANG_XIN_ITEM= "SHANG_XIN_ITEM";
 
+    public static final String SCENARIO_SHANG_XIN_CONTENT= "SHANG_XIN_CONTENT";
+
+
 
 }
