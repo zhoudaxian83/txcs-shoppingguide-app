@@ -47,7 +47,7 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         Map<String, String> params = Maps.newHashMap();
         params.put("pageSize", pageSize);
         params.put("itemSets", "crm_322385");
-
+        params.put("smAreaId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         Integer index = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserPageInfo).map(
             PageInfoDO::getIndex).orElse(0);
         params.put("index", "0");
