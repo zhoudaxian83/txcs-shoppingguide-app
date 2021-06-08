@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
+ * tpp入参组装扩展点
  * @author haixiao.zhang
  * @date 2021/6/8
  */
@@ -38,8 +39,6 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
          */
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID);
-
-        sgFrameworkContextContent.getEntitySetParams().getContentSetIdList();
         Map<String, String> params = Maps.newHashMap();
         params.put("itemSets", "crm_322385,crm_5233");
         params.put("commerce", "B2C");
