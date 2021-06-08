@@ -191,6 +191,7 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
         itemRecommendMetaInfo.setAppId(24910L);
         itemMetaInfo.setItemRecommendMetaInfo(itemRecommendMetaInfo);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
+        itemRecommendMetaInfo.setUseRecommendSpiV2(true);
         return itemMetaInfo;
     }
 
