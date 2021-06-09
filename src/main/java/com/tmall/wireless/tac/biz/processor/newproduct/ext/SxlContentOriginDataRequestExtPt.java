@@ -55,11 +55,17 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
 
-        Map<String, ResResponse> aldResponse = getAldInfo(sgFrameworkContextContent);
-        LOGGER.error("SxlContentOriginDataRequestExtPt aldResponse:{}",JSON.toJSONString(aldResponse));
+        //Map<String, ResResponse> aldResponse = getAldInfo(sgFrameworkContextContent);
+       // LOGGER.error("SxlContentOriginDataRequestExtPt aldResponse:{}",JSON.toJSONString(aldResponse));
+
         /**
          * https://tui.taobao.com/recommend?appid=25831&itemSets=crm_5233&commerce=B2C&regionCode=108&smAreaId=330110&itemSetFilterTriggers=crm_5233&OPEN_MAINTENANCE=1
          */
+
+        /*
+        https://tuipre.taobao.com/recommend?appid=25831&itemSets=crm_296517,crm_296516&commerce=B2C&regionCode=108&smAreaId=330110&itemSetFilterTriggers=crm_296517,crm_296516
+        */
+
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID);
         Map<String, String> params = Maps.newHashMap();
