@@ -34,8 +34,8 @@ import org.springframework.stereotype.Service;
  * @Date: 2021/5/14 10:26
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-    scenario = ScenarioConstantApp.WU_ZHE_TIAN)
+        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+        scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
@@ -60,16 +60,16 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOMain) {
-                ItemInfoBySourceDTOMain itemInfoBySourceDTOMain = (ItemInfoBySourceDTOMain)itemInfoBySourceDTO;
+                ItemInfoBySourceDTOMain itemInfoBySourceDTOMain = (ItemInfoBySourceDTOMain) itemInfoBySourceDTO;
                 itemUrl = Optional.of(itemInfoBySourceDTOMain)
-                    .map(ItemInfoBySourceDTOMain::getItemDTO)
-                    .map(ItemDataDTO::getDetailUrl)
-                    .orElse("");
+                        .map(ItemInfoBySourceDTOMain::getItemDTO)
+                        .map(ItemDataDTO::getDetailUrl)
+                        .orElse("");
 
                 hasMainSource = true;
             }
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOOrigin) {
-                ItemInfoBySourceDTOOrigin itemInfoBySourceDTOOrigin = (ItemInfoBySourceDTOOrigin)itemInfoBySourceDTO;
+                ItemInfoBySourceDTOOrigin itemInfoBySourceDTOOrigin = (ItemInfoBySourceDTOOrigin) itemInfoBySourceDTO;
                 originScm = itemInfoBySourceDTOOrigin.getScm();
 
             }
@@ -126,30 +126,31 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     /**
      * 返回结果优化，clear多余数据
+     *
      * @param itemEntityVO
      */
-    private void perfect(ItemEntityVO itemEntityVO){
+    private void perfect(ItemEntityVO itemEntityVO) {
 
     }
 
 
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
         List<ItemLimitDTO> itemLimitDTOS;
-        Long itemId = (Long)itemEntityVO.get("itemId");
+        Long itemId = (Long) itemEntityVO.get("itemId");
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
         if (limitResult == null) {
-            itemEntityVO.put("limit", null);
+            itemEntityVO.put("itemLimit", null);
             return;
         }
         itemLimitDTOS = limitResult.get(itemId);
         /**
          * 限购信息
          */
-        itemEntityVO.put("limit", itemLimitDTOS);
+        itemEntityVO.put("itemLimit", itemLimitDTOS.get(0));
     }
 
     private Map<Long, List<ItemLimitDTO>> getLimitResult(Map<String, Object> userParams) {
-        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>)userParams.get(Constant.ITEM_LIMIT_RESULT);
+        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>) userParams.get(Constant.ITEM_LIMIT_RESULT);
         if (limitResult != null) {
             return limitResult;
         }
