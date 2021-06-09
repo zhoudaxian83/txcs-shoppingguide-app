@@ -149,7 +149,6 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         /**
          * 限购信息
          */
-        tacLogger.info("限购信息itemLimit:"+ JSON.toJSONString(itemLimitDTOS));
         itemEntityVO.put("itemLimit", itemLimitDTOS.get(0));
     }
 
