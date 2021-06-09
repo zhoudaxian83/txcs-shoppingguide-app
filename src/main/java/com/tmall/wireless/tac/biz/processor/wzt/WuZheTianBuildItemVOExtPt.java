@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.alibaba.cola.extension.Extension;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
@@ -22,6 +23,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -146,6 +148,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         /**
          * 限购信息
          */
+        tacLogger.info("限购信息itemLimit:"+ JSON.toJSONString(itemLimitDTOS));
         itemEntityVO.put("itemLimit", itemLimitDTOS.get(0));
     }
 
