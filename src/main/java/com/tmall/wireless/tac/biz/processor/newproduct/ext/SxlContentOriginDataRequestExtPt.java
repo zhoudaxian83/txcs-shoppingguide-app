@@ -55,8 +55,8 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
 
-        //Map<String, ResResponse> aldResponse = getAldInfo(sgFrameworkContextContent);
-       // LOGGER.error("SxlContentOriginDataRequestExtPt aldResponse:{}",JSON.toJSONString(aldResponse));
+        Map<String, ResResponse> aldResponse = getAldInfo(sgFrameworkContextContent);
+        LOGGER.error("SxlContentOriginDataRequestExtPt aldResponse:{}",JSON.toJSONString(aldResponse));
 
         /**
          * https://tui.taobao.com/recommend?appid=25831&itemSets=crm_5233&commerce=B2C&regionCode=108&smAreaId=330110&itemSetFilterTriggers=crm_5233&OPEN_MAINTENANCE=1
@@ -71,6 +71,7 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         Map<String, String> params = Maps.newHashMap();
         params.put("itemSets", "crm_322385,crm_5233");
         params.put("commerce", "B2C");
+        params.put("regionCode", "108");
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
@@ -94,8 +95,8 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         item.setResId("17390113");
         UserProfile userProfile = request.getUserProfile();
         userProfile.setUserId(sgFrameworkContextContent.getUserDO().getUserId());
-        DeviceInfo deviceInfo = request.getDeviceInfo();;
-        deviceInfo.setTtid(sgFrameworkContextContent.getUserDO().getUtdid());
+        DeviceInfo deviceInfo = request.getDeviceInfo();
+        //deviceInfo.setTtid(sgFrameworkContextContent.get().);
         request.setRequestItems(Lists.newArrayList(item));
         //地址信息
         LocationInfo locationInfo = request.getLocationInfo();
