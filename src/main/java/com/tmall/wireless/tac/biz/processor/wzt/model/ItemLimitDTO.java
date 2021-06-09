@@ -1,11 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.wzt.model;
 
-import java.io.Serializable;
-
 import lombok.Data;
 
 @Data
-public class ItemLimitDTO implements Serializable {
+public class ItemLimitDTO  {
 
     //商品id
     private Long itemId;
