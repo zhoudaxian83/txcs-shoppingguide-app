@@ -50,7 +50,7 @@ public class ContentSetIdListUtil {
     }
 
     /**
-     * 承接页不出菜谱
+     * 承接页不出菜谱、心智
      * @param requestParams
      * @return
      */

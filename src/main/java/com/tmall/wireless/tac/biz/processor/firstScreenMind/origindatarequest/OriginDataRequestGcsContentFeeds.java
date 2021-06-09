@@ -11,6 +11,7 @@ import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 public class OriginDataRequestGcsContentFeeds implements OriginDataRequest{
     @Override
     public RecommendRequest buildRecommendRequest(SgFrameworkContext sgFrameworkContext) {
+
         return null;
     }
 

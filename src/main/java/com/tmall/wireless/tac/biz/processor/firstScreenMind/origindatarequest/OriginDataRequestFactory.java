@@ -6,7 +6,6 @@ import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.FirstScreenConstant;
-import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +22,6 @@ public class OriginDataRequestFactory {
 
     public RecommendRequest getRecommendRequest(String requestFrom, SgFrameworkContext sgFrameworkContext){
         OriginDataRequest originDataRequest = null;
-        LOGGER.info("OriginDataRequestFactory requestFrom:" + requestFrom);
-        tacLogger.info("OriginDataRequestFactory requestFrom:" + requestFrom);
-        LOGGER.info("OriginDataRequestFactory isMind(sgFrameworkContext):" + isMind(sgFrameworkContext));
-        tacLogger.info("OriginDataRequestFactory isMind(sgFrameworkContext):" + isMind(sgFrameworkContext));
         switch (requestFrom){
             case FirstScreenConstant.CONTENT_CONTENT_FEEDS:
                 if(isMind(sgFrameworkContext)){
