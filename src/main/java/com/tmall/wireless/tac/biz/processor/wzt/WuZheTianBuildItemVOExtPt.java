@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import com.alibaba.cola.extension.Extension;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
@@ -23,7 +22,6 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -90,7 +88,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         this.buildLimit(itemEntityVO, userParams);
-        this.perfect(itemEntityVO);
+        this.buildElse(itemEntityVO);
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
@@ -128,12 +126,12 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     }
 
     /**
-     * 返回结果优化，clear多余数据
+     * 补全其它字段
      *
      * @param itemEntityVO
      */
-    private void perfect(ItemEntityVO itemEntityVO) {
-
+    private void buildElse(ItemEntityVO itemEntityVO) {
+        itemEntityVO.put("itemType", "channelPriceNew");
     }
 
 
@@ -141,8 +139,8 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         List<ItemLimitDTO> itemLimitDTOS;
         Long itemId = (Long) itemEntityVO.get("itemId");
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
-        if (limitResult == null|| CollectionUtils.isEmpty(limitResult.get(itemId))) {
-            itemEntityVO.put("itemLimit", null);
+        if (limitResult == null || CollectionUtils.isEmpty(limitResult.get(itemId))) {
+            itemEntityVO.put("itemLimit", new ItemLimitDTO());
             return;
         }
         itemLimitDTOS = limitResult.get(itemId);
