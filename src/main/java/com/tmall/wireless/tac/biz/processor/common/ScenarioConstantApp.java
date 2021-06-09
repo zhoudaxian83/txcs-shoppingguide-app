@@ -23,4 +23,7 @@ public class ScenarioConstantApp extends ScenarioConstant {
 
     public static final String SCENE_FIRST_SCREEN_MIND_ITEM = "FIRST_SCREEN_MIND_ITEM";
 
+    /**smartbuy**/
+    public static final String SCENE_SMART_BUY_ITEM = "SCENE_SMART_BUY_ITEM";
+
 }

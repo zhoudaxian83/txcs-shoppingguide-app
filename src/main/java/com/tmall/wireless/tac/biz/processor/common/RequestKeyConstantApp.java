@@ -13,6 +13,8 @@ public class RequestKeyConstantApp {
     public static final String PAGE_SIZE = "pageSize";
     public static final String SMAREA_ID = "smAreaId";
     public static final String ITEM_SET_IDS = "itemSetIds";
+    public static final String ITEM_ID = "itemId";
+    public static final String O2O_TYPE = "o2oType";
     // 逛超市场景集key
     public static final String FIRST_SCREEN_SCENE_CONTENT_SET_RANKING = "rankingContentSetIds";
     public static final String FIRST_SCREEN_SCENE_CONTENT_SET_RECIPE = "recipeContentSetIds";
