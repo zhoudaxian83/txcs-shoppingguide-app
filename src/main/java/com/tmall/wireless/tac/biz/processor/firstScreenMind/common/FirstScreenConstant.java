@@ -7,8 +7,8 @@ public class FirstScreenConstant {
 
     public static final String REQUEST_FROM = "requestFrom";
 
-    public static final String CONTENT_FEEDS  = "contentfeeds";
-    public static final String ITEM_FEEDS = "itemfeeds";
+    public static final String CONTENT_FEEDS  = "contentFeeds";
+    public static final String ITEM_FEEDS = "itemFeeds";
     public static final String GCS_CONTENT_FEEDS = "gcsContentFeeds";
     public static final String GCS_ITEM_FEEDS = "gcsItemFeeds";
 
