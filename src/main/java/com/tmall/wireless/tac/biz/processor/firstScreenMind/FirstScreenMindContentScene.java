@@ -14,6 +14,7 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.MindUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -52,7 +53,8 @@ public class FirstScreenMindContentScene {
         sgFrameworkContextContent.setSceneInfo(getSceneInfo());
         sgFrameworkContextContent.setUserDO(getUserDO(context));
         sgFrameworkContextContent.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
-        sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo());
+
+        sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo(context.getParams()));
 
 
         PageInfoDO pageInfoDO = new PageInfoDO();
@@ -125,7 +127,7 @@ public class FirstScreenMindContentScene {
     }
 
 
-    public ContentMetaInfo getContentMetaInfo() {
+    public ContentMetaInfo getContentMetaInfo(Map<String, Object> requestParams) {
         ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
@@ -161,7 +163,12 @@ public class FirstScreenMindContentScene {
 
         contentMetaInfo.setItemMetaInfo(itemMetaInfo);
         ContentRecommendMetaInfo contentRecommendMetaInfo = new ContentRecommendMetaInfo();
-        contentRecommendMetaInfo.setUseRecommendSpiV2(true);
+        if(MindUtil.isMind(requestParams)){
+            contentRecommendMetaInfo.setUseRecommendSpiV2(true);
+        }else{
+            contentRecommendMetaInfo.setUseRecommendSpiV2(false);
+        }
+
         contentMetaInfo.setContentRecommendMetaInfo(contentRecommendMetaInfo);
         return contentMetaInfo;
     }

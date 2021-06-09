@@ -9,6 +9,9 @@ import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author guijian
+ */
 @Component
 public class FirstScreenMindContentHandler extends RpmReactiveHandler<SgFrameworkResponse<ContentVO>> {
 

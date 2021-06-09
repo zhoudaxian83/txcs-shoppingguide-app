@@ -14,8 +14,10 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.FirstScreenConstant;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.origindatarequest.OriginDataRequestFactory;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderAddressUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -30,13 +32,15 @@ import java.util.Optional;
 @Service
 public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
 
-
     @Autowired
-    TacLogger tacLogger;
+    OriginDataRequestFactory originDataRequestFactory;
 
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info("****FirstScreenMindItemOriginDataRequestExtPt sgFrameworkContextItem****:"+sgFrameworkContextItem.toString());
+
+        RecommendRequest tppRequest = originDataRequestFactory.getRecommendRequest(FirstScreenConstant.ITEM_ITEM_FEEDS,sgFrameworkContextItem);
+        return tppRequest;
+        /*tacLogger.info("****FirstScreenMindItemOriginDataRequestExtPt sgFrameworkContextItem****:"+sgFrameworkContextItem.toString());
 
         boolean isO2o = isO2oScene(sgFrameworkContextItem);
 
@@ -79,7 +83,7 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
         }else{
             tppRequest.setAppId(23410L);
         }
-        /***TPP相关常量*/
+        *//***TPP相关常量*//*
         params.put("itemSetIdSource","crm");
         Integer index = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserPageInfo).map(PageInfoDO::getIndex).orElse(0);
         params.put("isFirstPage", index > 0 ? "false" : "true");
@@ -89,19 +93,7 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
         tacLogger.info("****FirstScreenMindItemOriginDataRequestExtPt tppRequest****:"+tppRequest.toString());
-        return tppRequest;
+        return tppRequest;*/
     }
-
-    private boolean isO2oScene(SgFrameworkContextItem sgFrameworkContextItem) {
-
-        String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
-        return RenderContentTypeEnum.checkO2OContentType(contentType);
-    }
-
-    private boolean isBangdan(SgFrameworkContextItem sgFrameworkContextItem) {
-        String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
-        return RenderContentTypeEnum.bangdanContent.getType().equals(contentType);
-    }
-
 
 }
