@@ -23,8 +23,11 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.AldSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.newproduct.handler.SxlItemFeedsHandler;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * tpp入参组装扩展点
@@ -59,8 +63,8 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
 
-        Map<String, ResResponse> aldResponse = getAldInfo(sgFrameworkContextContent);
-        tacLogger.info("SxlContentOriginDataRequestExtPt aldResponse:{}"+JSON.toJSONString(aldResponse));
+        getAldInfo(sgFrameworkContextContent);
+        tacLogger.info("SxlContentOriginDataRequestExtPt aldResponse:{}"+JSON.toJSONString(sgFrameworkContextContent.getUserParams()));
 
         /**
          * https://tui.taobao.com/recommend?appid=25831&itemSets=crm_5233&commerce=B2C&regionCode=108&smAreaId=330110&itemSetFilterTriggers=crm_5233&OPEN_MAINTENANCE=1
@@ -73,10 +77,12 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID);
         Map<String, String> params = Maps.newHashMap();
-        params.put("itemSets", "crm_322385,crm_5233");
+
+        Map<String,Object> itemSetMap = (Map<String,Object>)sgFrameworkContextContent.getUserParams().get(Constant.SXL_ITEMSET_PRE_KEY);
+
+        params.put("itemSets",  String.join(",", itemSetMap.keySet()));
         params.put("commerce", "B2C");
         params.put("regionCode", "108");
-        params.put("pageSize", "5");
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
@@ -85,19 +91,29 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
     }
 
 
-    private Map<String, ResResponse> getAldInfo(SgFrameworkContextContent sgFrameworkContextContent){
+    private void getAldInfo(SgFrameworkContextContent sgFrameworkContextContent){
 
-       return aldSpi.queryAldInfoSync(buildAldRequest(sgFrameworkContextContent));
+        Map<String, ResResponse> mapResponse = aldSpi.queryAldInfoSync(buildAldRequest(sgFrameworkContextContent));
+        Map<String,Object> itemSetMap = Maps.newHashMap();
+        sgFrameworkContextContent.getUserParams().put(Constant.SXL_ITEMSET_PRE_KEY,itemSetMap);
+
+        if(MapUtils.isNotEmpty(mapResponse)){
+            List<Map<String, Object>> dataList = (List<Map<String, Object>>)mapResponse.get(Constant.CONTENT_ALD_RES_ID).get("data");
+            dataList.forEach(e->{
+                itemSetMap.put((String)e.get("itemSetId"),e);
+            });
+
+        }
 
     }
 
     private Request buildAldRequest(SgFrameworkContextContent sgFrameworkContextContent){
         Request request = new Request();
-        request.setBizId(101);
-        request.setCallSource("txcs-shoppingguide");
+        request.setBizId(Constant.ALD_BIZ_ID);
+        request.setCallSource(Constant.ALD_CALL_SOURCE);
         request.setDebug(false);
         RequestItem item = new RequestItem();
-        item.setResId("17390113");
+        item.setResId(Constant.CONTENT_ALD_RES_ID);
         UserProfile userProfile = request.getUserProfile();
         userProfile.setUserId(sgFrameworkContextContent.getUserDO().getUserId());
         DeviceInfo deviceInfo = request.getDeviceInfo();
@@ -111,5 +127,16 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         locationInfo.setWdkCodes(wdkCodes);
         return request;
 
+    }
+
+    public static void main(String args[]){
+
+        Map<String,String> map = Maps.newHashMap();
+        map.put("111","111");
+        map.put("222","222");
+
+
+        String str = String.join(",", map.keySet());
+        System.out.println(str);
     }
 }
