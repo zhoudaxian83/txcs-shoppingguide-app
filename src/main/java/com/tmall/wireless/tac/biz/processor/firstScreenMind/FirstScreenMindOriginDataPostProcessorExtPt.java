@@ -120,13 +120,14 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
             bizType = BizType.SM.getCode();
             o2oType = O2oType.B2C.name();
         }
-
         List<ItemEntity> itemEntityList = itemIdList.stream().map(itemId -> {
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(itemId);
             itemEntity.setO2oType(o2oType);
             itemEntity.setBusinessType(businessType);
             itemEntity.setBizType(bizType);
+            /**所见即所得打标**/
+            itemEntity.setTop(true);
             return itemEntity;
         }).collect(Collectors.toList());
 

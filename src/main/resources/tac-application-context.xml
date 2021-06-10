@@ -28,5 +28,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemOriginDataFailProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.origindatarequest.OriginDataRequestFactory"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenItemBuildItemVOExtPt"/>
 
 </beans>
