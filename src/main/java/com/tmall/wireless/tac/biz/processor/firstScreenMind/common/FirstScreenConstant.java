@@ -13,15 +13,15 @@ public class FirstScreenConstant {
     public static final String GCS_ITEM_FEEDS = "gcsItemFeeds";
 
     /**首页改版-首页内容**/
-    public static final String CONTENT_CONTENT_FEEDS = "content_content_feeds";
+    public static final String FIR_CONTENT_FEEDS = "fir_content_feeds";
     /**首页改版-承接页内容**/
-    public static final String ITEM_CONTENT_FEEDS = "item_content_feeds";
+    public static final String SUB_CONTENT_FEEDS = "sub_content_feeds";
     /**首页改版-承接页商品**/
-    public static final String ITEM_ITEM_FEEDS = "item_item_feeds";
+    public static final String SUB_ITEM_FEEDS = "sub_item_feeds";
     /**逛超市-首页内容**/
-    public static final String GCS_CONTENT_CONTENT_FEEDS = "gcs_content_content_feeds";
+    public static final String GCS_FIR_CONTENT_FEEDS = "gcs_fir_content_feeds";
     /**逛超市-承接页内容**/
-    public static final String GCS_ITEM_CONTENT_FEEDS = "gcs_item_content_feeds";
+    public static final String GCS_SUB_CONTENT_FEEDS = "gcs_sub_content_feeds";
     /**逛超市-承接页商品**/
-    public static final String GCS_ITEM_ITEM_FEEDS = "gcs_item_item_feeds";
+    public static final String GCS_SUB_ITEM_FEEDS = "gcs_sub_item_feeds";
 }

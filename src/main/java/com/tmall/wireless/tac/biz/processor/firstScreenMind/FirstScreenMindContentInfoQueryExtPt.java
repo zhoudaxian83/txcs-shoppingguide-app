@@ -65,7 +65,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             for (ContentEntity contentEntity : contentEntities) {
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
             }
-            Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
+            Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
             tacLogger.info("***********mgetResult.getValue()*******:"+mgetResult.getValue());
             LOGGER.info("***********mgetResult.getValue()*******:"+mgetResult.getValue());
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
@@ -75,7 +75,6 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             Map<Long, TairSceneDTO> tairResult = Maps.newHashMap();
             //循环遍历获取结果
             dataEntryList.forEach(dataEntry -> {
-                // txcs_scene_detail_v2_2020053172349
                 Object tairKey = dataEntry.getKey();
                 String tairKeyStr = String.valueOf(tairKey);
                 String[] s = tairKeyStr.split("_");
@@ -92,15 +91,13 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     continue;
                 }
                 ContentInfoDTO contentDTO = new ContentInfoDTO();
-//                contentDTO.setContentId(contentId);
-//                contentDTO.setContentEntity(contentEntity);
                 Map<String, Object> contentInfo = Maps.newHashMap();
                 contentInfo.put("contentId",tairSceneDTO.getId());
                 contentInfo.put("contentTitle",tairSceneDTO.getTitle());
                 contentInfo.put("contentSubtitle",tairSceneDTO.getSubtitle());
                 contentInfo.put("itemSetIds", getItemSetIds(tairSceneDTO));
                 Map<String, Object> tairPropertyMap = tairSceneDTO.getProperty();
-                //前后端映射
+                //前后端映射  首页改版、逛超市映射字段相同
                 for(FrontBackMapEnum frontBackMapEnum : FrontBackMapEnum.values()){
                     contentInfo.put(frontBackMapEnum.getFront(),tairPropertyMap.get(frontBackMapEnum.getBack()));
                 }

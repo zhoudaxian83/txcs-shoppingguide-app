@@ -38,7 +38,7 @@ public class FirstScreenMindItemOriginDataRequestExtPt implements ItemOriginData
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
 
-        RecommendRequest tppRequest = originDataRequestFactory.getRecommendRequest(FirstScreenConstant.ITEM_ITEM_FEEDS,sgFrameworkContextItem);
+        RecommendRequest tppRequest = originDataRequestFactory.getRecommendRequest(FirstScreenConstant.SUB_ITEM_FEEDS,sgFrameworkContextItem);
         return tppRequest;
         /*tacLogger.info("****FirstScreenMindItemOriginDataRequestExtPt sgFrameworkContextItem****:"+sgFrameworkContextItem.toString());
 

@@ -34,10 +34,15 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         /**前端没有传递，默认是首页内容**/
         String requestFrom = MapUtil.getStringWithDefault(requestParams,FirstScreenConstant.REQUEST_FROM,
             FirstScreenConstant.CONTENT_FEEDS);
+
         if(FirstScreenConstant.CONTENT_FEEDS.equals(requestFrom)){
-            tppRequest = originDataRequestFactory.getRecommendRequest(FirstScreenConstant.CONTENT_CONTENT_FEEDS,sgFrameworkContextContent);
-        }else{
-            tppRequest = originDataRequestFactory.getRecommendRequest(FirstScreenConstant.ITEM_CONTENT_FEEDS,sgFrameworkContextContent);
+            tppRequest = originDataRequestFactory.getRecommendRequest(FirstScreenConstant.FIR_CONTENT_FEEDS,sgFrameworkContextContent);
+        }else if (FirstScreenConstant.ITEM_FEEDS.equals(requestFrom)){
+            tppRequest = originDataRequestFactory.getRecommendRequest(FirstScreenConstant.SUB_CONTENT_FEEDS,sgFrameworkContextContent);
+        }else if(FirstScreenConstant.GCS_CONTENT_FEEDS.equals(requestFrom)){
+            tppRequest = originDataRequestFactory.getRecommendRequest(FirstScreenConstant.GCS_FIR_CONTENT_FEEDS,sgFrameworkContextContent);
+        }else if(FirstScreenConstant.GCS_ITEM_FEEDS.equals(requestFrom)){
+            tppRequest = originDataRequestFactory.getRecommendRequest(FirstScreenConstant.GCS_SUB_CONTENT_FEEDS,sgFrameworkContextContent);
         }
         return tppRequest;
         /*boolean isMind = isMind(sgFrameworkContextContent.getRequestParams());

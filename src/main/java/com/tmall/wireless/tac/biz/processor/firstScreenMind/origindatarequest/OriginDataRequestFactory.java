@@ -23,30 +23,30 @@ public class OriginDataRequestFactory {
     public RecommendRequest getRecommendRequest(String requestFrom, SgFrameworkContext sgFrameworkContext){
         OriginDataRequest originDataRequest = null;
         switch (requestFrom){
-            case FirstScreenConstant.CONTENT_CONTENT_FEEDS:
+            case FirstScreenConstant.FIR_CONTENT_FEEDS:
                 if(isMind(sgFrameworkContext)){
                     originDataRequest = new OriginDataRequestContentFeedsMind();
                 }else{
                     originDataRequest = new OriginDataRequestContentFeeds();
                 }
                 break;
-            case FirstScreenConstant.ITEM_CONTENT_FEEDS:
+            case FirstScreenConstant.SUB_CONTENT_FEEDS:
                 originDataRequest = new OriginDataRequestContentFeeds();
                 break;
-            case FirstScreenConstant.ITEM_ITEM_FEEDS:
+            case FirstScreenConstant.SUB_ITEM_FEEDS:
                 originDataRequest = new OriginDataRequestItemFeeds();
                 break;
-            case FirstScreenConstant.GCS_CONTENT_CONTENT_FEEDS:
+            case FirstScreenConstant.GCS_FIR_CONTENT_FEEDS:
                 originDataRequest = new OriginDataRequestGcsContentFeeds();
                 break;
-            case FirstScreenConstant.GCS_ITEM_CONTENT_FEEDS:
+            case FirstScreenConstant.GCS_SUB_CONTENT_FEEDS:
                 originDataRequest = new OriginDataRequestGcsContentFeeds();
                 break;
-            case FirstScreenConstant.GCS_ITEM_ITEM_FEEDS:
-                originDataRequest = new OriginDataRequestGcsItemFeeds();
+            case FirstScreenConstant.GCS_SUB_ITEM_FEEDS:
+                originDataRequest = new OriginDataRequestItemFeeds();
                 break;
             default:
-                originDataRequest = new OriginDataRequestGcsContentFeeds();
+                originDataRequest = new OriginDataRequestContentFeeds();
                 break;
 
         }
