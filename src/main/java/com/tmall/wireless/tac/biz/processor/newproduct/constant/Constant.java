@@ -16,6 +16,9 @@ public class Constant {
 
     public static final String SXL_ITEMSET_PRE_KEY = "sxlItemSets";
 
+    public static final String SXL_ITEMSET_ID = "crm_322385";
+
+
 
 
 

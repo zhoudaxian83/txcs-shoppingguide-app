@@ -14,6 +14,7 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -47,7 +48,7 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         sgFrameworkContextItem.getEntitySetParams().getContentSetIdList();
         Map<String, String> params = Maps.newHashMap();
         params.put("pageSize", pageSize);
-        params.put("itemSets", "crm_322385");
+        params.put("itemSets", Constant.SXL_ITEMSET_ID);
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         Integer index = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserPageInfo).map(
             PageInfoDO::getIndex).orElse(0);
