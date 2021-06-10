@@ -16,7 +16,6 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,7 +38,9 @@ public class SxlItemInfoPostProcessorExtPt implements ItemInfoPostProcessorExtPt
             .getItemInfoGroupResponseMap();
 
         SgFrameworkResponse<EntityVO> entityVOgFrameworkResponse = sgFrameworkContextItem.getEntityVOSgFrameworkResponse();
-        tacLogger.info("SxlItemInfoPostProcessorExtPt entityVOgFrameworkResponse:{}"+JSON.toJSONString(itemGroupItemInfoGroupResponseMap));
+
+        entityVOgFrameworkResponse.getItemAndContentList();
+        tacLogger.info("SxlItemInfoPostProcessorExtPt entityVOgFrameworkResponse:{}"+JSON.toJSONString(entityVOgFrameworkResponse.getItemAndContentList()));
         return Response.success(new ItemInfoPostProcessorResp());
     }
 }
