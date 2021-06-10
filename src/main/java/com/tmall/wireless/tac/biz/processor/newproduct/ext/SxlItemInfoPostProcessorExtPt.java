@@ -39,8 +39,7 @@ public class SxlItemInfoPostProcessorExtPt implements ItemInfoPostProcessorExtPt
             .getItemInfoGroupResponseMap();
 
         SgFrameworkResponse<EntityVO> entityVOgFrameworkResponse = sgFrameworkContextItem.getEntityVOSgFrameworkResponse();
-        List<EntityVO> list = entityVOgFrameworkResponse.getItemAndContentList();
-        tacLogger.info("SxlItemInfoPostProcessorExtPt list:{}"+JSON.toJSONString(list));
+        tacLogger.info("SxlItemInfoPostProcessorExtPt entityVOgFrameworkResponse:{}"+JSON.toJSONString(itemGroupItemInfoGroupResponseMap));
         return Response.success(new ItemInfoPostProcessorResp());
     }
 }
