@@ -100,7 +100,7 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         if(MapUtils.isNotEmpty(mapResponse)){
             List<Map<String, Object>> dataList = (List<Map<String, Object>>)mapResponse.get(Constant.CONTENT_ALD_RES_ID).get("data");
             dataList.forEach(e->{
-                itemSetMap.put((String)e.get("itemSetId"),e);
+                itemSetMap.put("crm_"+(String)e.get("itemSetId"),e);
             });
 
         }
