@@ -24,6 +24,7 @@ import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.AldSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.handler.SxlItemFeedsHandler;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,17 +53,20 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
     @Autowired
     private AldSpi aldSpi;
 
+    @Autowired
+    TacLogger tacLogger;
+
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
 
         Map<String, ResResponse> aldResponse = getAldInfo(sgFrameworkContextContent);
-        LOGGER.error("SxlContentOriginDataRequestExtPt aldResponse:{}",JSON.toJSONString(aldResponse));
+        tacLogger.info("SxlContentOriginDataRequestExtPt aldResponse:{}"+JSON.toJSONString(aldResponse));
 
         /**
          * https://tui.taobao.com/recommend?appid=25831&itemSets=crm_5233&commerce=B2C&regionCode=108&smAreaId=330110&itemSetFilterTriggers=crm_5233&OPEN_MAINTENANCE=1
          */
 
-        /*
+        /*t
         https://tuipre.taobao.com/recommend?appid=25831&itemSets=crm_296517,crm_296516&commerce=B2C&regionCode=108&smAreaId=330110&itemSetFilterTriggers=crm_296517,crm_296516
         */
 
@@ -72,6 +76,7 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         params.put("itemSets", "crm_322385,crm_5233");
         params.put("commerce", "B2C");
         params.put("regionCode", "108");
+        params.put("pageSize", "5");
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
