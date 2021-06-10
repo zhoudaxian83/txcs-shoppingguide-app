@@ -33,7 +33,7 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
 
     private static final Long APPID = 24910L;
 
-    private static final String pageSize = "20";
+    private static final String pageSize = "5";
 
 
     @Override

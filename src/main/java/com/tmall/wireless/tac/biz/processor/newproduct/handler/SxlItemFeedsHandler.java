@@ -74,7 +74,6 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
                 entityVO.put("itemImg",aldResList.get(0).get("itemImg"));
                 entityVO.put("sellingPointDesc",aldResList.get(0).get("sellPoint"));
                 list.add(0,entityVO);
-                response.getData().setItemAndContentList(list);
                 return response;
             }).onErrorReturn((r -> TacResult.errorResult("")));
         }
