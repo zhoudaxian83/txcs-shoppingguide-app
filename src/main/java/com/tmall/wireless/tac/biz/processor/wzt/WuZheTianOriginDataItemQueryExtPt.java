@@ -84,8 +84,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         dataContext.setIndex(index);
         dataContext.setPageSize(pageSize);
-        OriginDataDTO<ItemEntity> cacheOriginDataDTO = getItemToCacheOfArea(smAreaId);
-        if (cacheOriginDataDTO == null) {
+//        OriginDataDTO<ItemEntity> cacheOriginDataDTO = getItemToCacheOfArea(smAreaId);
+//        if (cacheOriginDataDTO == null) {
             //tair获取推荐商品
             List<Long> tairItems = this.getOriginalRecommend(smAreaId);
             dataContext.setItems(tairItems);
@@ -103,10 +103,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                     this.setItemToCacheOfArea(originDataDTO, smAreaId);
                     return this.getItemPage(originDataDTO, dataContext);
                 });
-        } else {
-            context.getUserParams().put("count", cacheOriginDataDTO.getResult().size());
-            return Flowable.just(this.getItemPage(cacheOriginDataDTO, dataContext));
-        }
+//        } else {
+//            context.getUserParams().put("count", cacheOriginDataDTO.getResult().size());
+//            return Flowable.just(this.getItemPage(cacheOriginDataDTO, dataContext));
+//        }
     }
 
     /**
