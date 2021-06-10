@@ -61,6 +61,8 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
          * itemImg":"https://gw.alicdn.com/imgextra/i3/O1CN01Jn1zcv262Dy0MjOHV_!!6000000007603-2-tps-354-414.png","sellPoint":"如果夏天有香气，我猜一定是蜜桃味的～","distinctId":"1623992516548","dataSetId":17951090,"itemTitle":"Skinfood清爽蜜桃味水乳","auctionTag":"https://gw.alicdn.com/imgextra/i4/O1CN01DpBPTa1Tn9XIPZvgj_!!6000000002426-2-tps-400-200.png"
          */
         List<Map<String, Object>> aldResList = getAldInfo(context);
+
+        tacLogger.info("aldResList:"+JSON.toJSONString(aldResList));
         if(CollectionUtils.isEmpty(aldResList)){
             return tacResultFlowable;
         }else{
