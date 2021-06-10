@@ -99,8 +99,6 @@ public class SxlContentRecService {
         return userDO;
     }
 
-
-
     public ContentMetaInfo getContentMetaInfo() {
         ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
