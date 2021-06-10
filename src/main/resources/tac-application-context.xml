@@ -42,5 +42,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlContentOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlContentInfoQueryExtPt"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlItemInfoPostProcessorExtPt"/>
 
 </beans>
