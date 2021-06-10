@@ -65,16 +65,18 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
         if(CollectionUtils.isEmpty(aldResList)){
             return tacResultFlowable;
         }else{
-            tacLogger.info("aldResList:"+JSON.toJSONString(aldResList));
-            tacResultFlowable.map(e->{
-                List<EntityVO> list = e.getData().getItemAndContentList();
+            tacResultFlowable.map(response->{
+
+                List<EntityVO> list = response.getData().getItemAndContentList();
                 EntityVO entityVO = new EntityVO();
                 entityVO.put("itemId",aldResList.get(0).get("id"));
                 entityVO.put("itemImg",aldResList.get(0).get("itemImg"));
                 entityVO.put("sellingPointDesc",aldResList.get(0).get("sellPoint"));
                 list.add(0,entityVO);
-                return e;
-            }).onErrorReturn((r -> TacResult.errorResult("")));
+                tacLogger.info("aldResList:"+JSON.toJSONString(list));
+                return response;
+            }).map(TacResult::newResult)
+                .onErrorReturn((r -> TacResult.errorResult("")));
         }
 
         return tacResultFlowable;
