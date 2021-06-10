@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Extension(bizId = ScenarioConstant.BIZ_TYPE_SUPERMARKET,
     useCase = ScenarioConstant.LOC_TYPE_B2C,
-    scenario = ScenarioConstantApp.SCENARIO_SHANG_XIN_CONTENT)
+    scenario = ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
 @Service
 public class SxlItemInfoPostProcessorExtPt implements ItemInfoPostProcessorExtPt {
 
