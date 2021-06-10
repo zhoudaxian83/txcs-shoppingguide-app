@@ -32,8 +32,8 @@ import org.springframework.stereotype.Service;
  * description:
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-    scenario = ScenarioConstantApp.WU_ZHE_TIAN)
+        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+        scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcessorExtPt {
 
@@ -60,11 +60,11 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
     private Map<String, Object> buildGetItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
         Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
         Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
-            .getItemInfoGroupResponseMap();
+                .getItemInfoGroupResponseMap();
         ItemGroup itemGroup = new ItemGroup("sm", "B2C");
         List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
-            itemGroup).getValue()
-            .values()), ItemInfoDTO.class);
+                itemGroup).getValue()
+                .values()), ItemInfoDTO.class);
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
             ItemDTO itemDTO = itemInfoDTO.getItemInfos().get("captain").getItemDTO();
             Map<String, Object> skuMap = Maps.newHashMap();
@@ -84,9 +84,11 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
         Object o;
         try {
             o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramsValue);
-            JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
-            if ((boolean)jsonObject.get(Constant.SUCCESS)) {
-                return (JSONObject)jsonObject.get(Constant.LIMIT_INFO);
+            JSONObject jsonObject = (JSONObject) JSON.toJSON(o);
+            if ((boolean) jsonObject.get(Constant.SUCCESS)) {
+                tacLogger.info("限购信息入参paramsValue：" + JSON.toJSONString(paramsValue));
+                tacLogger.info("限购信息返回结果o：" + JSON.toJSONString(o));
+                return (JSONObject) jsonObject.get(Constant.LIMIT_INFO);
             } else {
                 tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
                 return null;
