@@ -1,10 +1,12 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.handler;
 
 import com.alibaba.fastjson.JSON;
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.service.SxlContentRecService;
 import com.tmall.wireless.tac.biz.processor.newproduct.service.SxlItemRecService;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -40,19 +42,23 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
 
         Flowable<TacResult<SgFrameworkResponse<EntityVO>>> item = sxlItemRecService.recommend(context);
 
-        return Flowable.zip(content,item, (contentInfo, itemInfo) -> mergeContentAndItem(contentInfo, itemInfo));
+        return Flowable.zip(content,item, (contentInfo, itemInfo) -> mergeContentAndItem(contentInfo, itemInfo,context));
 
     }
 
 
     private TacResult<SgFrameworkResponse<EntityVO>>  mergeContentAndItem(TacResult<SgFrameworkResponse<ContentVO>> contentInfo,
-                                                           TacResult<SgFrameworkResponse<EntityVO>> itemInfo) {
+                                                           TacResult<SgFrameworkResponse<EntityVO>> itemInfo,Context context) {
 
 
         if(CollectionUtils.isNotEmpty(contentInfo.getData().getItemAndContentList())){
             EntityVO entityVO = new EntityVO();
             contentInfo.getData().getItemAndContentList().forEach(e->{
                 Integer position = (Integer)e.get("position");
+                int index = Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "0"));
+                if(position > index){
+                    position = position-index;
+                }
                 if(position < itemInfo.getData().getItemAndContentList().size()){
                     entityVO.put("banner",e);
                     itemInfo.getData().getItemAndContentList().add(position,entityVO);
