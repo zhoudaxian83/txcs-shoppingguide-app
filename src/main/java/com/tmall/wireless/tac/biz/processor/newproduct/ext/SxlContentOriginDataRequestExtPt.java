@@ -96,7 +96,6 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         Map<String, ResResponse> mapResponse = aldSpi.queryAldInfoSync(buildAldRequest(sgFrameworkContextContent));
         Map<String,Object> itemSetMap = Maps.newHashMap();
         sgFrameworkContextContent.getUserParams().put(Constant.SXL_ITEMSET_PRE_KEY,itemSetMap);
-
         if(MapUtils.isNotEmpty(mapResponse)){
             List<Map<String, Object>> dataList = (List<Map<String, Object>>)mapResponse.get(Constant.CONTENT_ALD_RES_ID).get("data");
             dataList.forEach(e->{
