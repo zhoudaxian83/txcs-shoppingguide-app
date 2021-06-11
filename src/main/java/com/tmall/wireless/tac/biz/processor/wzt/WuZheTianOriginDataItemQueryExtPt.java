@@ -130,11 +130,13 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             return Lists.newArrayList();
         } else {
             try {
-                tacLogger.info("pmtRuleDataItemRuleDTOS.get(0)" + JSON.toJSONString(pmtRuleDataItemRuleDTOS.get(0)));
-                List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS = pmtRuleDataItemRuleDTOS.get(0).getDataSetItemRuleDTOList();
+                PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = JSON.parseObject(
+                        JSON.toJSON(pmtRuleDataItemRuleDTOS.get(0)).toString(), PmtRuleDataItemRuleDTO.class);
+                List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS = pmtRuleDataItemRuleDTO.getDataSetItemRuleDTOList();
                 tacLogger.info("columnCenterDataSetItemRuleDTOS原始数据" + JSON.toJSONString(columnCenterDataSetItemRuleDTOS));
                 columnCenterDataSetItemRuleDTOS.forEach(item -> {
-                    if (item.getDataRule().getStick() != null) {
+                    tacLogger.info("getStick:" + item.getDataRule().getStick());
+                    if (item.getDataRule().getStick() != 0L) {
                         item.setIndex(item.getDataRule().getStick());
                     } else {
                         item.setIndex(stickMax);
