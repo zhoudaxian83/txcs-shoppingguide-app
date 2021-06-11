@@ -14,4 +14,5 @@ public class PmtRuleDataItemRuleDTO implements Serializable {
     private static final long serialVersionUID = -1L;
     private ColumnCenterPmtRuleDataSetDTO pmtRuleDataSetDTO;
     private List<ColumnCenterDataSetItemRuleDTO> dataSetItemRuleDTOList;
+    private int index;
 }

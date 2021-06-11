@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.wzt.model;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,6 +9,7 @@ import java.util.Date;
  * @Author: luoJunChong
  * @Date: 2021/5/17 19:07
  */
+@Data
 public class ColumnCenterDataRuleDTO implements Serializable {
     private static final long serialVersionUID = -1L;
     private Long dataRuleId;

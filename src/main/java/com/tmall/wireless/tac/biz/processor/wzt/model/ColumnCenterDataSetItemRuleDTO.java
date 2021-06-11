@@ -24,4 +24,5 @@ public class ColumnCenterDataSetItemRuleDTO implements Serializable {
     private String upSelfRation;
     private String itemExtension;
     private ColumnCenterDataRuleDTO dataRule;
+    private Long index;
 }

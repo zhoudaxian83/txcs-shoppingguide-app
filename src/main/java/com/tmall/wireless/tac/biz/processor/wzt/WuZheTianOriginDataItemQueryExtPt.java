@@ -1,9 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.cola.extension.Extension;
@@ -98,13 +95,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                         return new OriginDataDTO<>();
                     }
                     OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-                    //给前端总条数
-                    context.getUserParams().put("count", originDataDTO.getResult().size());
                     this.setItemToCacheOfArea(originDataDTO, smAreaId);
                     return this.getItemPage(originDataDTO, dataContext);
                 });
 //        } else {
-//            context.getUserParams().put("count", cacheOriginDataDTO.getResult().size());
 //            return Flowable.just(this.getItemPage(cacheOriginDataDTO, dataContext));
 //        }
     }
@@ -128,19 +122,28 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     }
 
     private List<Long> getOriginalRecommend(Long smAreaId) {
+        Long stickMax = 10000L;
         List<Long> items = null;
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
-        tacLogger.info("getOriginalRecommend得到推荐原始数据" + JSON.toJSONString(pmtRuleDataItemRuleDTOS));
         if (CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOS)) {
             tacLogger.info(LOG_PREFIX + "getOriginalRecommend获取tair原始数据为空，请检查tair数据源配置");
             return Lists.newArrayList();
         } else {
             try {
-                PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = JSON.parseObject(
-                        JSON.toJSON(pmtRuleDataItemRuleDTOS.get(0)).toString(), PmtRuleDataItemRuleDTO.class);
-                items = pmtRuleDataItemRuleDTO.getDataSetItemRuleDTOList().stream().map(
+                List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS = pmtRuleDataItemRuleDTOS.get(0).getDataSetItemRuleDTOList();
+                tacLogger.info("columnCenterDataSetItemRuleDTOS原始数据" + JSON.toJSONString(columnCenterDataSetItemRuleDTOS));
+                columnCenterDataSetItemRuleDTOS.forEach(item -> {
+                    if (item.getDataRule().getStick() != null) {
+                        item.setIndex(item.getDataRule().getStick());
+                    } else {
+                        item.setIndex(stickMax);
+                    }
+                });
+                List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOSSort = columnCenterDataSetItemRuleDTOS.stream().sorted(Comparator.comparing(ColumnCenterDataSetItemRuleDTO::getIndex)).collect(
+                        Collectors.toList());
+                items = columnCenterDataSetItemRuleDTOSSort.stream().map(
                         ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
-                tacLogger.warn(LOG_PREFIX + "获取tair原始pmtRuleDataItemRuleDTO：" + JSON.toJSONString(pmtRuleDataItemRuleDTO));
+                tacLogger.warn(LOG_PREFIX + "获取tair原始数据排序后：" + JSON.toJSONString(items));
                 return items;
             } catch (Exception e) {
                 tacLogger.error(LOG_PREFIX + "getOriginalRecommend获取tair原始items异常：" + JSON.toJSONString(items), e);
@@ -176,11 +179,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         return originDataDTO;
     }
 
-    private List<PmtRuleDataItemRuleDTO> sortTairItems(List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS){
+    private List<PmtRuleDataItemRuleDTO> sortTairItems(List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS) {
         return pmtRuleDataItemRuleDTOS;
     }
 
-    //TODO 需要增加置顶逻辑，不过转换后像是没有返回对应数据
     private List<PmtRuleDataItemRuleDTO> getTairItems(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
@@ -192,9 +194,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             cacheKey = cacheKey + "_pre";
         }
         try {
-            Object o = tairUtil.getCache(cacheKey);
-            tacLogger.info("tair推荐原始数据" + JSON.toJSONString(o));
-            return (List<PmtRuleDataItemRuleDTO>) o;
+            return (List<PmtRuleDataItemRuleDTO>) tairUtil.getCache(cacheKey);
         } catch (Exception e) {
             tacLogger.error(LOG_PREFIX + "getTairItems数据转换异常：smAreaId：" + smAreaId, e);
         }
