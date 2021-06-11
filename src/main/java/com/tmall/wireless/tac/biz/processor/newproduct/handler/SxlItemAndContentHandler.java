@@ -1,13 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.handler;
 
-import com.google.common.collect.Lists;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
-import com.tmall.txcs.gs.framework.support.LogUtil;
-import com.tmall.txcs.gs.model.Response;
-import com.tmall.txcs.gs.model.content.ContentDTO;
 import com.tmall.wireless.tac.biz.processor.newproduct.service.SxlContentRecService;
 import com.tmall.wireless.tac.biz.processor.newproduct.service.SxlItemRecService;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -16,8 +12,6 @@ import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.Optional;
 
 /**
  * @author haixiao.zhang
