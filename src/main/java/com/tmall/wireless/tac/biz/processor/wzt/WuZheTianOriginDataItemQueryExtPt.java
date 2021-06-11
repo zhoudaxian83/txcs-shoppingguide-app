@@ -186,7 +186,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             cacheKey = cacheKey + "_pre";
         }
         try {
-            return (List<PmtRuleDataItemRuleDTO>) tairUtil.getCache(cacheKey);
+            Object o = tairUtil.getCache(cacheKey);
+            tacLogger.info("tair推荐原始数据" + JSON.toJSONString(o));
+            return (List<PmtRuleDataItemRuleDTO>) o;
         } catch (Exception e) {
             tacLogger.error(LOG_PREFIX + "getTairItems数据转换异常：smAreaId：" + smAreaId, e);
         }

@@ -43,8 +43,8 @@ public class TairUtil {
                 cacheKey);
             if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
                 && dataEntryResult.getValue().getValue() != null) {
-                tacLogger.warn(
-                    LOG_PREFIX + "取缓存key打印，cacheKey: " + cacheKey);
+//                tacLogger.warn(
+//                    LOG_PREFIX + "取缓存key打印，cacheKey: " + cacheKey);
                 return dataEntryResult.getValue().getValue();
             } else {
                 tacLogger.info(LOG_PREFIX + "getCache获取缓存为空，cacheKey: " + cacheKey);
