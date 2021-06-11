@@ -57,6 +57,11 @@ public class GulSubTabItemInfoBuildItemVOExtPt implements BuildItemVOExtPt {
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
+
+        if (itemEntityVO.get("smartUi") == null) {
+            itemEntityVO.put("contentType", 0);
+
+        }
         return Response.success(itemEntityVO);
     }
 
