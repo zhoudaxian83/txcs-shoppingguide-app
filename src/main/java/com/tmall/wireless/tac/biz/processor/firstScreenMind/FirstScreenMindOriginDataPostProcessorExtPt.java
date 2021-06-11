@@ -67,9 +67,10 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
         List<ItemEntity> finalItemEntities = Lists.newArrayList();
         Set<String> itemUniqueKeySet = Sets.newHashSet();
         Long contentId = MapUtil.getLongWithDefault(requestParam,"moduleId",0L);
+        Long itemSetIds = MapUtil.getLongWithDefault(requestParam,"itemSetIds",0L);
         List<Long> topItemIds = Lists.newArrayList();
         if(contentId > 0L){
-            topItemIds = getTopItemIds(contentId);
+            topItemIds = getTopItemIds(contentId,itemSetIds);
         }
         /**首页所见即所得置顶且去重，非首页去重**/
         for(ItemEntity itemEntity:itemEntityList){
@@ -105,7 +106,7 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
      * @param contentId
      * @return
      */
-    private List<Long> getTopItemIds(Long contentId){
+    private List<Long> getTopItemIds(Long contentId,Long itemSetIds){
         List<Long> contentIds = Lists.newArrayList();
         if(contentId == null || contentId <= 0 ){
             return null;
@@ -117,8 +118,13 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
         }
         TairSceneDTO tairSceneDTO = tairResult.get(contentId);
         Map<Long,List<Long>> topItemIdMap = contentInfoSupport.getTopItemIds(tairSceneDTO);
-        /**视频不存在货架，只有一个圈品集**/
-        List<Long> itemIds = topItemIdMap.values().stream().findFirst().get();
+        List<Long> itemIds = Lists.newArrayList();
+        if(itemSetIds > 0L){
+            itemIds = topItemIdMap.get(itemSetIds);
+        }else{
+            /**视频不存在货架，只有一个圈品集**/
+            topItemIdMap.values().stream().findFirst().get();
+        }
         return itemIds;
     }
 
