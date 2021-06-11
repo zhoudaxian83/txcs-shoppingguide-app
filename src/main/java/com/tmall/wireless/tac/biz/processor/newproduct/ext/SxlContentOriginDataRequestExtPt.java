@@ -79,10 +79,13 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         Map<String, String> params = Maps.newHashMap();
 
         Map<String,Object> itemSetMap = (Map<String,Object>)sgFrameworkContextContent.getUserParams().get(Constant.SXL_ITEMSET_PRE_KEY);
-
+        if(MapUtils.isEmpty(itemSetMap)){
+            return tppRequest;
+        }
+        tppRequest.setAppId(APPID);
         params.put("itemSets",  String.join(",", itemSetMap.keySet()));
         params.put("commerce", "B2C");
-        params.put("regionCode", "108");
+        params.put("regionCode", String.valueOf(sgFrameworkContextContent.getLocParams().getRegionCode()));
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
@@ -93,13 +96,19 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
 
     private void getAldInfo(SgFrameworkContextContent sgFrameworkContextContent){
 
+        int index = sgFrameworkContextContent.getUserPageInfo().getIndex();
+        int pageSize = sgFrameworkContextContent.getUserPageInfo().getIndex();
         Map<String, ResResponse> mapResponse = aldSpi.queryAldInfoSync(buildAldRequest(sgFrameworkContextContent));
         Map<String,Object> itemSetMap = Maps.newHashMap();
         sgFrameworkContextContent.getUserParams().put(Constant.SXL_ITEMSET_PRE_KEY,itemSetMap);
         if(MapUtils.isNotEmpty(mapResponse)){
             List<Map<String, Object>> dataList = (List<Map<String, Object>>)mapResponse.get(Constant.CONTENT_ALD_RES_ID).get("data");
+
             dataList.forEach(e->{
-                itemSetMap.put("crm_"+(String)e.get("itemSetId"),e);
+                Integer position = (Integer)e.get("position");
+                if(position!=null && position < index*pageSize && position>(index-1)*pageSize){
+                    itemSetMap.put("crm_"+e.get("itemSetId"),e);
+                }
             });
 
         }

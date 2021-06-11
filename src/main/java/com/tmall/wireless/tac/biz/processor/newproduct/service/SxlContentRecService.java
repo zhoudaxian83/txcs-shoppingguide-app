@@ -13,6 +13,7 @@ import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceContent;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -68,11 +69,14 @@ public class SxlContentRecService {
         sgFrameworkContextContent.setUserDO(getUserDO(context));
         sgFrameworkContextContent.setLocParams(CsaUtil
             .parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
+
         sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo());
 
         PageInfoDO pageInfoDO = new PageInfoDO();
-        pageInfoDO.setIndex(Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
-        pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
+        String index = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "1");
+        String pageSize = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.PAGE_SIZE, "10");
+        pageInfoDO.setIndex(Integer.valueOf(index));
+        pageInfoDO.setPageSize(Integer.valueOf(pageSize));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
 
 
