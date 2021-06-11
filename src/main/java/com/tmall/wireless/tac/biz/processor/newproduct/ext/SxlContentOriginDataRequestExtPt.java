@@ -97,7 +97,7 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
     private void getAldInfo(SgFrameworkContextContent sgFrameworkContextContent){
 
         int index = sgFrameworkContextContent.getUserPageInfo().getIndex();
-        int pageSize = sgFrameworkContextContent.getUserPageInfo().getIndex();
+        int pageSize = sgFrameworkContextContent.getUserPageInfo().getPageSize();
         Map<String, ResResponse> mapResponse = aldSpi.queryAldInfoSync(buildAldRequest(sgFrameworkContextContent));
         Map<String,Object> itemSetMap = Maps.newHashMap();
         sgFrameworkContextContent.getUserParams().put(Constant.SXL_ITEMSET_PRE_KEY,itemSetMap);
