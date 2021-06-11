@@ -130,6 +130,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private List<Long> getOriginalRecommend(Long smAreaId) {
         List<Long> items = null;
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
+        tacLogger.info("getOriginalRecommend得到推荐原始数据" + JSON.toJSONString(pmtRuleDataItemRuleDTOS));
         if (CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOS)) {
             tacLogger.info(LOG_PREFIX + "getOriginalRecommend获取tair原始数据为空，请检查tair数据源配置");
             return Lists.newArrayList();
@@ -175,6 +176,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         return originDataDTO;
     }
 
+    private List<PmtRuleDataItemRuleDTO> sortTairItems(List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS){
+        return pmtRuleDataItemRuleDTOS;
+    }
+
+    //TODO 需要增加置顶逻辑，不过转换后像是没有返回对应数据
     private List<PmtRuleDataItemRuleDTO> getTairItems(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
