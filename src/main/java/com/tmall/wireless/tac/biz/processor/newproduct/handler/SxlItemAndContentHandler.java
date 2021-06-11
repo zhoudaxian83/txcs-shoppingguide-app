@@ -52,11 +52,12 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
         if(CollectionUtils.isNotEmpty(contentInfo.getData().getItemAndContentList())){
             EntityVO entityVO = new EntityVO();
             contentInfo.getData().getItemAndContentList().forEach(e->{
-                Object aldInfo = e.get("ald");
-                tacLogger.info("aldInfo:"+JSON.toJSONString(aldInfo));
+                Integer position = (Integer)e.get("position");
+                entityVO.put("banner",e);
+                itemInfo.getData().getItemAndContentList().add(position,entityVO);
+
             });
-            entityVO.put("banner",contentInfo.getData().getItemAndContentList().get(0));
-            itemInfo.getData().getItemAndContentList().add(0,entityVO);
+
         }
         return itemInfo;
 
