@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.EntityVO;
@@ -50,6 +51,10 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
 
         if(CollectionUtils.isNotEmpty(contentInfo.getData().getItemAndContentList())){
             EntityVO entityVO = new EntityVO();
+            contentInfo.getData().getItemAndContentList().forEach(e->{
+                Object aldInfo = e.get("ald");
+                tacLogger.info("aldInfo:"+JSON.toJSONString(aldInfo));
+            });
             entityVO.put("banner",contentInfo.getData().getItemAndContentList().get(0));
             itemInfo.getData().getItemAndContentList().add(0,entityVO);
         }

@@ -14,12 +14,14 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +47,17 @@ public class SxlContentRecService {
     @Autowired
     TacLogger tacLogger;
 
+    static List<Pair<String, String>> dataTubeKeyList = Lists.newArrayList(
+        Pair.of("recommendWords","recommendWords"),
+        Pair.of("videoUrl","videoUrl"),
+        Pair.of("type","sxlType"),
+        Pair.of("atmosphereImageUrl","atmosphereImageUrl"),
+        Pair.of("sellingPointDesc","sellingPointDesc")
+    );
+
     public Flowable<TacResult<SgFrameworkResponse<ContentVO>>> recommend(Context context) {
 
         long startTime = System.currentTimeMillis();
-        tacLogger.info("***FirstScreenMindContentScene context***:"+ JSON.toJSONString(context));
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
@@ -65,13 +74,13 @@ public class SxlContentRecService {
         pageInfoDO.setIndex(Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
         pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
-        tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
-        LOGGER.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
+
 
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
             .map(response->{
+                Map<String,Object> aldMap = (Map<String,Object>)sgFrameworkContextContent.getUserParams().get(Constant.SXL_ITEMSET_PRE_KEY);
                 response.getItemAndContentList().forEach(e->{
-                    e.put("ald",sgFrameworkContextContent.getUserParams().get("crm_"+e.get("contentId")));
+                    e.put("ald",aldMap.get("crm_"+e.get("contentId")));
                 });
                 return response;
             })
@@ -92,8 +101,6 @@ public class SxlContentRecService {
         UserDO userDO = new UserDO();
         userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
-        tacLogger.info("****FirstScreenMindContentScene context.getParams().get(\"cookies\"))***:"+context.getParams().get("cookies"));
-        LOGGER.info("****FirstScreenMindContentScene context.getParams().get(\"cookies\"))***:"+context.getParams().get("cookies"));
         if (MapUtils.isNotEmpty(context.getParams())) {
             Object cookies = context.getParams().get("cookies");
             if (cookies != null && cookies instanceof Map) {
