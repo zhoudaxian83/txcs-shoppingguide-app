@@ -10,6 +10,7 @@ import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -46,10 +47,12 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
     private TacResult<SgFrameworkResponse<EntityVO>>  mergeContentAndItem(TacResult<SgFrameworkResponse<ContentVO>> contentInfo,
                                                            TacResult<SgFrameworkResponse<EntityVO>> itemInfo) {
 
-        EntityVO entityVO = new EntityVO();
-        entityVO.put("banner",contentInfo.getData().getItemAndContentList().get(0));
-        itemInfo.getData().getItemAndContentList().add(0,entityVO);
 
+        if(CollectionUtils.isNotEmpty(contentInfo.getData().getItemAndContentList())){
+            EntityVO entityVO = new EntityVO();
+            entityVO.put("banner",contentInfo.getData().getItemAndContentList().get(0));
+            itemInfo.getData().getItemAndContentList().add(0,entityVO);
+        }
         return itemInfo;
 
     }

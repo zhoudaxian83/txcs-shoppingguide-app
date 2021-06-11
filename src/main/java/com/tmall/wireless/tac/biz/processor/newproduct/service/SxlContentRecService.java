@@ -61,7 +61,6 @@ public class SxlContentRecService {
             .parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo());
 
-
         PageInfoDO pageInfoDO = new PageInfoDO();
         pageInfoDO.setIndex(Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
         pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
@@ -70,6 +69,12 @@ public class SxlContentRecService {
         LOGGER.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
 
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
+            .map(response->{
+                response.getItemAndContentList().forEach(e->{
+                    e.put("ald",sgFrameworkContextContent.getUserParams().get("crm_"+e.get("contentId")));
+                });
+                return response;
+            })
             .map(TacResult::newResult)
             .onErrorReturn(r -> TacResult.errorResult(""));
     }
