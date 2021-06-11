@@ -5,7 +5,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
-import com.tmall.aselfcommon.model.scene.enums.SceneType;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataPostProcessorExtPt;
@@ -15,7 +14,6 @@ import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.item.BizType;
 import com.tmall.txcs.gs.model.item.ItemUniqueId;
 import com.tmall.txcs.gs.model.item.O2oType;
-import com.tmall.txcs.gs.model.model.dto.ContentEntity;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -81,7 +79,7 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
             }
             itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
             if(isFirstPage(contextItem)){
-                if(CollectionUtils.isNotEmpty(topItemIds)){
+                if(CollectionUtils.isNotEmpty(topItemIds) && topItemIds.contains(itemEntity.getItemId())){
                     itemEntity.setTop(true);
                 }
                 finalItemEntities.add(itemEntity);
