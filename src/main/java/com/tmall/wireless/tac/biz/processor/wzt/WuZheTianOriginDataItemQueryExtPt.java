@@ -136,7 +136,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 tacLogger.info("columnCenterDataSetItemRuleDTOS原始数据" + JSON.toJSONString(columnCenterDataSetItemRuleDTOS));
                 columnCenterDataSetItemRuleDTOS.forEach(item -> {
                     tacLogger.info("getStick:" + item.getDataRule().getStick());
-                    if (item.getDataRule().getStick() != 0L) {
+                    if (item.getDataRule().getStick() != null) {
                         item.setIndex(item.getDataRule().getStick());
                     } else {
                         item.setIndex(stickMax);
