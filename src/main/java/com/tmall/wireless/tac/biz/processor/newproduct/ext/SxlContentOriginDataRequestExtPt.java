@@ -106,9 +106,9 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
 
             dataList.forEach(e->{
                 Integer position = (Integer)e.get("position");
-                tacLogger.info("SxlContentOriginDataRequestExtPt position:{}"+position);
+                tacLogger.info("SxlContentOriginDataRequestExtPt position:"+position+"index:"+index+"pageSize:"+pageSize);
 
-                if(position!=null && position < index*pageSize && position>(index-1)*pageSize){
+                if(position!=null && position < index+pageSize && position>index){
                     itemSetMap.put("crm_"+e.get("itemSetId"),e);
                 }
             });
