@@ -53,8 +53,10 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
             EntityVO entityVO = new EntityVO();
             contentInfo.getData().getItemAndContentList().forEach(e->{
                 Integer position = (Integer)e.get("position");
-                entityVO.put("banner",e);
-                itemInfo.getData().getItemAndContentList().add(position,entityVO);
+                if(position < itemInfo.getData().getItemAndContentList().size()){
+                    entityVO.put("banner",e);
+                    itemInfo.getData().getItemAndContentList().add(position,entityVO);
+                }
 
             });
 
