@@ -91,9 +91,11 @@ public class FirstScreenMindContentScene {
                     response.getExtInfos().put("propertyMap", propertyMap);
                     LOGGER.info("FirstScreenMindContentScene JSON.toJSONString(response)"+JSON.toJSONString(response));
                     return response;
-                })
-                .map(TacResult::newResult)
-                .onErrorReturn(r -> TacResult.errorResult(""));
+                }).map(TacResult::newResult)
+                .map(tacResult -> {
+                    tacResult.getBackupMetaData().setUseBackup(true);
+                    return tacResult;
+                }).onErrorReturn(r -> TacResult.errorResult(""));
     }
     public SceneInfo getSceneInfo(){
         SceneInfo sceneInfo = new SceneInfo();

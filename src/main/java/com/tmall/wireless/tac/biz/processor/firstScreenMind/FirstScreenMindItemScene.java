@@ -75,6 +75,10 @@ public class FirstScreenMindItemScene {
                     return response;
                 })
                 .map(TacResult::newResult)
+                .map(tacResult -> {
+                    tacResult.getBackupMetaData().setUseBackup(true);
+                    return tacResult;
+                })
                 .onErrorReturn(r -> TacResult.errorResult(""));
 
     }
