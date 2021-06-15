@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.wzt;
 
 import com.ali.com.google.common.base.Joiner;
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
@@ -10,6 +11,8 @@ import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +25,9 @@ import java.util.stream.Collectors;
 @Service
 public class WuZheTianItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
     private static final Long APP_ID = 21431L;
+
+    @Autowired
+    TacLogger tacLogger;
 
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
@@ -36,6 +42,7 @@ public class WuZheTianItemOriginDataRequestExtPt implements ItemOriginDataReques
         Map<String, String> params = Maps.newHashMap();
         params.put("userItemIdList", Joiner.on(",").join(itemIds));
         recommendRequest.setParams(params);
+        tacLogger.info("tpp扩展点参数：" + JSON.toJSONString(recommendRequest));
         return RecommendRequest;
     }
 }
