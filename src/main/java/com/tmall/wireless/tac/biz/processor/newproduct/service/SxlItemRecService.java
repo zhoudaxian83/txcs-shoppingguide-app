@@ -44,7 +44,7 @@ public class SxlItemRecService {
     static List<Pair<String, String>> dataTubeKeyList = Lists.newArrayList(
         Pair.of("recommendWords","recommendWords"),
         Pair.of("videoUrl","videoUrl"),
-        Pair.of("type","sxlType"),
+        Pair.of("type","type"),
         Pair.of("atmosphereImageUrl","atmosphereImageUrl"),
         Pair.of("sellingPointDesc","sellingPointDesc")
     );
