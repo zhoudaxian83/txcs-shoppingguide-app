@@ -95,7 +95,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                         return new OriginDataDTO<>();
                     }
                     OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-                    originDataDTO  = this.testBuildOriginDataDTO(tairItems);
+                    originDataDTO = this.testBuildOriginDataDTO(tairItems);
                     tacLogger.info("原始数据originDataDTO：" + JSON.toJSONString(originDataDTO));
                     //this.setItemToCacheOfArea(originDataDTO, smAreaId);
                     return this.getItemPage(originDataDTO, dataContext);
@@ -105,9 +105,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 //        }
     }
 
-    private OriginDataDTO<ItemEntity> testBuildOriginDataDTO(List<Long> itemIds){
+    private OriginDataDTO<ItemEntity> testBuildOriginDataDTO(List<Long> itemIds) {
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-        List<ItemEntity> itemEntities = itemIds.stream().map(itemId->{
+        List<ItemEntity> itemEntities = itemIds.stream().map(itemId -> {
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(itemId);
             return itemEntity;
@@ -131,6 +131,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Map<String, String> params = Maps.newHashMap();
         params.put("userItemIdList", Joiner.on(",").join(itemIds));
         recommendRequest.setParams(params);
+        tacLogger.info("tpp入参recommendRequest：" + JSON.toJSONString(recommendRequest));
         return recommendRequest;
     }
 
