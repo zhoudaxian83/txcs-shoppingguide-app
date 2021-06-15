@@ -133,7 +133,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = JSON.parseObject(
                         JSON.toJSON(pmtRuleDataItemRuleDTOS.get(0)).toString(), PmtRuleDataItemRuleDTO.class);
                 List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS = pmtRuleDataItemRuleDTO.getDataSetItemRuleDTOList();
-                //tacLogger.info("columnCenterDataSetItemRuleDTOS原始数据" + JSON.toJSONString(columnCenterDataSetItemRuleDTOS));
                 columnCenterDataSetItemRuleDTOS.forEach(item -> {
                     if (item.getDataRule().getStick() != null) {
                         item.setIndex(item.getDataRule().getStick());
@@ -145,7 +144,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                         Collectors.toList());
                 items = columnCenterDataSetItemRuleDTOSSort.stream().map(
                         ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
-                // tacLogger.info(LOG_PREFIX + "获取tair原始数据排序后：" + JSON.toJSONString(items));
                 return items;
             } catch (Exception e) {
                 tacLogger.error(LOG_PREFIX + "getOriginalRecommend获取tair原始items异常：" + JSON.toJSONString(items), e);

@@ -1,11 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.wzt.utils;
 
 import com.alibaba.fastjson.JSON;
-
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
-import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -18,8 +16,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TairUtil {
-    @Autowired
-    private MultiClusterTairManager multiClusterTairManager;
 
     @Autowired
     TairFactorySpi tairFactorySpi;
@@ -36,13 +32,13 @@ public class TairUtil {
             TairManager defaultTair = tairFactorySpi.getDefaultTair();
             if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null) {
                 tacLogger.warn(
-                    LOG_PREFIX + "缓存异常，cacheKey: " + cacheKey);
+                        LOG_PREFIX + "缓存异常，cacheKey: " + cacheKey);
                 return null;
             }
             Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(NAME_SPACE,
-                cacheKey);
+                    cacheKey);
             if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
-                && dataEntryResult.getValue().getValue() != null) {
+                    && dataEntryResult.getValue().getValue() != null) {
 //                tacLogger.warn(
 //                    LOG_PREFIX + "取缓存key打印，cacheKey: " + cacheKey);
                 return dataEntryResult.getValue().getValue();
@@ -64,7 +60,7 @@ public class TairUtil {
                 return false;
             }
             ResultCode resultCode = defaultTair.getMultiClusterTairManager().put(NAME_SPACE,
-                cacheKey, JSON.toJSONString(data), 0, 60 * 30);
+                    cacheKey, JSON.toJSONString(data), 0, 60 * 30);
             if (resultCode.isSuccess()) {
                 return true;
             } else {
