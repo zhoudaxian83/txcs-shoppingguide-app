@@ -86,6 +86,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //tair获取推荐商品
         List<Long> tairItems = this.getOriginalRecommend(smAreaId);
         dataContext.setItems(tairItems);
+
+
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, tairItems))
                 .map(recommendResponseEntityResponse -> {
                     if (!recommendResponseEntityResponse.isSuccess()
@@ -95,6 +97,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                         return new OriginDataDTO<>();
                     }
                     OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
+                    tacLogger.info("原始数据originDataDTO：" + JSON.toJSONString(originDataDTO));
                     this.setItemToCacheOfArea(originDataDTO, smAreaId);
                     return this.getItemPage(originDataDTO, dataContext);
                 });
