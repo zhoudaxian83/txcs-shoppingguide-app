@@ -85,31 +85,30 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 //        if (cacheOriginDataDTO == null) {
         //tair获取推荐商品
         List<Long> tairItems = this.getOriginalRecommend(smAreaId);
-        return Flowable.just(this.testBuildOriginDataDTO(tairItems));
-//        dataContext.setItems(tairItems);
-//        return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, tairItems))
-//                .map(recommendResponseEntityResponse -> {
-//                    if (!recommendResponseEntityResponse.isSuccess()
-//                            || recommendResponseEntityResponse.getValue() == null
-//                            || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
-//                        tacLogger.info("tpp个性化排序返回异常：" + JSON.toJSONString(recommendResponseEntityResponse));
-//                        return new OriginDataDTO<>();
-//                    }
-//                    OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-//                    //TODO
-//                    originDataDTO = this.testBuildOriginDataDTO(tairItems);
-//                    tacLogger.info("原始数据originDataDTO：" + JSON.toJSONString(originDataDTO));
-//                    //this.setItemToCacheOfArea(originDataDTO, smAreaId);
-//                    return this.getItemPage(originDataDTO, dataContext);
-//                });
+        dataContext.setItems(tairItems);
+        return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, tairItems))
+                .map(recommendResponseEntityResponse -> {
+                    if (!recommendResponseEntityResponse.isSuccess()
+                            || recommendResponseEntityResponse.getValue() == null
+                            || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
+                        tacLogger.info("tpp个性化排序返回异常：" + JSON.toJSONString(recommendResponseEntityResponse));
+                        return new OriginDataDTO<>();
+                    }
+                    OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
+                    //TODO
+                    originDataDTO = this.testBuildOriginDataDTO(tairItems);
+                    tacLogger.info("原始数据originDataDTO：" + JSON.toJSONString(originDataDTO));
+                    //this.setItemToCacheOfArea(originDataDTO, smAreaId);
+                    return this.getItemPage(originDataDTO, dataContext);
+                });
 //        } else {
 //            return Flowable.just(this.getItemPage(cacheOriginDataDTO, dataContext));
 //        }
     }
 
-    private OriginDataDTO<ItemEntity> testBuildOriginDataDTO(List<Long> itemIds) {
+    private OriginDataDTO<ItemEntity> testBuildOriginDataDTO(List<Long> itemIds){
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-        List<ItemEntity> itemEntities = itemIds.stream().map(itemId -> {
+        List<ItemEntity> itemEntities = itemIds.stream().map(itemId->{
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(itemId);
             return itemEntity;
