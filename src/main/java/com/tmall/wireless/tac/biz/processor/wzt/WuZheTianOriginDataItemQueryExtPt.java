@@ -103,17 +103,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 //        }
     }
 
-    private OriginDataDTO<ItemEntity> testBuildOriginDataDTO(List<Long> itemIds) {
-        OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-        List<ItemEntity> itemEntities = itemIds.stream().map(itemId -> {
-            ItemEntity itemEntity = new ItemEntity();
-            itemEntity.setItemId(itemId);
-            return itemEntity;
-        }).collect(Collectors.toList());
-        originDataDTO.setResult(itemEntities);
-        return originDataDTO;
-    }
-
     /**
      * tpp获取个性化排序规则参数构建
      *
