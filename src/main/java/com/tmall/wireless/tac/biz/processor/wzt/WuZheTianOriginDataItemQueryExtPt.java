@@ -95,8 +95,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                         return new OriginDataDTO<>();
                     }
                     OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-                    //TODO
-                    originDataDTO = this.testBuildOriginDataDTO(tairItems);
+                    originDataDTO  = this.testBuildOriginDataDTO(tairItems);
                     tacLogger.info("原始数据originDataDTO：" + JSON.toJSONString(originDataDTO));
                     //this.setItemToCacheOfArea(originDataDTO, smAreaId);
                     return this.getItemPage(originDataDTO, dataContext);
