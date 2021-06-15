@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.WU_ZHE_TIAN)
+//@Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+//        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+//        scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
     private static final Long APP_ID = 21431L;
