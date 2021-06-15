@@ -23,26 +23,26 @@ import java.util.stream.Collectors;
 //        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
 //        scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
-public class WuZheTianItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
+public class WuZheTianItemOriginDataRequestExtPt {
     private static final Long APP_ID = 21431L;
 
-    @Autowired
-    TacLogger tacLogger;
-
-    @Override
-    public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
-        OriginDataDTO<ItemEntity> originDataDTO = sgFrameworkContextItem.getItemEntityOriginDataDTO();
-        List<Long> itemIds = originDataDTO.getResult().stream().map(ItemEntity::getItemId).collect(Collectors.toList());
-        Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
-        RecommendRequest RecommendRequest = new RecommendRequest();
-        RecommendRequest recommendRequest = new RecommendRequest();
-        recommendRequest.setLogResult(true);
-        recommendRequest.setUserId(userId);
-        recommendRequest.setAppId(APP_ID);
-        Map<String, String> params = Maps.newHashMap();
-        params.put("userItemIdList", Joiner.on(",").join(itemIds));
-        recommendRequest.setParams(params);
-        tacLogger.info("tpp扩展点参数：" + JSON.toJSONString(recommendRequest));
-        return RecommendRequest;
-    }
+//    @Autowired
+//    TacLogger tacLogger;
+//
+//    @Override
+//    public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
+//        OriginDataDTO<ItemEntity> originDataDTO = sgFrameworkContextItem.getItemEntityOriginDataDTO();
+//        List<Long> itemIds = originDataDTO.getResult().stream().map(ItemEntity::getItemId).collect(Collectors.toList());
+//        Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
+//        RecommendRequest RecommendRequest = new RecommendRequest();
+//        RecommendRequest recommendRequest = new RecommendRequest();
+//        recommendRequest.setLogResult(true);
+//        recommendRequest.setUserId(userId);
+//        recommendRequest.setAppId(APP_ID);
+//        Map<String, String> params = Maps.newHashMap();
+//        params.put("userItemIdList", Joiner.on(",").join(itemIds));
+//        recommendRequest.setParams(params);
+//        tacLogger.info("tpp扩展点参数：" + JSON.toJSONString(recommendRequest));
+//        return RecommendRequest;
+//    }
 }
