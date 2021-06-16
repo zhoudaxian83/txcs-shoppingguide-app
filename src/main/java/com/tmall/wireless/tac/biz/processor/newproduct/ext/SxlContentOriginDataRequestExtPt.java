@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -148,5 +149,15 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
 
         String str = String.join(",", map.keySet());
         System.out.println(str);
+
+        List<Long> itemIdList = Lists.newArrayList();
+        itemIdList.add(11L);
+        itemIdList.add(22L);
+
+        List<String> li = itemIdList.stream().map(e->{
+            return "crm_"+e;
+        }).collect(Collectors.toList());
+
+        System.out.println(String.join(",",li));
     }
 }

@@ -1,24 +1,23 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.ext;
 
 import com.alibaba.cola.extension.Extension;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import com.tmall.txcs.gs.model.biz.context.LocParams;
-import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * tpp入参组装扩展点
@@ -31,7 +30,7 @@ import java.util.Optional;
 @Service
 public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
 
-    private static final Long APPID = 24910L;
+    private static final Long APPID = 25385L;
 
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
@@ -42,18 +41,29 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID);
 
-        sgFrameworkContextItem.getEntitySetParams().getContentSetIdList();
         Map<String, String> params = Maps.newHashMap();
         params.put("pageSize", String.valueOf(sgFrameworkContextItem.getUserPageInfo().getPageSize()));
-        params.put("itemSets", Constant.SXL_ITEMSET_ID);
+        params.put("itemSets",  buildItemSetIds(sgFrameworkContextItem));
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
-        Integer index = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserPageInfo).map(
-            PageInfoDO::getIndex).orElse(0);
-
         params.put("index", String.valueOf(sgFrameworkContextItem.getUserPageInfo().getIndex()));
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
         tppRequest.setParams(params);
         return tppRequest;
+    }
+
+
+    private String buildItemSetIds(SgFrameworkContextItem sgFrameworkContextItem){
+
+        List<Long> itemSetIdList = sgFrameworkContextItem.getEntitySetParams().getItemSetIdList();
+        if(CollectionUtils.isNotEmpty(itemSetIdList)){
+            List<String> list = itemSetIdList.stream().map(e->{
+                return sgFrameworkContextItem.getEntitySetParams().getItemSetSource()+"_"+e;
+            }).collect(Collectors.toList());
+            return String.join(",",list);
+        }else {
+            return Constant.SXL_ITEMSET_ID;
+        }
+
     }
 }

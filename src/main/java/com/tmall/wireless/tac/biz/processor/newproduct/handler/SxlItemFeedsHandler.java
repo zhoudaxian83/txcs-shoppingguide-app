@@ -8,6 +8,7 @@ import com.alibaba.aladdin.lamp.domain.response.ResResponse;
 import com.alibaba.aladdin.lamp.domain.user.UserProfile;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.tmall.hades.monitor.code.Const;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
@@ -21,6 +22,7 @@ import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,13 +87,14 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
 
     private List<Map<String, Object>> getAldInfo(Context context){
 
-        Map<String, ResResponse> mapResponse = aldSpi.queryAldInfoSync(buildAldRequest(context));
+        String source = MapUtil.getStringWithDefault(context.getParams(), "source", "");
 
-        if(MapUtils.isNotEmpty(mapResponse)){
-            List<Map<String, Object>> dataList = (List<Map<String, Object>>)mapResponse.get(Constant.ITEM_ALD_RES_ID).get("data");
-
-            return dataList;
-
+        if(StringUtils.isNotBlank(source) && Constant.SXL_SOURCE_CON_PAGE.contains(source)){
+            Map<String, ResResponse> mapResponse = aldSpi.queryAldInfoSync(buildAldRequest(context));
+            if(MapUtils.isNotEmpty(mapResponse)){
+                List<Map<String, Object>> dataList = (List<Map<String, Object>>)mapResponse.get(Constant.ITEM_ALD_RES_ID).get("data");
+                return dataList;
+            }
         }
 
         return null;

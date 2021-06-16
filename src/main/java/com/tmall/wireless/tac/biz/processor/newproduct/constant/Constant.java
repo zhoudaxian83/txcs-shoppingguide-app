@@ -1,5 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.constant;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
 /**
  * @author haixiao.zhang
  * @date 2021/6/10
@@ -18,8 +22,7 @@ public class Constant {
 
     public static final String SXL_ITEMSET_ID = "crm_322385";
 
-
-
+    public static final List<String> SXL_SOURCE_CON_PAGE = Lists.newArrayList("mainPage");
 
 
 }

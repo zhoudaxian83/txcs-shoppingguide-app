@@ -112,7 +112,7 @@ public class SxlItemRecService {
 
 
         ItemRecommendMetaInfo itemRecommendMetaInfo = new ItemRecommendMetaInfo();
-        itemRecommendMetaInfo.setAppId(24910L);
+        itemRecommendMetaInfo.setAppId(25385L);
         itemMetaInfo.setItemRecommendMetaInfo(itemRecommendMetaInfo);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         itemRecommendMetaInfo.setUseRecommendSpiV2(true);
