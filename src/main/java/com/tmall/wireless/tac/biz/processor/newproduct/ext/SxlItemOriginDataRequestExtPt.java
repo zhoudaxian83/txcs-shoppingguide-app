@@ -33,9 +33,6 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
 
     private static final Long APPID = 24910L;
 
-    private static final String pageSize = "5";
-
-
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
 
@@ -47,12 +44,13 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
 
         sgFrameworkContextItem.getEntitySetParams().getContentSetIdList();
         Map<String, String> params = Maps.newHashMap();
-        params.put("pageSize", pageSize);
+        params.put("pageSize", String.valueOf(sgFrameworkContextItem.getUserPageInfo().getPageSize()));
         params.put("itemSets", Constant.SXL_ITEMSET_ID);
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         Integer index = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserPageInfo).map(
             PageInfoDO::getIndex).orElse(0);
-        params.put("index", "0");
+
+        params.put("index", String.valueOf(sgFrameworkContextItem.getUserPageInfo().getIndex()));
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
         tppRequest.setParams(params);
