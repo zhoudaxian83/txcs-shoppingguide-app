@@ -89,7 +89,7 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
 
         String source = MapUtil.getStringWithDefault(context.getParams(), "source", "");
 
-        if(StringUtils.isNotBlank(source) && Constant.SXL_SOURCE_CON_PAGE.contains(source)){
+        if(StringUtils.isNotBlank(source) && Constant.SXL_SOURCE_AGREE.contains(source)){
             Map<String, ResResponse> mapResponse = aldSpi.queryAldInfoSync(buildAldRequest(context));
             if(MapUtils.isNotEmpty(mapResponse)){
                 List<Map<String, Object>> dataList = (List<Map<String, Object>>)mapResponse.get(Constant.ITEM_ALD_RES_ID).get("data");

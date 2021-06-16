@@ -22,7 +22,7 @@ public class Constant {
 
     public static final String SXL_ITEMSET_ID = "crm_322385";
 
-    public static final List<String> SXL_SOURCE_CON_PAGE = Lists.newArrayList("mainPage");
+    public static final List<String> SXL_SOURCE_AGREE = Lists.newArrayList("mainPage");
 
 
 }
