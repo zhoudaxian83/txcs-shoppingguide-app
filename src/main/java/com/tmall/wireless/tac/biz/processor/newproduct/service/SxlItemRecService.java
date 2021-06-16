@@ -79,7 +79,7 @@ public class SxlItemRecService {
         sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo());
 
         PageInfoDO pageInfoDO = new PageInfoDO();
-        String index = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "1");
+        String index = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "0");
         String pageSize = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.PAGE_SIZE, "10");
         pageInfoDO.setIndex(Integer.valueOf(index));
         pageInfoDO.setPageSize(Integer.valueOf(pageSize));

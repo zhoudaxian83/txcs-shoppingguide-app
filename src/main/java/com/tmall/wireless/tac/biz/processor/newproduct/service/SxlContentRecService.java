@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.service;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
@@ -31,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 上新了内容推荐
@@ -49,11 +49,7 @@ public class SxlContentRecService {
     TacLogger tacLogger;
 
     static List<Pair<String, String>> dataTubeKeyList = Lists.newArrayList(
-        Pair.of("recommendWords","recommendWords"),
-        Pair.of("videoUrl","videoUrl"),
-        Pair.of("type","type"),
-        Pair.of("atmosphereImageUrl","atmosphereImageUrl"),
-        Pair.of("sellingPointDesc","sellingPointDesc")
+        Pair.of("newItemAttribute","newItemAttribute")
     );
 
     public Flowable<TacResult<SgFrameworkResponse<ContentVO>>> recommend(Context context) {
@@ -73,7 +69,7 @@ public class SxlContentRecService {
         sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo());
 
         PageInfoDO pageInfoDO = new PageInfoDO();
-        String index = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "1");
+        String index = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "0");
         String pageSize = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.PAGE_SIZE, "10");
         pageInfoDO.setIndex(Integer.valueOf(index));
         pageInfoDO.setPageSize(Integer.valueOf(pageSize));
@@ -128,6 +124,8 @@ public class SxlContentRecService {
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         //captain SceneCode场景code
         itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
+        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(322385L));
+
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 
         ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
@@ -145,5 +143,20 @@ public class SxlContentRecService {
         contentRecommendMetaInfo.setUseRecommendSpiV2(true);
         contentMetaInfo.setContentRecommendMetaInfo(contentRecommendMetaInfo);
         return contentMetaInfo;
+    }
+
+    private static DataTubeMateInfo buildDataTubeMateInfo(Long itemSetId) {
+
+
+        DataTubeMateInfo dataTubeMateInfo = new DataTubeMateInfo();
+        dataTubeMateInfo.setActivityId(String.valueOf(itemSetId));
+        dataTubeMateInfo.setChannelName("itemExtLdb");
+        dataTubeMateInfo.setDataKeyList(dataTubeKeyList.stream().map(k -> {
+            DataTubeKey dataTubeKey = new DataTubeKey();
+            dataTubeKey.setDataKey(k.getRight());
+            dataTubeKey.setVoKey(k.getLeft());
+            return dataTubeKey;
+        }).collect(Collectors.toList()));
+        return dataTubeMateInfo;
     }
 }
