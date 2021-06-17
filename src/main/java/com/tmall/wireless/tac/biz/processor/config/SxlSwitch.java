@@ -11,9 +11,12 @@ import com.taobao.csp.switchcenter.bean.Switch;
 @NameSpace(nameSpace = "sxl")
 public class SxlSwitch {
 
-    private static final String APP_NAME = "txcs-shoppingguide";
 
     @AppSwitch(des = "测试", level = Switch.Level.p4)
     public static Integer ITEM_PAGE_SIZE = 60;
+
+    @AppSwitch(des = "商品推荐选品集id", level = Switch.Level.p4)
+    public static final String SXL_ITEMSET_ID = "crm_322385";
+
 
 }
