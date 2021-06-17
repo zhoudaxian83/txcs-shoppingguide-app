@@ -95,6 +95,10 @@ public class SxlItemRecService {
 
         tacLogger.info("switchClassLoader:"+SxlSwitch.class.getClassLoader().toString());
 
+        tacLogger.info("switchClass1:"+SxlSwitch.class.toGenericString());
+
+        tacLogger.info("switchClass2:"+SxlSwitch.class.toString());
+
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)
             .onErrorReturn(r -> TacResult.errorResult(""));
