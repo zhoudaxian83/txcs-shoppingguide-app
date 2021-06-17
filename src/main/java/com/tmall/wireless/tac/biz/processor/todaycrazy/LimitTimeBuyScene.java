@@ -113,6 +113,7 @@ public class LimitTimeBuyScene {
             if(limitBuyDto.getIsHit()){
                 generalItem.put("itemAndContentList",sgFrameworkResponse.getItemAndContentList());
             }
+            generalItem.put("test","test");
             generalItemse.add(generalItem);
 
 
