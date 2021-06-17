@@ -44,6 +44,7 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         /**
          * https://tui.taobao.com/recommend?appid=24910&itemSets=crm_219953,crm_219840&pageSize=20&index=0
          */
+
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID);
 
@@ -54,6 +55,9 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         params.put("index", String.valueOf(sgFrameworkContextItem.getUserPageInfo().getIndex()));
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
+        params.put("commerce", "B2C");
+        params.put("regionCode", String.valueOf(sgFrameworkContextItem.getLocParams().getRegionCode()));
+
         tppRequest.setParams(params);
 
         tacLogger.info("SxlItemOriginDataRequestExtPt tppRequest:"+ JSON.toJSONString(tppRequest));
