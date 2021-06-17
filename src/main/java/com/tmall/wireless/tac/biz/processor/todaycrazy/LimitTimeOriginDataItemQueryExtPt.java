@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
-
 import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
@@ -25,7 +24,6 @@ import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TairUtil;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TodayCrazyUtils;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
-import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
