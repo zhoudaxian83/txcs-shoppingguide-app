@@ -12,12 +12,15 @@ import com.taobao.csp.switchcenter.core.SwitchManager;
 @NameSpace(nameSpace = "sxl")
 public class SxlSwitch {
 
+    private static final String APP_NAME = "txcs-shoppingguide";
+
+
     @AppSwitch(des = "召回商品数", level = Switch.Level.p4)
     public static Integer ITEM_PAGE_SIZE = 60;
 
     public static Object getValue(String key){
 
-        return SwitchManager.getValue("",key);
+        return SwitchManager.getValue(APP_NAME,key);
     }
 
 }
