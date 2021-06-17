@@ -38,7 +38,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     Logger LOGGER = LoggerFactory.getLogger(LimitTimeBuyScene.class);
 
     @Autowired
-    TairFactorySpi tairFactorySpi;
+    TairUtil tairUtil;
     @Autowired
     AldInfoUtil aldInfoUtil;
     @Autowired
@@ -71,7 +71,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         }
 
         List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList = Lists.newArrayList();
-        List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = getCacheData();
+        List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = tairUtil.getCacheData();
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt pmtRuleDataItemRuleDTOList.size()***"+pmtRuleDataItemRuleDTOList.size());
         for(PmtRuleDataItemRuleDTO pmtRule : pmtRuleDataItemRuleDTOList){
             List<ColumnCenterDataSetItemRuleDTO> itemList = pmtRule.getDataSetItemRuleDTOList();
@@ -90,43 +90,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         originDataDTO.setResult(aldInfoUtil.buildItemList(hitpmtRuleDataItemRuleDTOList));
         return Flowable.just(originDataDTO);
     }
-    /**
-     * 获取缓存数据
-     * @return
-     */
-    public List<PmtRuleDataItemRuleDTO>  getCacheData(){
-        List<PmtRuleDataItemRuleDTO> pmtRuleList = Lists.newArrayList();
-        //5个key里面一样的
-        String normalTairKey = TairUtil.formatHotTairKey();
-        Result<DataEntry> rst = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().get(NAME_SPACE,normalTairKey);
-        if(rst == null || !rst.isSuccess() || rst.getValue() == null || rst.getValue().getValue() == null){
-            return pmtRuleList;
-        }
-        DataEntry dataEntry = rst.getValue();
-        pmtRuleList = (List<PmtRuleDataItemRuleDTO>)dataEntry.getValue();
-        return pmtRuleList;
-    }
-
-    /**
-     * 设置captain channelKey  渠道立减
-     * @param sgFrameworkContextItem
-     * @param pmtRule
-     */
-    public void setChannelKey(SgFrameworkContextItem sgFrameworkContextItem,PmtRuleDataItemRuleDTO pmtRule){
-        ColumnCenterPmtRuleDataSetDTO pmtRuleDataSetDTO = pmtRule.getPmtRuleDataSetDTO();
-        String promotionExtension = pmtRuleDataSetDTO.getExtension();
-        Map<String, Object> extensionMap = TodayCrazyUtils.parseExtension(promotionExtension, "\\|", "\\=", true);
-        String channelKey = MapUtil.getStringWithDefault(extensionMap, "channelKey","panic_buying_today");
-        sgFrameworkContextItem.getItemMetaInfo().getItemGroupRenderInfoList().forEach(itemGroupMetaInfo -> {
-            itemGroupMetaInfo.getItemInfoSourceMetaInfos().forEach(itemInfoSourceMetaInfo -> {
-                if(itemInfoSourceMetaInfo.getSourceName() != null && "captain".equals(itemInfoSourceMetaInfo.getSourceName())){
-                    //todo 设置captain channelKey  渠道立减
-                    //priceRequest.setExtraParams(Collections.singletonMap("umpChannel", channelKey));
-                    //itemInfoSourceMetaInfo
-                }
-            });
-        });
-
 
     }
 }
