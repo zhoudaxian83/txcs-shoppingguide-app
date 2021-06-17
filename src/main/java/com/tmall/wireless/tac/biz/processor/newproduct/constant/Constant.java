@@ -24,5 +24,6 @@ public class Constant {
 
     public static final List<String> SXL_SOURCE_AGREE = Lists.newArrayList("mainPage");
 
+    public static final Long SXL_MAIN_ACTIVEX_ID = 870L;
 
 }

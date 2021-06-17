@@ -124,7 +124,7 @@ public class SxlContentRecService {
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         //captain SceneCode场景code
         itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
-        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(870L));
+        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(Constant.SXL_MAIN_ACTIVEX_ID));
 
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 
