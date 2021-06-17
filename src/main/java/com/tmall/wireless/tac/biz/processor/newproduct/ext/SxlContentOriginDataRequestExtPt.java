@@ -91,6 +91,9 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
         tppRequest.setParams(params);
+
+        tacLogger.info("SxlContentOriginDataRequestExtPt tppRequest:"+ JSON.toJSONString(tppRequest));
+
         return tppRequest;
     }
 

@@ -3,7 +3,6 @@ package com.tmall.wireless.tac.biz.processor.config;
 import com.taobao.csp.switchcenter.annotation.AppSwitch;
 import com.taobao.csp.switchcenter.annotation.NameSpace;
 import com.taobao.csp.switchcenter.bean.Switch;
-import com.taobao.csp.switchcenter.core.SwitchManager;
 
 /**
  * @author haixiao.zhang
@@ -14,13 +13,7 @@ public class SxlSwitch {
 
     private static final String APP_NAME = "txcs-shoppingguide";
 
-
-    @AppSwitch(des = "召回商品数", level = Switch.Level.p4)
+    @AppSwitch(des = "测试", level = Switch.Level.p4)
     public static Integer ITEM_PAGE_SIZE = 60;
-
-    public static Object getValue(String key){
-
-        return SwitchManager.getValue(APP_NAME,key);
-    }
 
 }
