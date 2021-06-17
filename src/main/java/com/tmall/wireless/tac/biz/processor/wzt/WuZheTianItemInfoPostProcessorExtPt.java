@@ -86,8 +86,6 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
             o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramsValue);
             JSONObject jsonObject = (JSONObject) JSON.toJSON(o);
             if ((boolean) jsonObject.get(Constant.SUCCESS)) {
-                tacLogger.info("限购信息入参paramsValue：" + JSON.toJSONString(paramsValue));
-                tacLogger.info("限购信息返回结果o：" + JSON.toJSONString(o));
                 return (JSONObject) jsonObject.get(Constant.LIMIT_INFO);
             } else {
                 tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");

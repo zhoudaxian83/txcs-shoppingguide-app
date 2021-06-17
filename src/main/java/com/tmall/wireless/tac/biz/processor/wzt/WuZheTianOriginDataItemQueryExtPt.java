@@ -1,20 +1,15 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
+import com.ali.com.google.common.base.Joiner;
+import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-
-import com.ali.com.google.common.base.Joiner;
-import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
-import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -36,6 +31,9 @@ import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * @author luojunchong
  */
@@ -51,9 +49,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     TairUtil tairUtil;
 
-    @Autowired
-    TairFactorySpi tairFactorySpi;
-
     /**
      * 分大区个性化排序后商品缓存后缀
      */
@@ -66,8 +61,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     RecommendSpi recommendSpi;
 
-    @Autowired
-    private SgExtensionExecutor sgExtensionExecutor;
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
