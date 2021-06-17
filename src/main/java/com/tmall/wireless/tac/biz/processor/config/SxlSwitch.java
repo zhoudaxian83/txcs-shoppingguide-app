@@ -9,7 +9,7 @@ import com.taobao.csp.switchcenter.core.SwitchManager;
  * @author haixiao.zhang
  * @date 2021/6/17
  */
-@NameSpace(nameSpace = "txcs-shoppingguide-app")
+@NameSpace(nameSpace = "sxl")
 public class SxlSwitch {
 
     @AppSwitch(des = "召回商品数", level = Switch.Level.p4)

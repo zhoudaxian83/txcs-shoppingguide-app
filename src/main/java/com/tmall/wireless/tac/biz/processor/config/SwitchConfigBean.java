@@ -8,7 +8,7 @@ import com.taobao.csp.switchcenter.core.SwitchManager;
  */
 public class SwitchConfigBean {
 
-    private static final String APP_NAME = "txcs-shoppingguide-app";
+    private static final String APP_NAME = "txcs-shoppingguide";
 
     private void init() {
         try {
