@@ -15,7 +15,9 @@ import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
 import com.tmall.wireless.tac.client.common.TacResult;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
@@ -37,6 +39,9 @@ import java.util.stream.Collectors;
 public class SxlItemRecService {
 
     Logger LOGGER = LoggerFactory.getLogger(SxlItemRecService.class);
+
+    @Autowired
+    TacLogger tacLogger;
 
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
@@ -84,6 +89,10 @@ public class SxlItemRecService {
         pageInfoDO.setIndex(Integer.valueOf(index));
         pageInfoDO.setPageSize(Integer.valueOf(pageSize));
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
+
+
+        tacLogger.info("switch1:"+SxlSwitch.ITEM_PAGE_SIZE);
+        tacLogger.info("switch2:"+SxlSwitch.getValue("ITEM_PAGE_SIZE"));
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)
