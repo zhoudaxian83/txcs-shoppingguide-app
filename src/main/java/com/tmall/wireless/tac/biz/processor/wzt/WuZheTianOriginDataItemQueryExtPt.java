@@ -4,6 +4,8 @@ import com.ali.com.google.common.base.Joiner;
 import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -19,12 +21,14 @@ import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
 import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
-import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.enums.LogicalArea;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.DataContext;
+import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.PmtRuleDataItemRuleDTO;
+import com.tmall.wireless.tac.biz.processor.wzt.service.LimitService;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
@@ -49,6 +53,14 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     TairUtil tairUtil;
 
+
+    @Autowired
+    LimitService limitService;
+
+
+    @Autowired
+    RecommendSpi recommendSpi;
+
     /**
      * 分大区个性化排序后商品缓存后缀
      */
@@ -58,8 +70,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     private static final Long APP_ID = 21431L;
 
-    @Autowired
-    RecommendSpi recommendSpi;
 
 
     @Override
@@ -77,23 +87,50 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 //        OriginDataDTO<ItemEntity> cacheOriginDataDTO = getItemToCacheOfArea(smAreaId);
 //        if (cacheOriginDataDTO == null) {
         //tair获取推荐商品
-        List<Long> tairItems = this.getOriginalRecommend(smAreaId);
-        dataContext.setItems(tairItems);
-        return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, tairItems))
-                .map(recommendResponseEntityResponse -> {
-                    if (!recommendResponseEntityResponse.isSuccess()
-                            || recommendResponseEntityResponse.getValue() == null
-                            || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
-                        tacLogger.info("tpp个性化排序返回异常：" + JSON.toJSONString(recommendResponseEntityResponse));
-                        return new OriginDataDTO<>();
-                    }
-                    OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-                    this.setItemToCacheOfArea(originDataDTO, smAreaId);
-                    return this.getItemPage(originDataDTO, dataContext);
-                });
-//        } else {
-//            return Flowable.just(this.getItemPage(cacheOriginDataDTO, dataContext));
-//        }
+        List<ColumnCenterDataSetItemRuleDTO> tairItems = this.getOriginalRecommend(smAreaId);
+        context.getUserParams().put("LimitSkuList", this.buildLimitSkuListParam(tairItems));
+        Map<Long, List<ItemLimitDTO>> itemLimitResult = limitService.getItemLimitResult(context);
+        if (itemLimitResult != null) {
+            tacLogger.info("limit结果" + JSON.toJSONString(itemLimitResult));
+            context.getUserParams().put(Constant.ITEM_LIMIT_RESULT, itemLimitResult);
+        } else {
+            tacLogger.warn(LOG_PREFIX + "获取限购数据为空");
+        }
+        List<Long> items = tairItems.stream().map(
+            ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
+        dataContext.setItems(items);
+        return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
+            .map(recommendResponseEntityResponse -> {
+                if (!recommendResponseEntityResponse.isSuccess()
+                    || recommendResponseEntityResponse.getValue() == null
+                    || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
+                    tacLogger.info("tpp个性化排序返回异常：" + JSON.toJSONString(recommendResponseEntityResponse));
+                    return new OriginDataDTO<>();
+                }
+                OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
+                this.setItemToCacheOfArea(originDataDTO, smAreaId);
+                return this.getItemPage(originDataDTO, dataContext, itemLimitResult);
+            });
+        //        } else {
+        //            return Flowable.just(this.getItemPage(cacheOriginDataDTO, dataContext));
+        //        }
+    }
+
+    private List<Map> buildLimitSkuListParam(List<ColumnCenterDataSetItemRuleDTO> tairItems) {
+        List<Map> skuList = Lists.newArrayList();
+        tairItems.forEach(item -> {
+            Long itemId = item.getItemId();
+            JSONObject jsonObject = JSONObject.parseObject(item.getItemExtension());
+            JSONArray jsonArray = (JSONArray)jsonObject.get("skuInfo");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                Map<String, Object> skuMap = Maps.newHashMap();
+                Long skuId = jsonArray.getJSONObject(i).getLong("skuId");
+                skuMap.put("skuId", skuId);
+                skuMap.put("itemId", itemId);
+                skuList.add(skuMap);
+            }
+        });
+        return skuList;
     }
 
     /**
@@ -114,9 +151,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         return recommendRequest;
     }
 
-    private List<Long> getOriginalRecommend(Long smAreaId) {
+    private List<ColumnCenterDataSetItemRuleDTO> getOriginalRecommend(Long smAreaId) {
         Long stickMax = 10000L;
-        List<Long> items = null;
+        List<ColumnCenterDataSetItemRuleDTO> items = null;
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = this.getTairItems(smAreaId);
         if (CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOS)) {
             tacLogger.info(LOG_PREFIX + "getOriginalRecommend获取tair原始数据为空，请检查tair数据源配置");
@@ -124,8 +161,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         } else {
             try {
                 PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = JSON.parseObject(
-                        JSON.toJSON(pmtRuleDataItemRuleDTOS.get(0)).toString(), PmtRuleDataItemRuleDTO.class);
-                List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS = pmtRuleDataItemRuleDTO.getDataSetItemRuleDTOList();
+                    JSON.toJSON(pmtRuleDataItemRuleDTOS.get(0)).toString(), PmtRuleDataItemRuleDTO.class);
+                List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS = pmtRuleDataItemRuleDTO
+                    .getDataSetItemRuleDTOList();
+                tacLogger.info("原始列表pmtRuleDataItemRuleDTO" + JSON.toJSONString(pmtRuleDataItemRuleDTO));
                 columnCenterDataSetItemRuleDTOS.forEach(item -> {
                     if (item.getDataRule().getStick() != null) {
                         item.setIndex(item.getDataRule().getStick());
@@ -133,11 +172,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                         item.setIndex(stickMax);
                     }
                 });
-                List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOSSort = columnCenterDataSetItemRuleDTOS.stream().sorted(Comparator.comparing(ColumnCenterDataSetItemRuleDTO::getIndex)).collect(
-                        Collectors.toList());
-                items = columnCenterDataSetItemRuleDTOSSort.stream().map(
-                        ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
-                return items;
+                return columnCenterDataSetItemRuleDTOS.stream().sorted(
+                    Comparator.comparing(ColumnCenterDataSetItemRuleDTO::getIndex)).collect(
+                    Collectors.toList());
             } catch (Exception e) {
                 tacLogger.error(LOG_PREFIX + "getOriginalRecommend获取tair原始items异常：" + JSON.toJSONString(items), e);
             }
@@ -145,11 +182,47 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         return items;
     }
 
-    private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
+    /**
+     * 分页并做沉底处理
+     *
+     * @param originDataDTO
+     * @param dataContext
+     * @return
+     */
+    private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext,
+        Map<Long, List<ItemLimitDTO>> itemLimitResult) {
         List<ItemEntity> itemEntities = this.getPage(originDataDTO.getResult(), dataContext.getIndex(),
-                dataContext.getPageSize());
+            dataContext.getPageSize());
+        if (itemLimitResult != null) {
+            itemEntities = this.sink(itemEntities, itemLimitResult);
+            //限购沉底逻辑
+        }
         originDataDTO.setResult(itemEntities);
         return originDataDTO;
+    }
+
+    private List<ItemEntity> sink(List<ItemEntity> itemEntities, Map<Long, List<ItemLimitDTO>> itemLimitResult) {
+        List<ItemEntity> front = Lists.newArrayList();
+        List<ItemEntity> rear = Lists.newArrayList();
+        itemEntities.forEach(itemEntity -> {
+            if (this.verifyLimit(itemLimitResult.get(itemEntity.getItemId()))) {
+                front.add(itemEntity);
+            } else {
+                rear.add(itemEntity);
+            }
+        });
+        front.addAll(rear);
+        return front;
+    }
+
+    private boolean verifyLimit(List<ItemLimitDTO> itemLimitDTOS) {
+        if (CollectionUtils.isEmpty(itemLimitDTOS)) {
+            return true;
+        }
+        ItemLimitDTO itemLimitDTO = itemLimitDTOS.get(0);
+        //当已售数量大于等于总限制数，个人限制数量大于等于个人限购数沉底处理
+        return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
+            && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
     }
 
     /**
