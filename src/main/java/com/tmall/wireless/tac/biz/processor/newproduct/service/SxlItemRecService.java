@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.newproduct.service;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.taobao.csp.switchcenter.core.SwitchContainer;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
@@ -93,7 +94,8 @@ public class SxlItemRecService {
 
         tacLogger.info("switch1:"+SxlSwitch.ITEM_PAGE_SIZE);
 
-        tacLogger.info("switch2:"+SxlSwitch.ceshi);
+        tacLogger.info("SwitchBeanMapByAppName:"+JSON.toJSONString(SwitchContainer.getSwitchBeanMapByAppName("txcs-shoppingguide")));
+
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)
