@@ -94,8 +94,7 @@ public class SxlItemRecService {
 
         tacLogger.info("switch1:"+SxlSwitch.ITEM_PAGE_SIZE);
 
-        tacLogger.info("SwitchBeanMapByAppName:"+JSON.toJSONString(SwitchContainer.getSwitchBeanMapByAppName("txcs-shoppingguide")));
-
+        tacLogger.info("getListeners:"+JSON.toJSONString(SwitchContainer.getListeners()));
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)
