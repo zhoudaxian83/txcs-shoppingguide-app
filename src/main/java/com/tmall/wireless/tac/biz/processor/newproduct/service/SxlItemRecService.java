@@ -92,7 +92,6 @@ public class SxlItemRecService {
 
 
         tacLogger.info("switch1:"+SxlSwitch.ITEM_PAGE_SIZE);
-        tacLogger.info("switch2:"+SxlSwitch.SXL_ITEMSET_ID);
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)
