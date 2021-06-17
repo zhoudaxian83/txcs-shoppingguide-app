@@ -74,7 +74,7 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
             }).collect(Collectors.toList());
             return String.join(",",list);
         }else {
-            return SxlSwitch.SXL_ITEMSET_ID;
+            return "";
         }
 
     }
