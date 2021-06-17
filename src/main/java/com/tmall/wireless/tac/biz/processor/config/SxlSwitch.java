@@ -15,5 +15,8 @@ public class SxlSwitch {
     @AppSwitch(des = "测试", level = Switch.Level.p4)
     public static Integer ITEM_PAGE_SIZE = 60;
 
+    @AppSwitch(des = "商品推荐选品集id", level = Switch.Level.p4)
+    public static String SXL_ITEMSET_ID = "crm_322385";
+
 
 }
