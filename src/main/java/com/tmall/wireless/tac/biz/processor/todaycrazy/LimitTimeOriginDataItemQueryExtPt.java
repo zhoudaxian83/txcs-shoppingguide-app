@@ -6,22 +6,16 @@ import java.util.Map;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
-import com.taobao.tair.DataEntry;
-import com.taobao.tair.Result;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
-import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterPmtRuleDataSetDTO;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
-import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.model.LimitBuyDto;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil;
-import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TairUtil;
-import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TodayCrazyUtils;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.slf4j.Logger;
@@ -77,7 +71,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             List<ColumnCenterDataSetItemRuleDTO> itemList = pmtRule.getDataSetItemRuleDTOList();
             LOGGER.info("****LimitTimeOriginDataItemQueryExtPt itemList.size()***"+itemList.size());
             LOGGER.info("****LimitTimeOriginDataItemQueryExtPt JSON.toJSONString(itemList)***"+JSON.toJSONString(itemList));
-            setChannelKey(sgFrameworkContextItem,pmtRule);
             for(ColumnCenterDataSetItemRuleDTO item : itemList){
                 Long startTime = item.getDataRule().getItemScheduleStartTime().getTime()/1000;
                 Long endTime = item.getDataRule().getItemScheduleEndTime().getTime()/1000;
@@ -89,7 +82,5 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitpmtRuleDataItemRuleDTOList.size()***"+hitpmtRuleDataItemRuleDTOList.size());
         originDataDTO.setResult(aldInfoUtil.buildItemList(hitpmtRuleDataItemRuleDTOList));
         return Flowable.just(originDataDTO);
-    }
-
     }
 }
