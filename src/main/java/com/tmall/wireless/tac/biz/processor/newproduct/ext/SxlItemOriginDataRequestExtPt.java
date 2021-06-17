@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.ext;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
@@ -11,7 +12,9 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +35,9 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
 
     private static final Long APPID = 25385L;
 
+    @Autowired
+    TacLogger tacLogger;
+
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
 
@@ -49,6 +55,8 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
         tppRequest.setParams(params);
+
+        tacLogger.info("SxlItemOriginDataRequestExtPt tppRequest:"+ JSON.toJSONString(tppRequest));
         return tppRequest;
     }
 
