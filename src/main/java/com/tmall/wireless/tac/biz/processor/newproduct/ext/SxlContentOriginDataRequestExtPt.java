@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -162,5 +163,12 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         }).collect(Collectors.toList());
 
         System.out.println(String.join(",",li));
+        Field[] fields = SxlContentOriginDataRequestExtPt.class.getDeclaredFields();
+        for (Field field : fields) {
+
+            System.out.println(field.getName());
+        }
+
+
     }
 }
