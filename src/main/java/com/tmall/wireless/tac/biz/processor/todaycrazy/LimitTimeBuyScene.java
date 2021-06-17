@@ -1,11 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.todaycrazy;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonObject;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
-import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.ItemEntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
@@ -17,23 +15,19 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.todaycrazy.model.AldVO;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.model.LimitBuyDto;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil;
-import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
+import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,11 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.management.ObjectName;
-
+import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author guijian
@@ -65,14 +56,14 @@ public class LimitTimeBuyScene {
 
     private static final String SceneCode = "superMarket_todayCrazy";
 
-    public Flowable<TacResult<List<AldVO>>> recommend(Context context) {
-        tacLogger.info("***LimitTimeBuyScene context.getParams()****:"+context.getParams());
-        LOGGER.info("***LimitTimeBuyScene context.getParams()****:"+context.getParams());
+    public Flowable<TacResult<List<GeneralItem>>> recommend(RequestContext4Ald requestContext4Ald) {
+        tacLogger.info("***LimitTimeBuyScene context.getParams()****:"+requestContext4Ald.getParams());
+        LOGGER.info("***LimitTimeBuyScene context.getParams()****:"+requestContext4Ald.getParams());
 
-        Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
+        Long smAreaId = MapUtil.getLongWithDefault(requestContext4Ald.getParams(), "smAreaId", 330100L);
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
 
-        sgFrameworkContextItem.setRequestParams(context.getParams());
+        sgFrameworkContextItem.setRequestParams(requestContext4Ald.getParams());
 
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
@@ -81,11 +72,11 @@ public class LimitTimeBuyScene {
         sgFrameworkContextItem.setSceneInfo(sceneInfo);
 
         UserDO userDO = new UserDO();
-        userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
-        userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
+        userDO.setUserId(Optional.of(requestContext4Ald).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
+        userDO.setNick(Optional.of(requestContext4Ald).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
         sgFrameworkContextItem.setUserDO(userDO);
 
-        sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
+        sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(requestContext4Ald.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo());
 
 
@@ -96,14 +87,14 @@ public class LimitTimeBuyScene {
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(response ->
-                    buildAldVO(response,sgFrameworkContextItem)
+                    buildGeneralItemse(response,sgFrameworkContextItem)
                 ).map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
 
     }
-    public List<AldVO> buildAldVO(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
+    public List<GeneralItem> buildGeneralItemse(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
         perfect(sgFrameworkResponse,sgFrameworkContextItem);
-        List<AldVO> aldVOS = new ArrayList<>();
+        List<GeneralItem> generalItemse = new ArrayList<>();
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
         //第几个时间段
         int index = aldInfoUtil.getIndex(params);
@@ -115,18 +106,18 @@ public class LimitTimeBuyScene {
         aldInfoUtil.buildNowTime(linkedHashMap,index,limitBuyDtos);
         AtomicInteger i = new AtomicInteger();
         limitBuyDtos.forEach(limitBuyDto -> {
-            AldVO aldVO = new AldVO();
-            aldVO.setIsHit(limitBuyDto.getIsHit());
-            aldVO.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
-            aldVO.set__pos__(i.getAndIncrement());
+            GeneralItem generalItem = new GeneralItem();
+            generalItem.put("isHit",limitBuyDto.getIsHit());
+            generalItem.put("startTime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
+            generalItem.put("__pos__",i.getAndIncrement());
             if(limitBuyDto.getIsHit()){
-                aldVO.setItemAndContentList(sgFrameworkResponse.getItemAndContentList());
+                generalItem.put("itemAndContentList",sgFrameworkResponse.getItemAndContentList());
             }
-            aldVOS.add(aldVO);
+            generalItemse.add(generalItem);
+
+
         });
-        LOGGER.info("***LimitTimeBuyScene sgFrameworkContextItem.getUserParams()****:"+sgFrameworkContextItem.getUserParams().get(Constant.ITEM_LIMIT_RESULT));
-        LOGGER.info("***LimitTimeBuyScene aldVOS****:"+aldVOS);
-        return aldVOS;
+        return generalItemse;
     }
 
     /**
