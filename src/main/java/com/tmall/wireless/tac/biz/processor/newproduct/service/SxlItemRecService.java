@@ -93,7 +93,7 @@ public class SxlItemRecService {
 
         tacLogger.info("switch1:"+SxlSwitch.ITEM_PAGE_SIZE);
 
-        tacLogger.info("switchClassLoader:"+SxlSwitch.class.getClassLoader().toString());
+        tacLogger.info("switch2:"+SxlSwitch.ceshi);
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)

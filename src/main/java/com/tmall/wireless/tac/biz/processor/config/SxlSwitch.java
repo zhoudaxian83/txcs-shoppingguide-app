@@ -19,4 +19,8 @@ public class SxlSwitch {
     public static String SXL_ITEMSET_ID = "crm_322385";
 
 
+    @AppSwitch(des = "测试新", level = Switch.Level.p4)
+    public static String ceshi = "111";
+
+
 }
