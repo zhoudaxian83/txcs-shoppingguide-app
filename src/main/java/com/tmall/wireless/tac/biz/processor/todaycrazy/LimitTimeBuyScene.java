@@ -15,6 +15,7 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.model.LimitBuyDto;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -36,6 +37,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.management.ObjectName;
+
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 
@@ -96,6 +100,7 @@ public class LimitTimeBuyScene {
         perfect(sgFrameworkResponse,sgFrameworkContextItem);
         List<GeneralItem> generalItemse = new ArrayList<>();
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
+        Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
         //第几个时间段
         int index = aldInfoUtil.getIndex(params);
         //ald排期信息
@@ -105,11 +110,13 @@ public class LimitTimeBuyScene {
         //打标命中的时间段
         aldInfoUtil.buildNowTime(linkedHashMap,index,limitBuyDtos);
         AtomicInteger i = new AtomicInteger();
+        String umpChannel = MapUtil.getStringWithDefault(userParams, VoKeyConstantApp.UMP_CHANNEL,"panic_buying_today");
         limitBuyDtos.forEach(limitBuyDto -> {
             GeneralItem generalItem = new GeneralItem();
             generalItem.put("isHit",limitBuyDto.getIsHit());
             generalItem.put("startTime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
             generalItem.put("__pos__",i.getAndIncrement());
+            generalItem.put(VoKeyConstantApp.UMP_CHANNEL,umpChannel);
             if(limitBuyDto.getIsHit()){
                 generalItem.put("itemAndContentList",sgFrameworkResponse.getItemAndContentList());
             }

@@ -14,6 +14,7 @@ import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.spi.model.DataTubeParams;
 import com.tmall.txcs.gs.model.spi.model.ItemDataRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TairUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
@@ -67,7 +68,9 @@ public class LimitTimeCaptainRequestExtPt implements CaptainRequestExtPt {
         if(dataTubeParams != null){
             itemDataRequest.setDataTubeParams(dataTubeParams);
         }
-        itemDataRequest.setChannelKey(tairUtil.getChannelKey());
+        String umpChannel = tairUtil.getChannelKey();
+        itemDataRequest.setChannelKey(umpChannel);
+        userParam.put(VoKeyConstantApp.UMP_CHANNEL,umpChannel);
         tacLogger.info("itemDataRequest:"+itemDataRequest);
         LOGGER.info("itemDataRequest:"+itemDataRequest);
         return itemDataRequest;
