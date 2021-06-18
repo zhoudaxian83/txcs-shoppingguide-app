@@ -43,8 +43,8 @@ public class TairUtil {
                 tairKey = LimitTairkeyEnum.FLASH_SALE_HD.getKey();
                 break;
         }
-        //return tairKey+"_pre";
-        return tairKey;
+        return tairKey+"_pre";
+        //return tairKey;
     }
     /**
      * 获取缓存数据
