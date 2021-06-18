@@ -52,8 +52,9 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
 
 
         if(CollectionUtils.isNotEmpty(contentInfo.getData().getItemAndContentList())){
-            EntityVO entityVO = new EntityVO();
+
             contentInfo.getData().getItemAndContentList().forEach(e->{
+                EntityVO entityVO = new EntityVO();
                 Integer position = (Integer)e.get("position");
                 int index = Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "0"));
                 if(position > index){
