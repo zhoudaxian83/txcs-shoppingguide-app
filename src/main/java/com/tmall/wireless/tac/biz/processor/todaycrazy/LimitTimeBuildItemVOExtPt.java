@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -20,6 +21,7 @@ import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,10 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
         Map<String,Object> userParams = buildItemVoRequest.getContext().getUserParams();
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
         String umpChannel = MapUtil.getStringWithDefault(userParams, VoKeyConstantApp.UMP_CHANNEL,"panic_buying_today");
+        if(userParams.get(Constant.ITEM_LIMIT_RESULT) != null){
+            Object itemLimitResult = userParams.get(Constant.ITEM_LIMIT_RESULT);
+
+        }
         itemEntityVO.put("contentType", 0);
 
         if (buildItemVoRequest == null || buildItemVoRequest.getItemInfoDTO() == null) {
