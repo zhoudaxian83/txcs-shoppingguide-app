@@ -25,8 +25,6 @@ public class SxlSwitch {
 
     public static Object getValue(){
 
-        Switch sw = SwitchManager.getSwitch("txcs-shoppingguide","sxl");
-
         return SwitchManager.getStrValue("txcs-shoppingguide","sxl");
 
     }
