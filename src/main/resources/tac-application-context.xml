@@ -31,6 +31,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyItemInfoPostProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeCaptainRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TairUtil"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuildItemVOExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.tacHandler.YoubaozangHandler"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianOriginDataItemQueryExtPt"/>

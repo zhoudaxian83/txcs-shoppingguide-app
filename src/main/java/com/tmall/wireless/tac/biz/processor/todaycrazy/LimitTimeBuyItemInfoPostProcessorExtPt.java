@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorExtPt;
@@ -34,7 +32,7 @@ import org.springframework.stereotype.Service;
     scenario = ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
 @Service
 public class LimitTimeBuyItemInfoPostProcessorExtPt implements ItemInfoPostProcessorExtPt {
-    private static final String LOG_PREFIX = "WuZheTianItemInfoPostProcessorExtPt-";
+    private static final String LOG_PREFIX = "LimitTimeBuyItemInfoPostProcessorExtPt";
 
     @Autowired
     RpcSpi rpcSpi;

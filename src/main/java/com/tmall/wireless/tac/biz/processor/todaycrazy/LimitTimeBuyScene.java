@@ -110,13 +110,11 @@ public class LimitTimeBuyScene {
         //打标命中的时间段
         aldInfoUtil.buildNowTime(linkedHashMap,index,limitBuyDtos);
         AtomicInteger i = new AtomicInteger();
-        String umpChannel = MapUtil.getStringWithDefault(userParams, VoKeyConstantApp.UMP_CHANNEL,"panic_buying_today");
         limitBuyDtos.forEach(limitBuyDto -> {
             GeneralItem generalItem = new GeneralItem();
             generalItem.put("isHit",limitBuyDto.getIsHit());
             generalItem.put("startTime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
             generalItem.put("__pos__",i.getAndIncrement());
-            generalItem.put(VoKeyConstantApp.UMP_CHANNEL,umpChannel);
             if(limitBuyDto.getIsHit()){
                 generalItem.put("itemAndContentList",sgFrameworkResponse.getItemAndContentList());
             }
