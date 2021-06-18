@@ -47,6 +47,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
+        ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
         Map<String, Object> userParams = buildItemVoRequest.getContext().getUserParams();
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
@@ -54,9 +55,12 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         if (buildItemVoRequest.getItemInfoDTO() == null) {
             return Response.fail(ErrorCode.PARAMS_ERROR);
         }
-        ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
         String originScm = "";
         String itemUrl = "";
+        String itemDesc = "";
+        boolean canBuy = false;
+        boolean sellout = false;
+
         Map<String, String> trackPoint = Maps.newHashMap();
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
@@ -66,6 +70,10 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
                         .map(ItemInfoBySourceDTOMain::getItemDTO)
                         .map(ItemDataDTO::getDetailUrl)
                         .orElse("");
+                ItemDataDTO itemDataDTO = itemInfoBySourceDTOMain.getItemDTO();
+                canBuy = itemDataDTO.isCanBuy();
+                sellout = itemDataDTO.isSellOut();
+                itemDesc = itemDataDTO.getItemDesc();
 
                 hasMainSource = true;
             }
@@ -87,8 +95,12 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         itemUrl = itemUrl + "&scm=" + scm;
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
+
         this.buildLimit(itemEntityVO, userParams);
-        this.buildElse(itemEntityVO);
+        itemEntityVO.put("itemType", "channelPriceNew");
+        itemEntityVO.put("canBuy", canBuy);
+        itemEntityVO.put("sellout", sellout);
+        itemEntityVO.put("itemDesc", itemDesc);
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
@@ -125,16 +137,6 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         }
     }
 
-    /**
-     * 补全其它字段
-     *
-     * @param itemEntityVO
-     */
-    private void buildElse(ItemEntityVO itemEntityVO) {
-        itemEntityVO.put("itemType", "channelPriceNew");
-    }
-
-
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
         List<ItemLimitDTO> itemLimitDTOS;
         Long itemId = (Long) itemEntityVO.get("itemId");
@@ -151,8 +153,8 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     }
 
     private Map<Long, List<ItemLimitDTO>> getLimitResult(Map<String, Object> userParams) {
-        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>)userParams.get(
-            Constant.ITEM_LIMIT_RESULT);
+        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>) userParams.get(
+                Constant.ITEM_LIMIT_RESULT);
         if (limitResult != null) {
             return limitResult;
         }
