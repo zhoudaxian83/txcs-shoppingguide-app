@@ -1,14 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.wzt.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.ItemGroup;
@@ -22,6 +16,11 @@ import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemInfoDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author: luoJunChong
@@ -44,20 +43,17 @@ public class LimitService {
         Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
                 .getItemInfoGroupResponseMap();
         ItemGroup itemGroup = new ItemGroup("sm", "B2C");
-
-        //tair缓存取skuId
-        List<Map> skuList = (List<Map>) sgFrameworkContextItem.getUserParams().get("LimitSkuList");
         //captain获取skuId
-        //List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
-        //    itemGroup).getValue()
-        //    .values()), ItemInfoDTO.class);
-        //List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
-        //    ItemDTO itemDTO = itemInfoDTO.getItemInfos().get("captain").getItemDTO();
-        //    Map<String, Object> skuMap = Maps.newHashMap();
-        //    skuMap.put("skuId", itemDTO.getSkuId() == null ? 0L : itemDTO.getSkuId());
-        //    skuMap.put("itemId", itemDTO.getItemId() == null ? 0L : itemDTO.getItemId());
-        //    return skuMap;
-        //}).collect(Collectors.toList());
+        List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
+                itemGroup).getValue()
+                .values()), ItemInfoDTO.class);
+        List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
+            ItemDTO itemDTO = itemInfoDTO.getItemInfos().get("captain").getItemDTO();
+            Map<String, Object> skuMap = Maps.newHashMap();
+            skuMap.put("skuId", itemDTO.getSkuId() == null ? 0L : itemDTO.getSkuId());
+            skuMap.put("itemId", itemDTO.getItemId() == null ? 0L : itemDTO.getItemId());
+            return skuMap;
+        }).collect(Collectors.toList());
         Map<String, Object> paramsValue = new HashMap<>(16);
         Map<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("userId", userId);
@@ -121,5 +117,22 @@ public class LimitService {
         }
         return longListMap1;
     }
+
+//    private List<Map> buildLimitSkuListParam(List<ColumnCenterDataSetItemRuleDTO> tairItems) {
+//        List<Map> skuList = Lists.newArrayList();
+//        tairItems.forEach(item -> {
+//            Long itemId = item.getItemId();
+//            JSONObject jsonObject = JSONObject.parseObject(item.getItemExtension());
+//            JSONArray jsonArray = (JSONArray) jsonObject.get("skuInfo");
+//            for (int i = 0; i < jsonArray.size(); i++) {
+//                Map<String, Object> skuMap = Maps.newHashMap();
+//                Long skuId = jsonArray.getJSONObject(i).getLong("skuId");
+//                skuMap.put("skuId", skuId);
+//                skuMap.put("itemId", itemId);
+//                skuList.add(skuMap);
+//            }
+//        });
+//        return skuList;
+//    }
 
 }

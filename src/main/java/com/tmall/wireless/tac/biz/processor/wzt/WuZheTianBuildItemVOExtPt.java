@@ -1,10 +1,12 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -35,8 +37,8 @@ import org.springframework.stereotype.Service;
  * @Date: 2021/5/14 10:26
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.WU_ZHE_TIAN)
+    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+    scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
@@ -57,28 +59,31 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         }
         String originScm = "";
         String itemUrl = "";
-        String itemDesc = "";
+        String itemDesc = null;
         boolean canBuy = false;
         boolean sellout = false;
+        String specifications = "";
 
         Map<String, String> trackPoint = Maps.newHashMap();
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOMain) {
-                ItemInfoBySourceDTOMain itemInfoBySourceDTOMain = (ItemInfoBySourceDTOMain) itemInfoBySourceDTO;
+                ItemInfoBySourceDTOMain itemInfoBySourceDTOMain = (ItemInfoBySourceDTOMain)itemInfoBySourceDTO;
                 itemUrl = Optional.of(itemInfoBySourceDTOMain)
-                        .map(ItemInfoBySourceDTOMain::getItemDTO)
-                        .map(ItemDataDTO::getDetailUrl)
-                        .orElse("");
+                    .map(ItemInfoBySourceDTOMain::getItemDTO)
+                    .map(ItemDataDTO::getDetailUrl)
+                    .orElse("");
                 ItemDataDTO itemDataDTO = itemInfoBySourceDTOMain.getItemDTO();
                 canBuy = itemDataDTO.isCanBuy();
                 sellout = itemDataDTO.isSellOut();
-                itemDesc = itemDataDTO.getItemDesc();
 
+                JSONObject itemPromotionResp = (JSONObject)itemDataDTO.getItemPromotionResp();
+                itemDesc = buildItemDesc(itemPromotionResp);
+                specifications = itemDataDTO.getSpecDetail();
                 hasMainSource = true;
             }
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOOrigin) {
-                ItemInfoBySourceDTOOrigin itemInfoBySourceDTOOrigin = (ItemInfoBySourceDTOOrigin) itemInfoBySourceDTO;
+                ItemInfoBySourceDTOOrigin itemInfoBySourceDTOOrigin = (ItemInfoBySourceDTOOrigin)itemInfoBySourceDTO;
                 originScm = itemInfoBySourceDTOOrigin.getScm();
 
             }
@@ -99,12 +104,33 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         this.buildLimit(itemEntityVO, userParams);
         itemEntityVO.put("itemType", "channelPriceNew");
         itemEntityVO.put("canBuy", canBuy);
+        itemEntityVO.put("specifications", specifications);
         itemEntityVO.put("sellout", sellout);
         itemEntityVO.put("itemDesc", itemDesc);
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
         return Response.success(itemEntityVO);
+    }
+
+    private String buildItemDesc(JSONObject itemPromotionResp) {
+        if (itemPromotionResp.getJSONObject("unifyPrice") != null && itemPromotionResp.getJSONObject("unifyPrice")
+            .getJSONObject("showPrice") != null && itemPromotionResp.getJSONObject("unifyPrice").getJSONObject(
+            "showPrice").getBigDecimal("price") != null &&
+            itemPromotionResp.getJSONObject("unifyPrice")
+                .getJSONObject("chaoShiPrice") != null && itemPromotionResp.getJSONObject("unifyPrice").getJSONObject(
+            "chaoShiPrice").getBigDecimal("price") != null) {
+
+            BigDecimal showPrice = itemPromotionResp.getJSONObject("unifyPrice").getJSONObject("showPrice")
+                .getBigDecimal("price");
+            //String text = jsonObject.getJSONObject("unifyPrice").getJSONObject("showPrice").getString("text");
+            BigDecimal chaoShiPrice = itemPromotionResp.getJSONObject("unifyPrice").getJSONObject("chaoShiPrice")
+                .getBigDecimal("price");
+            String text = "专享补贴";
+            return text + chaoShiPrice.subtract(showPrice);
+        } else {
+            return null;
+        }
     }
 
     private String processScm(String originScm, Map<String, String> scmKeyValue) {
@@ -139,7 +165,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
         List<ItemLimitDTO> itemLimitDTOS;
-        Long itemId = (Long) itemEntityVO.get("itemId");
+        Long itemId = (Long)itemEntityVO.get("itemId");
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
         if (limitResult == null || CollectionUtils.isEmpty(limitResult.get(itemId))) {
             itemEntityVO.put("itemLimit", new ItemLimitDTO());
@@ -153,8 +179,8 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     }
 
     private Map<Long, List<ItemLimitDTO>> getLimitResult(Map<String, Object> userParams) {
-        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>) userParams.get(
-                Constant.ITEM_LIMIT_RESULT);
+        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>)userParams.get(
+            Constant.ITEM_LIMIT_RESULT);
         if (limitResult != null) {
             return limitResult;
         }

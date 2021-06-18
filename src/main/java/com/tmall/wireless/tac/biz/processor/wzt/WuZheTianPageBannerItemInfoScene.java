@@ -1,11 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
+import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -24,6 +23,7 @@ import com.tmall.txcs.gs.model.biz.context.PmtParams;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.utils.LimitItemUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -62,7 +62,7 @@ public class WuZheTianPageBannerItemInfoScene {
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
         sgFrameworkContextItem.setUserDO(userDO);
         sgFrameworkContextItem.setLocParams(
-            CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
+                CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo());
 
         EntitySetParams entitySetParams = new EntitySetParams();
@@ -83,8 +83,17 @@ public class WuZheTianPageBannerItemInfoScene {
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
         sgFrameworkContextItem.setUserParams(context.getParams());
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-            .map(TacResult::newResult)
-            .onErrorReturn(r -> TacResult.errorResult(""));
+                .map(TacResult::newResult).map(tacResult -> {
+                    List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
+                    if (!CollectionUtils.isEmpty(originalEntityVOList)) {
+                        List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
+                        if (noLimitEntityVOList.size() != originalEntityVOList.size()) {
+                            tacResult.getData().setItemAndContentList(noLimitEntityVOList);
+                        }
+                    }
+                    return tacResult;
+                })
+                .onErrorReturn(r -> TacResult.errorResult(""));
 
     }
 
