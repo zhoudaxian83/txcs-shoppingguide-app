@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.config;
 import com.taobao.csp.switchcenter.annotation.AppSwitch;
 import com.taobao.csp.switchcenter.annotation.NameSpace;
 import com.taobao.csp.switchcenter.bean.Switch;
+import com.taobao.csp.switchcenter.core.SwitchManager;
 
 /**
  * @author haixiao.zhang
@@ -21,6 +22,14 @@ public class SxlSwitch {
 
     @AppSwitch(des = "测试新", level = Switch.Level.p4)
     public static String ceshi = "111";
+
+    public static Object getValue(){
+
+        Switch sw = SwitchManager.getSwitch("txcs-shoppingguide","sxl");
+
+        return SwitchManager.getStrValue("txcs-shoppingguide","sxl");
+
+    }
 
 
 }
