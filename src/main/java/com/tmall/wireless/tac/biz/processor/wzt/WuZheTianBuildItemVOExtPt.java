@@ -57,8 +57,9 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         }
         String originScm = "";
         String itemUrl = "";
-        Boolean canBuy = false;
-        Boolean sellout = false;
+        String itemDesc = "";
+        boolean canBuy = false;
+        boolean sellout = false;
 
         Map<String, String> trackPoint = Maps.newHashMap();
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
@@ -66,12 +67,13 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOMain) {
                 ItemInfoBySourceDTOMain itemInfoBySourceDTOMain = (ItemInfoBySourceDTOMain) itemInfoBySourceDTO;
                 itemUrl = Optional.of(itemInfoBySourceDTOMain)
-                    .map(ItemInfoBySourceDTOMain::getItemDTO)
-                    .map(ItemDataDTO::getDetailUrl)
-                    .orElse("");
+                        .map(ItemInfoBySourceDTOMain::getItemDTO)
+                        .map(ItemDataDTO::getDetailUrl)
+                        .orElse("");
                 ItemDataDTO itemDataDTO = itemInfoBySourceDTOMain.getItemDTO();
                 canBuy = itemDataDTO.isCanBuy();
                 sellout = itemDataDTO.isSellOut();
+                itemDesc = itemDataDTO.getItemDesc();
 
                 hasMainSource = true;
             }
@@ -98,6 +100,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         itemEntityVO.put("itemType", "channelPriceNew");
         itemEntityVO.put("canBuy", canBuy);
         itemEntityVO.put("sellout", sellout);
+        itemEntityVO.put("itemDesc", itemDesc);
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
@@ -150,8 +153,8 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     }
 
     private Map<Long, List<ItemLimitDTO>> getLimitResult(Map<String, Object> userParams) {
-        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>)userParams.get(
-            Constant.ITEM_LIMIT_RESULT);
+        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>) userParams.get(
+                Constant.ITEM_LIMIT_RESULT);
         if (limitResult != null) {
             return limitResult;
         }
