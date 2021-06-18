@@ -62,7 +62,7 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
                 }
                 if(position < itemInfo.getData().getItemAndContentList().size()){
                     entityVO.put("banner",e);
-                    itemInfo.getData().getItemAndContentList().add(position,entityVO);
+                    itemInfo.getData().getItemAndContentList().add(position-1,entityVO);
                 }
 
             });
