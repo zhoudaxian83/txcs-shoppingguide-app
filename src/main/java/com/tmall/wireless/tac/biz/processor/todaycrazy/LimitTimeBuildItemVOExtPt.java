@@ -43,7 +43,11 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
         String umpChannel = MapUtil.getStringWithDefault(userParams, VoKeyConstantApp.UMP_CHANNEL,"panic_buying_today");
         if(userParams.get(Constant.ITEM_LIMIT_RESULT) != null){
             Object itemLimitResult = userParams.get(Constant.ITEM_LIMIT_RESULT);
-
+            if(itemLimitResult instanceof Map){
+                Long itemId =  itemInfoDTO.getItemEntity().getItemId();
+                Object limitResult = ((Map<String, Object>)itemLimitResult).get(String.valueOf(itemId));
+                itemEntityVO.put(Constant.ITEM_LIMIT_RESULT,limitResult);
+            }
         }
         itemEntityVO.put("contentType", 0);
 
