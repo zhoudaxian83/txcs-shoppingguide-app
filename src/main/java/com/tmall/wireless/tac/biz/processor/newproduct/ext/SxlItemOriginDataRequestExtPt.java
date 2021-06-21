@@ -11,7 +11,7 @@ import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
+import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +74,7 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
             }).collect(Collectors.toList());
             return String.join(",",list);
         }else {
-            return SxlSwitch.SXL_ITEMSET_ID;
+            return "crm_"+Constant.SXL_ITEMSET_ID;
         }
 
     }

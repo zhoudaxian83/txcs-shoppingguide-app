@@ -2,7 +2,6 @@ package com.tmall.wireless.tac.biz.processor.newproduct.service;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
-import com.taobao.csp.switchcenter.core.SwitchContainer;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
@@ -17,6 +16,7 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
+import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -61,7 +61,7 @@ public class SxlItemRecService {
         HadesLogUtil.debug("ITEM_REQUEST:{}"+JSON.toJSONString(context));
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
-        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID, 322385L);
+        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID, Constant.SXL_ITEMSET_ID);
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         EntitySetParams entitySetParams = new EntitySetParams();
@@ -82,7 +82,7 @@ public class SxlItemRecService {
         sgFrameworkContextItem.setLocParams(CsaUtil
             .parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
 
-        sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo());
+        sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(itemSetId));
 
         PageInfoDO pageInfoDO = new PageInfoDO();
         String index = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "0");
@@ -103,7 +103,7 @@ public class SxlItemRecService {
 
     }
 
-    private static ItemMetaInfo getItemMetaInfo() {
+    private static ItemMetaInfo getItemMetaInfo(Long itemSetId) {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
@@ -114,7 +114,7 @@ public class SxlItemRecService {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
-        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(322385L));
+        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(itemSetId));
 
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
