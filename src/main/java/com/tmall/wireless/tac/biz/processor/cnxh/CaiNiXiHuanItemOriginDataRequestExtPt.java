@@ -27,9 +27,6 @@ import org.springframework.stereotype.Service;
     scenario = ScenarioConstantApp.O2O_CNXH)
 @Service
 public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
-
-    @Autowired
-    private SgExtensionExecutor sgExtensionExecutor;
     @Autowired
     TacLogger tacLogger;
 
