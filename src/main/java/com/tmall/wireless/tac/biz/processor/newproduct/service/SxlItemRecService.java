@@ -16,7 +16,6 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
-import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -61,7 +60,9 @@ public class SxlItemRecService {
         HadesLogUtil.debug("ITEM_REQUEST:{}"+JSON.toJSONString(context));
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
-        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID, Constant.SXL_ITEMSET_ID);
+
+        Long itemSetIdSw = (Long)SxlSwitch.getValue("SXL_ITEMSET_ID");
+        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,itemSetIdSw);
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         EntitySetParams entitySetParams = new EntitySetParams();
@@ -91,12 +92,6 @@ public class SxlItemRecService {
         pageInfoDO.setPageSize(Integer.valueOf(pageSize));
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
 
-
-        tacLogger.info("switch1:"+SxlSwitch.ITEM_PAGE_SIZE);
-
-
-        tacLogger.info("switch2:"+SxlSwitch.getValue());
-
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)
             .onErrorReturn(r -> TacResult.errorResult(""));
@@ -124,6 +119,7 @@ public class SxlItemRecService {
 
 
         ItemRecommendMetaInfo itemRecommendMetaInfo = new ItemRecommendMetaInfo();
+
         itemRecommendMetaInfo.setAppId(25385L);
         itemMetaInfo.setItemRecommendMetaInfo(itemRecommendMetaInfo);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);

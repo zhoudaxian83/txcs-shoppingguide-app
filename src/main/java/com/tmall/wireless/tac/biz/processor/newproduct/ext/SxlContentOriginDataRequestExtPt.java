@@ -10,32 +10,24 @@ import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
-import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
-import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import com.tmall.txcs.gs.model.biz.context.LocParams;
-import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.AldSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
-import com.tmall.wireless.tac.biz.processor.newproduct.handler.SxlItemFeedsHandler;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -171,4 +163,6 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
 
 
     }
+
+
 }

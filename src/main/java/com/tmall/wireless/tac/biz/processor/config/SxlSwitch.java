@@ -12,20 +12,20 @@ import com.taobao.csp.switchcenter.core.SwitchManager;
 @NameSpace(nameSpace = "sxl")
 public class SxlSwitch {
 
-
-    @AppSwitch(des = "测试", level = Switch.Level.p4)
-    public static Integer ITEM_PAGE_SIZE = 60;
+    private static final String APP_NAME = "txcs-shoppingguide";
 
     @AppSwitch(des = "商品推荐选品集id", level = Switch.Level.p4)
-    public static String SXL_ITEMSET_ID = "crm_322385";
+    public static Long SXL_ITEMSET_ID = 322385L;
 
+    @AppSwitch(des = "商品推荐tppId", level = Switch.Level.p4)
+    public static Long SXL_TPP_APP_ID = 25385L;
 
-    @AppSwitch(des = "测试新", level = Switch.Level.p4)
-    public static String ceshi = "111";
+    @AppSwitch(des = "招商主活动id", level = Switch.Level.p4)
+    public static Long SXL_MAIN_ACTIVEX_ID = 870L;
 
-    public static Object getValue(){
+    public static Object getValue(String key){
 
-        return SwitchManager.getStrValue("txcs-shoppingguide","sxl.ITEM_PAGE_SIZE");
+        return SwitchManager.getStrValue(APP_NAME,"sxl."+key);
 
     }
 
