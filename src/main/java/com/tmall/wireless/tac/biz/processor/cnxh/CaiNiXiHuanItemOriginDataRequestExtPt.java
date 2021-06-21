@@ -37,7 +37,6 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
     }
 
     private RecommendRequest buildTppParams(SgFrameworkContextItem context) {
-        tacLogger.info("扩展点数据：" + JSON.toJSONString(context));
         String pageId = "pageId";
         String itemBusinessType = "itemBusinessType";
         RecommendRequest recommendRequest = new RecommendRequest();
