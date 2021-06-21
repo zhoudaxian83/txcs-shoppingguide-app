@@ -24,6 +24,7 @@ import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.cnxh.enums.O2OChannelEnum;
+import com.tmall.wireless.tac.biz.processor.cnxh.utils.O2OChannelUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
@@ -90,9 +91,10 @@ public class CaiNiXiHuanOriginDataItemQueryExtPt implements OriginDataItemQueryE
             context.getBizScenario(),
             pt -> pt.process0(context)).getParams();
         Map<String, String> params = new HashMap<>(16);
-        String O2OChannel = MapUtil.getStringWithDefault(context.getRequestParams(), "O2OChannel", "");
-        String moduleId = MapUtil.getStringWithDefault(context.getRequestParams(), "moduleId", "");
         String csa = MapUtil.getStringWithDefault(context.getRequestParams(), "csa", "");
+        String O2OChannel = MapUtil.getStringWithDefault(context.getRequestParams(), "O2OChannel", "");
+        O2OChannel = O2OChannel.equals("") ? O2OChannelUtil.getO2OChannel(csa) : O2OChannel;
+        String moduleId = MapUtil.getStringWithDefault(context.getRequestParams(), "moduleId", "");
         Long appId = this.getAppId(O2OChannel);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
