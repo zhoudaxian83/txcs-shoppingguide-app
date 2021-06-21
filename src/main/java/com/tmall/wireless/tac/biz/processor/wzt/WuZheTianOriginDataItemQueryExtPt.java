@@ -65,11 +65,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         DataContext dataContext = new DataContext();
-        String csa = MapUtil.getStringWithDefault(context.getRequestParams(), "csa",
-            "13278278282_0_38.066124.114.465406_0_0_0_130105_107_0_0_0_130105007_0");
-        AddressDTO addressDTO = SmAreaIdUtil.getAddressDTO(csa);
-        tacLogger.info("addressDTO:" + JSON.toJSONString(addressDTO));
-        tacLogger.info("addressDTO.getType():" + JSON.toJSONString(addressDTO.getType()));
         Long smAreaId = SmAreaIdUtil.getSmAreaId(context);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 1L);
