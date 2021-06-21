@@ -20,7 +20,7 @@ public class Constant {
 
     public static final String SXL_ITEMSET_PRE_KEY = "sxlItemSets";
 
-    public static final Long SXL_ITEMSET_ID = 378081L;
+    public static final Long SXL_ITEMSET_ID = 322385L;
 
     public static final List<String> SXL_SOURCE_AGREE = Lists.newArrayList("mainPage");
 
