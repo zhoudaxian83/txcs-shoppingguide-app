@@ -42,10 +42,6 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         String pageId = "pageId";
         String itemBusinessType = "itemBusinessType";
         RecommendRequest recommendRequest = new RecommendRequest();
-        Map<String, String> params1 = sgExtensionExecutor.execute(
-            ItemOriginDataRequestExtPt.class,
-            context.getBizScenario(),
-            pt -> pt.process0(context)).getParams();
         Map<String, String> params = new HashMap<>(16);
         String csa = MapUtil.getStringWithDefault(context.getRequestParams(), "csa", "");
         String O2OChannel = MapUtil.getStringWithDefault(context.getRequestParams(), "O2OChannel", "");
@@ -69,7 +65,7 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         params.put(pageId, appId + "");
         params.put("logicAreaId", logicAreaId);
         params.put("itemSetIdList", itemSetId + "");
-        params.put("isFirstPage", params1.get("isFirstPage"));
+        params.put("isFirstPage", (index == 0L) + "");
         if (O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)) {
             params.put(pageId, "onehourcnxh");
             params.put(itemBusinessType, "OneHour");
