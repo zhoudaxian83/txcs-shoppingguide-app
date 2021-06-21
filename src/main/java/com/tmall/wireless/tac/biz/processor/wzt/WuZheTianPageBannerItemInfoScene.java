@@ -25,7 +25,6 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.LimitItemUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
@@ -37,8 +36,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class WuZheTianPageBannerItemInfoScene {
-    @Autowired
-    TacLogger tacLogger;
 
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
@@ -62,7 +59,7 @@ public class WuZheTianPageBannerItemInfoScene {
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
         sgFrameworkContextItem.setUserDO(userDO);
         sgFrameworkContextItem.setLocParams(
-                CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
+            CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo());
 
         EntitySetParams entitySetParams = new EntitySetParams();
@@ -83,20 +80,19 @@ public class WuZheTianPageBannerItemInfoScene {
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
         sgFrameworkContextItem.setUserParams(context.getParams());
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-                .map(TacResult::newResult).map(tacResult -> {
-                    List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
-                    if (!CollectionUtils.isEmpty(originalEntityVOList)) {
-                        List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
-                        if (noLimitEntityVOList.size() != originalEntityVOList.size()) {
-                            tacResult.getData().setItemAndContentList(noLimitEntityVOList);
-                        }
+            .map(TacResult::newResult).map(tacResult -> {
+                List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
+                if (!CollectionUtils.isEmpty(originalEntityVOList)) {
+                    List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
+                    if (noLimitEntityVOList.size() != originalEntityVOList.size()) {
+                        tacResult.getData().setItemAndContentList(noLimitEntityVOList);
                     }
-                    return tacResult;
-                })
-                .onErrorReturn(r -> TacResult.errorResult(""));
+                }
+                return tacResult;
+            })
+            .onErrorReturn(r -> TacResult.errorResult(""));
 
     }
-
 
     public static ItemMetaInfo getItemMetaInfo() {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
@@ -126,7 +122,6 @@ public class WuZheTianPageBannerItemInfoScene {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName(ItemInfoSourceKey.TPP);
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
-
 
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTest = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTest.setSourceName("test");

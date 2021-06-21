@@ -126,7 +126,6 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
             chaoShiPriceKey).getBigDecimal(price) != null) {
             BigDecimal showPrice = itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(showPriceKey)
                 .getBigDecimal(price);
-            //String text = jsonObject.getJSONObject("unifyPrice").getJSONObject("showPrice").getString("text");
             BigDecimal chaoShiPrice = itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(chaoShiPriceKey)
                 .getBigDecimal(price);
             String text = "专享补贴";

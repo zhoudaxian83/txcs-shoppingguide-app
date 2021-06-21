@@ -6,6 +6,9 @@ import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 
 import java.util.List;
 
+/**
+ * @author luojunchong
+ */
 public class LimitItemUtil {
 
     public static boolean notLimit(ItemLimitDTO itemLimitDTO) {

@@ -61,8 +61,6 @@ public class TairUtil {
                 cacheKey);
             if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
                 && dataEntryResult.getValue().getValue() != null) {
-                //                tacLogger.warn(
-                //                    LOG_PREFIX + "取缓存key打印，cacheKey: " + cacheKey);
                 return dataEntryResult.getValue().getValue();
             } else {
                 tacLogger.info(LOG_PREFIX + "getCache获取缓存为空，cacheKey: " + cacheKey);
@@ -95,6 +93,11 @@ public class TairUtil {
         return false;
     }
 
+    /**
+     * 获取原始tair并做排序
+     * @param smAreaId
+     * @return
+     */
     public List<ColumnCenterDataSetItemRuleDTO> getOriginalRecommend(Long smAreaId) {
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = getCachePmtRuleDataItemRuleDTOList(smAreaId);
         Long stickMax = 10000L;
@@ -110,7 +113,6 @@ public class TairUtil {
                         com.tmall.wireless.tac.biz.processor.wzt.model.PmtRuleDataItemRuleDTO.class);
                 List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS = pmtRuleDataItemRuleDTO
                     .getDataSetItemRuleDTOList();
-                tacLogger.info("原始列表pmtRuleDataItemRuleDTO" + JSON.toJSONString(pmtRuleDataItemRuleDTO));
                 columnCenterDataSetItemRuleDTOS.forEach(item -> {
                     if (item.getDataRule().getStick() != null) {
                         item.setIndex(item.getDataRule().getStick());

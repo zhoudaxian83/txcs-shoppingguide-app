@@ -1,13 +1,16 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
-import com.ali.com.google.common.base.Joiner;
-import com.ali.unit.rule.util.lang.CollectionUtils;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
+import com.ali.com.google.common.base.Joiner;
+import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.google.common.collect.Maps;
-import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
@@ -19,7 +22,6 @@ import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.wzt.enums.LogicalArea;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.DataContext;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.LogicPageUtil;
@@ -29,11 +31,6 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author luojunchong
@@ -85,7 +82,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 if (!recommendResponseEntityResponse.isSuccess()
                     || recommendResponseEntityResponse.getValue() == null
                     || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
-                    tacLogger.info("tpp个性化排序返回异常：" + JSON.toJSONString(recommendResponseEntityResponse));
+                    tacLogger.info("tpp个性化排序返回异常了：" + JSON.toJSONString(recommendResponseEntityResponse));
                     return new OriginDataDTO<>();
                 }
                 OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
@@ -116,7 +113,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     }
 
     /**
-     * 分页并做沉底处理
+     * 分页
      *
      * @param originDataDTO
      * @param dataContext
