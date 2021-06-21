@@ -25,7 +25,7 @@ public class SxlSwitch {
 
     public static Object getValue(){
 
-        return SwitchManager.getStrValue("txcs-shoppingguide","sxl");
+        return SwitchManager.getStrValue("txcs-shoppingguide","sxl.ITEM_PAGE_SIZE");
 
     }
 
