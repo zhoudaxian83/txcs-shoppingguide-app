@@ -114,18 +114,21 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     }
 
     private String buildItemDesc(JSONObject itemPromotionResp) {
-        if (itemPromotionResp.getJSONObject("unifyPrice") != null && itemPromotionResp.getJSONObject("unifyPrice")
-            .getJSONObject("showPrice") != null && itemPromotionResp.getJSONObject("unifyPrice").getJSONObject(
-            "showPrice").getBigDecimal("price") != null &&
-            itemPromotionResp.getJSONObject("unifyPrice")
-                .getJSONObject("chaoShiPrice") != null && itemPromotionResp.getJSONObject("unifyPrice").getJSONObject(
-            "chaoShiPrice").getBigDecimal("price") != null) {
-
-            BigDecimal showPrice = itemPromotionResp.getJSONObject("unifyPrice").getJSONObject("showPrice")
-                .getBigDecimal("price");
+        String unifyPrice = "unifyPrice";
+        String price = "price";
+        String showPriceKey = "showPrice";
+        String chaoShiPriceKey = "chaoShiPrice";
+        if (itemPromotionResp.getJSONObject(unifyPrice) != null && itemPromotionResp.getJSONObject(unifyPrice)
+            .getJSONObject(showPriceKey) != null && itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(
+            showPriceKey).getBigDecimal(price) != null &&
+            itemPromotionResp.getJSONObject(unifyPrice)
+                .getJSONObject(chaoShiPriceKey) != null && itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(
+            chaoShiPriceKey).getBigDecimal(price) != null) {
+            BigDecimal showPrice = itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(showPriceKey)
+                .getBigDecimal(price);
             //String text = jsonObject.getJSONObject("unifyPrice").getJSONObject("showPrice").getString("text");
-            BigDecimal chaoShiPrice = itemPromotionResp.getJSONObject("unifyPrice").getJSONObject("chaoShiPrice")
-                .getBigDecimal("price");
+            BigDecimal chaoShiPrice = itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(chaoShiPriceKey)
+                .getBigDecimal(price);
             String text = "专享补贴";
             return text + chaoShiPrice.subtract(showPrice);
         } else {

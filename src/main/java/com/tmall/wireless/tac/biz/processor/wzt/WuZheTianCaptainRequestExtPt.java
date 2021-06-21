@@ -25,6 +25,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author luojunchong
+ */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
     useCase = ScenarioConstantApp.LOC_TYPE_B2C,
     scenario = ScenarioConstantApp.WU_ZHE_TIAN)

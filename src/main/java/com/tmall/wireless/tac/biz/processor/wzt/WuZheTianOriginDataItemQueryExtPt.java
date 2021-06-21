@@ -2,9 +2,12 @@ package com.tmall.wireless.tac.biz.processor.wzt;
 
 import com.ali.com.google.common.base.Joiner;
 import com.ali.unit.rule.util.lang.CollectionUtils;
+
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
+
 import com.google.common.collect.Maps;
+import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
@@ -36,8 +39,8 @@ import java.util.stream.Collectors;
  * @author luojunchong
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.WU_ZHE_TIAN)
+    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+    scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
@@ -46,7 +49,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     @Autowired
     TairUtil tairUtil;
-
 
     @Autowired
     RecommendSpi recommendSpi;
@@ -60,41 +62,44 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     private static final Long APP_ID = 21431L;
 
-
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         DataContext dataContext = new DataContext();
+        String csa = MapUtil.getStringWithDefault(context.getRequestParams(), "csa",
+            "13278278282_0_38.066124.114.465406_0_0_0_130105_107_0_0_0_130105007_0");
+        AddressDTO addressDTO = SmAreaIdUtil.getAddressDTO(csa);
+        tacLogger.info("addressDTO:" + JSON.toJSONString(addressDTO));
         Long smAreaId = SmAreaIdUtil.getSmAreaId(context);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 1L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         dataContext.setIndex(index);
         dataContext.setPageSize(pageSize);
-//        OriginDataDTO<ItemEntity> cacheOriginDataDTO = getItemToCacheOfArea(smAreaId);
-//        if (cacheOriginDataDTO == null) {
+        //        OriginDataDTO<ItemEntity> cacheOriginDataDTO = getItemToCacheOfArea(smAreaId);
+        //        if (cacheOriginDataDTO == null) {
         //tair获取推荐商品
 
-        List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(smAreaId);
+        List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
+            smAreaId);
         List<Long> items = columnCenterDataSetItemRuleDTOList.stream().map(
-                ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
+            ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
         dataContext.setItems(items);
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
-                .map(recommendResponseEntityResponse -> {
-                    if (!recommendResponseEntityResponse.isSuccess()
-                            || recommendResponseEntityResponse.getValue() == null
-                            || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
-                        tacLogger.info("tpp个性化排序返回异常：" + JSON.toJSONString(recommendResponseEntityResponse));
-                        return new OriginDataDTO<>();
-                    }
-                    OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-                    //this.setItemToCacheOfArea(originDataDTO, smAreaId);
-                    return this.getItemPage(originDataDTO, dataContext);
-                });
+            .map(recommendResponseEntityResponse -> {
+                if (!recommendResponseEntityResponse.isSuccess()
+                    || recommendResponseEntityResponse.getValue() == null
+                    || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
+                    tacLogger.info("tpp个性化排序返回异常：" + JSON.toJSONString(recommendResponseEntityResponse));
+                    return new OriginDataDTO<>();
+                }
+                OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
+                //this.setItemToCacheOfArea(originDataDTO, smAreaId);
+                return this.getItemPage(originDataDTO, dataContext);
+            });
         //        } else {
         //            return Flowable.just(this.getItemPage(cacheOriginDataDTO, dataContext));
         //        }
     }
-
 
     /**
      * tpp获取个性化排序规则参数构建
@@ -114,7 +119,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         return recommendRequest;
     }
 
-
     /**
      * 分页并做沉底处理
      *
@@ -124,11 +128,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      */
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
         List<ItemEntity> itemEntities = LogicPageUtil.getPage(originDataDTO.getResult(), dataContext.getIndex(),
-                dataContext.getPageSize());
+            dataContext.getPageSize());
         originDataDTO.setResult(itemEntities);
         return originDataDTO;
     }
-
 
     /**
      * 未缓存前
@@ -144,14 +147,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         originDataDTO.setScm(recommendResponseEntity.getScm());
         originDataDTO.setTppBuckets(recommendResponseEntity.getTppBuckets());
         originDataDTO.setResult(recommendResponseEntity
-                .getResult()
-                .stream()
-                .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
+            .getResult()
+            .stream()
+            .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
         return originDataDTO;
     }
-
-
-
-
 
 }
