@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
 
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.aselfcommon.model.todaycrazy.enums.LogicalArea;
@@ -36,6 +37,7 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
     }
 
     private RecommendRequest buildTppParams(SgFrameworkContextItem context) {
+        tacLogger.info("扩展点数据：" + JSON.toJSONString(context));
         String pageId = "pageId";
         String itemBusinessType = "itemBusinessType";
         RecommendRequest recommendRequest = new RecommendRequest();
