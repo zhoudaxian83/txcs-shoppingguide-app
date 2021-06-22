@@ -12,7 +12,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <common.rpm.version>1.0.6</common.rpm.version>
+    <common.rpm.version>1.0.7-SNAPSHOT</common.rpm.version>
   </properties>
 
 
@@ -85,6 +85,17 @@
           <version>4.1.1</version>
       </dependency>
 
+      <dependency>
+          <groupId>com.alibaba.aladdin</groupId>
+          <artifactId>ald-lamp-client</artifactId>
+          <version>2.0.15</version>
+      </dependency>
+
+      <dependency>
+          <groupId>com.taobao.csp</groupId>
+          <artifactId>switchcenter</artifactId>
+          <version>2.1.1.2-fix-fastjson-noneautotype</version>
+      </dependency>
 
     <dependency>
       <groupId>junit</groupId>

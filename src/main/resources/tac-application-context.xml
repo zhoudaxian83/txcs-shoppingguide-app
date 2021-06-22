@@ -11,6 +11,8 @@
 
     <context:component-scan base-package="com.alibaba.cola" />
 
+
+    <bean id="springSwitchBean" class="com.tmall.wireless.tac.biz.processor.config.SwitchConfigBean" init-method="init"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.TestItemInfoBySourceProcessor"/>
@@ -19,7 +21,6 @@
 
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.ItemInfoBySourceProcessorInventory"/>
-
 
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoBuildItemVOExtPt"/>
@@ -36,6 +37,16 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindOriginDataPostProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.handler.SxlItemFeedsHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.handler.SxlContentHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.handler.SxlItemAndContentHandler"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlItemOriginDataRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlContentOriginDataRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlContentInfoQueryExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlItemInfoPostProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemOriginDataFailProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemInfoBuildItemVOExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.smartbuy.SmartBuyOriginDataItemQueryExtPt"/>
