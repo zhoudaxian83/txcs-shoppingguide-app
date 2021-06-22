@@ -4,6 +4,7 @@ import com.alibaba.cola.extension.Extension;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataPostProcessorExtPt;
@@ -16,11 +17,15 @@ import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,9 +40,13 @@ import java.util.stream.Collectors;
         scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
 @Service
 public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPostProcessorExtPt {
+
+    @Autowired
+    ContentInfoSupport contentInfoSupport;
     @Override
     public OriginDataDTO<ItemEntity> process(SgFrameworkContextItem contextItem) {
         OriginDataDTO<ItemEntity> originDataDTO = Optional.of(contextItem).map(SgFrameworkContextItem::getItemEntityOriginDataDTO).orElse(null);
+        Map<String, Object> requestParam = contextItem.getRequestParams();
         /**榜单不需要所见及所得，无需特殊处理**/
         if(isBangdan(contextItem)){
             return originDataDTO;
@@ -57,17 +66,26 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
         }
         List<ItemEntity> finalItemEntities = Lists.newArrayList();
         Set<String> itemUniqueKeySet = Sets.newHashSet();
+        Long contentId = MapUtil.getLongWithDefault(requestParam,"moduleId",0L);
+        Long itemSetIds = MapUtil.getLongWithDefault(requestParam,"itemSetIds",0L);
+        List<Long> topItemIds = Lists.newArrayList();
+        if(contentId > 0L){
+            topItemIds = getTopItemIds(contentId,itemSetIds);
+        }
         /**首页所见即所得置顶且去重，非首页去重**/
-        itemEntityList.forEach(itemEntity -> {
+        for(ItemEntity itemEntity:itemEntityList){
             ItemUniqueId itemUniqueId = itemEntity.getItemUniqueId();
             if (itemUniqueKeySet.contains(itemUniqueId.toString())) {
-                return;
+                continue;
             }
             itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
             if(isFirstPage(contextItem)){
+                if(CollectionUtils.isNotEmpty(topItemIds) && topItemIds.contains(itemEntity.getItemId())){
+                    itemEntity.setTop(true);
+                }
                 finalItemEntities.add(itemEntity);
             }
-        });
+        }
 
         originDataDTO.getResult().forEach(itemEntity -> {
             ItemUniqueId itemUniqueId = itemEntity.getItemUniqueId();
@@ -82,6 +100,32 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
         contextItem.setItemEntityOriginDataDTO(originDataDTO);
         return originDataDTO;
 
+    }
+    /**
+     * 获取tair内容下置顶商品
+     * @param contentId
+     * @return
+     */
+    private List<Long> getTopItemIds(Long contentId,Long itemSetIds){
+        List<Long> contentIds = Lists.newArrayList();
+        if(contentId == null || contentId <= 0 ){
+            return null;
+        }
+        contentIds.add(contentId);
+        Map<Long, TairSceneDTO> tairResult = contentInfoSupport.getTairData(contentIds);
+        if(MapUtils.isEmpty(tairResult)){
+            return null;
+        }
+        TairSceneDTO tairSceneDTO = tairResult.get(contentId);
+        Map<Long,List<Long>> topItemIdMap = contentInfoSupport.getTopItemIds(tairSceneDTO);
+        List<Long> itemIds = Lists.newArrayList();
+        if(itemSetIds > 0L){
+            itemIds = topItemIdMap.get(itemSetIds);
+        }else{
+            /**视频不存在货架，只有一个圈品集**/
+            topItemIdMap.values().stream().findFirst().get();
+        }
+        return itemIds;
     }
 
     private boolean isBangdan(SgFrameworkContextItem sgFrameworkContextItem) {
@@ -120,7 +164,6 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
             bizType = BizType.SM.getCode();
             o2oType = O2oType.B2C.name();
         }
-
         List<ItemEntity> itemEntityList = itemIdList.stream().map(itemId -> {
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(itemId);
