@@ -111,7 +111,7 @@ public class CaiNiXiHuanPageBannerItemInfoScene {
         itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName(ItemInfoSourceKey.CAPTAIN);
-        itemInfoSourceMetaInfoCaptain.setSceneCode("superMarket_todayCrazy");
+        itemInfoSourceMetaInfoCaptain.setSceneCode("index.guessULike");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
