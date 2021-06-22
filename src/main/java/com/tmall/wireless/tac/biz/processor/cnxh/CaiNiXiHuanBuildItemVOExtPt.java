@@ -77,6 +77,8 @@ public class CaiNiXiHuanBuildItemVOExtPt implements BuildItemVOExtPt {
                 if (unifyPrice != null) {
                     promotionPrice = getPromotionPrice(unifyPrice);
                     reservePrice = getReservePrice(unifyPrice);
+                    //reservePrice , 优先chaoshiPrice，无showPrice
+                    reservePrice = "".equals(reservePrice) ? promotionPrice : reservePrice;
                 }
 
             }
@@ -99,6 +101,7 @@ public class CaiNiXiHuanBuildItemVOExtPt implements BuildItemVOExtPt {
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         //个性化字段begin
+
         chaoshiItemTitle = itemEntityVO.getString("title");
         itemEntityVO.put("itemDesc", itemDesc);
         itemEntityVO.put("reservePrice", reservePrice);
