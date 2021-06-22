@@ -21,7 +21,7 @@ public class SxlSwitch {
     public static Long SXL_TPP_APP_ID = 25385L;
 
     @AppSwitch(des = "招商主活动id", level = Switch.Level.p4)
-    public static Long SXL_MAIN_ACTIVEX_ID = 870L;
+    public static Long SXL_MAIN_ACTIVEX_ID = 885L;
 
     public static Object getValue(String key){
 
