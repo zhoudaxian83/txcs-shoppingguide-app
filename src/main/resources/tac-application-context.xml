@@ -37,6 +37,7 @@
     <!--猜你喜欢-->
     <!--    <bean class="com.tmall.wireless.tac.biz.processor.cnxh.CaiNiXiHuanOriginDataItemQueryExtPt"/>-->
     <bean class="com.tmall.wireless.tac.biz.processor.cnxh.CaiNiXiHuanItemOriginDataRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.cnxh.CaiNiXiHuanBuildItemVOExtPt"/>
 
 
 </beans>
