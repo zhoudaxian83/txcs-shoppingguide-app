@@ -65,6 +65,9 @@ public class O2oBangdanContentInfoQueryExtPt implements ContentInfoQueryExtPt {
         String pKey = "txcs_scene_detail_v2";
         Map<Long, ContentInfoDTO> contentDTOMap = Maps.newHashMap();
         try {
+
+            tacLogger.info("O2oBangdanContentInfoQueryExtPt pKey:"+pKey);
+
             List<ContentEntity> contentEntities  = Optional.of(sgFrameworkContextContent).map(SgFrameworkContextContent::getContentEntityOriginDataDTO).map(OriginDataDTO::getResult).orElse(Lists
                 .newArrayList());
             List<String> sKeyList = new ArrayList<>();
