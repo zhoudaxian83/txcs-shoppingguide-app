@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.wzt.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.ItemGroup;
@@ -41,12 +42,12 @@ public class LimitService {
     private Map<String, Object> buildGetItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
         Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
         Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
-                .getItemInfoGroupResponseMap();
+            .getItemInfoGroupResponseMap();
         ItemGroup itemGroup = new ItemGroup("sm", "B2C");
         //captain获取skuId
         List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
-                itemGroup).getValue()
-                .values()), ItemInfoDTO.class);
+            itemGroup).getValue()
+            .values()), ItemInfoDTO.class);
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
             ItemDTO itemDTO = itemInfoDTO.getItemInfos().get("captain").getItemDTO();
             Map<String, Object> skuMap = Maps.newHashMap();
@@ -67,9 +68,10 @@ public class LimitService {
         Object o;
         try {
             o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramsValue);
-            JSONObject jsonObject = (JSONObject) JSON.toJSON(o);
-            if ((boolean) jsonObject.get(Constant.SUCCESS)) {
-                return (JSONObject) jsonObject.get(Constant.LIMIT_INFO);
+            tacLogger.info("限购返回结果：" + JSON.toJSONString(o));
+            JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
+            if ((boolean)jsonObject.get(Constant.SUCCESS)) {
+                return (JSONObject)jsonObject.get(Constant.LIMIT_INFO);
             } else {
                 tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
                 return null;
@@ -89,8 +91,8 @@ public class LimitService {
 
     private Map<Long, List<ItemLimitDTO>> convert(JSONObject limitJsonObject) {
         Map<Long, List<ItemLimitDTO>> limitResult = JSONObject.parseObject(limitJsonObject.toJSONString(),
-                new TypeReference<Map<Long, List<ItemLimitDTO>>>() {
-                });
+            new TypeReference<Map<Long, List<ItemLimitDTO>>>() {
+            });
         if (limitResult != null) {
             return limitResult;
             //return this.mock(limitResult);
@@ -118,21 +120,21 @@ public class LimitService {
         return longListMap1;
     }
 
-//    private List<Map> buildLimitSkuListParam(List<ColumnCenterDataSetItemRuleDTO> tairItems) {
-//        List<Map> skuList = Lists.newArrayList();
-//        tairItems.forEach(item -> {
-//            Long itemId = item.getItemId();
-//            JSONObject jsonObject = JSONObject.parseObject(item.getItemExtension());
-//            JSONArray jsonArray = (JSONArray) jsonObject.get("skuInfo");
-//            for (int i = 0; i < jsonArray.size(); i++) {
-//                Map<String, Object> skuMap = Maps.newHashMap();
-//                Long skuId = jsonArray.getJSONObject(i).getLong("skuId");
-//                skuMap.put("skuId", skuId);
-//                skuMap.put("itemId", itemId);
-//                skuList.add(skuMap);
-//            }
-//        });
-//        return skuList;
-//    }
+    //    private List<Map> buildLimitSkuListParam(List<ColumnCenterDataSetItemRuleDTO> tairItems) {
+    //        List<Map> skuList = Lists.newArrayList();
+    //        tairItems.forEach(item -> {
+    //            Long itemId = item.getItemId();
+    //            JSONObject jsonObject = JSONObject.parseObject(item.getItemExtension());
+    //            JSONArray jsonArray = (JSONArray) jsonObject.get("skuInfo");
+    //            for (int i = 0; i < jsonArray.size(); i++) {
+    //                Map<String, Object> skuMap = Maps.newHashMap();
+    //                Long skuId = jsonArray.getJSONObject(i).getLong("skuId");
+    //                skuMap.put("skuId", skuId);
+    //                skuMap.put("itemId", itemId);
+    //                skuList.add(skuMap);
+    //            }
+    //        });
+    //        return skuList;
+    //    }
 
 }
