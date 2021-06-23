@@ -94,10 +94,9 @@ public class LimitService {
 
     public Map<Long, List<ItemLimitDTO>> getItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
         JSONObject limitJsonObject = this.doGetItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
-        return this.convert(limitJsonObject);
-    }
-
-    private Map<Long, List<ItemLimitDTO>> convert(JSONObject limitJsonObject) {
+        if (limitJsonObject == null) {
+            return null;
+        }
         Map<Long, List<ItemLimitDTO>> limitResult = JSONObject.parseObject(limitJsonObject.toJSONString(),
             new TypeReference<Map<Long, List<ItemLimitDTO>>>() {
             });
