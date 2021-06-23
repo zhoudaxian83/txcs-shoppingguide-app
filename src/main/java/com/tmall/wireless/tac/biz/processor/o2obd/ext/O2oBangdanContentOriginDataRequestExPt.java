@@ -1,13 +1,24 @@
 package com.tmall.wireless.tac.biz.processor.o2obd.ext;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
+import com.tmall.txcs.gs.model.biz.context.LocParams;
+import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.Optional;
+
 /**
+ * tpp参数组装
  * @author haixiao.zhang
  * @date 2021/6/22
  */
@@ -16,9 +27,41 @@ import org.springframework.stereotype.Service;
     scenario = ScenarioConstantApp.O2O_BANG_DAN)
 @Service
 public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginDataRequestExtPt {
+
+    private static final Long APPID = 23198L;
+
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
 
-        return null;
+        /**
+         * https://tui.taobao.com/recommend?appid=23198&majorCityCode=0&logicAreaId=112&pageSize=10&rt1HourStoreId=233930382&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=1832025789&smAreaId=640105&itemBusinessType=OneHour&regionCode=112&topContentCount=1&isFirstPage=true&contentType=7&contentSetIdList=118003
+         */
+
+        /**
+         * https://tui.taobao.com/recommend?appid=23198&itemBusinessType=B2C&appid=23198&logicAreaId=108&topContentCount=1&contentSetIdList=6006&pageSize=1&isFirstPage=true&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=0&smAreaId=370214&contentType=7
+         */
+        RecommendRequest tppRequest = new RecommendRequest();
+        tppRequest.setAppId(APPID);
+        Map<String, String> params = Maps.newHashMap();
+
+        Map<String,Object> itemSetMap = (Map<String,Object>)sgFrameworkContextContent.getUserParams().get(Constant.SXL_ITEMSET_PRE_KEY);
+        if(MapUtils.isEmpty(itemSetMap)){
+            return tppRequest;
+        }
+        tppRequest.setAppId(APPID);
+        params.put("contentSetIdList",  "6006");
+        params.put("contentSetSource", "intelligentCombinationItems");
+        params.put("itemCountPerContent", "5");
+        //params.put("rt1HourStoreId", "233930382");
+        params.put("itemBusinessType", "B2C");
+
+        params.put("regionCode", String.valueOf(sgFrameworkContextContent.getLocParams().getRegionCode()));
+        params.put("smAreaId", Optional
+            .ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
+        tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
+            .map(UserDO::getUserId).orElse(0L));
+        tppRequest.setParams(params);
+
+        return tppRequest;
     }
 }
