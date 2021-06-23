@@ -150,7 +150,7 @@ public class O2oBangdanService {
 
         contentMetaInfo.setItemMetaInfo(itemMetaInfo);
         ContentRecommendMetaInfo contentRecommendMetaInfo = new ContentRecommendMetaInfo();
-        contentRecommendMetaInfo.setUseRecommendSpiV2(true);
+        contentRecommendMetaInfo.setUseRecommendSpiV2(false);
         contentMetaInfo.setContentRecommendMetaInfo(contentRecommendMetaInfo);
         return contentMetaInfo;
     }
