@@ -1,5 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.wzt.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -15,13 +20,10 @@ import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemInfoDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Author: luoJunChong
@@ -30,7 +32,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class LimitService {
-
+    Logger LOGGER = LoggerFactory.getLogger(LimitService.class);
     private static final String LOG_PREFIX = "LimitService-";
 
     @Autowired
@@ -68,11 +70,15 @@ public class LimitService {
         Object o;
         try {
             o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramsValue);
-            tacLogger.info("限购返回结果：" + JSON.toJSONString(o));
             JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
-            tacLogger.info("限购返回结果：" + JSON.toJSONString(jsonObject));
-            tacLogger.info("限购返回结果SUCCESS：" + jsonObject.getBoolean(Constant.SUCCESS));
-            if (jsonObject.getBoolean(Constant.SUCCESS)) {
+            Boolean success = jsonObject.getBoolean(Constant.SUCCESS);
+            //适配异常情况
+            if (success == null) {
+                tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常");
+                LOGGER.error("限购接口RPC调用返回异常");
+                return null;
+            }
+            if (success) {
                 return (JSONObject)jsonObject.get(Constant.LIMIT_INFO);
             } else {
                 tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
