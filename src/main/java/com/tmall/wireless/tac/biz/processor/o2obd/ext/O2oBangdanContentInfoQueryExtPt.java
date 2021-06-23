@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.o2obd.ext;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -24,9 +25,11 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderErrorEnu
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.model.content.SubContentModel;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderCheckUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -53,6 +56,9 @@ public class O2oBangdanContentInfoQueryExtPt implements ContentInfoQueryExtPt {
 
     private static final int labelSceneNamespace = 184;
 
+    @Autowired
+    TacLogger tacLogger;
+
     @Override
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
         /*场景详情缓存前缀*/
@@ -65,8 +71,11 @@ public class O2oBangdanContentInfoQueryExtPt implements ContentInfoQueryExtPt {
             for (ContentEntity contentEntity : contentEntities) {
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
             }
+
+            tacLogger.info("O2oBangdanContentInfoQueryExtPt sKeyList:"+JSON.toJSONString(sKeyList));
+
             Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-            LOGGER.info("***********mgetResult.getValue()*******:"+mgetResult.getValue());
+            tacLogger.info("O2oBangdanContentInfoQueryExtPt mgetResult:"+mgetResult.getValue());
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail(""));
             }

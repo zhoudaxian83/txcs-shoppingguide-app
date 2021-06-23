@@ -47,7 +47,7 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
          */
 
         /**
-         * {"itemBusinessType":"B2C","regionCode":"null","contentSetIdList":"6006","contentSetSource":"intelligentCombinationItems","itemCountPerContent":"5","contentType":"7","smAreaId":"330100"},"userId":1832025789
+         * https://tuipre.taobao.com/recommend?appid=23198&majorCityCode=107&logicAreaId=112&pageSize=10&rt1HourStoreId=233930124&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=1832025789&smAreaId=640105&itemBusinessType=OneHour&regionCode=112&topContentCount=1&isFirstPage=true&contentType=7&contentSetIdList=167004
          */
 
         RecommendRequest tppRequest = new RecommendRequest();
@@ -55,15 +55,15 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
         Map<String, String> params = Maps.newHashMap();
 
         tppRequest.setAppId(APPID);
-        params.put("contentSetIdList",  "6006");
+        params.put("contentSetIdList",  "167004");
         params.put("contentSetSource", "intelligentCombinationItems");
         params.put("itemCountPerContent", "5");
-        //params.put("rt1HourStoreId", "233930382");
-        params.put("itemBusinessType", "B2C");
+        params.put("rt1HourStoreId", "233930382");
+        params.put("itemBusinessType", "OneHour");
         params.put("contentType", "7");
         params.put("userid","1832025789");
         params.put("pageSize","6");
-        params.put("regionCode", String.valueOf(sgFrameworkContextContent.getLocParams().getRegionCode()));
+        params.put("majorCityCode", String.valueOf(sgFrameworkContextContent.getLocParams().getMajorCityCode()));
         params.put("smAreaId", Optional
             .ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
