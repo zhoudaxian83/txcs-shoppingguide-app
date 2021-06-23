@@ -47,11 +47,11 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
          */
 
         /**
-         * https://tuipre.taobao.com/recommend?appid=23198&majorCityCode=107&logicAreaId=112&pageSize=10&rt1HourStoreId=233930124&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=1832025789&smAreaId=640105&itemBusinessType=OneHour&regionCode=112&contentType=7&contentSetIdList=167004
+         * {"majorCityCode":"107","logicAreaId":"112","contentSetIdList":"167004","pageSize":"10","rt1HourStoreId":"233930382","contentSetSource":"intelligentCombinationItems","itemCountPerContent":"5","userid":"1832025789","smAreaId":"330100","itemBusinessType":"OneHour","topContentCount":"1","isFirstPage":"true","contentType":"7"},"userId":1832025789
          */
 
         /**
-         *  https://tuipre.taobao.com/recommend?appid=23198&majorCityCode=107&logicAreaId=112&pageSize=10&rt1HourStoreId=233930124&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=1832025789&smAreaId=640105&itemBusinessType=OneHour&regionCode=112&topContentCount=1&isFirstPage=true&contentType=7&contentSetIdList=167004
+         *  &majorCityCode=107&logicAreaId=112&pageSize=10&rt1HourStoreId=233930124&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=1832025789&smAreaId=640105&itemBusinessType=OneHour&regionCode=112&topContentCount=1&isFirstPage=true&contentType=7&contentSetIdList=167004
          */
 
 
@@ -63,7 +63,7 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
         params.put("contentSetIdList",  "167004");
         params.put("contentSetSource", "intelligentCombinationItems");
         params.put("itemCountPerContent", "5");
-        params.put("rt1HourStoreId", "233930382");
+        params.put("rt1HourStoreId", "233930124");
         params.put("itemBusinessType", "OneHour");
         params.put("contentType", "7");
         params.put("userid","1832025789");
