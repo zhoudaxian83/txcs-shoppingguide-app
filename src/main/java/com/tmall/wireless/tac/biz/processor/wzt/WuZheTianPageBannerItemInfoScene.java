@@ -3,6 +3,8 @@ package com.tmall.wireless.tac.biz.processor.wzt;
 import java.util.List;
 import java.util.Optional;
 
+import com.alibaba.fastjson.JSON;
+
 import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
@@ -25,6 +27,7 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.LimitItemUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
@@ -36,6 +39,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class WuZheTianPageBannerItemInfoScene {
+
+    @Autowired
+    TacLogger tacLogger;
 
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
@@ -82,6 +88,7 @@ public class WuZheTianPageBannerItemInfoScene {
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult).map(tacResult -> {
                 List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
+                tacLogger.info("未过滤数据：" + JSON.toJSONString(tacResult));
                 if (!CollectionUtils.isEmpty(originalEntityVOList)) {
                     List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
                     if (noLimitEntityVOList.size() != originalEntityVOList.size()) {
