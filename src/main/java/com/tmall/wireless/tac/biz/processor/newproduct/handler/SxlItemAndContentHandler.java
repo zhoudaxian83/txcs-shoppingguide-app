@@ -16,6 +16,7 @@ import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 
 /**
  * @author haixiao.zhang
@@ -53,6 +54,7 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
 
         if(CollectionUtils.isNotEmpty(contentInfo.getData().getItemAndContentList())){
 
+            List<EntityVO> entityVOList = itemInfo.getData().getItemAndContentList();
             contentInfo.getData().getItemAndContentList().forEach(e->{
                 EntityVO entityVO = new EntityVO();
                 Integer position = (Integer)e.get("position");
@@ -60,9 +62,9 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
                 if(position > index){
                     position = position-index;
                 }
-                if(position < itemInfo.getData().getItemAndContentList().size()){
+                if(position < entityVOList.size()){
                     entityVO.put("banner",e);
-                    itemInfo.getData().getItemAndContentList().add(position-1,entityVO);
+                    entityVOList.add(position-1,entityVO);
                 }
 
             });

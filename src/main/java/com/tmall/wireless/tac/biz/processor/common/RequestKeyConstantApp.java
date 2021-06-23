@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.common;
 
-import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 
 /**
  * Created by yangqing.byq on 2021/4/6.
@@ -38,5 +37,8 @@ public class RequestKeyConstantApp {
 
 
     public static final String CONTENT_TYPE = "contentType";
+
+    /**上新了key**/
+    public static final String SXL_MAIN_ACTIVITY_ID = "mainActivityId";
 
 }

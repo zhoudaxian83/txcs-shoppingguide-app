@@ -21,6 +21,7 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +65,12 @@ public class SxlItemRecService {
         Long itemSetIdSw = Long.valueOf((String)SxlSwitch.getValue("SXL_ITEMSET_ID"));
         Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,itemSetIdSw);
 
+
+        String activityId = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.SXL_MAIN_ACTIVITY_ID,"");
+        if(StringUtils.isBlank(activityId)){
+            activityId = String.valueOf(itemSetId);
+        }
+
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetSource("crm");
@@ -83,11 +90,11 @@ public class SxlItemRecService {
         sgFrameworkContextItem.setLocParams(CsaUtil
             .parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
 
-        sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(itemSetId));
+        sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(activityId));
 
         PageInfoDO pageInfoDO = new PageInfoDO();
         String index = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "0");
-        String pageSize = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.PAGE_SIZE, "10");
+        String pageSize = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.PAGE_SIZE, "20");
         pageInfoDO.setIndex(Integer.valueOf(index));
         pageInfoDO.setPageSize(Integer.valueOf(pageSize));
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
@@ -98,7 +105,7 @@ public class SxlItemRecService {
 
     }
 
-    private static ItemMetaInfo getItemMetaInfo(Long itemSetId) {
+    private static ItemMetaInfo getItemMetaInfo(String activityId) {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
@@ -109,7 +116,7 @@ public class SxlItemRecService {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
-        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(itemSetId));
+        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(activityId));
 
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
@@ -128,11 +135,10 @@ public class SxlItemRecService {
     }
 
 
-    private static DataTubeMateInfo buildDataTubeMateInfo(Long itemSetId) {
-
+    private static DataTubeMateInfo buildDataTubeMateInfo(String activityId) {
 
         DataTubeMateInfo dataTubeMateInfo = new DataTubeMateInfo();
-        dataTubeMateInfo.setActivityId(String.valueOf(itemSetId));
+        dataTubeMateInfo.setActivityId(activityId);
         dataTubeMateInfo.setChannelName("itemExtLdb");
         dataTubeMateInfo.setDataKeyList(dataTubeKeyList.stream().map(k -> {
             DataTubeKey dataTubeKey = new DataTubeKey();

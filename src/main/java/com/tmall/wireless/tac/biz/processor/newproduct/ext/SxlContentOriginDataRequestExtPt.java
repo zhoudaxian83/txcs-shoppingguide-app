@@ -146,22 +146,6 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         String str = String.join(",", map.keySet());
         System.out.println(str);
 
-        List<Long> itemIdList = Lists.newArrayList();
-        itemIdList.add(11L);
-        itemIdList.add(22L);
-
-        List<String> li = itemIdList.stream().map(e->{
-            return "crm_"+e;
-        }).collect(Collectors.toList());
-
-        System.out.println(String.join(",",li));
-        Field[] fields = SxlContentOriginDataRequestExtPt.class.getDeclaredFields();
-        for (Field field : fields) {
-
-            System.out.println(field.getName());
-        }
-
-
     }
 
 
