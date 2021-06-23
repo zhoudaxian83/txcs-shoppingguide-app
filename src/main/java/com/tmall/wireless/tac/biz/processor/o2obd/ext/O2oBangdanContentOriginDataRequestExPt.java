@@ -47,8 +47,13 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
          */
 
         /**
-         * https://tuipre.taobao.com/recommend?appid=23198&majorCityCode=107&logicAreaId=112&pageSize=10&rt1HourStoreId=233930124&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=1832025789&smAreaId=640105&itemBusinessType=OneHour&regionCode=112&topContentCount=1&isFirstPage=true&contentType=7&contentSetIdList=167004
+         * https://tuipre.taobao.com/recommend?appid=23198&majorCityCode=107&logicAreaId=112&pageSize=10&rt1HourStoreId=233930124&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=1832025789&smAreaId=640105&itemBusinessType=OneHour&regionCode=112&contentType=7&contentSetIdList=167004
          */
+
+        /**
+         *  https://tuipre.taobao.com/recommend?appid=23198&majorCityCode=107&logicAreaId=112&pageSize=10&rt1HourStoreId=233930124&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=1832025789&smAreaId=640105&itemBusinessType=OneHour&regionCode=112&topContentCount=1&isFirstPage=true&contentType=7&contentSetIdList=167004
+         */
+
 
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID);
@@ -62,8 +67,14 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
         params.put("itemBusinessType", "OneHour");
         params.put("contentType", "7");
         params.put("userid","1832025789");
-        params.put("pageSize","6");
-        params.put("majorCityCode", String.valueOf(sgFrameworkContextContent.getLocParams().getMajorCityCode()));
+        params.put("pageSize","10");
+        params.put("majorCityCode", "107");
+
+        params.put("logicAreaId", "112");
+        params.put("isFirstPage", "true");
+        params.put("topContentCount", "1");
+
+        //params.put("majorCityCode", String.valueOf(sgFrameworkContextContent.getLocParams().getMajorCityCode()));
         params.put("smAreaId", Optional
             .ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
