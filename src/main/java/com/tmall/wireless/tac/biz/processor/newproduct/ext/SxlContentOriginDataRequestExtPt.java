@@ -138,13 +138,15 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
 
     public static void main(String args[]){
 
-        Map<String,String> map = Maps.newHashMap();
-        map.put("111","111");
-        map.put("222","222");
+      List<Integer> list = Lists.newArrayList();
+      list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(1,4);
 
 
-        String str = String.join(",", map.keySet());
-        System.out.println(str);
+
+
 
     }
 

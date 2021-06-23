@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.handler;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.ContentVO;
@@ -16,7 +17,9 @@ import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author haixiao.zhang
@@ -54,8 +57,12 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
 
         if(CollectionUtils.isNotEmpty(contentInfo.getData().getItemAndContentList())){
 
+            List<ContentVO> contentList = contentInfo.getData().getItemAndContentList();
+
+            contentList = contentList.stream().sorted(Comparator.comparingInt(e->e.getIntValue("position"))).collect(Collectors.toList());
+
             List<EntityVO> entityVOList = itemInfo.getData().getItemAndContentList();
-            contentInfo.getData().getItemAndContentList().forEach(e->{
+            contentList.forEach(e->{
                 EntityVO entityVO = new EntityVO();
                 Integer position = (Integer)e.get("position");
                 int index = Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "0"));
@@ -68,7 +75,6 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
                 }
 
             });
-
         }
         return itemInfo;
 
