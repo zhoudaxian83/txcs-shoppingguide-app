@@ -52,7 +52,8 @@ public class SxlItemRecService {
         Pair.of("videoUrl","videoUrl"),
         Pair.of("type","type"),
         Pair.of("atmosphereImageUrl","atmosphereImageUrl"),
-        Pair.of("sellingPointDesc","sellingPointDesc")
+        Pair.of("sellingPointDesc","sellingPointDesc"),
+        Pair.of("newItemAttribute","newItemAttribute")
     );
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
