@@ -62,7 +62,6 @@ public class LimitService {
         paramMap.put("userId", userId);
         paramMap.put("itemIdList", skuList);
         paramsValue.put("itemLimitInfoQuery", paramMap);
-        tacLogger.info("构建limit入参" + JSON.toJSONString(paramsValue));
         return paramsValue;
     }
 
@@ -74,7 +73,7 @@ public class LimitService {
             Boolean success = jsonObject.getBoolean(Constant.SUCCESS);
             //适配异常情况
             if (success == null) {
-                tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常");
+                tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue);
                 LOGGER.error("限购接口RPC调用返回异常");
                 return null;
             }
@@ -86,6 +85,7 @@ public class LimitService {
             }
         } catch (Exception e) {
             tacLogger.error(LOG_PREFIX + "获取限购信息异常", e);
+            LOGGER.error("获取限购信息异常,paramsValue:" + paramsValue);
             e.printStackTrace();
         }
         return null;
