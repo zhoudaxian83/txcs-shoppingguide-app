@@ -14,6 +14,7 @@ import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -21,6 +22,7 @@ import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,7 +126,9 @@ public class SxlContentRecService {
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         //captain SceneCode场景code
         itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
-        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(Constant.SXL_MAIN_ACTIVEX_ID));
+
+        String activeId = (String)SxlSwitch.getValue("SXL_MAIN_ACTIVEX_ID");
+        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(StringUtils.isEmpty(activeId)?Constant.SXL_MAIN_ACTIVEX_ID:activeId));
 
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 
@@ -145,11 +149,11 @@ public class SxlContentRecService {
         return contentMetaInfo;
     }
 
-    private static DataTubeMateInfo buildDataTubeMateInfo(Long itemSetId) {
+    private static DataTubeMateInfo buildDataTubeMateInfo(String itemSetId) {
 
 
         DataTubeMateInfo dataTubeMateInfo = new DataTubeMateInfo();
-        dataTubeMateInfo.setActivityId(String.valueOf(itemSetId));
+        dataTubeMateInfo.setActivityId(itemSetId);
         dataTubeMateInfo.setChannelName("itemExtLdb");
         dataTubeMateInfo.setDataKeyList(dataTubeKeyList.stream().map(k -> {
             DataTubeKey dataTubeKey = new DataTubeKey();

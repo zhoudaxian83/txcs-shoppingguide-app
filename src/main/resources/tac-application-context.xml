@@ -50,5 +50,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemOriginDataFailProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemInfoBuildItemVOExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.smartbuy.SmartBuyOriginDataItemQueryExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.origindatarequest.OriginDataRequestFactory"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenItemBuildItemVOExtPt"/>
 
 </beans>
