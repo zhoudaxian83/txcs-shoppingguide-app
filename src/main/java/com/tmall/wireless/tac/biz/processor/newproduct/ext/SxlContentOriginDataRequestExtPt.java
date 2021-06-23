@@ -10,6 +10,7 @@ import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
@@ -138,12 +139,17 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
 
     public static void main(String args[]){
 
-      List<Integer> list = Lists.newArrayList();
-      list.add(1);
-        list.add(2);
-        list.add(3);
-        list.add(1,4);
 
+        String csa = "8882186302_0_30.287391.120.033319_0_0_0_330110_107_0_0_236635411_330110005_0";
+
+        csa = "6665041005_0_31.934247.118.786675_0_0_0_320115_107_0_0_235580018_320115002_0";
+        System.out.println(JSON.toJSONString(AddressUtil.parseCSA(csa)));
+
+        Long cit = 3301L;
+
+        String aa = String.valueOf(cit).substring(0,4)+"00";
+
+        System.out.println(aa);
 
 
 
