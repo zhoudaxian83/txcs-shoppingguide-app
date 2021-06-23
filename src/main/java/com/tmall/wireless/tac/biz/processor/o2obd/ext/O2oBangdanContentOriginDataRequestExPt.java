@@ -43,8 +43,7 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
          * https://tui.taobao.com/recommend?appid=23198&majorCityCode=0&logicAreaId=112&pageSize=10&rt1HourStoreId=233930382&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=1832025789&smAreaId=640105&itemBusinessType=OneHour&regionCode=112&topContentCount=1&isFirstPage=true&contentType=7&contentSetIdList=118003
          */
 
-        /**
-         * https://tuipre.taobao.com/recommend?appid=23198&itemBusinessType=B2C&appid=23198&logicAreaId=108&topContentCount=1&contentSetIdList=6006&pageSize=1&isFirstPage=true&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=0&smAreaId=370214&contentType=7
+         /** https://tuipre.taobao.com/recommend?appid=23198&itemBusinessType=B2C&appid=23198&logicAreaId=108&topContentCount=1&contentSetIdList=6006&pageSize=1&isFirstPage=true&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=0&smAreaId=370214&contentType=7
          */
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID);

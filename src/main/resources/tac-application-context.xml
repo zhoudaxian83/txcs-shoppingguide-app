@@ -53,4 +53,9 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.origindatarequest.OriginDataRequestFactory"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenItemBuildItemVOExtPt"/>
 
+
+    <bean class="com.tmall.wireless.tac.biz.processor.o2obd.ext.O2oBangdanContentOriginDataRequestExPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.o2obd.ext.O2oBangdanContentInfoQueryExtPt"/>
+
+
 </beans>
