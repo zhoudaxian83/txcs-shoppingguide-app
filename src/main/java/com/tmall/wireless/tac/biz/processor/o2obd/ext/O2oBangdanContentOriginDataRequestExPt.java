@@ -43,8 +43,13 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
          * https://tui.taobao.com/recommend?appid=23198&majorCityCode=0&logicAreaId=112&pageSize=10&rt1HourStoreId=233930382&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=1832025789&smAreaId=640105&itemBusinessType=OneHour&regionCode=112&topContentCount=1&isFirstPage=true&contentType=7&contentSetIdList=118003
          */
 
-         /** https://tuipre.taobao.com/recommend?appid=23198&itemBusinessType=B2C&appid=23198&logicAreaId=108&topContentCount=1&contentSetIdList=6006&pageSize=1&isFirstPage=true&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=0&smAreaId=370214&contentType=7
+         /** https://tuipre.taobao.com/recommend?appid=23198&itemBusinessType=B2C&&logicAreaId=108&contentSetIdList=6006&contentSetSource=intelligentCombinationItems&itemCountPerContent=5&userid=0&smAreaId=370214&contentType=7
          */
+
+        /**
+         * {"itemBusinessType":"B2C","regionCode":"null","contentSetIdList":"6006","contentSetSource":"intelligentCombinationItems","itemCountPerContent":"5","contentType":"7","smAreaId":"330100"},"userId":1832025789
+         */
+
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID);
         Map<String, String> params = Maps.newHashMap();
@@ -56,6 +61,8 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
         //params.put("rt1HourStoreId", "233930382");
         params.put("itemBusinessType", "B2C");
         params.put("contentType", "7");
+        params.put("userid","1832025789");
+        params.put("pageSize","6");
         params.put("regionCode", String.valueOf(sgFrameworkContextContent.getLocParams().getRegionCode()));
         params.put("smAreaId", Optional
             .ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
