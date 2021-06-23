@@ -49,10 +49,6 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
         tppRequest.setAppId(APPID);
         Map<String, String> params = Maps.newHashMap();
 
-        Map<String,Object> itemSetMap = (Map<String,Object>)sgFrameworkContextContent.getUserParams().get(Constant.SXL_ITEMSET_PRE_KEY);
-        if(MapUtils.isEmpty(itemSetMap)){
-            return tppRequest;
-        }
         tppRequest.setAppId(APPID);
         params.put("contentSetIdList",  "6006");
         params.put("contentSetSource", "intelligentCombinationItems");
