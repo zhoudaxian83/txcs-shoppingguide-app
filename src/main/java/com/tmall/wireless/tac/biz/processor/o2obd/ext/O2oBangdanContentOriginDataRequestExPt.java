@@ -11,7 +11,9 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.MapUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -30,6 +32,10 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
 
     private static final Long APPID = 23198L;
 
+
+    @Autowired
+    TacLogger tacLogger;
+
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
 
@@ -38,7 +44,7 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
          */
 
         /**
-         * https://tui.taobao.com/recommend?appid=23198&itemBusinessType=B2C&appid=23198&logicAreaId=108&topContentCount=1&contentSetIdList=6006&pageSize=1&isFirstPage=true&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=0&smAreaId=370214&contentType=7
+         * https://tuipre.taobao.com/recommend?appid=23198&itemBusinessType=B2C&appid=23198&logicAreaId=108&topContentCount=1&contentSetIdList=6006&pageSize=1&isFirstPage=true&contentSetSource=intelligentCombinationItems&itemCountPerContent=10&userid=0&smAreaId=370214&contentType=7
          */
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID);
@@ -54,7 +60,7 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
         params.put("itemCountPerContent", "5");
         //params.put("rt1HourStoreId", "233930382");
         params.put("itemBusinessType", "B2C");
-
+        params.put("contentType", "7");
         params.put("regionCode", String.valueOf(sgFrameworkContextContent.getLocParams().getRegionCode()));
         params.put("smAreaId", Optional
             .ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
@@ -62,6 +68,7 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
             .map(UserDO::getUserId).orElse(0L));
         tppRequest.setParams(params);
 
+        tacLogger.info("O2oBangdanContentOriginDataRequestExPt tppRequest:"+JSON.toJSONString(tppRequest));
         return tppRequest;
     }
 }
