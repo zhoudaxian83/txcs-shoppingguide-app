@@ -23,6 +23,19 @@ public class LimitItemUtil {
         if (itemLimitDTO == null || itemLimitDTO.getSkuId() == 0) {
             return true;
         }
+        //兼容只有总限购或个人限购的情况
+        if (itemLimitDTO.getUsedCount() == null) {
+            itemLimitDTO.setUsedCount(0L);
+        }
+        if (itemLimitDTO.getTotalLimit() == null) {
+            itemLimitDTO.setTotalLimit(0L);
+        }
+        if (itemLimitDTO.getUserUsedCount() == null) {
+            itemLimitDTO.setUserUsedCount(0L);
+        }
+        if (itemLimitDTO.getUserLimit() == null) {
+            itemLimitDTO.setUserLimit(0L);
+        }
         //当已售数量大于等于总限制数，个人限制数量大于等于个人限购数沉底处理
         return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
             && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
