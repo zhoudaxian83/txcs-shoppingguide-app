@@ -41,7 +41,6 @@ public class WuZheTianItemInfoPostProcessorExtPt implements ItemInfoPostProcesso
     public Response<ItemInfoPostProcessorResp> process(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<Long, List<ItemLimitDTO>> itemLimitResult = limitService.getItemLimitResult(sgFrameworkContextItem);
         if (itemLimitResult != null) {
-            tacLogger.info("limit结果" + JSON.toJSONString(itemLimitResult));
             sgFrameworkContextItem.getUserParams().put(Constant.ITEM_LIMIT_RESULT, itemLimitResult);
         } else {
             tacLogger.warn(LOG_PREFIX + "获取限购数据为空");
