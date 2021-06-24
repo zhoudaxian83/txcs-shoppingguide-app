@@ -1,30 +1,45 @@
 package com.tmall.wireless.tac.biz.processor.o2obd.handler;
 
-import com.alibaba.fastjson.JSON;
-import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
-import com.tmall.txcs.gs.base.RpmReactiveHandler;
+import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+import com.google.common.collect.Lists;
 import com.tmall.txcs.gs.framework.model.ContentVO;
-import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.biz.processor.o2obd.service.O2oBangdanService;
 import com.tmall.wireless.tac.client.common.TacResult;
-import com.tmall.wireless.tac.client.domain.Context;
+import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
+import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author haixiao.zhang
  * @date 2021/6/22
  */
 @Service
-public class O2oBangdanHandler extends RpmReactiveHandler<SgFrameworkResponse<ContentVO>> {
+public class O2oBangdanHandler extends TacReactiveHandler4Ald {
 
     @Autowired
     O2oBangdanService o2oBangdanService;
 
     @Override
-    public Flowable<TacResult<SgFrameworkResponse<ContentVO>>> executeFlowable(Context context) throws Exception {
-        return o2oBangdanService.recommend(context);
-    }
+    public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald)
+        throws Exception {
 
+        return o2oBangdanService.recommend(requestContext4Ald).map(response->{
+            List<GeneralItem> generalItemList = Lists.newArrayList();
+            List<ContentVO> list = response.getData().getItemAndContentList();
+            list.forEach(contentVO -> {
+                GeneralItem generalItem = new GeneralItem();
+                String key = contentVO.keySet().toString();
+                Object va = contentVO.get(key);
+                generalItem.put(key,va);
+                generalItemList.add(generalItem);
+            });
+            return generalItemList;
+        }).map(TacResult::newResult)
+        .onErrorReturn((r -> TacResult.errorResult("")));
+
+    }
 }
