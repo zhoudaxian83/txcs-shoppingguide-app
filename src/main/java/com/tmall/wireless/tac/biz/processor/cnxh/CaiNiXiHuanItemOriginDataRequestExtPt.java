@@ -49,6 +49,7 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
+        pageSize = pageSize == 0L ? 20L : pageSize;
         Long itemSetId = MapUtil.getLongWithDefault(context.getRequestParams(), "itemSetId", 0L);
         Long smAreaId = context.getLocParams().getSmAreaId() == 0 ? LogicalArea.parseByCode(
             AddressUtil.parseCSA(csa).getRegionCode()).getCoreCityCode() : context.getLocParams().getSmAreaId();

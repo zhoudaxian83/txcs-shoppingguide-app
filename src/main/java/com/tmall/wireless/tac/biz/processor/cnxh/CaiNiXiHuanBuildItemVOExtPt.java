@@ -108,7 +108,6 @@ public class CaiNiXiHuanBuildItemVOExtPt implements BuildItemVOExtPt {
         itemEntityVO.put("promotionPrice", promotionPrice);
         itemEntityVO.put("promotionName", itemDesc);
         itemEntityVO.put("chaoshiItemTitle", chaoshiItemTitle);
-        itemEntityVO.put("test2", "test2");
         //个性化字段end
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
