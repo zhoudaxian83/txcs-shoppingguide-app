@@ -20,7 +20,7 @@ public class LimitItemUtil {
     TacLogger tacLogger;
 
     public static boolean notLimit(ItemLimitDTO itemLimitDTO) {
-        if (itemLimitDTO == null || itemLimitDTO.getSkuId() == 0) {
+        if (itemLimitDTO == null || itemLimitDTO.getSkuId() == null) {
             return true;
         }
         //兼容只有总限购或个人限购的情况
