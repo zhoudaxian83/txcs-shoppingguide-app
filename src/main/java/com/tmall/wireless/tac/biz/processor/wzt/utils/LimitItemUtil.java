@@ -23,31 +23,37 @@ public class LimitItemUtil {
         if (itemLimitDTO == null || itemLimitDTO.getSkuId() == null) {
             return true;
         }
+
         //兼容只有总限购或个人限购的情况
         boolean totalLimit = itemLimitDTO.getUsedCount() != null && itemLimitDTO.getTotalLimit() != null;
         boolean userLimit = itemLimitDTO.getUserUsedCount() != null && itemLimitDTO.getUserLimit() != null;
-        if (totalLimit && !userLimit) {
-            return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit();
+        if (!totalLimit && !userLimit) {
+            return true;
         }
-        if (!totalLimit && userLimit) {
+        if (totalLimit && userLimit) {
+            //当已售数量大于等于总限制数，个人限制数量大于等于个人限购数沉底处理
+            return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
+                && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
+        }
+        if (totalLimit) {
+            return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit();
+        } else {
             return itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
         }
-        //当已售数量大于等于总限制数，个人限制数量大于等于个人限购数沉底处理
-        return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
-            && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
     }
 
     public static void main(String[] args) {
         ItemLimitDTO itemLimitDTO = new ItemLimitDTO();
         //超过总限购
-        itemLimitDTO.setTotalLimit(10L);
-        itemLimitDTO.setUsedCount(10L);
+        //itemLimitDTO.setTotalLimit(10L);
+        //itemLimitDTO.setUsedCount(4L);
         //超过用户限购
         //itemLimitDTO.setUserLimit(5L);
         //itemLimitDTO.setUserUsedCount(5L);
 
         itemLimitDTO.setSkuId(123456L);
-        notLimit(itemLimitDTO);
+        System.out.println(notLimit(itemLimitDTO));
+
     }
 
     public static List<EntityVO> doLimitItems(List<EntityVO> entityVOList) {
