@@ -112,8 +112,8 @@ public class LimitService {
         List<ItemLimitDTO> itemLimitDTOList = Lists.newArrayList();
         ItemLimitDTO itemLimitDTO = new ItemLimitDTO();
         //超过总限购
-        itemLimitDTO.setTotalLimit(10L);
-        itemLimitDTO.setUsedCount(10L);
+        //itemLimitDTO.setTotalLimit(10L);
+        //itemLimitDTO.setUsedCount(10L);
         //超过用户限购
         //itemLimitDTO.setUserLimit(5L);
         //itemLimitDTO.setUserUsedCount(5L);
