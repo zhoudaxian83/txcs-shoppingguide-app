@@ -74,7 +74,7 @@ public class LimitService {
             Boolean success = jsonObject.getBoolean(Constant.SUCCESS);
             //适配异常情况
             if (success == null) {
-                tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue);
+                tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue+"|jsonObject："+JSON.toJSONString(jsonObject));
                 LOGGER.error("限购接口RPC调用返回异常");
                 return null;
             }
