@@ -99,7 +99,7 @@ public class LimitService {
     public Map<Long, List<ItemLimitDTO>> getItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<Long, List<ItemLimitDTO>> limitResult;
         //MOCK
-        if (true) {
+        if (false) {
             limitResult = this.mock();
         } else {
             limitResult = this.getItemLimitResult(this.buildGetItemLimitParam(sgFrameworkContextItem));
