@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.ItemGroup;
@@ -93,6 +94,10 @@ public class LimitService {
     }
 
     public Map<Long, List<ItemLimitDTO>> getItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
+        //MOCK
+        if (false) {
+            return this.mock();
+        }
         JSONObject limitJsonObject = this.doGetItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
         if (limitJsonObject == null) {
             return null;
@@ -100,30 +105,24 @@ public class LimitService {
         Map<Long, List<ItemLimitDTO>> limitResult = JSONObject.parseObject(limitJsonObject.toJSONString(),
             new TypeReference<Map<Long, List<ItemLimitDTO>>>() {
             });
-        if (limitResult != null) {
-            return limitResult;
-            //return this.mock(limitResult);
-        }
-        return null;
+        return limitResult;
     }
 
-    private Map<Long, List<ItemLimitDTO>> mock(Map<Long, List<ItemLimitDTO>> longListMap) {
+    private Map<Long, List<ItemLimitDTO>> mock() {
         Map<Long, List<ItemLimitDTO>> longListMap1 = new HashMap<>(16);
-        for (Long key : longListMap.keySet()) {
-            List<ItemLimitDTO> itemLimitDTOS = longListMap.get(key);
-            //美宝莲唇膏
-            if (key == 607615049047L) {
-                ItemLimitDTO itemLimitDTO = new ItemLimitDTO();
-                //超过总限购
-                itemLimitDTO.setTotalLimit(10L);
-                itemLimitDTO.setUsedCount(10L);
-                //超过用户限购
-                itemLimitDTO.setUserLimit(5L);
-                itemLimitDTO.setUserUsedCount(5L);
-                itemLimitDTOS.add(0, itemLimitDTO);
-            }
-            longListMap1.put(key, itemLimitDTOS);
-        }
+        List<ItemLimitDTO> itemLimitDTOS = Lists.newArrayList();
+        //美宝莲唇膏
+        ItemLimitDTO itemLimitDTO = new ItemLimitDTO();
+        //超过总限购
+        itemLimitDTO.setTotalLimit(10L);
+        itemLimitDTO.setUsedCount(10L);
+        //超过用户限购
+        itemLimitDTO.setUserLimit(5L);
+        itemLimitDTO.setUserUsedCount(5L);
+
+        itemLimitDTO.setSkuId(123456L);
+        itemLimitDTOS.add(0, itemLimitDTO);
+        longListMap1.put(609977546160L, itemLimitDTOS);
         return longListMap1;
     }
 
