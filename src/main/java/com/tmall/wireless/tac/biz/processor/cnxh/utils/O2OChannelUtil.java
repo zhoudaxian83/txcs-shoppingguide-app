@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.cnxh.utils;
 
+import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
+import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.wireless.tac.biz.processor.cnxh.enums.O2OChannelEnum;
 
 /**
@@ -9,9 +11,10 @@ import com.tmall.wireless.tac.biz.processor.cnxh.enums.O2OChannelEnum;
 public class O2OChannelUtil {
     public static String getO2OChannel(String csa) {
         String O2OChannel = "";
-        boolean rt1HourStoreCover = RenderAddressUtil.rt1HourStoreCover(csa);
-        boolean rtHalfDayStoreCover = RenderAddressUtil.rtHalfDayStoreCover(csa);
-        boolean nextDayStoreCover = RenderAddressUtil.nextDayStoreCover(csa);
+        AddressDTO addressDTO = AddressUtil.parseCSA(csa);
+        boolean rt1HourStoreCover = addressDTO.isRt1HourStoreCover();
+        boolean rtHalfDayStoreCover = addressDTO.isRtHalfDayStoreCover();
+        boolean nextDayStoreCover = isRtHalfDayStoreCover(addressDTO.getRtNextDayStoreId());
         //默认优先级 一小时达 > 半日达 > 外仓
         if (rt1HourStoreCover) {
             return O2OChannelEnum.ONE_HOUR.getCode();
@@ -21,5 +24,9 @@ public class O2OChannelUtil {
             return O2OChannelEnum.NEXT_DAY.getCode();
         }
         return O2OChannel;
+    }
+
+    public static boolean isRtHalfDayStoreCover(Long rtNextDayStoreId) {
+        return rtNextDayStoreId != null && rtNextDayStoreId > 0;
     }
 }
