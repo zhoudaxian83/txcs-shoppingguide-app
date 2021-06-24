@@ -37,6 +37,19 @@ public class LimitItemUtil {
             && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
     }
 
+    public static void main(String[] args) {
+        ItemLimitDTO itemLimitDTO = new ItemLimitDTO();
+        //超过总限购
+        itemLimitDTO.setTotalLimit(10L);
+        itemLimitDTO.setUsedCount(10L);
+        //超过用户限购
+        //itemLimitDTO.setUserLimit(5L);
+        //itemLimitDTO.setUserUsedCount(5L);
+
+        itemLimitDTO.setSkuId(123456L);
+        notLimit(itemLimitDTO);
+    }
+
     public static List<EntityVO> doLimitItems(List<EntityVO> entityVOList) {
         List<EntityVO> noLimitEntityVOList = Lists.newArrayList();
         entityVOList.forEach(entityVO -> {
