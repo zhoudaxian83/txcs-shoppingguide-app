@@ -42,7 +42,7 @@ public class LimitService {
     @Autowired
     TacLogger tacLogger;
 
-    private Map<String, Object> buildGetItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
+    private Map<String, Object> buildGetItemLimitParam(SgFrameworkContextItem sgFrameworkContextItem) {
         Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
         Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
             .getItemInfoGroupResponseMap();
@@ -66,7 +66,7 @@ public class LimitService {
         return paramsValue;
     }
 
-    private JSONObject doGetItemLimitResult(Map<String, Object> paramsValue) {
+    private Map<Long, List<ItemLimitDTO>> getItemLimitResult(Map<String, Object> paramsValue) {
         Object o;
         try {
             o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramsValue);
@@ -79,7 +79,10 @@ public class LimitService {
                 return null;
             }
             if (success) {
-                return (JSONObject)jsonObject.get(Constant.LIMIT_INFO);
+                return JSONObject.parseObject(((JSONObject)jsonObject.get(
+                    Constant.LIMIT_INFO)).toJSONString(),
+                    new TypeReference<Map<Long, List<ItemLimitDTO>>>() {
+                    });
             } else {
                 tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
                 return null;
@@ -94,53 +97,30 @@ public class LimitService {
     }
 
     public Map<Long, List<ItemLimitDTO>> getItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
+        Map<Long, List<ItemLimitDTO>> limitResult;
         //MOCK
-        if (false) {
-            return this.mock();
+        if (true) {
+            limitResult = this.mock();
+        } else {
+            limitResult = this.getItemLimitResult(this.buildGetItemLimitParam(sgFrameworkContextItem));
         }
-        JSONObject limitJsonObject = this.doGetItemLimitResult(this.buildGetItemLimitResult(sgFrameworkContextItem));
-        if (limitJsonObject == null) {
-            return null;
-        }
-        Map<Long, List<ItemLimitDTO>> limitResult = JSONObject.parseObject(limitJsonObject.toJSONString(),
-            new TypeReference<Map<Long, List<ItemLimitDTO>>>() {
-            });
         return limitResult;
     }
 
     private Map<Long, List<ItemLimitDTO>> mock() {
-        Map<Long, List<ItemLimitDTO>> longListMap1 = new HashMap<>(16);
-        List<ItemLimitDTO> itemLimitDTOS = Lists.newArrayList();
-        //美宝莲唇膏
+        Map<Long, List<ItemLimitDTO>> limitResult = new HashMap<>(16);
+        List<ItemLimitDTO> itemLimitDTOList = Lists.newArrayList();
         ItemLimitDTO itemLimitDTO = new ItemLimitDTO();
         //超过总限购
         itemLimitDTO.setTotalLimit(10L);
         itemLimitDTO.setUsedCount(10L);
         //超过用户限购
-        itemLimitDTO.setUserLimit(5L);
-        itemLimitDTO.setUserUsedCount(5L);
+        //itemLimitDTO.setUserLimit(5L);
+        //itemLimitDTO.setUserUsedCount(5L);
 
         itemLimitDTO.setSkuId(123456L);
-        itemLimitDTOS.add(0, itemLimitDTO);
-        longListMap1.put(609977546160L, itemLimitDTOS);
-        return longListMap1;
+        itemLimitDTOList.add(itemLimitDTO);
+        limitResult.put(609977546160L, itemLimitDTOList);
+        return limitResult;
     }
-
-    //    private List<Map> buildLimitSkuListParam(List<ColumnCenterDataSetItemRuleDTO> tairItems) {
-    //        List<Map> skuList = Lists.newArrayList();
-    //        tairItems.forEach(item -> {
-    //            Long itemId = item.getItemId();
-    //            JSONObject jsonObject = JSONObject.parseObject(item.getItemExtension());
-    //            JSONArray jsonArray = (JSONArray) jsonObject.get("skuInfo");
-    //            for (int i = 0; i < jsonArray.size(); i++) {
-    //                Map<String, Object> skuMap = Maps.newHashMap();
-    //                Long skuId = jsonArray.getJSONObject(i).getLong("skuId");
-    //                skuMap.put("skuId", skuId);
-    //                skuMap.put("itemId", itemId);
-    //                skuList.add(skuMap);
-    //            }
-    //        });
-    //        return skuList;
-    //    }
-
 }
