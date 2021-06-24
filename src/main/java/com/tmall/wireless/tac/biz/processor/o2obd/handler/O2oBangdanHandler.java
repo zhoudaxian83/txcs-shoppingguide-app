@@ -32,9 +32,9 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
             List<ContentVO> list = response.getData().getItemAndContentList();
             list.forEach(contentVO -> {
                 GeneralItem generalItem = new GeneralItem();
-                String key = contentVO.keySet().toString();
-                Object va = contentVO.get(key);
-                generalItem.put(key,va);
+                contentVO.keySet().forEach(key->{
+                    generalItem.put(key,contentVO.get(key));
+                });
                 generalItemList.add(generalItem);
             });
             return generalItemList;
