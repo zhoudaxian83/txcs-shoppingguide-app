@@ -16,6 +16,7 @@ import com.tmall.wireless.tac.biz.processor.cnxh.enums.O2OChannelEnum;
 import com.tmall.wireless.tac.biz.processor.cnxh.utils.O2OChannelUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import org.apache.ecs.html.S;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,8 @@ import org.springframework.stereotype.Service;
     scenario = ScenarioConstantApp.O2O_CNXH)
 @Service
 public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
+    public static final long APP_ID = 22171;
+
     @Autowired
     TacLogger tacLogger;
 
@@ -45,12 +48,11 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         String O2OChannel = MapUtil.getStringWithDefault(context.getRequestParams(), "O2OChannel", "");
         O2OChannel = O2OChannel.equals("") ? O2OChannelUtil.getO2OChannel(csa) : O2OChannel;
         String moduleId = MapUtil.getStringWithDefault(context.getRequestParams(), "moduleId", "");
-        Long appId = this.getAppId(O2OChannel);
+        //Long appId = this.getAppId(O2OChannel);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         pageSize = pageSize == 0L ? 20L : pageSize;
-        //String itemSetId = MapUtil.getStringWithDefault(context.getRequestParams(), "itemSetId", "");
         Long smAreaId = context.getLocParams().getSmAreaId() == 0 ? LogicalArea.parseByCode(
             AddressUtil.parseCSA(csa).getRegionCode()).getCoreCityCode() : context.getLocParams().getSmAreaId();
         String logicAreaId = AddressUtil.parseCSA(csa).getRegionCode();
@@ -61,11 +63,8 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         params.put("userId", String.valueOf(userId));
         params.put("index", index + "");
         params.put("pageSize", pageSize + "");
-        params.put(pageId, appId + "");
+        params.put(pageId, APP_ID + "");
         params.put("logicAreaId", logicAreaId);
-        //if (!"".equals(itemSetId)) {
-        //    params.put("itemSetIdList", itemSetId);
-        //}
 
         params.put("isFirstPage", (index == 0L) + "");
         if (O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)) {
@@ -90,7 +89,7 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
             params.put("itemSetIdList", "198684");
         }
 
-        recommendRequest.setAppId(appId);
+        recommendRequest.setAppId(APP_ID);
         recommendRequest.setLogResult(true);
         recommendRequest.setParams(params);
         recommendRequest.setUserId(userId);
