@@ -56,17 +56,17 @@ public class O2oBangdanService {
         long startTime = System.currentTimeMillis();
         tacLogger.info("***O2oBangdanService context***:"+ JSON.toJSONString(context));
 
-        Long smAreaId = MapUtil.getLongWithDefault(context.getAldParam(), "smAreaId", 330100L);
+
         SgFrameworkContextContent sgFrameworkContextContent = new SgFrameworkContextContent();
         sgFrameworkContextContent.setRequestParams(context.getParams());
-
+        String csa = (String)Optional.ofNullable(context.getAldParam().get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA))
+            .orElse(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA));
+        Long smAreaId = (Long)Optional.ofNullable(context.getAldParam().get("smAreaId"))
+            .orElse(context.get("smAreaId"));
         sgFrameworkContextContent.setSceneInfo(getSceneInfo());
         sgFrameworkContextContent.setUserDO(getUserDO(context));
-        sgFrameworkContextContent.setLocParams(CsaUtil
-            .parseCsaObj(context.getAldParam().get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
+        sgFrameworkContextContent.setLocParams(CsaUtil.parseCsaObj(csa, smAreaId));
         sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo());
-
-
         PageInfoDO pageInfoDO = new PageInfoDO();
         pageInfoDO.setIndex(Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
         pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
