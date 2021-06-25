@@ -22,6 +22,7 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUt
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
+import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.MapUtils;
@@ -50,20 +51,19 @@ public class O2oBangdanService {
     @Autowired
     TacLogger tacLogger;
 
-    public Flowable<TacResult<SgFrameworkResponse<ContentVO>>> recommend(Context context) {
+    public Flowable<TacResult<SgFrameworkResponse<ContentVO>>> recommend(RequestContext4Ald context) {
 
         long startTime = System.currentTimeMillis();
         tacLogger.info("***O2oBangdanService context***:"+ JSON.toJSONString(context));
 
-        Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
+        Long smAreaId = MapUtil.getLongWithDefault(context.getAldParam(), "smAreaId", 330100L);
         SgFrameworkContextContent sgFrameworkContextContent = new SgFrameworkContextContent();
         sgFrameworkContextContent.setRequestParams(context.getParams());
-
 
         sgFrameworkContextContent.setSceneInfo(getSceneInfo());
         sgFrameworkContextContent.setUserDO(getUserDO(context));
         sgFrameworkContextContent.setLocParams(CsaUtil
-            .parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
+            .parseCsaObj(context.getAldParam().get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo());
 
 
