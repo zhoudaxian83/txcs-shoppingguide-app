@@ -70,7 +70,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             tacLogger.info("***********mgetResult.getValue()*******:"+mgetResult.getValue());
             LOGGER.info("***********mgetResultRequest:{};mgetResult.getValue:{}*******:", JSON.toJSONString(sKeyList), mgetResult.getValue());
             if (CollectionUtils.isEmpty(mgetResult.getValue())) {
-                return Flowable.just(Response.fail(""));
+                return Flowable.just(Response.fail("READ_CONTENT_FROM_TAIR_RETURN_EMPTY"));
             }
             List<DataEntry> dataEntryList = mgetResult.getValue();
             Map<Long, TairSceneDTO> tairResult = Maps.newHashMap();
