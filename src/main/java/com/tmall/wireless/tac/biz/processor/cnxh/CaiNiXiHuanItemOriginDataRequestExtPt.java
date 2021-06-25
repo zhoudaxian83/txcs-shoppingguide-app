@@ -62,7 +62,7 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         params.put("userId", String.valueOf(userId));
         params.put("index", index + "");
         params.put("pageSize", pageSize + "");
-        params.put(pageId, APP_ID + "");
+        params.put("appid", APP_ID + "");
         params.put("logicAreaId", logicAreaId);
 
         params.put("isFirstPage", (index == 0L) + "");
