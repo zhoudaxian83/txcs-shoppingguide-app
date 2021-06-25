@@ -77,9 +77,11 @@ public class O2oBangdanService {
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
         tacLogger.info("*****O2oBangdanService sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
 
-        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+        HadesLogUtil.stream(ScenarioConstantApp.O2O_BANG_DAN)
             .kv("step", "requestLog")
             .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
+            .kv("csa",csa)
+            .kv("aldParam",JSON.toJSONString(context.getAldParam()))
             .error();
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
             .map(TacResult::newResult)
