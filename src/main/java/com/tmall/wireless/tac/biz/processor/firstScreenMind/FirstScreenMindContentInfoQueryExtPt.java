@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.firstScreenMind;
+`package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
@@ -69,7 +69,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
             tacLogger.info("***********mgetResult.getValue()*******:"+mgetResult.getValue());
             LOGGER.info("***********mgetResultRequest:{};mgetResult.getValue:{}*******:", JSON.toJSONString(sKeyList), JSON.toJSONString(mgetResult.getValue()));
-            if (CollectionUtils.isEmpty(mgetResult.getValue())) {
+            if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail("READ_CONTENT_FROM_TAIR_RETURN_EMPTY"));
             }
             List<DataEntry> dataEntryList = mgetResult.getValue();
