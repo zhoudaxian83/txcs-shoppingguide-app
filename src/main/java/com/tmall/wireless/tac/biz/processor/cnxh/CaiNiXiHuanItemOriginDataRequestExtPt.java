@@ -89,6 +89,7 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         recommendRequest.setLogResult(true);
         recommendRequest.setParams(params);
         recommendRequest.setUserId(userId);
+        tacLogger.info("recommendRequest:" + JSON.toJSONString(recommendRequest));
         return recommendRequest;
 
     }
