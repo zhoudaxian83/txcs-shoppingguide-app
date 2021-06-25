@@ -16,7 +16,6 @@ import com.tmall.wireless.tac.biz.processor.cnxh.enums.O2OChannelEnum;
 import com.tmall.wireless.tac.biz.processor.cnxh.utils.O2OChannelUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import org.apache.ecs.html.S;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
