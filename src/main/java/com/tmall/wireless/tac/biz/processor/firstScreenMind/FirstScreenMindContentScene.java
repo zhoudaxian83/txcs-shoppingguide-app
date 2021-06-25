@@ -72,7 +72,7 @@ public class FirstScreenMindContentScene {
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                 .kv("step", "requestLog")
                 .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
-                .error();
+                .info();
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> {
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
@@ -104,7 +104,7 @@ public class FirstScreenMindContentScene {
                             .kv("step", "requestLog")
                             .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
                             .kv("rt", String.valueOf(System.currentTimeMillis() - startTime))
-                            .error();
+                            .info();
                     return response;
                 }).map(TacResult::newResult)
                 .map(tacResult -> {
