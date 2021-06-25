@@ -28,12 +28,12 @@ public class RequestKeyConstantApp {
 
 
     /**逛超市场景集key**/
-    public static final String VM_CONTENT_SET_B2C = "normalB2CContentSetIds";
-    public static final String VM_CONTENT_SET_O2O = "normalO2OContentSetIds";
-    public static final String VM_CONTENT_SET_BRAND = "brandContentSetIds";
-    public static final String VM_CONTENT_SET_RECIPE = "recipeContentSetIds";
-    public static final String VM_CONTENT_SET_MEDIA = "mediaContentSetIds";
-    public static final String VM_CONTENT_SET_RANKING = "rankingContentSetIds";
+//    public static final String VM_CONTENT_SET_B2C = "normalB2CContentSetIds";
+//    public static final String VM_CONTENT_SET_O2O = "normalO2OContentSetIds";
+//    public static final String VM_CONTENT_SET_BRAND = "brandContentSetIds";
+//    public static final String VM_CONTENT_SET_RECIPE = "recipeContentSetIds";
+//    public static final String VM_CONTENT_SET_MEDIA = "mediaContentSetIds";
+//    public static final String VM_CONTENT_SET_RANKING = "rankingContentSetIds";
 
 
     public static final String CONTENT_TYPE = "contentType";
