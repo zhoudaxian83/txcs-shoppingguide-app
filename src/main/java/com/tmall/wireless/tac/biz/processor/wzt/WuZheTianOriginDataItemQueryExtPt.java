@@ -29,6 +29,7 @@ import com.tmall.wireless.tac.biz.processor.wzt.utils.SmAreaIdUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -120,8 +121,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @return
      */
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
-        List<ItemEntity> itemEntities = LogicPageUtil.getPage(originDataDTO.getResult(), dataContext.getIndex(),
+        Pair<Boolean, List<ItemEntity>> pair = LogicPageUtil.getPage(originDataDTO.getResult(), dataContext.getIndex(),
             dataContext.getPageSize());
+        List<ItemEntity> itemEntities = pair.getRight();
+        originDataDTO.setHasMore(pair.getLeft());
         originDataDTO.setResult(itemEntities);
         return originDataDTO;
     }
