@@ -1,4 +1,4 @@
-`package com.tmall.wireless.tac.biz.processor.firstScreenMind;
+package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
