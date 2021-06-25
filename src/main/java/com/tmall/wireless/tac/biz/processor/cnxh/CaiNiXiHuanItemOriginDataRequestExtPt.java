@@ -82,12 +82,12 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         } else if (O2OChannelEnum.NEXT_DAY.getCode().equals(O2OChannel)) {
             params.put(pageId, "nextdaycnxh");
             params.put(itemBusinessType, "NextDay");
+            params.put("itemSetIdList", "13545");
         } else if (O2OChannelEnum.ALL_FRESH.getCode().equals(O2OChannel)) {
             params.put("pageId", "onehourcnxh");
             params.put(itemBusinessType, "B2C");
             params.put("itemSetIdList", "198684");
         }
-
         recommendRequest.setAppId(APP_ID);
         recommendRequest.setLogResult(true);
         recommendRequest.setParams(params);
