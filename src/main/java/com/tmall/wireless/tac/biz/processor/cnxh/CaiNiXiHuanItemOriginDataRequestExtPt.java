@@ -51,7 +51,7 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         pageSize = pageSize == 0L ? 20L : pageSize;
-        Long itemSetId = MapUtil.getLongWithDefault(context.getRequestParams(), "itemSetId", 0L);
+        String itemSetId = MapUtil.getStringWithDefault(context.getRequestParams(), "itemSetId", "");
         Long smAreaId = context.getLocParams().getSmAreaId() == 0 ? LogicalArea.parseByCode(
             AddressUtil.parseCSA(csa).getRegionCode()).getCoreCityCode() : context.getLocParams().getSmAreaId();
         String logicAreaId = AddressUtil.parseCSA(csa).getRegionCode();
@@ -64,7 +64,10 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         params.put("pageSize", pageSize + "");
         params.put(pageId, appId + "");
         params.put("logicAreaId", logicAreaId);
-        params.put("itemSetIdList", itemSetId + "");
+        if (!"".equals(itemSetId)) {
+            params.put("itemSetIdList", itemSetId);
+        }
+
         params.put("isFirstPage", (index == 0L) + "");
         if (O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)) {
             params.put(pageId, "onehourcnxh");
