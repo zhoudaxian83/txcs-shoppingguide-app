@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.o2obd.ext;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
@@ -55,28 +56,30 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
 
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID);
+        tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
+            .map(UserDO::getUserId).orElse(0L));
         Map<String, String> params = Maps.newHashMap();
-
-        tppRequest.setAppId(APPID);
-        params.put("contentSetIdList",  "167004");
+        params.put("contentSetIdList",  (String)sgFrameworkContextContent.getUserParams().get("contentSetIdList"));
         params.put("contentSetSource", "intelligentCombinationItems");
         params.put("itemCountPerContent", "5");
-        params.put("rt1HourStoreId", "233930124");
-        params.put("itemBusinessType", "OneHour");
+        long oneHourStoreId = sgFrameworkContextContent.getLocParams().getRt1HourStoreId();
+        long halfDayStoreId = sgFrameworkContextContent.getLocParams().getRtHalfDayStoreId();
+        if(oneHourStoreId!=0L){
+            params.put("rt1HourStoreId", String.valueOf(oneHourStoreId));
+            params.put("itemBusinessType", "OneHour");
+        }else if(halfDayStoreId!=0L){
+            params.put("rtHalfDayStoreId", String.valueOf(halfDayStoreId));
+            params.put("itemBusinessType", "HalfDay");
+        }
         params.put("contentType", "7");
-        params.put("userid","1832025789");
         params.put("pageSize","10");
-        params.put("majorCityCode", "107");
-
-        params.put("logicAreaId", "112");
+        params.put("majorCityCode", String.valueOf(sgFrameworkContextContent.getLocParams().getMajorCityCode()));
+        params.put("logicAreaId", String.valueOf(sgFrameworkContextContent.getLocParams().getSmAreaId()));
         params.put("isFirstPage", "true");
         params.put("topContentCount", "1");
-
         //params.put("majorCityCode", String.valueOf(sgFrameworkContextContent.getLocParams().getMajorCityCode()));
         params.put("smAreaId", Optional
             .ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
-        tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
-            .map(UserDO::getUserId).orElse(0L));
         tppRequest.setParams(params);
 
         tacLogger.info("O2oBangdanContentOriginDataRequestExPt tppRequest:"+JSON.toJSONString(tppRequest));
