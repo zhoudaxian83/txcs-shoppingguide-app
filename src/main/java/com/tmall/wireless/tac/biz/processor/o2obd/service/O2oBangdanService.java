@@ -59,10 +59,11 @@ public class O2oBangdanService {
 
         SgFrameworkContextContent sgFrameworkContextContent = new SgFrameworkContextContent();
         sgFrameworkContextContent.setRequestParams(context.getParams());
-        String csa = (String)Optional.ofNullable(context.getAldParam().get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA))
-            .orElse(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA));
-        Long smAreaId = (Long)Optional.ofNullable(context.getAldParam().get("smAreaId"))
-            .orElse(context.get("smAreaId"));
+
+        String csa = MapUtil.getStringWithDefault(context.getAldParam(),UserParamsKeyConstant.USER_PARAMS_KEY_CSA,
+            MapUtil.getStringWithDefault(context.getParams(),UserParamsKeyConstant.USER_PARAMS_KEY_CSA,null));
+        Long smAreaId = MapUtil.getLongWithDefault(context.getAldParam(),"smAreaId",
+            MapUtil.getLongWithDefault(context.getParams(),"smAreaId",0L));
         sgFrameworkContextContent.setSceneInfo(getSceneInfo());
         sgFrameworkContextContent.setUserDO(getUserDO(context));
         sgFrameworkContextContent.setLocParams(CsaUtil.parseCsaObj(csa, smAreaId));
