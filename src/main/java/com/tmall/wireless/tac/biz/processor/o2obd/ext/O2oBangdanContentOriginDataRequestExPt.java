@@ -73,11 +73,10 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
         }
         params.put("contentType", "7");
         params.put("pageSize","10");
-        params.put("majorCityCode", String.valueOf(sgFrameworkContextContent.getLocParams().getMajorCityCode()));
-        params.put("logicAreaId", String.valueOf(sgFrameworkContextContent.getLocParams().getSmAreaId()));
+        params.put("majorCityCode", String.valueOf(sgFrameworkContextContent.getLocParams().getCityCode()));
+        params.put("logicAreaId", String.valueOf(sgFrameworkContextContent.getLocParams().getRegionCode()));
         params.put("isFirstPage", "true");
         params.put("topContentCount", "1");
-        //params.put("majorCityCode", String.valueOf(sgFrameworkContextContent.getLocParams().getMajorCityCode()));
         params.put("smAreaId", Optional
             .ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         tppRequest.setParams(params);
