@@ -52,6 +52,10 @@ public class LogicPageUtil {
             }
             resultList.add(originalList.get(Math.toIntExact(pageStart++)));
         }
+        //请求数据刚好等于全部数据的情况
+        if (index * pageSize == originalList.size()) {
+            hasMore = false;
+        }
         return Pair.of(hasMore, resultList);
     }
 
