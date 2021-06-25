@@ -9,7 +9,6 @@ import com.alibaba.fastjson.JSON;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.aselfcommon.model.todaycrazy.enums.LogicalArea;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
-import com.tmall.txcs.gs.framework.extensions.excutor.SgExtensionExecutor;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
@@ -51,7 +50,7 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         pageSize = pageSize == 0L ? 20L : pageSize;
-        String itemSetId = MapUtil.getStringWithDefault(context.getRequestParams(), "itemSetId", "");
+        //String itemSetId = MapUtil.getStringWithDefault(context.getRequestParams(), "itemSetId", "");
         Long smAreaId = context.getLocParams().getSmAreaId() == 0 ? LogicalArea.parseByCode(
             AddressUtil.parseCSA(csa).getRegionCode()).getCoreCityCode() : context.getLocParams().getSmAreaId();
         String logicAreaId = AddressUtil.parseCSA(csa).getRegionCode();
@@ -64,9 +63,9 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         params.put("pageSize", pageSize + "");
         params.put(pageId, appId + "");
         params.put("logicAreaId", logicAreaId);
-        if (!"".equals(itemSetId)) {
-            params.put("itemSetIdList", itemSetId);
-        }
+        //if (!"".equals(itemSetId)) {
+        //    params.put("itemSetIdList", itemSetId);
+        //}
 
         params.put("isFirstPage", (index == 0L) + "");
         if (O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)) {
@@ -75,18 +74,20 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
             params.put("rt1HourStoreId", String.valueOf(context.getLocParams().getRt1HourStoreId()));
             params.put("itemBusinessType", "OneHour");
             params.put("moduleId", moduleId);
+            params.put("itemSetIdList", "13545");
         } else if (O2OChannelEnum.HALF_DAY.getCode().equals(O2OChannel)) {
             params.put(pageId, "halfdaycnxh");
             params.put(itemBusinessType, "HalfDay");
             params.put("rtHalfDayStoreId", String.valueOf(context.getLocParams().getRtHalfDayStoreId()));
             params.put("moduleId", moduleId);
-
+            params.put("itemSetIdList", "13545");
         } else if (O2OChannelEnum.NEXT_DAY.getCode().equals(O2OChannel)) {
             params.put(pageId, "nextdaycnxh");
             params.put(itemBusinessType, "NextDay");
         } else if (O2OChannelEnum.ALL_FRESH.getCode().equals(O2OChannel)) {
             params.put("pageId", "onehourcnxh");
             params.put(itemBusinessType, "B2C");
+            params.put("itemSetIdList", "198684");
         }
 
         recommendRequest.setAppId(appId);
