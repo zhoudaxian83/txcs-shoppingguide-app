@@ -47,7 +47,7 @@ public class OriginDataRequestContentFeedsMind implements OriginDataRequest {
         List<String> itemBusinessTypeList = Lists.newArrayList(TppItemBusinessTypeEnum.B2C.getType());
         if (oneHour > 0) {
             itemBusinessTypeList.add(TppItemBusinessTypeEnum.O2O.getType());
-            params.put("rt1HourStoreId", RenderLangUtil.safeString(oneHour));
+            params.put("rtOneHourStoreId", RenderLangUtil.safeString(oneHour));
         } else if (halfDay > 0){
             itemBusinessTypeList.add(TppItemBusinessTypeEnum.O2O.getType());
             params.put("rtHalfDayStoreId", RenderLangUtil.safeString(halfDay));
