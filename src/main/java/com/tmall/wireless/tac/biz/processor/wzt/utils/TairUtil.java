@@ -13,6 +13,7 @@ import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
+import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TodayCrazyUtils;
 import com.tmall.wireless.tac.biz.processor.wzt.enums.LogicalArea;
@@ -95,6 +96,7 @@ public class TairUtil {
 
     /**
      * 获取原始tair并做排序
+     *
      * @param smAreaId
      * @return
      */
@@ -154,10 +156,10 @@ public class TairUtil {
             .getPmtRuleDataSetDTO() != null) {
             String promotionExtension = pmtRuleDataItemRuleDTOList.get(0).getPmtRuleDataSetDTO().getExtension();
             Map<String, Object> extensionMap = TodayCrazyUtils.parseExtension(promotionExtension, "\\|", "\\=", true);
-            String channelKey = MapUtil.getStringWithDefault(extensionMap, "channelKey", "panic_buying_today");
+            String channelKey = MapUtil.getStringWithDefault(extensionMap, "channelKey", VoKeyConstantApp.CHANNEL_KEY);
             return channelKey;
         }
-        return "panic_buying_today";
+        return VoKeyConstantApp.CHANNEL_KEY;
     }
 
     /**
