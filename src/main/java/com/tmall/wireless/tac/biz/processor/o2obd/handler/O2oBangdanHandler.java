@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.o2obd.handler;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.google.common.collect.Lists;
 import com.tmall.txcs.gs.framework.model.ContentVO;
+import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
 import com.tmall.wireless.tac.biz.processor.o2obd.service.O2oBangdanService;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -20,8 +21,6 @@ import java.util.List;
  */
 @Service
 public class O2oBangdanHandler extends TacReactiveHandler4Ald {
-
-    private static final String pageUrl = "https://pages.tmall.com/wow/an/cs/act/wupr?wh_biz=tm&&disableNav=YES&contentId=%s&contentType=%s&itemSetIds=%s&wh_pid=go-shopping/1774bde7dd7";
 
     @Autowired
     O2oBangdanService o2oBangdanService;
@@ -72,12 +71,12 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
         String contentId = generalItem.getString("contentId");
         String contentType = generalItem.getString("contentType");
         String itemSetIds = generalItem.getString("itemSetIds");
-        return String.format(pageUrl,contentId,contentType,itemSetIds);
+        return String.format(SxlSwitch.O2O_BD_JUMP_UTL,contentId,contentType,itemSetIds);
     }
 
     public static void main(String args[]){
 
-        System.out.println(String.format(pageUrl,"2020053217732","bangdanContent","373479"));
+        System.out.println(String.format(SxlSwitch.O2O_BD_JUMP_UTL,"2020053217732","bangdanContent","373479"));
     }
 }
 
