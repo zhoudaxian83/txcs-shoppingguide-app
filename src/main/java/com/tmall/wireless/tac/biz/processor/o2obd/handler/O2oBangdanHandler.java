@@ -53,6 +53,14 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
          *           "itemSetIds": "373479",
          *            "__track__": "13753845.13753845.20719161.1914.2"
          */
+        String jumpUrl = SxlSwitch.getValue("O2O_BD_JUMP_UTL");
+        Long itemSetIdSw = Long.valueOf(SxlSwitch.getValue("SXL_ITEMSET_ID"));
+        String itemSetIdS = SxlSwitch.getValue("SXL_ITEMSET_ID");
+
+        tacLogger.info("buildJumpUrl:"+jumpUrl);
+        tacLogger.info("itemSetIdS:"+itemSetIdS);
+        tacLogger.info("itemSetIdSw:"+itemSetIdSw);
+
         return o2oBangdanService.recommend(requestContext4Ald).map(response->{
             List<GeneralItem> generalItemList = Lists.newArrayList();
             List<ContentVO> list = response.getData().getItemAndContentList();
@@ -82,8 +90,6 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
 
         String jumpUrl = SxlSwitch.getValue("O2O_BD_JUMP_UTL");
         tacLogger.info("buildJumpUrl:"+jumpUrl);
-
-
         return String.format(jumpUrl,contentId,contentType,itemSetIds,String.join(",",itemIdList));
     }
 
