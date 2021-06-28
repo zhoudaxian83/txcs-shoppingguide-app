@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSON;
 import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.aselfcommon.model.todaycrazy.enums.LogicalArea;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -83,6 +84,11 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
         recommendRequest.setParams(params);
         recommendRequest.setUserId(userId);
         tacLogger.info("recommendRequest:" + JSON.toJSONString(recommendRequest));
+
+        HadesLogUtil.stream(ScenarioConstantApp.O2O_CNXH)
+            .kv("step", "tppRequest")
+            .kv("tppRequest",JSON.toJSONString(recommendRequest))
+            .error();
         return recommendRequest;
 
     }
