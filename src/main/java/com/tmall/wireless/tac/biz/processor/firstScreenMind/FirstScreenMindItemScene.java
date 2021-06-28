@@ -59,8 +59,10 @@ public class FirstScreenMindItemScene {
 
 
         PageInfoDO pageInfoDO = new PageInfoDO();
-        pageInfoDO.setIndex(0);
-        pageInfoDO.setPageSize(20);
+        /*pageInfoDO.setIndex(0);
+        pageInfoDO.setPageSize(20);*/
+        pageInfoDO.setIndex(Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
+        pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
         tacLogger.info("***FirstScreenMindItemScene sgFrameworkContextItem.toString()***:"+sgFrameworkContextItem.toString());
 
