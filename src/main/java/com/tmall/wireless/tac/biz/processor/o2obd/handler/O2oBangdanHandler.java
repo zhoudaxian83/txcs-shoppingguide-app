@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.o2obd.handler;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.EntityVO;
@@ -53,14 +54,6 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
          *           "itemSetIds": "373479",
          *            "__track__": "13753845.13753845.20719161.1914.2"
          */
-        String jumpUrl = SxlSwitch.getValue("O2O_BD_JUMP_UTL");
-        Long itemSetIdSw = Long.valueOf(SxlSwitch.getValue("SXL_ITEMSET_ID"));
-        String itemSetIdS = SxlSwitch.getValue("SXL_ITEMSET_ID");
-
-        tacLogger.info("buildJumpUrl:"+jumpUrl);
-        tacLogger.info("itemSetIdS:"+itemSetIdS);
-        tacLogger.info("itemSetIdSw:"+itemSetIdSw);
-
         return o2oBangdanService.recommend(requestContext4Ald).map(response->{
             List<GeneralItem> generalItemList = Lists.newArrayList();
             List<ContentVO> list = response.getData().getItemAndContentList();
@@ -88,20 +81,28 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
             return entityVO.get("itemId");
         }).map(String::valueOf).collect(Collectors.toList());
 
-        String jumpUrl = SxlSwitch.getValue("O2O_BD_JUMP_UTL");
+        String jumpUrl = (String)JSON.parse(SxlSwitch.getValue("O2O_BD_JUMP_UTL"));
         tacLogger.info("buildJumpUrl:"+jumpUrl);
         return String.format(jumpUrl,contentId,contentType,itemSetIds,String.join(",",itemIdList));
     }
 
     public static void main(String args[]){
 
-        System.out.println(String.format(SxlSwitch.O2O_BD_JUMP_UTL,"2020053217732","bangdanContent","373479"));
+        System.out.println(String.format(SxlSwitch.O2O_BD_JUMP_UTL,"2020053217732","bangdanContent","373479","111"));
 
         List<String> itemList = Lists.newArrayList();
         itemList.add("11111");
         itemList.add("2222");
 
         System.out.println(String.join(",",itemList));
+
+        String js = JSON.toJSONString(SxlSwitch.O2O_BD_JUMP_UTL);
+
+        System.out.println(js);
+        String aa = (String)JSON.parse(js);
+        System.out.println(aa);
+
+
 
     }
 }
