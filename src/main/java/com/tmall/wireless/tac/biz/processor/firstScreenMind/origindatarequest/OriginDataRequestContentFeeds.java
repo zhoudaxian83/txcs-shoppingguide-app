@@ -34,7 +34,7 @@ public class OriginDataRequestContentFeeds implements OriginDataRequest{
         if (oneHour > 0) {
             itemBusinessTypeList.add(TppItemBusinessTypeEnum.OneHour.getType());
             params.put("rt1HourStoreId", RenderLangUtil.safeString(oneHour));
-        } else if (halfDay >= 0){
+        } else if (halfDay > 0){
             itemBusinessTypeList.add(TppItemBusinessTypeEnum.HalfDay.getType());
             params.put("rtHalfDayStoreId", RenderLangUtil.safeString(halfDay));
         }

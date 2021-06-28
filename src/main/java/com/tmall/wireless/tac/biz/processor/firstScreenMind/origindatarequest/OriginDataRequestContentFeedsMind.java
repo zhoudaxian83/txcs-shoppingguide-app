@@ -13,7 +13,9 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.client.domain.Enviroment;
 
 /**
@@ -39,7 +41,20 @@ public class OriginDataRequestContentFeedsMind implements OriginDataRequest {
             .collect(
                 Collectors.toList());
         params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
-        params.put("commerce", "B2C");
+        /**心智场景支持O2O场景**/
+        Long oneHour = Optional.of(sgFrameworkContext).map(SgFrameworkContext::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
+        Long halfDay = Optional.of(sgFrameworkContext).map(SgFrameworkContext::getLocParams).map(LocParams::getRtHalfDayStoreId).orElse(0L);
+        List<String> itemBusinessTypeList = Lists.newArrayList(TppItemBusinessTypeEnum.B2C.getType());
+        if (oneHour > 0) {
+            itemBusinessTypeList.add(TppItemBusinessTypeEnum.O2O.getType());
+            params.put("rt1HourStoreId", RenderLangUtil.safeString(oneHour));
+        } else if (halfDay > 0){
+            itemBusinessTypeList.add(TppItemBusinessTypeEnum.O2O.getType());
+            params.put("rtHalfDayStoreId", RenderLangUtil.safeString(halfDay));
+        }
+        params.put("commerce", Joiner.on(",").join(itemBusinessTypeList));
+
+
         params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContext).map(
             SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
         if (params.get("regionCode") == null || "".equals(params.get("regionCode"))) {

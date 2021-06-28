@@ -7,6 +7,7 @@ public enum TppItemBusinessTypeEnum {
     OneHour("OneHour","TPP商品一小时达业务类型"),
     HalfDay("HalfDay","TPP商品半日达业务类型"),
     NextDay("NextDay","TPP商品外仓业务类型"),
+    O2O("O2O","TPP商品O2O业务类型"),
     ;
 
     TppItemBusinessTypeEnum(String type, String description) {
