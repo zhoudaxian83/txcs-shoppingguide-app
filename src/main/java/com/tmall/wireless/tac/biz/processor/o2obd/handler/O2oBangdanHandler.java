@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.o2obd.handler;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.google.common.collect.Lists;
 import com.tmall.txcs.gs.framework.model.ContentVO;
+import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
 import com.tmall.wireless.tac.biz.processor.o2obd.service.O2oBangdanService;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -71,9 +72,9 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
         String contentId = generalItem.getString("contentId");
         String contentType = generalItem.getString("contentType");
         String itemSetIds = generalItem.getString("itemSetIds");
-        List<ContentVO> itemList = (List)generalItem.get("items");
-        List<String> itemIdList = itemList.stream().map(contentVO -> {
-            return contentVO.get("itemId");
+        List<EntityVO> itemList = (List<EntityVO>)generalItem.get("items");
+        List<String> itemIdList = itemList.stream().map(entityVO -> {
+            return entityVO.get("itemId");
         }).map(String::valueOf).collect(Collectors.toList());
         return String.format((String)SxlSwitch.getValue("O2O_BD_JUMP_UTL"),contentId,contentType,itemSetIds,String.join(",",itemIdList));
     }
