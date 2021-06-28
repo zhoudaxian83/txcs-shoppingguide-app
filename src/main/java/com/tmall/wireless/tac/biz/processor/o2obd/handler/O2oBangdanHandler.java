@@ -8,6 +8,7 @@ import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ import java.util.List;
 @Service
 public class O2oBangdanHandler extends TacReactiveHandler4Ald {
 
+    private static final String pageUrl = "https://pages.tmall.com/wow/an/cs/act/wupr?wh_biz=tm&&disableNav=YES&contentId=%s&contentType=%s&itemSetIds=%s&wh_pid=go-shopping/1774bde7dd7";
+
     @Autowired
     O2oBangdanService o2oBangdanService;
 
@@ -27,6 +30,25 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald)
         throws Exception {
 
+        /**
+         * https://pages.tmall.com/wow/an/cs/act/wupr?spm=a3204.21125900.9715263030.d_b2cNormalContent_2020053172898_19539059607&wh_biz=tm&wh_pid=go-shopping/1774bde7dd7&disableNav=YES&recommendForUTab=true&b2cContentSetIds=7002&o2oContentSetIds=17002&mediaContentSetIds=140002&rankingContentSetIds=160002&contentId=2020053172898&contentType=b2cNormalContent&itemSetIds=210671&entryItemIds=19539059607,12424825277,39352890583,19555059312,41763548231,17059283658
+         */
+        /**
+         *           "contentAuthor": null,
+         *           "contentBackgroundPic": "1",
+         *           "contentCustomLink": null,
+         *           "contentSubtitle": "测试O2O榜单-华东",
+         *           "contentPic": "1",
+         *           "contentSeeCount": null,
+         *           "contentId": "2020053217732",
+         *           "contentTitle": "测试O2O榜单-华东",
+         *           "contentVideoUrl": null,
+         *           "contentType": "bangdanContent",
+         *           "items": [
+         *           ],
+         *           "itemSetIds": "373479",
+         *            "__track__": "13753845.13753845.20719161.1914.2"
+         */
         return o2oBangdanService.recommend(requestContext4Ald).map(response->{
             List<GeneralItem> generalItemList = Lists.newArrayList();
             List<ContentVO> list = response.getData().getItemAndContentList();
@@ -35,6 +57,7 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
                 contentVO.keySet().forEach(key->{
                     generalItem.put(key,contentVO.get(key));
                 });
+                generalItem.put("jumpUrl",buildJumpUrl(generalItem));
                 generalItemList.add(generalItem);
             });
             return generalItemList;
@@ -42,4 +65,19 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
         .onErrorReturn((r -> TacResult.errorResult("")));
 
     }
+
+    private String buildJumpUrl(GeneralItem generalItem){
+
+
+        String contentId = generalItem.getString("contentId");
+        String contentType = generalItem.getString("contentType");
+        String itemSetIds = generalItem.getString("itemSetIds");
+        return String.format(pageUrl,contentId,contentType,itemSetIds);
+    }
+
+    public static void main(String args[]){
+
+        System.out.println(String.format(pageUrl,"2020053217732","bangdanContent","373479"));
+    }
 }
+
