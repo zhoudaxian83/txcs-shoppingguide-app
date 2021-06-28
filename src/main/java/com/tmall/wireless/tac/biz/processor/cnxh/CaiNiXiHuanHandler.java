@@ -9,9 +9,6 @@ import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * Created by yangqing.byq on 2021/3/9.
- */
 @Component
 public class CaiNiXiHuanHandler extends RpmReactiveHandler<SgFrameworkResponse<EntityVO>> {
     @Autowired
