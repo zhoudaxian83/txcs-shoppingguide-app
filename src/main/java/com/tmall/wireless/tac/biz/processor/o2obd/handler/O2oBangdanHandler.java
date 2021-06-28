@@ -80,7 +80,7 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
             return entityVO.get("itemId");
         }).map(String::valueOf).collect(Collectors.toList());
 
-        String jumpUrl = (String)SxlSwitch.getValue("O2O_BD_JUMP_UTL");
+        String jumpUrl = SxlSwitch.getValue("O2O_BD_JUMP_UTL");
         tacLogger.info("buildJumpUrl:"+jumpUrl);
 
 
