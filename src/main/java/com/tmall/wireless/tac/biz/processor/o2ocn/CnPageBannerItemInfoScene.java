@@ -63,18 +63,6 @@ public class CnPageBannerItemInfoScene {
             CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo());
 
-        //EntitySetParams entitySetParams = new EntitySetParams();
-        //entitySetParams.setItemSetSource("crm");
-        //entitySetParams.setItemSetIdList(Lists.newArrayList(5233L));
-        //sgFrameworkContextItem.setEntitySetParams(entitySetParams);
-
-        PmtParams pmtParams = new PmtParams();
-        pmtParams.setPmtSource("sm_manager");
-        pmtParams.setPmtName("o2o_cnxh");
-        pmtParams.setPageId("o2o_cnxh");
-        pmtParams.setModuleId(level1Id.toString());
-        sgFrameworkContextItem.setPmtParams(pmtParams);
-
         PageInfoDO pageInfoDO = new PageInfoDO();
         pageInfoDO.setIndex(index.intValue());
         pageInfoDO.setPageSize(pageSize.intValue());
