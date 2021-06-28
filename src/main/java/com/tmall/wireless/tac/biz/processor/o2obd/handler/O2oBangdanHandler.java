@@ -7,6 +7,7 @@ import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
 import com.tmall.wireless.tac.biz.processor.o2obd.service.O2oBangdanService;
 import com.tmall.wireless.tac.client.common.TacResult;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +26,9 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
 
     @Autowired
     O2oBangdanService o2oBangdanService;
+
+    @Autowired
+    TacLogger tacLogger;
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald)
@@ -76,7 +79,12 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
         List<String> itemIdList = itemList.stream().map(entityVO -> {
             return entityVO.get("itemId");
         }).map(String::valueOf).collect(Collectors.toList());
-        return String.format((String)SxlSwitch.getValue("O2O_BD_JUMP_UTL"),contentId,contentType,itemSetIds,String.join(",",itemIdList));
+
+        String jumpUrl = (String)SxlSwitch.getValue("O2O_BD_JUMP_UTL");
+        tacLogger.info("buildJumpUrl:"+jumpUrl);
+
+
+        return String.format(jumpUrl,contentId,contentType,itemSetIds,String.join(",",itemIdList));
     }
 
     public static void main(String args[]){
