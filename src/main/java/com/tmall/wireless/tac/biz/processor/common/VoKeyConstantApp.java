@@ -5,4 +5,5 @@ package com.tmall.wireless.tac.biz.processor.common;
  */
 public class VoKeyConstantApp {
     public static final String UMP_CHANNEL = "umpChannel";
+    public static final String CHANNEL_KEY = "panicBuyingToday";
 }

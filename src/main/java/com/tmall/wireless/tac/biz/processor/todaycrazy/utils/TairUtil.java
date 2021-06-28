@@ -8,6 +8,7 @@ import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
+import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTairkeyEnum;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,9 +73,9 @@ public class TairUtil {
         if(CollectionUtils.isNotEmpty(pmtRuleDataItemRuleDTOList) && pmtRuleDataItemRuleDTOList.get(0).getPmtRuleDataSetDTO() != null){
             String promotionExtension = pmtRuleDataItemRuleDTOList.get(0).getPmtRuleDataSetDTO().getExtension();
             Map<String, Object> extensionMap = TodayCrazyUtils.parseExtension(promotionExtension, "\\|", "\\=", true);
-            String channelKey = MapUtil.getStringWithDefault(extensionMap, "channelKey","panic_buying_today");
+            String channelKey = MapUtil.getStringWithDefault(extensionMap, "channelKey", VoKeyConstantApp.CHANNEL_KEY);
             return channelKey;
         }
-        return "panic_buying_today";
+        return VoKeyConstantApp.CHANNEL_KEY;
     }
 }
