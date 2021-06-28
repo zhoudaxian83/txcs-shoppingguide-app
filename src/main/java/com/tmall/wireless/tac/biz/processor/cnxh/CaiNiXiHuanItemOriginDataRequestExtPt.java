@@ -49,8 +49,8 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         //Long appId = this.getAppId(O2OChannel);
         Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 0L);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
-        Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
-        pageSize = pageSize == 0L ? 20L : pageSize;
+        //Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
+        //pageSize = pageSize == 0L ? 20L : pageSize;
         Long smAreaId = context.getLocParams().getSmAreaId() == 0 ? LogicalArea.parseByCode(
             AddressUtil.parseCSA(csa).getRegionCode()).getCoreCityCode() : context.getLocParams().getSmAreaId();
         String logicAreaId = AddressUtil.parseCSA(csa).getRegionCode();
@@ -60,7 +60,7 @@ public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequ
         params.put("smAreaId", smAreaId + "");
         params.put("userId", String.valueOf(userId));
         params.put("index", index + "");
-        params.put("pageSize", pageSize + "");
+        //params.put("pageSize", pageSize + "");
         params.put("appid", APP_ID + "");
         params.put("logicAreaId", logicAreaId);
 
