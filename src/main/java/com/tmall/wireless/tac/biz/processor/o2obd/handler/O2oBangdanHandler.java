@@ -9,11 +9,12 @@ import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * @author haixiao.zhang
@@ -67,16 +68,26 @@ public class O2oBangdanHandler extends TacReactiveHandler4Ald {
 
     private String buildJumpUrl(GeneralItem generalItem){
 
-
         String contentId = generalItem.getString("contentId");
         String contentType = generalItem.getString("contentType");
         String itemSetIds = generalItem.getString("itemSetIds");
-        return String.format(SxlSwitch.O2O_BD_JUMP_UTL,contentId,contentType,itemSetIds);
+        List<ContentVO> itemList = (List)generalItem.get("items");
+        List<String> itemIdList = itemList.stream().map(contentVO -> {
+            return contentVO.get("itemId");
+        }).map(String::valueOf).collect(Collectors.toList());
+        return String.format((String)SxlSwitch.getValue("O2O_BD_JUMP_UTL"),contentId,contentType,itemSetIds,String.join(",",itemIdList));
     }
 
     public static void main(String args[]){
 
         System.out.println(String.format(SxlSwitch.O2O_BD_JUMP_UTL,"2020053217732","bangdanContent","373479"));
+
+        List<String> itemList = Lists.newArrayList();
+        itemList.add("11111");
+        itemList.add("2222");
+
+        System.out.println(String.join(",",itemList));
+
     }
 }
 

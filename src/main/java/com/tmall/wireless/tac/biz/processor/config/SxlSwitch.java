@@ -24,8 +24,7 @@ public class SxlSwitch {
     public static Long SXL_MAIN_ACTIVEX_ID = 885L;
 
     @AppSwitch(des = "o2o榜单跳转链接", level = Switch.Level.p4)
-    public static String O2O_BD_JUMP_UTL = " https://pre-wormhole.wapa.tmall.com/wow/an/cs/act/wupr?wh_biz=tm&wh_pid=go-shopping/1773d7acee3&disableNav=YES&contentId=%s&contentType=%s&itemSetIds=%s";
-
+    public static String O2O_BD_JUMP_UTL = " https://pre-wormhole.wapa.tmall.com/wow/an/cs/act/wupr?wh_biz=tm&wh_pid=go-shopping/1773d7acee3&disableNav=YES&contentId=%s&contentType=%s&itemSetIds=%s&entryItemIds=%s";
 
     public static Object getValue(String key){
 
