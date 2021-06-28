@@ -1,8 +1,8 @@
-package com.tmall.wireless.tac.biz.processor.cnxh.utils;
+package com.tmall.wireless.tac.biz.processor.o2ocn.utils;
 
 import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
-import com.tmall.wireless.tac.biz.processor.cnxh.enums.O2OChannelEnum;
+import com.tmall.wireless.tac.biz.processor.o2ocn.enums.O2OChannelEnum;
 
 /**
  * @Author: luoJunChong

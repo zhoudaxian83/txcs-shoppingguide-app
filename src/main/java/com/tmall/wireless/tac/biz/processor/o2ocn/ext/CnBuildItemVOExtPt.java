@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.cnxh;
+package com.tmall.wireless.tac.biz.processor.o2ocn.ext;
 
 import java.util.Map;
 import java.util.Optional;
@@ -33,12 +33,12 @@ import org.springframework.stereotype.Service;
  * @Date: 2021/5/14 10:26
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+    useCase = ScenarioConstantApp.LOC_TYPE_O2O,
     scenario = ScenarioConstantApp.O2O_CNXH)
 @Service
-public class CaiNiXiHuanBuildItemVOExtPt implements BuildItemVOExtPt {
+public class CnBuildItemVOExtPt implements BuildItemVOExtPt {
 
-    Logger LOGGER = LoggerFactory.getLogger(CaiNiXiHuanBuildItemVOExtPt.class);
+    Logger LOGGER = LoggerFactory.getLogger(CnBuildItemVOExtPt.class);
 
     @Autowired
     TacLogger tacLogger;

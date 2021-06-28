@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.cnxh;
+package com.tmall.wireless.tac.biz.processor.o2ocn.ext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,8 +12,8 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
-import com.tmall.wireless.tac.biz.processor.cnxh.enums.O2OChannelEnum;
-import com.tmall.wireless.tac.biz.processor.cnxh.utils.O2OChannelUtil;
+import com.tmall.wireless.tac.biz.processor.o2ocn.enums.O2OChannelEnum;
+import com.tmall.wireless.tac.biz.processor.o2ocn.utils.O2OChannelUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,10 @@ import org.springframework.stereotype.Service;
  * @author luojunchong
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+    useCase = ScenarioConstantApp.LOC_TYPE_O2O,
     scenario = ScenarioConstantApp.O2O_CNXH)
 @Service
-public class CaiNiXiHuanItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
+public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
     public static final long APP_ID = 22171;
 
     @Autowired

@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.cnxh;
+package com.tmall.wireless.tac.biz.processor.o2ocn;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Service;
  * Created by yangqing.byq on 2021/4/6.
  */
 @Service
-public class CaiNiXiHuanPageBannerItemInfoScene {
+public class CnPageBannerItemInfoScene {
     @Autowired
     TacLogger tacLogger;
 
@@ -51,7 +51,7 @@ public class CaiNiXiHuanPageBannerItemInfoScene {
         sgFrameworkContextItem.setRequestParams(context.getParams());
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstant.BIZ_TYPE_SUPERMARKET);
-        sceneInfo.setSubBiz(ScenarioConstant.LOC_TYPE_B2C);
+        sceneInfo.setSubBiz(ScenarioConstant.LOC_TYPE_O2O);
         sceneInfo.setScene(ScenarioConstantApp.O2O_CNXH);
         sgFrameworkContextItem.setSceneInfo(sceneInfo);
 

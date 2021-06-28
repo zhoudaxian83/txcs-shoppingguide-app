@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.cnxh;
+package com.tmall.wireless.tac.biz.processor.o2ocn;
 
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.EntityVO;
@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CaiNiXiHuanHandler extends RpmReactiveHandler<SgFrameworkResponse<EntityVO>> {
+public class CnHandler extends RpmReactiveHandler<SgFrameworkResponse<EntityVO>> {
     @Autowired
-    CaiNiXiHuanPageBannerItemInfoScene caiNiXiHuanPageBannerItemInfoScene;
+    CnPageBannerItemInfoScene caiNiXiHuanPageBannerItemInfoScene;
 
     @Override
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {

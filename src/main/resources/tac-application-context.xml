@@ -35,9 +35,9 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport"/>
 
     <!--猜你喜欢-->
-    <!--    <bean class="com.tmall.wireless.tac.biz.processor.cnxh.CaiNiXiHuanOriginDataItemQueryExtPt"/>-->
-    <bean class="com.tmall.wireless.tac.biz.processor.cnxh.CaiNiXiHuanItemOriginDataRequestExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.cnxh.CaiNiXiHuanBuildItemVOExtPt"/>
+    <!--    <bean class="com.tmall.wireless.tac.biz.processor.o2ocn.CaiNiXiHuanOriginDataItemQueryExtPt"/>-->
+    <bean class="com.tmall.wireless.tac.biz.processor.o2ocn.ext.CntemOriginDataRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.o2ocn.ext.CnBuildItemVOExtPt"/>
 
 
 </beans>

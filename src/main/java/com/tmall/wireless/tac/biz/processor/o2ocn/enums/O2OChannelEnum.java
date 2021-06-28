@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.cnxh.enums;
+package com.tmall.wireless.tac.biz.processor.o2ocn.enums;
 
 /**
  * @Author: luoJunChong
