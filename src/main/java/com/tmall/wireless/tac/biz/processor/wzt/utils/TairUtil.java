@@ -1,5 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.wzt.utils;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 
@@ -22,11 +27,6 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Author: luoJunChong
@@ -103,7 +103,6 @@ public class TairUtil {
     public List<ColumnCenterDataSetItemRuleDTO> getOriginalRecommend(Long smAreaId) {
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = getCachePmtRuleDataItemRuleDTOList(smAreaId);
         Long stickMax = 10000L;
-        List<ColumnCenterDataSetItemRuleDTO> items = null;
         if (com.ali.unit.rule.util.lang.CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOS)) {
             tacLogger.info(LOG_PREFIX + "getOriginalRecommend获取tair原始数据为空，请检查tair数据源配置");
             return Lists.newArrayList();
@@ -126,10 +125,10 @@ public class TairUtil {
                     Comparator.comparing(ColumnCenterDataSetItemRuleDTO::getIndex)).collect(
                     Collectors.toList());
             } catch (Exception e) {
-                tacLogger.error(LOG_PREFIX + "getOriginalRecommend获取tair原始items异常：" + JSON.toJSONString(items), e);
+                tacLogger.error(LOG_PREFIX + "getOriginalRecommend获取tair原始items异常"e);
             }
         }
-        return items;
+        return Lists.newArrayList();
     }
 
     private List<PmtRuleDataItemRuleDTO> getCachePmtRuleDataItemRuleDTOList(Long smAreaId) {

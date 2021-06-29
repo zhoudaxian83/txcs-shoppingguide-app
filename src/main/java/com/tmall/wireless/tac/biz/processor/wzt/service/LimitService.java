@@ -74,7 +74,8 @@ public class LimitService {
             Boolean success = jsonObject.getBoolean(Constant.SUCCESS);
             //适配异常情况
             if (success == null) {
-                tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue+"|jsonObject："+JSON.toJSONString(jsonObject));
+                tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue + "|jsonObject：" + JSON
+                    .toJSONString(jsonObject));
                 LOGGER.error("限购接口RPC调用返回异常");
                 return null;
             }
@@ -93,7 +94,6 @@ public class LimitService {
             e.printStackTrace();
         }
         return null;
-
     }
 
     public Map<Long, List<ItemLimitDTO>> getItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
@@ -102,7 +102,11 @@ public class LimitService {
         if (false) {
             limitResult = this.mock();
         } else {
-            limitResult = this.getItemLimitResult(this.buildGetItemLimitParam(sgFrameworkContextItem));
+            Map<String, Object> param = this.buildGetItemLimitParam(sgFrameworkContextItem);
+            limitResult = this.getItemLimitResult(param);
+            //TODO
+            tacLogger.info("getItemLimitResult-param:" + JSON.toJSONString(param));
+            tacLogger.info("getItemLimitResult-limitResult:" + JSON.toJSONString(limitResult));
         }
         return limitResult;
     }

@@ -75,6 +75,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
             smAreaId);
+        //TODO
+        tacLogger.info("columnCenterDataSetItemRuleDTOList:" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
         List<Long> items = columnCenterDataSetItemRuleDTOList.stream().map(
             ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
         dataContext.setItems(items);
