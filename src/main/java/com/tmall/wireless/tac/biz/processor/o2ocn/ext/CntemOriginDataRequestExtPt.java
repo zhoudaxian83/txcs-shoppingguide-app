@@ -41,7 +41,9 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
     }
 
     /**
-     * https://tui.taobao.com/recommend?appid=22171&itemSetIdList=13545&smAreaId=330110&rt1HourStoreId=233930038&userId=1832025789&itemBusinessType=OneHour&isFirstPage=true
+     * https://tui.taobao.com/recommend?appid=22171&itemSetIdList=13545&smAreaId=330110&rt1HourStoreId=233930038
+     * &userId=1832025789&itemBusinessType=OneHour&isFirstPage=true
+     *
      * @param context
      * @return
      */
@@ -50,7 +52,7 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
         Map<String, String> params = new HashMap<>(16);
         String csa = MapUtil.getStringWithDefault(context.getRequestParams(), "csa", "");
         AddressDTO addressDTO = null;
-        if(StringUtils.isNotBlank(csa)){
+        if (StringUtils.isNotBlank(csa)) {
             addressDTO = AddressUtil.parseCSA(csa);
         }
         recommendRequest.setAppId(Long.valueOf(Constants.APP_ID));
@@ -67,17 +69,17 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
         params.put("logicAreaId", logicAreaId);
         params.put("isFirstPage", (index == 0L) + "");
         if (O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)
-            || (addressDTO!=null && addressDTO.isRt1HourStoreCover())) {
+            || (addressDTO != null && addressDTO.isRt1HourStoreCover())) {
             params.put("rt1HourStoreId", String.valueOf(context.getLocParams().getRt1HourStoreId()));
             params.put("itemBusinessType", "OneHour");
             params.put("itemSetIdList", Constants.O2O_ITEMSET_ID);
         } else if (O2OChannelEnum.HALF_DAY.getCode().equals(O2OChannel)
-            || (addressDTO!=null && addressDTO.isRtHalfDayStoreCover())) {
+            || (addressDTO != null && addressDTO.isRtHalfDayStoreCover())) {
             params.put("itemBusinessType", "HalfDay");
             params.put("rtHalfDayStoreId", String.valueOf(context.getLocParams().getRtHalfDayStoreId()));
             params.put("itemSetIdList", Constants.O2O_ITEMSET_ID);
-        }else if(O2OChannelEnum.ALL_FRESH.getCode().equals(O2OChannel) ||
-            (addressDTO!=null && !addressDTO.isRtStoreCover())){
+        } else if (O2OChannelEnum.ALL_FRESH.getCode().equals(O2OChannel) ||
+            (addressDTO != null && !addressDTO.isRtStoreCover())) {
             params.put("itemBusinessType", "B2C");
             params.put("itemSetIdList", Constants.ALL_FRESH_ITEMSET_ID);
         }
@@ -87,8 +89,9 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
 
         HadesLogUtil.stream(ScenarioConstantApp.O2O_CNXH)
             .kv("step", "tppRequest")
-            .kv("tppRequest",JSON.toJSONString(recommendRequest))
+            .kv("tppRequest", JSON.toJSONString(recommendRequest))
             .error();
+        tacLogger.info("recommendRequest:" + JSON.toJSONString(recommendRequest));
         return recommendRequest;
 
     }
