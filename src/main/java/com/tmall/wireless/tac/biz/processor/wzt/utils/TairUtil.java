@@ -125,7 +125,7 @@ public class TairUtil {
                     Comparator.comparing(ColumnCenterDataSetItemRuleDTO::getIndex)).collect(
                     Collectors.toList());
             } catch (Exception e) {
-                tacLogger.error(LOG_PREFIX + "getOriginalRecommend获取tair原始items异常"e);
+                tacLogger.error(LOG_PREFIX + "getOriginalRecommend获取tair原始items异常", e);
             }
         }
         return Lists.newArrayList();
