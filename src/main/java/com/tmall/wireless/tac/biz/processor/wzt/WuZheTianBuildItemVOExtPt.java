@@ -12,6 +12,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.origindate.ItemInfoBySourceDTOOrigin;
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVOExtPt;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVoRequest;
 import com.tmall.txcs.gs.framework.model.ErrorCode;
@@ -21,6 +22,7 @@ import com.tmall.txcs.gs.model.spi.model.ItemDataDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -49,8 +51,9 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
-        ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
         Map<String, Object> userParams = buildItemVoRequest.getContext().getUserParams();
+        String umpChannel = MapUtil.getStringWithDefault(userParams, VoKeyConstantApp.UMP_CHANNEL,VoKeyConstantApp.CHANNEL_KEY);
+        ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
         boolean hasMainSource = false;
@@ -107,6 +110,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         itemEntityVO.put("specifications", specifications);
         itemEntityVO.put("sellout", sellout);
         itemEntityVO.put("itemDesc", itemDesc);
+        itemEntityVO.put(VoKeyConstantApp.UMP_CHANNEL,umpChannel);
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
