@@ -65,7 +65,7 @@ public class O2oBangdanService {
         Long smAreaId = MapUtil.getLongWithDefault(context.getAldParam(),"smAreaId",
             MapUtil.getLongWithDefault(context.getParams(),"smAreaId",0L));
         String contentSetIdList = MapUtil.getStringWithDefault(context.getAldParam(),"contentIds",
-            MapUtil.getStringWithDefault(context.getParams(),"contentIds","167004"));
+            MapUtil.getStringWithDefault(context.getParams(),"contentsId","167004"));
         sgFrameworkContextContent.getUserParams().put("contentSetIdList",contentSetIdList);
         sgFrameworkContextContent.setSceneInfo(getSceneInfo());
         sgFrameworkContextContent.setUserDO(getUserDO(context));
