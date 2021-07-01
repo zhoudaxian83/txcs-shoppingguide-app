@@ -84,6 +84,7 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
                     generalItem.put("hasMore", response.isHasMore());
                     generalItem.put("index", response.getIndex());
                     List<GeneralItem> re = Lists.newArrayList();
+                    re.add(generalItem);
                     return re;
                 })
                 .map(TacResult::newResult)
