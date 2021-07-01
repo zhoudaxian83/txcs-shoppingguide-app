@@ -26,7 +26,7 @@ public class AldUrlParamUtil {
             return Maps.newHashMap();
         }
 
-        String[] split = url.split(",");
+        String[] split = url.split("\\?");
 
         if (split.length < 2) {
             return Maps.newHashMap();
