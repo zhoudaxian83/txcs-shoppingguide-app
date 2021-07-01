@@ -75,16 +75,9 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
                     }
                     response.getExtInfos().put("contentModel", contentInfo);
 
-                    GeneralItem generalItem = new GeneralItem();
-                    generalItem.put("success", response.isSuccess());
-                    generalItem.put("errorCode", response.getErrorCode());
-                    generalItem.put("errorMsg", response.getErrorMsg());
-                    generalItem.put("itemAndContentList", response.getItemAndContentList());
-                    generalItem.put("extInfos", response.getExtInfos());
-                    generalItem.put("hasMore", response.isHasMore());
-                    generalItem.put("index", response.getIndex());
+
                     List<GeneralItem> re = Lists.newArrayList();
-                    re.add(generalItem);
+                    re.add(convertAldItem(response));
                     return re;
                 })
                 .map(TacResult::newResult)
@@ -94,6 +87,19 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
                 })
                 .onErrorReturn(r -> TacResult.errorResult(""));
 
+    }
+
+    private GeneralItem convertAldItem(SgFrameworkResponse<EntityVO> response) {
+        GeneralItem generalItem = new GeneralItem();
+        generalItem.put("success", response.isSuccess());
+        generalItem.put("errorCode", response.getErrorCode());
+        generalItem.put("errorMsg", response.getErrorMsg());
+        generalItem.put("itemAndContentList", response.getItemAndContentList());
+        generalItem.put("extInfos", response.getExtInfos());
+        generalItem.put("hasMore", response.isHasMore());
+        generalItem.put("index", response.getIndex());
+
+        return generalItem;
     }
 
     private UserDO getUserDO(UserInfo userInfo) {
