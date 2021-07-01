@@ -134,6 +134,8 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     contentInfo.put("contentType",RenderContentTypeEnum.recipeContent.getType());
                 } else if (type.equals(SceneType.MEDIA.name())) {
                     contentInfo.put("contentType",RenderContentTypeEnum.mediaContent.getType());
+                } else if (marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(SceneType.BOARD.name())) {
+                    contentInfo.put("contentType",RenderContentTypeEnum.bangdanO2OContent.getType());
                 } else if (type.equals(SceneType.BOARD.name())) {
                     contentInfo.put("contentType",RenderContentTypeEnum.bangdanContent.getType());
                 } else {
