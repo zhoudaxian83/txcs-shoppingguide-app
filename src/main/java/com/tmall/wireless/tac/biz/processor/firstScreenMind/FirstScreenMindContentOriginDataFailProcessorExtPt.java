@@ -62,7 +62,6 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             PageInfoDO::getPageSize).orElse(needSize);
         boolean isSuccess = checkSuccess(originDataDTO);
         if(isSuccess){
-        //if(true){
             return originDataDTO;
         }
         List<String> sKeyList = Lists.newArrayList();
