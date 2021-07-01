@@ -4,15 +4,18 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.*;
 import com.tmall.txcs.gs.framework.model.meta.*;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceContent;
+import com.tmall.txcs.gs.framework.support.LogUtil;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.MindUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
@@ -28,8 +31,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.spec.OAEPParameterSpec;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -43,6 +48,7 @@ public class FirstScreenMindContentScene {
 
     public Flowable<TacResult<SgFrameworkResponse<ContentVO>>> recommend(Context context) {
 
+        long startTime = System.currentTimeMillis();
         tacLogger.info("***FirstScreenMindContentScene context***:"+ JSON.toJSONString(context));
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
@@ -63,6 +69,11 @@ public class FirstScreenMindContentScene {
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
         tacLogger.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
         LOGGER.info("*****FirstScreenMindContentScene sgFrameworkContextContent.toString()***:"+sgFrameworkContextContent.toString());
+
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("step", "requestLog")
+                .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
+                .info();
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> {
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
@@ -73,7 +84,10 @@ public class FirstScreenMindContentScene {
                     Map<String,Object> propertyMap = Maps.newHashMap();
 
                     propertyMap.put("index",response.getIndex());
-                    if((null == isFixPositionBanner) || ("".equals(isFixPositionBanner)) || StringUtils.equalsIgnoreCase("true",String.valueOf(isFixPositionBanner))){
+                    if((null == isFixPositionBanner
+                            || ("".equals(isFixPositionBanner))
+                            || StringUtils.equalsIgnoreCase("true",String.valueOf(isFixPositionBanner)))
+                            && getMindContentSetId(requestParams) > 0L){
                         if (response.isHasMore()) {
                             propertyMap.put("isFixPositionBanner", true);
                         } else {
@@ -90,6 +104,11 @@ public class FirstScreenMindContentScene {
                     }
                     response.getExtInfos().put("propertyMap", propertyMap);
                     LOGGER.info("FirstScreenMindContentScene JSON.toJSONString(response)"+JSON.toJSONString(response));
+                    HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                            .kv("step", "requestLog")
+                            .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
+                            .kv("rt", String.valueOf(System.currentTimeMillis() - startTime))
+                            .info();
                     return response;
                 }).map(TacResult::newResult)
                 .map(tacResult -> {
@@ -97,6 +116,13 @@ public class FirstScreenMindContentScene {
                     return tacResult;
                 }).onErrorReturn(r -> TacResult.errorResult(""));
     }
+
+    private Long getMindContentSetId(Map<String, Object> requestParams) {
+        return MapUtil.getLongWithDefault(requestParams,
+                RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_MIND, 0L);
+    }
+
+
     public SceneInfo getSceneInfo(){
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
