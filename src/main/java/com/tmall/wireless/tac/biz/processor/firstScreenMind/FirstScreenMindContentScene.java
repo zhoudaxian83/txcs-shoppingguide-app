@@ -153,6 +153,8 @@ public class FirstScreenMindContentScene {
         ItemGroupMetaInfo itemGroupMetaInfo3 = new ItemGroupMetaInfo();
         itemGroupMetaInfo3.setGroupName("sm_O2ONextDay");
         itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        ItemGroupMetaInfo itemGroupMetaInfo4 = new ItemGroupMetaInfo();
+        itemGroupMetaInfo3.setGroupName("sm_O2O");
 
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         itemGroupMetaInfoList.add(itemGroupMetaInfo);

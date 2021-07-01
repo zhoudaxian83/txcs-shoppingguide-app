@@ -61,8 +61,8 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             SgFrameworkContext::getUserPageInfo).map(
             PageInfoDO::getPageSize).orElse(needSize);
         boolean isSuccess = checkSuccess(originDataDTO);
-        //if(isSuccess){
-        if(true){
+        if(isSuccess){
+        //if(true){
             return originDataDTO;
         }
         List<String> sKeyList = Lists.newArrayList();
