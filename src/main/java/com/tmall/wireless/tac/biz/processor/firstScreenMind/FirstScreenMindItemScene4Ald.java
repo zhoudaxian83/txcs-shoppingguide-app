@@ -61,7 +61,7 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
 
         PageInfoDO pageInfoDO = new PageInfoDO();
         pageInfoDO.setIndex(0);
-        pageInfoDO.setPageSize(20);
+        pageInfoDO.setPageSize(30);
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
         tacLogger.info("***FirstScreenMindItemScene sgFrameworkContextItem.toString()***:"+sgFrameworkContextItem.toString());
 
