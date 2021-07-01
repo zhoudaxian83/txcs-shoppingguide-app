@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
+import com.ali.com.google.common.collect.Lists;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
@@ -20,6 +21,8 @@ public class FirstScreenMindItemAldHandler extends TacReactiveHandler4Ald {
     FirstScreenMindItemScene firstScreenMindItemScene;
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
-        return Flowable.just(TacResult.errorResult("error"));
+        GeneralItem generalItem = new GeneralItem();
+        generalItem.putIfAbsent("jinzhou_title", "jinzhou_title");
+        return Flowable.just(TacResult.newResult(Lists.newArrayList(generalItem)));
     }
 }
