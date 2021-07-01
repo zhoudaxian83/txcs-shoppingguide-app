@@ -85,14 +85,18 @@ public class FirstScreenMindItemScene {
 
     }
 
-    private Map<String, Object> queryContentInfo(SgFrameworkContextItem sgFrameworkContextItem) {
+    protected Map<String, Object> queryContentInfo(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<String, Object> contentInfo = Maps.newHashMap();
         Long moduleId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "moduleId", 0L);
         if (moduleId <= 0) {
+            moduleId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "contentId", 0L);;
+        }
+        if (moduleId <= 0) {
             return contentInfo;
         }
+        Long contentId = moduleId;
         Map<Long, Map<String, Object>> contentIdToContentInfoMap = contentInfoSupport.queryContentInfoByContentIdList(Lists.newArrayList(moduleId));
-        return Optional.ofNullable(contentIdToContentInfoMap).map(map -> map.get(moduleId)).orElse(Maps.newHashMap());
+        return Optional.ofNullable(contentIdToContentInfoMap).map(map -> map.get(contentId)).orElse(Maps.newHashMap());
     }
 
     public SceneInfo getSceneInfo(){
