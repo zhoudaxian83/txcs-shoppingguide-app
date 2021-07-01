@@ -83,7 +83,7 @@ public class FirstScreenMindItemScene {
 
     }
 
-    private Map<String, Object> queryContentInfo(SgFrameworkContextItem sgFrameworkContextItem) {
+    protected Map<String, Object> queryContentInfo(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<String, Object> contentInfo = Maps.newHashMap();
         Long moduleId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "moduleId", 0L);
         if (moduleId <= 0) {
