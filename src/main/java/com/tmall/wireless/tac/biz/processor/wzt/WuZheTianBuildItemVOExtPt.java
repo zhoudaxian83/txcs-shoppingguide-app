@@ -79,7 +79,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
                 ItemDataDTO itemDataDTO = itemInfoBySourceDTOMain.getItemDTO();
                 canBuy = itemDataDTO.isCanBuy();
                 sellout = itemDataDTO.isSellOut();
-
+                tacLogger.info("sellout:sellout="+sellout+""+itemDataDTO.getItemId());
                 JSONObject itemPromotionResp = (JSONObject)itemDataDTO.getItemPromotionResp();
                 itemDesc = buildItemDesc(itemPromotionResp);
                 specifications = itemDataDTO.getSpecDetail();
