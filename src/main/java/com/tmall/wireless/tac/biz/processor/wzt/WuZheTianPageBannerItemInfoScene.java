@@ -25,6 +25,7 @@ import com.tmall.txcs.gs.model.biz.context.PmtParams;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.LimitItemUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -90,6 +91,19 @@ public class WuZheTianPageBannerItemInfoScene {
                 List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
                 if (!CollectionUtils.isEmpty(originalEntityVOList)) {
                     List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
+
+                    originalEntityVOList.forEach(entityVO -> {
+                        ItemLimitDTO itemLimitDTO = (ItemLimitDTO)entityVO.get("itemLimit");
+                        boolean canBuy = (boolean)entityVO.get("canBuy");
+                        boolean sellout = (boolean)entityVO.get("sellout");
+                        boolean limit = LimitItemUtil.notLimit(itemLimitDTO);
+                        tacLogger.info("限购结果：canBuy="+canBuy+"limit="+limit+"sellout="+sellout);
+                        //去掉超出限购的，如果都超出限购则正常放回全部数据
+                        //且拥有库存，可以购买的
+                        if (limit && canBuy && sellout) {
+                            noLimitEntityVOList.add(entityVO);
+                        }
+                    });
                     if (noLimitEntityVOList.size() != originalEntityVOList.size()) {
                         tacResult.getData().setItemAndContentList(noLimitEntityVOList);
                     }
