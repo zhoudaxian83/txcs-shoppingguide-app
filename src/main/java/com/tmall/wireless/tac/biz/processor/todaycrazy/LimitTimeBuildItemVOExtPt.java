@@ -23,7 +23,6 @@ import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.io.JsonStringEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -104,7 +103,7 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
             .info();
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
-        itemEntityVO.put("isSellout",getIsSellout(itemEntityVO,canBuy,sellout));
+        itemEntityVO.put("soldOut",getSoldOut(itemEntityVO,canBuy,sellout));
         itemEntityVO.put(VoKeyConstantApp.UMP_CHANNEL,umpChannel);
 
         return Response.success(itemEntityVO);
@@ -117,8 +116,8 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
      * @param sellout
      * @return
      */
-    public boolean getIsSellout(ItemEntityVO itemEntityVO,boolean canBuy,boolean sellout){
-        boolean isSellout = false;
+    public boolean getSoldOut(ItemEntityVO itemEntityVO,boolean canBuy,boolean sellout){
+        boolean soldOut = false;
         /**总量限售**/
         int totalLimit = 0;
         /**已售总量**/
@@ -127,15 +126,15 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
         int userLimit = 0;
         /**个人已购数量**/
         int userUsedCount = 0;
-        if(itemEntityVO.get(Constant.ITEM_LIMIT_RESULT) != null && itemEntityVO.get(Constant.ITEM_LIMIT_RESULT) instanceof Map){
-            Map<String, Object> itemLimitResult = (Map<String, Object>)itemEntityVO.get(Constant.ITEM_LIMIT_RESULT);
+        if(itemEntityVO.get(Constant.ITEM_LIMIT_RESULT) != null && itemEntityVO.getJSONArray(Constant.ITEM_LIMIT_RESULT).getJSONObject(0) instanceof Map){
+            Map<String, Object> itemLimitResult = (Map<String, Object>)itemEntityVO.getJSONArray(Constant.ITEM_LIMIT_RESULT).getJSONObject(0);
             totalLimit = MapUtil.getIntWithDefault(itemLimitResult,"totalLimit",0);
             usedCount = MapUtil.getIntWithDefault(itemLimitResult,"usedCount",0);
             userLimit = MapUtil.getIntWithDefault(itemLimitResult,"userLimit",0);
             userUsedCount = MapUtil.getIntWithDefault(itemLimitResult,"userUsedCount",0);
 
         }
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY+"1")
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
             .kv("canBuy", String.valueOf(canBuy))
             .kv("sellout", String.valueOf(sellout))
             .kv("totalLimit",String.valueOf(totalLimit))
@@ -145,9 +144,9 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
             .kv("itemLimitResult", JSON.toJSONString(itemEntityVO.get(Constant.ITEM_LIMIT_RESULT)))
             .info();
         if(!canBuy || sellout || usedCount >= totalLimit || userUsedCount >= userLimit){
-            isSellout = true;
+            soldOut = true;
         }
-        return isSellout;
+        return soldOut;
     }
 
     private String processScm(String originScm, Map<String, String> scmKeyValue) {
