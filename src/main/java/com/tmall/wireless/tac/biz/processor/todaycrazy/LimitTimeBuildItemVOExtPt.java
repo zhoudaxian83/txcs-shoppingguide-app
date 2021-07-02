@@ -2,15 +2,13 @@ package com.tmall.wireless.tac.biz.processor.todaycrazy;
 
 import java.util.Map;
 import java.util.Optional;
-
 import com.alibaba.cola.extension.Extension;
-import com.alibaba.fastjson.JSONObject;
-
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import com.taobao.csp.hotsensor.fastjson.JSON;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.origindate.ItemInfoBySourceDTOOrigin;
-import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVOExtPt;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVoRequest;
 import com.tmall.txcs.gs.framework.model.ErrorCode;
@@ -21,6 +19,7 @@ import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +56,12 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
 
         String originScm = "";
         String itemUrl = "";
+        /**是否在架**/
+        boolean canBuy = false;
+        /**是否已售完,true:已售完**/
+        boolean sellout = false;
+        /**个人限购超出或总量限购超出或无库存或下架，均出抢光标**/
+        boolean isSellout = false;
 
         Map<String, String> trackPoint = Maps.newHashMap();
 
@@ -68,6 +73,9 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
                     .map(ItemInfoBySourceDTOMain::getItemDTO)
                     .map(ItemDataDTO::getDetailUrl)
                     .orElse("");
+                ItemDataDTO itemDataDTO = itemInfoBySourceDTOMain.getItemDTO();
+                canBuy = itemDataDTO.isCanBuy();
+                sellout = itemDataDTO.isSellOut();
             }
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOOrigin) {
                 ItemInfoBySourceDTOOrigin itemInfoBySourceDTOOrigin = (ItemInfoBySourceDTOOrigin) itemInfoBySourceDTO;
@@ -88,12 +96,54 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
 
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
-
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("canBuy", String.valueOf(canBuy))
+            .kv("sellout", String.valueOf(sellout))
+            .kv("itemLimitResult", JSON.toJSONString(itemEntityVO.get(Constant.ITEM_LIMIT_RESULT)))
+            .info();
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
+        itemEntityVO.put("soldOut",getSoldOut(itemEntityVO,canBuy,sellout));
         itemEntityVO.put(VoKeyConstantApp.UMP_CHANNEL,umpChannel);
 
         return Response.success(itemEntityVO);
+    }
+
+    /**
+     * 是否抢光打标：个人限购超出或总量限购超出或无库存或下架，均出抢光标
+     * @param itemEntityVO
+     * @param canBuy
+     * @param sellout
+     * @return
+     */
+    public boolean getSoldOut(ItemEntityVO itemEntityVO,boolean canBuy,boolean sellout){
+        boolean soldOut = false;
+        /**总量限售**/
+        int totalLimit = 0;
+        /**已售总量**/
+        int usedCount = 0;
+        /**个人限售**/
+        int userLimit = 0;
+        /**个人已购数量**/
+        int userUsedCount = 0;
+        if(itemEntityVO.get(Constant.ITEM_LIMIT_RESULT) != null && itemEntityVO.getJSONArray(Constant.ITEM_LIMIT_RESULT).getJSONObject(0) instanceof Map){
+            Map<String, Object> itemLimitResult = (Map<String, Object>)itemEntityVO.getJSONArray(Constant.ITEM_LIMIT_RESULT).getJSONObject(0);
+            totalLimit = MapUtil.getIntWithDefault(itemLimitResult,"totalLimit",0);
+            usedCount = MapUtil.getIntWithDefault(itemLimitResult,"usedCount",0);
+            userLimit = MapUtil.getIntWithDefault(itemLimitResult,"userLimit",0);
+            userUsedCount = MapUtil.getIntWithDefault(itemLimitResult,"userUsedCount",0);
+
+        }
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("totalLimit",String.valueOf(totalLimit))
+            .kv("usedCount",String.valueOf(usedCount))
+            .kv("userLimit",String.valueOf(userLimit))
+            .kv("userUsedCount",String.valueOf(userUsedCount))
+            .info();
+        if(!canBuy || sellout || usedCount >= totalLimit || userUsedCount >= userLimit){
+            soldOut = true;
+        }
+        return soldOut;
     }
 
     private String processScm(String originScm, Map<String, String> scmKeyValue) {
