@@ -1,23 +1,15 @@
 package com.tmall.wireless.tac.biz.processor.wzt.utils;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
 import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author luojunchong
  */
 public class LimitItemUtil {
-    @Autowired
-    TacLogger tacLogger;
 
     public static boolean notLimit(ItemLimitDTO itemLimitDTO) {
         if (itemLimitDTO == null || itemLimitDTO.getSkuId() == null) {

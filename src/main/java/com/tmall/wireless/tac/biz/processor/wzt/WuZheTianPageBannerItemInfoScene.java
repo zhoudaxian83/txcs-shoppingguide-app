@@ -3,8 +3,6 @@ package com.tmall.wireless.tac.biz.processor.wzt;
 import java.util.List;
 import java.util.Optional;
 
-import com.alibaba.fastjson.JSON;
-
 import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
@@ -90,8 +88,8 @@ public class WuZheTianPageBannerItemInfoScene {
             .map(TacResult::newResult).map(tacResult -> {
                 List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
                 if (!CollectionUtils.isEmpty(originalEntityVOList)) {
-                    List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
-
+                    //List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
+                    List<EntityVO> noLimitEntityVOList = Lists.newArrayList();
                     originalEntityVOList.forEach(entityVO -> {
                         ItemLimitDTO itemLimitDTO = (ItemLimitDTO)entityVO.get("itemLimit");
                         boolean canBuy = (boolean)entityVO.get("canBuy");
