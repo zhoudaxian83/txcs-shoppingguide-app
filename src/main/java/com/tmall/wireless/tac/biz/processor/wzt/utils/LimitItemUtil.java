@@ -42,14 +42,15 @@ public class LimitItemUtil {
         }
     }
 
-
-
     public static List<EntityVO> doLimitItems(List<EntityVO> entityVOList) {
         List<EntityVO> noLimitEntityVOList = Lists.newArrayList();
         entityVOList.forEach(entityVO -> {
             ItemLimitDTO itemLimitDTO = (ItemLimitDTO)entityVO.get("itemLimit");
+            boolean canBuy = (boolean)entityVO.get("canBuy");
+            boolean sellout = (boolean)entityVO.get("sellout");
             //去掉超出限购的，如果都超出限购则正常放回全部数据
-            if (LimitItemUtil.notLimit(itemLimitDTO)) {
+            //且拥有库存，可以购买的
+            if (LimitItemUtil.notLimit(itemLimitDTO) && canBuy && sellout) {
                 noLimitEntityVOList.add(entityVO);
             }
         });

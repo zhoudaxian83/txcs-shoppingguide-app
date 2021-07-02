@@ -133,7 +133,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
             BigDecimal chaoShiPrice = itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(chaoShiPriceKey)
                 .getBigDecimal(price);
             String text = "专享补贴";
-            return text + chaoShiPrice.subtract(showPrice);
+            return text + chaoShiPrice.subtract(showPrice)+"元";
         } else {
             return null;
         }
