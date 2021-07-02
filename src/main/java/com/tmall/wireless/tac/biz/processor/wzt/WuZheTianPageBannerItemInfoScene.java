@@ -89,7 +89,7 @@ public class WuZheTianPageBannerItemInfoScene {
                 List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
                 if (!CollectionUtils.isEmpty(originalEntityVOList)) {
                     List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
-                    if (noLimitEntityVOList.size() != originalEntityVOList.size()) {
+                    if (noLimitEntityVOList.size() != originalEntityVOList.size() && noLimitEntityVOList.size() != 0) {
                         tacResult.getData().setItemAndContentList(noLimitEntityVOList);
                     }
                 }
