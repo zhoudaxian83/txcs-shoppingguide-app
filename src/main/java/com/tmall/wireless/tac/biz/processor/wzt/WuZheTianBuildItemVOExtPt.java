@@ -52,7 +52,8 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Map<String, Object> userParams = buildItemVoRequest.getContext().getUserParams();
-        String umpChannel = MapUtil.getStringWithDefault(userParams, VoKeyConstantApp.UMP_CHANNEL,VoKeyConstantApp.CHANNEL_KEY);
+        String umpChannel = MapUtil.getStringWithDefault(userParams, VoKeyConstantApp.UMP_CHANNEL,
+            VoKeyConstantApp.CHANNEL_KEY);
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
@@ -79,7 +80,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
                 ItemDataDTO itemDataDTO = itemInfoBySourceDTOMain.getItemDTO();
                 canBuy = itemDataDTO.isCanBuy();
                 sellout = itemDataDTO.isSellOut();
-                tacLogger.info("sellout:sellout="+sellout+""+itemDataDTO.getItemId());
+                tacLogger.info("sellout:sellout=" + sellout + "itemId=" + itemDataDTO.getItemId());
                 JSONObject itemPromotionResp = (JSONObject)itemDataDTO.getItemPromotionResp();
                 itemDesc = buildItemDesc(itemPromotionResp);
                 specifications = itemDataDTO.getSpecDetail();
@@ -110,7 +111,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
         itemEntityVO.put("specifications", specifications);
         itemEntityVO.put("sellout", sellout);
         itemEntityVO.put("itemDesc", itemDesc);
-        itemEntityVO.put(VoKeyConstantApp.UMP_CHANNEL,umpChannel);
+        itemEntityVO.put(VoKeyConstantApp.UMP_CHANNEL, umpChannel);
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
         }
@@ -133,7 +134,7 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
             BigDecimal chaoShiPrice = itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(chaoShiPriceKey)
                 .getBigDecimal(price);
             String text = "专享补贴";
-            return text + chaoShiPrice.subtract(showPrice)+"元";
+            return text + chaoShiPrice.subtract(showPrice) + "元";
         } else {
             return null;
         }
