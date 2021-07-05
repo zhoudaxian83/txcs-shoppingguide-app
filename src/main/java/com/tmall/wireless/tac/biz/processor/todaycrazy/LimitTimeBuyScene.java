@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.todaycrazy;
 
 import com.google.common.collect.Lists;
+import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -24,6 +25,7 @@ import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +119,7 @@ public class LimitTimeBuyScene {
             generalItem.put("startTime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
             generalItem.put("__pos__",i.getAndIncrement());
             if(limitBuyDto.getIsHit()){
-                generalItem.put("itemAndContentList",sgFrameworkResponse.getItemAndContentList());
+                generalItem.put("itemAndContentList",soltOutSort(sgFrameworkResponse.getItemAndContentList()));
             }
             generalItemse.add(generalItem);
 
@@ -124,6 +127,30 @@ public class LimitTimeBuyScene {
         });
         return generalItemse;
     }
+
+    /**
+     * 已抢光商品顺序下沉
+     * @param itemEntityVOS
+     * @return
+     */
+    public List<ItemEntityVO> soltOutSort(List<ItemEntityVO> itemEntityVOS){
+        if(CollectionUtils.isEmpty(itemEntityVOS)){
+            return itemEntityVOS;
+        }
+        List<ItemEntityVO> frontList = new ArrayList<>();
+        List<ItemEntityVO> backList = new ArrayList<>();
+        itemEntityVOS.forEach(itemEntityVO -> {
+            if(null != itemEntityVO.get("soldOut") && (Boolean)itemEntityVO.get("soldOut")){
+                backList.add(itemEntityVO);
+            }else{
+                frontList.add(itemEntityVO);
+            }
+        });
+        frontList.addAll(backList);
+        return frontList;
+
+    }
+
 
     /**
      * 完善限购信息
