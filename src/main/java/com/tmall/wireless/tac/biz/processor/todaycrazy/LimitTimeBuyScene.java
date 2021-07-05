@@ -142,6 +142,7 @@ public class LimitTimeBuyScene {
         List<ItemEntityVO> backList = new ArrayList<>();
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
             .kv("soltOutSort","soltOutSort")
+            .kv("itemEntityVOS.size()",JSON.toJSONString(itemEntityVOS.size()))
             .kv("itemEntityVOS",JSON.toJSONString(itemEntityVOS))
             .info();
 
