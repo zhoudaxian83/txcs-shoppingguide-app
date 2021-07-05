@@ -112,8 +112,10 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 .kv("dingKengDeal","dingKengDeal")
                 .kv("ItemId",String.valueOf(item.getItemId()))
                 .kv("stick",String.valueOf(stick))
-                .kv("dingKengColumnCenterDataSetItemRuleDTO",JSON.toJSONString(dingKengColumnCenterDataSetItemRuleDTO))
+                .kv("item",JSON.toJSONString(item))
+                .kv("stick != null && 1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()",JSON.toJSONString(stick != null && 1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()))
                 .info();
+
             if(stick != null && 1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()){
                 stickMap.put(stick,item);
             }else{
