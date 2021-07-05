@@ -22,6 +22,7 @@ import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.DataContext;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.LogicPageUtil;
@@ -30,6 +31,8 @@ import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,10 +61,12 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     private static final String LOG_PREFIX = "WuZheTianOriginDataItemQueryExtPt-";
 
-    private static final Long APP_ID = 21431L;
+    Logger LOGGER = LoggerFactory.getLogger(WuZheTianBuildItemVOExtPt.class);
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
+        LOGGER.info(LOG_PREFIX + "test_log");
+        tacLogger.info(LOG_PREFIX + "test_log2");
         DataContext dataContext = new DataContext();
         Long smAreaId = SmAreaIdUtil.getSmAreaId(context);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
@@ -69,10 +74,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         dataContext.setIndex(index);
         dataContext.setPageSize(pageSize);
-        //        OriginDataDTO<ItemEntity> cacheOriginDataDTO = getItemToCacheOfArea(smAreaId);
-        //        if (cacheOriginDataDTO == null) {
         //tair获取推荐商品
-
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
             smAreaId);
         List<Long> items = columnCenterDataSetItemRuleDTOList.stream().map(
@@ -87,12 +89,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                     return new OriginDataDTO<>();
                 }
                 OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-                //this.setItemToCacheOfArea(originDataDTO, smAreaId);
                 return this.getItemPage(originDataDTO, dataContext);
             });
-        //        } else {
-        //            return Flowable.just(this.getItemPage(cacheOriginDataDTO, dataContext));
-        //        }
     }
 
     /**
@@ -106,7 +104,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setLogResult(true);
         recommendRequest.setUserId(userId);
-        recommendRequest.setAppId(APP_ID);
+        recommendRequest.setAppId(Constant.APP_ID);
         Map<String, String> params = Maps.newHashMap();
         params.put("userItemIdList", Joiner.on(",").join(itemIds));
         recommendRequest.setParams(params);
