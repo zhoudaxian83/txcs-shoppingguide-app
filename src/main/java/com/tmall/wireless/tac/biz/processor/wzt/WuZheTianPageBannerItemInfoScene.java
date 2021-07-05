@@ -87,14 +87,15 @@ public class WuZheTianPageBannerItemInfoScene {
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult).map(tacResult -> {
                 List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
-                tacLogger.info("过滤前数量:"+originalEntityVOList.size());
+                tacLogger.info("过滤前数量:" + originalEntityVOList.size());
                 if (!CollectionUtils.isEmpty(originalEntityVOList)) {
                     List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
                     if (noLimitEntityVOList.size() != originalEntityVOList.size() && noLimitEntityVOList.size() != 0) {
                         tacResult.getData().setItemAndContentList(noLimitEntityVOList);
                     }
                 }
-                tacLogger.info("过滤后数量:"+tacResult.getData().getItemAndContentList().size());
+                tacLogger.info("过滤后数量:" + tacResult.getData().getItemAndContentList().size());
+                tacResult.setHasMore(tacResult.getData().isHasMore());
                 return tacResult;
             })
             .onErrorReturn(r -> TacResult.errorResult(""));
