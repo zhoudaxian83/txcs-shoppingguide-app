@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.todaycrazy;
 
 import com.google.common.collect.Lists;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -139,6 +140,11 @@ public class LimitTimeBuyScene {
         }
         List<ItemEntityVO> frontList = new ArrayList<>();
         List<ItemEntityVO> backList = new ArrayList<>();
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("soltOutSort","soltOutSort")
+            .kv("itemEntityVOS",JSON.toJSONString(itemEntityVOS))
+            .info();
+
         itemEntityVOS.forEach(itemEntityVO -> {
             if(null != itemEntityVO.get("soldOut") && (Boolean)itemEntityVO.get("soldOut")){
                 backList.add(itemEntityVO);
@@ -146,6 +152,11 @@ public class LimitTimeBuyScene {
                 frontList.add(itemEntityVO);
             }
         });
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("soltOutSort","soltOutSort")
+            .kv("frontList",JSON.toJSONString(frontList))
+            .kv("backList",JSON.toJSONString(backList))
+            .info();
         frontList.addAll(backList);
         return frontList;
 
