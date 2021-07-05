@@ -80,17 +80,17 @@ public class ContentSetIdListUtil {
 
         List<Long> result = Lists.newArrayList();
         result.add(MapUtil
-            .getLongWithDefault(requestParams, RequestKeyConstantApp.VM_CONTENT_SET_BRAND, 0L));
+            .getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_BRAND, 0L));
         result.add(
-            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.VM_CONTENT_SET_O2O, 0L));
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_O2O, 0L));
         result.add(
-            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.VM_CONTENT_SET_B2C, 0L));
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, 0L));
         result.add(
-            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.VM_CONTENT_SET_RECIPE, 0L));
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RECIPE, 0L));
         result.add(
-            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.VM_CONTENT_SET_MEDIA, 0L));
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_MEDIA, 0L));
         result.add(
-            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.VM_CONTENT_SET_RANKING, 0L));
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING, 0L));
 
         return result.stream().filter(contentSetId -> contentSetId > 0).collect(Collectors.toList());
     }
@@ -103,17 +103,17 @@ public class ContentSetIdListUtil {
 
         List<Long> result = Lists.newArrayList();
         result.add(MapUtil
-            .getLongWithDefault(requestParams, RequestKeyConstantApp.VM_CONTENT_SET_BRAND, 0L));
+            .getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_BRAND, 0L));
         result.add(
-            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.VM_CONTENT_SET_O2O, 0L));
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_O2O, 0L));
         result.add(
-            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.VM_CONTENT_SET_B2C, 0L));
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, 0L));
         /*result.add(
             MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.VM_CONTENT_SET_RECIPE, 0L));*/
         result.add(
-            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.VM_CONTENT_SET_MEDIA, 0L));
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_MIND, 0L));
         result.add(
-            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.VM_CONTENT_SET_RANKING, 0L));
+            MapUtil.getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING, 0L));
 
         return result.stream().filter(contentSetId -> contentSetId > 0).collect(Collectors.toList());
     }
