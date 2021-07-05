@@ -73,10 +73,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //tair获取推荐商品
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
             smAreaId);
-        tacLogger.info("columnCenterDataSetItemRuleDTOList size:"+columnCenterDataSetItemRuleDTOList.size());
+        tacLogger.info("columnCenterDataSetItemRuleDTOList size:" + columnCenterDataSetItemRuleDTOList.size());
         List<Long> items = columnCenterDataSetItemRuleDTOList.stream().map(
             ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
         dataContext.setItems(items);
+        tacLogger.info("items" + items.size());
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
             .map(recommendResponseEntityResponse -> {
                 if (!recommendResponseEntityResponse.isSuccess()

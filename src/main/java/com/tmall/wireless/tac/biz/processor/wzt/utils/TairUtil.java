@@ -102,7 +102,6 @@ public class TairUtil {
      */
     public List<ColumnCenterDataSetItemRuleDTO> getOriginalRecommend(Long smAreaId) {
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = getCachePmtRuleDataItemRuleDTOList(smAreaId);
-        tacLogger.info("pmtRuleDataItemRuleDTOS size:"+pmtRuleDataItemRuleDTOS.size());
         tacLogger.info("pmtRuleDataItemRuleDTOS："+JSON.toJSONString(pmtRuleDataItemRuleDTOS));
         Long stickMax = 10000L;
         if (com.ali.unit.rule.util.lang.CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOS)) {
