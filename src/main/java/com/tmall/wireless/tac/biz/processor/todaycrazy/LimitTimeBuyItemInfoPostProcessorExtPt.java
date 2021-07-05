@@ -8,6 +8,7 @@ import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorExtPt;
 import com.tmall.txcs.gs.framework.extensions.itemdatapost.ItemInfoPostProcessorResp;
@@ -82,6 +83,10 @@ public class LimitTimeBuyItemInfoPostProcessorExtPt implements ItemInfoPostProce
         try {
             o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramsValue);
             JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                .kv("getItemLimitResult","getItemLimitResult")
+                .kv("jsonObject",jsonObject.toJSONString())
+                .info();
             if ((boolean)jsonObject.get(Constant.SUCCESS)) {
                 return (JSONObject)jsonObject.get(Constant.LIMIT_INFO);
             } else {
