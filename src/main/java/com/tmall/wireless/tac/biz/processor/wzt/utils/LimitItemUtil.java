@@ -43,7 +43,7 @@ public class LimitItemUtil {
             boolean limit = LimitItemUtil.notLimit(itemLimitDTO);
             //去掉超出限购的，如果都超出限购则正常放回全部数据
             //且拥有库存，可以购买的
-            if (limit && canBuy && sellout) {
+            if (limit && canBuy && !sellout) {
                 noLimitEntityVOList.add(entityVO);
             }
         });
