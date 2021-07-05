@@ -83,9 +83,15 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             }
         }
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitpmtRuleDataItemRuleDTOList.size()***"+hitpmtRuleDataItemRuleDTOList.size());
-        originDataDTO.setResult(aldInfoUtil.buildItemList(hitpmtRuleDataItemRuleDTOList));
+        originDataDTO.setResult(aldInfoUtil.buildItemList(dingKengDeal(hitpmtRuleDataItemRuleDTOList)));
         return Flowable.just(originDataDTO);
     }
+
+    /**
+     * 商品定坑
+     * @param hitpmtRuleDataItemRuleDTOList
+     * @return
+     */
     public List<ColumnCenterDataSetItemRuleDTO> dingKengDeal(List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList){
         if(CollectionUtils.isEmpty(hitpmtRuleDataItemRuleDTOList)){
             return hitpmtRuleDataItemRuleDTOList;
@@ -95,7 +101,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<ColumnCenterDataSetItemRuleDTO> originList = new ArrayList<>();
         hitpmtRuleDataItemRuleDTOList.forEach(item -> {
             Long stick = item.getDataRule().getStick();
-            if(1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()){
+            if(stick != null && 1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()){
                 stickMap.put(stick,item);
             }else{
                 originList.add(item);
