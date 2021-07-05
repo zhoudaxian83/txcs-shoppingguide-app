@@ -97,6 +97,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 contentInfo.put("contentTitle",tairSceneDTO.getTitle());
                 contentInfo.put("contentSubtitle",tairSceneDTO.getSubtitle());
                 contentInfo.put("itemSetIds", getItemSetIds(tairSceneDTO));
+                contentInfo.put("scm", contentEntity.getTrack_point());
                 Map<String, Object> tairPropertyMap = tairSceneDTO.getProperty();
                 //前后端映射  首页改版、逛超市映射字段相同
                 for(FrontBackMapEnum frontBackMapEnum : FrontBackMapEnum.values()){
