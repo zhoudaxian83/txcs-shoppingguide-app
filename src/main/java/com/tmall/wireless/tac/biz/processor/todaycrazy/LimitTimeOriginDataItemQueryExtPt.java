@@ -128,7 +128,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 .info();
         });
         int j = 0;
-        for(int i=1;i<hitpmtRuleDataItemRuleDTOList.size();i++){
+        for(int i=1;i<=hitpmtRuleDataItemRuleDTOList.size();i++){
             if(stickMap.containsKey(Long.valueOf(i))){
                 dingKengColumnCenterDataSetItemRuleDTO.add(stickMap.get(Long.valueOf(i)));
             }else{
