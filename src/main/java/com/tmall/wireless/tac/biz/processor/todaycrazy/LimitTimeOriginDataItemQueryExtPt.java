@@ -109,7 +109,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             Long stick = item.getDataRule().getStick();
             HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
                 .kv("dingKengDeal","dingKengDeal")
-                .kv("stick","stick")
+                .kv("stick",String.valueOf(stick))
                 .info();
             if(stick != null && 1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()){
                 stickMap.put(stick,item);
