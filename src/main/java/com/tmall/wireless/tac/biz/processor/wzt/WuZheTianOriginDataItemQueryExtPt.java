@@ -117,8 +117,12 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @return
      */
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
+        tacLogger.info("分页入参originDataDTO.getResult() size：" + originDataDTO.getResult().size());
+        tacLogger.info("分页入参dataContext.getIndex()：" + JSON.toJSONString(dataContext.getIndex()));
+        tacLogger.info("分页入参dataContext.getPageSize()：" + JSON.toJSONString(dataContext.getPageSize()));
         Pair<Boolean, List<ItemEntity>> pair = LogicPageUtil.getPage(originDataDTO.getResult(), dataContext.getIndex(),
             dataContext.getPageSize());
+        tacLogger.info("分页结果：" + JSON.toJSONString(pair));
         List<ItemEntity> itemEntities = pair.getRight();
         originDataDTO.setHasMore(pair.getLeft());
         originDataDTO.setResult(itemEntities);
