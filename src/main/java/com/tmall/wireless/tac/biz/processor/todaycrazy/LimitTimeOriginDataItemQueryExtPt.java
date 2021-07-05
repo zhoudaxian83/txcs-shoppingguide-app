@@ -101,7 +101,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<ColumnCenterDataSetItemRuleDTO> originList = new ArrayList<>();
         hitpmtRuleDataItemRuleDTOList.forEach(item -> {
             Long stick = item.getDataRule().getStick();
-            if(1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()){
+            if(stick != null && 1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()){
                 stickMap.put(stick,item);
             }else{
                 originList.add(item);
