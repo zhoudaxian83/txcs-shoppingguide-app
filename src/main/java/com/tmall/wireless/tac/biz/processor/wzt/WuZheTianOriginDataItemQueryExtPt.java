@@ -61,12 +61,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
     private static final String LOG_PREFIX = "WuZheTianOriginDataItemQueryExtPt-";
 
-    Logger LOGGER = LoggerFactory.getLogger(WuZheTianBuildItemVOExtPt.class);
-
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
-        LOGGER.info(LOG_PREFIX + "test_log");
-        tacLogger.info(LOG_PREFIX + "test_log2");
         DataContext dataContext = new DataContext();
         Long smAreaId = SmAreaIdUtil.getSmAreaId(context);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
