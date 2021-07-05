@@ -10,6 +10,8 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
+import com.tmall.dataenginer.client.api.crowd.domain.KvBasedFeature;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -99,23 +101,39 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<ColumnCenterDataSetItemRuleDTO> dingKengColumnCenterDataSetItemRuleDTO = Lists.newArrayList();
         Map<Long,ColumnCenterDataSetItemRuleDTO> stickMap = new HashMap<>();
         List<ColumnCenterDataSetItemRuleDTO> originList = new ArrayList<>();
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("dingKengDeal","dingKengDeal")
+            .kv("","");
+
         hitpmtRuleDataItemRuleDTOList.forEach(item -> {
             Long stick = item.getDataRule().getStick();
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                .kv("dingKengDeal","dingKengDeal")
+                .kv("stick",String.valueOf(stick))
+                .info();
             if(stick != null && 1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()){
                 stickMap.put(stick,item);
             }else{
                 originList.add(item);
             }
         });
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("dingKengDeal","dingKengDeal")
+            .kv("stickMap", JSON.toJSONString(stickMap))
+            .info();
         int j = 0;
         for(int i=1;i<hitpmtRuleDataItemRuleDTOList.size();i++){
             if(stickMap.containsKey(i)){
-                dingKengColumnCenterDataSetItemRuleDTO.add(stickMap.get(i));
+                dingKengColumnCenterDataSetItemRuleDTO.add(stickMap.get(Long.valueOf(i)));
             }else{
                 dingKengColumnCenterDataSetItemRuleDTO.add(originList.get(j));
                 j++;
             }
         }
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("dingKengDeal","dingKengDeal")
+            .kv("dingKengColumnCenterDataSetItemRuleDTO", JSON.toJSONString(dingKengColumnCenterDataSetItemRuleDTO))
+            .info();
         return dingKengColumnCenterDataSetItemRuleDTO;
     }
 }
