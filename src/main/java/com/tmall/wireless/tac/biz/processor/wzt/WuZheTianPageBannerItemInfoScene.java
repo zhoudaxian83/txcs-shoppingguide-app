@@ -93,6 +93,7 @@ public class WuZheTianPageBannerItemInfoScene {
                         tacResult.getData().setItemAndContentList(noLimitEntityVOList);
                     }
                 }
+                tacResult.setHasMore(tacResult.getData().isHasMore());
                 return tacResult;
             })
             .onErrorReturn(r -> TacResult.errorResult(""));
