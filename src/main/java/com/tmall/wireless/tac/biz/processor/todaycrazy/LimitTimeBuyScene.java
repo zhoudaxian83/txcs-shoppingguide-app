@@ -101,10 +101,9 @@ public class LimitTimeBuyScene {
 
     }
     public List<GeneralItem> buildGeneralItemse(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
-        perfect(sgFrameworkResponse,sgFrameworkContextItem);
+        /*perfect(sgFrameworkResponse,sgFrameworkContextItem);*/
         List<GeneralItem> generalItemse = new ArrayList<>();
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
-        Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
         //第几个时间段
         int index = aldInfoUtil.getIndex(params);
         //ald排期信息
