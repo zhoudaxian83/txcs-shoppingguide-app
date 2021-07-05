@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.todaycrazy;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TairUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,5 +85,31 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitpmtRuleDataItemRuleDTOList.size()***"+hitpmtRuleDataItemRuleDTOList.size());
         originDataDTO.setResult(aldInfoUtil.buildItemList(hitpmtRuleDataItemRuleDTOList));
         return Flowable.just(originDataDTO);
+    }
+    public List<ColumnCenterDataSetItemRuleDTO> dingKengDeal(List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList){
+        if(CollectionUtils.isEmpty(hitpmtRuleDataItemRuleDTOList)){
+            return hitpmtRuleDataItemRuleDTOList;
+        }
+        List<ColumnCenterDataSetItemRuleDTO> dingKengColumnCenterDataSetItemRuleDTO = Lists.newArrayList();
+        Map<Long,ColumnCenterDataSetItemRuleDTO> stickMap = new HashMap<>();
+        List<ColumnCenterDataSetItemRuleDTO> originList = new ArrayList<>();
+        hitpmtRuleDataItemRuleDTOList.forEach(item -> {
+            Long stick = item.getDataRule().getStick();
+            if(1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()){
+                stickMap.put(stick,item);
+            }else{
+                originList.add(item);
+            }
+        });
+        int j = 0;
+        for(int i=1;i<hitpmtRuleDataItemRuleDTOList.size();i++){
+            if(stickMap.containsKey(i)){
+                dingKengColumnCenterDataSetItemRuleDTO.add(stickMap.get(i));
+            }else{
+                dingKengColumnCenterDataSetItemRuleDTO.add(originList.get(j));
+                j++;
+            }
+        }
+        return dingKengColumnCenterDataSetItemRuleDTO;
     }
 }

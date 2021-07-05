@@ -95,6 +95,7 @@ public class AldInfoUtil {
         columnCenterDataSetItemRuleDTOS.forEach(columnCenterDataSetItemRuleDTO -> {
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(columnCenterDataSetItemRuleDTO.getItemId());
+            /**专享价、渠道价、限时疯抢、五折天里面的商品不会出现O2O的吧**/
             itemEntity.setO2oType(O2oType.B2C.name());
             itemEntity.setBizType(BizType.SM.getCode());
             itemEntity.setBusinessType(O2oType.B2C.name());
