@@ -121,8 +121,8 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             }
             HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
                 .kv("dingKengDeal","dingKengDeal")
-                .kv("stickMap",String.valueOf(stickMap))
-                .kv("originList",String.valueOf(originList))
+                .kv("stickMap",JSON.toJSONString(stickMap))
+                .kv("originList",JSON.toJSONString(originList))
                 .info();
         });
         int j = 0;
