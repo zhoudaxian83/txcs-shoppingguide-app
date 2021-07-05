@@ -71,15 +71,12 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
         List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList = Lists.newArrayList();
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = tairUtil.getCacheData();
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt pmtRuleDataItemRuleDTOList.size()***"+pmtRuleDataItemRuleDTOList.size());
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
             .kv("tair pmtRuleDataItemRuleDTOList.size()",String.valueOf(pmtRuleDataItemRuleDTOList.size()))
             .kv("tair pmtRuleDataItemRuleDTOList.size()",JSON.toJSONString(pmtRuleDataItemRuleDTOList))
             .info();
         for(PmtRuleDataItemRuleDTO pmtRule : pmtRuleDataItemRuleDTOList){
             List<ColumnCenterDataSetItemRuleDTO> itemList = pmtRule.getDataSetItemRuleDTOList();
-            LOGGER.info("****LimitTimeOriginDataItemQueryExtPt itemList.size()***"+itemList.size());
-            LOGGER.info("****LimitTimeOriginDataItemQueryExtPt JSON.toJSONString(itemList)***"+JSON.toJSONString(itemList));
             for(ColumnCenterDataSetItemRuleDTO item : itemList){
                 Long startTime = item.getDataRule().getItemScheduleStartTime().getTime()/1000;
                 Long endTime = item.getDataRule().getItemScheduleEndTime().getTime()/1000;
@@ -88,7 +85,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 }
             }
         }
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitpmtRuleDataItemRuleDTOList.size()***"+hitpmtRuleDataItemRuleDTOList.size());
         originDataDTO.setResult(aldInfoUtil.buildItemList(dingKengDeal(hitpmtRuleDataItemRuleDTOList)));
         return Flowable.just(originDataDTO);
     }
@@ -108,24 +104,11 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
         hitpmtRuleDataItemRuleDTOList.forEach(item -> {
             Long stick = item.getDataRule().getStick();
-            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-                .kv("dingKengDeal","dingKengDeal")
-                .kv("ItemId",String.valueOf(item.getItemId()))
-                .kv("stick",String.valueOf(stick))
-                .kv("item",JSON.toJSONString(item))
-                .kv("stick != null && 1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()",JSON.toJSONString(stick != null && 1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()))
-                .info();
-
             if(stick != null && 1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()){
                 stickMap.put(stick,item);
             }else{
                 originList.add(item);
             }
-            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-                .kv("dingKengDeal","dingKengDeal")
-                .kv("stickMap",JSON.toJSONString(stickMap))
-                .kv("originList",JSON.toJSONString(originList))
-                .info();
         });
         int j = 0;
         for(int i=1;i<=hitpmtRuleDataItemRuleDTOList.size();i++){
@@ -136,11 +119,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 j++;
             }
         }
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("dingKengDeal","dingKengDeal")
-            .kv("dingKengColumnCenterDataSetItemRuleDTO.size()",JSON.toJSONString(dingKengColumnCenterDataSetItemRuleDTO.size()))
-            .kv("dingKengColumnCenterDataSetItemRuleDTO",JSON.toJSONString(dingKengColumnCenterDataSetItemRuleDTO))
-            .info();
         return dingKengColumnCenterDataSetItemRuleDTO;
     }
 }

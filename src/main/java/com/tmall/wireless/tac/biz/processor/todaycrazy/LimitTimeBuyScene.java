@@ -140,12 +140,6 @@ public class LimitTimeBuyScene {
         }
         List<ItemEntityVO> frontList = new ArrayList<>();
         List<ItemEntityVO> backList = new ArrayList<>();
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("soltOutSort","soltOutSort")
-            .kv("itemEntityVOS.size()",JSON.toJSONString(itemEntityVOS.size()))
-            .kv("itemEntityVOS",JSON.toJSONString(itemEntityVOS))
-            .info();
-
         itemEntityVOS.forEach(itemEntityVO -> {
             if(null != itemEntityVO.get("soldOut") && (Boolean)itemEntityVO.get("soldOut")){
                 backList.add(itemEntityVO);
@@ -153,11 +147,6 @@ public class LimitTimeBuyScene {
                 frontList.add(itemEntityVO);
             }
         });
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("soltOutSort","soltOutSort")
-            .kv("frontList",JSON.toJSONString(frontList))
-            .kv("backList",JSON.toJSONString(backList))
-            .info();
         frontList.addAll(backList);
         return frontList;
 
