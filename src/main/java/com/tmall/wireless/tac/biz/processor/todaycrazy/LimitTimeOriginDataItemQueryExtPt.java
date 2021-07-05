@@ -119,6 +119,11 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             }else{
                 originList.add(item);
             }
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                .kv("dingKengDeal","dingKengDeal")
+                .kv("stickMap",String.valueOf(stickMap))
+                .kv("originList",String.valueOf(originList))
+                .info();
         });
         int j = 0;
         for(int i=1;i<hitpmtRuleDataItemRuleDTOList.size();i++){
