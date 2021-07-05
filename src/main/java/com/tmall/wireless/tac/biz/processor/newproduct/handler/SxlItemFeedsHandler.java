@@ -63,6 +63,7 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
          */
         List<Map<String, Object>> aldResList = getAldInfo(context);
 
+        tacLogger.info("aldResList:"+JSON.toJSONString(aldResList));
         if(CollectionUtils.isEmpty(aldResList)){
             return tacResultFlowable;
         }else{
