@@ -59,11 +59,11 @@ public class SxlOriginDataPostProcessorExtPt implements OriginDataPostProcessorE
         List<ItemEntity> finalItemEntities = Lists.newArrayList();
         Set<String> itemUniqueKeySet = Sets.newHashSet();
         originDataDTO.getResult().forEach(itemEntity -> {
-            ItemUniqueId itemUniqueId = itemEntity.getItemUniqueId();
-            if (itemUniqueKeySet.contains(itemUniqueId.toString())) {
+            String itemId = String.valueOf(itemEntity.getItemId());
+            if (itemUniqueKeySet.contains(itemId)) {
                 return;
             }
-            itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
+            itemUniqueKeySet.add(itemId);
             finalItemEntities.add(itemEntity);
 
         });
