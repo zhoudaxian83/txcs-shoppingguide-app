@@ -52,6 +52,8 @@ public class TairUtil {
             return tairKey+"_pre";
         }else if(enviroment.isOnline()){
             return tairKey;
+        }else if(enviroment.isDaily()){
+            return tairKey;
         }
         throw new RpmBizException("unsupport enviroment");
     }
