@@ -56,8 +56,7 @@ public class TairUtil {
         }
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
             .kv("TairUtil","formatHotTairKey")
-            .kv("enviroment", JSON.toJSONString(enviroment))
-            .kv("commonFactoryAbs.getEnviroment()", JSON.toJSONString(commonFactoryAbs.getEnviroment()))
+            .kv("commonFactoryAbs.getEnviroment()", JSON.toJSONString(commonFactoryAbs))
             .info();
         /*if(enviroment.isPreline()){
             return tairKey+"_pre";
