@@ -3,17 +3,23 @@ package com.tmall.wireless.tac.biz.processor.todaycrazy.utils;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+
 import com.google.common.collect.Lists;
+import com.taobao.mtop.api.jackson.JacksonSerializeConfigListener;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.model.exception.RpmBizException;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTairkeyEnum;
 import com.tmall.wireless.tac.client.domain.Enviroment;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.yaml.snakeyaml.emitter.ScalarAnalysis;
 
 /**
  * @author guijian
@@ -48,13 +54,18 @@ public class TairUtil {
                 tairKey = LimitTairkeyEnum.FLASH_SALE_HD.getKey();
                 break;
         }
-        /*if(enviroment.isPreline()){
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("TairUtil","formatHotTairKey")
+            .kv("enviroment", JSON.toJSONString(enviroment))
+            .info();
+        if(enviroment.isPreline()){
             return tairKey+"_pre";
         }else if(enviroment.isOnline()){
             return tairKey;
         }else if(enviroment.isDaily()){
             return tairKey;
-        }*/
+        }
+
         return tairKey+"_pre";
     }
     /**
@@ -65,6 +76,10 @@ public class TairUtil {
         List<PmtRuleDataItemRuleDTO> pmtRuleList = Lists.newArrayList();
         //5个key里面一样的
         String normalTairKey = TairUtil.formatHotTairKey();
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("TairUtil","formatHotTairKey")
+            .kv("normalTairKey", normalTairKey)
+            .info();
         Result<DataEntry> rst = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().get(NAME_SPACE,normalTairKey);
         if(rst == null || !rst.isSuccess() || rst.getValue() == null || rst.getValue().getValue() == null){
             return pmtRuleList;
