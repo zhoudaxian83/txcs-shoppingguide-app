@@ -86,14 +86,11 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
         recommendRequest.setParams(params);
         recommendRequest.setUserId(userId);
         tacLogger.info("recommendRequest:" + JSON.toJSONString(recommendRequest));
-
         HadesLogUtil.stream(ScenarioConstantApp.O2O_CNXH)
             .kv("step", "tppRequest")
             .kv("tppRequest", JSON.toJSONString(recommendRequest))
             .error();
-        tacLogger.info("recommendRequest:" + JSON.toJSONString(recommendRequest));
         return recommendRequest;
-
     }
 
     /**
