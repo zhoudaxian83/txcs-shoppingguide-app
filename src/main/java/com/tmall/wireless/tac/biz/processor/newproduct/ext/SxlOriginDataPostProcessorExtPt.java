@@ -44,7 +44,7 @@ public class SxlOriginDataPostProcessorExtPt implements OriginDataPostProcessorE
 
         tacLogger.info("SxlOriginDataPostProcessorExtPt index:"+index);
 
-        if(StringUtils.isBlank(topItemIds) || index == 0){
+        if(StringUtils.isBlank(topItemIds) || index > 0){
             return originDataDTO;
         }else{
             ItemEntity itemEntity = new ItemEntity();
