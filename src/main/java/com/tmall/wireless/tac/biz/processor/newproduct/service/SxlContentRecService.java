@@ -130,8 +130,8 @@ public class SxlContentRecService {
         //captain SceneCode场景code
         itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
 
-        String activeId = SxlSwitch.getValue("SXL_MAIN_ACTIVEX_ID");
-        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(StringUtils.isEmpty(activeId)?Constant.SXL_MAIN_ACTIVEX_ID:activeId));
+        //String activeId = SxlSwitch.getValue("SXL_MAIN_ACTIVEX_ID");
+        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(Constant.SXL_MAIN_ACTIVEX_ID));
 
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 
