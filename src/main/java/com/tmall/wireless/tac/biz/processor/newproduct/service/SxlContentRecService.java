@@ -145,7 +145,7 @@ public class SxlContentRecService {
 
         contentMetaInfo.setItemMetaInfo(itemMetaInfo);
         ContentRecommendMetaInfo contentRecommendMetaInfo = new ContentRecommendMetaInfo();
-        contentRecommendMetaInfo.setUseRecommendSpiV2(false);
+        contentRecommendMetaInfo.setUseRecommendSpiV2(true);
         contentMetaInfo.setContentRecommendMetaInfo(contentRecommendMetaInfo);
         return contentMetaInfo;
     }
