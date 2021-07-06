@@ -30,8 +30,7 @@ public class TairUtil {
     TairFactorySpi tairFactorySpi;
     @Autowired
     CommonFactoryAbs commonFactoryAbs;
-    @Autowired
-    private static Enviroment enviroment;
+
     private static final int NAME_SPACE = 184;
 
     public String formatHotTairKey(){
@@ -54,19 +53,13 @@ public class TairUtil {
                 tairKey = LimitTairkeyEnum.FLASH_SALE_HD.getKey();
                 break;
         }
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("TairUtil","getCacheData")
-            .kv("commonFactoryAbs.getEnviroment()", JSON.toJSONString(commonFactoryAbs))
-            .kv("commonFactoryAbs.getEnviroment()", JSON.toJSONString(commonFactoryAbs.getEnviroment()))
-            .info();
-        /*if(enviroment.isPreline()){
+        if(commonFactoryAbs.getEnviroment().isPreline()){
             return tairKey+"_pre";
-        }else if(enviroment.isOnline()){
+        }else if(commonFactoryAbs.getEnviroment().isOnline()){
             return tairKey;
-        }else if(enviroment.isDaily()){
+        }else if(commonFactoryAbs.getEnviroment().isDaily()){
             return tairKey;
-        }*/
-
+        }
         return tairKey+"_pre";
     }
     /**
