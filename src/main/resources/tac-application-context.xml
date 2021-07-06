@@ -60,4 +60,18 @@
     <bean class="com.tmall.wireless.tac.biz.processor.o2ocn.ext.CntemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.o2ocn.ext.CnBuildItemVOExtPt"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyScene"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeOriginDataItemQueryExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyItemInfoPostProcessorExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeCaptainRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TairUtil"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuildItemVOExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeItemOriginDataFailProcessorExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianOriginDataItemQueryExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianBuildItemVOExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianItemInfoPostProcessorExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianCaptainRequestExtPt"/>
 </beans>
