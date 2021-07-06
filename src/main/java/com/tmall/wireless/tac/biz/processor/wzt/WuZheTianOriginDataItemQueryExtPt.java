@@ -78,6 +78,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
         dataContext.setItems(items);
         tacLogger.info("items" + items.size());
+        tacLogger.info("itemsData" + JSON.toJSONString(items));
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
             .map(recommendResponseEntityResponse -> {
                 if (!recommendResponseEntityResponse.isSuccess()

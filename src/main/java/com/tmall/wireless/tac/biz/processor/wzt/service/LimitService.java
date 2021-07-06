@@ -104,6 +104,8 @@ public class LimitService {
         } else {
             Map<String, Object> param = this.buildGetItemLimitParam(sgFrameworkContextItem);
             limitResult = this.getItemLimitResult(param);
+            tacLogger.info("limit入参：" + JSON.toJSONString(param));
+            tacLogger.info("limit结果：" + JSON.toJSONString(limitResult));
         }
         return limitResult;
     }
