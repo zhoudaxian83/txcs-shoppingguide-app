@@ -38,12 +38,13 @@ public class SxlOriginDataPostProcessorExtPt implements OriginDataPostProcessorE
 
         OriginDataDTO<ItemEntity> originDataDTO = Optional.of(sgFrameworkContextItem).map(SgFrameworkContextItem::getItemEntityOriginDataDTO).orElse(null);
         String topItemIds = (String)sgFrameworkContextItem.getUserParams().get(Constant.SXL_TOP_ITEM_IDS);
+
+        int index = sgFrameworkContextItem.getUserPageInfo().getIndex();
         tacLogger.info("SxlOriginDataPostProcessorExtPt topItemIds:"+topItemIds);
-        if(StringUtils.isBlank(topItemIds)){
+        if(StringUtils.isBlank(topItemIds) || index == 0){
             return originDataDTO;
         }else{
             ItemEntity itemEntity = new ItemEntity();
-            itemEntity.setItemId((Long.valueOf(topItemIds.split(",")[0])));
             itemEntity.setBizType("sm");
             itemEntity.setO2oType("B2C");
             itemEntity.setBusinessType("B2C");

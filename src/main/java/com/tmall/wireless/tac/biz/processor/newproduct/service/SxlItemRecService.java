@@ -75,7 +75,6 @@ public class SxlItemRecService {
 
         String topItemIds = MapUtil.getStringWithDefault(context.getParams(), "itemIds","");
 
-
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetSource("crm");
