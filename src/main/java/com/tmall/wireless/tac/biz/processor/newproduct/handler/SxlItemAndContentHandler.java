@@ -1,7 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.handler;
 
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.ContentVO;

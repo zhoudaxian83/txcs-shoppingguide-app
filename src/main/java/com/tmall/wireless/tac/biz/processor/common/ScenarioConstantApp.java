@@ -30,6 +30,8 @@ public class ScenarioConstantApp extends ScenarioConstant {
     /**smartbuy**/
     public static final String SCENE_SMART_BUY_ITEM = "SCENE_SMART_BUY_ITEM";
 
+    public static final String O2O_BANG_DAN = "O2O_BANG_DAN";
+
     /**
      * o2o猜你喜欢
      */

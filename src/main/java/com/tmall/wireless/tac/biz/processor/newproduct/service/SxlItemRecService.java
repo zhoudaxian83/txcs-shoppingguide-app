@@ -64,7 +64,7 @@ public class SxlItemRecService {
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
-        Long itemSetIdSw = Long.valueOf((String)SxlSwitch.getValue("SXL_ITEMSET_ID"));
+        Long itemSetIdSw = Long.valueOf(SxlSwitch.getValue("SXL_ITEMSET_ID"));
         Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,itemSetIdSw);
 
 
