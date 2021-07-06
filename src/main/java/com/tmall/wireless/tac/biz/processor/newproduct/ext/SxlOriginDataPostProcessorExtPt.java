@@ -41,6 +41,9 @@ public class SxlOriginDataPostProcessorExtPt implements OriginDataPostProcessorE
 
         int index = sgFrameworkContextItem.getUserPageInfo().getIndex();
         tacLogger.info("SxlOriginDataPostProcessorExtPt topItemIds:"+topItemIds);
+
+        tacLogger.info("SxlOriginDataPostProcessorExtPt index:"+index);
+
         if(StringUtils.isBlank(topItemIds) || index == 0){
             return originDataDTO;
         }else{
