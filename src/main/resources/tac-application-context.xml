@@ -75,4 +75,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianBuildItemVOExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianItemInfoPostProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianCaptainRequestExtPt"/>
+
+
 </beans>
