@@ -48,14 +48,14 @@ public class TairUtil {
                 tairKey = LimitTairkeyEnum.FLASH_SALE_HD.getKey();
                 break;
         }
-        if(enviroment.isPreline()){
+        /*if(enviroment.isPreline()){
             return tairKey+"_pre";
         }else if(enviroment.isOnline()){
             return tairKey;
         }else if(enviroment.isDaily()){
             return tairKey;
-        }
-        throw new RpmBizException("unsupport enviroment");
+        }*/
+        return tairKey+"_pre";
     }
     /**
      * 获取缓存数据
