@@ -39,6 +39,7 @@ public class RequestKeyConstantApp {
 
     public static final String CONTENT_TYPE = "contentType";
 
+
     /**上新了key**/
     public static final String SXL_MAIN_ACTIVITY_ID = "mainActivityId";
 
