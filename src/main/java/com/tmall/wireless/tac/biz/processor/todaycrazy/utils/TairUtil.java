@@ -54,6 +54,11 @@ public class TairUtil {
                 tairKey = LimitTairkeyEnum.FLASH_SALE_HD.getKey();
                 break;
         }
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("TairUtil","getCacheData")
+            .kv("commonFactoryAbs.getEnviroment()", JSON.toJSONString(commonFactoryAbs))
+            .kv("commonFactoryAbs.getEnviroment()", JSON.toJSONString(commonFactoryAbs.getEnviroment()))
+            .info();
         /*if(enviroment.isPreline()){
             return tairKey+"_pre";
         }else if(enviroment.isOnline()){
@@ -70,11 +75,6 @@ public class TairUtil {
      */
     public List<PmtRuleDataItemRuleDTO> getCacheData(){
         List<PmtRuleDataItemRuleDTO> pmtRuleList = Lists.newArrayList();
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("TairUtil","getCacheData")
-            .kv("commonFactoryAbs.getEnviroment()", JSON.toJSONString(commonFactoryAbs))
-            .kv("commonFactoryAbs.getEnviroment()", JSON.toJSONString(commonFactoryAbs.getEnviroment()))
-            .info();
         //5个key里面一样的
         String normalTairKey = formatHotTairKey();
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
