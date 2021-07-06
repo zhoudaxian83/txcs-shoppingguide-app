@@ -4,12 +4,12 @@
        xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
-    <context:annotation-config />
-    <context:component-scan base-package="com.tmall.wireless.tac.biz.processor" />
-    <context:component-scan base-package="com.tmall.txcs.gs.framework" />
-    <context:component-scan base-package="com.tmall.txcs.biz.supermarket" />
+    <context:annotation-config/>
+    <context:component-scan base-package="com.tmall.wireless.tac.biz.processor"/>
+    <context:component-scan base-package="com.tmall.txcs.gs.framework"/>
+    <context:component-scan base-package="com.tmall.txcs.biz.supermarket"/>
 
-    <context:component-scan base-package="com.alibaba.cola" />
+    <context:component-scan base-package="com.alibaba.cola"/>
 
 
     <bean id="springSwitchBean" class="com.tmall.wireless.tac.biz.processor.config.SwitchConfigBean" init-method="init"/>
@@ -57,5 +57,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.o2obd.ext.O2oBangdanContentOriginDataRequestExPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.o2obd.ext.O2oBangdanContentInfoQueryExtPt"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.o2ocn.ext.CntemOriginDataRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.o2ocn.ext.CnBuildItemVOExtPt"/>
 
 </beans>

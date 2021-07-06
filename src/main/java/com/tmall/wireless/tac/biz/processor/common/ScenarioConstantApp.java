@@ -23,7 +23,6 @@ public class ScenarioConstantApp extends ScenarioConstant {
 
     public static final String SCENE_FIRST_SCREEN_MIND_ITEM = "FIRST_SCREEN_MIND_ITEM";
 
-
     public static final String SCENARIO_SHANG_XIN_ITEM= "SHANG_XIN_ITEM";
 
     public static final String SCENARIO_SHANG_XIN_CONTENT= "SHANG_XIN_CONTENT";
@@ -33,4 +32,8 @@ public class ScenarioConstantApp extends ScenarioConstant {
 
     public static final String O2O_BANG_DAN = "O2O_BANG_DAN";
 
+    /**
+     * o2o猜你喜欢
+     */
+    public static final String O2O_CNXH = "o2o_cnxh";
 }

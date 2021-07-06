@@ -15,6 +15,7 @@ import com.tmall.txcs.gs.framework.support.LogUtil;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.MindUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
@@ -72,7 +73,7 @@ public class FirstScreenMindContentScene {
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                 .kv("step", "requestLog")
                 .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
-                .error();
+                .info();
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> {
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
@@ -83,7 +84,10 @@ public class FirstScreenMindContentScene {
                     Map<String,Object> propertyMap = Maps.newHashMap();
 
                     propertyMap.put("index",response.getIndex());
-                    if((null == isFixPositionBanner) || ("".equals(isFixPositionBanner)) || StringUtils.equalsIgnoreCase("true",String.valueOf(isFixPositionBanner))){
+                    if((null == isFixPositionBanner
+                            || ("".equals(isFixPositionBanner))
+                            || StringUtils.equalsIgnoreCase("true",String.valueOf(isFixPositionBanner)))
+                            && getMindContentSetId(requestParams) > 0L){
                         if (response.isHasMore()) {
                             propertyMap.put("isFixPositionBanner", true);
                         } else {
@@ -104,7 +108,7 @@ public class FirstScreenMindContentScene {
                             .kv("step", "requestLog")
                             .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
                             .kv("rt", String.valueOf(System.currentTimeMillis() - startTime))
-                            .error();
+                            .info();
                     return response;
                 }).map(TacResult::newResult)
                 .map(tacResult -> {
@@ -112,6 +116,13 @@ public class FirstScreenMindContentScene {
                     return tacResult;
                 }).onErrorReturn(r -> TacResult.errorResult(""));
     }
+
+    private Long getMindContentSetId(Map<String, Object> requestParams) {
+        return MapUtil.getLongWithDefault(requestParams,
+                RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_MIND, 0L);
+    }
+
+
     public SceneInfo getSceneInfo(){
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
