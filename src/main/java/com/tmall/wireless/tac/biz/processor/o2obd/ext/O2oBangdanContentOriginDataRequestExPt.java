@@ -31,7 +31,7 @@ import java.util.Optional;
 @Service
 public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginDataRequestExtPt {
 
-    private static final Long APPID = 25399L;
+    private static final Long APPID = 23198L;
 
 
     @Autowired
