@@ -46,6 +46,7 @@ public class SxlOriginDataPostProcessorExtPt implements OriginDataPostProcessorE
             itemEntity.setItemId((Long.valueOf(topItemIds.split(",")[0])));
             itemEntity.setBizType("B2C");
             itemEntity.setO2oType("B2C");
+            itemEntity.setBusinessType("B2C");
             originDataDTO.getResult().add(0,itemEntity);
         }
 
