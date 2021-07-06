@@ -34,7 +34,7 @@ public class TairUtil {
     private static Enviroment enviroment;
     private static final int NAME_SPACE = 184;
 
-    public static String formatHotTairKey(){
+    public String formatHotTairKey(){
         String tairKey = "";
         int num = (int) (Math.random() * 5 + 1);
         switch (num){
@@ -76,7 +76,7 @@ public class TairUtil {
             .kv("commonFactoryAbs.getEnviroment()", JSON.toJSONString(commonFactoryAbs.getEnviroment()))
             .info();
         //5个key里面一样的
-        String normalTairKey = TairUtil.formatHotTairKey();
+        String normalTairKey = formatHotTairKey();
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
             .kv("TairUtil","formatHotTairKey")
             .kv("normalTairKey", normalTairKey)
