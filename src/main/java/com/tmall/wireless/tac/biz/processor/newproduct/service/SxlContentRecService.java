@@ -78,10 +78,12 @@ public class SxlContentRecService {
         pageInfoDO.setPageSize(Integer.valueOf(pageSize));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
 
-        tacLogger.info("SxlContentRecService sgFrameworkContextContent"+JSON.toJSONString(sgFrameworkContextContent));
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
             .map(response->{
                 Map<String,Object> aldMap = (Map<String,Object>)sgFrameworkContextContent.getUserParams().get(Constant.SXL_ITEMSET_PRE_KEY);
+
+                tacLogger.info("SxlContentRecService response"+JSON.toJSONString(response));
+
                 response.getItemAndContentList().forEach(e->{
                     Map<String,Object> objectMap = (Map<String,Object>)aldMap.get("crm_"+e.get("contentId"));
                     objectMap.keySet().forEach(ob->{
