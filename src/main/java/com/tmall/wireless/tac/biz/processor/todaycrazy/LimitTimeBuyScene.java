@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.todaycrazy;
 
 import com.google.common.collect.Lists;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -100,10 +101,9 @@ public class LimitTimeBuyScene {
 
     }
     public List<GeneralItem> buildGeneralItemse(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
-        perfect(sgFrameworkResponse,sgFrameworkContextItem);
+        /*perfect(sgFrameworkResponse,sgFrameworkContextItem);*/
         List<GeneralItem> generalItemse = new ArrayList<>();
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
-        Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
         //第几个时间段
         int index = aldInfoUtil.getIndex(params);
         //ald排期信息

@@ -71,11 +71,12 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
         List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList = Lists.newArrayList();
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = tairUtil.getCacheData();
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt pmtRuleDataItemRuleDTOList.size()***"+pmtRuleDataItemRuleDTOList.size());
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("tair pmtRuleDataItemRuleDTOList.size()",String.valueOf(pmtRuleDataItemRuleDTOList.size()))
+            .kv("tair pmtRuleDataItemRuleDTOList.size()",JSON.toJSONString(pmtRuleDataItemRuleDTOList))
+            .info();
         for(PmtRuleDataItemRuleDTO pmtRule : pmtRuleDataItemRuleDTOList){
             List<ColumnCenterDataSetItemRuleDTO> itemList = pmtRule.getDataSetItemRuleDTOList();
-            LOGGER.info("****LimitTimeOriginDataItemQueryExtPt itemList.size()***"+itemList.size());
-            LOGGER.info("****LimitTimeOriginDataItemQueryExtPt JSON.toJSONString(itemList)***"+JSON.toJSONString(itemList));
             for(ColumnCenterDataSetItemRuleDTO item : itemList){
                 Long startTime = item.getDataRule().getItemScheduleStartTime().getTime()/1000;
                 Long endTime = item.getDataRule().getItemScheduleEndTime().getTime()/1000;
@@ -84,7 +85,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 }
             }
         }
-        LOGGER.info("****LimitTimeOriginDataItemQueryExtPt hitpmtRuleDataItemRuleDTOList.size()***"+hitpmtRuleDataItemRuleDTOList.size());
         originDataDTO.setResult(aldInfoUtil.buildItemList(dingKengDeal(hitpmtRuleDataItemRuleDTOList)));
         return Flowable.just(originDataDTO);
     }
@@ -101,9 +101,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<ColumnCenterDataSetItemRuleDTO> dingKengColumnCenterDataSetItemRuleDTO = Lists.newArrayList();
         Map<Long,ColumnCenterDataSetItemRuleDTO> stickMap = new HashMap<>();
         List<ColumnCenterDataSetItemRuleDTO> originList = new ArrayList<>();
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("dingKengDeal","dingKengDeal")
-            .kv("","");
 
         hitpmtRuleDataItemRuleDTOList.forEach(item -> {
             Long stick = item.getDataRule().getStick();
@@ -114,7 +111,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             }
         });
         int j = 0;
-        for(int i=1;i<hitpmtRuleDataItemRuleDTOList.size();i++){
+        for(int i=1;i<=hitpmtRuleDataItemRuleDTOList.size();i++){
             if(stickMap.containsKey(Long.valueOf(i))){
                 dingKengColumnCenterDataSetItemRuleDTO.add(stickMap.get(Long.valueOf(i)));
             }else{

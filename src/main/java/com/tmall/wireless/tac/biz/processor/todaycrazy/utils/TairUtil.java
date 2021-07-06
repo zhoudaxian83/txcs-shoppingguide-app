@@ -7,9 +7,11 @@ import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
+import com.tmall.txcs.gs.model.exception.RpmBizException;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTairkeyEnum;
+import com.tmall.wireless.tac.client.domain.Enviroment;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,6 +24,8 @@ public class TairUtil {
 
     @Autowired
     TairFactorySpi tairFactorySpi;
+    @Autowired
+    private static Enviroment enviroment;
     private static final int NAME_SPACE = 184;
 
     public static String formatHotTairKey(){
@@ -44,8 +48,14 @@ public class TairUtil {
                 tairKey = LimitTairkeyEnum.FLASH_SALE_HD.getKey();
                 break;
         }
+        /*if(enviroment.isPreline()){
+            return tairKey+"_pre";
+        }else if(enviroment.isOnline()){
+            return tairKey;
+        }else if(enviroment.isDaily()){
+            return tairKey;
+        }*/
         return tairKey+"_pre";
-        //return tairKey;
     }
     /**
      * 获取缓存数据
