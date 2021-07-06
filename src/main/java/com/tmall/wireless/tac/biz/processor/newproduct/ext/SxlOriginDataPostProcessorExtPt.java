@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.ext;
 
 import com.alibaba.cola.extension.Extension;
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
@@ -9,7 +8,6 @@ import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataPostProcessor
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
 import com.tmall.txcs.gs.model.item.BizType;
-import com.tmall.txcs.gs.model.item.ItemUniqueId;
 import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
