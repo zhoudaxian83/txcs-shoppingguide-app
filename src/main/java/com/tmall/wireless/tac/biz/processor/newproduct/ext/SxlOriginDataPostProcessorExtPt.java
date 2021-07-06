@@ -68,7 +68,7 @@ public class SxlOriginDataPostProcessorExtPt implements OriginDataPostProcessorE
 
         });
         originDataDTO.setResult(finalItemEntities);
-        tacLogger.info("SxlOriginDataPostProcessorExtPt originDataDTO:"+ JSON.toJSONString(finalItemEntities));
+        //acLogger.info("SxlOriginDataPostProcessorExtPt originDataDTO:"+ JSON.toJSONString(finalItemEntities));
 
         return originDataDTO;
 
