@@ -11,7 +11,9 @@ import com.tmall.txcs.gs.model.item.ItemUniqueId;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +30,14 @@ import java.util.Set;
 @Service
 public class SxlOriginDataPostProcessorExtPt implements OriginDataPostProcessorExtPt {
 
+    @Autowired
+    TacLogger tacLogger;
     @Override
     public OriginDataDTO<ItemEntity> process(SgFrameworkContextItem sgFrameworkContextItem) {
 
         OriginDataDTO<ItemEntity> originDataDTO = Optional.of(sgFrameworkContextItem).map(SgFrameworkContextItem::getItemEntityOriginDataDTO).orElse(null);
         String topItemIds = (String)sgFrameworkContextItem.getUserParams().get(Constant.SXL_TOP_ITEM_IDS);
+        tacLogger.info("SxlOriginDataPostProcessorExtPt topItemIds:"+topItemIds);
         if(StringUtils.isBlank(topItemIds)){
             return originDataDTO;
         }else{
