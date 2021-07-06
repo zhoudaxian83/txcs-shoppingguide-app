@@ -59,6 +59,7 @@
 
     <bean class="com.tmall.wireless.tac.biz.processor.o2ocn.ext.CntemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.o2ocn.ext.CnBuildItemVOExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlOriginDataPostProcessorExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyHandler"/>
     <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyScene"/>
