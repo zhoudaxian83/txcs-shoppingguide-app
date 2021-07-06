@@ -55,13 +55,13 @@ public class TairUtil {
             .kv("TairUtil","formatHotTairKey")
             .kv("enviroment", JSON.toJSONString(enviroment))
             .info();
-        if(enviroment.isPreline()){
+        /*if(enviroment.isPreline()){
             return tairKey+"_pre";
         }else if(enviroment.isOnline()){
             return tairKey;
         }else if(enviroment.isDaily()){
             return tairKey;
-        }
+        }*/
 
         return tairKey+"_pre";
     }
