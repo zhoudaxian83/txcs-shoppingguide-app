@@ -10,6 +10,7 @@ import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.txcs.gs.spi.factory.CommonFactoryAbs;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
@@ -29,6 +30,8 @@ public class TairUtil {
     TairFactorySpi tairFactorySpi;
     @Autowired
     private static Enviroment enviroment;
+    @Autowired
+    private static CommonFactoryAbs commonFactoryAbs;
     private static final int NAME_SPACE = 184;
 
     public static String formatHotTairKey(){
@@ -54,6 +57,7 @@ public class TairUtil {
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
             .kv("TairUtil","formatHotTairKey")
             .kv("enviroment", JSON.toJSONString(enviroment))
+            .kv("commonFactoryAbs.getEnviroment()", JSON.toJSONString(commonFactoryAbs.getEnviroment()))
             .info();
         /*if(enviroment.isPreline()){
             return tairKey+"_pre";
