@@ -16,6 +16,7 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
+import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -72,6 +73,9 @@ public class SxlItemRecService {
             activityId = String.valueOf(itemSetId);
         }
 
+        String topItemIds = MapUtil.getStringWithDefault(context.getParams(), "itemIds","");
+
+
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetSource("crm");
@@ -99,6 +103,10 @@ public class SxlItemRecService {
         pageInfoDO.setIndex(Integer.valueOf(index));
         pageInfoDO.setPageSize(Integer.valueOf(pageSize));
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
+
+        if(StringUtils.isNotBlank(topItemIds)){
+            sgFrameworkContextItem.getUserParams().put(Constant.SXL_TOP_ITEM_IDS,topItemIds);
+        }
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)
