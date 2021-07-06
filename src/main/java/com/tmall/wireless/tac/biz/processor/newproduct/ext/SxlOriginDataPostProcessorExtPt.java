@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.ext;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
@@ -59,6 +60,8 @@ public class SxlOriginDataPostProcessorExtPt implements OriginDataPostProcessorE
             finalItemEntities.add(itemEntity);
 
         });
+        tacLogger.info("SxlOriginDataPostProcessorExtPt originDataDTO:"+ JSON.toJSONString(originDataDTO));
+
         originDataDTO.setResult(finalItemEntities);
         return originDataDTO;
 
