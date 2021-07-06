@@ -82,8 +82,6 @@ public class SxlContentRecService {
             .map(response->{
                 Map<String,Object> aldMap = (Map<String,Object>)sgFrameworkContextContent.getUserParams().get(Constant.SXL_ITEMSET_PRE_KEY);
 
-                tacLogger.info("SxlContentRecService response"+JSON.toJSONString(response));
-
                 response.getItemAndContentList().forEach(e->{
                     Map<String,Object> objectMap = (Map<String,Object>)aldMap.get("crm_"+e.get("contentId"));
                     objectMap.keySet().forEach(ob->{
@@ -130,8 +128,8 @@ public class SxlContentRecService {
         //captain SceneCode场景code
         itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
 
-        //String activeId = SxlSwitch.getValue("SXL_MAIN_ACTIVEX_ID");
-        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(Constant.SXL_MAIN_ACTIVEX_ID));
+        String activeId = SxlSwitch.getValue("SXL_MAIN_ACTIVEX_ID");
+        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(StringUtils.isEmpty(activeId)?Constant.SXL_MAIN_ACTIVEX_ID:activeId));
 
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 
@@ -147,7 +145,7 @@ public class SxlContentRecService {
 
         contentMetaInfo.setItemMetaInfo(itemMetaInfo);
         ContentRecommendMetaInfo contentRecommendMetaInfo = new ContentRecommendMetaInfo();
-        contentRecommendMetaInfo.setUseRecommendSpiV2(true);
+        contentRecommendMetaInfo.setUseRecommendSpiV2(false);
         contentMetaInfo.setContentRecommendMetaInfo(contentRecommendMetaInfo);
         return contentMetaInfo;
     }
