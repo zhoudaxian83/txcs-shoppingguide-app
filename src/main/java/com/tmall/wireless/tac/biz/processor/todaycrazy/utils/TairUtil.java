@@ -31,10 +31,10 @@ public class TairUtil {
     @Autowired
     private static Enviroment enviroment;
     @Autowired
-    private static CommonFactoryAbs commonFactoryAbs;
+    CommonFactoryAbs commonFactoryAbs;
     private static final int NAME_SPACE = 184;
 
-    public static String formatHotTairKey(){
+    public String formatHotTairKey(){
         String tairKey = "";
         int num = (int) (Math.random() * 5 + 1);
         switch (num){
@@ -57,6 +57,7 @@ public class TairUtil {
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
             .kv("TairUtil","formatHotTairKey")
             .kv("commonFactoryAbs.getEnviroment()", JSON.toJSONString(commonFactoryAbs))
+            .kv("tairFactorySpi", JSON.toJSONString(tairFactorySpi))
             .info();
         /*if(enviroment.isPreline()){
             return tairKey+"_pre";
@@ -75,7 +76,7 @@ public class TairUtil {
     public List<PmtRuleDataItemRuleDTO> getCacheData(){
         List<PmtRuleDataItemRuleDTO> pmtRuleList = Lists.newArrayList();
         //5个key里面一样的
-        String normalTairKey = TairUtil.formatHotTairKey();
+        String normalTairKey = formatHotTairKey();
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
             .kv("TairUtil","formatHotTairKey")
             .kv("normalTairKey", normalTairKey)
