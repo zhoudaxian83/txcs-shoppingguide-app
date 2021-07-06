@@ -8,7 +8,9 @@ import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataPostProcessorExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
+import com.tmall.txcs.gs.model.item.BizType;
 import com.tmall.txcs.gs.model.item.ItemUniqueId;
+import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
@@ -48,9 +50,9 @@ public class SxlOriginDataPostProcessorExtPt implements OriginDataPostProcessorE
             return originDataDTO;
         }else{
             ItemEntity itemEntity = new ItemEntity();
-            itemEntity.setBizType("sm");
-            itemEntity.setO2oType("B2C");
-            itemEntity.setBusinessType("B2C");
+            itemEntity.setBizType(BizType.SM.getCode());
+            itemEntity.setO2oType(O2oType.B2C.name());
+            itemEntity.setBusinessType(O2oType.B2C.name());
             originDataDTO.getResult().add(0,itemEntity);
         }
 
