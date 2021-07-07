@@ -34,11 +34,13 @@ public class OriginDataRequestItemFeeds implements OriginDataRequest{
                 Lists.newArrayList(107L))));
         Optional<Map> requestParams = Optional.ofNullable(sgFrameworkContext).map(SgFrameworkContext::getRequestParams);
         params.put("itemSetIdList", requestParams.map(entry -> entry.get("itemSetIds")).orElse("").toString());
-        String csa = requestParams.map(entry -> entry.get("csa")).orElse("").toString();
-        boolean rt1HourStoreCover = RenderAddressUtil.rt1HourStoreCover(csa);
-        boolean rtHalfDayStoreCover = RenderAddressUtil.rtHalfDayStoreCover(csa);
-        Long rt1HourStoreId = RenderAddressUtil.getRt1HourStoreId(csa);
-        Long rtHalfDayStoreId = RenderAddressUtil.getRtHalfDayStoreId(csa);
+
+
+        Long rt1HourStoreId = Optional.ofNullable(sgFrameworkContext).map(SgFrameworkContext::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
+        Long rtHalfDayStoreId = Optional.ofNullable(sgFrameworkContext).map(SgFrameworkContext::getLocParams).map(LocParams::getRtHalfDayStoreId).orElse(0L);
+
+        boolean rt1HourStoreCover = rt1HourStoreId > 0L;
+        boolean rtHalfDayStoreCover = rtHalfDayStoreId > 0L;
 
         boolean isO2o = isO2oScene(sgFrameworkContext);
         //默认优先级 一小时达 > 半日达 > 外仓
