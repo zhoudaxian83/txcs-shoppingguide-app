@@ -84,7 +84,7 @@ public class OriginDataRequestItemFeeds implements OriginDataRequest{
         if (StringUtils.isNotEmpty(moduleId)) {
             return moduleId;
         }
-        return requestParams.map(entry -> entry.get("contentId")).orElse("").toString()
+        return requestParams.map(entry -> entry.get("contentId")).orElse("").toString();
     }
 
     private boolean isO2oScene(SgFrameworkContext sgFrameworkContext) {
