@@ -63,21 +63,28 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
          */
         List<Map<String, Object>> aldResList = getAldInfo(context);
 
+        tacLogger.info("aldResList:"+JSON.toJSONString(aldResList));
         if(CollectionUtils.isEmpty(aldResList)){
             return tacResultFlowable;
         }else{
-
+            /**
+             * 白底图 ：itemImg2
+             * 标签：auctionTag
+             */
             return tacResultFlowable.map(response->{
                 List<EntityVO> list = response.getData().getItemAndContentList();
                 EntityVO entityVO = new EntityVO();
-                entityVO.put("itemId",aldResList.get(0).get("id"));
-                entityVO.put("itemImg",aldResList.get(0).get("itemImg"));
+                entityVO.put("itemId",aldResList.get(0).get("itemId"));
+                entityVO.put("itemImg",aldResList.get(0).get("itemImg2"));
                 entityVO.put("sellingPointDesc",aldResList.get(0).get("sellPoint"));
+                entityVO.put("type",aldResList.get(0).get("auctionTag"));
+
                 list.add(0,entityVO);
                 EntityVO entityVO1 = new EntityVO();
-                entityVO1.put("itemId",aldResList.get(1).get("id"));
-                entityVO1.put("itemImg",aldResList.get(1).get("itemImg"));
+                entityVO1.put("itemId",aldResList.get(1).get("itemId"));
+                entityVO1.put("itemImg",aldResList.get(1).get("itemImg2"));
                 entityVO1.put("sellingPointDesc",aldResList.get(1).get("sellPoint"));
+                entityVO1.put("type",aldResList.get(0).get("auctionTag"));
                 list.add(entityVO1);
                 return response;
             }).onErrorReturn((r -> TacResult.errorResult("")));

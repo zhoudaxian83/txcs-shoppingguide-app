@@ -22,8 +22,10 @@ public class Constant {
 
     public static final Long SXL_ITEMSET_ID = 322385L;
 
-    public static final List<String> SXL_SOURCE_AGREE = Lists.newArrayList("mainPage");
+    public static final List<String> SXL_SOURCE_AGREE = Lists.newArrayList("firstPage");
 
     public static final String SXL_MAIN_ACTIVEX_ID = "885";
+
+    public static final String SXL_TOP_ITEM_IDS = "topItemIds";
 
 }

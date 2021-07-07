@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.ContentVO;
@@ -43,6 +42,8 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
 
 
         Flowable<TacResult<SgFrameworkResponse<ContentVO>>> content = sxlContentRecService.recommend(context);
+
+        tacLogger.info("SxlItemAndContentHandler content"+ JSON.toJSONString(content));
 
         Flowable<TacResult<SgFrameworkResponse<EntityVO>>> item = sxlItemRecService.recommend(context);
 

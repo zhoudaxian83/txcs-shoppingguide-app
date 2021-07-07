@@ -33,7 +33,6 @@ public class SxlContentInfoQueryExtPt implements ContentInfoQueryExtPt {
         contentInfoDTO.setContentInfo(contentInfo);
         resMap.put(5233L,contentInfoDTO);
         resMap.put(322385L,contentInfoDTO);
-
         return Flowable.just(Response.success(resMap));
 
     }

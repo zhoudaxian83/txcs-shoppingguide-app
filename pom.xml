@@ -12,7 +12,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <common.rpm.version>1.0.7-SNAPSHOT</common.rpm.version>
+        <common.rpm.version>1.0.8</common.rpm.version>
     </properties>
 
 
@@ -92,7 +92,18 @@
             <groupId>com.taobao.csp</groupId>
             <artifactId>switchcenter</artifactId>
             <version>2.1.1.2-fix-fastjson-noneautotype</version>
+<!--        <dependency>-->
+<!--            <groupId>com.tmall.aself</groupId>-->
+<!--            <artifactId>aselfmanager-client</artifactId>-->
+<!--            <version>1.0.26-RELEASE</version>-->
+<!--        </dependency>-->
         </dependency>
+        <dependency>
+            <groupId>com.tmall.aself</groupId>
+            <artifactId>aselfmanager-client</artifactId>
+            <version>1.0.32</version>
+        </dependency>
+
 
         <dependency>
             <groupId>junit</groupId>
@@ -101,6 +112,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
