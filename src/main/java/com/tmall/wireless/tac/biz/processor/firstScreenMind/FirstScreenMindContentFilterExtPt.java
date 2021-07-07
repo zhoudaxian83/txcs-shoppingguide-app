@@ -108,7 +108,7 @@ public class FirstScreenMindContentFilterExtPt implements ContentFilterExtPt {
                     canBuyItemList.add(item);
                 } else {
                     LogUtil.errorCode(sgFrameworkContextContent.getBizScenario().getUniqueIdentity(),
-                            "ITEM_CANBUY_FALSE" + "," + contentId + " " + item.getString("641456783229"));
+                            "ITEM_CANBUY_FALSE" + "," + contentId + " " + item.getString("itemId"));
                 }
             }
 
