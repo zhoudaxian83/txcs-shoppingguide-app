@@ -63,8 +63,7 @@ public class FirstScreenMindContentFilterExtPt implements ContentFilterExtPt {
                 } else {
 
                     LogUtil.errorCode(contentFilterRequest.getSgFrameworkContextContent().getBizScenario().getUniqueIdentity(),
-                            "CONTENT_FILTER_BY_ITEM",
-                            contentId + "");
+                            "CONTENT_FILTER_BY_ITEM" + "," + contentId + "");
                 }
             });
 
@@ -109,8 +108,7 @@ public class FirstScreenMindContentFilterExtPt implements ContentFilterExtPt {
                     canBuyItemList.add(item);
                 } else {
                     LogUtil.errorCode(sgFrameworkContextContent.getBizScenario().getUniqueIdentity(),
-                            "ITEM_CANBUY_FALSE",
-                            contentId + " " + item.getString("641456783229"));
+                            "ITEM_CANBUY_FALSE" + "," + contentId + " " + item.getString("641456783229"));
                 }
             }
 
