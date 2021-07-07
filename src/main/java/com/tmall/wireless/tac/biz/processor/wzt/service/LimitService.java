@@ -98,32 +98,9 @@ public class LimitService {
 
     public Map<Long, List<ItemLimitDTO>> getItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<Long, List<ItemLimitDTO>> limitResult;
-        //MOCK
-        if (false) {
-            limitResult = this.mock();
-        } else {
-            Map<String, Object> param = this.buildGetItemLimitParam(sgFrameworkContextItem);
-            limitResult = this.getItemLimitResult(param);
-            tacLogger.info("limit入参：" + JSON.toJSONString(param));
-            tacLogger.info("limit结果：" + JSON.toJSONString(limitResult));
-        }
+        Map<String, Object> param = this.buildGetItemLimitParam(sgFrameworkContextItem);
+        limitResult = this.getItemLimitResult(param);
         return limitResult;
     }
 
-    private Map<Long, List<ItemLimitDTO>> mock() {
-        Map<Long, List<ItemLimitDTO>> limitResult = new HashMap<>(16);
-        List<ItemLimitDTO> itemLimitDTOList = Lists.newArrayList();
-        ItemLimitDTO itemLimitDTO = new ItemLimitDTO();
-        //超过总限购
-        //itemLimitDTO.setTotalLimit(10L);
-        //itemLimitDTO.setUsedCount(10L);
-        //超过用户限购
-        //itemLimitDTO.setUserLimit(5L);
-        //itemLimitDTO.setUserUsedCount(5L);
-
-        itemLimitDTO.setSkuId(123456L);
-        itemLimitDTOList.add(itemLimitDTO);
-        limitResult.put(609977546160L, itemLimitDTOList);
-        return limitResult;
-    }
 }

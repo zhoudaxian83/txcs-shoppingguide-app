@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.alibaba.cola.extension.Extension;
-import com.alibaba.fastjson.JSON;
 
 import com.ali.com.google.common.base.Joiner;
 import com.ali.unit.rule.util.lang.CollectionUtils;
@@ -31,8 +30,6 @@ import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,9 +41,6 @@ import org.springframework.stereotype.Service;
     scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
-
-    @Autowired
-    TacLogger tacLogger;
 
     @Autowired
     TairUtil tairUtil;
@@ -73,18 +67,14 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //tair获取推荐商品
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
             smAreaId);
-        tacLogger.info("columnCenterDataSetItemRuleDTOList size:" + columnCenterDataSetItemRuleDTOList.size());
         List<Long> items = columnCenterDataSetItemRuleDTOList.stream().map(
             ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
         dataContext.setItems(items);
-        tacLogger.info("items" + items.size());
-        tacLogger.info("itemsData" + JSON.toJSONString(items));
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
             .map(recommendResponseEntityResponse -> {
                 if (!recommendResponseEntityResponse.isSuccess()
                     || recommendResponseEntityResponse.getValue() == null
                     || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
-                    tacLogger.info("tpp个性化排序返回异常了：" + JSON.toJSONString(recommendResponseEntityResponse));
                     return new OriginDataDTO<>();
                 }
                 OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
