@@ -142,7 +142,9 @@ public class O2oBangdanContentInfoQueryExtPt implements ContentInfoQueryExtPt {
                     contentInfo.put("contentType",RenderContentTypeEnum.recipeContent.getType());
                 } else if (type.equals(SceneType.MEDIA.name())) {
                     contentInfo.put("contentType",RenderContentTypeEnum.mediaContent.getType());
-                } else if (type.equals(SceneType.BOARD.name())) {
+                }else if(marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(SceneType.BOARD.name())){
+                    contentInfo.put("contentType","bangdanO2OContent");
+                }else if (type.equals(SceneType.BOARD.name())) {
                     contentInfo.put("contentType",RenderContentTypeEnum.bangdanContent.getType());
                 } else {
                     //默认打底-普通场景
