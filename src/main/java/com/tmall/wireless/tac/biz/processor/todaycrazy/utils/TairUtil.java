@@ -2,9 +2,6 @@ package com.tmall.wireless.tac.biz.processor.todaycrazy.utils;
 
 import java.util.List;
 import java.util.Map;
-
-import com.alibaba.fastjson.JSON;
-
 import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
@@ -15,7 +12,6 @@ import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTairkeyEnum;
-import com.tmall.wireless.tac.client.domain.Enviroment;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,12 +25,11 @@ public class TairUtil {
     @Autowired
     TairFactorySpi tairFactorySpi;
     @Autowired
-    private static Enviroment enviroment;
-    @Autowired
-    private static CommonFactoryAbs commonFactoryAbs;
+    CommonFactoryAbs commonFactoryAbs;
+
     private static final int NAME_SPACE = 184;
 
-    public static String formatHotTairKey(){
+    public String formatHotTairKey(){
         String tairKey = "";
         int num = (int) (Math.random() * 5 + 1);
         switch (num){
@@ -54,19 +49,15 @@ public class TairUtil {
                 tairKey = LimitTairkeyEnum.FLASH_SALE_HD.getKey();
                 break;
         }
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("TairUtil","formatHotTairKey")
-            .kv("commonFactoryAbs.getEnviroment()", JSON.toJSONString(commonFactoryAbs))
-            .info();
-        /*if(enviroment.isPreline()){
+        if(commonFactoryAbs.getEnviroment().isPreline()){
             return tairKey+"_pre";
-        }else if(enviroment.isOnline()){
+        }else if(commonFactoryAbs.getEnviroment().isOnline()){
             return tairKey;
-        }else if(enviroment.isDaily()){
+        }else if(commonFactoryAbs.getEnviroment().isDaily()){
             return tairKey;
-        }*/
-
-        return tairKey+"_pre";
+        }
+        //return tairKey+"_pre";
+        return tairKey;
     }
     /**
      * 获取缓存数据
@@ -75,7 +66,7 @@ public class TairUtil {
     public List<PmtRuleDataItemRuleDTO> getCacheData(){
         List<PmtRuleDataItemRuleDTO> pmtRuleList = Lists.newArrayList();
         //5个key里面一样的
-        String normalTairKey = TairUtil.formatHotTairKey();
+        String normalTairKey = formatHotTairKey();
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
             .kv("TairUtil","formatHotTairKey")
             .kv("normalTairKey", normalTairKey)
