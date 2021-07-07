@@ -26,4 +26,6 @@ public class Constant {
 
     public static final String SXL_MAIN_ACTIVEX_ID = "885";
 
+    public static final String SXL_TOP_ITEM_IDS = "topItemIds";
+
 }

@@ -36,4 +36,13 @@ public class ScenarioConstantApp extends ScenarioConstant {
      * o2o猜你喜欢
      */
     public static final String O2O_CNXH = "o2o_cnxh";
+    /**
+     * 今日疯抢-限时抢购
+     */
+    public static final String SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY = "TODAY_CRAZY_LIMIT_TIME_BUY";
+    /**
+     * 五折天
+     */
+    public static final String WU_ZHE_TIAN = "WU_ZHE_TIAN";
+
 }

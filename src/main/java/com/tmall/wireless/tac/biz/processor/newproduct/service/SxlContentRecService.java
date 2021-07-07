@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.service;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
@@ -77,10 +78,10 @@ public class SxlContentRecService {
         pageInfoDO.setPageSize(Integer.valueOf(pageSize));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
 
-
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
             .map(response->{
                 Map<String,Object> aldMap = (Map<String,Object>)sgFrameworkContextContent.getUserParams().get(Constant.SXL_ITEMSET_PRE_KEY);
+
                 response.getItemAndContentList().forEach(e->{
                     Map<String,Object> objectMap = (Map<String,Object>)aldMap.get("crm_"+e.get("contentId"));
                     objectMap.keySet().forEach(ob->{
