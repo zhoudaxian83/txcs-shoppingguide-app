@@ -82,8 +82,8 @@ public class OriginDataRequestItemFeeds implements OriginDataRequest{
 
     private boolean isBangdan(SgFrameworkContext sgFrameworkContext) {
         String contentType = MapUtil.getStringWithDefault(sgFrameworkContext.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
-        return
-                RenderContentTypeEnum.bangdanO2OContent.getType().equals(contentType);
+        return RenderContentTypeEnum.bangdanContent.getType().equals(contentType)
+        || RenderContentTypeEnum.bangdanO2OContent.getType().equals(contentType);
     }
 
 }
