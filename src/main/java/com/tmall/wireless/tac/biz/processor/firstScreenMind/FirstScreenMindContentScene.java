@@ -113,6 +113,9 @@ public class FirstScreenMindContentScene {
                 }).map(TacResult::newResult)
                 .map(tacResult -> {
                     tacResult.getBackupMetaData().setUseBackup(true);
+                    if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
+                        tacResult.setSuccess(false);
+                    }
                     return tacResult;
                 }).onErrorReturn(r -> TacResult.errorResult(""));
     }
