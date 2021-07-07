@@ -59,7 +59,7 @@ public class FirstScreenMindContentFilterExtPt implements ContentFilterExtPt {
                 if (contentId2CanBuyItemList.get(contentId) != null
                         && contentId2CanBuyItemList.get(contentId).size() >= CONTENT_ITEM_SIZE) {
                     contentListAfterFilter.add(contentVO);
-                    contentVO.put("items", contentId2CanBuyItemList.get(contentId).size());
+                    contentVO.put("items", contentId2CanBuyItemList.get(contentId));
                 } else {
 
                     LogUtil.errorCode(contentFilterRequest.getSgFrameworkContextContent().getBizScenario().getUniqueIdentity(),
