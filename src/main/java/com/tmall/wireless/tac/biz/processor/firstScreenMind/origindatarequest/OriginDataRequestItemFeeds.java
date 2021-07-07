@@ -1,7 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind.origindatarequest;
 
-import java.util.Map;
-import java.util.Optional;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -14,8 +12,10 @@ import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
-import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderAddressUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author guijian
