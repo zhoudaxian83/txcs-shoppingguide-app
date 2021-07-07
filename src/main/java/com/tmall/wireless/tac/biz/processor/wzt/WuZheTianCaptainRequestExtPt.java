@@ -17,7 +17,6 @@ import com.tmall.txcs.gs.model.spi.model.ItemDataRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.SmAreaIdUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -38,8 +37,6 @@ public class WuZheTianCaptainRequestExtPt implements CaptainRequestExtPt {
 
     @Autowired
     TairUtil tairUtil;
-    @Autowired
-    TacLogger tacLogger;
 
     @Override
     public ItemDataRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
@@ -70,8 +67,6 @@ public class WuZheTianCaptainRequestExtPt implements CaptainRequestExtPt {
             itemDataRequest.setDataTubeParams(dataTubeParams);
         }
         itemDataRequest.setChannelKey(tairUtil.getChannelKey(getSmAreaId));
-        tacLogger.info("itemDataRequest:" + itemDataRequest);
-        LOGGER.info("itemDataRequest:" + itemDataRequest);
         return itemDataRequest;
     }
 }
