@@ -85,4 +85,5 @@ public class OriginDataRequestItemFeeds implements OriginDataRequest{
         return RenderContentTypeEnum.bangdanContent.getType().equals(contentType) ||
                 RenderContentTypeEnum.bangdanO2OContent.getType().equals(contentType);
     }
+
 }
