@@ -13,6 +13,7 @@ import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;
@@ -59,7 +60,7 @@ public class OriginDataRequestItemFeeds implements OriginDataRequest{
         }
         params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContext).map(
             SgFrameworkContext::getUserDO).map(UserDO::getCna).orElse(""));
-        params.put("sceneId", requestParams.map(entry -> entry.get("moduleId")).orElse("").toString());
+        params.put("sceneId", getModuleId(requestParams));
         if(isBangdan(sgFrameworkContext)){
             tppRequest.setAppId(25399L);
         }else{
@@ -76,6 +77,16 @@ public class OriginDataRequestItemFeeds implements OriginDataRequest{
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContext).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
         return tppRequest;
     }
+
+    private String getModuleId(Optional<Map> requestParams) {
+
+        String moduleId = requestParams.map(entry -> entry.get("moduleId")).orElse("").toString();
+        if (StringUtils.isNotEmpty(moduleId)) {
+            return moduleId;
+        }
+        return requestParams.map(entry -> entry.get("contentId")).orElse("").toString()
+    }
+
     private boolean isO2oScene(SgFrameworkContext sgFrameworkContext) {
 
         String contentType = MapUtil.getStringWithDefault(sgFrameworkContext.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
