@@ -12,6 +12,7 @@ import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tmall.aselfcommon.model.gcs.domain.GcsTairContentDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ContentFailProcessorRequest;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ContentOriginDataFailProcessorExtPt;
@@ -61,6 +62,10 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             SgFrameworkContext::getUserPageInfo).map(
             PageInfoDO::getPageSize).orElse(needSize);
         boolean isSuccess = checkSuccess(originDataDTO);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+            .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
+            .kv("isSuccess",String.valueOf(isSuccess))
+            .info();
         if(isSuccess){
             return originDataDTO;
         }
@@ -70,12 +75,14 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         Result<Map<Object, Result<DataEntry>>> labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
         if(labelSceneResult != null && labelSceneResult.getValue() !=null){
             Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
+                .kv("resultMap.size()",String.valueOf(resultMap.size()))
+                .info();
             if(MapUtils.isEmpty(resultMap)){
                 return originDataDTO;
             };
             OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap,needSize);
-            LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
-            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
             return baseOriginDataDTO;
         }
         return originDataDTO;

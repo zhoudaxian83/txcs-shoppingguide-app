@@ -5,9 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
+
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemOriginDataFailProcessorExtPt;
@@ -57,6 +60,10 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
         Map<String, Object> requestParams = itemFailProcessorRequest.getSgFrameworkContextItem().getRequestParams();
         OriginDataDTO<ItemEntity> originDataDTO = itemFailProcessorRequest.getItemEntityOriginDataDTO();
         boolean isSuccess = checkSuccess(originDataDTO);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("FirstScreenMindItemOriginDataFailProcessorExtPt","process")
+            .kv("isSuccess",String.valueOf(isSuccess))
+            .info();
         if(isSuccess){
             return originDataDTO;
         }
@@ -64,14 +71,18 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         Result<DataEntry> labelSceneResult = multiClusterTairManager.prefixGet(nameSpace,pKey,sKey);
         if(!labelSceneResult.isSuccess()){
-            LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt labelSceneResult:"+labelSceneResult);
-            tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt labelSceneResult:"+labelSceneResult);
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+                .kv("FirstScreenMindItemOriginDataFailProcessorExtPt","process")
+                .kv("labelSceneResult", JSON.toJSONString(labelSceneResult))
+                .info();
             return originDataDTO;
         }
         DataEntry dataEntry = labelSceneResult.getValue();
         if(dataEntry == null || dataEntry.getValue() == null){
-            LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry为空!");
-            tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry为空!");
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+                .kv("FirstScreenMindItemOriginDataFailProcessorExtPt","process")
+                .kv("dataEntry", "tair：dataEntry打底数据为空")
+                .info();
             return originDataDTO;
         }
         List<Long> itemIdList = (List<Long>) dataEntry.getValue();
@@ -79,9 +90,10 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
             return originDataDTO;
         }
         OriginDataDTO<ItemEntity> baseOriginDataDTO = buildOriginDataDTO(itemIdList,itemFailProcessorRequest.getSgFrameworkContextItem());
-        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt baseOriginDataDTO.getResult().size()"+baseOriginDataDTO.getResult().size());
-        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt baseOriginDataDTO.getResult().size()"+baseOriginDataDTO.getResult().size());
-
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("FirstScreenMindItemOriginDataFailProcessorExtPt","process")
+            .kv("baseOriginDataDTO.getResult().size()", String.valueOf(baseOriginDataDTO.getResult().size()))
+            .info();
         return baseOriginDataDTO;
     }
     public OriginDataDTO<ItemEntity> buildOriginDataDTO(List<Long> itemIdList,SgFrameworkContextItem contextItem){
