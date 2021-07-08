@@ -44,6 +44,9 @@ public class FirstScreenItemBuildItemVOExtPt implements BuildItemVOExtPt {
         String originScm = "";
         String itemUrl = "";
 
+
+        boolean canBuy = true;
+
         Map<String, String> trackPoint = Maps.newHashMap();
 
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
@@ -55,6 +58,7 @@ public class FirstScreenItemBuildItemVOExtPt implements BuildItemVOExtPt {
                     .map(ItemDataDTO::getDetailUrl)
                     .orElse("");
 
+                canBuy = canBuy(itemInfoBySourceDTOMain);
                 hasMainSource = true;
             }
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOOrigin) {
@@ -72,14 +76,15 @@ public class FirstScreenItemBuildItemVOExtPt implements BuildItemVOExtPt {
 
         }
 
-
-
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
 
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
 
+        if (!canBuy) {
+            return Response.fail("ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F");
+        }
 
         if (!hasMainSource) {
             return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
@@ -117,5 +122,12 @@ public class FirstScreenItemBuildItemVOExtPt implements BuildItemVOExtPt {
             LOGGER.error("scmConvertError", e);
             return scm;
         }
+    }
+
+    private boolean canBuy(ItemInfoBySourceDTOMain itemInfoBySourceDTO) {
+        Boolean canBuy = Optional.of(itemInfoBySourceDTO).map(ItemInfoBySourceDTOMain::getItemDTO).map(ItemDataDTO::isCanBuy).orElse(true);
+        Boolean sellOut = Optional.of(itemInfoBySourceDTO).map(ItemInfoBySourceDTOMain::getItemDTO).map(ItemDataDTO::isSellOut).orElse(false);
+        return canBuy && !sellOut;
+
     }
 }
