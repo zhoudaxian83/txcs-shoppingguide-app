@@ -58,12 +58,12 @@ public class FirstScreenItemBuildItemVOExtPt implements BuildItemVOExtPt {
                     .map(ItemDataDTO::getDetailUrl)
                     .orElse("");
 
+                canBuy = canBuy(itemInfoBySourceDTOMain);
                 hasMainSource = true;
             }
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOOrigin) {
                 ItemInfoBySourceDTOOrigin itemInfoBySourceDTOOrigin = (ItemInfoBySourceDTOOrigin) itemInfoBySourceDTO;
                 originScm = itemInfoBySourceDTOOrigin.getScm();
-                canBuy = canBuy((ItemInfoBySourceDTOMain)itemInfoBySourceDTO);
 
             }
             Map<String, String> scmKeyValue = itemInfoBySourceDTO.getScmKeyValue();
