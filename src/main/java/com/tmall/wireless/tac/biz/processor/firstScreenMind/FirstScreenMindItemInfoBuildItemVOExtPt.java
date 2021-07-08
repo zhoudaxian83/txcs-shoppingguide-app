@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-    scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+    scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
 @Service
 public class FirstScreenMindItemInfoBuildItemVOExtPt implements BuildItemVOExtPt {
     @Override
