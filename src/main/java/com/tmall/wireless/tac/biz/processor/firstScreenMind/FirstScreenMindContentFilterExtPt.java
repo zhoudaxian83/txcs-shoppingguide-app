@@ -135,7 +135,7 @@ public class FirstScreenMindContentFilterExtPt implements ContentFilterExtPt {
 
     private boolean itemInfoError(ItemEntityVO item, SgFrameworkContextContent sgFrameworkContextContent, Long contentId) {
         return StringUtils.isEmpty(item.getString("shortTitle"))
-                || StringUtils.isEmpty(item.getString("itemUrl"));
+                || StringUtils.isEmpty(item.getString("itemImg"));
 
     }
 }
