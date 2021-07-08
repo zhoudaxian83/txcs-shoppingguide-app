@@ -104,7 +104,7 @@ public class FirstScreenMindContentFilterExtPt implements ContentFilterExtPt {
                 return;
             }
             for (ItemEntityVO item : items) {
-                if (canBuy(item)) {
+                if (canBuy(item, sgFrameworkContextContent, contentId)) {
                     canBuyItemList.add(item);
                 } else {
                     LogUtil.errorCode(sgFrameworkContextContent.getBizScenario().getUniqueIdentity(),
@@ -119,10 +119,23 @@ public class FirstScreenMindContentFilterExtPt implements ContentFilterExtPt {
 
     }
 
-    private boolean canBuy(ItemEntityVO item) {
+    private boolean canBuy(ItemEntityVO item, SgFrameworkContextContent sgFrameworkContextContent, Long contentId) {
+
+        if (itemInfoError(item, sgFrameworkContextContent, contentId)) {
+            LogUtil.errorCode(sgFrameworkContextContent.getBizScenario().getUniqueIdentity(),
+                    "ITEM_INFO_ERROR" + "," + contentId + " " + item.getString("itemId"));
+            return false;
+        }
+
         Boolean canBuy = item.getBoolean("canBuy");
         Boolean sellOut = item.getBoolean("sellOut");
 
         return (canBuy == null || canBuy) && (sellOut == null || !sellOut);
+    }
+
+    private boolean itemInfoError(ItemEntityVO item, SgFrameworkContextContent sgFrameworkContextContent, Long contentId) {
+        return StringUtils.isEmpty(item.getString("shortTitle"))
+                || StringUtils.isEmpty(item.getString("itemUrl"));
+
     }
 }
