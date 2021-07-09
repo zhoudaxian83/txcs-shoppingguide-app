@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**
+ * 买买菜商品查询
  * @author haixiao.zhang
  * @date 2021/7/9
  */
@@ -20,7 +21,7 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
 
     @Autowired
     private AldSpi aldSpi;
-    
+
     @Override
     public Flowable<TacResult<ItemRecallModeDO>> executeFlowable(Context context) throws Exception {
 
