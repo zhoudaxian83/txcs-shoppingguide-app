@@ -83,6 +83,7 @@ public class MmcO2OPromiseHandler extends RpmReactiveHandler<Map<String,Object>>
                 }
                 StoreTimeSliceDTO storeTimeSliceDTO = slice.getData();
                 Map<String, Object> resultData = new HashMap<String, Object>();
+                resultData.put("displayTimeStr", storeTimeSliceDTO.getFirstTimeDateOrigin());
                 resultData.put("displayTime", displayTimeSlice(storeTimeSliceDTO));
                 return TacResult.newResult(resultData);
             }).onErrorReturn(e -> {
