@@ -13,8 +13,12 @@ import com.tmall.wireless.tac.client.dataservice.TacOptLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -73,12 +77,13 @@ public class MmcO2OPromiseHandler extends RpmReactiveHandler<Map<String,Object>>
 
         return promiseServiceSpi.calcStoreFirstTimeSliceFlowable(request)
             .map(slice -> {
-                if(!slice.isSuccess()) {
+                if(!slice.isSuccess() || null == slice.getData() || StringUtils.isEmpty(slice.getData().getTimeSlot()) || null == slice.getData().getFirstTimeDate()) {
                     TacResult<Map<String,Object>> result = TacResult.errorResult(slice.getMsgCode(), slice.getMsgInfo());
                     return result;
                 }
                 StoreTimeSliceDTO storeTimeSliceDTO = slice.getData();
                 Map<String, Object> resultData = new HashMap<String, Object>();
+                resultData.put("displayTime", displayTimeSlice(storeTimeSliceDTO));
                 return TacResult.newResult(resultData);
             }).onErrorReturn(e -> {
                 tacLogger.error("[MMC_PROMISE] promise calc store first time slice failed", e);
@@ -89,6 +94,19 @@ public class MmcO2OPromiseHandler extends RpmReactiveHandler<Map<String,Object>>
                 long sessionTime = System.currentTimeMillis() - startTime;
                 tacLogger.info("[MMC_PROMISE] cost={}, utdid={}, userId={}, csa:{}", sessionTime, utdid, userId, csa);
             });
+    }
+
+    /**
+     * 展示时间片
+     * @param storeTimeSliceDTO
+     * @return
+     */
+    private static String displayTimeSlice(StoreTimeSliceDTO storeTimeSliceDTO){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String todayDate = format.format(new Date());
+        Date firstTimeDate = storeTimeSliceDTO.getFirstTimeDate();
+        String displayDay = firstTimeDate.equals(todayDate) ? "今天": "明天";
+        return StringUtils.join(new String[]{"预计",displayDay, storeTimeSliceDTO.getTimeSlot(), "送货上门"});
     }
 
 }
