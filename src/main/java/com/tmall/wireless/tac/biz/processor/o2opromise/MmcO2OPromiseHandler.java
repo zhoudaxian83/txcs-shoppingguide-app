@@ -77,13 +77,12 @@ public class MmcO2OPromiseHandler extends RpmReactiveHandler<Map<String,Object>>
 
         return promiseServiceSpi.calcStoreFirstTimeSliceFlowable(request)
             .map(slice -> {
-                if(!slice.isSuccess() || null == slice.getData() || StringUtils.isEmpty(slice.getData().getTimeSlot()) || null == slice.getData().getFirstTimeDate()) {
+                if(!slice.isSuccess() || null == slice.getData() || StringUtils.isEmpty(slice.getData().getTimeSlot()) || StringUtils.isEmpty(slice.getData().getFirstTimeDateOrigin())) {
                     TacResult<Map<String,Object>> result = TacResult.errorResult(slice.getMsgCode(), slice.getMsgInfo());
                     return result;
                 }
                 StoreTimeSliceDTO storeTimeSliceDTO = slice.getData();
                 Map<String, Object> resultData = new HashMap<String, Object>();
-                resultData.put("displayTimeStr", storeTimeSliceDTO.getFirstTimeDateOrigin());
                 resultData.put("displayTime", displayTimeSlice(storeTimeSliceDTO));
                 return TacResult.newResult(resultData);
             }).onErrorReturn(e -> {
@@ -105,7 +104,7 @@ public class MmcO2OPromiseHandler extends RpmReactiveHandler<Map<String,Object>>
     private static String displayTimeSlice(StoreTimeSliceDTO storeTimeSliceDTO){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String todayDate = format.format(new Date());
-        Date firstTimeDate = storeTimeSliceDTO.getFirstTimeDate();
+        String firstTimeDate = storeTimeSliceDTO.getFirstTimeDateOrigin();
         String displayDay = firstTimeDate.equals(todayDate) ? "今天": "明天";
         return StringUtils.join(new String[]{"预计",displayDay, storeTimeSliceDTO.getTimeSlot(), "送货上门"});
     }
