@@ -26,6 +26,7 @@ import com.tmall.txcs.gs.spi.recommend.AldSpi;
 import com.tmall.txcs.gs.spi.recommend.MmcMemberService;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler;
 import io.reactivex.Flowable;
@@ -43,6 +44,9 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
 
     public static final String MMC_HOT_ITEM_ALD_RES_ID = "17385421";
 
+    @Autowired
+    TacLogger tacLogger;
+
 
     @Autowired
     private AldSpi aldSpi;
@@ -52,6 +56,7 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
 
     @Override
     public Flowable<TacResult<ItemRecallModeDO>> executeFlowable(Context context) throws Exception {
+        tacLogger.info("MmcItemQueryHandler.start");
         ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
         List<ItemDO> returnItemIdList = new ArrayList<>();
         Map<String, Object> extendDataMap = new HashMap<>();//扩展参数，权益信息会放到这个里面
