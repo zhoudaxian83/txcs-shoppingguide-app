@@ -54,6 +54,9 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
     @Autowired
     private MmcMemberService mmcMemberService;
 
+    @Autowired
+    TacLogger tacLogger;
+
     @Override
     public Flowable<TacResult<ItemRecallModeDO>> executeFlowable(Context context) throws Exception {
         tacLogger.info("MmcItemQueryHandler.start");
