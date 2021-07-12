@@ -57,73 +57,68 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
 
     @Override
     public Flowable<TacResult<ItemRecallModeDO>> executeFlowable(Context context) throws Exception {
-        try{
-            tacLogger.info("MmcItemQueryHandler.start");
-            ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
-            List<ItemDO> returnItemIdList = new ArrayList<>();
-            Map<String, Object> extendDataMap = new HashMap<>();//扩展参数，权益信息会放到这个里面
-            if(MapUtils.isNotEmpty(itemRecallModeDO.getExtendData())){
-                extendDataMap = itemRecallModeDO.getExtendData();
-            }
-
-            Long userId = MapUtil.getLongWithDefault(context.getParams(), "userId", 0L);
-            List<StoreResult> storeList = new ArrayList<>();
-            Object stores = context.getParams().get("stores");
-            if (stores != null && stores instanceof List) {
-                storeList = (List<StoreResult>)stores;
-            } else {
-                //TODO 异常处理
-            }
-            List<String> storeIdList = storeList.stream().map(StoreResult::getStoreId).collect(Collectors.toList());
-
-            Request request = buildAldRequest(userId, storeIdList);
-            Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
-            if (MapUtils.isNotEmpty(aldResponseMap)) {
-                List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID)
-                    .get("data");
-                if(CollectionUtils.isNotEmpty(dataList)){
-                    List<ItemDO> oldItemIdList = dataList.stream().map(e -> {
-                        Long contentId = (Long)e.get("contentId");
-                        ItemDO oldItemDO = new ItemDO();
-                        oldItemDO.setItemId(contentId);
-                        oldItemDO.setType(ItemType.NORMAL_ITEM);
-                        return oldItemDO;
-                    }).collect(Collectors.toList());
-                    returnItemIdList.addAll(oldItemIdList);
-                }
-            }
-
-            //如果userId为空，则不取新人三选一数据和券数据
-            if (userId != null && userId != 0L) {
-                O2OItemBenfitsRequest o2OItemBenfitsRequest = new O2OItemBenfitsRequest();
-                o2OItemBenfitsRequest.setUserId(userId);
-                o2OItemBenfitsRequest.setStoreId(Long.valueOf(storeIdList.get(0)));
-                Result<O2OItemBenfitsResponse> o2OItemBenfitsResponseResult = mmcMemberService.queryItemAndBenefits(o2OItemBenfitsRequest);
-                if(o2OItemBenfitsResponseResult.isSuccess()){
-                    O2OItemBenfitsResponse o2OItemBenfitsResponse = o2OItemBenfitsResponseResult.getData();
-                    List<Long> chooseItemIds = o2OItemBenfitsResponse.getChooseItemIds();
-                    if(CollectionUtils.isNotEmpty(chooseItemIds)){
-                        List<ItemDO> newItemList = chooseItemIds.stream().map(e -> {
-                            ItemDO itemDO = new ItemDO();
-                            itemDO.setItemId(e);
-                            itemDO.setType(ItemType.NEW_USER_ITEM);
-                            return itemDO;
-                        }).collect(Collectors.toList());
-                        //新人商品数据
-                        returnItemIdList.addAll(newItemList);
-                    }
-                    //红包数据
-                    extendDataMap.putAll(o2OItemBenfitsResponse.getExt());
-                }
-            }
-
-            itemRecallModeDO.setItems(returnItemIdList);
-            itemRecallModeDO.setExtendData(extendDataMap);
-            return Flowable.just(TacResult.newResult(itemRecallModeDO));
-        }catch (Exception e){
-            tacLogger.error("MmcItemQueryHandler.error. e:{}", e);
-            return Flowable.error(e);
+        tacLogger.info("MmcItemQueryHandler.start");
+        ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
+        List<ItemDO> returnItemIdList = new ArrayList<>();
+        Map<String, Object> extendDataMap = new HashMap<>();//扩展参数，权益信息会放到这个里面
+        if(MapUtils.isNotEmpty(itemRecallModeDO.getExtendData())){
+            extendDataMap = itemRecallModeDO.getExtendData();
         }
+
+        Long userId = MapUtil.getLongWithDefault(context.getParams(), "userId", 0L);
+        List<StoreResult> storeList = new ArrayList<>();
+        Object stores = context.getParams().get("stores");
+        if (stores != null && stores instanceof List) {
+            storeList = (List<StoreResult>)stores;
+        } else {
+            //TODO 异常处理
+        }
+        List<String> storeIdList = storeList.stream().map(StoreResult::getStoreId).collect(Collectors.toList());
+
+        Request request = buildAldRequest(userId, storeIdList);
+        Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
+        if (MapUtils.isNotEmpty(aldResponseMap)) {
+            List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID)
+                .get("data");
+            if(CollectionUtils.isNotEmpty(dataList)){
+                List<ItemDO> oldItemIdList = dataList.stream().map(e -> {
+                    Long contentId = (Long)e.get("contentId");
+                    ItemDO oldItemDO = new ItemDO();
+                    oldItemDO.setItemId(contentId);
+                    oldItemDO.setType(ItemType.NORMAL_ITEM);
+                    return oldItemDO;
+                }).collect(Collectors.toList());
+                returnItemIdList.addAll(oldItemIdList);
+            }
+        }
+
+        //如果userId为空，则不取新人三选一数据和券数据
+        if (userId != null && userId != 0L) {
+            O2OItemBenfitsRequest o2OItemBenfitsRequest = new O2OItemBenfitsRequest();
+            o2OItemBenfitsRequest.setUserId(userId);
+            o2OItemBenfitsRequest.setStoreId(Long.valueOf(storeIdList.get(0)));
+            Result<O2OItemBenfitsResponse> o2OItemBenfitsResponseResult = mmcMemberService.queryItemAndBenefits(o2OItemBenfitsRequest);
+            if(o2OItemBenfitsResponseResult.isSuccess()){
+                O2OItemBenfitsResponse o2OItemBenfitsResponse = o2OItemBenfitsResponseResult.getData();
+                List<Long> chooseItemIds = o2OItemBenfitsResponse.getChooseItemIds();
+                if(CollectionUtils.isNotEmpty(chooseItemIds)){
+                    List<ItemDO> newItemList = chooseItemIds.stream().map(e -> {
+                        ItemDO itemDO = new ItemDO();
+                        itemDO.setItemId(e);
+                        itemDO.setType(ItemType.NEW_USER_ITEM);
+                        return itemDO;
+                    }).collect(Collectors.toList());
+                    //新人商品数据
+                    returnItemIdList.addAll(newItemList);
+                }
+                //红包数据
+                extendDataMap.putAll(o2OItemBenfitsResponse.getExt());
+            }
+        }
+
+        itemRecallModeDO.setItems(returnItemIdList);
+        itemRecallModeDO.setExtendData(extendDataMap);
+        return Flowable.just(TacResult.newResult(itemRecallModeDO));
 
     }
 
