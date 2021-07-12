@@ -77,5 +77,8 @@
     <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianItemInfoPostProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianCaptainRequestExtPt"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.mmc.handler.MmcItemQueryHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.mmc.handler.MmcItemMergeHandler"/>
+
 
 </beans>
