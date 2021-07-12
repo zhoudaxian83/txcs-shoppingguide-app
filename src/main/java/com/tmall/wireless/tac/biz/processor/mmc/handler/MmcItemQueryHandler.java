@@ -5,6 +5,7 @@ import com.taobao.freshx.homepage.client.domain.ItemRecallModeDO;
 import com.taobao.poi2.client.result.StoreResult;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.AldSpi;
+import com.tmall.txcs.gs.spi.recommend.MmcMemberService;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -39,6 +40,11 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
 
     @Autowired
     private AldSpi aldSpi;
+
+
+    @Autowired
+    private MmcMemberService mmcMemberService;
+
 
     @Override
     public Flowable<TacResult<ItemRecallModeDO>> executeFlowable(Context context) throws Exception {
