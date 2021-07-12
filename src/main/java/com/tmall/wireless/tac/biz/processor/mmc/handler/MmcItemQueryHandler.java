@@ -26,6 +26,7 @@ import com.tmall.txcs.gs.spi.recommend.AldSpi;
 import com.tmall.txcs.gs.spi.recommend.MmcMemberService;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler;
 import io.reactivex.Flowable;
@@ -49,6 +50,9 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
 
     @Autowired
     private MmcMemberService mmcMemberService;
+
+    @Autowired
+    TacLogger tacLogger;
 
     @Override
     public Flowable<TacResult<ItemRecallModeDO>> executeFlowable(Context context) throws Exception {
