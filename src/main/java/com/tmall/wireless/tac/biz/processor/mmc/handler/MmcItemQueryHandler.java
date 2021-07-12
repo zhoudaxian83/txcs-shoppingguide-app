@@ -42,7 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO> {
 
-    public static final String MMC_HOT_ITEM_ALD_RES_ID = "17385421";
+    public static final String MMC_HOT_ITEM_ALD_RES_ID = "13757822";
 
     @Autowired
     TacLogger tacLogger;
