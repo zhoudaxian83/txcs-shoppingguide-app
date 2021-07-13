@@ -72,16 +72,16 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
         }
 
         Long userId = MapUtil.getLongWithDefault(context.getParams(), "userId", 0L);
-        //List<StoreResult> storeList = new ArrayList<>();
-        //Object stores = context.getParams().get("stores");
-        //if (stores != null && stores instanceof List) {
-        //    storeList = (List<StoreResult>)stores;
-        //} else {
-        //    //TODO 异常处理
-        //}
-        //List<String> storeIdList = storeList.stream().map(StoreResult::getStoreId).collect(Collectors.toList());
-        String storeId = MapUtil.getStringWithDefault(context.getParams(), "storeId", "");
-        List<String> storeIdList = Arrays.asList(storeId);
+        List<StoreResult> storeList = new ArrayList<>();
+        Object stores = context.getParams().get("stores");
+        if (stores != null && stores instanceof List) {
+            storeList = (List<StoreResult>)stores;
+        } else {
+            //TODO 异常处理
+        }
+        List<String> storeIdList = storeList.stream().map(StoreResult::getStoreId).collect(Collectors.toList());
+        //String storeId = MapUtil.getStringWithDefault(context.getParams(), "storeId", "");
+        //List<String> storeIdList = Arrays.asList(storeId);
 
         Request request = buildAldRequest(userId, storeIdList);
         Long aldStart = System.currentTimeMillis();
