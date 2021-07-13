@@ -38,28 +38,28 @@ public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
 
         Long userId = MapUtil.getLongWithDefault(context.getParams(),"userId",0L);
         int canExposureItemCount = Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(),"canExposureItemCount","0"));
+        ItemDirectionalDiscountRequest request = new ItemDirectionalDiscountRequest();
 
         MaterialDO materialDO = null;
         if(context.getParams().get("materialDO")!=null){
             materialDO = (MaterialDO)context.getParams().get("materialDO");
+            Long storeId = Long.valueOf(materialDO.getStores().get(0).getStoreId());
+            request.setStoreId(storeId);
+
         }
         //Map extendData = (Map)context.getParams().get("extendData");
 
         List<Long> itemIdList = Lists.newArrayList();
-        Long storeId = Long.valueOf(materialDO.getStores().get(0).getStoreId());
         materialDO.getItems().forEach(itemDO -> {
             ItemType itemType = itemDO.getType();
             if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
                 itemIdList.add(itemDO.getItemId());
             }
         });
-
-        ItemDirectionalDiscountRequest request = new ItemDirectionalDiscountRequest();
         request.setItemIds(itemIdList);
-        request.setStoreId(storeId);
         request.setUmpId(0L);
         request.setUserId(userId);
-        if(CollectionUtils.isNotEmpty(itemIdList)){
+        if(CollectionUtils.isNotEmpty(itemIdList) && request.getStoreId()!=null && request.getStoreId()!=0L){
             Result<ItemDirectionalDiscountResponse> responseResult =  mmcMemberService.queryItemDirectionalDiscount(request);
             if(responseResult!=null && responseResult.isSuccess()){
                 ItemDirectionalDiscountResponse itemDirectionalDiscountResponse = responseResult.getData();
