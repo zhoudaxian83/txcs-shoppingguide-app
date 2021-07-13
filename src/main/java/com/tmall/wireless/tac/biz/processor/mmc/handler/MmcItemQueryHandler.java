@@ -128,7 +128,7 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
             Result<O2OItemBenfitsResponse> o2OItemBenfitsResponseResult = mmcMemberService.queryItemAndBenefits(o2OItemBenfitsRequest);
             Long memberEnd = System.currentTimeMillis();
             tacLogger.info("-----------member cost : " + (memberEnd - memberStart)+"-------------------");
-            if(o2OItemBenfitsResponseResult.isSuccess()){
+            if(o2OItemBenfitsResponseResult.isSuccess() && o2OItemBenfitsResponseResult.getData() != null){
                 O2OItemBenfitsResponse o2OItemBenfitsResponse = o2OItemBenfitsResponseResult.getData();
                 List<Long> chooseItemIds = o2OItemBenfitsResponse.getChooseItemIds();
                 if(CollectionUtils.isNotEmpty(chooseItemIds)){
