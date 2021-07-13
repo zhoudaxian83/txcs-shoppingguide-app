@@ -11,6 +11,7 @@ import com.alibaba.aladdin.lamp.domain.request.RequestItem;
 import com.alibaba.aladdin.lamp.domain.request.modules.LocationInfo;
 import com.alibaba.aladdin.lamp.domain.response.ResResponse;
 import com.alibaba.aladdin.lamp.domain.user.UserProfile;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.hyperlocalretail.sdk.member.o2otbmc.domain.O2OItemBenfitsRequest;
 import com.alibaba.hyperlocalretail.sdk.member.o2otbmc.domain.O2OItemBenfitsResponse;
@@ -79,6 +80,7 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
 
         Request request = buildAldRequest(userId, storeIdList);
         Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
+        tacLogger.info("aldResponseMap:" + JSON.toJSONString(aldResponseMap));
         if (MapUtils.isNotEmpty(aldResponseMap)) {
             List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID)
                 .get("data");
