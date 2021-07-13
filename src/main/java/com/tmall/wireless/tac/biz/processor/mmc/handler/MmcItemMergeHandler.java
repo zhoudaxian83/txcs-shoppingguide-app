@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.taobao.freshx.homepage.client.domain.ItemDO;
 import com.taobao.freshx.homepage.client.domain.ItemType;
 import com.taobao.freshx.homepage.client.domain.MaterialDO;
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.MmcMemberService;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -35,7 +36,7 @@ public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
     @Override
     public Flowable<TacResult<MaterialDO>> executeFlowable(Context context) throws Exception {
 
-        Long userId = (Long)context.getParams().get("userId");
+        Long userId = MapUtil.getLongWithDefault(context.getParams(),"userId",0L);
         MaterialDO materialDO = (MaterialDO)context.getParams().get("materialDO");
         Integer canExposureItemCount = (Integer)context.getParams().get("canExposureItemCount");
         Map extendData = (Map)context.getParams().get("extendData");
