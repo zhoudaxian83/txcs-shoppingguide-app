@@ -6,23 +6,25 @@ import com.alibaba.hyperlocalretail.sdk.member.o2otbmc.domain.ItemDirectionalDis
 import com.alibaba.hyperlocalretail.sdk.member.o2otbmc.domain.O2OItemPriceDTO;
 import com.alibaba.tcls.scrm.sdk.utils.domain.common.Result;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.taobao.freshx.homepage.client.domain.BenefitDO;
 import com.taobao.freshx.homepage.client.domain.ItemDO;
 import com.taobao.freshx.homepage.client.domain.ItemType;
 import com.taobao.freshx.homepage.client.domain.MaterialDO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.MmcMemberService;
-import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +44,9 @@ public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
     @Override
     public Flowable<TacResult<MaterialDO>> executeFlowable(Context context) throws Exception {
 
-        LOGGER.error("executeFlowable start context:{}",JSON.toJSONString(context));
+        HadesLogUtil.stream("MmcItemMergeHandler")
+            .kv("context",JSON.toJSONString(context))
+            .info();
         Long userId = MapUtil.getLongWithDefault(context.getParams(),"userId",0L);
         int canExposureItemCount = Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(),"canExposureItemCount","0"));
         ItemDirectionalDiscountRequest request = new ItemDirectionalDiscountRequest();
@@ -54,7 +58,12 @@ public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
             request.setStoreId(storeId);
 
         }
-        //Map extendData = (Map)context.getParams().get("extendData");
+        Map extendData = Maps.newHashMap();
+        String umpId = "0";
+        if(context.getParams().get("extendData")!=null){
+            extendData = (Map)context.getParams().get("extendData");
+            umpId = (String)extendData.get("chooseUmpId");
+        }
 
         List<Long> itemIdList = Lists.newArrayList();
         if(materialDO!=null && CollectionUtils.isNotEmpty(materialDO.getItems())){
@@ -65,10 +74,15 @@ public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
                 }
             });
             request.setItemIds(itemIdList);
-            request.setUmpId(0L);
+            request.setUmpId(Long.valueOf(umpId));
             request.setUserId(userId);
             if(CollectionUtils.isNotEmpty(itemIdList) && request.getStoreId()!=null && request.getStoreId()!=0L){
                 Result<ItemDirectionalDiscountResponse> responseResult =  mmcMemberService.queryItemDirectionalDiscount(request);
+
+                HadesLogUtil.stream("MmcItemMergeHandler responseResult")
+                    .kv("request",JSON.toJSONString(request))
+                    .kv("responseResult",JSON.toJSONString(responseResult))
+                    .info();
                 if(responseResult!=null && responseResult.isSuccess()){
                     ItemDirectionalDiscountResponse itemDirectionalDiscountResponse = responseResult.getData();
                     Map<Long, O2OItemPriceDTO> itemPriceMap = itemDirectionalDiscountResponse.getItemPriceMap();
@@ -83,38 +97,81 @@ public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
                     });
                 }
             }
+            if(StringUtils.isNotBlank((String)extendData.get("benefitPic"))){
+                BenefitDO benefitDO = materialDO.getBenefit();
+                benefitDO.setPicUrl((String)extendData.get("benefitPic"));
+                benefitDO.setId(umpId);
+                canExposureItemCount = canExposureItemCount - 1;
+            }
+
             List<ItemDO> reItemList = sortItem(canExposureItemCount,materialDO.getItems());
+
             materialDO.setItems(reItemList);
         }
 
+        HadesLogUtil.stream("MmcItemMergeHandler materialDO")
+            .kv("materialDO",JSON.toJSONString(materialDO))
+            .info();
         return Flowable.just(TacResult.newResult(materialDO));
     }
 
-    private BigDecimal getPrice(Long itemId,Map<Long, O2OItemPriceDTO> map){
-
-        return map.get(itemId).getPrice();
-    }
 
     /**
      * 新人优先
      * @param canExposureItemCount
      * @param itemList
      */
-    private List<ItemDO> sortItem(Integer canExposureItemCount,List<ItemDO> itemList){
-        List<ItemDO> reItemList = Lists.newArrayList();
-        List<ItemDO> newItemList = Lists.newArrayList();
-        itemList.forEach(itemDO -> {
-            ItemType itemType = itemDO.getType();
-            if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
-                newItemList.add(itemDO);
-            }else {
-                reItemList.add(itemDO);
-            }
+    private List<ItemDO> sortItem(int canExposureItemCount,List<ItemDO> itemList){
 
-        });
-        if(CollectionUtils.isNotEmpty(reItemList)){
-            newItemList.addAll(reItemList);
+        List<ItemDO> newItemList = Lists.newArrayList();
+        List<ItemDO> reItemList = Lists.newArrayList();
+
+        if(CollectionUtils.isNotEmpty(itemList) && canExposureItemCount > 0){
+            itemList.forEach(itemDO -> {
+                ItemType itemType = itemDO.getType();
+                if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
+                    newItemList.add(itemDO);
+                }else {
+                    reItemList.add(itemDO);
+                }
+
+            });
+            if(newItemList.size() < canExposureItemCount){
+                if(reItemList.size() > canExposureItemCount-newItemList.size()){
+                    newItemList.addAll(reItemList.subList(0,canExposureItemCount-newItemList.size()));
+                }else {
+                    newItemList.addAll(reItemList);
+                }
+            }
+            /**
+             * newItemIds=商品1ID:O2OHalfDay,商品2Id:O2OHalfDay,……
+             * itemIds=商品1ID:O2OHalfDay,商品2Id:O2OHalfDay,……
+             */
+            StringBuilder oldItemActionUrl = new StringBuilder();
+            oldItemActionUrl.append("itemIds=");
+            //新人品
+            StringBuilder newItemActionUrl = new StringBuilder();
+            newItemActionUrl.append("newItemIds=");
+
+            newItemList.forEach(itemDO->{
+                if(itemDO.getType().getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
+                    newItemActionUrl.append(itemDO.getItemId()).append(":O2OHalfDay").append(",");
+                }else {
+                    oldItemActionUrl.append(itemDO.getItemId()).append(":O2OHalfDay").append(",");
+                }
+            });
+            newItemList.forEach(itemDO->{
+                if(itemDO.getType().getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
+                    itemDO.setActionUrl(newItemActionUrl.toString());
+                }else {
+                    itemDO.setActionUrl(oldItemActionUrl.toString());
+                }
+            });
+
+        }else {
+            return itemList;
         }
+
         return newItemList;
 
     }
