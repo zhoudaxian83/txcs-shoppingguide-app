@@ -50,34 +50,36 @@ public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
         //Map extendData = (Map)context.getParams().get("extendData");
 
         List<Long> itemIdList = Lists.newArrayList();
-        materialDO.getItems().forEach(itemDO -> {
-            ItemType itemType = itemDO.getType();
-            if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
-                itemIdList.add(itemDO.getItemId());
-            }
-        });
-        request.setItemIds(itemIdList);
-        request.setUmpId(0L);
-        request.setUserId(userId);
-        if(CollectionUtils.isNotEmpty(itemIdList) && request.getStoreId()!=null && request.getStoreId()!=0L){
-            Result<ItemDirectionalDiscountResponse> responseResult =  mmcMemberService.queryItemDirectionalDiscount(request);
-            if(responseResult!=null && responseResult.isSuccess()){
-                ItemDirectionalDiscountResponse itemDirectionalDiscountResponse = responseResult.getData();
-                Map<Long, O2OItemPriceDTO> itemPriceMap = itemDirectionalDiscountResponse.getItemPriceMap();
-                materialDO.getItems().forEach(itemDO -> {
-                    ItemType itemType = itemDO.getType();
-                    if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
-                        if(itemPriceMap.get(itemDO.getItemId())!=null){
-                            itemDO.setPromotedPriceYuan(itemPriceMap.get(itemDO.getItemId()).getPriceInYuan());
-                            itemDO.setPromotedPrice(itemPriceMap.get(itemDO.getItemId()).getPrice().longValue());
+        if(materialDO!=null && CollectionUtils.isNotEmpty(materialDO.getItems())){
+            materialDO.getItems().forEach(itemDO -> {
+                ItemType itemType = itemDO.getType();
+                if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
+                    itemIdList.add(itemDO.getItemId());
+                }
+            });
+            request.setItemIds(itemIdList);
+            request.setUmpId(0L);
+            request.setUserId(userId);
+            if(CollectionUtils.isNotEmpty(itemIdList) && request.getStoreId()!=null && request.getStoreId()!=0L){
+                Result<ItemDirectionalDiscountResponse> responseResult =  mmcMemberService.queryItemDirectionalDiscount(request);
+                if(responseResult!=null && responseResult.isSuccess()){
+                    ItemDirectionalDiscountResponse itemDirectionalDiscountResponse = responseResult.getData();
+                    Map<Long, O2OItemPriceDTO> itemPriceMap = itemDirectionalDiscountResponse.getItemPriceMap();
+                    materialDO.getItems().forEach(itemDO -> {
+                        ItemType itemType = itemDO.getType();
+                        if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
+                            if(itemPriceMap.get(itemDO.getItemId())!=null){
+                                itemDO.setPromotedPriceYuan(itemPriceMap.get(itemDO.getItemId()).getPriceInYuan());
+                                itemDO.setPromotedPrice(itemPriceMap.get(itemDO.getItemId()).getPrice().longValue());
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
+            List<ItemDO> reItemList = sortItem(canExposureItemCount,materialDO.getItems());
+            materialDO.setItems(reItemList);
         }
 
-        List<ItemDO> reItemList = sortItem(canExposureItemCount,materialDO.getItems());
-        materialDO.setItems(reItemList);
         return Flowable.just(TacResult.newResult(materialDO));
     }
 
