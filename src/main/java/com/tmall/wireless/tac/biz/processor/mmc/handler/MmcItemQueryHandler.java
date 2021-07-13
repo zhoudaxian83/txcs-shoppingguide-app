@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.mmc.handler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +61,7 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
 
     @Override
     public Flowable<TacResult<ItemRecallModeDO>> executeFlowable(Context context) throws Exception {
-        tacLogger.info("MmcItemQueryHandler.start");
+        tacLogger.info("MmcItemQueryHandler.start. ----- context:{}" + JSON.toJSONString(context));
         ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
         List<ItemDO> returnItemIdList = new ArrayList<>();
         Map<String, Object> extendDataMap = new HashMap<>();//扩展参数，权益信息会放到这个里面
@@ -69,14 +70,16 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
         }
 
         Long userId = MapUtil.getLongWithDefault(context.getParams(), "userId", 0L);
-        List<StoreResult> storeList = new ArrayList<>();
-        Object stores = context.getParams().get("stores");
-        if (stores != null && stores instanceof List) {
-            storeList = (List<StoreResult>)stores;
-        } else {
-            //TODO 异常处理
-        }
-        List<String> storeIdList = storeList.stream().map(StoreResult::getStoreId).collect(Collectors.toList());
+        //List<StoreResult> storeList = new ArrayList<>();
+        //Object stores = context.getParams().get("stores");
+        //if (stores != null && stores instanceof List) {
+        //    storeList = (List<StoreResult>)stores;
+        //} else {
+        //    //TODO 异常处理
+        //}
+        //List<String> storeIdList = storeList.stream().map(StoreResult::getStoreId).collect(Collectors.toList());
+        String storeId = MapUtil.getStringWithDefault(context.getParams(), "storeId", "");
+        List<String> storeIdList = Arrays.asList(storeId);
 
         Request request = buildAldRequest(userId, storeIdList);
         Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
