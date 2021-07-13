@@ -76,10 +76,10 @@ public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
                     });
                 }
             }
+            List<ItemDO> reItemList = sortItem(canExposureItemCount,materialDO.getItems());
+            materialDO.setItems(reItemList);
         }
 
-        List<ItemDO> reItemList = sortItem(canExposureItemCount,materialDO.getItems());
-        materialDO.setItems(reItemList);
         return Flowable.just(TacResult.newResult(materialDO));
     }
 
