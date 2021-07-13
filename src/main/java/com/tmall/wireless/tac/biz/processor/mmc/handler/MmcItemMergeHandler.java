@@ -37,9 +37,9 @@ public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
     public Flowable<TacResult<MaterialDO>> executeFlowable(Context context) throws Exception {
 
         Long userId = MapUtil.getLongWithDefault(context.getParams(),"userId",0L);
-        MaterialDO materialDO = (MaterialDO)context.getParams().get("materialDO");
-        Integer canExposureItemCount = (Integer)context.getParams().get("canExposureItemCount");
+        int canExposureItemCount = Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(),"canExposureItemCount",""));
         Map extendData = (Map)context.getParams().get("extendData");
+        MaterialDO materialDO = (MaterialDO)context.getParams().get("materialDO");
 
         List<Long> itemIdList = Lists.newArrayList();
         Long storeId = Long.valueOf(materialDO.getStores().get(0).getStoreId());
