@@ -46,7 +46,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO> {
 
-    public static final String MMC_HOT_ITEM_ALD_RES_ID = "13757822";
+    public static final String MMC_HOT_ITEM_ALD_RES_ID = "17733663";
 
     @Autowired
     TacLogger tacLogger;
