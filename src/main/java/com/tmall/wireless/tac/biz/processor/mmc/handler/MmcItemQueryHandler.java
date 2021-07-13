@@ -82,18 +82,23 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
         Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
         tacLogger.info("aldResponseMap:" + JSON.toJSONString(aldResponseMap));
         if (MapUtils.isNotEmpty(aldResponseMap)) {
-            List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID)
-                .get("data");
-            if(CollectionUtils.isNotEmpty(dataList)){
-                List<ItemDO> oldItemIdList = dataList.stream().map(e -> {
-                    Long contentId = (Long)e.get("contentId");
-                    ItemDO oldItemDO = new ItemDO();
-                    oldItemDO.setItemId(contentId);
-                    oldItemDO.setType(ItemType.NORMAL_ITEM);
-                    return oldItemDO;
-                }).collect(Collectors.toList());
-                returnItemIdList.addAll(oldItemIdList);
+            ResResponse resResponse = aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID);
+            tacLogger.info("resResponse:" + JSON.toJSONString(resResponse));
+            if(resResponse != null){
+                List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID)
+                    .get("data");
+                if(CollectionUtils.isNotEmpty(dataList)){
+                    List<ItemDO> oldItemIdList = dataList.stream().map(e -> {
+                        Long contentId = (Long)e.get("contentId");
+                        ItemDO oldItemDO = new ItemDO();
+                        oldItemDO.setItemId(contentId);
+                        oldItemDO.setType(ItemType.NORMAL_ITEM);
+                        return oldItemDO;
+                    }).collect(Collectors.toList());
+                    returnItemIdList.addAll(oldItemIdList);
+                }
             }
+
         }
 
         //如果userId为空，则不取新人三选一数据和券数据
