@@ -34,6 +34,8 @@ import com.tmall.wireless.tac.client.handler.TacReactiveHandler;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +47,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO> {
+
+    Logger LOGGER = LoggerFactory.getLogger(MmcItemQueryHandler.class);
 
     public static final String MMC_HOT_ITEM_ALD_RES_ID = "13757822";
 
@@ -62,8 +66,10 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
     @Override
     public Flowable<TacResult<ItemRecallModeDO>> executeFlowable(Context context) throws Exception {
         tacLogger.info("------------------------------");
+        LOGGER.error("--------------MmcItemQueryHandler start----------------");
         Long start = System.currentTimeMillis();
         tacLogger.info("MmcItemQueryHandler.start. ----- context:{}" + JSON.toJSONString(context));
+        LOGGER.error("MmcItemQueryHandler.start. ----- context:{}" + JSON.toJSONString(context));
         ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
         List<ItemDO> returnItemIdList = new ArrayList<>();
         Map<String, Object> extendDataMap = new HashMap<>();//扩展参数，权益信息会放到这个里面
