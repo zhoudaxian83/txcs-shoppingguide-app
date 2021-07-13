@@ -11,10 +11,13 @@ import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.aselfcommon.model.scene.enums.SceneType;
 import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
 import com.tmall.txcs.gs.model.Response;
+import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.content.ContentInfoDTO;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
@@ -37,6 +40,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -66,9 +70,21 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             for (ContentEntity contentEntity : contentEntities) {
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
             }
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+                    Objects::toString).orElse("0"))
+                .kv("FirstScreenMindContentInfoQueryExtPt","process")
+                .kv("sKeyList",JSON.toJSONString(sKeyList))
+                .info();
             Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-            tacLogger.info("***********mgetResult.getValue()*******:"+mgetResult.getValue());
-            LOGGER.info("***********mgetResultRequest:{};mgetResult.getValue:{}*******:", JSON.toJSONString(sKeyList), JSON.toJSONString(mgetResult.getValue()));
+            if(mgetResult != null && mgetResult.getValue() != null){
+                HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                    .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+                        Objects::toString).orElse("0"))
+                    .kv("FirstScreenMindContentInfoQueryExtPt","process")
+                    .kv("mgetResult.getValue().size()",JSON.toJSONString(mgetResult.getValue().size()))
+                    .info();
+            }
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail("READ_CONTENT_FROM_TAIR_RETURN_EMPTY"));
             }
@@ -146,6 +162,12 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 contentDTO.setContentInfo(contentInfo);
                 contentDTOMap.put(contentId,contentDTO);
             }
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+                    Objects::toString).orElse("0"))
+                .kv("FirstScreenMindContentInfoQueryExtPt","process")
+                .kv("contentDTOMap",JSON.toJSONString(contentDTOMap))
+                .info();
         }catch (Exception e){
             LOGGER.info(RenderErrorEnum.contentBatchTairExc.getCode(), RenderErrorEnum.contentBatchTairExc.getMessage());
             return Flowable.just(Response.fail(RenderErrorEnum.contentBatchTairExc.getCode()));
