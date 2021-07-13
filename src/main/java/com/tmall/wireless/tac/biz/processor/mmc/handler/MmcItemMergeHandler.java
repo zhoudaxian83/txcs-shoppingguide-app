@@ -15,6 +15,7 @@ import com.tmall.wireless.tac.client.handler.TacReactiveHandler;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.Map;
  * @author haixiao.zhang
  * @date 2021/7/9
  */
+@Service
 public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
 
     @Autowired

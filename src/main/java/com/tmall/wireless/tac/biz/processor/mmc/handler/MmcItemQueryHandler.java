@@ -33,6 +33,7 @@ import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * 买买菜商品查询
@@ -40,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author haixiao.zhang
  * @date 2021/7/9
  */
+@Service
 public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO> {
 
     public static final String MMC_HOT_ITEM_ALD_RES_ID = "13757822";
