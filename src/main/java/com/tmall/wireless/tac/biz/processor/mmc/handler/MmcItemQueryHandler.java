@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.mmc.handler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,13 +26,11 @@ import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.AldSpi;
 import com.tmall.txcs.gs.spi.recommend.MmcMemberService;
-import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
-import com.tmall.wireless.tac.client.handler.TacReactiveHandler;
-import io.reactivex.Flowable;
+import com.tmall.wireless.tac.client.handler.TacHandler;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
@@ -48,7 +45,7 @@ import org.springframework.stereotype.Service;
  * @date 2021/7/9
  */
 @Service
-public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO> {
+public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     Logger LOGGER = LoggerFactory.getLogger(MmcItemQueryHandler.class);
 
@@ -64,9 +61,8 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
     @Autowired
     private MmcMemberService mmcMemberService;
 
-
     @Override
-    public Flowable<TacResult<ItemRecallModeDO>> executeFlowable(Context context) throws Exception {
+    public TacResult<ItemRecallModeDO> execute(Context context) throws Exception {
         tacLogger.info("------------------------------");
         LOGGER.error("--------------MmcItemQueryHandler start----------------");
         HadesLogUtil.stream("MmcItemQueryHandler")
@@ -152,8 +148,7 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
         tacLogger.info("return itemRecallModeDO:" + JSON.toJSONString(itemRecallModeDO));
         Long end = System.currentTimeMillis();
         tacLogger.info("final cost:" + (end - start));
-        return Flowable.just(TacResult.newResult(itemRecallModeDO));
-
+        return TacResult.newResult(itemRecallModeDO);
     }
 
     private Request buildAldRequest(Long userId, List<String> storeIdList) {
@@ -176,5 +171,6 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
         return request;
 
     }
+
 
 }
