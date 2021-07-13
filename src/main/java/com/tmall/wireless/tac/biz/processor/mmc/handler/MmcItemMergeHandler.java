@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.mmc.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.hyperlocalretail.sdk.member.o2otbmc.domain.ItemDirectionalDiscountRequest;
 import com.alibaba.hyperlocalretail.sdk.member.o2otbmc.domain.ItemDirectionalDiscountResponse;
 import com.alibaba.hyperlocalretail.sdk.member.o2otbmc.domain.O2OItemPriceDTO;
@@ -10,11 +11,14 @@ import com.taobao.freshx.homepage.client.domain.ItemType;
 import com.taobao.freshx.homepage.client.domain.MaterialDO;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.MmcMemberService;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +34,15 @@ import java.util.Map;
 @Service
 public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
 
+    Logger LOGGER = LoggerFactory.getLogger(MmcItemMergeHandler.class);
+
     @Autowired
     private MmcMemberService mmcMemberService;
 
     @Override
     public Flowable<TacResult<MaterialDO>> executeFlowable(Context context) throws Exception {
 
+        LOGGER.error("executeFlowable start context:{}",JSON.toJSONString(context));
         Long userId = MapUtil.getLongWithDefault(context.getParams(),"userId",0L);
         int canExposureItemCount = Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(),"canExposureItemCount","0"));
         ItemDirectionalDiscountRequest request = new ItemDirectionalDiscountRequest();
