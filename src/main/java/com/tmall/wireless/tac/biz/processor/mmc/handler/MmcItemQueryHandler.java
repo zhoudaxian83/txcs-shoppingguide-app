@@ -89,7 +89,8 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
                     .get("data");
                 if(CollectionUtils.isNotEmpty(dataList)){
                     List<ItemDO> oldItemIdList = dataList.stream().map(e -> {
-                        Long contentId = (Long)e.get("contentId");
+                        Long contentId = Long.valueOf(String.valueOf(e.get("contentId")));
+
                         ItemDO oldItemDO = new ItemDO();
                         oldItemDO.setItemId(contentId);
                         oldItemDO.setType(ItemType.NORMAL_ITEM);
@@ -127,6 +128,7 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
 
         itemRecallModeDO.setItems(returnItemIdList);
         itemRecallModeDO.setExtendData(extendDataMap);
+        tacLogger.info("return itemRecallModeDO:" + JSON.toJSONString(itemRecallModeDO));
         return Flowable.just(TacResult.newResult(itemRecallModeDO));
 
     }
