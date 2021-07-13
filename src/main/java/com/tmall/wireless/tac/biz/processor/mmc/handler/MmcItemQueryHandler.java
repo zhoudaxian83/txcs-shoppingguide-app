@@ -128,6 +128,7 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
 
         itemRecallModeDO.setItems(returnItemIdList);
         itemRecallModeDO.setExtendData(extendDataMap);
+        tacLogger.info("return itemRecallModeDO:" + JSON.toJSONString(itemRecallModeDO));
         return Flowable.just(TacResult.newResult(itemRecallModeDO));
 
     }
