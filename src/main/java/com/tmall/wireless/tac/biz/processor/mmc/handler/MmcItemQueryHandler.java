@@ -137,7 +137,7 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
         request.setCallSource(Constant.ALD_CALL_SOURCE);
         request.setDebug(false);
         RequestItem requestItem = new RequestItem();
-        requestItem.setResId(Constant.CONTENT_ALD_RES_ID);
+        requestItem.setResId(MMC_HOT_ITEM_ALD_RES_ID);
         JSONObject data = new JSONObject();
         //渠道参数，流程模板需要识别，识别到以后流程模板内部只返回静态数据，也就是只拿到商品id，不走渲染逻辑
         data.put("sourceChannel", "mmc-halfday");
