@@ -46,7 +46,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO> {
 
-    public static final String MMC_HOT_ITEM_ALD_RES_ID = "13757822";
+    public static final String MMC_HOT_ITEM_ALD_RES_ID = "17733663";
 
     @Autowired
     TacLogger tacLogger;
@@ -61,6 +61,8 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
 
     @Override
     public Flowable<TacResult<ItemRecallModeDO>> executeFlowable(Context context) throws Exception {
+        tacLogger.info("------------------------------");
+        Long start = System.currentTimeMillis();
         tacLogger.info("MmcItemQueryHandler.start. ----- context:{}" + JSON.toJSONString(context));
         ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
         List<ItemDO> returnItemIdList = new ArrayList<>();
@@ -82,18 +84,19 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
         List<String> storeIdList = Arrays.asList(storeId);
 
         Request request = buildAldRequest(userId, storeIdList);
+        Long aldStart = System.currentTimeMillis();
         Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
+        Long aldEnd = System.currentTimeMillis();
+        tacLogger.info("-----------ald cost : " + (aldEnd - aldStart)+"-------------------");
         tacLogger.info("aldResponseMap:" + JSON.toJSONString(aldResponseMap));
         if (MapUtils.isNotEmpty(aldResponseMap)) {
             ResResponse resResponse = aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID);
-            tacLogger.info("resResponse:" + JSON.toJSONString(resResponse));
             if(resResponse != null){
                 List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID)
                     .get("data");
                 if(CollectionUtils.isNotEmpty(dataList)){
                     List<ItemDO> oldItemIdList = dataList.stream().map(e -> {
                         Long contentId = Long.valueOf(String.valueOf(e.get("contentId")));
-
                         ItemDO oldItemDO = new ItemDO();
                         oldItemDO.setItemId(contentId);
                         oldItemDO.setType(ItemType.NORMAL_ITEM);
@@ -110,7 +113,10 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
             O2OItemBenfitsRequest o2OItemBenfitsRequest = new O2OItemBenfitsRequest();
             o2OItemBenfitsRequest.setUserId(userId);
             o2OItemBenfitsRequest.setStoreId(Long.valueOf(storeIdList.get(0)));
+            Long memberStart = System.currentTimeMillis();
             Result<O2OItemBenfitsResponse> o2OItemBenfitsResponseResult = mmcMemberService.queryItemAndBenefits(o2OItemBenfitsRequest);
+            Long memberEnd = System.currentTimeMillis();
+            tacLogger.info("-----------member cost : " + (memberEnd - memberStart)+"-------------------");
             if(o2OItemBenfitsResponseResult.isSuccess()){
                 O2OItemBenfitsResponse o2OItemBenfitsResponse = o2OItemBenfitsResponseResult.getData();
                 List<Long> chooseItemIds = o2OItemBenfitsResponse.getChooseItemIds();
@@ -132,6 +138,8 @@ public class MmcItemQueryHandler implements TacReactiveHandler<ItemRecallModeDO>
         itemRecallModeDO.setItems(returnItemIdList);
         itemRecallModeDO.setExtendData(extendDataMap);
         tacLogger.info("return itemRecallModeDO:" + JSON.toJSONString(itemRecallModeDO));
+        Long end = System.currentTimeMillis();
+        tacLogger.info("final cost:" + (end - start));
         return Flowable.just(TacResult.newResult(itemRecallModeDO));
 
     }
