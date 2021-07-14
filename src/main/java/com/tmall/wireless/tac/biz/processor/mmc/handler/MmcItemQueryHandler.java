@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import com.taobao.freshx.homepage.client.domain.ItemDO;
 import com.taobao.freshx.homepage.client.domain.ItemRecallModeDO;
 import com.taobao.freshx.homepage.client.domain.ItemType;
+import com.taobao.freshx.homepage.client.domain.RecallType;
 import com.taobao.poi2.client.result.StoreResult;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -145,6 +146,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
         itemRecallModeDO.setItems(returnItemIdList);
         itemRecallModeDO.setExtendData(extendDataMap);
+        itemRecallModeDO.setType(RecallType.ASSIGN_ITEM_ID);
         tacLogger.info("return itemRecallModeDO:" + JSON.toJSONString(itemRecallModeDO));
         Long end = System.currentTimeMillis();
         tacLogger.info("final cost:" + (end - start));
