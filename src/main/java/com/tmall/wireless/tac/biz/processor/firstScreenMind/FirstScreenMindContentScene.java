@@ -102,7 +102,6 @@ public class FirstScreenMindContentScene {
                         response.setExtInfos(Maps.newHashMap());
                     }
                     response.getExtInfos().put("propertyMap", propertyMap);
-                    LOGGER.info("FirstScreenMindContentScene JSON.toJSONString(response)"+JSON.toJSONString(response));
                     HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                             .kv("step", "requestLog")
                             .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
