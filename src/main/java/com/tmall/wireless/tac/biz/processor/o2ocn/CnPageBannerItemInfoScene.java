@@ -42,7 +42,6 @@ public class CnPageBannerItemInfoScene {
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
-        Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 0L);
         Long index = MapUtil.getLongWithDefault(context.getParams(), "index", 0L);
         Long pageSize = MapUtil.getLongWithDefault(context.getParams(), "pageSize", 20L);
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
@@ -68,6 +67,8 @@ public class CnPageBannerItemInfoScene {
         pageInfoDO.setPageSize(pageSize.intValue());
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
         sgFrameworkContextItem.setUserParams(context.getParams());
+        String itemSetId = MapUtil.getStringWithDefault(context.getParams(), "itemSetId", "13545");
+        sgFrameworkContextItem.getUserParams().put("itemSetId",itemSetId);
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)
             .onErrorReturn(r -> TacResult.errorResult(""));

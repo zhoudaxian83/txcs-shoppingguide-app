@@ -32,9 +32,6 @@ import org.springframework.stereotype.Service;
  * @Author: luoJunChong
  * @Date: 2021/5/14 10:26
  */
-@Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-    useCase = ScenarioConstantApp.LOC_TYPE_O2O,
-    scenario = ScenarioConstantApp.O2O_CNXH)
 @Service
 public class CnBuildItemVOExtPt implements BuildItemVOExtPt {
 
@@ -80,7 +77,6 @@ public class CnBuildItemVOExtPt implements BuildItemVOExtPt {
                     //reservePrice , 优先chaoshiPrice，无showPrice
                     reservePrice = "".equals(reservePrice) ? promotionPrice : reservePrice;
                 }
-
             }
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOOrigin) {
                 ItemInfoBySourceDTOOrigin itemInfoBySourceDTOOrigin = (ItemInfoBySourceDTOOrigin)itemInfoBySourceDTO;

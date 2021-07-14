@@ -62,22 +62,23 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
         Long smAreaId = context.getLocParams().getSmAreaId() == 0 ? LogicalArea.parseByCode(
             AddressUtil.parseCSA(csa).getRegionCode()).getCoreCityCode() : context.getLocParams().getSmAreaId();
+        String itemSetId = (String)context.getUserParams().get("itemSetId");
         String logicAreaId = AddressUtil.parseCSA(csa).getRegionCode();
         params.put("smAreaId", String.valueOf(smAreaId));
         params.put("userId", String.valueOf(userId));
         params.put("appid", Constants.APP_ID);
         params.put("logicAreaId", logicAreaId);
         params.put("isFirstPage", (index == 0L) + "");
+        params.put("itemSetIdList", StringUtils.isNoneBlank(itemSetId)?itemSetId:Constants.O2O_ITEMSET_ID);
+
         if (O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)
             || (addressDTO != null && addressDTO.isRt1HourStoreCover())) {
             params.put("rt1HourStoreId", String.valueOf(context.getLocParams().getRt1HourStoreId()));
             params.put("itemBusinessType", "OneHour");
-            params.put("itemSetIdList", Constants.O2O_ITEMSET_ID);
         } else if (O2OChannelEnum.HALF_DAY.getCode().equals(O2OChannel)
             || (addressDTO != null && addressDTO.isRtHalfDayStoreCover())) {
             params.put("itemBusinessType", "HalfDay");
             params.put("rtHalfDayStoreId", String.valueOf(context.getLocParams().getRtHalfDayStoreId()));
-            params.put("itemSetIdList", Constants.O2O_ITEMSET_ID);
         } else if (O2OChannelEnum.ALL_FRESH.getCode().equals(O2OChannel) ||
             (addressDTO != null && !addressDTO.isRtStoreCover())) {
             params.put("itemBusinessType", "B2C");
