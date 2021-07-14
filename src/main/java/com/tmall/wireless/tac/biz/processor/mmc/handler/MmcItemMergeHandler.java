@@ -16,8 +16,7 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.MmcMemberService;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
-import com.tmall.wireless.tac.client.handler.TacReactiveHandler;
-import io.reactivex.Flowable;
+import com.tmall.wireless.tac.client.handler.TacHandler;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,7 +33,7 @@ import java.util.Map;
  * @date 2021/7/9
  */
 @Service
-public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
+public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
 
     Logger LOGGER = LoggerFactory.getLogger(MmcItemMergeHandler.class);
 
@@ -42,7 +41,7 @@ public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
     private MmcMemberService mmcMemberService;
 
     @Override
-    public Flowable<TacResult<MaterialDO>> executeFlowable(Context context) throws Exception {
+    public TacResult<MaterialDO> execute(Context context) throws Exception {
 
         HadesLogUtil.stream("MmcItemMergeHandler")
             .kv("context",JSON.toJSONString(context))
@@ -112,7 +111,7 @@ public class MmcItemMergeHandler implements TacReactiveHandler<MaterialDO> {
         HadesLogUtil.stream("MmcItemMergeHandler materialDO")
             .kv("materialDO",JSON.toJSONString(materialDO))
             .info();
-        return Flowable.just(TacResult.newResult(materialDO));
+        return TacResult.newResult(materialDO);
     }
 
 
