@@ -97,7 +97,12 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                 }
             }
             if(StringUtils.isNotBlank((String)extendData.get("benefitPic"))){
-                BenefitDO benefitDO = materialDO.getBenefit();
+                BenefitDO benefitDO;
+                if(materialDO.getBenefit() == null){
+                    benefitDO = new BenefitDO();
+                }else{
+                    benefitDO = materialDO.getBenefit();
+                }
                 benefitDO.setPicUrl((String)extendData.get("benefitPic"));
                 benefitDO.setId(umpId);
                 canExposureItemCount = canExposureItemCount - 1;
