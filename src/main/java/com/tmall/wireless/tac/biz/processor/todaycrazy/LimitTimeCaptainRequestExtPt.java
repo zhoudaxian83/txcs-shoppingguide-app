@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
+
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.iteminfo.request.CaptainRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
@@ -71,8 +74,11 @@ public class LimitTimeCaptainRequestExtPt implements CaptainRequestExtPt {
         String umpChannel = tairUtil.getChannelKey();
         itemDataRequest.setChannelKey(umpChannel);
         userParam.put(VoKeyConstantApp.UMP_CHANNEL,umpChannel);
-        tacLogger.info("itemDataRequest:"+itemDataRequest);
-        LOGGER.info("itemDataRequest:"+itemDataRequest);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("userId",String.valueOf(Optional.ofNullable(contextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L)))
+            .kv("LimitTimeCaptainRequestExtPt","process")
+            .kv("itemDataRequest", JSON.toJSONString(itemDataRequest))
+            .info();
         return itemDataRequest;
     }
 }
