@@ -75,9 +75,6 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
         ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
         List<ItemDO> returnItemIdList = new ArrayList<>();
         Map<String, Object> extendDataMap = new HashMap<>();//扩展参数，权益信息会放到这个里面
-        if(MapUtils.isNotEmpty(itemRecallModeDO.getExtendData())){
-            extendDataMap = itemRecallModeDO.getExtendData();
-        }
 
         Long userId = MapUtil.getLongWithDefault(context.getParams(), "userId", 0L);
         List<StoreResult> storeList = new ArrayList<>();
