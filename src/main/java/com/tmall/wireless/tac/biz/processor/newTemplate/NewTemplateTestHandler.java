@@ -10,12 +10,14 @@ import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
 /**
  * Created by yangqing.byq on 2021/7/15.
  */
+@Component
 public class NewTemplateTestHandler extends RpmReactiveHandler<SgFrameworkResponse<ItemEntityVO>> {
 
     @Resource
