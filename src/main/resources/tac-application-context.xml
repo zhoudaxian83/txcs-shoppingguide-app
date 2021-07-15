@@ -11,7 +11,7 @@
 <!--    <context:component-scan base-package="com.tmall.tcls.gs.sdk.framework"/>-->
     <context:component-scan base-package="com.tmall.txcs.gs.sdk.ext"/>
 
-    <context:component-scan base-package="com.alibaba.cola"/>
+<!--    <context:component-scan base-package="com.alibaba.cola"/>-->
 
 
     <bean id="springSwitchBean" class="com.tmall.wireless.tac.biz.processor.config.SwitchConfigBean" init-method="init"/>
