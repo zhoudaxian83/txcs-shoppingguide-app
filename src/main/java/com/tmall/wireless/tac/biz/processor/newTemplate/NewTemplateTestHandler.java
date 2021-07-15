@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.newTemplate;
 
 
-import com.tmall.tcls.gs.sdk.framework.model.EntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
