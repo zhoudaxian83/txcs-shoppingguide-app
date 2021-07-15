@@ -5,7 +5,7 @@ import com.tmall.tcls.gs.sdk.framework.model.EntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
-import com.tmall.tcls.gs.sdk.framework.service.SgFrameworkServiceItem;
+import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -21,12 +21,12 @@ import javax.annotation.Resource;
 public class NewTemplateTestHandler extends RpmReactiveHandler<SgFrameworkResponse<ItemEntityVO>> {
 
     @Resource
-    SgFrameworkServiceItem sgFrameworkServiceItem;
+    ShoppingguideSdkItemService shoppingguideSdkItemService;
 
     @Override
     public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
-        return sgFrameworkServiceItem.recommend0(sgFrameworkContextItem).map(
+        return shoppingguideSdkItemService.recommend0(sgFrameworkContextItem).map(
                 TacResult::newResult
         );
     }
