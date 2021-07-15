@@ -19,14 +19,16 @@ import javax.annotation.Resource;
 @Component
 public class NewTemplateTestHandler extends RpmReactiveHandler<SgFrameworkResponse<ItemEntityVO>> {
 
-    @Resource
-    ShoppingguideSdkItemService shoppingguideSdkItemService;
+//    @Resource
+//    ShoppingguideSdkItemService shoppingguideSdkItemService;
 
     @Override
     public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
-        SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
-        return shoppingguideSdkItemService.recommend0(sgFrameworkContextItem).map(
-                TacResult::newResult
-        );
+//        SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
+//        return shoppingguideSdkItemService.recommend0(sgFrameworkContextItem).map(
+//                TacResult::newResult
+//        );
+        SgFrameworkResponse<ItemEntityVO> response = new SgFrameworkResponse<>();
+        return Flowable.just(TacResult.newResult(response));
     }
 }
