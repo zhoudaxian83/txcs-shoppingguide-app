@@ -104,10 +104,6 @@ public class CnPageBannerItemInfoScene {
         itemInfoSourceMetaInfoTpp.setSourceName(ItemInfoSourceKey.TPP);
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
 
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTest = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoTest.setSourceName("test");
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTest);
-
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
 
         ItemRecommendMetaInfo itemRecommendMetaInfo = new ItemRecommendMetaInfo();
