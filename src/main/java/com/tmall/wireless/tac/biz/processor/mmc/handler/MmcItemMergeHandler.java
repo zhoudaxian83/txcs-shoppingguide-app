@@ -43,7 +43,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
     @Override
     public TacResult<MaterialDO> execute(Context context) throws Exception {
 
-        HadesLogUtil.stream("MmcItemMergeHandler")
+        HadesLogUtil.stream("MmcItemMergeHandlerRequest")
             .kv("context",JSON.toJSONString(context))
             .info();
         Long userId = MapUtil.getLongWithDefault(context.getParams(),"userId",0L);
@@ -64,18 +64,18 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
             umpId = (String)extendData.get("chooseUmpId");
         }
 
-        List<Long> itemIdList = Lists.newArrayList();
+        List<Long> newItemIdList = Lists.newArrayList();
         if(materialDO!=null && CollectionUtils.isNotEmpty(materialDO.getItems())){
             materialDO.getItems().forEach(itemDO -> {
                 ItemType itemType = itemDO.getType();
                 if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
-                    itemIdList.add(itemDO.getItemId());
+                    newItemIdList.add(itemDO.getItemId());
                 }
             });
-            request.setItemIds(itemIdList);
+            request.setItemIds(newItemIdList);
             request.setUmpId(Long.valueOf(umpId));
             request.setUserId(userId);
-            if(CollectionUtils.isNotEmpty(itemIdList) && request.getStoreId()!=null && request.getStoreId()!=0L){
+            if(CollectionUtils.isNotEmpty(newItemIdList) && request.getStoreId()!=null && request.getStoreId()!=0L){
                 Result<ItemDirectionalDiscountResponse> responseResult =  mmcMemberService.queryItemDirectionalDiscount(request);
 
                 HadesLogUtil.stream("MmcItemMergeHandler responseResult")
@@ -105,7 +105,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                 }
                 benefitDO.setPicUrl((String)extendData.get("benefitPic"));
                 benefitDO.setId(umpId);
-                canExposureItemCount = canExposureItemCount - 1;
+                //canExposureItemCount = canExposureItemCount - 1;
             }
 
             List<ItemDO> reItemList = sortItem(canExposureItemCount,materialDO.getItems());
@@ -113,8 +113,9 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
             materialDO.setItems(reItemList);
         }
 
-        HadesLogUtil.stream("MmcItemMergeHandler materialDO")
+        HadesLogUtil.stream("MmcItemMergeHandlerResponse")
             .kv("materialDO",JSON.toJSONString(materialDO))
+            .kv("code","0000")
             .info();
         return TacResult.newResult(materialDO);
     }
