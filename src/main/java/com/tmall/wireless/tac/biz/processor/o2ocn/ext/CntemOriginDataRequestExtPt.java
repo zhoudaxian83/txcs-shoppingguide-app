@@ -72,8 +72,8 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
         params.put("isFirstPage", (index == 0L) + "");
         params.put("itemSetIdList", StringUtils.isNoneBlank(itemSetId)?itemSetId:Constants.O2O_ITEMSET_ID);
 
-        if (O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)
-            || (addressDTO != null && addressDTO.isRt1HourStoreCover())
+        if ((O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)
+            || (addressDTO != null && addressDTO.isRt1HourStoreCover()))
             && !source.equals("mmcSearch")) {
             params.put("rt1HourStoreId", String.valueOf(context.getLocParams().getRt1HourStoreId()));
             params.put("itemBusinessType", "OneHour");
@@ -88,7 +88,7 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
         }
         recommendRequest.setParams(params);
         recommendRequest.setUserId(userId);
-        tacLogger.info("recommendRequest:" + JSON.toJSONString(recommendRequest));
+        tacLogger.info("tppRequest:" + JSON.toJSONString(recommendRequest)+"source:"+source);
         HadesLogUtil.stream(ScenarioConstantApp.O2O_CNXH)
             .kv("step", "tppRequest")
             .kv("tppRequest", JSON.toJSONString(recommendRequest))
