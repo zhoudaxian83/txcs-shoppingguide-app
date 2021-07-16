@@ -2,8 +2,12 @@ package com.tmall.wireless.tac.biz.processor.mmc.handler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import com.alibaba.aladdin.lamp.domain.request.Request;
@@ -52,9 +56,6 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     public static final String MMC_HOT_ITEM_ALD_RES_ID = "13757822";
 
-    @Autowired
-    TacLogger tacLogger;
-
 
     @Autowired
     private AldSpi aldSpi;
@@ -64,90 +65,98 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     @Override
     public TacResult<ItemRecallModeDO> execute(Context context) throws Exception {
-        tacLogger.info("------------------------------");
-        LOGGER.error("--------------MmcItemQueryHandler start----------------");
-        HadesLogUtil.stream("MmcItemQueryHandler")
-            .kv("context",JSON.toJSONString(context))
-            .info();
-        Long start = System.currentTimeMillis();
-        tacLogger.info("MmcItemQueryHandler.start. ----- context:{}" + JSON.toJSONString(context));
-        LOGGER.error("MmcItemQueryHandler.start. ----- context:{}" + JSON.toJSONString(context));
-        ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
-        List<ItemDO> returnItemIdList = new ArrayList<>();
-        Map<String, Object> extendDataMap = new HashMap<>();//扩展参数，权益信息会放到这个里面
+        try{
+            Long totalStart = System.currentTimeMillis();
+            LOGGER.error("--------------MmcItemQueryHandler start----------------");
+            HadesLogUtil.stream("MmcItemQueryHandler")
+                .kv("context",JSON.toJSONString(context))
+                .info();
 
-        Long userId = MapUtil.getLongWithDefault(context.getParams(), "userId", 0L);
-        List<StoreResult> storeList = new ArrayList<>();
-        Object stores = context.getParams().get("stores");
-        if (stores != null && stores instanceof List) {
-            storeList = (List<StoreResult>)stores;
-        } else {
-            //TODO 异常处理
-        }
-        List<String> storeIdList = storeList.stream().map(StoreResult::getStoreId).collect(Collectors.toList());
-        //String storeId = MapUtil.getStringWithDefault(context.getParams(), "storeId", "");
-        //List<String> storeIdList = Arrays.asList(storeId);
+            LOGGER.error("MmcItemQueryHandler.start. ----- context:{}" + JSON.toJSONString(context));
+            ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
+            List<ItemDO> returnItemIdList = new ArrayList<>();
+            Map<String, Object> extendDataMap = new HashMap<>();//扩展参数，权益信息会放到这个里面
 
-        Request request = buildAldRequest(userId, storeIdList);
-        Long aldStart = System.currentTimeMillis();
-        Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
-        Long aldEnd = System.currentTimeMillis();
-        tacLogger.info("-----------ald cost : " + (aldEnd - aldStart)+"-------------------");
-        tacLogger.info("aldResponseMap:" + JSON.toJSONString(aldResponseMap));
-        if (MapUtils.isNotEmpty(aldResponseMap)) {
-            ResResponse resResponse = aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID);
-            if(resResponse != null){
-                List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID)
-                    .get("data");
-                if(CollectionUtils.isNotEmpty(dataList)){
-                    List<ItemDO> oldItemIdList = dataList.stream().map(e -> {
-                        Long contentId = Long.valueOf(String.valueOf(e.get("contentId")));
-                        ItemDO oldItemDO = new ItemDO();
-                        oldItemDO.setItemId(contentId);
-                        oldItemDO.setType(ItemType.NORMAL_ITEM);
-                        return oldItemDO;
-                    }).collect(Collectors.toList());
-                    returnItemIdList.addAll(oldItemIdList);
+            Long userId = MapUtil.getLongWithDefault(context.getParams(), "userId", 0L);
+            List<StoreResult> storeList = new ArrayList<>();
+            Object stores = context.getParams().get("stores");
+            if (stores != null && stores instanceof List) {
+                storeList = (List<StoreResult>)stores;
+            } else {
+                //TODO 异常处理
+            }
+            List<String> storeIdList = storeList.stream().map(StoreResult::getStoreId).collect(Collectors.toList());
+
+            Request request = buildAldRequest(userId, storeIdList);
+            Long aldStart = System.currentTimeMillis();
+            Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
+            Long aldEnd = System.currentTimeMillis();
+            if (MapUtils.isNotEmpty(aldResponseMap)) {
+                ResResponse resResponse = aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID);
+                if(resResponse != null){
+                    List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID)
+                        .get("data");
+                    if(CollectionUtils.isNotEmpty(dataList)){
+                        List<ItemDO> oldItemIdList = dataList.stream().map(e -> {
+                            Long contentId = Long.valueOf(String.valueOf(e.get("contentId")));
+                            ItemDO oldItemDO = new ItemDO();
+                            oldItemDO.setItemId(contentId);
+                            oldItemDO.setType(ItemType.NORMAL_ITEM);
+                            return oldItemDO;
+                        }).collect(Collectors.toList());
+
+                        returnItemIdList.addAll(oldItemIdList);
+                    }
                 }
+
             }
 
-        }
-
-        //如果userId为空，则不取新人三选一数据和券数据
-        if (userId != null && userId != 0L) {
-            O2OItemBenfitsRequest o2OItemBenfitsRequest = new O2OItemBenfitsRequest();
-            o2OItemBenfitsRequest.setUserId(userId);
-            o2OItemBenfitsRequest.setStoreId(Long.valueOf(storeIdList.get(0)));
-            Long memberStart = System.currentTimeMillis();
-            Result<O2OItemBenfitsResponse> o2OItemBenfitsResponseResult = mmcMemberService.queryItemAndBenefits(o2OItemBenfitsRequest);
-            Long memberEnd = System.currentTimeMillis();
-            tacLogger.info("-----------member cost : " + (memberEnd - memberStart)+"-------------------");
-            if(o2OItemBenfitsResponseResult.isSuccess() && o2OItemBenfitsResponseResult.getData() != null){
-                O2OItemBenfitsResponse o2OItemBenfitsResponse = o2OItemBenfitsResponseResult.getData();
-                tacLogger.info("-----------o2OItemBenfitsResponse : " + o2OItemBenfitsResponse);
-                List<Long> chooseItemIds = o2OItemBenfitsResponse.getChooseItemIds();
-                if(CollectionUtils.isNotEmpty(chooseItemIds)){
-                    List<ItemDO> newItemList = chooseItemIds.stream().map(e -> {
-                        ItemDO itemDO = new ItemDO();
-                        itemDO.setItemId(e);
-                        itemDO.setType(ItemType.NEW_USER_ITEM);
-                        return itemDO;
-                    }).collect(Collectors.toList());
-                    //新人商品数据
-                    returnItemIdList.addAll(newItemList);
+            //如果userId为空，则不取新人三选一数据和券数据
+            Long memberCost = 0L;
+            if (userId != null && userId != 0L) {
+                O2OItemBenfitsRequest o2OItemBenfitsRequest = new O2OItemBenfitsRequest();
+                o2OItemBenfitsRequest.setUserId(userId);
+                o2OItemBenfitsRequest.setStoreId(Long.valueOf(storeIdList.get(0)));
+                Long memberStart = System.currentTimeMillis();
+                Result<O2OItemBenfitsResponse> o2OItemBenfitsResponseResult = mmcMemberService.queryItemAndBenefits(o2OItemBenfitsRequest);
+                Long memberEnd = System.currentTimeMillis();
+                memberCost = memberEnd - memberStart;
+                if(o2OItemBenfitsResponseResult.isSuccess() && o2OItemBenfitsResponseResult.getData() != null){
+                    O2OItemBenfitsResponse o2OItemBenfitsResponse = o2OItemBenfitsResponseResult.getData();
+                    List<Long> chooseItemIds = o2OItemBenfitsResponse.getChooseItemIds();
+                    if(CollectionUtils.isNotEmpty(chooseItemIds)){
+                        List<ItemDO> newItemList = chooseItemIds.stream().map(e -> {
+                            ItemDO itemDO = new ItemDO();
+                            itemDO.setItemId(e);
+                            itemDO.setType(ItemType.NEW_USER_ITEM);
+                            return itemDO;
+                        }).collect(Collectors.toList());
+                        //新人商品数据
+                        returnItemIdList.addAll(newItemList);
+                    }
+                    //红包数据
+                    extendDataMap.putAll(o2OItemBenfitsResponse.getExt());
                 }
-                //红包数据
-                extendDataMap.putAll(o2OItemBenfitsResponse.getExt());
             }
+            //删除重复商品
+
+            removeDuplicateItems(returnItemIdList);
+
+            itemRecallModeDO.setItems(returnItemIdList);
+            itemRecallModeDO.setExtendData(extendDataMap);
+            itemRecallModeDO.setType(RecallType.ASSIGN_ITEM_ID);
+            Long totalEnd = System.currentTimeMillis();
+            HadesLogUtil.stream("MmcItemQueryHandler")
+                .kv("totalCost", String.valueOf(totalEnd - totalStart))
+                .kv("aldCost", String.valueOf(aldEnd - aldStart))
+                .kv("memberCost", String.valueOf(memberCost))
+                .info();
+            return TacResult.newResult(itemRecallModeDO);
+        }catch (Exception e){
+            LOGGER.error("MmcItemQueryHandler error.", e);
+            throw e;
         }
 
-        itemRecallModeDO.setItems(returnItemIdList);
-        itemRecallModeDO.setExtendData(extendDataMap);
-        itemRecallModeDO.setType(RecallType.ASSIGN_ITEM_ID);
-        tacLogger.info("return itemRecallModeDO:" + JSON.toJSONString(itemRecallModeDO));
-        Long end = System.currentTimeMillis();
-        tacLogger.info("final cost:" + (end - start));
-        return TacResult.newResult(itemRecallModeDO);
     }
 
     private Request buildAldRequest(Long userId, List<String> storeIdList) {
@@ -171,5 +180,41 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     }
 
+    /**
+     * 删除重复商品，改变原始对象
+     * @param itemDOList
+     * @return
+     */
+    public static void removeDuplicateItems(List<ItemDO> itemDOList){
+        Set<Long> itemIdSet = new HashSet<>();
+        // 删除重复的元素
+        Iterator<ItemDO> iterator = itemDOList.iterator();
+        while (iterator.hasNext()) {
+            ItemDO itemDO = iterator.next();
+            if (itemIdSet.contains(itemDO.getItemId())) {
+                iterator.remove();
+            } else {
+                itemIdSet.add(itemDO.getItemId());
+            }
+        }
+
+    }
+
+    public static void main(String[] args) {
+        List<ItemDO> oldItemIdList = new ArrayList<>();
+        ItemDO itemDO1 = new ItemDO();
+        itemDO1.setItemId(11L);
+        oldItemIdList.add(itemDO1);
+        ItemDO itemDO2 = new ItemDO();
+        itemDO2.setItemId(22L);
+        oldItemIdList.add(itemDO2);
+        ItemDO itemDO3 = new ItemDO();
+        itemDO3.setItemId(11L);
+        oldItemIdList.add(itemDO3);
+        System.out.println("原始:" + JSON.toJSONString(oldItemIdList));
+        removeDuplicateItems(oldItemIdList);
+        System.out.println("去重后："+JSON.toJSONString(oldItemIdList));
+
+    }
 
 }
