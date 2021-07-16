@@ -46,6 +46,9 @@ public class CnPageBannerItemInfoScene {
         Long pageSize = MapUtil.getLongWithDefault(context.getParams(), "pageSize", 20L);
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
+
+        String source = MapUtil.getStringWithDefault(context.getParams(), "source", "main");
+
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         sgFrameworkContextItem.setRequestParams(context.getParams());
         SceneInfo sceneInfo = new SceneInfo();
@@ -69,6 +72,7 @@ public class CnPageBannerItemInfoScene {
         sgFrameworkContextItem.setUserParams(context.getParams());
         String itemSetId = MapUtil.getStringWithDefault(context.getParams(), "itemSetId", "13545");
         sgFrameworkContextItem.getUserParams().put("itemSetId",itemSetId);
+        sgFrameworkContextItem.getUserParams().put("source",source);
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult)
             .onErrorReturn(r -> TacResult.errorResult(""));

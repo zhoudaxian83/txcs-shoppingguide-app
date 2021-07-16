@@ -63,6 +63,7 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
         Long smAreaId = context.getLocParams().getSmAreaId() == 0 ? LogicalArea.parseByCode(
             AddressUtil.parseCSA(csa).getRegionCode()).getCoreCityCode() : context.getLocParams().getSmAreaId();
         String itemSetId = (String)context.getUserParams().get("itemSetId");
+        String source = (String)context.getUserParams().get("source");
         String logicAreaId = AddressUtil.parseCSA(csa).getRegionCode();
         params.put("smAreaId", String.valueOf(smAreaId));
         params.put("userId", String.valueOf(userId));
@@ -72,7 +73,8 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
         params.put("itemSetIdList", StringUtils.isNoneBlank(itemSetId)?itemSetId:Constants.O2O_ITEMSET_ID);
 
         if (O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)
-            || (addressDTO != null && addressDTO.isRt1HourStoreCover())) {
+            || (addressDTO != null && addressDTO.isRt1HourStoreCover())
+            && !source.equals("mmcSearch")) {
             params.put("rt1HourStoreId", String.valueOf(context.getLocParams().getRt1HourStoreId()));
             params.put("itemBusinessType", "OneHour");
         } else if (O2OChannelEnum.HALF_DAY.getCode().equals(O2OChannel)
