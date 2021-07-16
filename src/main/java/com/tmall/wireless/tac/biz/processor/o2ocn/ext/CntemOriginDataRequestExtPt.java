@@ -108,13 +108,4 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
         return O2OChannelEnum.ALL_FRESH.getAppId();
 
     }
-
-    public static void main(String args[]){
-
-        String s = "https://tui.taobao"
-            + ".com/recommend?appid=22171&itemSetIdList=%&smAreaId=%&userId=1832025789&itemBusinessType=%&isFirstPage=true";
-
-
-        System.out.println(String.format(s,"11","222","333"));
-    }
 }
