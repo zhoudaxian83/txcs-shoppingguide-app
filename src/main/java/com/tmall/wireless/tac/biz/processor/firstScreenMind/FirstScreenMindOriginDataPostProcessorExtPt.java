@@ -85,7 +85,7 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
             }
             itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
             if(isFirstPage(contextItem)){
-                if(isMedia(contextItem) &&CollectionUtils.isNotEmpty(topItemIds) && topItemIds.contains(itemEntity.getItemId())){
+                if(isMedia(contextItem) && CollectionUtils.isNotEmpty(topItemIds) && topItemIds.contains(itemEntity.getItemId())){
                     itemEntity.setTop(true);
                 }
                 finalItemEntities.add(itemEntity);
