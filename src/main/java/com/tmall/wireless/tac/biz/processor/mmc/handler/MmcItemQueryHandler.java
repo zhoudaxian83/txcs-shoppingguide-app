@@ -25,6 +25,7 @@ import com.taobao.freshx.homepage.client.domain.ItemDO;
 import com.taobao.freshx.homepage.client.domain.ItemRecallModeDO;
 import com.taobao.freshx.homepage.client.domain.ItemType;
 import com.taobao.freshx.homepage.client.domain.RecallType;
+import com.taobao.poi2.client.enumtype.ServiceRangeDeliveryTimeType;
 import com.taobao.poi2.client.result.StoreResult;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.hades.monitor.print.HadesLogUtil;
@@ -52,6 +53,8 @@ import org.springframework.stereotype.Service;
 public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     Logger LOGGER = LoggerFactory.getLogger(MmcItemQueryHandler.class);
+
+    public static final String HALS_DAY_PREFIX = "SG_TMCS_HALF_DAY_DS:";
 
     public static final String MMC_HOT_ITEM_ALD_RES_ID = "18105096";
 
@@ -82,10 +85,9 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                     .kv("stores", JSON.toJSONString(stores))
                     .info();
             }
-            List<String> storeIdList = storeList.stream().map(StoreResult::getStoreId).collect(Collectors.toList());
 
             //获取阿拉丁的爆款专区数据
-            List<ItemDO> aldData = getAldData(userId, storeIdList);
+            List<ItemDO> aldData = getAldData(userId, storeList);
             HadesLogUtil.stream("MmcItemQueryHandler inner|aldDataSize")
                 .kv("aldDataSize", String.valueOf(aldData.size()))
                 .info();
@@ -94,7 +96,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             //如果userId为空，则不取新人三选一数据和券数据
             if (userId != null && userId != 0L) {
                 //获取新人数据
-                List<ItemDO> memberData = getMemberData(userId, storeIdList, extendDataMap);
+                List<ItemDO> memberData = getMemberData(userId, storeList, extendDataMap);
                 HadesLogUtil.stream("MmcItemQueryHandler inner|memberDataSize")
                     .kv("memberDataSize", String.valueOf(memberData.size()))
                     .info();
@@ -107,7 +109,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             itemRecallModeDO.setExtendData(extendDataMap);
             itemRecallModeDO.setType(RecallType.ASSIGN_ITEM_ID);
             Long totalEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("MmcItemQueryHandler inner|totalCost")
+            HadesLogUtil.stream("MmcItemQueryHandler inner|totalCost" + (totalEnd - totalStart))
                 .kv("totalCost", String.valueOf(totalEnd - totalStart))
                 .info();
             HadesLogUtil.stream("MmcItemQueryHandler inner|main process|success")
@@ -124,9 +126,10 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     }
 
-    private List<ItemDO> getMemberData(Long userId, List<String> storeIdList, Map<String, Object> extendDataMap) {
+    private List<ItemDO> getMemberData(Long userId, List<StoreResult> storeList, Map<String, Object> extendDataMap) {
         List<ItemDO> returnItemIdList = new ArrayList<>();
         try {
+            List<String> storeIdList = storeList.stream().map(StoreResult::getStoreId).collect(Collectors.toList());
             O2OItemBenfitsRequest o2OItemBenfitsRequest = new O2OItemBenfitsRequest();
             o2OItemBenfitsRequest.setUserId(userId);
             o2OItemBenfitsRequest.setStoreId(Long.valueOf(storeIdList.get(0)));
@@ -161,7 +164,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
         } catch (Exception e) {
             HadesLogUtil.stream("MmcItemQueryHandler inner|get member data|error")
                 .kv("userId", String.valueOf(userId))
-                .kv("storeIdList", JSON.toJSONString(storeIdList))
+                .kv("storeList", JSON.toJSONString(storeList))
                 .kv("errorMsg", StackTraceUtil.stackTrace(e))
                 .error();
             return returnItemIdList;
@@ -169,11 +172,11 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     }
 
-    private List<ItemDO> getAldData(Long userId, List<String> storeIdList) {
+    private List<ItemDO> getAldData(Long userId, List<StoreResult> storeList) {
         List<ItemDO> returnItemIdList = new ArrayList<>();
         Long aldStart = System.currentTimeMillis();
         try {
-            Request request = buildAldRequest(userId, storeIdList);
+            Request request = buildAldRequest(userId, storeList);
             Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
             Long aldEnd = System.currentTimeMillis();
             if (MapUtils.isNotEmpty(aldResponseMap)) {
@@ -205,14 +208,14 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
         } catch (Exception e) {
             HadesLogUtil.stream("MmcItemQueryHandler inner|get ald data|error")
                 .kv("userId", String.valueOf(userId))
-                .kv("storeIdList", JSON.toJSONString(storeIdList))
+                .kv("storeList", JSON.toJSONString(storeList))
                 .kv("errorMsg", StackTraceUtil.stackTrace(e))
                 .error();
             return returnItemIdList;
         }
     }
 
-    private Request buildAldRequest(Long userId, List<String> storeIdList) {
+    private Request buildAldRequest(Long userId, List<StoreResult> storeIdList) {
         Request request = new Request();
         request.setBizId(Constant.ALD_BIZ_ID);
         request.setCallSource(Constant.ALD_CALL_SOURCE);
@@ -228,7 +231,16 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
         request.setRequestItems(Lists.newArrayList(requestItem));
         //地址信息
         LocationInfo locationInfo = request.getLocationInfo();
-        locationInfo.setWdkCodes(storeIdList);
+        //TODO 720版本 只有半日达 820版本两者都有的情况 需要确定这个list是优先级是什么
+        List<StoreResult> storeResultList = storeIdList.stream().filter(
+            e -> ServiceRangeDeliveryTimeType.HALF_DAY.equals(e.getDeliveryTime())).collect(
+            Collectors.toList());
+        if(CollectionUtils.isNotEmpty(storeResultList)){
+            List<String> collect = storeResultList.stream().map(e -> HALS_DAY_PREFIX + e.getStoreId()).collect(
+                Collectors.toList());
+            locationInfo.setWdkCodes(collect);
+        }
+
         return request;
 
     }
@@ -270,12 +282,8 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
         //System.out.println("去重后："+JSON.toJSONString(oldItemIdList));
         Long time = 0L;
 
-        test(time);
-        System.out.println(time);
     }
 
-    private static void test(Long time) {
-        time = 3L;
-    }
+
 
 }
