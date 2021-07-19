@@ -27,6 +27,7 @@ import com.taobao.freshx.homepage.client.domain.ItemRecallModeDO;
 import com.taobao.freshx.homepage.client.domain.ItemType;
 import com.taobao.freshx.homepage.client.domain.RecallType;
 import com.taobao.poi2.client.result.StoreResult;
+import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.AldSpi;
@@ -66,12 +67,9 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
     @Override
     public TacResult<ItemRecallModeDO> execute(Context context) throws Exception {
         try{
+            Long aldCost = 0L;
+            Long memberCost = 0L;
             Long totalStart = System.currentTimeMillis();
-            LOGGER.error("--------------MmcItemQueryHandler start----------------");
-            HadesLogUtil.stream("MmcItemQueryHandler")
-                .kv("context",JSON.toJSONString(context))
-                .info();
-
             LOGGER.error("MmcItemQueryHandler.start. ----- context:{}" + JSON.toJSONString(context));
             ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
             List<ItemDO> returnItemIdList = new ArrayList<>();
@@ -83,10 +81,99 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             if (stores != null && stores instanceof List) {
                 storeList = (List<StoreResult>)stores;
             } else {
-                //TODO 异常处理
+                HadesLogUtil.stream("MmcItemQueryHandler inner|stores is empty")
+                    .kv("stores", JSON.toJSONString(stores))
+                    .info();
             }
             List<String> storeIdList = storeList.stream().map(StoreResult::getStoreId).collect(Collectors.toList());
 
+            //获取阿拉丁的爆款专区数据
+            List<ItemDO> aldData = getAldData(userId, storeIdList, aldCost);
+            HadesLogUtil.stream("MmcItemQueryHandler.aldData")
+                .kv("aldDataSize", String.valueOf(aldData.size()))
+                .info();
+            returnItemIdList.addAll(aldData);
+
+            //如果userId为空，则不取新人三选一数据和券数据
+            if (userId != null && userId != 0L) {
+                //获取新人数据
+                List<ItemDO> memberData = getMemberData(userId, storeIdList, extendDataMap, memberCost);
+                HadesLogUtil.stream("MmcItemQueryHandler.memberData")
+                    .kv("memberData", String.valueOf(memberData.size()))
+                    .info();
+                returnItemIdList.addAll(memberData);
+            }
+            //删除重复商品
+            removeDuplicateItems(returnItemIdList);
+
+            itemRecallModeDO.setItems(returnItemIdList);
+            itemRecallModeDO.setExtendData(extendDataMap);
+            itemRecallModeDO.setType(RecallType.ASSIGN_ITEM_ID);
+            Long totalEnd = System.currentTimeMillis();
+            HadesLogUtil.stream("MmcItemQueryHandler")
+                .kv("totalCost", String.valueOf(totalEnd - totalStart))
+                .kv("aldCost", String.valueOf(aldCost))
+                .kv("memberCost", String.valueOf(memberCost))
+                .info();
+            HadesLogUtil.stream("MmcItemQueryHandler inner|main process|success")
+                .kv("context", JSON.toJSONString(context))
+                .info();
+            return TacResult.newResult(itemRecallModeDO);
+        }catch (Exception e){
+            HadesLogUtil.stream("MmcItemQueryHandler inner|main process|error")
+                .kv("context", JSON.toJSONString(context))
+                .error();
+            throw e;
+        }
+
+    }
+
+    private List<ItemDO> getMemberData(Long userId, List<String> storeIdList, Map<String, Object> extendDataMap, Long memberCost){
+        List<ItemDO> returnItemIdList = new ArrayList<>();
+        try{
+            O2OItemBenfitsRequest o2OItemBenfitsRequest = new O2OItemBenfitsRequest();
+            o2OItemBenfitsRequest.setUserId(userId);
+            o2OItemBenfitsRequest.setStoreId(Long.valueOf(storeIdList.get(0)));
+            Long memberStart = System.currentTimeMillis();
+            Result<O2OItemBenfitsResponse> o2OItemBenfitsResponseResult = mmcMemberService.queryItemAndBenefits(o2OItemBenfitsRequest);
+            Long memberEnd = System.currentTimeMillis();
+            memberCost = (memberEnd - memberStart);
+            if(o2OItemBenfitsResponseResult.isSuccess() && o2OItemBenfitsResponseResult.getData() != null){
+                O2OItemBenfitsResponse o2OItemBenfitsResponse = o2OItemBenfitsResponseResult.getData();
+                List<Long> chooseItemIds = o2OItemBenfitsResponse.getChooseItemIds();
+                if(CollectionUtils.isNotEmpty(chooseItemIds)){
+                    List<ItemDO> newItemList = chooseItemIds.stream().map(e -> {
+                        ItemDO itemDO = new ItemDO();
+                        itemDO.setItemId(e);
+                        itemDO.setType(ItemType.NEW_USER_ITEM);
+                        return itemDO;
+                    }).collect(Collectors.toList());
+                    //新人商品数据
+                    returnItemIdList.addAll(newItemList);
+                }else {
+                    HadesLogUtil.stream("MmcItemQueryHandler inner|get member data|empty")
+                        .kv("o2OItemBenfitsRequest", JSON.toJSONString(o2OItemBenfitsRequest))
+                        .kv("o2OItemBenfitsResponseResult", JSON.toJSONString(o2OItemBenfitsResponseResult))
+                        .error();
+                }
+                //红包数据
+                extendDataMap.putAll(o2OItemBenfitsResponse.getExt());
+            }
+            return returnItemIdList;
+        }catch (Exception e){
+            HadesLogUtil.stream("MmcItemQueryHandler inner|get member data|error")
+                .kv("userId", String.valueOf(userId))
+                .kv("storeIdList", JSON.toJSONString(storeIdList))
+                .kv("errorMsg", StackTraceUtil.stackTrace(e))
+                .error();
+            return returnItemIdList;
+        }
+
+    }
+
+    private List<ItemDO> getAldData(Long userId, List<String> storeIdList, Long aldCost){
+        List<ItemDO> returnItemIdList = new ArrayList<>();
+        try{
             Request request = buildAldRequest(userId, storeIdList);
             Long aldStart = System.currentTimeMillis();
             Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
@@ -104,60 +191,27 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                             oldItemDO.setType(ItemType.NORMAL_ITEM);
                             return oldItemDO;
                         }).collect(Collectors.toList());
-
                         returnItemIdList.addAll(oldItemIdList);
+                    }else {
+                        HadesLogUtil.stream("MmcItemQueryHandler inner|get ald data|empty")
+                            .kv("request", JSON.toJSONString(request))
+                            .kv("aldResponseMap", JSON.toJSONString(aldResponseMap))
+                            .info();
                     }
                 }
-
             }
-
-            //如果userId为空，则不取新人三选一数据和券数据
-            Long memberCost = 0L;
-            if (userId != null && userId != 0L) {
-                O2OItemBenfitsRequest o2OItemBenfitsRequest = new O2OItemBenfitsRequest();
-                o2OItemBenfitsRequest.setUserId(userId);
-                o2OItemBenfitsRequest.setStoreId(Long.valueOf(storeIdList.get(0)));
-                Long memberStart = System.currentTimeMillis();
-                Result<O2OItemBenfitsResponse> o2OItemBenfitsResponseResult = mmcMemberService.queryItemAndBenefits(o2OItemBenfitsRequest);
-                Long memberEnd = System.currentTimeMillis();
-                memberCost = memberEnd - memberStart;
-                if(o2OItemBenfitsResponseResult.isSuccess() && o2OItemBenfitsResponseResult.getData() != null){
-                    O2OItemBenfitsResponse o2OItemBenfitsResponse = o2OItemBenfitsResponseResult.getData();
-                    List<Long> chooseItemIds = o2OItemBenfitsResponse.getChooseItemIds();
-                    if(CollectionUtils.isNotEmpty(chooseItemIds)){
-                        List<ItemDO> newItemList = chooseItemIds.stream().map(e -> {
-                            ItemDO itemDO = new ItemDO();
-                            itemDO.setItemId(e);
-                            itemDO.setType(ItemType.NEW_USER_ITEM);
-                            return itemDO;
-                        }).collect(Collectors.toList());
-                        //新人商品数据
-                        returnItemIdList.addAll(newItemList);
-                    }
-                    //红包数据
-                    extendDataMap.putAll(o2OItemBenfitsResponse.getExt());
-                }
-            }
-            //删除重复商品
-
-            removeDuplicateItems(returnItemIdList);
-
-            itemRecallModeDO.setItems(returnItemIdList);
-            itemRecallModeDO.setExtendData(extendDataMap);
-            itemRecallModeDO.setType(RecallType.ASSIGN_ITEM_ID);
-            Long totalEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("MmcItemQueryHandler")
-                .kv("totalCost", String.valueOf(totalEnd - totalStart))
-                .kv("aldCost", String.valueOf(aldEnd - aldStart))
-                .kv("memberCost", String.valueOf(memberCost))
-                .info();
-            return TacResult.newResult(itemRecallModeDO);
+            aldCost = (aldEnd - aldStart);
+            return returnItemIdList;
         }catch (Exception e){
-            LOGGER.error("MmcItemQueryHandler error.", e);
-            throw e;
+            HadesLogUtil.stream("MmcItemQueryHandler inner|get ald data|error")
+                .kv("userId", String.valueOf(userId))
+                .kv("storeIdList", JSON.toJSONString(storeIdList))
+                .kv("errorMsg", StackTraceUtil.stackTrace(e))
+                .error();
+            return returnItemIdList;
         }
-
     }
+
 
     private Request buildAldRequest(Long userId, List<String> storeIdList) {
         Request request = new Request();
