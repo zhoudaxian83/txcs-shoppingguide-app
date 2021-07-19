@@ -75,12 +75,12 @@ public class CnPageBannerItemInfoScene {
         sgFrameworkContextItem.getUserParams().put("source",source);
 
 
-        if(StringUtils.isNotBlank(source) && source.equals("mmcSearch")){
+        if(StringUtils.isNotBlank(source)){
             return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(response->{
                     List<EntityVO> list = response.getItemAndContentList();
                     list.forEach(entityVO -> {
-                        entityVO.put("itemUrl",entityVO.get("itemUrl")+"&sourceChannel=mmc-halfday");
+                        entityVO.put("itemUrl",entityVO.get("itemUrl")+"&sourceChannel="+source);
                     });
                     return response;
                 })
