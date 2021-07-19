@@ -54,7 +54,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     Logger LOGGER = LoggerFactory.getLogger(MmcItemQueryHandler.class);
 
-    public static final String MMC_HOT_ITEM_ALD_RES_ID = "13757822";
+    public static final String MMC_HOT_ITEM_ALD_RES_ID = "18105096";
 
 
     @Autowired
