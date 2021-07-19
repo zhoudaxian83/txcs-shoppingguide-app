@@ -18,7 +18,6 @@ import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemRecommendMetaInfo;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
-import com.tmall.txcs.gs.model.biz.context.PmtParams;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -27,6 +26,7 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,9 +73,27 @@ public class CnPageBannerItemInfoScene {
         String itemSetId = MapUtil.getStringWithDefault(context.getParams(), "itemSetId", "13545");
         sgFrameworkContextItem.getUserParams().put("itemSetId",itemSetId);
         sgFrameworkContextItem.getUserParams().put("source",source);
-        return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-            .map(TacResult::newResult)
-            .onErrorReturn(r -> TacResult.errorResult(""));
+
+
+        if(StringUtils.isNotBlank(source) && source.equals("mmcSearch")){
+            return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+                .map(response->{
+                    List<EntityVO> list = response.getItemAndContentList();
+                    list.forEach(entityVO -> {
+                        entityVO.put("itemUrl",entityVO.get("itemUrl")+"&sourceChannel=mmc-halfday");
+                    });
+                    return response;
+                })
+                .map(TacResult::newResult)
+                .onErrorReturn(r -> TacResult.errorResult(""));
+        }else{
+            return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+                .map(TacResult::newResult)
+                .onErrorReturn(r -> TacResult.errorResult(""));
+        }
+
+
+
 
     }
 
