@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import com.alibaba.aladdin.lamp.domain.request.Request;
@@ -34,7 +33,6 @@ import com.tmall.txcs.gs.spi.recommend.AldSpi;
 import com.tmall.txcs.gs.spi.recommend.MmcMemberService;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.handler.TacHandler;
 import org.apache.commons.collections.CollectionUtils;
@@ -57,7 +55,6 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     public static final String MMC_HOT_ITEM_ALD_RES_ID = "18105096";
 
-
     @Autowired
     private AldSpi aldSpi;
 
@@ -66,12 +63,10 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     @Override
     public TacResult<ItemRecallModeDO> execute(Context context) throws Exception {
-        try{
+        try {
             HadesLogUtil.stream("MmcItemQueryHandler inner|context")
                 .kv("context", JSON.toJSONString(context))
                 .info();
-            Long aldCost = 0L;
-            Long memberCost = 0L;
             Long totalStart = System.currentTimeMillis();
             ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
             List<ItemDO> returnItemIdList = new ArrayList<>();
@@ -90,7 +85,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             List<String> storeIdList = storeList.stream().map(StoreResult::getStoreId).collect(Collectors.toList());
 
             //获取阿拉丁的爆款专区数据
-            List<ItemDO> aldData = getAldData(userId, storeIdList, aldCost);
+            List<ItemDO> aldData = getAldData(userId, storeIdList);
             HadesLogUtil.stream("MmcItemQueryHandler inner|aldDataSize")
                 .kv("aldDataSize", String.valueOf(aldData.size()))
                 .info();
@@ -99,7 +94,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             //如果userId为空，则不取新人三选一数据和券数据
             if (userId != null && userId != 0L) {
                 //获取新人数据
-                List<ItemDO> memberData = getMemberData(userId, storeIdList, extendDataMap, memberCost);
+                List<ItemDO> memberData = getMemberData(userId, storeIdList, extendDataMap);
                 HadesLogUtil.stream("MmcItemQueryHandler inner|memberDataSize")
                     .kv("memberDataSize", String.valueOf(memberData.size()))
                     .info();
@@ -112,16 +107,14 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             itemRecallModeDO.setExtendData(extendDataMap);
             itemRecallModeDO.setType(RecallType.ASSIGN_ITEM_ID);
             Long totalEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("MmcItemQueryHandler inner|cost")
+            HadesLogUtil.stream("MmcItemQueryHandler inner|totalCost")
                 .kv("totalCost", String.valueOf(totalEnd - totalStart))
-                .kv("aldCost", String.valueOf(aldCost))
-                .kv("memberCost", String.valueOf(memberCost))
                 .info();
             HadesLogUtil.stream("MmcItemQueryHandler inner|main process|success")
                 .kv("totalCost", String.valueOf(totalEnd - totalStart))
                 .info();
             return TacResult.newResult(itemRecallModeDO);
-        }catch (Exception e){
+        } catch (Exception e) {
             HadesLogUtil.stream("MmcItemQueryHandler inner|main process|error")
                 .kv("context", JSON.toJSONString(context))
                 .kv("errorMsg", StackTraceUtil.stackTrace(e))
@@ -131,20 +124,20 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     }
 
-    private List<ItemDO> getMemberData(Long userId, List<String> storeIdList, Map<String, Object> extendDataMap, Long memberCost){
+    private List<ItemDO> getMemberData(Long userId, List<String> storeIdList, Map<String, Object> extendDataMap) {
         List<ItemDO> returnItemIdList = new ArrayList<>();
-        try{
+        try {
             O2OItemBenfitsRequest o2OItemBenfitsRequest = new O2OItemBenfitsRequest();
             o2OItemBenfitsRequest.setUserId(userId);
             o2OItemBenfitsRequest.setStoreId(Long.valueOf(storeIdList.get(0)));
             Long memberStart = System.currentTimeMillis();
-            Result<O2OItemBenfitsResponse> o2OItemBenfitsResponseResult = mmcMemberService.queryItemAndBenefits(o2OItemBenfitsRequest);
+            Result<O2OItemBenfitsResponse> o2OItemBenfitsResponseResult = mmcMemberService.queryItemAndBenefits(
+                o2OItemBenfitsRequest);
             Long memberEnd = System.currentTimeMillis();
-            memberCost = (memberEnd - memberStart);
-            if(o2OItemBenfitsResponseResult.isSuccess() && o2OItemBenfitsResponseResult.getData() != null){
+            if (o2OItemBenfitsResponseResult.isSuccess() && o2OItemBenfitsResponseResult.getData() != null) {
                 O2OItemBenfitsResponse o2OItemBenfitsResponse = o2OItemBenfitsResponseResult.getData();
                 List<Long> chooseItemIds = o2OItemBenfitsResponse.getChooseItemIds();
-                if(CollectionUtils.isNotEmpty(chooseItemIds)){
+                if (CollectionUtils.isNotEmpty(chooseItemIds)) {
                     List<ItemDO> newItemList = chooseItemIds.stream().map(e -> {
                         ItemDO itemDO = new ItemDO();
                         itemDO.setItemId(e);
@@ -153,7 +146,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                     }).collect(Collectors.toList());
                     //新人商品数据
                     returnItemIdList.addAll(newItemList);
-                }else {
+                } else {
                     HadesLogUtil.stream("MmcItemQueryHandler inner|get member data|empty")
                         .kv("o2OItemBenfitsRequest", JSON.toJSONString(o2OItemBenfitsRequest))
                         .kv("o2OItemBenfitsResponseResult", JSON.toJSONString(o2OItemBenfitsResponseResult))
@@ -162,8 +155,10 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                 //红包数据
                 extendDataMap.putAll(o2OItemBenfitsResponse.getExt());
             }
+            HadesLogUtil.stream("MmcItemQueryHandler inner|memberCost|" + (memberEnd - memberStart))
+                .info();
             return returnItemIdList;
-        }catch (Exception e){
+        } catch (Exception e) {
             HadesLogUtil.stream("MmcItemQueryHandler inner|get member data|error")
                 .kv("userId", String.valueOf(userId))
                 .kv("storeIdList", JSON.toJSONString(storeIdList))
@@ -174,19 +169,20 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     }
 
-    private List<ItemDO> getAldData(Long userId, List<String> storeIdList, Long aldCost){
+    private List<ItemDO> getAldData(Long userId, List<String> storeIdList) {
         List<ItemDO> returnItemIdList = new ArrayList<>();
-        try{
+        Long aldStart = System.currentTimeMillis();
+        try {
             Request request = buildAldRequest(userId, storeIdList);
-            Long aldStart = System.currentTimeMillis();
             Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
             Long aldEnd = System.currentTimeMillis();
             if (MapUtils.isNotEmpty(aldResponseMap)) {
                 ResResponse resResponse = aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID);
-                if(resResponse != null){
-                    List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID)
+                if (resResponse != null) {
+                    List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(
+                        MMC_HOT_ITEM_ALD_RES_ID)
                         .get("data");
-                    if(CollectionUtils.isNotEmpty(dataList)){
+                    if (CollectionUtils.isNotEmpty(dataList)) {
                         List<ItemDO> oldItemIdList = dataList.stream().map(e -> {
                             Long contentId = Long.valueOf(String.valueOf(e.get("contentId")));
                             ItemDO oldItemDO = new ItemDO();
@@ -195,7 +191,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                             return oldItemDO;
                         }).collect(Collectors.toList());
                         returnItemIdList.addAll(oldItemIdList);
-                    }else {
+                    } else {
                         HadesLogUtil.stream("MmcItemQueryHandler inner|get ald data|empty")
                             .kv("request", JSON.toJSONString(request))
                             .kv("aldResponseMap", JSON.toJSONString(aldResponseMap))
@@ -203,9 +199,10 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                     }
                 }
             }
-            aldCost = (aldEnd - aldStart);
+            HadesLogUtil.stream("MmcItemQueryHandler inner|aldCost|" + (aldEnd - aldStart))
+                .info();
             return returnItemIdList;
-        }catch (Exception e){
+        } catch (Exception e) {
             HadesLogUtil.stream("MmcItemQueryHandler inner|get ald data|error")
                 .kv("userId", String.valueOf(userId))
                 .kv("storeIdList", JSON.toJSONString(storeIdList))
@@ -214,7 +211,6 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             return returnItemIdList;
         }
     }
-
 
     private Request buildAldRequest(Long userId, List<String> storeIdList) {
         Request request = new Request();
@@ -239,10 +235,11 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     /**
      * 删除重复商品，改变原始对象
+     *
      * @param itemDOList
      * @return
      */
-    public static void removeDuplicateItems(List<ItemDO> itemDOList){
+    public static void removeDuplicateItems(List<ItemDO> itemDOList) {
         Set<Long> itemIdSet = new HashSet<>();
         // 删除重复的元素
         Iterator<ItemDO> iterator = itemDOList.iterator();
@@ -258,20 +255,27 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
     }
 
     public static void main(String[] args) {
-        List<ItemDO> oldItemIdList = new ArrayList<>();
-        ItemDO itemDO1 = new ItemDO();
-        itemDO1.setItemId(11L);
-        oldItemIdList.add(itemDO1);
-        ItemDO itemDO2 = new ItemDO();
-        itemDO2.setItemId(22L);
-        oldItemIdList.add(itemDO2);
-        ItemDO itemDO3 = new ItemDO();
-        itemDO3.setItemId(11L);
-        oldItemIdList.add(itemDO3);
-        System.out.println("原始:" + JSON.toJSONString(oldItemIdList));
-        removeDuplicateItems(oldItemIdList);
-        System.out.println("去重后："+JSON.toJSONString(oldItemIdList));
+        //List<ItemDO> oldItemIdList = new ArrayList<>();
+        //ItemDO itemDO1 = new ItemDO();
+        //itemDO1.setItemId(11L);
+        //oldItemIdList.add(itemDO1);
+        //ItemDO itemDO2 = new ItemDO();
+        //itemDO2.setItemId(22L);
+        //oldItemIdList.add(itemDO2);
+        //ItemDO itemDO3 = new ItemDO();
+        //itemDO3.setItemId(11L);
+        //oldItemIdList.add(itemDO3);
+        //System.out.println("原始:" + JSON.toJSONString(oldItemIdList));
+        //removeDuplicateItems(oldItemIdList);
+        //System.out.println("去重后："+JSON.toJSONString(oldItemIdList));
+        Long time = 0L;
 
+        test(time);
+        System.out.println(time);
+    }
+
+    private static void test(Long time) {
+        time = 3L;
     }
 
 }
