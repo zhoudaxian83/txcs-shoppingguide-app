@@ -72,8 +72,9 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
         Set<String> itemUniqueKeySet = Sets.newHashSet();
         Long contentId = MapUtil.getLongWithDefault(requestParam,"moduleId",0L);
         Long itemSetIds = MapUtil.getLongWithDefault(requestParam,"itemSetIds",0L);
+        /**视频场景才打标**/
         List<Long> topItemIds = Lists.newArrayList();
-        if(contentId > 0L){
+        if(isMedia(contextItem) && contentId > 0L){
             topItemIds = getTopItemIds(contentId,itemSetIds);
         }
         /**首页所见即所得置顶且去重，非首页去重**/
@@ -84,7 +85,7 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
             }
             itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
             if(isFirstPage(contextItem)){
-                if(CollectionUtils.isNotEmpty(topItemIds) && topItemIds.contains(itemEntity.getItemId())){
+                if(isMedia(contextItem) &&CollectionUtils.isNotEmpty(topItemIds) && topItemIds.contains(itemEntity.getItemId())){
                     itemEntity.setTop(true);
                 }
                 finalItemEntities.add(itemEntity);
@@ -139,6 +140,10 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
     private boolean isBangdan(SgFrameworkContextItem sgFrameworkContextItem) {
         String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
         return RenderContentTypeEnum.bangdanContent.getType().equals(contentType) || RenderContentTypeEnum.bangdanO2OContent.getType().equals(contentType);
+    }
+    private boolean isMedia(SgFrameworkContextItem sgFrameworkContextItem) {
+        String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
+        return RenderContentTypeEnum.mediaContent.getType().equals(contentType);
     }
 
     /**
