@@ -40,6 +40,8 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
     @Autowired
     private MmcMemberService mmcMemberService;
 
+    private static final String actionUrl = "https://pre-wormhole.tmall.com/wow/an/cs/act/wupr?disableNav=YES&wh_biz=tm&wh_pid=o2o-mmc/dev&sourceChannel=mmc-halfday&channel=halfday&pha=true";
+
     @Override
     public TacResult<MaterialDO> execute(Context context) throws Exception {
 
@@ -57,11 +59,21 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
             request.setStoreId(storeId);
 
         }
-        Map extendData = Maps.newHashMap();
         String umpId = "0";
         if(context.getParams().get("extendData")!=null){
-            extendData = (Map)context.getParams().get("extendData");
+            Map extendData = (Map)context.getParams().get("extendData");
             umpId = (String)extendData.get("chooseUmpId");
+            if(StringUtils.isNotBlank((String)extendData.get("benefitPic"))){
+                BenefitDO benefitDO;
+                if(materialDO.getBenefit() == null){
+                    benefitDO = new BenefitDO();
+                }else{
+                    benefitDO = materialDO.getBenefit();
+                }
+                benefitDO.setPicUrl((String)extendData.get("benefitPic"));
+                benefitDO.setId(umpId);
+                //canExposureItemCount = canExposureItemCount - 1;
+            }
         }
 
         List<Long> newItemIdList = Lists.newArrayList();
@@ -96,17 +108,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                     });
                 }
             }
-            if(StringUtils.isNotBlank((String)extendData.get("benefitPic"))){
-                BenefitDO benefitDO;
-                if(materialDO.getBenefit() == null){
-                    benefitDO = new BenefitDO();
-                }else{
-                    benefitDO = materialDO.getBenefit();
-                }
-                benefitDO.setPicUrl((String)extendData.get("benefitPic"));
-                benefitDO.setId(umpId);
-                //canExposureItemCount = canExposureItemCount - 1;
-            }
+
 
             List<ItemDO> reItemList = sortItem(canExposureItemCount,materialDO.getItems());
 
@@ -152,27 +154,40 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
              * newItemIds=商品1ID:O2OHalfDay,商品2Id:O2OHalfDay,……
              * itemIds=商品1ID:O2OHalfDay,商品2Id:O2OHalfDay,……
              */
-            StringBuilder oldItemActionUrl = new StringBuilder();
-            oldItemActionUrl.append("itemIds=");
+            StringBuilder oldItemIds = new StringBuilder();
             //新人品
-            StringBuilder newItemActionUrl = new StringBuilder();
-            newItemActionUrl.append("newItemIds=");
+            StringBuilder newItemIds = new StringBuilder();
 
             newItemList.forEach(itemDO->{
                 if(itemDO.getType().getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
-                    newItemActionUrl.append(itemDO.getItemId()).append(":O2OHalfDay").append(",");
+                    newItemIds.append(itemDO.getItemId()).append(":O2OHalfDay").append(",");
                 }else {
-                    oldItemActionUrl.append(itemDO.getItemId()).append(":O2OHalfDay").append(",");
-                }
-            });
-            newItemList.forEach(itemDO->{
-                if(itemDO.getType().getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
-                    itemDO.setActionUrl(newItemActionUrl.toString());
-                }else {
-                    itemDO.setActionUrl(oldItemActionUrl.toString());
+                    oldItemIds.append(itemDO.getItemId()).append(":O2OHalfDay").append(",");
                 }
             });
 
+
+            StringBuilder sbActionUrl = new StringBuilder();
+            sbActionUrl.append(actionUrl);
+            if(StringUtils.isNotBlank(oldItemIds.toString())){
+                sbActionUrl.append("&itemIds=");
+                if(oldItemIds.toString().endsWith(",")){
+                    sbActionUrl.append(oldItemIds.substring(0,oldItemIds.length()-1));
+                }else{
+                    sbActionUrl.append(oldItemIds.toString());
+                }
+            }
+            if(StringUtils.isNotBlank(newItemIds.toString())){
+                sbActionUrl.append("&newItemIds=");
+                if(newItemIds.toString().endsWith(",")){
+                    sbActionUrl.append(newItemIds.substring(0,newItemIds.length()-1));
+                }else{
+                    sbActionUrl.append(newItemIds.toString());
+                }
+            }
+            newItemList.forEach(itemDO->{
+                itemDO.setActionUrl(sbActionUrl.toString());
+            });
         }else {
             return itemList;
         }
@@ -180,4 +195,5 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
         return newItemList;
 
     }
+
 }
