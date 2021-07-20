@@ -51,6 +51,10 @@ public class FirstScreenMindItemScene {
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
         tacLogger.info("***FirstScreenMindItemScene context.toString():***"+context.toString());
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("FirstScreenMindItemScene", "recommend")
+            .kv("context","context")
+            .info();
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
