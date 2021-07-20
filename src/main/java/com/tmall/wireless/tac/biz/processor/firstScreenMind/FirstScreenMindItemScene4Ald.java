@@ -51,6 +51,10 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
     ContentInfoSupport contentInfoSupport;
 
     public Flowable<TacResult<List<GeneralItem>>> recommend4Ald(RequestContext4Ald requestContext4Ald) {
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("FirstScreenMindItemScene4Ald", "recommend4Ald")
+            .kv("requestContext4Ald","requestContext4Ald")
+            .info();
         Long smAreaId = MapUtil.getLongWithDefault(requestContext4Ald.getAldParam(), "smAreaId", 330100L);
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
