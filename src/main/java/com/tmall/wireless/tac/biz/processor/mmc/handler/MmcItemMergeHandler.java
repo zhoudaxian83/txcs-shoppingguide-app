@@ -139,6 +139,10 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
             List<ItemDO> reItemList = Lists.newArrayList();
             List<ItemDO> itemList = materialDO.getItems();
             if(CollectionUtils.isNotEmpty(itemList) && canExposureItemCount > 0){
+
+                HadesLogUtil.stream("MmcItemMergeHandler ItemList")
+                    .kv("itemList",JSON.toJSONString(itemList))
+                    .info();
                 itemList.forEach(itemDO -> {
                     ItemType itemType = itemDO.getType();
                     if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())
@@ -195,7 +199,9 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                 newItemList.forEach(itemDO->{
                     itemDO.setActionUrl(sbActionUrl.toString());
                 });
-
+                HadesLogUtil.stream("MmcItemMergeHandler newItemList")
+                    .kv("newItemList",JSON.toJSONString(newItemList))
+                    .info();
 
             }
         }catch (Exception e){
