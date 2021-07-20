@@ -39,7 +39,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
     @Autowired
     private MmcMemberService mmcMemberService;
 
-    private static final String actionUrl = "https://pre-wormhole.tmall.com/wow/an/cs/act/wupr?disableNav=YES&wh_biz=tm&wh_pid=o2o-mmc/dev&sourceChannel=mmc-halfday&channel=halfday&pha=true";
+    private static final String actionUrl = "https://pages.tmall.com/wow/an/cs/act/wupr?disableNav=YES&wh_biz=tm&wh_pid=o2o-mmc/index&sourceChannel=mmc-halfday&channel=halfday&pha=true";
 
     @Override
     public TacResult<MaterialDO> execute(Context context) throws Exception {
