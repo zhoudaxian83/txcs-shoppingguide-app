@@ -46,7 +46,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
 
         MaterialDO materialDO = null;
         try{
-            HadesLogUtil.stream("MmcItemMergeHandlerRequest")
+            HadesLogUtil.stream("MmcItemMergeHandler request")
                 .kv("context",JSON.toJSONString(context))
                 .info();
             Long userId = MapUtil.getLongWithDefault(context.getParams(),"userId",0L);
@@ -54,9 +54,6 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
             ItemDirectionalDiscountRequest request = new ItemDirectionalDiscountRequest();
 
 
-            HadesLogUtil.stream("MmcItemMergeHandlerRequest materialDO")
-                .kv("context",JSON.toJSONString(context.getParams().get("materialDO")))
-                .info();
             if(context.getParams().get("materialDO")!=null){
                 materialDO = (MaterialDO)context.getParams().get("materialDO");
                 Long storeId = Long.valueOf(materialDO.getStores().get(0).getStoreId());
@@ -87,12 +84,13 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                         newItemIdList.add(itemDO.getItemId());
                     }
                 });
-                request.setItemIds(newItemIdList);
-                request.setUmpId(Long.valueOf(umpId));
-                request.setUserId(userId);
-                if(CollectionUtils.isNotEmpty(newItemIdList) && request.getStoreId()!=null && request.getStoreId()!=0L){
+                if(CollectionUtils.isNotEmpty(newItemIdList)
+                    && request.getStoreId()!=null
+                    && request.getStoreId()!=0L){
+                    request.setItemIds(newItemIdList);
+                    request.setUmpId(Long.valueOf(umpId));
+                    request.setUserId(userId);
                     Result<ItemDirectionalDiscountResponse> responseResult =  mmcMemberService.queryItemDirectionalDiscount(request);
-
                     HadesLogUtil.stream("MmcItemMergeHandler responseResult")
                         .kv("request",JSON.toJSONString(request))
                         .kv("responseResult",JSON.toJSONString(responseResult))
@@ -119,11 +117,14 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                 Map<Long, O2OItemPriceDTO> itemPriceMap = (Map<Long, O2OItemPriceDTO>)context.getParams().get("itemPriceMap");
                 sortItem(materialDO,canExposureItemCount,itemPriceMap);
             }
-            HadesLogUtil.stream("MmcItemMergeHandlerResponse")
+            HadesLogUtil.stream("MmcItemMergeHandler response")
                 .kv("materialDO",JSON.toJSONString(materialDO))
                 .kv("code","0000")
                 .info();
         }catch (Exception e){
+            HadesLogUtil.stream("MmcItemMergeHandler error")
+                .kv("exception",JSON.toJSONString(e))
+                .info();
             LOGGER.error("MmcItemMergeHandler execute error",e);
         }
 
