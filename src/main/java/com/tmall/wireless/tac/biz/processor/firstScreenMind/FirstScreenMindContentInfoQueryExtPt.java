@@ -2,30 +2,26 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
-
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
-import com.tmall.aselfcommon.model.gcs.enums.GcsSceneType;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.aselfcommon.model.scene.enums.SceneType;
 import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
-import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryRequest;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
 import com.tmall.txcs.gs.model.Response;
-import com.tmall.txcs.gs.model.content.ContentDTO;
+import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.content.ContentInfoDTO;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
-import com.tmall.txcs.gs.model.model.dto.ItemEntity;
-import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderErrorEnum;
@@ -44,6 +40,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -73,24 +70,35 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             for (ContentEntity contentEntity : contentEntities) {
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
             }
-            Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-            tacLogger.info("***********mgetResult.getValue().size()*******:"+mgetResult.getValue().size());
-            LOGGER.info("***********mgetResult.getValue().size()*******:"+mgetResult.getValue().size());
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+                    Objects::toString).orElse("0"))
+                .kv("FirstScreenMindContentInfoQueryExtPt","process")
+                .kv("sKeyList",JSON.toJSONString(sKeyList))
+                .info();
+            Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
+            if(mgetResult != null && mgetResult.getValue() != null){
+                HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                    .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+                        Objects::toString).orElse("0"))
+                    .kv("FirstScreenMindContentInfoQueryExtPt","process")
+                    .kv("mgetResult.getValue().size()",JSON.toJSONString(mgetResult.getValue().size()))
+                    .info();
+            }
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
-                return Flowable.just(Response.fail(""));
+                return Flowable.just(Response.fail("READ_CONTENT_FROM_TAIR_RETURN_EMPTY"));
             }
             List<DataEntry> dataEntryList = mgetResult.getValue();
             Map<Long, TairSceneDTO> tairResult = Maps.newHashMap();
             //循环遍历获取结果
             dataEntryList.forEach(dataEntry -> {
-                // txcs_scene_detail_v2_2020053172349
                 Object tairKey = dataEntry.getKey();
                 String tairKeyStr = String.valueOf(tairKey);
                 String[] s = tairKeyStr.split("_");
                 String contentId = s[s.length - 1];
                 TairSceneDTO value = (TairSceneDTO) dataEntry.getValue();
                 tairResult.put(Long.valueOf(contentId), value);
-            });;
+            });
             for(ContentEntity contentEntity : contentEntities){
                 Long contentId = contentEntity.getContentId();
                 TairSceneDTO tairSceneDTO = tairResult.get(contentId);
@@ -100,15 +108,14 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     continue;
                 }
                 ContentInfoDTO contentDTO = new ContentInfoDTO();
-//                contentDTO.setContentId(contentId);
-//                contentDTO.setContentEntity(contentEntity);
                 Map<String, Object> contentInfo = Maps.newHashMap();
                 contentInfo.put("contentId",tairSceneDTO.getId());
                 contentInfo.put("contentTitle",tairSceneDTO.getTitle());
                 contentInfo.put("contentSubtitle",tairSceneDTO.getSubtitle());
                 contentInfo.put("itemSetIds", getItemSetIds(tairSceneDTO));
+                contentInfo.put("scm", contentEntity.getTrack_point());
                 Map<String, Object> tairPropertyMap = tairSceneDTO.getProperty();
-                //前后端映射
+                //前后端映射  首页改版、逛超市映射字段相同
                 for(FrontBackMapEnum frontBackMapEnum : FrontBackMapEnum.values()){
                     contentInfo.put(frontBackMapEnum.getFront(),tairPropertyMap.get(frontBackMapEnum.getBack()));
                 }
@@ -143,6 +150,8 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     contentInfo.put("contentType",RenderContentTypeEnum.recipeContent.getType());
                 } else if (type.equals(SceneType.MEDIA.name())) {
                     contentInfo.put("contentType",RenderContentTypeEnum.mediaContent.getType());
+                } else if (marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(SceneType.BOARD.name())) {
+                    contentInfo.put("contentType",RenderContentTypeEnum.bangdanO2OContent.getType());
                 } else if (type.equals(SceneType.BOARD.name())) {
                     contentInfo.put("contentType",RenderContentTypeEnum.bangdanContent.getType());
                 } else {
@@ -153,6 +162,12 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 contentDTO.setContentInfo(contentInfo);
                 contentDTOMap.put(contentId,contentDTO);
             }
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+                    Objects::toString).orElse("0"))
+                .kv("FirstScreenMindContentInfoQueryExtPt","process")
+                .kv("contentDTOMap",JSON.toJSONString(contentDTOMap))
+                .info();
         }catch (Exception e){
             LOGGER.info(RenderErrorEnum.contentBatchTairExc.getCode(), RenderErrorEnum.contentBatchTairExc.getMessage());
             return Flowable.just(Response.fail(RenderErrorEnum.contentBatchTairExc.getCode()));

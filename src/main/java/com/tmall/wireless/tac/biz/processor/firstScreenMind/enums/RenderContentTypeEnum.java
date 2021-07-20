@@ -19,6 +19,7 @@ public enum RenderContentTypeEnum {
     recipeContent("recipeContent","b2c品牌场景","recipeContent"),
     mediaContent("mediaContent","b2c品牌场景","mediaContent"),
     bangdanContent("bangdanContent","榜单场景","bangdanContent"),
+    bangdanO2OContent("bangdanO2OContent","O2O榜单场景","bangdanO2OContent"),
 
     ;
 
@@ -42,7 +43,11 @@ public enum RenderContentTypeEnum {
 
     /**判断当前内容是否是O2O内容类型*/
     private static final Set<String> o2o_contentType_collection =
-        Sets.newHashSet(o2oNormalContent.getType(),o2oCombineContent.getType(),o2oBrandContent.getType(),recipeContent.getType());
+        Sets.newHashSet(o2oNormalContent.getType(),
+                o2oCombineContent.getType(),
+                o2oBrandContent.getType(),
+                bangdanO2OContent.getType(),
+                recipeContent.getType());
 
     public static boolean checkO2OContentType(String contentType) {
         if(RenderCheckUtil.StringEmpty(contentType)){

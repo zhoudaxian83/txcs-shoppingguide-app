@@ -1,9 +1,14 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
+
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.taobao.tair.json.Json;
+import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataPostProcessorExtPt;
@@ -16,41 +21,141 @@ import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Created by yangqing.byq on 2021/5/21.
+ *
+ * @author yangqing.byq
+ * @date 2021/5/21
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
 @Service
 public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPostProcessorExtPt {
+
+    @Autowired
+    ContentInfoSupport contentInfoSupport;
     @Override
     public OriginDataDTO<ItemEntity> process(SgFrameworkContextItem contextItem) {
-        if (isFirstPage(contextItem)) {
-            return processFirstPage(contextItem);
-        } else {
-            return contextItem.getItemEntityOriginDataDTO();
+        OriginDataDTO<ItemEntity> originDataDTO = Optional.of(contextItem).map(SgFrameworkContextItem::getItemEntityOriginDataDTO).orElse(null);
+        Map<String, Object> requestParam = contextItem.getRequestParams();
+        /**榜单不需要所见及所得，无需特殊处理**/
+        if(isBangdan(contextItem)){
+            return originDataDTO;
+        }
+        List<ItemEntity> itemEntityList = getItemEntityList(contextItem);
+
+        if(CollectionUtils.isEmpty(itemEntityList)){
+            return originDataDTO;
         }
 
+        if (originDataDTO == null || originDataDTO.getResult() == null) {
+            originDataDTO = new OriginDataDTO<>();
+            originDataDTO.setHasMore(false);
+            originDataDTO.setIndex(itemEntityList.size());
+            originDataDTO.setResult(Lists.newArrayList());
+            contextItem.setItemEntityOriginDataDTO(originDataDTO);
+        }
+        List<ItemEntity> finalItemEntities = Lists.newArrayList();
+        Set<String> itemUniqueKeySet = Sets.newHashSet();
+        Long contentId = MapUtil.getLongWithDefault(requestParam,"moduleId",0L);
+        Long itemSetIds = MapUtil.getLongWithDefault(requestParam,"itemSetIds",0L);
+        /**视频场景才打标**/
+        List<Long> topItemIds = Lists.newArrayList();
+        if(isMedia(contextItem) && contentId > 0L){
+            topItemIds = getTopItemIds(contentId,itemSetIds);
+        }
+        /**首页所见即所得置顶且去重，非首页去重**/
+        for(ItemEntity itemEntity:itemEntityList){
+            ItemUniqueId itemUniqueId = itemEntity.getItemUniqueId();
+            if (itemUniqueKeySet.contains(itemUniqueId.toString())) {
+                continue;
+            }
+            itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
+            if(isFirstPage(contextItem)){
+                if(isMedia(contextItem) && CollectionUtils.isNotEmpty(topItemIds) && topItemIds.contains(itemEntity.getItemId())){
+                    itemEntity.setTop(true);
+                }
+                finalItemEntities.add(itemEntity);
+            }
+        }
+
+        originDataDTO.getResult().forEach(itemEntity -> {
+            ItemUniqueId itemUniqueId = itemEntity.getItemUniqueId();
+            if (itemUniqueKeySet.contains(itemUniqueId.toString())) {
+                return;
+            }
+            itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
+            finalItemEntities.add(itemEntity);
+
+        });
+        originDataDTO.setResult(finalItemEntities);
+        contextItem.setItemEntityOriginDataDTO(originDataDTO);
+        return originDataDTO;
+
+    }
+    /**
+     * 获取tair内容下置顶商品
+     * @param contentId
+     * @return
+     */
+    private List<Long> getTopItemIds(Long contentId,Long itemSetIds){
+        List<Long> contentIds = Lists.newArrayList();
+        if(contentId == null || contentId <= 0 ){
+            return null;
+        }
+        contentIds.add(contentId);
+        Map<Long, TairSceneDTO> tairResult = contentInfoSupport.getTairData(contentIds);
+        if(MapUtils.isEmpty(tairResult)){
+            return null;
+        }
+        TairSceneDTO tairSceneDTO = tairResult.get(contentId);
+        Map<Long,List<Long>> topItemIdMap = contentInfoSupport.getTopItemIds(tairSceneDTO);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("FirstScreenMindOriginDataPostProcessorExtPt","getTopItemIds")
+            .kv("topItemIdMap", JSON.toJSONString(topItemIdMap))
+            .info();
+        List<Long> itemIds = Lists.newArrayList();
+        if(itemSetIds > 0L){
+            itemIds = topItemIdMap.get(itemSetIds);
+        }else{
+            /**视频不存在货架，只有一个圈品集**/
+            topItemIdMap.values().stream().findFirst().get();
+        }
+        return itemIds;
     }
 
-    private OriginDataDTO<ItemEntity> processFirstPage(SgFrameworkContextItem contextItem) {
+    private boolean isBangdan(SgFrameworkContextItem sgFrameworkContextItem) {
+        String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
+        return RenderContentTypeEnum.bangdanContent.getType().equals(contentType) || RenderContentTypeEnum.bangdanO2OContent.getType().equals(contentType);
+    }
+    private boolean isMedia(SgFrameworkContextItem sgFrameworkContextItem) {
+        String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
+        return RenderContentTypeEnum.mediaContent.getType().equals(contentType);
+    }
 
-
+    /**
+     * 获取所见所得商品
+     * @param contextItem
+     * @return
+     */
+    private List<ItemEntity> getItemEntityList(SgFrameworkContextItem contextItem){
         List<Long> itemIdList = getItemIdList(contextItem);
 
         if (CollectionUtils.isEmpty(itemIdList)) {
-            return contextItem.getItemEntityOriginDataDTO();
+            return null;
         }
 
         boolean isO2oScene = isO2oScene(contextItem);
@@ -72,7 +177,6 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
             bizType = BizType.SM.getCode();
             o2oType = O2oType.B2C.name();
         }
-
         List<ItemEntity> itemEntityList = itemIdList.stream().map(itemId -> {
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(itemId);
@@ -82,41 +186,7 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
             return itemEntity;
         }).collect(Collectors.toList());
 
-        OriginDataDTO<ItemEntity> originDataDTO = Optional.of(contextItem).map(SgFrameworkContextItem::getItemEntityOriginDataDTO).orElse(null);
-
-        if (originDataDTO == null || originDataDTO.getResult() == null) {
-            originDataDTO = new OriginDataDTO<>();
-            originDataDTO.setHasMore(false);
-            originDataDTO.setIndex(itemIdList.size());
-            originDataDTO.setResult(Lists.newArrayList());
-            contextItem.setItemEntityOriginDataDTO(originDataDTO);
-        }
-
-        List<ItemEntity> finalItemEntities = Lists.newArrayList();
-
-        Set<String> itemUniqueKeySet = Sets.newHashSet();
-
-        itemEntityList.forEach(itemEntity -> {
-            ItemUniqueId itemUniqueId = itemEntity.getItemUniqueId();
-            if (itemUniqueKeySet.contains(itemUniqueId.toString())) {
-                return;
-            }
-            itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
-            finalItemEntities.add(itemEntity);
-        });
-
-        originDataDTO.getResult().forEach(itemEntity -> {
-            ItemUniqueId itemUniqueId = itemEntity.getItemUniqueId();
-            if (itemUniqueKeySet.contains(itemUniqueId.toString())) {
-                return;
-            }
-            itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
-            finalItemEntities.add(itemEntity);
-        });
-
-        originDataDTO.setResult(finalItemEntities);
-        contextItem.setItemEntityOriginDataDTO(originDataDTO);
-        return originDataDTO;
+        return itemEntityList;
     }
 
     private boolean isFirstPage(SgFrameworkContextItem contextItem) {

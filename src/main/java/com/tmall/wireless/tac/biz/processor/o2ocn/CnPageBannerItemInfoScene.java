@@ -22,7 +22,6 @@ import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
@@ -35,8 +34,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CnPageBannerItemInfoScene {
-    @Autowired
-    TacLogger tacLogger;
 
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;

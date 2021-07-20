@@ -11,6 +11,8 @@
 
     <context:component-scan base-package="com.alibaba.cola"/>
 
+
+    <bean id="springSwitchBean" class="com.tmall.wireless.tac.biz.processor.config.SwitchConfigBean" init-method="init"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.TestItemInfoBySourceProcessor"/>
@@ -22,22 +24,61 @@
 
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.BannerItemInfoBuildItemVOExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.tacHandler.GulSubTabItemInfoBuildItemVOExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.youbaozang.YouBaoZangHandler"/>
     <bean class="com.tmall.wireless.tac.biz.processor.youbaozang.YouBaoZangBuildItemVOExtPtImpl"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentOriginDataRequestExPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentInfoQueryExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentFilterExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentOriginDataFailProcessorExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentOriginDataPostProcessorExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindOriginDataPostProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport"/>
 
-    <!--猜你喜欢-->
-    <!--    <bean class="com.tmall.wireless.tac.biz.processor.o2ocn.CaiNiXiHuanOriginDataItemQueryExtPt"/>-->
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.handler.SxlItemFeedsHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.handler.SxlContentHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.handler.SxlItemAndContentHandler"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlItemOriginDataRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlContentOriginDataRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlContentInfoQueryExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlItemInfoPostProcessorExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemOriginDataFailProcessorExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemInfoBuildItemVOExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.smartbuy.SmartBuyOriginDataItemQueryExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.origindatarequest.OriginDataRequestFactory"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenItemBuildItemVOExtPt"/>
+
+
+    <bean class="com.tmall.wireless.tac.biz.processor.o2obd.ext.O2oBangdanContentOriginDataRequestExPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.o2obd.ext.O2oBangdanContentInfoQueryExtPt"/>
+
     <bean class="com.tmall.wireless.tac.biz.processor.o2ocn.ext.CntemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.o2ocn.ext.CnBuildItemVOExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlOriginDataPostProcessorExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyScene"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeOriginDataItemQueryExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyItemInfoPostProcessorExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeCaptainRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TairUtil"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuildItemVOExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeItemOriginDataFailProcessorExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianOriginDataItemQueryExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianBuildItemVOExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianItemInfoPostProcessorExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.wzt.WuZheTianCaptainRequestExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.mmc.handler.MmcItemQueryHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.mmc.handler.MmcItemMergeHandler"/>
 
 
 </beans>

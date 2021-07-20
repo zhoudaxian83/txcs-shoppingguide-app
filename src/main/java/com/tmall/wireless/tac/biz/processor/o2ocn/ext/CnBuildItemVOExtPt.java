@@ -20,12 +20,10 @@ import com.tmall.txcs.gs.model.spi.model.ItemDataDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -37,13 +35,9 @@ public class CnBuildItemVOExtPt implements BuildItemVOExtPt {
 
     Logger LOGGER = LoggerFactory.getLogger(CnBuildItemVOExtPt.class);
 
-    @Autowired
-    TacLogger tacLogger;
-
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
-        Map<String, Object> userParams = buildItemVoRequest.getContext().getUserParams();
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
         boolean hasMainSource = false;
