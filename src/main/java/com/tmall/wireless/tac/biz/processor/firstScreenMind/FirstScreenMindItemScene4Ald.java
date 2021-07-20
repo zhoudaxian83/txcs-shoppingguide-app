@@ -51,10 +51,7 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
     ContentInfoSupport contentInfoSupport;
 
     public Flowable<TacResult<List<GeneralItem>>> recommend4Ald(RequestContext4Ald requestContext4Ald) {
-        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
-            .kv("FirstScreenMindItemScene4Ald", "recommend4Ald")
-            .kv("requestContext4Ald","requestContext4Ald")
-            .info();
+
         Long smAreaId = MapUtil.getLongWithDefault(requestContext4Ald.getAldParam(), "smAreaId", 330100L);
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
@@ -62,10 +59,6 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
         sgFrameworkContextItem.setRequestParams(AldUrlParamUtil.getAldUrlKv(requestContext4Ald));
 
         sgFrameworkContextItem.setSceneInfo(getSceneInfo());
-        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
-            .kv("FirstScreenMindItemScene4Ald", "recommend4Ald")
-            .kv("requestContext4Ald",JSON.toJSONString(requestContext4Ald))
-            .info();
 
         sgFrameworkContextItem.setUserDO(getUserDO(requestContext4Ald.getUserInfo()));
         String csa = MapUtils.getString(requestContext4Ald.getAldParam(), UserParamsKeyConstant.USER_PARAMS_KEY_CSA);
@@ -79,8 +72,8 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
             .kv("step", "requestLog")
-            /*.kv("userId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
-                Objects::toString).orElse("0"))*/
+            .kv("userId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+                Objects::toString).orElse("0"))
             .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
             .info();
 
