@@ -8,6 +8,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -97,6 +98,33 @@ public class ContentSetIdListUtil {
                 getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING));
 
         return result.stream().filter(contentSetId -> contentSetId > 0).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取纯榜单推荐列表参数
+     * @param requestParams
+     * @return
+     */
+    public static List<Long> getRankingList(Map<String, Object> requestParams){
+        List<Long> result = Lists.newArrayList();
+        result.addAll(
+            getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_BRAND));
+        result.addAll(
+            getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_O2O));
+        result.addAll(
+            getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C));
+        result.addAll(
+            getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RECIPE));
+        result.addAll(
+            getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_MEDIA));
+        if(CollectionUtils.isEmpty(result)){
+            result.addAll(
+                getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING));
+            if(CollectionUtils.isNotEmpty(result)){
+                return result;
+            }
+        }
+        return Lists.newArrayList();
     }
     /**
      * 逛超市承接页不出菜谱

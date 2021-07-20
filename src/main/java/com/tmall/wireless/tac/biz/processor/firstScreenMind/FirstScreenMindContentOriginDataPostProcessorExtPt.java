@@ -2,18 +2,25 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.taobao.tair.json.Json;
 import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.aselfcommon.model.scene.enums.SceneType;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.ContentOriginDataPostProcessorExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
+import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.item.ItemUniqueId;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
@@ -71,8 +78,12 @@ public class FirstScreenMindContentOriginDataPostProcessorExtPt implements Conte
             }
             /**itemSetId,list**/
             Map<Long,List<Long>> topItemIdMap = contentInfoSupport.getTopItemIds(tairSceneDTO);
-            LOGGER.info("FirstScreenMindContentOriginDataPostProcessorExtPt topItemIdMap:"+contentId+":"+type+":"+topItemIdMap);
-            tacLogger.info("FirstScreenMindContentOriginDataPostProcessorExtPt topItemIdMap:"+contentId+":"+type+":"+topItemIdMap);
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+                    Objects::toString).orElse("0"))
+                .kv("contentId", JSON.toJSONString(contentId))
+                .kv("topItemIdMap",JSON.toJSONString(topItemIdMap))
+                .info();
             /**视频不存在货架，只有一个圈品集**/
             List<Long> itemIds = topItemIdMap.values().stream().findFirst().get();
             if(CollectionUtils.isEmpty(itemIds)){

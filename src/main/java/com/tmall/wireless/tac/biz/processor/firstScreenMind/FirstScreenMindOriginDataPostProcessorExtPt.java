@@ -1,10 +1,14 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
+
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.taobao.tair.json.Json;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataPostProcessorExtPt;
@@ -68,8 +72,9 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
         Set<String> itemUniqueKeySet = Sets.newHashSet();
         Long contentId = MapUtil.getLongWithDefault(requestParam,"moduleId",0L);
         Long itemSetIds = MapUtil.getLongWithDefault(requestParam,"itemSetIds",0L);
+        /**视频场景才打标**/
         List<Long> topItemIds = Lists.newArrayList();
-        if(contentId > 0L){
+        if(isMedia(contextItem) && contentId > 0L){
             topItemIds = getTopItemIds(contentId,itemSetIds);
         }
         /**首页所见即所得置顶且去重，非首页去重**/
@@ -80,7 +85,7 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
             }
             itemUniqueKeySet.add(itemEntity.getItemUniqueId().toString());
             if(isFirstPage(contextItem)){
-                if(CollectionUtils.isNotEmpty(topItemIds) && topItemIds.contains(itemEntity.getItemId())){
+                if(isMedia(contextItem) && CollectionUtils.isNotEmpty(topItemIds) && topItemIds.contains(itemEntity.getItemId())){
                     itemEntity.setTop(true);
                 }
                 finalItemEntities.add(itemEntity);
@@ -118,6 +123,10 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
         }
         TairSceneDTO tairSceneDTO = tairResult.get(contentId);
         Map<Long,List<Long>> topItemIdMap = contentInfoSupport.getTopItemIds(tairSceneDTO);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("FirstScreenMindOriginDataPostProcessorExtPt","getTopItemIds")
+            .kv("topItemIdMap", JSON.toJSONString(topItemIdMap))
+            .info();
         List<Long> itemIds = Lists.newArrayList();
         if(itemSetIds > 0L){
             itemIds = topItemIdMap.get(itemSetIds);
@@ -130,7 +139,11 @@ public class FirstScreenMindOriginDataPostProcessorExtPt implements OriginDataPo
 
     private boolean isBangdan(SgFrameworkContextItem sgFrameworkContextItem) {
         String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
-        return RenderContentTypeEnum.bangdanContent.getType().equals(contentType);
+        return RenderContentTypeEnum.bangdanContent.getType().equals(contentType) || RenderContentTypeEnum.bangdanO2OContent.getType().equals(contentType);
+    }
+    private boolean isMedia(SgFrameworkContextItem sgFrameworkContextItem) {
+        String contentType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
+        return RenderContentTypeEnum.mediaContent.getType().equals(contentType);
     }
 
     /**

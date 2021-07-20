@@ -4,18 +4,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.alibaba.fastjson.JSON;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.FirstScreenConstant;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  * @author guijian
@@ -74,11 +80,22 @@ public class OriginDataRequestContentFeeds implements OriginDataRequest{
         Integer index = Optional.ofNullable(sgFrameworkContext).map(SgFrameworkContext::getUserPageInfo).map(
             PageInfoDO::getIndex).orElse(0);
         params.put("isFirstPage", index > 0 ? "false" : "true");
-        tppRequest.setAppId(25409L);
+        /**判断是否为纯榜单推荐，不为空则为纯榜单推荐**/
+        if(CollectionUtils.isNotEmpty(ContentSetIdListUtil.getRankingList(requestParams))) {
+            List<Long> rankingList = ContentSetIdListUtil.getRankingList(requestParams);
+            params.put("contentSetIdList", Joiner.on(",").join(rankingList));
+            tppRequest.setAppId(26548L);
+        }else{
+            tppRequest.setAppId(25409L);
+        }
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContext).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
+        HadesLogUtil.stream(FirstScreenConstant.SUB_CONTENT_FEEDS)
+            .kv("OriginDataRequestContentFeeds","buildRecommendRequest")
+            .kv("tppRequest", JSON.toJSONString(tppRequest))
+            .info();
         return tppRequest;
     }
 
