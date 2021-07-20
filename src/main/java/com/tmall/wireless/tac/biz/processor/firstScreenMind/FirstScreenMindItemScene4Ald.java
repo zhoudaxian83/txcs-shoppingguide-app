@@ -70,8 +70,8 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
             .kv("step", "requestLog")
-            .kv("userId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
-                Objects::toString).orElse("0"))
+            /*.kv("userId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+                Objects::toString).orElse("0"))*/
             .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
             .info();
 
