@@ -233,8 +233,9 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
         LocationInfo locationInfo = request.getLocationInfo();
 
         if(CollectionUtils.isNotEmpty(storeIdList)){
-            List<String> collect = storeIdList.stream().map(e -> HALS_DAY_PREFIX + e.getStoreId()).collect(
-                Collectors.toList());
+            List<String> collect = storeIdList.stream()
+                .map(e -> HALS_DAY_PREFIX + e.getStoreId())
+                .collect(Collectors.toList());
             locationInfo.setWdkCodes(collect);
         }
 
