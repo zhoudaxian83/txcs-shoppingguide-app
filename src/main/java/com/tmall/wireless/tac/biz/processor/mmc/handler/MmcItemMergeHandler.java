@@ -53,6 +53,10 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
             int canExposureItemCount = Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(),"canExposureItemCount","0"));
             ItemDirectionalDiscountRequest request = new ItemDirectionalDiscountRequest();
 
+
+            HadesLogUtil.stream("MmcItemMergeHandlerRequest materialDO")
+                .kv("context",JSON.toJSONString(context.getParams().get("materialDO")))
+                .info();
             if(context.getParams().get("materialDO")!=null){
                 materialDO = (MaterialDO)context.getParams().get("materialDO");
                 Long storeId = Long.valueOf(materialDO.getStores().get(0).getStoreId());
