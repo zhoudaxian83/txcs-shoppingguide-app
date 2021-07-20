@@ -231,12 +231,9 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
         request.setRequestItems(Lists.newArrayList(requestItem));
         //地址信息
         LocationInfo locationInfo = request.getLocationInfo();
-        //TODO 720版本 只有半日达 820版本两者都有的情况 需要确定这个list是优先级是什么
-        List<StoreResult> storeResultList = storeIdList.stream().filter(
-            e -> ServiceRangeDeliveryTimeType.HALF_DAY.equals(e.getDeliveryTime())).collect(
-            Collectors.toList());
-        if(CollectionUtils.isNotEmpty(storeResultList)){
-            List<String> collect = storeResultList.stream().map(e -> HALS_DAY_PREFIX + e.getStoreId()).collect(
+
+        if(CollectionUtils.isNotEmpty(storeIdList)){
+            List<String> collect = storeIdList.stream().map(e -> HALS_DAY_PREFIX + e.getStoreId()).collect(
                 Collectors.toList());
             locationInfo.setWdkCodes(collect);
         }
