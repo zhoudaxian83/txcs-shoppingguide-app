@@ -115,7 +115,9 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                                     if(itemPriceMap.get(itemDO.getItemId())!=null){
                                         itemDO.setPromotedPriceYuan(itemPriceMap.get(itemDO.getItemId()).getPriceInYuan());
                                         BigDecimal pri = itemPriceMap.get(itemDO.getItemId()).getPrice();
-                                        itemDO.setPromotedPrice(pri.multiply(new BigDecimal(100)).longValue());
+                                        if(pri!=null){
+                                            itemDO.setPromotedPrice(pri.multiply(new BigDecimal(100)).longValue());
+                                        }
                                     }
                                 }
                             });
@@ -148,13 +150,15 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
      */
     private void sortItem(MaterialDO materialDO,int canExposureItemCount,Map<Long, O2OItemPriceDTO> itemPriceMap){
 
-        List<ItemDO> newItemList = Lists.newArrayList();
+        List<ItemDO> finalItemList = Lists.newArrayList();
+
         try{
             List<ItemDO> reItemList = Lists.newArrayList();
             List<ItemDO> itemList = materialDO.getItems();
+            List<ItemDO> newItemList = Lists.newArrayList();
             if(CollectionUtils.isNotEmpty(itemList) && canExposureItemCount > 0){
 
-                HadesLogUtil.stream("MmcItemMergeHandler ItemList")
+                HadesLogUtil.stream("MmcItemMergeHandler itemList")
                     .kv("itemList",JSON.toJSONString(itemList))
                     .info();
                 itemList.forEach(itemDO -> {
@@ -174,7 +178,11 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                     }else {
                         newItemList.addAll(reItemList);
                     }
+                    finalItemList = newItemList;
+                }else {
+                    finalItemList = newItemList.subList(0,canExposureItemCount);
                 }
+
                 /**
                  * newItemIds=商品1ID:O2OHalfDay,商品2Id:O2OHalfDay,……
                  * itemIds=商品1ID:O2OHalfDay,商品2Id:O2OHalfDay,……
@@ -183,7 +191,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                 //新人品
                 StringBuilder newItemIds = new StringBuilder();
 
-                newItemList.forEach(itemDO->{
+                finalItemList.forEach(itemDO->{
                     if(itemDO.getType().getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
                         newItemIds.append(itemDO.getItemId()).append(":O2OHalfDay").append(",");
                     }else {
@@ -210,7 +218,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                         sbActionUrl.append(newItemIds.toString());
                     }
                 }
-                newItemList.forEach(itemDO->{
+                finalItemList.forEach(itemDO->{
                     itemDO.setActionUrl(sbActionUrl.toString());
                 });
 
@@ -218,7 +226,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                     materialDO.getBenefit().setActionUrl(sbActionUrl.toString());
                 }
                 HadesLogUtil.stream("MmcItemMergeHandler newItemList")
-                    .kv("newItemList",JSON.toJSONString(newItemList))
+                    .kv("newItemList",JSON.toJSONString(finalItemList))
                     .info();
 
             }
@@ -226,8 +234,8 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
             LOGGER.error("MmcItemMergeHandler sortItem error",e);
         }
 
-        if(CollectionUtils.isNotEmpty(newItemList)){
-            materialDO.setItems(newItemList);
+        if(CollectionUtils.isNotEmpty(finalItemList)){
+            materialDO.setItems(finalItemList);
         }
 
         //return newItemList;
