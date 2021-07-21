@@ -115,9 +115,6 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             HadesLogUtil.stream("MmcItemQueryHandler inner|main process|success")
                 .kv("totalCost", String.valueOf(totalEnd - totalStart))
                 .info();
-            HadesLogUtil.stream("MmcItemQueryHandler inner|main process|finalResult")
-                .kv("finalResult", JSON.toJSONString(itemRecallModeDO))
-                .info();
 
             return TacResult.newResult(itemRecallModeDO);
         } catch (Exception e) {
