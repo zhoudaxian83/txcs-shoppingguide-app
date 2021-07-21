@@ -128,6 +128,9 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                 .kv("code","0000")
                 .info();
         }catch (Exception e){
+            HadesLogUtil.stream("MmcItemMergeHandler error")
+                .kv("code","1000")
+                .error();
             LOGGER.error("MmcItemMergeHandler execute error",e);
         }
 
