@@ -78,6 +78,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                     }
                     benefitDO.setPicUrl((String)extendData.get("benefitPic"));
                     benefitDO.setId(umpId);
+                    //benefitDO.setActionUrl(actionUrl);
                 }
             }
 
@@ -206,6 +207,10 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                 newItemList.forEach(itemDO->{
                     itemDO.setActionUrl(sbActionUrl.toString());
                 });
+
+                if(materialDO.getBenefit()!=null){
+                    materialDO.getBenefit().setActionUrl(sbActionUrl.toString());
+                }
                 HadesLogUtil.stream("MmcItemMergeHandler newItemList")
                     .kv("newItemList",JSON.toJSONString(newItemList))
                     .info();
