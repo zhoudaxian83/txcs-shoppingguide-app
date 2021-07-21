@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -113,7 +114,8 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                                 if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
                                     if(itemPriceMap.get(itemDO.getItemId())!=null){
                                         itemDO.setPromotedPriceYuan(itemPriceMap.get(itemDO.getItemId()).getPriceInYuan());
-                                        itemDO.setPromotedPrice(itemPriceMap.get(itemDO.getItemId()).getPrice().longValue());
+                                        BigDecimal pri = itemPriceMap.get(itemDO.getItemId()).getPrice();
+                                        itemDO.setPromotedPrice(pri.multiply(new BigDecimal(100)).longValue());
                                     }
                                 }
                             });
@@ -124,7 +126,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                 sortItem(materialDO,canExposureItemCount,itemPriceMap);
             }
             HadesLogUtil.stream("MmcItemMergeHandler response")
-                .kv("materialDO",JSON.toJSONString(materialDO.getBenefit()))
+                .kv("materialDO",JSON.toJSONString(materialDO))
                 .kv("code","0000")
                 .info();
         }catch (Exception e){
