@@ -63,6 +63,10 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
             String umpId = "0";
             if(context.getParams().get("extendData")!=null){
                 Map extendData = (Map)context.getParams().get("extendData");
+
+                HadesLogUtil.stream("MmcItemMergeHandler extendData")
+                    .kv("extendData",JSON.toJSONString(extendData))
+                    .info();
                 umpId = (String)extendData.get("chooseUmpId");
                 if(StringUtils.isNotBlank((String)extendData.get("benefitPic"))){
                     BenefitDO benefitDO;
@@ -118,7 +122,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                 sortItem(materialDO,canExposureItemCount,itemPriceMap);
             }
             HadesLogUtil.stream("MmcItemMergeHandler response")
-                .kv("materialDO",JSON.toJSONString(materialDO))
+                .kv("materialDO",JSON.toJSONString(materialDO.getBenefit()))
                 .kv("code","0000")
                 .info();
         }catch (Exception e){
