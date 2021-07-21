@@ -72,6 +72,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                     BenefitDO benefitDO;
                     if(materialDO.getBenefit() == null){
                         benefitDO = new BenefitDO();
+                        materialDO.setBenefit(benefitDO);
                     }else{
                         benefitDO = materialDO.getBenefit();
                     }
