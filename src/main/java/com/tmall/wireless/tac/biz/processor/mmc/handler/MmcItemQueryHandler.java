@@ -25,7 +25,6 @@ import com.taobao.freshx.homepage.client.domain.ItemDO;
 import com.taobao.freshx.homepage.client.domain.ItemRecallModeDO;
 import com.taobao.freshx.homepage.client.domain.ItemType;
 import com.taobao.freshx.homepage.client.domain.RecallType;
-import com.taobao.poi2.client.enumtype.ServiceRangeDeliveryTimeType;
 import com.taobao.poi2.client.result.StoreResult;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.hades.monitor.print.HadesLogUtil;
@@ -67,9 +66,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
     @Override
     public TacResult<ItemRecallModeDO> execute(Context context) throws Exception {
         try {
-            HadesLogUtil.stream("MmcItemQueryHandler inner|context")
-                .kv("context", JSON.toJSONString(context))
-                .info();
+            LOGGER.error("[MmcItemQueryHandler].execute.start|context:{}", JSON.toJSONString(context));
             Long totalStart = System.currentTimeMillis();
             ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
             List<ItemDO> returnItemIdList = new ArrayList<>();
@@ -83,14 +80,14 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             } else {
                 HadesLogUtil.stream("MmcItemQueryHandler inner|stores is empty")
                     .kv("stores", JSON.toJSONString(stores))
-                    .info();
+                    .error();
             }
 
             //获取阿拉丁的爆款专区数据
             List<ItemDO> aldData = getAldData(userId, storeList);
             HadesLogUtil.stream("MmcItemQueryHandler inner|aldDataSize")
                 .kv("aldDataSize", String.valueOf(aldData.size()))
-                .info();
+                .error();
             returnItemIdList.addAll(aldData);
 
             //如果userId为空，则不取新人三选一数据和券数据
@@ -99,7 +96,8 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                 List<ItemDO> memberData = getMemberData(userId, storeList, extendDataMap);
                 HadesLogUtil.stream("MmcItemQueryHandler inner|memberDataSize")
                     .kv("memberDataSize", String.valueOf(memberData.size()))
-                    .info();
+                    .kv("extendDataMap", JSON.toJSONString(extendDataMap))
+                    .error();
                 returnItemIdList.addAll(memberData);
             }
             //删除重复商品
@@ -111,13 +109,10 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             Long totalEnd = System.currentTimeMillis();
             HadesLogUtil.stream("MmcItemQueryHandler inner|totalCost" + (totalEnd - totalStart))
                 .kv("totalCost", String.valueOf(totalEnd - totalStart))
-                .info();
+                .error();
             HadesLogUtil.stream("MmcItemQueryHandler inner|main process|success")
                 .kv("totalCost", String.valueOf(totalEnd - totalStart))
-                .info();
-            HadesLogUtil.stream("MmcItemQueryHandler inner|main process|finalResult")
-                .kv("finalResult", JSON.toJSONString(itemRecallModeDO))
-                .info();
+                .error();
 
             return TacResult.newResult(itemRecallModeDO);
         } catch (Exception e) {
@@ -125,6 +120,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                 .kv("context", JSON.toJSONString(context))
                 .kv("errorMsg", StackTraceUtil.stackTrace(e))
                 .error();
+            LOGGER.error("[MmcItemQueryHandler].execute.error", JSON.toJSONString(context));
             throw e;
         }
 
@@ -164,7 +160,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                 extendDataMap.putAll(o2OItemBenfitsResponse.getExt());
             }
             HadesLogUtil.stream("MmcItemQueryHandler inner|memberCost|" + (memberEnd - memberStart))
-                .info();
+                .error();
             return returnItemIdList;
         } catch (Exception e) {
             HadesLogUtil.stream("MmcItemQueryHandler inner|get member data|error")
@@ -203,12 +199,12 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                         HadesLogUtil.stream("MmcItemQueryHandler inner|get ald data|empty")
                             .kv("request", JSON.toJSONString(request))
                             .kv("aldResponseMap", JSON.toJSONString(aldResponseMap))
-                            .info();
+                            .error();
                     }
                 }
             }
             HadesLogUtil.stream("MmcItemQueryHandler inner|aldCost|" + (aldEnd - aldStart))
-                .info();
+                .error();
             return returnItemIdList;
         } catch (Exception e) {
             HadesLogUtil.stream("MmcItemQueryHandler inner|get ald data|error")
