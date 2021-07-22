@@ -44,6 +44,6 @@ public class RequestKeyConstantApp {
     public static final String SXL_MAIN_ACTIVITY_ID = "mainActivityId";
 
     /**tpp推荐剔除召回key**/
-    public static final String FIRST_SCREEN_EXPOSURE_CONTENT_IDS = "exposureContentIds"
+    public static final String FIRST_SCREEN_EXPOSURE_CONTENT_IDS = "exposureContentIds"；
 
 }
