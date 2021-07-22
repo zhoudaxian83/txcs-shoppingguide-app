@@ -28,6 +28,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,7 +148,13 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
 //        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_BRAND, ""));
 //        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_MIND, ""));
 //        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_O2O, ""));
-        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, ""));
+        String contentSetIdB2c = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, "");
+        if(StringUtils.isNotEmpty(contentSetIdB2c)){
+            result.add(contentSetIdB2c);
+        }else{
+            String contentSetIdRanking = MapUtil.getStringWithDefault(requestParams,RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING, "");
+            result.add(contentSetIdRanking);
+        }
 
         return result.stream().filter(contentSetId -> !("".equals(contentSetId) || "0".equals(contentSetId))).collect(Collectors.toList());
     }
