@@ -9,7 +9,9 @@
     <context:component-scan base-package="com.tmall.txcs.gs.framework"/>
     <context:component-scan base-package="com.tmall.txcs.biz.supermarket"/>
 
-    <bean id="bootstrap" class="com.tmall.txcs.gs.sdk.ext.boot.Bootstrap"/>
+    <bean id="bootstrap" class="com.tmall.txcs.gs.sdk.ext.boot.Bootstrap" init-method="init">
+        <property name="packages" value="com.tmall.tcls.gs.sdk.biz.extensions"/>
+    </bean>
     <import resource="classpath*:spring/shoppingguide-sdk-sm.xml"/>
 
     <bean class="com.tmall.tcls.gs.sdk.biz.iteminfo.bysource.DefaultItemInfoBySourceProcessorFactoryImpl"/>
