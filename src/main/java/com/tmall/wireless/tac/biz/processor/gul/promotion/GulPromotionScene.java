@@ -136,10 +136,10 @@ public class GulPromotionScene {
         itemInfoSourceMetaInfoCaptain.setSceneCode("index.guessULike");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);*/
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
+        /*ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
-        itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
+        itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);*/
         return itemMetaInfo;
     }
 
