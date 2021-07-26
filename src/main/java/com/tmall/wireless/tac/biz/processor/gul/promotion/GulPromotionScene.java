@@ -131,10 +131,10 @@ public class GulPromotionScene {
         requireListList.add(requireListPrice);
         itemInfoSourceMetaInfoSmartUi.setRequiredMaterials(requireListList);*/
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoSmartUi);
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
+        /*ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         itemInfoSourceMetaInfoCaptain.setSceneCode("index.guessULike");
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
+        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);*/
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
