@@ -115,9 +115,9 @@ public class GulPromotionScene {
         itemGroupMetaInfoList.add(itemGroupMetaInfo3);
         itemGroupMetaInfo3.setGroupName("sm_O2ONextDay");
         itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoSmartUi = new ItemInfoSourceMetaInfo();
+        /*ItemInfoSourceMetaInfo itemInfoSourceMetaInfoSmartUi = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoSmartUi.setSourceName("smartui");
-        itemInfoSourceMetaInfoSmartUi.setStrategyPackageId("637_10576");
+        itemInfoSourceMetaInfoSmartUi.setStrategyPackageId("637_10576");*/
         /*List<String> e1 = Lists.newArrayList(new String[]{"supermarketPrice", "timesBot", "salesLast30d"});
         List<String> e2 = Lists.newArrayList(new String[]{"priceLabel", "timesBot", "salesLast30d"});
         List<List<String>> exclusiveMaterials = Lists.newArrayList();
@@ -130,16 +130,16 @@ public class GulPromotionScene {
         requireListList.add(requireList);
         requireListList.add(requireListPrice);
         itemInfoSourceMetaInfoSmartUi.setRequiredMaterials(requireListList);*/
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoSmartUi);
-        /*ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
+        /*itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoSmartUi);*/
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         itemInfoSourceMetaInfoCaptain.setSceneCode("index.guessULike");
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);*/
+        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
-        /*ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
-        itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);*/
+        itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         return itemMetaInfo;
     }
 
