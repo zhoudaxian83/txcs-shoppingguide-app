@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author guijian
  */
 public class GulPromotionHandler extends RpmReactiveHandler<SgFrameworkResponse<EntityVO>> {
-    
+
     @Autowired
     GulPromotionScene gulPromotionScene;
 
