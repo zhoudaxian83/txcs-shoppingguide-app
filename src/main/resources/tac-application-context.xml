@@ -10,7 +10,12 @@
     <context:component-scan base-package="com.tmall.txcs.biz.supermarket"/>
 
     <bean id="bootstrap" class="com.tmall.txcs.gs.sdk.ext.boot.Bootstrap" init-method="init">
-        <property name="packages" value="com.tmall.tcls.gs.sdk.biz.extensions"/>
+        <property name="packages">
+            <list>
+                <value>com.tmall.tcls.gs.sdk.biz.extensions</value>
+                <value>com.tmall.wireless.tac.biz.processor</value>
+            </list>
+        </property>
     </bean>
     <import resource="classpath*:spring/shoppingguide-sdk-sm.xml"/>
 
