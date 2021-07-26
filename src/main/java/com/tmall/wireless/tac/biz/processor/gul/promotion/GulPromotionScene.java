@@ -117,8 +117,8 @@ public class GulPromotionScene {
         itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoSmartUi = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoSmartUi.setSourceName("smartui");
-        /*itemInfoSourceMetaInfoSmartUi.setStrategyPackageId("637_10576");*/
-        itemInfoSourceMetaInfoSmartUi.setStrategyPackageId("508_8608");
+        itemInfoSourceMetaInfoSmartUi.setStrategyPackageId("637_10576");
+        /*itemInfoSourceMetaInfoSmartUi.setStrategyPackageId("508_8608");*/
         List<String> e1 = Lists.newArrayList(new String[]{"supermarketPrice", "timesBot", "salesLast30d"});
         List<String> e2 = Lists.newArrayList(new String[]{"priceLabel", "timesBot", "salesLast30d"});
         List<List<String>> exclusiveMaterials = Lists.newArrayList();
