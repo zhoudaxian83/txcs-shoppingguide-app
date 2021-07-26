@@ -19,18 +19,8 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.taobao.shoppingguide</groupId>
+            <groupId>com.tcls.shoppingguide</groupId>
             <artifactId>shoppingguide-biz</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.tcls.shoppingguide</groupId>
-            <artifactId>shoppingguide-framework</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.tcls.shoppingguide</groupId>
-            <artifactId>shoppingguide-extension</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
