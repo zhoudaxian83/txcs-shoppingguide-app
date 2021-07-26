@@ -39,7 +39,7 @@ public class GulPromotionScene {
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
         Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 0L);
-        int index = Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "0"));
+        int index = Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), "index", "0"));
         int pageSize = Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20"));
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
