@@ -26,10 +26,12 @@ import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author guijian
  */
+@Service
 public class GulPromotionScene {
 
     @Autowired

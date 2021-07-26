@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.gul.promotion;
 
 import java.util.Map;
 import java.util.Optional;
+import com.alibaba.cola.extension.Extension;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -13,11 +14,19 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.PmtParams;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 
 /**
  * @author guijian
  */
+@Extension(
+    bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+    scenario = ScenarioConstantApp.GUL_PROMOTION
+)
+@Service
 public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
 
     public static final String FRESH_LEVEL1_ID = "1217";

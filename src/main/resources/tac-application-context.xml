@@ -80,5 +80,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.mmc.handler.MmcItemQueryHandler"/>
     <bean class="com.tmall.wireless.tac.biz.processor.mmc.handler.MmcItemMergeHandler"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionItemOriginDataRequestExtPt"/>
+
 
 </beans>
