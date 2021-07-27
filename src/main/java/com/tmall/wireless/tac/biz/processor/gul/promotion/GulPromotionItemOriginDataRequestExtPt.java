@@ -42,6 +42,7 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
         params.put("logicAreaId", Joiner
             .on(",").join(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(
                 Lists.newArrayList())));
+        params.put("userNick",Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getNick).orElse(""));
         Map<String, Object> requestParams = sgFrameworkContextItem.getRequestParams();
         String level1Id = MapUtil.getStringWithDefault(requestParams,"level1Id","1942");
         String level2Id = MapUtil.getStringWithDefault(requestParams,"level2Id","");
