@@ -55,6 +55,7 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
             PageInfoDO::getIndex).orElse(0);
         params.put("index", String.valueOf(index));
         params.put("isFirstPage", index > 0 ? "false" : "true");
+        params.put("type","promotionCainixihuan");
         tppRequest.setAppId(APPID);
 
 
