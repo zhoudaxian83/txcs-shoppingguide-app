@@ -60,7 +60,7 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
 
         Integer index = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserPageInfo).map(
             PageInfoDO::getIndex).orElse(0);
-        params.put("index", String.valueOf(index));
+        /*params.put("index", String.valueOf(index));*/
         params.put("isFirstPage", index > 0 ? "false" : "true");
         tppRequest.setAppId(APPID);
 
@@ -72,7 +72,7 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
         params.put("pmtName", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getPmtParams).map(PmtParams::getPmtName).orElse(""));
         params.put("pageId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getPmtParams).map(PmtParams::getPageId).orElse(""));
         params.put("moduleId", moduleId);
-        params.put("tagId",tagId);
+        /*params.put("tagId",tagId);*/
         if (StringUtils.equals(FRESH_LEVEL1_ID, moduleId)) {
             // 是生鲜tab
             tppRequest.setAppId(APPID_O2O);
