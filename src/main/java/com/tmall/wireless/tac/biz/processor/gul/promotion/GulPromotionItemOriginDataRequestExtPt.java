@@ -54,8 +54,8 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
         String level2Id = MapUtil.getStringWithDefault(requestParams,"level2Id","");
 
         params.put("level1Id", level1Id);
-        params.put("level2Id", level2Id);*/
-        params.put("type","promotionCainixihuan");
+        params.put("level2Id", level2Id);
+        params.put("type","promotionCainixihuan");*/
         //params.put("itemSetId", itemRecommendRequest.getItemSetId());
 
 
@@ -66,11 +66,14 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
         tppRequest.setAppId(APPID);
 
         String moduleId = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getPmtParams).map(
-            PmtParams::getModuleId).orElse("");
+            PmtParams::getModuleId).orElse("1217");
+        String tagId = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getPmtParams).map(
+            PmtParams::getTagId).orElse("");
         params.put("pmtSource", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getPmtParams).map(PmtParams::getPmtSource).orElse(""));
         params.put("pmtName", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getPmtParams).map(PmtParams::getPmtName).orElse(""));
         params.put("pageId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getPmtParams).map(PmtParams::getPageId).orElse(""));
         params.put("moduleId", moduleId);
+        params.put("tagId",tagId);
         if (StringUtils.equals(FRESH_LEVEL1_ID, moduleId)) {
             // 是生鲜tab
             tppRequest.setAppId(APPID_O2O);
