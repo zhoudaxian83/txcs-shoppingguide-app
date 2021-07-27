@@ -38,8 +38,8 @@ public class GulPromotionScene {
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
-        /*Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 1942L);
-        Long level2Id = MapUtil.getLongWithDefault(context.getParams(), "level2Id", 0L);*/
+        Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 1942L);
+        Long level2Id = MapUtil.getLongWithDefault(context.getParams(), "level2Id", 0L);
         int index = Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), "index", "0"));
         int pageSize = Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20"));
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
@@ -59,12 +59,13 @@ public class GulPromotionScene {
         entitySetParams.setItemSetSource("crm");
         entitySetParams.setItemSetIdList(Lists.newArrayList(new Long[]{5233L}));
         sgFrameworkContextItem.setEntitySetParams(entitySetParams);
-        /*PmtParams pmtParams = new PmtParams();
+        PmtParams pmtParams = new PmtParams();
         pmtParams.setPmtSource("sm_manager");
         pmtParams.setPmtName("guessULike");
         pmtParams.setPageId("cainixihuan1");
         pmtParams.setModuleId(level1Id.toString());
-        sgFrameworkContextItem.setPmtParams(pmtParams);*/
+        pmtParams.setTagId(level2Id.toString());
+        sgFrameworkContextItem.setPmtParams(pmtParams);
 
         sgFrameworkContextItem.setItemMetaInfo(getGulSubTabItemMetaInfo());
 
