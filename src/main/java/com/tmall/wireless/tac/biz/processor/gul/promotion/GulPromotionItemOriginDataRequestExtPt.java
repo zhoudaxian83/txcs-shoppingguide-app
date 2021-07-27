@@ -53,7 +53,7 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
 
         Integer index = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserPageInfo).map(
             PageInfoDO::getIndex).orElse(0);
-        params.put("pageSize", String.valueOf(index));
+        params.put("index", String.valueOf(index));
         params.put("isFirstPage", index > 0 ? "false" : "true");
         tppRequest.setAppId(APPID);
 
