@@ -16,6 +16,7 @@ import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemRecommendMetaInfo;
+import com.tmall.txcs.gs.framework.model.meta.node.ItemInfoNode;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
@@ -98,6 +99,15 @@ public class CnPageBannerItemInfoScene {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
+        List<ItemInfoNode> itemInfoNodes = Lists.newArrayList();
+        ItemInfoNode itemInfoNodeFirst = new ItemInfoNode();
+        itemInfoNodes.add(itemInfoNodeFirst);
+        itemInfoNodeFirst.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+
+        ItemInfoNode itemInfoNodeSecond = new ItemInfoNode();
+        itemInfoNodes.add(itemInfoNodeSecond);
+        itemInfoNodeSecond.setItemInfoSourceMetaInfos(Lists.newArrayList(getItemInfoBySourceTimeLabel()));
+
         ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo);
         itemGroupMetaInfo.setGroupName("sm_B2C");
@@ -106,10 +116,12 @@ public class CnPageBannerItemInfoScene {
         itemGroupMetaInfoList.add(itemGroupMetaInfo1);
         itemGroupMetaInfo1.setGroupName("sm_O2OOneHour");
         itemGroupMetaInfo1.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        itemGroupMetaInfo1.setItemInfoNodes(itemInfoNodes);
         ItemGroupMetaInfo itemGroupMetaInfo2 = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo2);
         itemGroupMetaInfo2.setGroupName("sm_O2OHalfDay");
         itemGroupMetaInfo2.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        itemGroupMetaInfo2.setItemInfoNodes(itemInfoNodes);
         ItemGroupMetaInfo itemGroupMetaInfo3 = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo3);
         itemGroupMetaInfo3.setGroupName("sm_O2ONextDay");
@@ -130,5 +142,13 @@ public class CnPageBannerItemInfoScene {
         itemMetaInfo.setItemRecommendMetaInfo(itemRecommendMetaInfo);
 
         return itemMetaInfo;
+    }
+
+
+     private static ItemInfoSourceMetaInfo getItemInfoBySourceTimeLabel() {
+
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfo = new ItemInfoSourceMetaInfo();
+        itemInfoSourceMetaInfo.setSourceName("timeLabel");
+        return itemInfoSourceMetaInfo;
     }
 }
