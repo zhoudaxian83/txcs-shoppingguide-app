@@ -99,6 +99,7 @@ public class CnPageBannerItemInfoScene {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
+
         List<ItemInfoNode> itemInfoNodes = Lists.newArrayList();
         ItemInfoNode itemInfoNodeFirst = new ItemInfoNode();
         itemInfoNodes.add(itemInfoNodeFirst);
