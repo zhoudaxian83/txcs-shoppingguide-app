@@ -107,7 +107,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             itemRecallModeDO.setExtendData(extendDataMap);
             itemRecallModeDO.setType(RecallType.ASSIGN_ITEM_ID);
             Long totalEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("MmcItemQueryHandler inner|totalCost" + (totalEnd - totalStart))
+            HadesLogUtil.stream("MmcItemQueryHandler inner|totalCost|" + (totalEnd - totalStart))
                 .kv("totalCost", String.valueOf(totalEnd - totalStart))
                 .error();
             HadesLogUtil.stream("MmcItemQueryHandler inner|main process|success")
