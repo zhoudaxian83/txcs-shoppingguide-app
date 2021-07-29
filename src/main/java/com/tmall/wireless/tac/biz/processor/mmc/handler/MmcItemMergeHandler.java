@@ -173,13 +173,15 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                     ItemType itemType = itemDO.getType();
                     if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())
                         && itemPriceMap!=null){
-                        if(newItemList.size() > newItemSize
-                            || newItemList.size() > canExposureItemCount){
+                        if(newItemList.size() > newItemSize){
                             continue;
+                        }
+                        if(newItemList.size() > canExposureItemCount-1){
+                            break;
                         }
                         newItemList.add(itemDO);
                     }else if(itemType.getCode().equals(ItemType.NORMAL_ITEM.getCode())){
-                        if(oldItemList.size() > canExposureItemCount){
+                        if(oldItemList.size() > canExposureItemCount-1){
                             continue;
                         }
                         oldItemList.add(itemDO);
