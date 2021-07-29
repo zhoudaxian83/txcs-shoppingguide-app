@@ -81,6 +81,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                 .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
                 .kv("resultMap.size()",String.valueOf(resultMap.size()))
+                .kv("resultMap",JSON.toJSONString(resultMap))
                 .info();
             if(MapUtils.isEmpty(resultMap)){
                 return originDataDTO;
