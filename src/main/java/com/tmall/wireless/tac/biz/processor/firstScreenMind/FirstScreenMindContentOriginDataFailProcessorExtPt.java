@@ -108,6 +108,10 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                 continue;
             }
             List<GcsTairContentDTO> gcsTairContentDTOList = (List<GcsTairContentDTO>) dataEntry.getValue();
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
+                .kv("gcsTairContentDTOList.size())",String.valueOf(gcsTairContentDTOList.size()))
+                .info();
             if(CollectionUtils.isEmpty(gcsTairContentDTOList)){
                 LOGGER.error("FirstScreenMindContentOriginDataFailProcessorExtPt gcsTairContentDTOList:"+ JSON.toJSONString(gcsTairContentDTOList));
                 continue;
@@ -135,11 +139,19 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                 contentEntities.add(contentEntity);
             });
         }
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+            .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
+            .kv("contentEntities.size()1",String.valueOf(contentEntities.size()))
+            .info();
         if(contentEntities.size() > needSize){
             originDataDTO.setResult(contentEntities.subList(0,needSize));
         }else{
             originDataDTO.setResult(contentEntities);
         }
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+            .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
+            .kv("originDataDTO.getResult().size())",String.valueOf(originDataDTO.getResult().size()))
+            .info();
         return originDataDTO;
     }
 
