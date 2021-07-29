@@ -66,9 +66,9 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
             .kv("isSuccess",String.valueOf(isSuccess))
             .info();
-        if(isSuccess){
+        /*if(isSuccess){
             return originDataDTO;
-        }
+        }*/
         List<String> sKeyList = Lists.newArrayList();
         sKeyList = getContentSetIdList(requestParams);
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
