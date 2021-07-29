@@ -39,7 +39,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
     @Autowired
     private MmcMemberService mmcMemberService;
 
-    private static final int newItemSize = 2;
+    private static final int newItemSize = 1;
 
     private static final String actionUrl = "https://pages.tmall.com/wow/an/cs/act/wupr?disableNav=YES&wh_biz=tm&wh_pid=o2o-mmc/index&sourceChannel=mmc-halfday&channel=halfday&pha=true";
 
