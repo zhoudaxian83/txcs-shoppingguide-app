@@ -6,13 +6,12 @@ import com.alibaba.hyperlocalretail.sdk.member.o2otbmc.domain.ItemDirectionalDis
 import com.alibaba.hyperlocalretail.sdk.member.o2otbmc.domain.O2OItemPriceDTO;
 import com.alibaba.tcls.scrm.sdk.utils.domain.common.Result;
 import com.google.common.collect.Lists;
-import com.taobao.freshx.homepage.client.domain.BenefitDO;
-import com.taobao.freshx.homepage.client.domain.ItemDO;
-import com.taobao.freshx.homepage.client.domain.ItemType;
-import com.taobao.freshx.homepage.client.domain.MaterialDO;
+import com.google.common.collect.Maps;
+import com.taobao.freshx.homepage.client.domain.*;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.MmcMemberService;
+import com.tmall.wireless.tac.biz.processor.mmc.context.ItemInfo;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.handler.TacHandler;
@@ -39,6 +38,8 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
 
     @Autowired
     private MmcMemberService mmcMemberService;
+
+    private static final int newItemSize = 2;
 
     private static final String actionUrl = "https://pages.tmall.com/wow/an/cs/act/wupr?disableNav=YES&wh_biz=tm&wh_pid=o2o-mmc/index&sourceChannel=mmc-halfday&channel=halfday&pha=true";
 
@@ -125,7 +126,14 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                     }
                 }
                 Map<Long, O2OItemPriceDTO> itemPriceMap = (Map<Long, O2OItemPriceDTO>)context.getParams().get("itemPriceMap");
-                sortItem(materialDO,canExposureItemCount,itemPriceMap);
+
+                String locType = "O2OHalfDay";
+                if(materialDO.getBizType()!=null
+                    && StringUtils.isNotBlank(materialDO.getBizType().getCode())
+                    && materialDO.getBizType().getCode().equals(BizType.ONE_HOUR_TO_HOME.getCode())){
+                    locType = "O2OOneHour";
+                }
+                sortItem(materialDO,canExposureItemCount,itemPriceMap,locType);
             }
             HadesLogUtil.stream("MmcItemMergeHandler response")
                 .kv("materialDO",JSON.toJSONString(materialDO))
@@ -148,61 +156,91 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
      * @param canExposureItemCount
      * @param materialDO
      */
-    private void sortItem(MaterialDO materialDO,int canExposureItemCount,Map<Long, O2OItemPriceDTO> itemPriceMap){
+    private void sortItem(MaterialDO materialDO,int canExposureItemCount,Map<Long, O2OItemPriceDTO> itemPriceMap,String locType){
 
         List<ItemDO> finalItemList = Lists.newArrayList();
 
         try{
-            List<ItemDO> reItemList = Lists.newArrayList();
+
+
+            List<ItemDO> oldItemList = Lists.newArrayList();
             List<ItemDO> itemList = materialDO.getItems();
             List<ItemDO> newItemList = Lists.newArrayList();
             if(CollectionUtils.isNotEmpty(itemList) && canExposureItemCount > 0){
-
-                HadesLogUtil.stream("MmcItemMergeHandler itemList")
-                    .kv("itemList",JSON.toJSONString(itemList))
-                    .info();
-                itemList.forEach(itemDO -> {
+                for(int i = 0;i<itemList.size();i++){
+                    ItemDO itemDO = itemList.get(i);
                     ItemType itemType = itemDO.getType();
                     if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())
                         && itemPriceMap!=null
                         && itemPriceMap.get(itemDO.getItemId())!=null){
+                        if(newItemList.size() > newItemSize){
+                            continue;
+                        }
                         newItemList.add(itemDO);
                     }else if(itemType.getCode().equals(ItemType.NORMAL_ITEM.getCode())){
-                        reItemList.add(itemDO);
+                        oldItemList.add(itemDO);
                     }
-
-                });
-                if(newItemList.size() < canExposureItemCount){
-                    if(reItemList.size() > canExposureItemCount-newItemList.size()){
-                        newItemList.addAll(reItemList.subList(0,canExposureItemCount-newItemList.size()));
-                    }else {
-                        newItemList.addAll(reItemList);
-                    }
-                    finalItemList = newItemList;
-                }else {
-                    finalItemList = newItemList.subList(0,canExposureItemCount);
                 }
+                if(newItemList.size() < canExposureItemCount){
+                    if(oldItemList.size() > canExposureItemCount-newItemList.size()){
+                        oldItemList = oldItemList.subList(0,canExposureItemCount-newItemList.size());
+                    }
+                }
+                finalItemList.addAll(newItemList);
+                finalItemList.addAll(oldItemList);
 
                 /**
                  * newItemIds=商品1ID:O2OHalfDay,商品2Id:O2OHalfDay,……
                  * itemIds=商品1ID:O2OHalfDay,商品2Id:O2OHalfDay,……
                  */
-                StringBuilder oldItemIds = new StringBuilder();
+                //StringBuilder oldItemIds = new StringBuilder();
                 //新人品
-                StringBuilder newItemIds = new StringBuilder();
+                //StringBuilder newItemIds = new StringBuilder();
+                Map<Long,List<ItemInfo>> newMap = Maps.newHashMap();
+                Map<Long,String> oldMap = Maps.newHashMap();
+                List<ItemInfo> oldItemInfoList = Lists.newArrayList();
+                List<ItemInfo> newItemInfoList = Lists.newArrayList();
+
+                for(int i=0;i<newItemList.size();i++){
+                    ItemDO itemDO = newItemList.get(i);
+                    ItemInfo itemInfo = new ItemInfo();
+                    itemInfo.setItemId(itemDO.getItemId());
+                    itemInfo.setLocType(locType);
+                    newItemInfoList.add(itemInfo);
+                    newMap.put(itemDO.getItemId(),newItemInfoList);
+                }
+
+                if(CollectionUtils.isNotEmpty(newItemList)){
+
+                    newItemList.forEach(itemDO -> {
+
+                    });
+                }
+
+
 
                 finalItemList.forEach(itemDO->{
+                    ItemInfo itemInfo = new ItemInfo();
+                    itemInfo.setItemId(itemDO.getItemId());
+                    //itemInfo.setLocType(locType);
                     if(itemDO.getType().getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
-                        newItemIds.append(itemDO.getItemId()).append(":O2OHalfDay").append(",");
+                        newItemInfoList.add(itemInfo);
+                        //newItemIds.append(itemDO.getItemId()).append(":").append(locType).append(",");
                     }else {
-                        oldItemIds.append(itemDO.getItemId()).append(":O2OHalfDay").append(",");
+                        oldItemInfoList.add(itemInfo);
+                        //oldItemIds.append(itemDO.getItemId()).append(":").append(locType).append(",");
                     }
                 });
 
 
+
+
+
+
                 StringBuilder sbActionUrl = new StringBuilder();
                 sbActionUrl.append(actionUrl);
-                if(StringUtils.isNotBlank(oldItemIds.toString())){
+
+               /* if(StringUtils.isNotBlank(oldItemIds.toString())){
                     sbActionUrl.append("&itemIds=");
                     if(oldItemIds.toString().endsWith(",")){
                         sbActionUrl.append(oldItemIds.substring(0,oldItemIds.length()-1));
@@ -217,17 +255,11 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                     }else{
                         sbActionUrl.append(newItemIds.toString());
                     }
-                }
-                finalItemList.forEach(itemDO->{
-                    itemDO.setActionUrl(sbActionUrl.toString());
-                });
+                }*/
 
                 if(materialDO.getBenefit()!=null){
                     materialDO.getBenefit().setActionUrl(sbActionUrl.toString());
                 }
-                HadesLogUtil.stream("MmcItemMergeHandler newItemList")
-                    .kv("newItemList",JSON.toJSONString(finalItemList))
-                    .info();
 
             }
         }catch (Exception e){
