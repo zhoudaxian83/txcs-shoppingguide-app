@@ -11,7 +11,6 @@ import com.taobao.freshx.homepage.client.domain.*;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.MmcMemberService;
-import com.tmall.wireless.tac.biz.processor.mmc.context.ItemInfo;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.handler.TacHandler;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 买买菜商品渲染
@@ -113,6 +113,7 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                             materialDO.getItems().forEach(itemDO -> {
                                 ItemType itemType = itemDO.getType();
                                 if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
+                                    //remove
                                     if(itemPriceMap.get(itemDO.getItemId())!=null){
                                         itemDO.setPromotedPriceYuan(itemPriceMap.get(itemDO.getItemId()).getPriceInYuan());
                                         BigDecimal pri = itemPriceMap.get(itemDO.getItemId()).getPrice();
@@ -125,14 +126,13 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                         }
                     }
                 }
-                Map<Long, O2OItemPriceDTO> itemPriceMap = (Map<Long, O2OItemPriceDTO>)context.getParams().get("itemPriceMap");
-
                 String locType = "O2OHalfDay";
                 if(materialDO.getBizType()!=null
                     && StringUtils.isNotBlank(materialDO.getBizType().getCode())
                     && materialDO.getBizType().getCode().equals(BizType.ONE_HOUR_TO_HOME.getCode())){
                     locType = "O2OOneHour";
                 }
+                Map<Long, O2OItemPriceDTO> itemPriceMap = (Map<Long, O2OItemPriceDTO>)context.getParams().get("itemPriceMap");
                 sortItem(materialDO,canExposureItemCount,itemPriceMap,locType);
             }
             HadesLogUtil.stream("MmcItemMergeHandler response")
@@ -161,11 +161,11 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
         List<ItemDO> finalItemList = Lists.newArrayList();
 
         try{
-
-
-            List<ItemDO> oldItemList = Lists.newArrayList();
             List<ItemDO> itemList = materialDO.getItems();
+            List<ItemDO> oldItemList = Lists.newArrayList();
             List<ItemDO> newItemList = Lists.newArrayList();
+
+
             if(CollectionUtils.isNotEmpty(itemList) && canExposureItemCount > 0){
                 for(int i = 0;i<itemList.size();i++){
                     ItemDO itemDO = itemList.get(i);
@@ -173,93 +173,91 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                     if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())
                         && itemPriceMap!=null
                         && itemPriceMap.get(itemDO.getItemId())!=null){
-                        if(newItemList.size() > newItemSize){
+                        if(newItemList.size() > newItemSize
+                            || newItemList.size() > canExposureItemCount){
                             continue;
                         }
                         newItemList.add(itemDO);
                     }else if(itemType.getCode().equals(ItemType.NORMAL_ITEM.getCode())){
+                        if(oldItemList.size() > canExposureItemCount){
+                            continue;
+                        }
                         oldItemList.add(itemDO);
                     }
                 }
-                if(newItemList.size() < canExposureItemCount){
-                    if(oldItemList.size() > canExposureItemCount-newItemList.size()){
-                        oldItemList = oldItemList.subList(0,canExposureItemCount-newItemList.size());
-                    }
-                }
                 finalItemList.addAll(newItemList);
+                if(oldItemList.size() > canExposureItemCount-newItemList.size()){
+                    oldItemList = oldItemList.subList(0,canExposureItemCount-newItemList.size());
+                }
                 finalItemList.addAll(oldItemList);
+
 
                 /**
                  * newItemIds=商品1ID:O2OHalfDay,商品2Id:O2OHalfDay,……
                  * itemIds=商品1ID:O2OHalfDay,商品2Id:O2OHalfDay,……
                  */
-                //StringBuilder oldItemIds = new StringBuilder();
-                //新人品
-                //StringBuilder newItemIds = new StringBuilder();
-                Map<Long,List<ItemInfo>> newMap = Maps.newHashMap();
-                Map<Long,String> oldMap = Maps.newHashMap();
-                List<ItemInfo> oldItemInfoList = Lists.newArrayList();
-                List<ItemInfo> newItemInfoList = Lists.newArrayList();
+                List<Long> oldItemIdList = Lists.newArrayList();
+                List<Long> newItemIdList = Lists.newArrayList();
 
-                for(int i=0;i<newItemList.size();i++){
-                    ItemDO itemDO = newItemList.get(i);
-                    ItemInfo itemInfo = new ItemInfo();
-                    itemInfo.setItemId(itemDO.getItemId());
-                    itemInfo.setLocType(locType);
-                    newItemInfoList.add(itemInfo);
-                    newMap.put(itemDO.getItemId(),newItemInfoList);
-                }
+                Map<Long,String> newUrlMap = Maps.newHashMap();
+                Map<Long,String> oldUrlMap = Maps.newHashMap();
+                newItemList.forEach(itemDO -> {
+                    newItemIdList.add(itemDO.getItemId());
+                });
 
-                if(CollectionUtils.isNotEmpty(newItemList)){
+                oldItemList.forEach(itemDO -> {
+                    oldItemIdList.add(itemDO.getItemId());
+                });
 
-                    newItemList.forEach(itemDO -> {
+                newItemList.forEach(itemDO -> {
+                    List<Long> itemIdList = Lists.newArrayList(newItemIdList);
+                    if(!itemIdList.get(0).equals(itemDO.getItemId())){
+                        itemIdList.remove(itemDO.getItemId());
+                        itemIdList.add(0,itemDO.getItemId());
+                    }
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("&newItemIds=");
+                    List li = itemIdList.stream().map(e->{
+                        return e+":"+locType;
+                    }).collect(Collectors.toList());
+                    sb.append(String.join(",",li));
+                    newUrlMap.put(itemDO.getItemId(),sb.toString());
+                    newUrlMap.put(1L,sb.toString());
+                });
 
-                    });
-                }
+                oldItemList.forEach(itemDO -> {
+                    List<Long> itemIdList = Lists.newArrayList(oldItemIdList);
+                    if(!itemIdList.get(0).equals(itemDO.getItemId())){
+                        itemIdList.remove(itemDO.getItemId());
+                        itemIdList.add(0,itemDO.getItemId());
+                    }
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("&itemIds=");
+                    List li = itemIdList.stream().map(e->{
+                        return e+":"+locType;
+                    }).collect(Collectors.toList());
+                    sb.append(String.join(",",li));
+                    oldUrlMap.put(itemDO.getItemId(),sb.toString());
+                    oldUrlMap.put(2L,sb.toString());
+
+                });
 
 
-
-                finalItemList.forEach(itemDO->{
-                    ItemInfo itemInfo = new ItemInfo();
-                    itemInfo.setItemId(itemDO.getItemId());
-                    //itemInfo.setLocType(locType);
+                finalItemList.forEach(itemDO -> {
+                    StringBuilder sb = new StringBuilder();
                     if(itemDO.getType().getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
-                        newItemInfoList.add(itemInfo);
-                        //newItemIds.append(itemDO.getItemId()).append(":").append(locType).append(",");
-                    }else {
-                        oldItemInfoList.add(itemInfo);
-                        //oldItemIds.append(itemDO.getItemId()).append(":").append(locType).append(",");
+                        sb.append(actionUrl).append(newUrlMap.get(itemDO.getItemId())).append(oldUrlMap.get(2L));
+                        itemDO.setActionUrl(sb.toString());
+                    }else if(itemDO.getType().getCode().equals(ItemType.NORMAL_ITEM.getCode())){
+                        sb.append(actionUrl).append(oldUrlMap.get(itemDO.getItemId())).append(newUrlMap.get(1L));
+                        itemDO.setActionUrl(sb.toString());
+                    }
+                    if(materialDO.getBenefit()!=null){
+                        materialDO.getBenefit().setActionUrl(sb.toString());
                     }
                 });
 
 
-
-
-
-
-                StringBuilder sbActionUrl = new StringBuilder();
-                sbActionUrl.append(actionUrl);
-
-               /* if(StringUtils.isNotBlank(oldItemIds.toString())){
-                    sbActionUrl.append("&itemIds=");
-                    if(oldItemIds.toString().endsWith(",")){
-                        sbActionUrl.append(oldItemIds.substring(0,oldItemIds.length()-1));
-                    }else{
-                        sbActionUrl.append(oldItemIds.toString());
-                    }
-                }
-                if(StringUtils.isNotBlank(newItemIds.toString())){
-                    sbActionUrl.append("&newItemIds=");
-                    if(newItemIds.toString().endsWith(",")){
-                        sbActionUrl.append(newItemIds.substring(0,newItemIds.length()-1));
-                    }else{
-                        sbActionUrl.append(newItemIds.toString());
-                    }
-                }*/
-
-                if(materialDO.getBenefit()!=null){
-                    materialDO.getBenefit().setActionUrl(sbActionUrl.toString());
-                }
 
             }
         }catch (Exception e){
@@ -271,6 +269,23 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
         }
 
         //return newItemList;
+
+    }
+
+    public static void  main(String args[]){
+
+        List<String> lis = Lists.newArrayList();
+        lis.add("111");
+        lis.add("222");
+
+        System.out.println(JSON.toJSONString(lis));
+
+        List<String> lis1 = Lists.newArrayList(lis);
+        lis1.remove("222");
+        System.out.println(JSON.toJSONString(lis1));
+        System.out.println(JSON.toJSONString(lis));
+
+
 
     }
 
