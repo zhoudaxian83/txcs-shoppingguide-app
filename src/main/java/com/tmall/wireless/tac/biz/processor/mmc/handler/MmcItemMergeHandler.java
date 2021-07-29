@@ -166,13 +166,13 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
             List<ItemDO> newItemList = Lists.newArrayList();
 
 
+            //&& itemPriceMap.get(itemDO.getItemId())!=null
             if(CollectionUtils.isNotEmpty(itemList) && canExposureItemCount > 0){
                 for(int i = 0;i<itemList.size();i++){
                     ItemDO itemDO = itemList.get(i);
                     ItemType itemType = itemDO.getType();
                     if(itemType.getCode().equals(ItemType.NEW_USER_ITEM.getCode())
-                        && itemPriceMap!=null
-                        && itemPriceMap.get(itemDO.getItemId())!=null){
+                        && itemPriceMap!=null){
                         if(newItemList.size() > newItemSize
                             || newItemList.size() > canExposureItemCount){
                             continue;
@@ -246,10 +246,20 @@ public class MmcItemMergeHandler implements TacHandler<MaterialDO> {
                 finalItemList.forEach(itemDO -> {
                     StringBuilder sb = new StringBuilder();
                     if(itemDO.getType().getCode().equals(ItemType.NEW_USER_ITEM.getCode())){
-                        sb.append(actionUrl).append(newUrlMap.get(itemDO.getItemId())).append(oldUrlMap.get(2L));
+                        if(StringUtils.isNotBlank(newUrlMap.get(itemDO.getItemId()))){
+                            sb.append(actionUrl).append(newUrlMap.get(itemDO.getItemId()));
+                        }
+                        if(StringUtils.isNotBlank(oldUrlMap.get(2L))){
+                            sb.append(oldUrlMap.get(2L));
+                        }
                         itemDO.setActionUrl(sb.toString());
                     }else if(itemDO.getType().getCode().equals(ItemType.NORMAL_ITEM.getCode())){
-                        sb.append(actionUrl).append(oldUrlMap.get(itemDO.getItemId())).append(newUrlMap.get(1L));
+                        if(StringUtils.isNotBlank(oldUrlMap.get(itemDO.getItemId()))){
+                            sb.append(actionUrl).append(oldUrlMap.get(itemDO.getItemId()));
+                        }
+                        if(StringUtils.isNotBlank(newUrlMap.get(1L))){
+                            sb.append(newUrlMap.get(1L));
+                        }
                         itemDO.setActionUrl(sb.toString());
                     }
                     if(materialDO.getBenefit()!=null){
