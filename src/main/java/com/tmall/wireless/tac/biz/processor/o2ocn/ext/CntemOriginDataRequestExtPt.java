@@ -18,7 +18,9 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.o2ocn.enums.O2OChannelEnum;
 import com.tmall.wireless.tac.biz.processor.o2ocn.utils.Constants;
 import com.tmall.wireless.tac.biz.processor.o2ocn.utils.O2OChannelUtil;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,6 +31,9 @@ import org.springframework.stereotype.Service;
     scenario = ScenarioConstantApp.O2O_CNXH)
 @Service
 public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
+
+    @Autowired
+    TacLogger tacLogger;
 
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
@@ -83,6 +88,7 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
         }
         recommendRequest.setParams(params);
         recommendRequest.setUserId(userId);
+        tacLogger.info("tppRequest:"+JSON.toJSONString(recommendRequest));
         HadesLogUtil.stream(ScenarioConstantApp.O2O_CNXH)
             .kv("step", "tppRequest")
             .kv("tppRequest", JSON.toJSONString(recommendRequest))
