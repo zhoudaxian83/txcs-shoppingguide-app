@@ -142,6 +142,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
             .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
             .kv("contentEntities.size()1",String.valueOf(contentEntities.size()))
+            .kv("needSize",String.valueOf(needSize))
             .info();
         if(contentEntities.size() > needSize){
             originDataDTO.setResult(contentEntities.subList(0,needSize));
