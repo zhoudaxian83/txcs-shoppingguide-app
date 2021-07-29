@@ -93,6 +93,13 @@ public class GulPromotionBuildItemVOExtPt implements BuildItemVOExtPt {
         if (itemEntityVO.get("smartUi") == null) {
             itemEntityVO.put("contentType", 0);
 
+        }else if(itemEntityVO.get("smartUi") instanceof Map){
+            Map<String,Object> smartUiMap = (Map<String, Object>)itemEntityVO.get("smartUi");
+            if((smartUiMap.get("whitePict") == null ||  "".equals(smartUiMap.get("whitePict")))
+                && (smartUiMap.get("scenePic") == null || "".equals(smartUiMap.get("whitePict")))
+                && (smartUiMap.get("videoUrl") == null || "".equals(smartUiMap.get("whitePict")))){
+                itemEntityVO.put("contentType", 0);
+            }
         }
         return Response.success(itemEntityVO);
     }
