@@ -109,11 +109,10 @@ public class CnPageBannerItemInfoScene {
         itemInfoNodes.add(itemInfoNodeSecond);
         itemInfoNodeSecond.setItemInfoSourceMetaInfos(Lists.newArrayList(getItemInfoBySourceTimeLabel()));
 
-        //ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
-        //itemGroupMetaInfoList.add(itemGroupMetaInfo);
-        //itemGroupMetaInfo.setGroupName("sm_B2C");
-        //itemGroupMetaInfo.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
-
+        ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
+        itemGroupMetaInfoList.add(itemGroupMetaInfo);
+        itemGroupMetaInfo.setGroupName("sm_B2C");
+        itemGroupMetaInfo.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
         ItemGroupMetaInfo itemGroupMetaInfo1 = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo1);
         itemGroupMetaInfo1.setGroupName("sm_O2OOneHour");
