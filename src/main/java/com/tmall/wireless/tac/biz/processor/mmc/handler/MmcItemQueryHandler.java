@@ -107,7 +107,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             itemRecallModeDO.setExtendData(extendDataMap);
             itemRecallModeDO.setType(RecallType.ASSIGN_ITEM_ID);
             Long totalEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("MmcItemQueryHandler inner|totalCost" + (totalEnd - totalStart))
+            HadesLogUtil.stream("MmcItemQueryHandler inner|totalCost|" + (totalEnd - totalStart))
                 .kv("totalCost", String.valueOf(totalEnd - totalStart))
                 .error();
             HadesLogUtil.stream("MmcItemQueryHandler inner|main process|success")
@@ -182,9 +182,12 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             if (MapUtils.isNotEmpty(aldResponseMap)) {
                 ResResponse resResponse = aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID);
                 if (resResponse != null) {
-                    List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(
-                        MMC_HOT_ITEM_ALD_RES_ID)
-                        .get("data");
+                    Object data = resResponse.get("data");
+                    HadesLogUtil.stream("MmcItemQueryHandler inner|resResponse.get(data)|")
+                        .kv("request", JSON.toJSONString(request))
+                        .kv("data", JSON.toJSONString(data))
+                        .error();
+                    List<Map<String, Object>> dataList = (List<Map<String, Object>>)data;
                     if (CollectionUtils.isNotEmpty(dataList)) {
                         List<ItemDO> oldItemIdList = dataList.stream().map(e -> {
                             Long contentId = Long.valueOf(String.valueOf(e.get("contentId")));
