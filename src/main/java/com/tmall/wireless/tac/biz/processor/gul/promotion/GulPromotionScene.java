@@ -129,13 +129,13 @@ public class GulPromotionScene {
         List<List<String>> exclusiveMaterials = Lists.newArrayList();
         exclusiveMaterials.add(e1);
         exclusiveMaterials.add(e2);
-        itemInfoSourceMetaInfoSmartUi.setExclusiveMaterials(exclusiveMaterials);
+        itemInfoSourceMetaInfoSmartUi.setExclusiveMaterials(exclusiveMaterials);*/
         List<String> requireList = Lists.newArrayList(new String[]{"extVideo5S", "richPict", "whitePict"});
         List<String> requireListPrice = Lists.newArrayList(new String[]{"pagePrice"});
         List<List<String>> requireListList = Lists.newArrayList();
         requireListList.add(requireList);
         requireListList.add(requireListPrice);
-        itemInfoSourceMetaInfoSmartUi.setRequiredMaterials(requireListList);*/
+        itemInfoSourceMetaInfoSmartUi.setRequiredMaterials(requireListList);
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoSmartUi);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
