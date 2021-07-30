@@ -2,7 +2,10 @@ package com.tmall.wireless.tac.biz.processor.o2ocn;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.alibaba.common.lang.StringUtil;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
@@ -18,6 +21,7 @@ import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemRecommendMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.node.ItemInfoNode;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
+import com.tmall.txcs.gs.model.biz.context.EntitySetParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
@@ -72,6 +76,17 @@ public class CnPageBannerItemInfoScene {
         sgFrameworkContextItem.getUserParams().put("itemSetId",itemSetId);
         sgFrameworkContextItem.getUserParams().put("source",source);
 
+        if (StringUtil.isNotEmpty(itemSetId)) {
+            EntitySetParams entitySetParams = new EntitySetParams();
+            entitySetParams.setItemSetSource("crm");
+            List<Long> itemSetIdList = Splitter.on(",").omitEmptyStrings().trimResults()
+                .splitToList(itemSetId)
+                .stream().filter(StringUtils::isNumeric)
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+            entitySetParams.setItemSetIdList(itemSetIdList);
+            sgFrameworkContextItem.setEntitySetParams(entitySetParams);
+        }
 
         if(StringUtils.isNotBlank(source)){
             return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
@@ -117,7 +132,7 @@ public class CnPageBannerItemInfoScene {
         itemGroupMetaInfoList.add(itemGroupMetaInfo1);
         itemGroupMetaInfo1.setGroupName("sm_O2OOneHour");
         itemGroupMetaInfo1.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
-        itemGroupMetaInfo1.setItemInfoNodes(itemInfoNodes);
+        //itemGroupMetaInfo1.setItemInfoNodes(itemInfoNodes);
         ItemGroupMetaInfo itemGroupMetaInfo2 = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo2);
         itemGroupMetaInfo2.setGroupName("sm_O2OHalfDay");
