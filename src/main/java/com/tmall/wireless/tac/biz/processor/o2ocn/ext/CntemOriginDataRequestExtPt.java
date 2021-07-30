@@ -110,4 +110,5 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
         return O2OChannelEnum.ALL_FRESH.getAppId();
 
     }
+
 }
