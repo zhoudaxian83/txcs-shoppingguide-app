@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.alibaba.common.lang.StringUtil;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
@@ -34,9 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Created by yangqing.byq on 2021/4/6.
- */
 @Service
 public class CnPageBannerItemInfoScene {
 
@@ -76,7 +72,7 @@ public class CnPageBannerItemInfoScene {
         sgFrameworkContextItem.getUserParams().put("itemSetId",itemSetId);
         sgFrameworkContextItem.getUserParams().put("source",source);
 
-        if (StringUtil.isNotEmpty(itemSetId)) {
+        if (StringUtils.isNotEmpty(itemSetId)) {
             EntitySetParams entitySetParams = new EntitySetParams();
             entitySetParams.setItemSetSource("crm");
             List<Long> itemSetIdList = Splitter.on(",").omitEmptyStrings().trimResults()
