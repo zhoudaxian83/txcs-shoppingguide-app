@@ -67,22 +67,21 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
             .kv("isSuccess",String.valueOf(isSuccess))
             .info();
-        /*if(isSuccess){
+        if(isSuccess){
             return originDataDTO;
         }
         List<String> sKeyList = Lists.newArrayList();
-        sKeyList = getContentSetIdList(requestParams);*/
-        List<String> sKeyList = Lists.newArrayList();
-        sKeyList.add("155019");
+        sKeyList = getContentSetIdList(requestParams);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+            .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
+            .kv("labelSceneNamespace",String.valueOf(labelSceneNamespace))
+            .kv("pKey",pKey)
+            .kv("sKeyList",JSON.toJSONString(sKeyList))
+            .info();
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         Result<Map<Object, Result<DataEntry>>> labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
         if(labelSceneResult != null && labelSceneResult.getValue() !=null){
             Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
-            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
-                .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
-                .kv("resultMap.size()",String.valueOf(resultMap.size()))
-                .kv("resultMap",JSON.toJSONString(resultMap))
-                .info();
             if(MapUtils.isEmpty(resultMap)){
                 return originDataDTO;
             };
@@ -95,7 +94,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
     public OriginDataDTO<ContentEntity> buildOriginDataDTO(Map<Object, Result<DataEntry>> resultMap,int needSize){
         OriginDataDTO<ContentEntity> originDataDTO = new OriginDataDTO<>();
         List<ContentEntity> contentEntities = Lists.newArrayList();
-        //内容集list-圈品集list-商品
+        //内容集list-内容id-商品
         for(Object sKey : resultMap.keySet()) {
             Result<DataEntry> result = resultMap.get(sKey);
             if (!result.isSuccess()) {
@@ -108,17 +107,16 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                 continue;
             }
             List<GcsTairContentDTO> gcsTairContentDTOList = (List<GcsTairContentDTO>) dataEntry.getValue();
-            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
-                .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
-                .kv("gcsTairContentDTOList.size())",String.valueOf(gcsTairContentDTOList.size()))
-                .info();
             if(CollectionUtils.isEmpty(gcsTairContentDTOList)){
                 LOGGER.error("FirstScreenMindContentOriginDataFailProcessorExtPt gcsTairContentDTOList:"+ JSON.toJSONString(gcsTairContentDTOList));
                 continue;
             }
-
-
             gcsTairContentDTOList.forEach(gcsTairContentDTO -> {
+                HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                    .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","buildOriginDataDTO")
+                    .kv("sKey",String.valueOf(sKey))
+                    .kv("contentId",gcsTairContentDTO.getSceneId())
+                    .info();
                 ContentEntity contentEntity = new ContentEntity();
                 contentEntity.setContentId(Long.valueOf(gcsTairContentDTO.getSceneId()));
                 List<Long> items = gcsTairContentDTO.getItems();
