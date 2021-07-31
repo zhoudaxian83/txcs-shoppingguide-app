@@ -37,6 +37,8 @@ public class GulPromotionScene {
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
+    private static final Long appId = 26777L;
+
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
         Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 1942L);
         /*Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 1217L);*/
@@ -123,6 +125,7 @@ public class GulPromotionScene {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoSmartUi = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoSmartUi.setSourceName("smartui");
         itemInfoSourceMetaInfoSmartUi.setStrategyPackageId("637_10576");
+        itemInfoSourceMetaInfoSmartUi.setAppId(appId);
         /*itemInfoSourceMetaInfoSmartUi.setStrategyPackageId("508_8608");*/
        /* List<String> e1 = Lists.newArrayList(new String[]{"supermarketPrice", "timesBot", "salesLast30d"});
         List<String> e2 = Lists.newArrayList(new String[]{"priceLabel", "timesBot", "salesLast30d"});
