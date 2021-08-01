@@ -122,6 +122,19 @@
             <artifactId>sdk-module-member-o2otbmc</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+
+        <!-- alipay begin -->
+        <dependency>
+            <groupId>com.alipay.recmixer</groupId>
+            <artifactId>recmixer-common-service-facade</artifactId>
+            <version>1.0.0.20210526</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.tradecsa</groupId>
+            <artifactId>tradecsa-common-service-spi</artifactId>
+            <version>1.0.0.2021071317</version>
+        </dependency>
+        <!-- alipay end-->
     </dependencies>
 
     <build>
