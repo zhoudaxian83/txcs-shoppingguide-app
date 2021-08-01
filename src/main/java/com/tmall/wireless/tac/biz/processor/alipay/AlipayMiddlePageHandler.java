@@ -5,10 +5,12 @@ import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by yangqing.byq on 2021/8/1.
  */
+@Component
 public class AlipayMiddlePageHandler extends RpmReactiveHandler<MixerCollectRecResult> {
     @Override
     public Flowable<TacResult<MixerCollectRecResult>> executeFlowable(Context context) throws Exception {
