@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -29,6 +30,7 @@ import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,12 +93,37 @@ public class CnPageBannerItemInfoScene {
                     list.forEach(entityVO -> {
                         entityVO.put("itemUrl",entityVO.get("itemUrl")+"&sourceChannel="+source);
                     });
+                    if(!CollectionUtils.isEmpty(response.getItemAndContentList())){
+                        HadesLogUtil.stream(ScenarioConstantApp.O2O_CNXH)
+                            .kv("source",source)
+                            .kv("code","0000")
+                            .info();
+                    } else{
+                        HadesLogUtil.stream(ScenarioConstantApp.O2O_CNXH)
+                            .kv("source",source)
+                            .kv("code","1000")
+                            .info();
+                    }
                     return response;
                 })
                 .map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
         }else{
             return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+                .map(response->{
+                    if(!CollectionUtils.isEmpty(response.getItemAndContentList())){
+                        HadesLogUtil.stream(ScenarioConstantApp.O2O_CNXH)
+                            .kv("source",source)
+                            .kv("code","0000")
+                            .info();
+                    } else{
+                        HadesLogUtil.stream(ScenarioConstantApp.O2O_CNXH)
+                            .kv("source",source)
+                            .kv("code","1000")
+                            .info();
+                    }
+                    return response;
+                })
                 .map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
         }
