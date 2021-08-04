@@ -26,6 +26,7 @@ import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import jdk.nashorn.internal.runtime.linker.LinkerCallSite;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -51,8 +52,11 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
     /**场景内容兜底缓存前缀**/
     private static final String pKey = "txcs_scene_collection_v1";
     private static final int labelSceneNamespace = 184;
+    /**打底内容最大数量**/
+    private static int needSize = 8;
     /**打底商品最大数量**/
-    private static int needSize = 10;
+    private static int needSizeItems = 20;
+
 
 
     @Override
@@ -111,12 +115,13 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                 LOGGER.error("FirstScreenMindContentOriginDataFailProcessorExtPt gcsTairContentDTOList:"+ JSON.toJSONString(gcsTairContentDTOList));
                 continue;
             }
-            gcsTairContentDTOList.forEach(gcsTairContentDTO -> {
-                HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
-                    .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","buildOriginDataDTO")
-                    .kv("sKey",String.valueOf(sKey))
-                    .kv("contentId",gcsTairContentDTO.getSceneId())
-                    .info();
+            List<GcsTairContentDTO> finalList = Lists.newArrayList();
+            if(gcsTairContentDTOList.size() > needSize){
+                finalList.addAll(gcsTairContentDTOList.subList(0,needSize));
+            }else{
+                finalList.addAll(gcsTairContentDTOList);
+            }
+            finalList.forEach(gcsTairContentDTO -> {
                 ContentEntity contentEntity = new ContentEntity();
                 contentEntity.setContentId(Long.valueOf(gcsTairContentDTO.getSceneId()));
                 List<Long> items = gcsTairContentDTO.getItems();
@@ -129,28 +134,21 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                     /*itemEntity.setBusinessType(gcsTairContentDTO.getMarketChannel());*/
                     itemEntities.add(itemEntity);
                 });
-                if(itemEntities.size() > needSize){
-                    contentEntity.setItems(itemEntities.subList(0,needSize));
+                if(itemEntities.size() > needSizeItems){
+                    contentEntity.setItems(itemEntities.subList(0,needSizeItems));
                 }else{
                     contentEntity.setItems(itemEntities);
                 }
+                HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                    .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","buildOriginDataDTO")
+                    .kv("sKey",String.valueOf(sKey))
+                    .kv("contentId",gcsTairContentDTO.getSceneId())
+                    .kv("contentEntity.getItems().size()",String.valueOf(contentEntity.getItems().size()))
+                    .info();
                 contentEntities.add(contentEntity);
             });
         }
-        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
-            .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
-            .kv("contentEntities.size()1",String.valueOf(contentEntities.size()))
-            .kv("needSize",String.valueOf(needSize))
-            .info();
-        if(contentEntities.size() > needSize){
-            originDataDTO.setResult(contentEntities.subList(0,needSize));
-        }else{
-            originDataDTO.setResult(contentEntities);
-        }
-        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
-            .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
-            .kv("originDataDTO.getResult().size())",String.valueOf(originDataDTO.getResult().size()))
-            .info();
+        originDataDTO.setResult(contentEntities);
         return originDataDTO;
     }
 
