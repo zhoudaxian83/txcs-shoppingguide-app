@@ -11,6 +11,7 @@ import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.aselfcommon.model.scene.enums.SceneType;
 import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
@@ -67,8 +68,10 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
             }
             Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-            tacLogger.info("***********mgetResult.getValue()*******:"+mgetResult.getValue());
-            LOGGER.info("***********mgetResultRequest:{};mgetResult.getValue:{}*******:", JSON.toJSONString(sKeyList), JSON.toJSONString(mgetResult.getValue()));
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("sKeyList",JSON.toJSONString(sKeyList))
+                .kv("mgetResult.getValue()",JSON.toJSONString(mgetResult.getValue()))
+                .info();
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail("READ_CONTENT_FROM_TAIR_RETURN_EMPTY"));
             }
@@ -148,7 +151,10 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             LOGGER.info(RenderErrorEnum.contentBatchTairExc.getCode(), RenderErrorEnum.contentBatchTairExc.getMessage());
             return Flowable.just(Response.fail(RenderErrorEnum.contentBatchTairExc.getCode()));
         }
-        tacLogger.info("****FirstScreenMindContentInfoQueryExtPt contentDTOMap*****:"+contentDTOMap.toString());
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+            .kv("FirstScreenMindContentInfoQueryExtPt","process")
+            .kv("contentDTOMap",JSON.toJSONString(contentDTOMap))
+            .info();
         return Flowable.just(Response.success(contentDTOMap));
     }
 
