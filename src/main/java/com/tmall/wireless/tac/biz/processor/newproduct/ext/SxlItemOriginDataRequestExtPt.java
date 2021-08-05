@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.newproduct.ext;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -59,8 +60,9 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         params.put("regionCode", String.valueOf(sgFrameworkContextItem.getLocParams().getRegionCode()));
 
         tppRequest.setParams(params);
-
-        tacLogger.info("SxlItemOriginDataRequestExtPt tppRequest:"+ JSON.toJSONString(tppRequest));
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+            .kv("tppRequest",JSON.toJSONString(tppRequest))
+            .info();
         return tppRequest;
     }
 
@@ -74,7 +76,7 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
             }).collect(Collectors.toList());
             return String.join(",",list);
         }else {
-            return "crm_"+Constant.SXL_ITEMSET_ID;
+            return "crm_" + Constant.SXL_ITEMSET_ID + "," + "crm_" + Constant.SXL_ALGO_ITEMSET_ID;
         }
 
     }

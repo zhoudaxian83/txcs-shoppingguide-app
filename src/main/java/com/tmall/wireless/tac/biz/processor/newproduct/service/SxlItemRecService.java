@@ -29,6 +29,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -63,11 +65,11 @@ public class SxlItemRecService {
         HadesLogUtil.debug("ITEM_REQUEST:{}"+JSON.toJSONString(context));
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
-
-        Long itemSetIdSw = Long.valueOf(SxlSwitch.getValue("SXL_ITEMSET_ID"));
-        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,itemSetIdSw);
-
-
+        /**算法招商圈品集id集合**/
+        List<Long> itemSetIdSws = getItemSetIdSw(SxlSwitch.getValue("SXL_ITEMSET_ID"));
+        /**主题承接页圈品集id**/
+        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,0L);
+        /**captain主活动ID**/
         String activityId = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.SXL_MAIN_ACTIVITY_ID,"");
         if(StringUtils.isBlank(activityId)){
             activityId = String.valueOf(itemSetId);
@@ -78,7 +80,11 @@ public class SxlItemRecService {
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetSource("crm");
-        entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
+        if(itemSetId > 0L){
+            entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
+        }else{
+            entitySetParams.setItemSetIdList(itemSetIdSws);
+        }
         sgFrameworkContextItem.setRequestParams(context.getParams());
         sgFrameworkContextItem.setEntitySetParams(entitySetParams);
         SceneInfo sceneInfo = new SceneInfo();
@@ -155,6 +161,21 @@ public class SxlItemRecService {
             return dataTubeKey;
         }).collect(Collectors.toList()));
         return dataTubeMateInfo;
+    }
+
+    /**
+     * 获取圈品集id列表
+     * @param itemSetIdSw
+     * @return
+     */
+    private List<Long> getItemSetIdSw(String itemSetIdSw){
+        List<Long> itemSetIdSws = Lists.newArrayList();
+        if(StringUtils.isEmpty(itemSetIdSw)){
+            return  itemSetIdSws;
+        }
+        itemSetIdSws = Arrays.stream(itemSetIdSw.split(","))
+            .map(itemSetId -> Long.valueOf(itemSetId)).collect(Collectors.toList());
+        return itemSetIdSws;
     }
 
 }

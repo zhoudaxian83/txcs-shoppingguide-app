@@ -19,8 +19,10 @@ public class Constant {
     public static final String ALD_CALL_SOURCE = "txcs-shoppingguide";
 
     public static final String SXL_ITEMSET_PRE_KEY = "sxlItemSets";
-
+    /**人工选品圈品集id**/
     public static final Long SXL_ITEMSET_ID = 322385L;
+    /**算法选品圈品集id**/
+    public static final Long SXL_ALGO_ITEMSET_ID = 322385L;
 
     public static final List<String> SXL_SOURCE_AGREE = Lists.newArrayList("firstPage");
 
