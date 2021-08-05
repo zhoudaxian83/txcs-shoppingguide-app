@@ -85,7 +85,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     .kv("mgetResult.getValue().size()",JSON.toJSONString(mgetResult.getValue().size()))
                     .info();
             }
-            if (mgetResult == null && !mgetResult.isSuccess() && CollectionUtils.isEmpty(mgetResult.getValue())) {
+            if (mgetResult == null || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail("READ_CONTENT_FROM_TAIR_RETURN_EMPTY"));
             }
             List<DataEntry> dataEntryList = mgetResult.getValue();
