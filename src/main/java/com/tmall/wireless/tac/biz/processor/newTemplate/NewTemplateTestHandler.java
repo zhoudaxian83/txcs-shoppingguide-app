@@ -22,6 +22,8 @@ public class NewTemplateTestHandler extends RpmReactiveHandler<SgFrameworkRespon
 //    @Resource
 //    ShoppingguideSdkItemService shoppingguideSdkItemService;
 
+    @Resource
+    TeItemContextCheckSdkExtPt teItemContextCheckSdkExtPt;
     @Override
     public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
 //        SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
