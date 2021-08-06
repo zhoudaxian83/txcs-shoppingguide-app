@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.wireless.tac.biz.processor.alipay.constant.AliPayConstant;
 import com.tmall.wireless.tac.biz.processor.alipay.service.IAliPayService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
 /**
  * Created by yangqing.byq on 2021/8/6.
  */
+@Service
 public class MockAliPayServiceImpl implements IAliPayService {
     @Override
     public MixerCollectRecResult processFirstPage(MixerCollectRecRequest mixerCollectRecRequest) {
