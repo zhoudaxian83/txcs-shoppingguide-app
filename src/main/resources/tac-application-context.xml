@@ -8,6 +8,10 @@
     <context:component-scan base-package="com.tmall.wireless.tac.biz.processor"/>
     <context:component-scan base-package="com.tmall.txcs.gs.framework"/>
     <context:component-scan base-package="com.tmall.txcs.biz.supermarket"/>
+    <context:component-scan base-package="com.alibaba.cola"/>
+
+
+    <!-- shoppingguide sdk begin -->
 
     <bean id="bootstrap" class="com.tmall.txcs.gs.sdk.ext.boot.Bootstrap" init-method="init">
         <property name="packages">
@@ -17,11 +21,12 @@
             </list>
         </property>
     </bean>
-    <import resource="classpath*:spring/shoppingguide-sdk-sm.xml"/>
+    <context:component-scan base-package="com.tmall.txcs.gs.sdk.ext"/>
+    <context:component-scan base-package="com.tmall.tcls.gs.sdk.framework"/>
+    <context:component-scan base-package="com.tmall.tcls.gs.sdk.biz.extensions"/>
+    <context:component-scan base-package="com.tmall.tcls.gs.sdk.biz.iteminfo.bygroup"/>
 
-    <bean class="com.tmall.tcls.gs.sdk.biz.iteminfo.bysource.DefaultItemInfoBySourceProcessorFactoryImpl"/>
-    <context:component-scan base-package="com.alibaba.cola"/>
-
+    <!-- shoppingguide sdk end -->
 
     <bean id="springSwitchBean" class="com.tmall.wireless.tac.biz.processor.config.SwitchConfigBean" init-method="init"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene"/>
