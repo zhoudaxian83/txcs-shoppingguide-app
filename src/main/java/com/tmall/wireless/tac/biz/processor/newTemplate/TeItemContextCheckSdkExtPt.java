@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by yangqing.byq on 2021/8/6.
  */
-@Component
+
 @SdkExtension(bizId = "cc")
 @SdkPackage(packageName = "package")
 public class TeItemContextCheckSdkExtPt extends Register implements ItemContextCheckSdkExtPt {
