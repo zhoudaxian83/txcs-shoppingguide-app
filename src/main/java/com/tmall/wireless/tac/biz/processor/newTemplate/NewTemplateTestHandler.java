@@ -1,6 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.newTemplate;
 
 
+import com.taobao.pandora.pandolet.annotation.Service;
+import com.tmall.tcls.gs.sdk.ext.boot.ExtensionPointRegister;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
@@ -19,6 +21,8 @@ import javax.annotation.Resource;
 @Component
 public class NewTemplateTestHandler extends RpmReactiveHandler<SgFrameworkResponse<ItemEntityVO>> {
 
+    @Resource
+    ExtensionPointRegister extensionPointRegister;
 //    @Resource
 //    ShoppingguideSdkItemService shoppingguideSdkItemService;
 
@@ -30,6 +34,7 @@ public class NewTemplateTestHandler extends RpmReactiveHandler<SgFrameworkRespon
 //        return shoppingguideSdkItemService.recommend0(sgFrameworkContextItem).map(
 //                TacResult::newResult
 //        );
+        extensionPointRegister.logExtensionResult();
         SgFrameworkResponse<ItemEntityVO> response = new SgFrameworkResponse<>();
         return Flowable.just(TacResult.newResult(response));
     }
