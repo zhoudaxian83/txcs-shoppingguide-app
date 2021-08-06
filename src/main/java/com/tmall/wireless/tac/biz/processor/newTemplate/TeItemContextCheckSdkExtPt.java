@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.newTemplate;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.contextcheck.ContextCheckResult;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.contextcheck.ItemContextCheckSdkExtPt;
 import com.tmall.txcs.gs.sdk.ext.annotation.Extension;
+import com.tmall.txcs.gs.sdk.ext.annotation.ProductPackage;
 import com.tmall.txcs.gs.sdk.ext.extension.Register;
 import com.tmall.wireless.tac.client.domain.Context;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Extension(bizId = "cc")
+@ProductPackage(packageName = "package")
 public class TeItemContextCheckSdkExtPt extends Register implements ItemContextCheckSdkExtPt {
     @Override
     public ContextCheckResult process(Context context) {
