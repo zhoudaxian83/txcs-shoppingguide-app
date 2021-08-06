@@ -24,8 +24,8 @@
     <bean class="com.tmall.tcls.gs.sdk.biz.iteminfo.bysource.DefaultItemInfoBySourceProcessorFactoryImpl"/>
     <context:component-scan base-package="com.tmall.txcs.gs.sdk.ext"/>
     <context:component-scan base-package="com.tmall.tcls.gs.sdk.framework"/>
-    <context:component-scan base-package="com.tmall.tcls.gs.sdk.biz.extensions"/>
-    <context:component-scan base-package="com.tmall.tcls.gs.sdk.biz.iteminfo.bygroup"/>
+    <context:component-scan base-package="com.tmall.tcls.gs.sdk.biz"/>
+<!--    <context:component-scan base-package="com.tmall.tcls.gs.sdk.biz.iteminfo.bygroup"/>-->
 
     <!-- shoppingguide sdk end -->
 
