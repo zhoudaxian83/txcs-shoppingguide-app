@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
  * @date 2021/7/6
  */
 @Extension(bizId = ScenarioConstant.BIZ_TYPE_SUPERMARKET,
-    useCase = ScenarioConstant.LOC_TYPE_B2C,
-    scenario = ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+        useCase = ScenarioConstant.LOC_TYPE_B2C,
+        scenario = ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
 @Service
 public class SxlOriginDataPostProcessorExtPt implements OriginDataPostProcessorExtPt {
 

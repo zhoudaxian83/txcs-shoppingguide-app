@@ -10,9 +10,11 @@ import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
+import com.tmall.txcs.gs.framework.model.constant.ItemInfoSourceKey;
 import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
+import com.tmall.txcs.gs.framework.model.meta.node.ItemInfoNode;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
@@ -51,6 +53,10 @@ public class FirstScreenMindItemScene {
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
         tacLogger.info("***FirstScreenMindItemScene context.toString():***"+context.toString());
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("FirstScreenMindItemScene", "recommend")
+            .kv("context","context")
+            .info();
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
@@ -64,8 +70,6 @@ public class FirstScreenMindItemScene {
 
 
         PageInfoDO pageInfoDO = new PageInfoDO();
-        /*pageInfoDO.setIndex(0);
-        pageInfoDO.setPageSize(20);*/
         pageInfoDO.setIndex(Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
         pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
@@ -151,6 +155,18 @@ public class FirstScreenMindItemScene {
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
 
+
+
+        List<ItemInfoNode> itemInfoNodes = Lists.newArrayList();
+        ItemInfoNode itemInfoNodeFirst = new ItemInfoNode();
+        itemInfoNodes.add(itemInfoNodeFirst);
+        itemInfoNodeFirst.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+
+
+        ItemInfoNode itemInfoNodeSceond = new ItemInfoNode();
+        itemInfoNodes.add(itemInfoNodeSceond);
+        itemInfoNodeSceond.setItemInfoSourceMetaInfos(Lists.newArrayList(getItemInfoBySourceTimeLabel()));
+
         ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo);
         itemGroupMetaInfo.setGroupName("sm_B2C");
@@ -158,11 +174,13 @@ public class FirstScreenMindItemScene {
         ItemGroupMetaInfo itemGroupMetaInfo1 = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo1);
         itemGroupMetaInfo1.setGroupName("sm_O2OOneHour");
-        itemGroupMetaInfo1.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+//        itemGroupMetaInfo1.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        itemGroupMetaInfo1.setItemInfoNodes(itemInfoNodes);
         ItemGroupMetaInfo itemGroupMetaInfo2 = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo2);
         itemGroupMetaInfo2.setGroupName("sm_O2OHalfDay");
-        itemGroupMetaInfo2.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+//        itemGroupMetaInfo2.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        itemGroupMetaInfo2.setItemInfoNodes(itemInfoNodes);
         ItemGroupMetaInfo itemGroupMetaInfo3 = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo3);
         itemGroupMetaInfo3.setGroupName("sm_O2ONextDay");
@@ -170,5 +188,11 @@ public class FirstScreenMindItemScene {
 
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         return itemMetaInfo;
+    }
+
+    private ItemInfoSourceMetaInfo getItemInfoBySourceTimeLabel() {
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfo = new ItemInfoSourceMetaInfo();
+        itemInfoSourceMetaInfo.setSourceName("timeLabel");
+        return itemInfoSourceMetaInfo;
     }
 }

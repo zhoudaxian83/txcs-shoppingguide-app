@@ -32,7 +32,7 @@ public class ScenarioConstantApp extends ScenarioConstant {
 
     public static final String O2O_BANG_DAN = "O2O_BANG_DAN";
 
-    /**
+     /**
      * o2o猜你喜欢
      */
     public static final String O2O_CNXH = "o2o_cnxh";
@@ -44,5 +44,9 @@ public class ScenarioConstantApp extends ScenarioConstant {
      * 五折天
      */
     public static final String WU_ZHE_TIAN = "WU_ZHE_TIAN";
+    /**会场猜你喜欢**/
+    public static final String GUL_PROMOTION = "GulPromotion";
+
+
 
 }

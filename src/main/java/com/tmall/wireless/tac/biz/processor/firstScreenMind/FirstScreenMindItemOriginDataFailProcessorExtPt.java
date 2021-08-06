@@ -70,22 +70,21 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
         String sKey = MapUtil.getStringWithDefault(requestParams,"moduleId","");
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         Result<DataEntry> labelSceneResult = multiClusterTairManager.prefixGet(nameSpace,pKey,sKey);
-        if(!labelSceneResult.isSuccess()){
+        if (labelSceneResult == null){
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+                .kv("FirstScreenMindItemOriginDataFailProcessorExtPt","process")
+                .kv("labelSceneResult", "tair打底数据获取失败")
+                .info();
+            return originDataDTO;
+        }
+        if(!labelSceneResult.isSuccess() || labelSceneResult.getValue() == null || labelSceneResult.getValue().getValue() == null){
             HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
                 .kv("FirstScreenMindItemOriginDataFailProcessorExtPt","process")
                 .kv("labelSceneResult", JSON.toJSONString(labelSceneResult))
                 .info();
             return originDataDTO;
         }
-        DataEntry dataEntry = labelSceneResult.getValue();
-        if(dataEntry == null || dataEntry.getValue() == null){
-            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
-                .kv("FirstScreenMindItemOriginDataFailProcessorExtPt","process")
-                .kv("dataEntry", "tair：dataEntry打底数据为空")
-                .info();
-            return originDataDTO;
-        }
-        List<Long> itemIdList = (List<Long>) dataEntry.getValue();
+        List<Long> itemIdList  = (List<Long>)(labelSceneResult.getValue().getValue());
         if(CollectionUtils.isEmpty(itemIdList)){
             return originDataDTO;
         }

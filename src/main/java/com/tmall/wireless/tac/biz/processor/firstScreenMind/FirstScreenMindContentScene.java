@@ -64,7 +64,7 @@ public class FirstScreenMindContentScene {
 
 
         PageInfoDO pageInfoDO = new PageInfoDO();
-        pageInfoDO.setIndex(Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), "pageStartPosition", "0")));
+        pageInfoDO.setIndex(Integer.parseInt(MapUtil.getStringWithDefault(context.getParams(), "index", "0")));
         pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
 
