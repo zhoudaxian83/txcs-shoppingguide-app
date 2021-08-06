@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * Created by yangqing.byq on 2021/8/6.
  */
 @Service
-@Extension
+@Extension(bizId = "cc")
 public class TeItemContextCheckSdkExtPt extends Register implements ItemContextCheckSdkExtPt {
     @Override
     public ContextCheckResult process(Context context) {
