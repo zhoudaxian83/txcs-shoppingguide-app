@@ -39,7 +39,7 @@ public class MockAliPayServiceImpl implements IAliPayService {
         serviceContentRecList.add(getServiceContent("商品1"));
         serviceContentRecList.add(getServiceContent("商品2"));
         serviceContentRecList.add(getServiceContent("商品3"));
-        return null;
+        return mixerCollectRecResult;
     }
 
     private ServiceContentRec getServiceContent(String title) {
