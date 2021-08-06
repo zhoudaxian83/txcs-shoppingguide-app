@@ -16,6 +16,9 @@ import java.util.Optional;
  */
 @Component
 public class AlipayFirstPageHandler extends RpmReactiveHandler<MixerCollectRecResult> {
+
+
+
     @Override
     public Flowable<TacResult<MixerCollectRecResult>> executeFlowable(Context context) throws Exception {
 
@@ -27,6 +30,7 @@ public class AlipayFirstPageHandler extends RpmReactiveHandler<MixerCollectRecRe
             return Flowable.just(TacResult.newResult(mixerCollectRecResult));
         }
         MixerCollectRecRequest mixerCollectRecRequest = (MixerCollectRecRequest) param;
+
 
         mixerCollectRecResult.setErrorMsg(mixerCollectRecRequest.getUtdid());
         return Flowable.just(TacResult.newResult(mixerCollectRecResult));
