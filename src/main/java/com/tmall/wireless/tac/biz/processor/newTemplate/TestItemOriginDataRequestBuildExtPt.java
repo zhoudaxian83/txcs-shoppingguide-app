@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
 useCase = ScenarioConstantApp.LOC_TYPE_B2C
-//        , scenario = "test"
+        , scenario = "test"
 )
 @SdkPackage(packageName = "test_package")
 public class TestItemOriginDataRequestBuildExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
