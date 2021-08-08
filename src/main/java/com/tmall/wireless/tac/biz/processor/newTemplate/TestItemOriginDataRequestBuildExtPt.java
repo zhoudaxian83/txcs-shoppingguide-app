@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkPackage;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
-import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildExtPt;
+import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -21,7 +21,7 @@ useCase = ScenarioConstantApp.LOC_TYPE_B2C
 //        , scenario = "test"
 )
 @SdkPackage(packageName = "test_package")
-public class TestItemOriginDataRequestBuildExtPt extends Register implements ItemOriginDataRequestBuildExtPt {
+public class TestItemOriginDataRequestBuildExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
     private static final Long APPID = 25385L;
 
     @Override
