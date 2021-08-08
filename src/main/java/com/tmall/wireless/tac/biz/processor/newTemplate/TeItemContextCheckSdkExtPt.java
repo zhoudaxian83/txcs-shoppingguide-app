@@ -6,7 +6,6 @@ import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.contextcheck.ContextCheckResult;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.contextcheck.ItemContextCheckSdkExtPt;
 import com.tmall.wireless.tac.client.domain.Context;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by yangqing.byq on 2021/8/6.
