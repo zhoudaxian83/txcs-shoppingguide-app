@@ -32,6 +32,8 @@ public class NewTemplateTestHandler extends RpmReactiveHandler<SgFrameworkRespon
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 ScenarioConstantApp.SCENARIO_SHANG_XIN_CONTENT);
 
+        bizScenario.addProducePackage("test_package");
+
         return shoppingguideSdkItemService.recommend(context, bizScenario)
         .map(TacResult::newResult);
 

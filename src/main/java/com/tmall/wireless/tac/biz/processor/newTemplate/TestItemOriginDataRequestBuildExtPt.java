@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.newTemplate;
 
 import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
+import com.tmall.tcls.gs.sdk.ext.annotation.SdkPackage;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
@@ -19,6 +20,7 @@ import java.util.Optional;
 useCase = ScenarioConstantApp.LOC_TYPE_B2C
 //        , scenario = "test"
 )
+@SdkPackage(packageName = "test_package")
 public class TestItemOriginDataRequestBuildExtPt extends Register implements ItemOriginDataRequestBuildExtPt {
     private static final Long APPID = 25385L;
 
