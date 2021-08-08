@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.newTemplate;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
@@ -19,7 +20,7 @@ import java.util.Optional;
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
 useCase = ScenarioConstantApp.LOC_TYPE_B2C,
 scenario = "test")
-public class TestItemOriginDataRequestBuildExtPt implements ItemOriginDataRequestBuildExtPt {
+public class TestItemOriginDataRequestBuildExtPt extends Register implements ItemOriginDataRequestBuildExtPt {
     private static final Long APPID = 25385L;
 
     @Override
