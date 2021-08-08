@@ -1,14 +1,12 @@
 package com.tmall.wireless.tac.biz.processor.newTemplate;
 
-import com.alibaba.cola.extension.Extension;
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Optional;
@@ -17,7 +15,7 @@ import java.util.Optional;
  * Created by yangqing.byq on 2021/8/8.
  */
 
-@Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+@SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
 useCase = ScenarioConstantApp.LOC_TYPE_B2C,
 scenario = "test")
 public class TestItemOriginDataRequestBuildExtPt extends Register implements ItemOriginDataRequestBuildExtPt {
