@@ -16,8 +16,9 @@ import java.util.Optional;
  */
 
 @SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-scenario = "test")
+useCase = ScenarioConstantApp.LOC_TYPE_B2C
+//        , scenario = "test"
+)
 public class TestItemOriginDataRequestBuildExtPt extends Register implements ItemOriginDataRequestBuildExtPt {
     private static final Long APPID = 25385L;
 
