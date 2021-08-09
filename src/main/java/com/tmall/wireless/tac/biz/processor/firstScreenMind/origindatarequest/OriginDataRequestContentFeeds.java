@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.firstScreenMind.origindatarequest;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,11 +18,13 @@ import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.FirstScreenConstant;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author guijian
@@ -82,6 +85,15 @@ public class OriginDataRequestContentFeeds implements OriginDataRequest{
         params.put("isFirstPage", index > 0 ? "false" : "true");
         /**判断是否为纯榜单推荐，不为空则为纯榜单推荐**/
         if(CollectionUtils.isNotEmpty(ContentSetIdListUtil.getRankingList(requestParams))) {
+            /**剔除首页曝光过滤内容数据**/
+            Map<String,Object> exposureDataMap = ContentSetIdListUtil.getExposureContentIds(requestParams);
+            if(exposureDataMap != null && !exposureDataMap.isEmpty()){
+                params.put("exposureDataParams", JSON.toJSONString(exposureDataMap));
+            }
+            HadesLogUtil.stream(FirstScreenConstant.SUB_CONTENT_FEEDS)
+                .kv("OriginDataRequestContentFeeds","buildRecommendRequest")
+                .kv("exposureDataMap",JSON.toJSONString(exposureDataMap))
+                .info();
             List<Long> rankingList = ContentSetIdListUtil.getRankingList(requestParams);
             params.put("contentSetIdList", Joiner.on(",").join(rankingList));
             tppRequest.setAppId(26548L);

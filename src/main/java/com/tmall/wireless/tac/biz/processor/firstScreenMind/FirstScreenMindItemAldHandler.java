@@ -30,6 +30,7 @@ public class FirstScreenMindItemAldHandler extends TacReactiveHandler4Ald {
     FirstScreenMindItemScene4Ald firstScreenMindItemScene4Ald;
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
+
         return firstScreenMindItemScene4Ald.recommend4Ald(requestContext4Ald);
     }
 }

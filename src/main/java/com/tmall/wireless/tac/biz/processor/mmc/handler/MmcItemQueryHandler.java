@@ -25,7 +25,6 @@ import com.taobao.freshx.homepage.client.domain.ItemDO;
 import com.taobao.freshx.homepage.client.domain.ItemRecallModeDO;
 import com.taobao.freshx.homepage.client.domain.ItemType;
 import com.taobao.freshx.homepage.client.domain.RecallType;
-import com.taobao.poi2.client.enumtype.ServiceRangeDeliveryTimeType;
 import com.taobao.poi2.client.result.StoreResult;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
@@ -68,9 +67,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
     @Override
     public TacResult<ItemRecallModeDO> execute(Context context) throws Exception {
         try {
-            HadesLogUtil.stream("MmcItemQueryHandler inner|context")
-                .kv("context", JSON.toJSONString(context))
-                .info();
+            LOGGER.error("[MmcItemQueryHandler].execute.start|context:{}", JSON.toJSONString(context));
             Long totalStart = System.currentTimeMillis();
             ItemRecallModeDO itemRecallModeDO = new ItemRecallModeDO();
             List<ItemDO> returnItemIdList = new ArrayList<>();
@@ -84,14 +81,14 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             } else {
                 HadesLogUtil.stream("MmcItemQueryHandler inner|stores is empty")
                     .kv("stores", JSON.toJSONString(stores))
-                    .info();
+                    .error();
             }
 
             //获取阿拉丁的爆款专区数据
             List<ItemDO> aldData = getAldData(userId, storeList);
             HadesLogUtil.stream("MmcItemQueryHandler inner|aldDataSize")
                 .kv("aldDataSize", String.valueOf(aldData.size()))
-                .info();
+                .error();
             returnItemIdList.addAll(aldData);
 
             //如果userId为空，则不取新人三选一数据和券数据
@@ -100,7 +97,8 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                 List<ItemDO> memberData = getMemberData(userId, storeList, extendDataMap);
                 HadesLogUtil.stream("MmcItemQueryHandler inner|memberDataSize")
                     .kv("memberDataSize", String.valueOf(memberData.size()))
-                    .info();
+                    .kv("extendDataMap", JSON.toJSONString(extendDataMap))
+                    .error();
                 returnItemIdList.addAll(memberData);
             }
             //删除重复商品
@@ -110,18 +108,19 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             itemRecallModeDO.setExtendData(extendDataMap);
             itemRecallModeDO.setType(RecallType.ASSIGN_ITEM_ID);
             Long totalEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("MmcItemQueryHandler inner|totalCost" + (totalEnd - totalStart))
+            HadesLogUtil.stream("MmcItemQueryHandler inner|totalCost|" + (totalEnd - totalStart))
                 .kv("totalCost", String.valueOf(totalEnd - totalStart))
-                .info();
+                .error();
             HadesLogUtil.stream("MmcItemQueryHandler inner|main process|success")
                 .kv("totalCost", String.valueOf(totalEnd - totalStart))
-                .info();
+                .error();
             return TacResult.newResult(itemRecallModeDO);
         } catch (Exception e) {
             HadesLogUtil.stream("MmcItemQueryHandler inner|main process|error")
                 .kv("context", JSON.toJSONString(context))
                 .kv("errorMsg", StackTraceUtil.stackTrace(e))
                 .error();
+            LOGGER.error("[MmcItemQueryHandler].execute.error", JSON.toJSONString(context));
             throw e;
         }
 
@@ -157,10 +156,11 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                         .error();
                 }
                 //红包数据
+
                 extendDataMap.putAll(o2OItemBenfitsResponse.getExt());
             }
             HadesLogUtil.stream("MmcItemQueryHandler inner|memberCost|" + (memberEnd - memberStart))
-                .info();
+                .error();
             return returnItemIdList;
         } catch (Exception e) {
             HadesLogUtil.stream("MmcItemQueryHandler inner|get member data|error")
@@ -183,9 +183,12 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             if (MapUtils.isNotEmpty(aldResponseMap)) {
                 ResResponse resResponse = aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID);
                 if (resResponse != null) {
-                    List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(
-                        MMC_HOT_ITEM_ALD_RES_ID)
-                        .get("data");
+                    Object data = resResponse.get("data");
+                    HadesLogUtil.stream("MmcItemQueryHandler inner|resResponse.get(data)|")
+                        .kv("request", JSON.toJSONString(request))
+                        .kv("data", JSON.toJSONString(data))
+                        .error();
+                    List<Map<String, Object>> dataList = (List<Map<String, Object>>)data;
                     if (CollectionUtils.isNotEmpty(dataList)) {
                         List<ItemDO> oldItemIdList = dataList.stream().map(e -> {
                             Long contentId = Long.valueOf(String.valueOf(e.get("contentId")));
@@ -199,12 +202,12 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
                         HadesLogUtil.stream("MmcItemQueryHandler inner|get ald data|empty")
                             .kv("request", JSON.toJSONString(request))
                             .kv("aldResponseMap", JSON.toJSONString(aldResponseMap))
-                            .info();
+                            .error();
                     }
                 }
             }
             HadesLogUtil.stream("MmcItemQueryHandler inner|aldCost|" + (aldEnd - aldStart))
-                .info();
+                .error();
             return returnItemIdList;
         } catch (Exception e) {
             HadesLogUtil.stream("MmcItemQueryHandler inner|get ald data|error")
