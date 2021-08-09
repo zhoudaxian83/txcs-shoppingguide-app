@@ -283,14 +283,10 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
         //System.out.println("原始:" + JSON.toJSONString(oldItemIdList));
         //removeDuplicateItems(oldItemIdList);
         //System.out.println("去重后："+JSON.toJSONString(oldItemIdList));
-        Long time = 0L;
 
+        System.out.println(String.format(aldUrl, "1111", "1111", 1832025789, "3333", "SG_TMCS_HALF_DAY_DS:3333"));
 
-        System.out.println(String.format(aldUrl,"1111","1111",1832025789,"3333","SG_TMCS_HALF_DAY_DS:3333"));
-
-        System.out.println(JSON.toJSONString(AddressUtil.parseCSA("8739373185_0_30.278433.120.028764_0_0_0_330110_107_0_0_236635411_330110005_0")));
     }
-
 
 
 }
