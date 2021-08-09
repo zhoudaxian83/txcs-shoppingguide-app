@@ -86,7 +86,7 @@ public class CnPageBannerItemInfoScene {
             sgFrameworkContextItem.setEntitySetParams(entitySetParams);
         }
 
-        if(StringUtils.isNotBlank(source)){
+        if(StringUtils.isNotBlank(source) && source.equals("mmc-halfday")){
             return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(response->{
                     List<EntityVO> list = response.getItemAndContentList();
