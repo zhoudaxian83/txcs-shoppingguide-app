@@ -26,6 +26,7 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.o2ocn.utils.Constants;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
@@ -86,7 +87,8 @@ public class CnPageBannerItemInfoScene {
             sgFrameworkContextItem.setEntitySetParams(entitySetParams);
         }
 
-        if(StringUtils.isNotBlank(source) && source.equals("mmc-halfday")){
+        if(StringUtils.isNotBlank(source) && (Constants.SOURCE_CHANEL_MMC_HALF_DAY.equals(source)
+            || Constants.SOURCE_CHANEL_MMC_ONE_HOUR.equals(source))){
             return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(response->{
                     List<EntityVO> list = response.getItemAndContentList();

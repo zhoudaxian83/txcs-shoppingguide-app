@@ -12,5 +12,7 @@ public class Constants {
 
     public static final String APP_ID = "27154";
 
+    public static final String SOURCE_CHANEL_MMC_HALF_DAY = "mmc-halfday";
 
+    public static final String SOURCE_CHANEL_MMC_ONE_HOUR = "mmc-onehour";
 }

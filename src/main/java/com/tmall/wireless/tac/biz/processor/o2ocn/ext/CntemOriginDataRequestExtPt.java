@@ -74,7 +74,7 @@ public class CntemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt {
 
         if ((O2OChannelEnum.ONE_HOUR.getCode().equals(O2OChannel)
             || (addressDTO != null && addressDTO.isRt1HourStoreCover()))
-            && !source.equals("mmc-halfday")) {
+            && !Constants.SOURCE_CHANEL_MMC_HALF_DAY.equals(source)) {
             params.put("rt1HourStoreId", String.valueOf(context.getLocParams().getRt1HourStoreId()));
             params.put("itemBusinessType", "OneHour");
         } else if (O2OChannelEnum.HALF_DAY.getCode().equals(O2OChannel)
