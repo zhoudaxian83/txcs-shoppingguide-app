@@ -60,10 +60,11 @@ public class IconRecommendClassifierWordOriginDataRequestExtPt implements Conten
                 .map(SgFrameworkContext::getUserPageInfo)
                 .map(PageInfoDO::getIndex)
                 .orElse(0)));
-        params.put("pageSize", String.valueOf(Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getUserPageInfo)
-                .map(PageInfoDO::getPageSize)
-                .orElse(3)));
+        params.put("pageSize", "3");
+//        params.put("pageSize", String.valueOf(Optional.ofNullable(sgFrameworkContextContent)
+//                .map(SgFrameworkContext::getUserPageInfo)
+//                .map(PageInfoDO::getPageSize)
+//                .orElse(3)));
 //        params.put("detailItemIdList", Joiner.on(",").join((List<Long>) Optional.ofNullable(sgFrameworkContextContent)
 //                .map(SgFrameworkContext::getRequestParams)
 //                .map(map -> map.get("itemIdList"))
@@ -83,5 +84,10 @@ public class IconRecommendClassifierWordOriginDataRequestExtPt implements Conten
 
         logger.info("[ClassifierWordOriginDataRequestExtPt] tppRequest: " + JSON.toJSONString(recommendRequest));
         return recommendRequest;
+    }
+
+    public static void main(String[] args) {
+        RecommendRequest recommendRequest = new RecommendRequest();
+        System.out.println("a" + Optional.of(recommendRequest).map(RecommendRequest::getAppId).orElse(777L));
     }
 }

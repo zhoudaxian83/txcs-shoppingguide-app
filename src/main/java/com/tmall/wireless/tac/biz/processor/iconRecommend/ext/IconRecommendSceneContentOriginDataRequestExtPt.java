@@ -69,10 +69,11 @@ public class IconRecommendSceneContentOriginDataRequestExtPt implements ContentO
                 .map(SgFrameworkContext::getUserPageInfo)
                 .map(PageInfoDO::getIndex)
                 .orElse(0)));
-        params.put("pageSize", String.valueOf(Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getUserPageInfo)
-                .map(PageInfoDO::getPageSize)
-                .orElse(1)));
+        params.put("pageSize", "1");
+//        params.put("pageSize", String.valueOf(Optional.ofNullable(sgFrameworkContextContent)
+//                .map(SgFrameworkContext::getUserPageInfo)
+//                .map(PageInfoDO::getPageSize)
+//                .orElse(1)));
         params.put("sceneSet", "intelligentCombinationItems");
 //        params.put("itemIds", Joiner.on(",").join((List<Long>) Optional.ofNullable(sgFrameworkContextContent)
 //                .map(SgFrameworkContext::getRequestParams)
