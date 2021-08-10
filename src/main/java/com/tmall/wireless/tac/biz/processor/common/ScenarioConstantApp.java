@@ -47,6 +47,14 @@ public class ScenarioConstantApp extends ScenarioConstant {
     /**会场猜你喜欢**/
     public static final String GUL_PROMOTION = "GulPromotion";
 
+    /**
+     * icon加购后推荐 场景
+     */
+    public static final String SCENARIO_ICON_RECOMMEND_SCENE = "ICON_RECOMMEND_SCENE";
 
+    /**
+     * icon加购后推荐 分类词
+     */
+    public static final String SCENARIO_ICON_RECOMMEND_CLASSIFIER = "ICON_RECOMMEND_CLASSIFIER";
 
 }

@@ -85,5 +85,10 @@
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionBuildItemVOExtPt"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.handler.IconRecommendHandler" />
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendClassifierWordOriginDataRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendContentSceneOriginDataRequestExtPt" />
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendContentInfoQueryExtPt" />
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.service.IconRecommendService" />
 
 </beans>
