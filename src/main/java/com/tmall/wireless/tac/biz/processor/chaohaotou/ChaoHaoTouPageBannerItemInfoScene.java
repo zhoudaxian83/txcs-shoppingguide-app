@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by yangqing.byq on 2021/4/6.
+ * @author luojunchong
  */
 @Service
 public class ChaoHaoTouPageBannerItemInfoScene {
@@ -69,8 +69,8 @@ public class ChaoHaoTouPageBannerItemInfoScene {
 
         PmtParams pmtParams = new PmtParams();
         pmtParams.setPmtSource("sm_manager");
-        pmtParams.setPmtName("wuZheTian");
-        pmtParams.setPageId("wuZheTian");
+        pmtParams.setPmtName("chaoHaoTou");
+        pmtParams.setPageId("chaoHaoTou");
         pmtParams.setModuleId(level1Id.toString());
         sgFrameworkContextItem.setPmtParams(pmtParams);
 
@@ -117,7 +117,7 @@ public class ChaoHaoTouPageBannerItemInfoScene {
         itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName(ItemInfoSourceKey.CAPTAIN);
-        itemInfoSourceMetaInfoCaptain.setSceneCode("superMarket_todayCrazy");
+        itemInfoSourceMetaInfoCaptain.setSceneCode("chaoHaoTou");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
