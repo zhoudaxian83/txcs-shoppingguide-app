@@ -1,11 +1,15 @@
 package com.tmall.wireless.tac.biz.processor.iconRecommend.ext;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
 import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
+import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
@@ -26,7 +30,7 @@ import java.util.Optional;
         scenario = ScenarioConstantApp.SCENARIO_ICON_RECOMMEND_SCENE
 )
 @Service
-public class IconRecommendContentSceneOriginDataRequestExtPt implements ContentOriginDataRequestExtPt {
+public class IconRecommendSceneContentOriginDataRequestExtPt implements ContentOriginDataRequestExtPt {
 
     @Autowired
     TacLogger logger;
@@ -52,9 +56,13 @@ public class IconRecommendContentSceneOriginDataRequestExtPt implements ContentO
         params.put("_mtop_rl_url_", "true");
         params.put("rtHalfDayStoreId", "236635411");
         params.put("commerce", "B2C");
-        params.put("smAreaId", "330110");
+        params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(330110L).toString());
         params.put("_devEnv_", "1");
-        params.put("regionCode", "107");
+        params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(
+                SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
+        if (params.get("regionCode") == null || "".equals(params.get("regionCode"))) {
+            params.put("regionCode", "107");
+        }
         // 其余参数
         // 曝光过滤数据
         params.put("index", String.valueOf(Optional.ofNullable(sgFrameworkContextContent)
@@ -75,7 +83,7 @@ public class IconRecommendContentSceneOriginDataRequestExtPt implements ContentO
                 .map(map -> map.get("itemIdList"))
                 .map(Object::toString)
                 .orElse(""));
-        logger.info("[ItemIds]: " + params.get("itemIds"));
+        logger.info("[Scene Word]: ItemIds: " + params.get("itemIds"));
         // 曝光过滤开关
         params.put("exposureSwitch", "true");
         params.put("maxItemReturn", "21");
@@ -86,6 +94,7 @@ public class IconRecommendContentSceneOriginDataRequestExtPt implements ContentO
                 .orElse(""));
         recommendRequest.setParams(params);
 
+        logger.info("[SceneContentOriginDataRequestExtPt] tppRequest: " + JSON.toJSONString(recommendRequest));
         return recommendRequest;
     }
 }

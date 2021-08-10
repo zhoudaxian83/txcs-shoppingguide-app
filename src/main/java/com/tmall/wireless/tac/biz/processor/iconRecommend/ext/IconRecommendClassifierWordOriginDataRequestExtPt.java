@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.iconRecommend.ext;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
@@ -72,7 +73,7 @@ public class IconRecommendClassifierWordOriginDataRequestExtPt implements Conten
                 .map(map -> map.get("itemIdList"))
                 .map(Object::toString)
                 .orElse(""));
-        logger.info("[ItemIds]: " + params.get("itemIds"));
+        logger.info("[Classifier Word]: ItemIds: " + params.get("detailItemIdList"));
         // 曝光过滤开关
         params.put("exposureSwitch", "true");
         params.put("itemCountPerContent", "21");
@@ -80,6 +81,7 @@ public class IconRecommendClassifierWordOriginDataRequestExtPt implements Conten
         params.put("contentSetSource", "contentPlatform2000");
         recommendRequest.setParams(params);
 
+        logger.info("[ClassifierWordOriginDataRequestExtPt] tppRequest: " + JSON.toJSONString(recommendRequest));
         return recommendRequest;
     }
 }

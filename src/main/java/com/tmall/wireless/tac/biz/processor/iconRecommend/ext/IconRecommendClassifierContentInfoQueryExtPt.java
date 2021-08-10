@@ -22,7 +22,7 @@ import java.util.Map;
         scenario = ScenarioConstantApp.SCENARIO_ICON_RECOMMEND_CLASSIFIER
 )
 @Service
-public class IconRecommendContentInfoQueryExtPt implements ContentInfoQueryExtPt {
+public class IconRecommendClassifierContentInfoQueryExtPt implements ContentInfoQueryExtPt {
     @Override
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
         ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
