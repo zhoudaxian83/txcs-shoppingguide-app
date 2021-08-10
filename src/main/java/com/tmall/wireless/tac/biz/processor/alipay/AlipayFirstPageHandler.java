@@ -8,10 +8,11 @@ import com.tmall.wireless.tac.biz.processor.alipay.service.IAliPayService;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+
 import java.util.Optional;
 
 /**
@@ -20,8 +21,8 @@ import java.util.Optional;
 @Component
 public class AlipayFirstPageHandler extends RpmReactiveHandler<MixerCollectRecResult> {
 
-    @Resource
-    IAliPayService aliPayService;
+    @Autowired
+    IAliPayService aliPayServiceImpl;
 
     @Override
     public Flowable<TacResult<MixerCollectRecResult>> executeFlowable(Context context) throws Exception {
@@ -35,6 +36,6 @@ public class AlipayFirstPageHandler extends RpmReactiveHandler<MixerCollectRecRe
         }
         MixerCollectRecRequest mixerCollectRecRequest = (MixerCollectRecRequest) param;
 
-        return Flowable.just(TacResult.newResult(aliPayService.processFirstPage(mixerCollectRecRequest)));
+        return Flowable.just(TacResult.newResult(aliPayServiceImpl.processFirstPage(mixerCollectRecRequest)));
     }
 }

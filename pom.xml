@@ -135,6 +135,13 @@
             <version>1.0.0.2021071317</version>
         </dependency>
         <!-- alipay end-->
+
+        <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>user-part</artifactId>
+            <version>1.0.4-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <build>
