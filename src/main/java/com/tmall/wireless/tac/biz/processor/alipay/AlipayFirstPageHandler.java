@@ -36,6 +36,10 @@ public class AlipayFirstPageHandler extends RpmReactiveHandler<MixerCollectRecRe
         }
         MixerCollectRecRequest mixerCollectRecRequest = (MixerCollectRecRequest) param;
 
-        return Flowable.just(TacResult.newResult(aliPayServiceImpl.processFirstPage(context, mixerCollectRecRequest)));
+
+        return aliPayServiceImpl.processFirstPage(context, mixerCollectRecRequest).map(
+                re -> TacResult.newResult(re)
+        );
+
     }
 }
