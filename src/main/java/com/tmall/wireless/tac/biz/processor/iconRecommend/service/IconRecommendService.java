@@ -18,6 +18,7 @@ import com.tmall.wireless.tac.biz.processor.iconRecommend.constant.ConstantValue
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
+import com.tmall.wireless.tac.client.domain.DeviceInfo;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.MapUtils;
@@ -80,6 +81,7 @@ public class IconRecommendService {
         UserDO userDO = new UserDO();
         userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
+        userDO.setUtdid(Optional.of(context).map(Context::getDeviceInfo).map(DeviceInfo::getUtdid).orElse(""));
         if (MapUtils.isNotEmpty(context.getParams())) {
             Object cookies = context.getParams().get("cookies");
             if (cookies != null && cookies instanceof Map) {
