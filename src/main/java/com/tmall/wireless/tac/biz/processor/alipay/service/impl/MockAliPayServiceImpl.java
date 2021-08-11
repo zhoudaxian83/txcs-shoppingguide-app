@@ -8,6 +8,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.wireless.tac.biz.processor.alipay.constant.AliPayConstant;
 import com.tmall.wireless.tac.biz.processor.alipay.service.IAliPayService;
+import com.tmall.wireless.tac.client.domain.Context;
+import io.reactivex.Flowable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.Map;
 @Service
 public class MockAliPayServiceImpl implements IAliPayService {
     @Override
-    public MixerCollectRecResult processFirstPage(MixerCollectRecRequest mixerCollectRecRequest) {
+    public Flowable<MixerCollectRecResult> processFirstPage(Context context, MixerCollectRecRequest mixerCollectRecRequest) {
 
         MixerCollectRecResult mixerCollectRecResult = new MixerCollectRecResult();
         mixerCollectRecResult.setSuccess(true);
@@ -38,7 +40,7 @@ public class MockAliPayServiceImpl implements IAliPayService {
         serviceContentRecList.add(getServiceContent("商品1"));
         serviceContentRecList.add(getServiceContent("商品2"));
         serviceContentRecList.add(getServiceContent("商品3"));
-        return mixerCollectRecResult;
+        return Flowable.just(mixerCollectRecResult);
     }
 
     private ServiceContentRec getServiceContent(String title) {
