@@ -28,7 +28,6 @@ public class MockAliPayServiceImpl implements IAliPayService {
         Map<String, CategoryContentRet> categoryContentRetMap = Maps.newHashMap();
         categoryContentRetMap.put(AliPayConstant.CATEGORY_CODE, categoryContentRet);
         mixerCollectRecResult.setCategoryContentMap(categoryContentRetMap);
-        categoryContentRetMap.put(AliPayConstant.CATEGORY_CODE, categoryContentRet);
 
 
         List<ServiceContentRec>	serviceContentRecList = Lists.newArrayList();
