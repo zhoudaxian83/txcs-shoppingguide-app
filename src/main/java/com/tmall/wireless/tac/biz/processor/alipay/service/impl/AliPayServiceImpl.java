@@ -38,10 +38,6 @@ public class AliPayServiceImpl implements IAliPayService {
     UserProvider userProvider;
 
     @Autowired
-    LocationManager locationManager;
-
-
-    @Autowired
     private AldSpi aldSpi;
 
     @Override
