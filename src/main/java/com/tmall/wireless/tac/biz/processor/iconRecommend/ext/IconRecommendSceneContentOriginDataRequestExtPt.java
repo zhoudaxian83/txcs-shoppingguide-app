@@ -54,7 +54,7 @@ public class IconRecommendSceneContentOriginDataRequestExtPt implements ContentO
         Map<String, String> params = Maps.newHashMap();
         // 固定前缀
         params.put("_mtop_rl_url_", "true");
-        params.put("rtHalfDayStoreId", "236635411");
+//        params.put("rtHalfDayStoreId", "236635411");
         params.put("commerce", "B2C");
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(330110L).toString());
         params.put("_devEnv_", "1");
