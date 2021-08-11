@@ -63,6 +63,9 @@ public class AliPayServiceImpl implements IAliPayService {
     @Autowired
     private AldSpi aldSpi;
 
+
+
+
     @Override
     public MixerCollectRecResult processFirstPage(MixerCollectRecRequest mixerCollectRecRequest) {
         SPIResult<Map<String, Long>> uicIdFromAlipayUid = userProvider.getUicIdFromAlipayUid(Lists.newArrayList("2088602128328730"));
