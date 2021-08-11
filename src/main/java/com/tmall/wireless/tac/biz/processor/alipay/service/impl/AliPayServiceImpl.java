@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.alipay.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecRequest;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecResult;
 import com.google.common.collect.Lists;
@@ -26,11 +27,11 @@ public class AliPayServiceImpl implements IAliPayService {
 
         Long taobaoUserId = Optional.of(uicIdFromAlipayUid).map(SPIResult::getData).map(map -> map.get("2088602128328730")).orElse(0L);
 
-        SPIResult<UicDeliverAddressBO> userDefaultAddressSyn = userProvider.getUserDefaultAddressSyn(taobaoUserId);
+        SPIResult<UicDeliverAddressBO> userDefaultAddressSyn = userProvider.getUserDefaultAddressSyn(357133924L);
 
         String userId = Optional.of(userDefaultAddressSyn).map(SPIResult::getData).map(UicDeliverAddressBO::getArea).orElse("");
         MixerCollectRecResult mixerCollectRecResult = new MixerCollectRecResult();
-        mixerCollectRecResult.setErrorCode(taobaoUserId + "  " + userId);
+        mixerCollectRecResult.setErrorCode(JSON.toJSONString(userDefaultAddressSyn));
         return mixerCollectRecResult;
     }
 }
