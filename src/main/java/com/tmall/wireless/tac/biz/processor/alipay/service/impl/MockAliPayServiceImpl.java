@@ -4,6 +4,8 @@ import com.alipay.recmixer.common.service.facade.model.CategoryContentRet;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecRequest;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecResult;
 import com.alipay.recmixer.common.service.facade.model.ServiceContentRec;
+import com.alipay.tradecsa.common.service.spi.request.MiddlePageSPIRequest;
+import com.alipay.tradecsa.common.service.spi.response.MiddlePageSPIResponse;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.wireless.tac.biz.processor.alipay.constant.AliPayConstant;
@@ -18,7 +20,7 @@ import java.util.Map;
 /**
  * Created by yangqing.byq on 2021/8/6.
  */
-@Service
+@Service("mockAliPayServiceImpl")
 public class MockAliPayServiceImpl implements IAliPayService {
     @Override
     public Flowable<MixerCollectRecResult> processFirstPage(Context context, MixerCollectRecRequest mixerCollectRecRequest) {
@@ -43,6 +45,12 @@ public class MockAliPayServiceImpl implements IAliPayService {
         return Flowable.just(mixerCollectRecResult);
     }
 
+    @Override
+    public Flowable<MiddlePageSPIResponse> processMiddlePage(Context context, MiddlePageSPIRequest middlePageSPIResponse) {
+        return null;
+    }
+
+
     private ServiceContentRec getServiceContent(String title) {
         ServiceContentRec serviceContentRec = new ServiceContentRec();
         serviceContentRec.setItemId("600561956069");
@@ -55,4 +63,8 @@ public class MockAliPayServiceImpl implements IAliPayService {
         serviceContentRec.setTitle(title);
         return serviceContentRec;
     }
+
+
+
+
 }

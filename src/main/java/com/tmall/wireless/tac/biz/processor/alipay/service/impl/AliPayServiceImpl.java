@@ -6,10 +6,13 @@ import com.alibaba.aladdin.lamp.domain.request.modules.LocationInfo;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.aladdin.lamp.domain.response.ResResponse;
 import com.alibaba.aladdin.lamp.domain.user.UserProfile;
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.recmixer.common.service.facade.model.CategoryContentRet;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecRequest;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecResult;
 import com.alipay.recmixer.common.service.facade.model.ServiceContentRec;
+import com.alipay.tradecsa.common.service.spi.request.MiddlePageSPIRequest;
+import com.alipay.tradecsa.common.service.spi.response.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
@@ -46,12 +49,14 @@ public class AliPayServiceImpl implements IAliPayService {
     public static final String fpTitleAldKey = "fpTitle";
     public static final String fpServiceTextAldKey = "fpService";
     public static final String fpIconPicAldKey = "fpIconPic";
+
     public static final String headColorAldKey = "headColor";
     public static final String headSubTitleAldKey = "headSubTitle";
     public static final String headBgPicAldKey = "headBgPic";
     public static final String navigationTitleAldKey = "navigationTitle";
     public static final String navigationIconPicAldKey = "navigationIconPic";
     public static final String navigationSearchUrlAldKey = "navigationSearchUrl";
+
     public static final String cardTitleAldKey = "cardTitle";
     public static final String cardSubTitleAldKey = "cardSubTitle";
     public static final String cardBgPicAldKey = "cardBgPic";
@@ -106,6 +111,69 @@ public class AliPayServiceImpl implements IAliPayService {
                 });
 
     }
+
+    @Override
+    public Flowable<MiddlePageSPIResponse> processMiddlePage(Context context, MiddlePageSPIRequest middlePageSPIRequest) {
+
+        GeneralItem aldData = getAldData(357133924L, "330100");
+
+        MiddlePageSPIResponse middlePageSPIResponse1 = new MiddlePageSPIResponse();
+
+        // 头部区
+        PageFloorHeaderDTO pageFloorHeaderDTO = new PageFloorHeaderDTO();
+        pageFloorHeaderDTO.setType("image");
+        pageFloorHeaderDTO.setTitle(aldData.getString(headSubTitleAldKey));
+        pageFloorHeaderDTO.setSubtitle(aldData.getString(headSubTitleAldKey));
+        pageFloorHeaderDTO.setBgColor(aldData.getString(headColorAldKey));
+        pageFloorHeaderDTO.setSubTitleImgUrl(aldData.getString(headBgPicAldKey));
+
+        // 导航栏
+        PageFloorNavigationDTO pageFloorNavigationDTO = new PageFloorNavigationDTO();
+        pageFloorNavigationDTO.setTitle(aldData.getString(navigationTitleAldKey));
+        pageFloorNavigationDTO.setTitleImage(aldData.getString(navigationIconPicAldKey));
+        pageFloorNavigationDTO.setStyle("light");
+        pageFloorNavigationDTO.setTitleLightImageUrl(aldData.getString(navigationIconPicAldKey));
+        middlePageSPIResponse1.setPageFloorNavigationDTO(pageFloorNavigationDTO);
+
+        BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+                ScenarioConstantApp.LOC_TYPE_B2C,
+                ScenarioConstantApp.SCENARIO_ALI_PAY_FIRST_PAGE);
+
+
+         return shoppingguideSdkItemService.recommend(context, bizScenario).map(re -> {
+
+            List<ItemEntityVO> itemAndContentList = re.getItemAndContentList();
+
+            PageFloorResultDTO pageFloorResultDTO = new PageFloorResultDTO();
+            pageFloorResultDTO.setPageFloorId("111");
+            PageFloorResultDetailDTO pageFloorResultDetailDTO = new PageFloorResultDetailDTO();
+            pageFloorResultDTO.setPageFloorResultDetailDTO(pageFloorResultDetailDTO);
+            PageFloorAtomicResultDTO pageFloorAtomicResultDTO1 = new PageFloorAtomicResultDTO();
+            pageFloorResultDetailDTO.setPageFloorAtomicResultDTOList(Lists.newArrayList(pageFloorAtomicResultDTO1));
+            List<JSONObject> cardData1 = Lists.newArrayList();
+            pageFloorAtomicResultDTO1.setCardData(cardData1);
+            cardData1.add(itemAndContentList.get(0));
+
+
+
+            PageFloorResultDTO pageFloorResultDTO2 = new PageFloorResultDTO();
+            pageFloorResultDTO2.setPageFloorId("222");
+            PageFloorResultDetailDTO pageFloorResultDetailDTO2 = new PageFloorResultDetailDTO();
+            pageFloorResultDTO2.setPageFloorResultDetailDTO(pageFloorResultDetailDTO2);
+            PageFloorAtomicResultDTO pageFloorAtomicResultDTO2 = new PageFloorAtomicResultDTO();
+            pageFloorResultDetailDTO2.setPageFloorAtomicResultDTOList(Lists.newArrayList(pageFloorAtomicResultDTO2));
+            List<JSONObject> cardData2 = Lists.newArrayList();
+            cardData2.addAll(itemAndContentList);
+            pageFloorAtomicResultDTO2.setCardData(cardData2);
+
+            middlePageSPIResponse1.setPageFloorResultDTOList(Lists.newArrayList(pageFloorResultDTO2, pageFloorResultDTO));
+
+
+            return middlePageSPIResponse1;
+        });
+
+    }
+
 
     private ServiceContentRec convert(ItemEntityVO item) {
         ServiceContentRec serviceContentRec = new ServiceContentRec();

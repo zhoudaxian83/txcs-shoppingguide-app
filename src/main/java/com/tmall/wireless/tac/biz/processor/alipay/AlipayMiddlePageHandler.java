@@ -4,9 +4,12 @@ import com.alipay.recmixer.common.service.facade.model.MixerCollectRecResult;
 import com.alipay.tradecsa.common.service.spi.request.MiddlePageSPIRequest;
 import com.alipay.tradecsa.common.service.spi.response.MiddlePageSPIResponse;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
+import com.tmall.wireless.tac.biz.processor.alipay.service.IAliPayService;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
+import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -19,6 +22,8 @@ public class AlipayMiddlePageHandler extends RpmReactiveHandler<MiddlePageSPIRes
 
     public static final String PARAM_KEY = "paramsKey";
 
+    @Autowired
+    IAliPayService mockAliPayServiceImpl;
     @Override
     public Flowable<TacResult<MiddlePageSPIResponse>> executeFlowable(Context context) throws Exception {
         MiddlePageSPIResponse middlePageSPIResponse = new MiddlePageSPIResponse();
@@ -29,8 +34,6 @@ public class AlipayMiddlePageHandler extends RpmReactiveHandler<MiddlePageSPIRes
             return Flowable.just(TacResult.newResult(middlePageSPIResponse));
         }
         MiddlePageSPIRequest middlePageSPIRequest = (MiddlePageSPIRequest) param;
-
-        middlePageSPIResponse.setErrorMsg("jinzhou test middle");
-        return Flowable.just(TacResult.newResult(middlePageSPIResponse));
+        return mockAliPayServiceImpl.processMiddlePage(context, middlePageSPIRequest).map(TacResult::newResult);
     }
 }
