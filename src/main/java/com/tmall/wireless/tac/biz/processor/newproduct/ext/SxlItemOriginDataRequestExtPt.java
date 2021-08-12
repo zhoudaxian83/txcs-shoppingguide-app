@@ -60,6 +60,7 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         params.put("regionCode", String.valueOf(sgFrameworkContextItem.getLocParams().getRegionCode()));
 
         tppRequest.setParams(params);
+        tppRequest.setLogResult(true);
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
             .kv("tppRequest",JSON.toJSONString(tppRequest))
             .info();
