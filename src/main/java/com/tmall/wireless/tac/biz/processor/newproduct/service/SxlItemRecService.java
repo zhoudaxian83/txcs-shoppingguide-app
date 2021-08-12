@@ -28,6 +28,7 @@ import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,10 @@ public class SxlItemRecService {
     SgFrameworkServiceItem sgFrameworkServiceItem;
     @Autowired
     HyperlocalRetailABTestClient hyperlocalRetailABTestClient;
+
+    private final static String AB_TEST_RESULT = "abTestResult";//ab实验分桶结果
+
+    private final static String AB_TEST_TRACE_INFO = "abTestTraceInfo";//ab实验
 
     static List<Pair<String, String>> dataTubeKeyList = Lists.newArrayList(
         Pair.of("recommendWords","recommendWords"),
@@ -171,24 +176,12 @@ public class SxlItemRecService {
     private String getAbData(Context context){
         Long useId = Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L);
         try {
-            HyperlocalRetailABTestResult hyperlocalRetailABTestResult = hyperlocalRetailABTestClient.abByBiz("SM_NEW_ARRIVAL",useId);
-            HyperlocalRetailABTestResult hyperlocalRetailABTestResult1 = hyperlocalRetailABTestClient.ab(102L,useId);
-            if (hyperlocalRetailABTestResult == null
-                || !hyperlocalRetailABTestResult.isSuccess()
-                || hyperlocalRetailABTestResult.getData() == null
-                || hyperlocalRetailABTestResult.getData().isEmpty()) {
-                HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
-                    .kv("SxlItemRecService getAbData","hyperlocalRetailABTestResult fail！")
-                    .kv("useId",String.valueOf(useId))
-                    .info();
-                return "";
-            }
+            /*HyperlocalRetailABTestResult hyperlocalRetailABTestResult = hyperlocalRetailABTestClient.abByBiz("SM_NEW_ARRIVAL",useId);
+            HyperlocalRetailABTestResult hyperlocalRetailABTestResult1 = hyperlocalRetailABTestClient.ab(102L,useId);*/
             HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
-                .kv("SxlItemRecService","getAbData")
+                .kv("SxlItemRecService getAbData",JSON.toJSONString(context.getParams().get(AB_TEST_RESULT)))
+                .kv("SxlItemRecService getAbData",JSON.toJSONString(context.getParams().get(AB_TEST_TRACE_INFO)))
                 .kv("useId",String.valueOf(useId))
-                .kv("hyperlocalRetailABTestResult",JSON.toJSONString(hyperlocalRetailABTestResult))
-                .kv("hyperlocalRetailABTestResult.getData()",JSON.toJSONString(hyperlocalRetailABTestResult.getData()))
-                .kv("hyperlocalRetailABTestResult.getGroup().getVariations()",JSON.toJSONString(hyperlocalRetailABTestResult.getGroup().getVariations()))
                 .info();
             return "";
         }catch (Exception e){

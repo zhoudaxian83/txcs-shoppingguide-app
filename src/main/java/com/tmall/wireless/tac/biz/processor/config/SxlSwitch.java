@@ -29,6 +29,12 @@ public class SxlSwitch {
     @AppSwitch(des = "o2o榜单跳转链接", level = Switch.Level.p4)
     public static String O2O_BD_JUMP_UTL = "https://pre-wormhole.wapa.tmall.com/wow/an/cs/act/wupr?wh_biz=tm&wh_pid=go-shopping/1773d7acee3&disableNav=YES&contentId=%s&contentType=%s&itemSetIds=%s&entryItemIds=%s";
 
+    @AppSwitch(des = "上新了超市格物abTest业务域code", level = Switch.Level.p4)
+    public static String SM_NEW_ARRIVAL = "SM_NEW_ARRIVAL";
+
+    @AppSwitch(des = "上新了超市算法选品ab实验id", level = Switch.Level.p4)
+    public static Long SXL_ALG_ITEMSET_ID_AB = 102L;
+
     public static String getValue(String key){
 
         return SwitchManager.getStrValue(APP_NAME,"sxl."+key);
