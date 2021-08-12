@@ -11,7 +11,9 @@ import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
+import com.tmall.txcs.gs.framework.model.constant.ItemInfoSourceKey;
 import com.tmall.txcs.gs.framework.model.meta.*;
+import com.tmall.txcs.gs.framework.model.meta.node.ItemInfoNode;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceContent;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
@@ -123,24 +125,53 @@ public class O2oBangdanService {
     public ContentMetaInfo getContentMetaInfo() {
         ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
+        /**
+         * Tpp Meta
+         */
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
+        /**
+         * Captain Meta
+         */
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         //captain SceneCode场景code
         itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
+        /**
+         * Time Label Meta
+         */
+        List<ItemInfoNode> itemInfoNodes = Lists.newArrayList();
+        ItemInfoNode itemInfoNode = new ItemInfoNode();
+        itemInfoNode.setItemInfoSourceMetaInfos(getItemInfoSourceTimeLabelMetaInfo());
+        itemInfoNodes.add(itemInfoNode);
 
+        /**
+         * B2C
+         */
         ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
         itemGroupMetaInfo.setGroupName("sm_B2C");
         itemGroupMetaInfo.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        /**
+         * 小时达
+         */
         ItemGroupMetaInfo itemGroupMetaInfo1 = new ItemGroupMetaInfo();
         itemGroupMetaInfo1.setGroupName("sm_O2OOneHour");
         itemGroupMetaInfo1.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        /**
+         * 半日达
+         */
         ItemGroupMetaInfo itemGroupMetaInfo2 = new ItemGroupMetaInfo();
         itemGroupMetaInfo2.setGroupName("sm_O2OHalfDay");
         itemGroupMetaInfo2.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        /**
+         * 新增时效标（仅半日达需要）
+         */
+        itemGroupMetaInfo2.setItemInfoNodes(itemInfoNodes);
+        /**
+         * 次日达
+         */
         ItemGroupMetaInfo itemGroupMetaInfo3 = new ItemGroupMetaInfo();
         itemGroupMetaInfo3.setGroupName("sm_O2ONextDay");
         itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
@@ -159,5 +190,11 @@ public class O2oBangdanService {
         contentRecommendMetaInfo.setUseRecommendSpiV2(false);
         contentMetaInfo.setContentRecommendMetaInfo(contentRecommendMetaInfo);
         return contentMetaInfo;
+    }
+
+    public List<ItemInfoSourceMetaInfo> getItemInfoSourceTimeLabelMetaInfo() {
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfo = new ItemInfoSourceMetaInfo();
+        itemInfoSourceMetaInfo.setSourceName("timeLabel");
+        return Lists.newArrayList(itemInfoSourceMetaInfo);
     }
 }
