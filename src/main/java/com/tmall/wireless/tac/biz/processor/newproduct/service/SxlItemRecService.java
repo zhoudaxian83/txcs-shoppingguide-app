@@ -85,12 +85,22 @@ public class SxlItemRecService {
         /**算法选品集id集合**/
         Long itemSetIdAlgSw = Long.valueOf(SxlSwitch.getValue("SXL_ALG_ITEMSET_ID"));
         /**主题承接页圈品集id**/
-        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,itemSetIdSw);
+        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,0L);
         /**招商主活动id-管道tair key**/
         String activityId = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.SXL_MAIN_ACTIVITY_ID,"");
-        getAbData(context);
+
         if(StringUtils.isBlank(activityId)){
-            activityId = String.valueOf(itemSetId);
+            /**算法选品接入ab实验**/
+            String itemSetIdType = getAbData(context);
+            if(!StringUtils.isBlank(itemSetIdType)){
+                if("old".equals(itemSetIdType)){
+                    activityId = String.valueOf(itemSetIdSw);
+                }else if("new".equals(itemSetIdType)){
+                    activityId = itemSetIdSw + "," + itemSetIdAlgSw;
+                }else{
+                    activityId = String.valueOf(itemSetIdSw);
+                }
+            }
         }
 
         String topItemIds = MapUtil.getStringWithDefault(context.getParams(), "itemIds","");
@@ -98,9 +108,19 @@ public class SxlItemRecService {
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetSource("crm");
-        entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
+        if(itemSetId > 0){
+            entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
+        }else {
+            List<Long> itemSetIds = Lists.newArrayList();
+            itemSetIds.add(itemSetIdSw);
+            itemSetIds.add(itemSetIdAlgSw);
+            entitySetParams.setItemSetIdList(itemSetIds);
+        }
         sgFrameworkContextItem.setRequestParams(context.getParams());
         sgFrameworkContextItem.setEntitySetParams(entitySetParams);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+            .kv("SxlItemRecService entitySetParams",JSON.toJSONString(entitySetParams))
+            .info();
         SceneInfo sceneInfo = new SceneInfo();
         sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
         sceneInfo.setSubBiz(ScenarioConstantApp.LOC_TYPE_B2C);
@@ -180,25 +200,35 @@ public class SxlItemRecService {
     private String getAbData(Context context){
         StringBuilder itemSetIdType = new StringBuilder();
         try {
-            /*HyperlocalRetailABTestResult hyperlocalRetailABTestResult = hyperlocalRetailABTestClient.abByBiz("SM_NEW_ARRIVAL",useId);
-            HyperlocalRetailABTestResult hyperlocalRetailABTestResult1 = hyperlocalRetailABTestClient.ab(102L,useId);*/
-            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
-                .kv("SxlItemRecService AB_TEST_RESULT",JSON.toJSONString(context.getParams().get(AB_TEST_RESULT)))
-                .kv("SxlItemRecService AB_TEST_TRACE_INFO",JSON.toJSONString(context.getParams().get(AB_TEST_TRACE_INFO)))
-                .info();
-            List<Map<String,Object>> abTestRest = (List<Map<String, Object>>)context.getParams().get(AB_TEST_RESULT);
-            abTestRest.forEach(variation ->{
+            if(context.getParams().get(AB_TEST_RESULT) == null
+                || StringUtils.isBlank(context.getParams().get(AB_TEST_RESULT).toString())){
                 HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
-                    .kv("SxlItemRecService variation.get(bizType)",JSON.toJSONString(variation.get("bizType")))
-                    .kv("SxlItemRecService variation.get(tclsExpId)",JSON.toJSONString(variation.get("tclsExpId")))
+                    .kv("SxlItemRecService context.getParams()",JSON.toJSONString(context.getParams()))
                     .info();
+                return itemSetIdType.toString();
+            }
+            List<Map<String,Object>> abTestRest = (List<Map<String, Object>>)context.getParams().get(AB_TEST_RESULT);
+            if(CollectionUtils.isEmpty(abTestRest)){
+                HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                    .kv("SxlItemRecService context.getParams().get(AB_TEST_RESULT)",JSON.toJSONString(context.getParams()))
+                    .info();
+                return itemSetIdType.toString();
+            }
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                .kv("SxlItemRecService abTestRest",JSON.toJSONString(abTestRest))
+                .info();
+            abTestRest.forEach(variation ->{
                 if("SM_NEW_ARRIVAL".equals(variation.get("bizType")) &&
                     "102".equals(variation.get("tclsExpId"))){
-                    itemSetIdType.append(variation.get("itemSetId"));
+                    if(variation.get("itemSetId") != null)
+                    itemSetIdType.append(String.valueOf(variation.get("itemSetId")));
+
                 }
             });
         }catch (Exception e){
-
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                .kv("SxlItemRecService getAbData",JSON.toJSONString(context.getParams()))
+                .info();
         }
         return itemSetIdType.toString();
     }
