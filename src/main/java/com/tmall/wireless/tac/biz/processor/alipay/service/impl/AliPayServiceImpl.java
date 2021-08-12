@@ -21,6 +21,7 @@ import com.tmall.wireless.store.spi.user.UserProvider;
 import com.tmall.wireless.store.spi.user.base.UicDeliverAddressBO;
 import com.tmall.wireless.tac.biz.processor.alipay.constant.AliPayConstant;
 import com.tmall.wireless.tac.biz.processor.alipay.service.IAliPayService;
+import com.tmall.wireless.tac.biz.processor.alipay.service.ext.AliPayFirstPageBuildItemVoSdkExtPt;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
@@ -109,11 +110,19 @@ public class AliPayServiceImpl implements IAliPayService {
         ServiceContentRec serviceContentRec = new ServiceContentRec();
         serviceContentRec.setItemId(String.valueOf(item.getItemId()));
         serviceContentRec.setImgUrl(item.getString("itemImg"));
-        serviceContentRec.setSubTitle("正品保障");
+
         serviceContentRec.setTitle(item.getString("title"));
         serviceContentRec.setActionLink(item.getString("itemUrl"));
         serviceContentRec.setBizCode(AliPayConstant.BIZ_CODE);
         serviceContentRec.setSource(AliPayConstant.SOURCE);
+
+        Map<String, String> ext = Maps.newHashMap();
+        ext.put("subScript", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.PROMOTION_POINT));
+        ext.put("subTitle", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.PROMOTION_POINT));
+        ext.put("sellingPrice", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.SELLING_PRICE));
+        ext.put("originPrice", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.ORIGIN_PRICE));
+
+        serviceContentRec.setExtMap(ext);
 
         return serviceContentRec;
     }

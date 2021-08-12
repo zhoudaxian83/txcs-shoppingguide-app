@@ -2,9 +2,7 @@ package com.tmall.wireless.tac.biz.processor.alipay.service.ext;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
-import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
-import com.tcls.mkt.atmosphere.model.response.PromotionAtmosphereDTO;
-import com.tcls.mkt.atmosphere.model.response.PromotionTextDTO;
+import com.tcls.mkt.atmosphere.model.response.*;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.tcls.gs.sdk.biz.extensions.item.vo.DefaultBuildItemVoSdkExtPt;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
@@ -34,14 +32,35 @@ import java.util.Optional;
 public class AliPayFirstPageBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt implements BuildItemVoSdkExtPt {
 
     public static final String PROMOTION_POINT = "promotionPoint";
+    public static final String SELLING_PRICE = "sellingPrice";
+    public static final String ORIGIN_PRICE = "originPrice";
     @Override
     protected Map<String, Object> getItemVoMap(ItemInfoBySourceDTO itemInfoBySourceDTO) {
         if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainDTO) {
             Map<String, Object> result = Maps.newHashMap();
             result.putAll(itemInfoBySourceDTO.getItemInfoVO());
             result.put(PROMOTION_POINT, getPromotionPoint((ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO));
+            result.put(SELLING_PRICE, getSellingPrice((ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO));
+            result.put(ORIGIN_PRICE, getOriginPrice((ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO));
         }
         return itemInfoBySourceDTO.getItemInfoVO();
+    }
+    private String getOriginPrice(ItemInfoBySourceCaptainDTO itemInfoBySourceDTO) {
+        return Optional.of(itemInfoBySourceDTO).
+                map(ItemInfoBySourceCaptainDTO::getItemDTO).
+                map(ItemDTO::getItemPromotionResp).
+                map(ItemPromotionResp::getUnifyPrice).
+                map(UnifyPriceDTO::getShowPrice).
+                map(Price::getPrice).orElse("");
+    }
+
+    private String getSellingPrice(ItemInfoBySourceCaptainDTO itemInfoBySourceDTO) {
+        return Optional.of(itemInfoBySourceDTO).
+                map(ItemInfoBySourceCaptainDTO::getItemDTO).
+                map(ItemDTO::getItemPromotionResp).
+                map(ItemPromotionResp::getUnifyPrice).
+                map(UnifyPriceDTO::getShowPrice).
+                map(Price::getPrice).orElse("");
     }
 
     private Object getPromotionPoint(ItemInfoBySourceCaptainDTO itemInfoBySourceDTO) {
