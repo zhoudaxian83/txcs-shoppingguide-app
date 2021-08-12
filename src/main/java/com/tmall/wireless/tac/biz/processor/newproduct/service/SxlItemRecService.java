@@ -76,7 +76,7 @@ public class SxlItemRecService {
         /**算法选品集id集合**/
         Long itemSetIdAlgSw = Long.valueOf(SxlSwitch.getValue("SXL_ALG_ITEMSET_ID"));
         /**主题承接页圈品集id**/
-        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,0L);
+        Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,itemSetIdSw);
         /**招商主活动id-管道tair key**/
         String activityId = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.SXL_MAIN_ACTIVITY_ID,"");
         getAbData(context);
