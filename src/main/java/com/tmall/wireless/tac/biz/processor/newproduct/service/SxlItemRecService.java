@@ -7,6 +7,7 @@ import com.alibaba.tcls.experiment.client.domain.HyperlocalRetailABTestResult;
 import com.alibaba.tcls.experiment.client.router.HyperlocalRetailABTestClient;
 
 import com.google.common.collect.Lists;
+import com.taobao.tddl.optimizer.config.table.parse.TableMetaParser;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
@@ -39,6 +40,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -59,7 +61,7 @@ public class SxlItemRecService {
     @Autowired
     HyperlocalRetailABTestClient hyperlocalRetailABTestClient;
 
-    private final static String AB_TEST_RESULT = "abTestResult";//ab实验分桶结果
+    private final static String AB_TEST_RESULT = "abTestVariationsResult";//ab实验分桶结果
 
     private final static String AB_TEST_TRACE_INFO = "abTestTraceInfo";//ab实验
 
@@ -176,26 +178,28 @@ public class SxlItemRecService {
     }
 
     private String getAbData(Context context){
+        StringBuilder itemSetIdType = new StringBuilder();
         try {
             /*HyperlocalRetailABTestResult hyperlocalRetailABTestResult = hyperlocalRetailABTestClient.abByBiz("SM_NEW_ARRIVAL",useId);
             HyperlocalRetailABTestResult hyperlocalRetailABTestResult1 = hyperlocalRetailABTestClient.ab(102L,useId);*/
             HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
-                .kv("SxlItemRecService getAbData",JSON.toJSONString(context.getParams().get(AB_TEST_RESULT)))
-                .kv("SxlItemRecService getAbData",JSON.toJSONString(context.getParams().get(AB_TEST_TRACE_INFO)))
+                .kv("SxlItemRecService AB_TEST_RESULT",JSON.toJSONString(context.getParams().get(AB_TEST_RESULT)))
+                .kv("SxlItemRecService AB_TEST_TRACE_INFO",JSON.toJSONString(context.getParams().get(AB_TEST_TRACE_INFO)))
                 .info();
-            List<HyperlocalRetailABTestGroup> hyperlocalRetailABTestGroups = (List<HyperlocalRetailABTestGroup>)context.getParams().get(AB_TEST_RESULT);
-            if(CollectionUtils.isEmpty(hyperlocalRetailABTestGroups)){
-                return "";
-            }
-            hyperlocalRetailABTestGroups.forEach(hyperlocalRetailABTestGroup -> {
-                if("102".equals(hyperlocalRetailABTestGroup.getExperimentId())){
-                    String itemSetIdType = (String)hyperlocalRetailABTestGroup.getVariations().get("itemSetId");
+            List<Map<String,Object>> abTestRest = (List<Map<String, Object>>)context.getParams().get(AB_TEST_RESULT);
+            abTestRest.forEach(variation ->{
+                HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                    .kv("SxlItemRecService variation.get(bizType)",JSON.toJSONString(variation.get("bizType")))
+                    .kv("SxlItemRecService variation.get(tclsExpId)",JSON.toJSONString(variation.get("tclsExpId")))
+                    .info();
+                if("SM_NEW_ARRIVAL".equals(variation.get("bizType")) &&
+                    "102".equals(variation.get("tclsExpId"))){
+                    itemSetIdType.append(variation.get("itemSetId"));
                 }
             });
-            return "";
         }catch (Exception e){
 
         }
-        return "";
+        return itemSetIdType.toString();
     }
 }
