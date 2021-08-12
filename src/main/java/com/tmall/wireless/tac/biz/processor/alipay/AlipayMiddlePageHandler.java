@@ -23,7 +23,7 @@ public class AlipayMiddlePageHandler extends RpmReactiveHandler<MiddlePageSPIRes
     public static final String PARAM_KEY = "paramsKey";
 
     @Autowired
-    IAliPayService mockAliPayServiceImpl;
+    IAliPayService aliPayServiceImpl;
     @Override
     public Flowable<TacResult<MiddlePageSPIResponse>> executeFlowable(Context context) throws Exception {
         MiddlePageSPIResponse middlePageSPIResponse = new MiddlePageSPIResponse();
@@ -34,6 +34,6 @@ public class AlipayMiddlePageHandler extends RpmReactiveHandler<MiddlePageSPIRes
             return Flowable.just(TacResult.newResult(middlePageSPIResponse));
         }
         MiddlePageSPIRequest middlePageSPIRequest = (MiddlePageSPIRequest) param;
-        return mockAliPayServiceImpl.processMiddlePage(context, middlePageSPIRequest).map(TacResult::newResult);
+        return aliPayServiceImpl.processMiddlePage(context, middlePageSPIRequest).map(TacResult::newResult);
     }
 }
