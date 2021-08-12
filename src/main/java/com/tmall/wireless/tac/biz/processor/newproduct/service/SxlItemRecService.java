@@ -168,7 +168,7 @@ public class SxlItemRecService {
         return dataTubeMateInfo;
     }
 
-    private void getAbData(Context context){
+    private String getAbData(Context context){
         Long useId = Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L);
         try {
             HyperlocalRetailABTestResult hyperlocalRetailABTestResult = hyperlocalRetailABTestClient.abByBiz("102",useId);
@@ -176,16 +176,23 @@ public class SxlItemRecService {
                 || !hyperlocalRetailABTestResult.isSuccess()
                 || hyperlocalRetailABTestResult.getData() == null
                 || hyperlocalRetailABTestResult.getData().isEmpty()) {
-                //todo
-                return;
+                HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                    .kv("SxlItemRecService getAbData","hyperlocalRetailABTestResult fail！")
+                    .kv("useId",String.valueOf(useId))
+                    .info();
+                return "";
             }
             HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                .kv("SxlItemRecService","getAbData")
+                .kv("useId",String.valueOf(useId))
                 .kv("hyperlocalRetailABTestResult",JSON.toJSONString(hyperlocalRetailABTestResult))
                 .kv("hyperlocalRetailABTestResult.getData()",JSON.toJSONString(hyperlocalRetailABTestResult.getData()))
+                .kv("hyperlocalRetailABTestResult.getGroup().getVariations()",JSON.toJSONString(hyperlocalRetailABTestResult.getGroup().getVariations()))
                 .info();
+            return "";
         }catch (Exception e){
 
         }
-
+        return "";
     }
 }
