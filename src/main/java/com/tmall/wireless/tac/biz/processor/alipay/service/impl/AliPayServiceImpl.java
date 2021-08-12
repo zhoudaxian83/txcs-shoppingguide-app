@@ -101,6 +101,7 @@ public class AliPayServiceImpl implements IAliPayService {
                     categoryContentRet.setServiceList(serviceContentRecList);
                     List<ServiceContentRec> collect = re.getItemAndContentList().stream().map(this::convert).collect(Collectors.toList());
                     categoryContentRet.setServiceList(collect);
+                    categoryContentRet.setSuccess(true);
                     return mixerCollectRecResult;
                 });
 

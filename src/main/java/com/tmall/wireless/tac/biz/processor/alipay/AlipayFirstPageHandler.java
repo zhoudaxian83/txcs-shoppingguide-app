@@ -21,6 +21,7 @@ import java.util.Optional;
 @Component
 public class AlipayFirstPageHandler extends RpmReactiveHandler<MixerCollectRecResult> {
 
+
     @Autowired
     IAliPayService aliPayServiceImpl;
 
@@ -38,6 +39,7 @@ public class AlipayFirstPageHandler extends RpmReactiveHandler<MixerCollectRecRe
 
 
         return aliPayServiceImpl.processFirstPage(context, mixerCollectRecRequest).map(
+
                 re -> TacResult.newResult(re)
         );
 
