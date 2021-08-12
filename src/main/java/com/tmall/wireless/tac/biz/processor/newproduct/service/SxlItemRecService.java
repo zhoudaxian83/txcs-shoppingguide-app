@@ -88,7 +88,7 @@ public class SxlItemRecService {
         Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,0L);
         /**招商主活动id-管道tair key**/
         String activityId = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.SXL_MAIN_ACTIVITY_ID,"");
-
+        LOGGER.error("activityId:{}", JSON.toJSONString(activityId));
         if(StringUtils.isBlank(activityId)){
             /**算法选品接入ab实验**/
             String itemSetIdType = getAbData(context);
@@ -199,7 +199,9 @@ public class SxlItemRecService {
 
     private String getAbData(Context context){
         StringBuilder itemSetIdType = new StringBuilder();
+        LOGGER.error("itemSetIdType:{}", JSON.toJSONString(itemSetIdType));
         try {
+            LOGGER.error("context.getParams().get(AB_TEST_RESULT):{}", context.getParams().get(AB_TEST_RESULT));
             if(context.getParams().get(AB_TEST_RESULT) == null
                 || StringUtils.isBlank(context.getParams().get(AB_TEST_RESULT).toString())){
                 HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
