@@ -171,7 +171,8 @@ public class SxlItemRecService {
     private String getAbData(Context context){
         Long useId = Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L);
         try {
-            HyperlocalRetailABTestResult hyperlocalRetailABTestResult = hyperlocalRetailABTestClient.abByBiz("102",useId);
+            HyperlocalRetailABTestResult hyperlocalRetailABTestResult = hyperlocalRetailABTestClient.abByBiz("SM_NEW_ARRIVAL",useId);
+            HyperlocalRetailABTestResult hyperlocalRetailABTestResult1 = hyperlocalRetailABTestClient.ab(102L,useId);
             if (hyperlocalRetailABTestResult == null
                 || !hyperlocalRetailABTestResult.isSuccess()
                 || hyperlocalRetailABTestResult.getData() == null
