@@ -42,6 +42,7 @@ public class AliPayFirstPageBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExt
             result.put(PROMOTION_POINT, getPromotionPoint((ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO));
             result.put(SELLING_PRICE, getSellingPrice((ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO));
             result.put(ORIGIN_PRICE, getOriginPrice((ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO));
+            return result;
         }
         return itemInfoBySourceDTO.getItemInfoVO();
     }
