@@ -14,8 +14,11 @@ public class SxlSwitch {
 
     private static final String APP_NAME = "txcs-shoppingguide";
 
-    @AppSwitch(des = "商品推荐选品集id", level = Switch.Level.p4)
+    @AppSwitch(des = "人工选品推荐选品集id", level = Switch.Level.p4)
     public static Long SXL_ITEMSET_ID = 322385L;
+
+    @AppSwitch(des = "算法选品推荐选品集id", level = Switch.Level.p4)
+    public static Long SXL_ALG_ITEMSET_ID = 387450L;
 
     @AppSwitch(des = "商品推荐tppId", level = Switch.Level.p4)
     public static Long SXL_TPP_APP_ID = 25385L;

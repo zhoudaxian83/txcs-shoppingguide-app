@@ -1,6 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.tcls.experiment.client.domain.HyperlocalRetailABTestBaseParam;
+import com.alibaba.tcls.experiment.client.domain.HyperlocalRetailABTestResult;
+import com.alibaba.tcls.experiment.client.router.HyperlocalRetailABTestClient;
+
 import com.google.common.collect.Lists;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
@@ -49,6 +53,8 @@ public class SxlItemRecService {
 
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
+    @Autowired
+    HyperlocalRetailABTestClient hyperlocalRetailABTestClient;
 
     static List<Pair<String, String>> dataTubeKeyList = Lists.newArrayList(
         Pair.of("recommendWords","recommendWords"),
@@ -65,12 +71,15 @@ public class SxlItemRecService {
         HadesLogUtil.debug("ITEM_REQUEST:{}"+JSON.toJSONString(context));
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
-        /**算法招商圈品集id集合**/
-        List<Long> itemSetIdSws = getItemSetIdSw(SxlSwitch.getValue("SXL_ITEMSET_ID"));
+        /**招商人工选品集id集合**/
+        Long itemSetIdSw = Long.valueOf(SxlSwitch.getValue("SXL_ITEMSET_ID"));
+        /**算法选品集id集合**/
+        Long itemSetIdAlgSw = Long.valueOf(SxlSwitch.getValue("SXL_ALG_ITEMSET_ID"));
         /**主题承接页圈品集id**/
         Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,0L);
-        /**captain主活动ID**/
+        /**招商主活动id-管道tair key**/
         String activityId = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.SXL_MAIN_ACTIVITY_ID,"");
+        getAbData(context);
         if(StringUtils.isBlank(activityId)){
             activityId = String.valueOf(itemSetId);
         }
@@ -80,11 +89,7 @@ public class SxlItemRecService {
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetSource("crm");
-        if(itemSetId > 0L){
-            entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
-        }else{
-            entitySetParams.setItemSetIdList(itemSetIdSws);
-        }
+        entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
         sgFrameworkContextItem.setRequestParams(context.getParams());
         sgFrameworkContextItem.setEntitySetParams(entitySetParams);
         SceneInfo sceneInfo = new SceneInfo();
@@ -163,19 +168,24 @@ public class SxlItemRecService {
         return dataTubeMateInfo;
     }
 
-    /**
-     * 获取圈品集id列表
-     * @param itemSetIdSw
-     * @return
-     */
-    private List<Long> getItemSetIdSw(String itemSetIdSw){
-        List<Long> itemSetIdSws = Lists.newArrayList();
-        if(StringUtils.isEmpty(itemSetIdSw)){
-            return  itemSetIdSws;
-        }
-        itemSetIdSws = Arrays.stream(itemSetIdSw.split(","))
-            .map(itemSetId -> Long.valueOf(itemSetId)).collect(Collectors.toList());
-        return itemSetIdSws;
-    }
+    private void getAbData(Context context){
+        Long useId = Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L);
+        try {
+            HyperlocalRetailABTestResult hyperlocalRetailABTestResult = hyperlocalRetailABTestClient.abByBiz("102",useId);
+            if (hyperlocalRetailABTestResult == null
+                || !hyperlocalRetailABTestResult.isSuccess()
+                || hyperlocalRetailABTestResult.getData() == null
+                || hyperlocalRetailABTestResult.getData().isEmpty()) {
+                //todo
+                return;
+            }
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                .kv("hyperlocalRetailABTestResult",JSON.toJSONString(hyperlocalRetailABTestResult))
+                .kv("hyperlocalRetailABTestResult.getData()",JSON.toJSONString(hyperlocalRetailABTestResult.getData()))
+                .info();
+        }catch (Exception e){
 
+        }
+
+    }
 }
