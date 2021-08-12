@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.newproduct.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.tcls.experiment.client.domain.HyperlocalRetailABTestBaseParam;
+import com.alibaba.tcls.experiment.client.domain.HyperlocalRetailABTestGroup;
 import com.alibaba.tcls.experiment.client.domain.HyperlocalRetailABTestResult;
 import com.alibaba.tcls.experiment.client.router.HyperlocalRetailABTestClient;
 
@@ -26,6 +27,7 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.formula.functions.T;
@@ -174,15 +176,22 @@ public class SxlItemRecService {
     }
 
     private String getAbData(Context context){
-        Long useId = Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L);
         try {
             /*HyperlocalRetailABTestResult hyperlocalRetailABTestResult = hyperlocalRetailABTestClient.abByBiz("SM_NEW_ARRIVAL",useId);
             HyperlocalRetailABTestResult hyperlocalRetailABTestResult1 = hyperlocalRetailABTestClient.ab(102L,useId);*/
             HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
                 .kv("SxlItemRecService getAbData",JSON.toJSONString(context.getParams().get(AB_TEST_RESULT)))
                 .kv("SxlItemRecService getAbData",JSON.toJSONString(context.getParams().get(AB_TEST_TRACE_INFO)))
-                .kv("useId",String.valueOf(useId))
                 .info();
+            List<HyperlocalRetailABTestGroup> hyperlocalRetailABTestGroups = (List<HyperlocalRetailABTestGroup>)context.getParams().get(AB_TEST_RESULT);
+            if(CollectionUtils.isEmpty(hyperlocalRetailABTestGroups)){
+                return "";
+            }
+            hyperlocalRetailABTestGroups.forEach(hyperlocalRetailABTestGroup -> {
+                if("102".equals(hyperlocalRetailABTestGroup.getExperimentId())){
+                    String itemSetIdType = (String)hyperlocalRetailABTestGroup.getVariations().get("itemSetId");
+                }
+            });
             return "";
         }catch (Exception e){
 
