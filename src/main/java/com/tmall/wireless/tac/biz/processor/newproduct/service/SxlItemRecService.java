@@ -119,6 +119,7 @@ public class SxlItemRecService {
         sgFrameworkContextItem.setRequestParams(context.getParams());
         sgFrameworkContextItem.setEntitySetParams(entitySetParams);
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+            .kv("activityId",activityId)
             .kv("SxlItemRecService entitySetParams.getItemSetIdList()",JSON.toJSONString(entitySetParams.getItemSetIdList()))
             .info();
         SceneInfo sceneInfo = new SceneInfo();
