@@ -58,6 +58,7 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
 
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID);
+        tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
         Map<String, String> params = Maps.newHashMap();
