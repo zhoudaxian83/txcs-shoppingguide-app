@@ -51,7 +51,7 @@ public class AliPayFirstPageBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExt
                 map(ItemInfoBySourceCaptainDTO::getItemDTO).
                 map(ItemDTO::getItemPromotionResp).
                 map(ItemPromotionResp::getUnifyPrice).
-                map(UnifyPriceDTO::getShowPrice).
+                map(UnifyPriceDTO::getChaoShiPrice).
                 map(Price::getPrice).orElse("");
     }
 
