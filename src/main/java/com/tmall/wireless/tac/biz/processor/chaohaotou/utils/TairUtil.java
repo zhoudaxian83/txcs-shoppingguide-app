@@ -181,20 +181,6 @@ public class TairUtil {
         });
     }
 
-    /**
-     * 缓存个性化排序后的商品信息，区分大区
-     *
-     * @return
-     */
-    private boolean setItemToCacheOfArea(OriginDataDTO<ItemEntity> originDataDTO, Long smAreaId) {
-        LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
-        if (logicalArea == null) {
-            tacLogger.warn(LOG_PREFIX + "setItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
-            return false;
-        }
-        return setCache(originDataDTO,
-            logicalArea.getCacheKey() + AREA_SORT_SUFFIX);
-    }
 
 }
 

@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.chaohaotou.ext;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -23,10 +22,7 @@ import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
-import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
-import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -103,8 +99,6 @@ public class ChaoHaoTouBuildItemVOExtPt implements BuildItemVOExtPt {
         itemUrl = itemUrl + "&scm=" + scm;
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
-
-        this.buildLimit(itemEntityVO, userParams);
         itemEntityVO.put("itemType", "channelPriceNew");
         itemEntityVO.put("canBuy", canBuy);
         itemEntityVO.put("specifications", specifications);
@@ -167,29 +161,5 @@ public class ChaoHaoTouBuildItemVOExtPt implements BuildItemVOExtPt {
             LOGGER.error("scmConvertError", e);
             return scm;
         }
-    }
-
-    private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
-        List<ItemLimitDTO> itemLimitDTOS;
-        Long itemId = (Long)itemEntityVO.get("itemId");
-        Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
-        if (limitResult == null || CollectionUtils.isEmpty(limitResult.get(itemId))) {
-            itemEntityVO.put("itemLimit", new ItemLimitDTO());
-            return;
-        }
-        itemLimitDTOS = limitResult.get(itemId);
-        /**
-         * 限购信息
-         */
-        itemEntityVO.put("itemLimit", itemLimitDTOS.get(0));
-    }
-
-    private Map<Long, List<ItemLimitDTO>> getLimitResult(Map<String, Object> userParams) {
-        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>)userParams.get(
-            Constant.ITEM_LIMIT_RESULT);
-        if (limitResult != null) {
-            return limitResult;
-        }
-        return null;
     }
 }

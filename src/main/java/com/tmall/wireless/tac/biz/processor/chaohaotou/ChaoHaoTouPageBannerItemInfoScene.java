@@ -3,7 +3,6 @@ package com.tmall.wireless.tac.biz.processor.chaohaotou;
 import java.util.List;
 import java.util.Optional;
 
-import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
@@ -23,7 +22,6 @@ import com.tmall.txcs.gs.model.biz.context.PmtParams;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.wzt.utils.LimitItemUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
@@ -81,17 +79,9 @@ public class ChaoHaoTouPageBannerItemInfoScene {
         sgFrameworkContextItem.setUserParams(context.getParams());
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult).map(tacResult -> {
-                List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
-                if (!CollectionUtils.isEmpty(originalEntityVOList)) {
-                    List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
-                    if (noLimitEntityVOList.size() != originalEntityVOList.size() && noLimitEntityVOList.size() != 0) {
-                        tacResult.getData().setItemAndContentList(noLimitEntityVOList);
-                    }
-                }
                 tacResult.setHasMore(tacResult.getData().isHasMore());
                 return tacResult;
-            })
-            .onErrorReturn(r -> TacResult.errorResult(""));
+            }).onErrorReturn(r -> TacResult.errorResult(""));
 
     }
 
