@@ -143,10 +143,13 @@ public class O2oBangdanService {
          * Time Label Meta
          */
         List<ItemInfoNode> itemInfoNodes = Lists.newArrayList();
-        ItemInfoNode itemInfoNode = new ItemInfoNode();
-        itemInfoNode.setItemInfoSourceMetaInfos(getItemInfoSourceTimeLabelMetaInfo());
-        itemInfoNodes.add(itemInfoNode);
+        ItemInfoNode itemInfoNodeFirst = new ItemInfoNode();
+        itemInfoNodeFirst.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        itemInfoNodes.add(itemInfoNodeFirst);
 
+        ItemInfoNode itemInfoNodeSecond = new ItemInfoNode();
+        itemInfoNodeSecond.setItemInfoSourceMetaInfos(getItemInfoSourceTimeLabelMetaInfo());
+        itemInfoNodes.add(itemInfoNodeSecond);
         /**
          * B2C
          */
