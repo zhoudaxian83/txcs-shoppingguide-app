@@ -1,8 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.alipay;
 
+import com.alibaba.fastjson.JSON;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecRequest;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecResult;
 import com.alipay.tradecsa.common.service.spi.request.MiddlePageSPIRequest;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.wireless.tac.biz.processor.alipay.service.IAliPayService;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -37,7 +39,7 @@ public class AlipayFirstPageHandler extends RpmReactiveHandler<MixerCollectRecRe
         }
         MixerCollectRecRequest mixerCollectRecRequest = (MixerCollectRecRequest) param;
 
-
+        HadesLogUtil.stream("AlipayFirstPageHandler").kv("request", JSON.toJSONString(mixerCollectRecRequest)).error();
         return aliPayServiceImpl.processFirstPage(context, mixerCollectRecRequest).map(
 
                 re -> TacResult.newResult(re)

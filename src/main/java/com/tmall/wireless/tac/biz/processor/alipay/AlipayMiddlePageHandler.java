@@ -1,8 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.alipay;
 
+import com.alibaba.fastjson.JSON;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecResult;
 import com.alipay.tradecsa.common.service.spi.request.MiddlePageSPIRequest;
 import com.alipay.tradecsa.common.service.spi.response.MiddlePageSPIResponse;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.wireless.tac.biz.processor.alipay.service.IAliPayService;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -34,6 +36,8 @@ public class AlipayMiddlePageHandler extends RpmReactiveHandler<MiddlePageSPIRes
             return Flowable.just(TacResult.newResult(middlePageSPIResponse));
         }
         MiddlePageSPIRequest middlePageSPIRequest = (MiddlePageSPIRequest) param;
+
+        HadesLogUtil.stream("AlipayMiddlePageHandler").kv("request", JSON.toJSONString(middlePageSPIRequest)).error();
         return aliPayServiceImpl.processMiddlePage(context, middlePageSPIRequest).map(TacResult::newResult);
     }
 }

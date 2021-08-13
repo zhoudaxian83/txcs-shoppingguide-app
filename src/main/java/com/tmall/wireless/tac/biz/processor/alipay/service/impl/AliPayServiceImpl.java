@@ -149,6 +149,7 @@ public class AliPayServiceImpl implements IAliPayService {
             PageFloorResultDetailDTO pageFloorResultDetailDTO = new PageFloorResultDetailDTO();
             pageFloorResultDTO.setPageFloorResultDetailDTO(pageFloorResultDetailDTO);
             PageFloorAtomicResultDTO pageFloorAtomicResultDTO1 = new PageFloorAtomicResultDTO();
+            pageFloorAtomicResultDTO1.setAtomCardTemplateId("原子模版ID");
             pageFloorResultDetailDTO.setPageFloorAtomicResultDTOList(Lists.newArrayList(pageFloorAtomicResultDTO1));
             List<JSONObject> cardData1 = Lists.newArrayList();
             pageFloorAtomicResultDTO1.setCardData(cardData1);
