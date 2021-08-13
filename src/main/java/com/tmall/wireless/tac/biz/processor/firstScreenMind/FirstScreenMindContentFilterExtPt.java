@@ -67,6 +67,7 @@ public class FirstScreenMindContentFilterExtPt implements ContentFilterExtPt {
                             "CONTENT_FILTER_BY_ITEM" + "," + contentId + "");
                 }
             });
+            contentListAfterFilter = = Lists.newArrayList();
             if(CollectionUtils.isEmpty(contentListAfterFilter)){
                 LogUtil.errorCode(contentFilterRequest.getSgFrameworkContextContent().getBizScenario().getUniqueIdentity(),
                     "CONTENT_FILTER_RESULT_EMPTY",
