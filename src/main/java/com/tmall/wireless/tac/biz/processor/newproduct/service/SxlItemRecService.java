@@ -88,7 +88,12 @@ public class SxlItemRecService {
         Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,0L);
         /**招商主活动id-管道tair key**/
         String activityId = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.SXL_MAIN_ACTIVITY_ID,"");
-        LOGGER.error("activityId:{}", JSON.toJSONString(activityId));
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+            .kv("SxlItemRecService itemSetIdSw",JSON.toJSONString(itemSetIdSw))
+            .kv("SxlItemRecService itemSetIdAlgSw",JSON.toJSONString(itemSetIdAlgSw))
+            .kv("SxlItemRecService itemSetId",JSON.toJSONString(itemSetId))
+            .kv("SxlItemRecService activityId",activityId)
+            .info();
         if(StringUtils.isBlank(activityId)){
             /**算法选品接入ab实验**/
             String itemSetIdType = getAbData(context);
@@ -221,8 +226,8 @@ public class SxlItemRecService {
                 .kv("SxlItemRecService abTestRest",JSON.toJSONString(abTestRest))
                 .info();
             abTestRest.forEach(variation ->{
-                if("SM_NEW_ARRIVAL".equals(variation.get("bizType")) &&
-                    "102".equals(variation.get("tclsExpId"))){
+                if(SxlSwitch.getValue("SM_NEW_ARRIVAL").equals(variation.get("bizType")) &&
+                    SxlSwitch.getValue("SXL_ALG_ITEMSET_ID_AB").equals(variation.get("tclsExpId"))){
                     if(variation.get("itemSetId") != null)
                     itemSetIdType.append(String.valueOf(variation.get("itemSetId")));
 

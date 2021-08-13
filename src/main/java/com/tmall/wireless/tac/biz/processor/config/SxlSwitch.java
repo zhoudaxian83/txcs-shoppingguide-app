@@ -33,7 +33,7 @@ public class SxlSwitch {
     public static String SM_NEW_ARRIVAL = "SM_NEW_ARRIVAL";
 
     @AppSwitch(des = "上新了超市算法选品ab实验id", level = Switch.Level.p4)
-    public static Long SXL_ALG_ITEMSET_ID_AB = 102L;
+    public static String SXL_ALG_ITEMSET_ID_AB = "102";
 
     public static String getValue(String key){
 
