@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 import com.alibaba.cola.extension.Extension;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.filter.ContentFilterExtPt;
 import com.tmall.txcs.gs.framework.extensions.filter.ContentFilterRequest;
 import com.tmall.txcs.gs.framework.model.ContentVO;
@@ -66,14 +67,12 @@ public class FirstScreenMindContentFilterExtPt implements ContentFilterExtPt {
                             "CONTENT_FILTER_BY_ITEM" + "," + contentId + "");
                 }
             });
-
-            if (!CollectionUtils.isEmpty(contentListAfterFilter)) {
-                contentVOSgFrameworkResponse.setItemAndContentList(contentListAfterFilter);
-            } else {
+            if(CollectionUtils.isEmpty(contentListAfterFilter)){
                 LogUtil.errorCode(contentFilterRequest.getSgFrameworkContextContent().getBizScenario().getUniqueIdentity(),
-                        "CONTENT_FILTER_RESULT_EMPTY",
-                        "");
+                    "CONTENT_FILTER_RESULT_EMPTY",
+                    "");
             }
+            contentVOSgFrameworkResponse.setItemAndContentList(contentListAfterFilter);
             return contentVOSgFrameworkResponse;
 
         } catch (Exception e) {
