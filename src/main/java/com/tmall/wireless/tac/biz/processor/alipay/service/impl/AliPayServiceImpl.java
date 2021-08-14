@@ -11,7 +11,10 @@ import com.alipay.recmixer.common.service.facade.model.CategoryContentRet;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecRequest;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecResult;
 import com.alipay.recmixer.common.service.facade.model.ServiceContentRec;
+import com.alipay.tradecsa.common.service.spi.request.MiddlePageFloorDTO;
 import com.alipay.tradecsa.common.service.spi.request.MiddlePageSPIRequest;
+import com.alipay.tradecsa.common.service.spi.request.PageFloorAtomicDTO;
+import com.alipay.tradecsa.common.service.spi.request.PageFloorDetailDTO;
 import com.alipay.tradecsa.common.service.spi.response.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -25,6 +28,9 @@ import com.tmall.wireless.store.spi.user.base.UicDeliverAddressBO;
 import com.tmall.wireless.tac.biz.processor.alipay.constant.AliPayConstant;
 import com.tmall.wireless.tac.biz.processor.alipay.service.IAliPayService;
 import com.tmall.wireless.tac.biz.processor.alipay.service.ext.AliPayFirstPageBuildItemVoSdkExtPt;
+import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.AtomicCardProcessRequest;
+import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.AtomicCardProcessorFactory;
+import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.IAtomicCardProcessor;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
@@ -34,6 +40,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -42,6 +49,8 @@ import static java.lang.String.valueOf;
 @Service("aliPayServiceImpl")
 public class AliPayServiceImpl implements IAliPayService {
 
+    @Autowired
+    AtomicCardProcessorFactory atomicCardProcessorFactory;
 
     public static final String itemSetAldKey = "itemSet";
     public static final String hookItemSetAldKey = "hookItemSet";
@@ -117,7 +126,7 @@ public class AliPayServiceImpl implements IAliPayService {
 
         GeneralItem aldData = getAldData(357133924L, "330100");
 
-        MiddlePageSPIResponse middlePageSPIResponse1 = new MiddlePageSPIResponse();
+        MiddlePageSPIResponse middlePageSPIResponse = new MiddlePageSPIResponse();
 
         // 头部区
         PageFloorHeaderDTO pageFloorHeaderDTO = new PageFloorHeaderDTO();
@@ -133,16 +142,37 @@ public class AliPayServiceImpl implements IAliPayService {
         pageFloorNavigationDTO.setTitleImage(aldData.getString(navigationIconPicAldKey));
         pageFloorNavigationDTO.setStyle("light");
         pageFloorNavigationDTO.setTitleLightImageUrl(aldData.getString(navigationIconPicAldKey));
-        middlePageSPIResponse1.setPageFloorNavigationDTO(pageFloorNavigationDTO);
+        middlePageSPIResponse.setPageFloorNavigationDTO(pageFloorNavigationDTO);
 
         BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 ScenarioConstantApp.SCENARIO_ALI_PAY_FIRST_PAGE);
 
 
-         return shoppingguideSdkItemService.recommend(context, bizScenario).map(re -> {
+        return shoppingguideSdkItemService.recommend(context, bizScenario).map(re -> {
 
             List<ItemEntityVO> itemAndContentList = re.getItemAndContentList();
+            List<PageFloorResultDTO> floorResultDTOS = Lists.newArrayList();
+            middlePageSPIRequest.getMiddlePageFloorDTOList().forEach(middlePageFloorDTO -> {
+
+
+                PageFloorResultDTO pageFloorResultDTO = new PageFloorResultDTO();
+                pageFloorResultDTO.setPageFloorId(middlePageFloorDTO.getPageFloorId());
+
+                List<PageFloorAtomicDTO> pageFloorAtomicDTOS = Optional.of(middlePageFloorDTO).map(MiddlePageFloorDTO::getPageFloorDetailDTO).map(PageFloorDetailDTO::getPageFloorAtomicDTOList).orElse(Lists.newArrayList());
+                List<PageFloorAtomicResultDTO> pageFloorAtomicResultDTOList = pageFloorAtomicDTOS.stream()
+                        .map(this::processAtomic)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+                PageFloorResultDetailDTO pageFloorResultDetailDTO = new PageFloorResultDetailDTO();
+                pageFloorResultDetailDTO.setPageFloorAtomicResultDTOList(pageFloorAtomicResultDTOList);
+                pageFloorResultDTO.setPageFloorResultDetailDTO(pageFloorResultDetailDTO);
+
+                floorResultDTOS.add(pageFloorResultDTO);
+
+            });
+
+            middlePageSPIResponse.setPageFloorResultDTOList(floorResultDTOS);
 
             PageFloorResultDTO pageFloorResultDTO = new PageFloorResultDTO();
             pageFloorResultDTO.setPageFloorId("111");
@@ -150,9 +180,11 @@ public class AliPayServiceImpl implements IAliPayService {
             pageFloorResultDTO.setPageFloorResultDetailDTO(pageFloorResultDetailDTO);
             PageFloorAtomicResultDTO pageFloorAtomicResultDTO1 = new PageFloorAtomicResultDTO();
             pageFloorAtomicResultDTO1.setAtomCardTemplateId("原子模版ID");
+            pageFloorAtomicResultDTO1.setDataId("???");
             pageFloorResultDetailDTO.setPageFloorAtomicResultDTOList(Lists.newArrayList(pageFloorAtomicResultDTO1));
             List<JSONObject> cardData1 = Lists.newArrayList();
             pageFloorAtomicResultDTO1.setCardData(cardData1);
+            cardData1.add(itemAndContentList.get(0));
             cardData1.add(itemAndContentList.get(0));
 
 
@@ -167,12 +199,25 @@ public class AliPayServiceImpl implements IAliPayService {
             cardData2.addAll(itemAndContentList);
             pageFloorAtomicResultDTO2.setCardData(cardData2);
 
-            middlePageSPIResponse1.setPageFloorResultDTOList(Lists.newArrayList(pageFloorResultDTO2, pageFloorResultDTO));
+            middlePageSPIResponse.setPageFloorResultDTOList(Lists.newArrayList(pageFloorResultDTO2, pageFloorResultDTO));
 
 
-            return middlePageSPIResponse1;
+            return middlePageSPIResponse;
         });
 
+    }
+
+    private PageFloorAtomicResultDTO processAtomic(PageFloorAtomicDTO pageFloorAtomicDTO) {
+
+        IAtomicCardProcessor processorByFloorId = atomicCardProcessorFactory.getProcessorByFloorId(pageFloorAtomicDTO.getAtomCardTemplateId());
+        if (processorByFloorId == null) {
+            return null;
+        }
+
+        AtomicCardProcessRequest atomicCardProcessRequest = new AtomicCardProcessRequest();
+        atomicCardProcessRequest.setPageFloorAtomicDTO(pageFloorAtomicDTO);
+
+        return processorByFloorId.process(atomicCardProcessRequest);
     }
 
 
