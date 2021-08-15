@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-//@Service
+@Service
 @SdkPackage(packageName = PackageNameKey.CONTENT_FEEDS)
 public class SceneFeedsContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
     @Override
