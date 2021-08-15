@@ -94,35 +94,41 @@ public class SxlItemRecService {
             .kv("SxlItemRecService itemSetId",JSON.toJSONString(itemSetId))
             .kv("SxlItemRecService activityId",activityId)
             .info();
-        if(StringUtils.isBlank(activityId)){
-            /**算法选品接入ab实验**/
-            String itemSetIdType = getAbData(context);
-            if(!StringUtils.isBlank(itemSetIdType)){
-                if("old".equals(itemSetIdType)){
-                    activityId = String.valueOf(itemSetIdSw);
-                }else if("new".equals(itemSetIdType)){
-                    activityId = itemSetIdSw + "," + itemSetIdAlgSw;
-                }else{
-                    activityId = String.valueOf(itemSetIdSw);
-                }
-            }else{
-                /**格物不支持未登录用户的ab能力，未登录用户默认走人工选品**/
-                activityId = String.valueOf(itemSetIdSw);
-            }
-        }
 
         String topItemIds = MapUtil.getStringWithDefault(context.getParams(), "itemIds","");
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetSource("crm");
-        if(itemSetId > 0){
+        /**主题系列新品承接页**/
+        if(!StringUtils.isBlank(activityId) && itemSetId > 0){
             entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
+            sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(activityId)));
         }else {
-            List<Long> itemSetIds = Lists.newArrayList();
-            itemSetIds.add(itemSetIdSw);
-            itemSetIds.add(itemSetIdAlgSw);
-            entitySetParams.setItemSetIdList(itemSetIds);
+            /**算法选品接入ab实验**/
+            String itemSetIdType = getAbData(context);
+            if(!StringUtils.isBlank(itemSetIdType)){
+                if("old".equals(itemSetIdType)){
+                    entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetIdSw));
+                    sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(String.valueOf(itemSetIdSw))));
+                }else if("new".equals(itemSetIdType)){
+                    List<Long> itemSetIds = Lists.newArrayList();
+                    itemSetIds.add(itemSetIdSw);
+                    itemSetIds.add(itemSetIdAlgSw);
+                    entitySetParams.setItemSetIdList(itemSetIds);
+                    List<String> activityIds = Lists.newArrayList();
+                    activityIds.add(String.valueOf(itemSetIdSw));
+                    activityIds.add(String.valueOf(itemSetIdAlgSw));
+                    sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(activityIds));
+                }else{
+                    entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetIdSw));
+                    sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(String.valueOf(itemSetIdSw))));
+                }
+            }else{
+                /**格物不支持未登录用户的ab能力，未登录用户默认走人工选品**/
+                activityId = String.valueOf(itemSetIdSw);
+                sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(String.valueOf(itemSetIdSw))));
+            }
         }
         sgFrameworkContextItem.setRequestParams(context.getParams());
         sgFrameworkContextItem.setEntitySetParams(entitySetParams);
@@ -143,8 +149,6 @@ public class SxlItemRecService {
         sgFrameworkContextItem.setLocParams(CsaUtil
             .parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
 
-        sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(activityId));
-
         PageInfoDO pageInfoDO = new PageInfoDO();
         String index = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "0");
         String pageSize = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.PAGE_SIZE, "20");
@@ -162,7 +166,7 @@ public class SxlItemRecService {
 
     }
 
-    private static ItemMetaInfo getItemMetaInfo(String activityId) {
+    private static ItemMetaInfo getItemMetaInfo(List<String> activityIds) {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
@@ -170,12 +174,13 @@ public class SxlItemRecService {
         itemGroupMetaInfoList.add(itemGroupMetaInfo1);
         itemGroupMetaInfo1.setGroupName("sm_B2C");
         itemGroupMetaInfo1.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-        itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
-        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(activityId));
-
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
+        for(int i=0;i<activityIds.size();i++){
+            ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
+            itemInfoSourceMetaInfoCaptain.setSourceName("captain");
+            itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
+            itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(activityIds.get(i)));
+            itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
+        }
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
@@ -206,6 +211,11 @@ public class SxlItemRecService {
         return dataTubeMateInfo;
     }
 
+    /**
+     * 获取ab数据
+     * @param context
+     * @return
+     */
     private String getAbData(Context context){
         StringBuilder itemSetIdType = new StringBuilder();
         LOGGER.error("itemSetIdType:{}", JSON.toJSONString(itemSetIdType));
