@@ -36,10 +36,8 @@ public class SceneFeedsContentOriginDataRequestBuildSdkExtPt extends Register im
                 map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO)
                 .map(UserDO::getUserId).orElse(0L));
         tppRequest.setAppId(25379L);
-        Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
-        if (requestParams == null || requestParams.isEmpty()) {
-            return null;
-        }
+
+
         List<Long> contentSetIdList = Lists.newArrayList(182011L);
         List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id)
                 .collect(
