@@ -17,6 +17,7 @@ import com.tmall.aselfcommon.model.scene.enums.SceneType;
 import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkPackage;
+import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.contentinfo.ContentInfoQuerySdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.Response;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
 
 @Service
 @SdkPackage(packageName = PackageNameKey.CONTENT_FEEDS)
-public class SceneFeedsContentInfoQuerySdkExtPt implements ContentInfoQuerySdkExtPt {
+public class SceneFeedsContentInfoQuerySdkExtPt extends Register implements ContentInfoQuerySdkExtPt {
     Logger LOGGER = LoggerFactory.getLogger(SceneFeedsContentInfoQuerySdkExtPt.class);
 
     @Autowired
