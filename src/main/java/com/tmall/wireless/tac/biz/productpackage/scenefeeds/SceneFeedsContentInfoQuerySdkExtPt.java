@@ -38,10 +38,10 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//@Service
+@Service
 @SdkPackage(packageName = PackageNameKey.CONTENT_FEEDS)
 public class SceneFeedsContentInfoQuerySdkExtPt extends Register implements ContentInfoQuerySdkExtPt {
-    Logger LOGGER = LoggerFactory.getLogger(SceneFeedsContentInfoQuerySdkExtPt.class);
+//    Logger LOGGER = LoggerFactory.getLogger(SceneFeedsContentInfoQuerySdkExtPt.class);
 
     @Autowired
     TairFactorySpi tairFactorySpi;
