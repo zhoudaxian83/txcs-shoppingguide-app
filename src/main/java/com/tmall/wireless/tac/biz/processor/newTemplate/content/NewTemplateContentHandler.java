@@ -6,6 +6,7 @@ import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkContentService;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
+import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -26,6 +27,7 @@ public class NewTemplateContentHandler extends RpmReactiveHandler<SgFrameworkRes
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 "CONTENT_TEST"
         );
+        b.addProducePackage(PackageNameKey.CONTENT_FEEDS);
         return shoppingguideSdkContentService.recommend0(context, b).map(TacResult::newResult);
     }
 }
