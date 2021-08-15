@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 public class SceneFeedsContentInfoQuerySdkExtPt implements ContentInfoQuerySdkExtPt {
     Logger LOGGER = LoggerFactory.getLogger(SceneFeedsContentInfoQuerySdkExtPt.class);
 
-    @Resource
+    @Autowired
     TairFactorySpi tairFactorySpi;
     private static final int labelSceneNamespace = 184;
 
