@@ -5,7 +5,6 @@ import com.ali.com.google.common.collect.Lists;
 import com.ali.com.google.common.collect.Maps;
 import com.alibaba.common.logging.Logger;
 import com.alibaba.common.logging.LoggerFactory;
-import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.taobao.tair.DataEntry;
@@ -34,6 +33,7 @@ import io.reactivex.Flowable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
