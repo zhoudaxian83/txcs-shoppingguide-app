@@ -69,6 +69,7 @@ public class IconRecommendClassifierContentInfoQueryExtPt implements ContentInfo
             }
 
             Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
+            logger.info("[ClassfierContentInfoQueryExtPt] sKeyList: " + sKeyList);
             logger.info("[ClassfierContentInfoQueryExtPt] mgetResult:" + mgetResult.getValue());
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail(""));
