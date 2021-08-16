@@ -81,10 +81,18 @@ public class OriginDataRequestItemFeeds implements OriginDataRequest{
     private String getModuleId(Optional<Map> requestParams) {
 
         String moduleId = requestParams.map(entry -> entry.get("moduleId")).orElse("").toString();
-        if (StringUtils.isNotEmpty(moduleId)) {
+        String contentId = requestParams.map(entry -> entry.get("contentId")).orElse("").toString();
+        String exposureContentIds = requestParams.map(entry -> entry.get("exposureContentIds")).orElse("").toString();
+        if (StringUtils.isNotBlank(moduleId)) {
             return moduleId;
+        }else if(StringUtils.isNotBlank(contentId)){
+            return contentId;
+        }else if(StringUtils.isNotBlank(exposureContentIds)){
+            /**榜单更多承接页**/
+            String exposureContentId = exposureContentIds.split(",")[0];
+            return exposureContentId;
         }
-        return requestParams.map(entry -> entry.get("contentId")).orElse("").toString();
+        return contentId;
     }
 
     private boolean isO2oScene(SgFrameworkContext sgFrameworkContext) {
