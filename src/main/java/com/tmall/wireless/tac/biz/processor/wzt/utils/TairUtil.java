@@ -55,13 +55,13 @@ public class TairUtil {
             TairManager defaultTair = tairFactorySpi.getDefaultTair();
             if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null) {
                 tacLogger.warn(
-                    LOG_PREFIX + "缓存异常，cacheKey: " + cacheKey);
+                        LOG_PREFIX + "缓存异常，cacheKey: " + cacheKey);
                 return null;
             }
             Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(NAME_SPACE,
-                cacheKey);
+                    cacheKey);
             if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
-                && dataEntryResult.getValue().getValue() != null) {
+                    && dataEntryResult.getValue().getValue() != null) {
                 return dataEntryResult.getValue().getValue();
             } else {
                 tacLogger.info(LOG_PREFIX + "getCache获取缓存为空，cacheKey: " + cacheKey);
@@ -81,7 +81,7 @@ public class TairUtil {
                 return false;
             }
             ResultCode resultCode = defaultTair.getMultiClusterTairManager().put(NAME_SPACE,
-                cacheKey, JSON.toJSONString(data), 0, 60 * 30);
+                    cacheKey, JSON.toJSONString(data), 0, 60 * 30);
             if (resultCode.isSuccess()) {
                 return true;
             } else {
@@ -102,7 +102,7 @@ public class TairUtil {
      */
     public List<ColumnCenterDataSetItemRuleDTO> getOriginalRecommend(Long smAreaId) {
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = getCachePmtRuleDataItemRuleDTOList(smAreaId);
-        tacLogger.info("验证定投数据_排序前："+JSON.toJSONString(pmtRuleDataItemRuleDTOS));
+        tacLogger.info("验证定投数据_排序前：" + JSON.toJSONString(pmtRuleDataItemRuleDTOS));
         Long stickMax = 10000L;
         if (com.ali.unit.rule.util.lang.CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOS)) {
             tacLogger.info(LOG_PREFIX + "getOriginalRecommend获取tair原始数据为空，请检查tair数据源配置");
@@ -110,11 +110,11 @@ public class TairUtil {
         } else {
             try {
                 com.tmall.wireless.tac.biz.processor.wzt.model.PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = JSON
-                    .parseObject(
-                        JSON.toJSON(pmtRuleDataItemRuleDTOS.get(0)).toString(),
-                        com.tmall.wireless.tac.biz.processor.wzt.model.PmtRuleDataItemRuleDTO.class);
+                        .parseObject(
+                                JSON.toJSON(pmtRuleDataItemRuleDTOS.get(0)).toString(),
+                                com.tmall.wireless.tac.biz.processor.wzt.model.PmtRuleDataItemRuleDTO.class);
                 List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS = pmtRuleDataItemRuleDTO
-                    .getDataSetItemRuleDTOList();
+                        .getDataSetItemRuleDTOList();
                 columnCenterDataSetItemRuleDTOS.forEach(item -> {
                     if (item.getDataRule().getStick() != null) {
                         item.setIndex(item.getDataRule().getStick());
@@ -122,9 +122,10 @@ public class TairUtil {
                         item.setIndex(stickMax);
                     }
                 });
-                return columnCenterDataSetItemRuleDTOS.stream().sorted(
-                    Comparator.comparing(ColumnCenterDataSetItemRuleDTO::getIndex)).collect(
-                    Collectors.toList());
+//                return columnCenterDataSetItemRuleDTOS.stream().sorted(
+//                    Comparator.comparing(ColumnCenterDataSetItemRuleDTO::getIndex)).collect(
+//                    Collectors.toList());
+                return columnCenterDataSetItemRuleDTOS;
             } catch (Exception e) {
                 tacLogger.error(LOG_PREFIX + "getOriginalRecommend获取tair原始items异常", e);
             }
@@ -143,7 +144,7 @@ public class TairUtil {
             cacheKey = cacheKey + "_pre";
         }
         try {
-            return (List<PmtRuleDataItemRuleDTO>)getCache(cacheKey);
+            return (List<PmtRuleDataItemRuleDTO>) getCache(cacheKey);
         } catch (Exception e) {
             tacLogger.error(LOG_PREFIX + "getTairItems数据转换异常：smAreaId：" + smAreaId, e);
         }
@@ -153,7 +154,7 @@ public class TairUtil {
     public String getChannelKey(Long smAreaId) {
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = getCachePmtRuleDataItemRuleDTOList(smAreaId);
         if (CollectionUtils.isNotEmpty(pmtRuleDataItemRuleDTOList) && pmtRuleDataItemRuleDTOList.get(0)
-            .getPmtRuleDataSetDTO() != null) {
+                .getPmtRuleDataSetDTO() != null) {
             String promotionExtension = pmtRuleDataItemRuleDTOList.get(0).getPmtRuleDataSetDTO().getExtension();
             Map<String, Object> extensionMap = TodayCrazyUtils.parseExtension(promotionExtension, "\\|", "\\=", true);
             String channelKey = MapUtil.getStringWithDefault(extensionMap, "channelKey", VoKeyConstantApp.CHANNEL_KEY);
@@ -178,7 +179,7 @@ public class TairUtil {
         if (o == null) {
             return null;
         }
-        return JSON.parseObject((String)o, new TypeReference<OriginDataDTO<ItemEntity>>() {
+        return JSON.parseObject((String) o, new TypeReference<OriginDataDTO<ItemEntity>>() {
         });
     }
 
@@ -194,7 +195,7 @@ public class TairUtil {
             return false;
         }
         return setCache(originDataDTO,
-            logicalArea.getCacheKey() + AREA_SORT_SUFFIX);
+                logicalArea.getCacheKey() + AREA_SORT_SUFFIX);
     }
 
 }
