@@ -102,6 +102,7 @@ public class TairUtil {
      */
     public List<ColumnCenterDataSetItemRuleDTO> getOriginalRecommend(Long smAreaId) {
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = getCachePmtRuleDataItemRuleDTOList(smAreaId);
+        tacLogger.info("验证定投数据_排序前："+JSON.toJSONString(pmtRuleDataItemRuleDTOS));
         Long stickMax = 10000L;
         if (com.ali.unit.rule.util.lang.CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOS)) {
             tacLogger.info(LOG_PREFIX + "getOriginalRecommend获取tair原始数据为空，请检查tair数据源配置");

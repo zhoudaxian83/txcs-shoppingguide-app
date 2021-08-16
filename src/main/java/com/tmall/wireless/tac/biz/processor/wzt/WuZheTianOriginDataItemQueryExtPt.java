@@ -9,6 +9,7 @@ import com.alibaba.cola.extension.Extension;
 
 import com.ali.com.google.common.base.Joiner;
 import com.ali.unit.rule.util.lang.CollectionUtils;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -48,6 +49,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     RecommendSpi recommendSpi;
 
+    @Autowired
+    TacLogger tacLogger;
+
     /**
      * 分大区个性化排序后商品缓存后缀
      */
@@ -67,6 +71,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //tair获取推荐商品
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
             smAreaId);
+        tacLogger.info("验证定投数据_排序后："+ JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
         List<Long> items = columnCenterDataSetItemRuleDTOList.stream().map(
             ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
         dataContext.setItems(items);
