@@ -1,8 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.cola.extension.Extension;
@@ -10,6 +8,7 @@ import com.alibaba.cola.extension.Extension;
 import com.ali.com.google.common.base.Joiner;
 import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -25,6 +24,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.DataContext;
+import com.tmall.wireless.tac.biz.processor.wzt.model.SortItemEntity;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.LogicPageUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.SmAreaIdUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
@@ -72,9 +72,13 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
                 smAreaId);
         tacLogger.info("验证定投数据_排序后：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
-        List<Long> items = columnCenterDataSetItemRuleDTOList.stream().map(
-                ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
-        dataContext.setItems(items);
+        //获取id和排序信息
+        Map<Long, Long> stringLongMap = new HashMap<>(16);
+        List<Long> items = Lists.newArrayList();
+        columnCenterDataSetItemRuleDTOList.forEach(columnCenterDataSetItemRuleDTO -> {
+            stringLongMap.put(columnCenterDataSetItemRuleDTO.getItemId(), columnCenterDataSetItemRuleDTO.getIndex());
+            items.add(columnCenterDataSetItemRuleDTO.getItemId());
+        });
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
                 .map(recommendResponseEntityResponse -> {
                     if (!recommendResponseEntityResponse.isSuccess()
@@ -83,9 +87,26 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                         return new OriginDataDTO<>();
                     }
                     OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
+                    this.sortItemEntityList(originDataDTO, stringLongMap);
                     tacLogger.info("分页前_排序：" + JSON.toJSONString(originDataDTO));
                     return this.getItemPage(originDataDTO, dataContext);
                 });
+    }
+
+    private void sortItemEntityList(OriginDataDTO<ItemEntity> originDataDTO, Map<Long, Long> stringLongMap) {
+        List<SortItemEntity> sortItemEntityList = Lists.newArrayList();
+        originDataDTO.getResult().forEach(itemEntity -> {
+            SortItemEntity sortItemEntity = new SortItemEntity();
+            sortItemEntity.setItemEntity(itemEntity);
+            sortItemEntity.setIndex(stringLongMap.get(itemEntity.getItemId()));
+            sortItemEntityList.add(sortItemEntity);
+        });
+        List<SortItemEntity> sortItemEntityList2 = sortItemEntityList.stream().sorted(
+                Comparator.comparing(SortItemEntity::getIndex)).collect(
+                Collectors.toList());
+        List<ItemEntity> itemEntityList = sortItemEntityList2.stream().map(
+                SortItemEntity::getItemEntity).collect(Collectors.toList());
+        originDataDTO.setResult(itemEntityList);
     }
 
     /**
@@ -114,6 +135,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @return
      */
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
+
         Pair<Boolean, List<ItemEntity>> pair = LogicPageUtil.getPage(originDataDTO.getResult(), dataContext.getIndex(),
                 dataContext.getPageSize());
         List<ItemEntity> itemEntities = pair.getRight();
