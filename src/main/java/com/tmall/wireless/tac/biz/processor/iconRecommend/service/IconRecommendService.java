@@ -52,7 +52,7 @@ public class IconRecommendService {
         sgFrameworkContextContent.setUserDO(getUserDO(context));
         sgFrameworkContextContent.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA),
                 MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L)));
-        sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo());
+        sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo(recommendContent));
 
         PageInfoDO pageInfoDO = new PageInfoDO();
         String index = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "0");
@@ -69,10 +69,8 @@ public class IconRecommendService {
         sceneInfo.setSubBiz(ScenarioConstantApp.LOC_TYPE_B2C);
         if (recommendContent.equals(ConstantValue.CLASSIFIER_WORD)) {
             sceneInfo.setScene(ScenarioConstantApp.SCENARIO_ICON_RECOMMEND_CLASSIFIER);
-        } else if (recommendContent.equals(ConstantValue.SCENE_WORD)){
+        } else if (recommendContent.equals(ConstantValue.SCENE_WORD)) {
             sceneInfo.setScene(ScenarioConstantApp.SCENARIO_ICON_RECOMMEND_SCENE);
-        } else {
-            logger.info("Scene is empty.");
         }
         return sceneInfo;
     }
@@ -92,7 +90,7 @@ public class IconRecommendService {
         return userDO;
     }
 
-    public ContentMetaInfo getContentMetaInfo() {
+    public ContentMetaInfo getContentMetaInfo(String recommendContent) {
 
         ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
         // TPP
@@ -119,7 +117,7 @@ public class IconRecommendService {
 
         contentMetaInfo.setItemMetaInfo(itemMetaInfo);
         ContentRecommendMetaInfo contentRecommendMetaInfo = new ContentRecommendMetaInfo();
-        contentRecommendMetaInfo.setUseRecommendSpiV2(true);
+        contentRecommendMetaInfo.setUseRecommendSpiV2(!recommendContent.equals(ConstantValue.CLASSIFIER_WORD));
         contentMetaInfo.setContentRecommendMetaInfo(contentRecommendMetaInfo);
         return contentMetaInfo;
     }
