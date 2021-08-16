@@ -35,6 +35,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -113,7 +114,7 @@ public class AliPayServiceImpl implements IAliPayService {
                     categoryContentRet.setSubTitle(aldData.getString(fpServiceTextAldKey));
                     categoryContentRet.setActionImgUrl(aldData.getString(fpServiceTextAldKey));
                     categoryContentRet.setServiceList(serviceContentRecList);
-                    List<ServiceContentRec> collect = re.getItemAndContentList().stream().map(this::convert).collect(Collectors.toList());
+                    List<ServiceContentRec> collect = re.getItemAndContentList().stream().map(e -> convert(e, aldData)).collect(Collectors.toList());
                     categoryContentRet.setServiceList(collect);
                     categoryContentRet.setSuccess(true);
                     return mixerCollectRecResult;
@@ -221,19 +222,21 @@ public class AliPayServiceImpl implements IAliPayService {
     }
 
 
-    private ServiceContentRec convert(ItemEntityVO item) {
+    private ServiceContentRec convert(ItemEntityVO item, GeneralItem aldData) {
         ServiceContentRec serviceContentRec = new ServiceContentRec();
         serviceContentRec.setItemId(String.valueOf(item.getItemId()));
         serviceContentRec.setImgUrl(item.getString("itemImg"));
 
-        serviceContentRec.setTitle(item.getString("title"));
+        serviceContentRec.setTitle(item.getString("shortTitle"));
         serviceContentRec.setActionLink(item.getString("itemUrl"));
         serviceContentRec.setBizCode(AliPayConstant.BIZ_CODE);
         serviceContentRec.setSource(AliPayConstant.SOURCE);
 
+        String subTitle = item.getString(AliPayFirstPageBuildItemVoSdkExtPt.PROMOTION_POINT);
+        subTitle = StringUtils.isEmpty(subTitle) ? aldData.getString(itemLabelAldKey) : subTitle;
         Map<String, String> ext = Maps.newHashMap();
-        ext.put("subScript", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.PROMOTION_POINT));
-        ext.put("subTitle", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.PROMOTION_POINT));
+        ext.put("subScript", subTitle);
+        ext.put("subTitle", subTitle);
         ext.put("sellingPrice", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.SELLING_PRICE));
         ext.put("originPrice", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.ORIGIN_PRICE));
 
