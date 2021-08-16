@@ -109,87 +109,87 @@ public class AliPayServiceImpl implements IAliPayService {
     @Override
     public Flowable<MiddlePageSPIResponse> processMiddlePage(Context context, MiddlePageSPIRequest middlePageSPIRequest) {
 
-        return null;
-//        GeneralItem aldData = getAldData(357133924L, "330100");
-//
-//        MiddlePageSPIResponse middlePageSPIResponse = new MiddlePageSPIResponse();
-//
-//        // 头部区
-//        PageFloorHeaderDTO pageFloorHeaderDTO = new PageFloorHeaderDTO();
-//        pageFloorHeaderDTO.setType("image");
-//        pageFloorHeaderDTO.setTitle(aldData.getString(headSubTitleAldKey));
-//        pageFloorHeaderDTO.setSubtitle(aldData.getString(headSubTitleAldKey));
-//        pageFloorHeaderDTO.setBgColor(aldData.getString(headColorAldKey));
-//        pageFloorHeaderDTO.setSubTitleImgUrl(aldData.getString(headBgPicAldKey));
-//
-//        // 导航栏
-//        PageFloorNavigationDTO pageFloorNavigationDTO = new PageFloorNavigationDTO();
-//        pageFloorNavigationDTO.setTitle(aldData.getString(navigationTitleAldKey));
-//        pageFloorNavigationDTO.setTitleImage(aldData.getString(navigationIconPicAldKey));
-//        pageFloorNavigationDTO.setStyle("light");
-//        pageFloorNavigationDTO.setTitleLightImageUrl(aldData.getString(navigationIconPicAldKey));
-//        middlePageSPIResponse.setPageFloorNavigationDTO(pageFloorNavigationDTO);
-//
-//        BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-//                ScenarioConstantApp.LOC_TYPE_B2C,
-//                ScenarioConstantApp.SCENARIO_ALI_PAY_FIRST_PAGE);
-//
-//
-//        return shoppingguideSdkItemService.recommend(context, bizScenario).map(re -> {
-//
-//            List<ItemEntityVO> itemAndContentList = re.getItemAndContentList();
-//            List<PageFloorResultDTO> floorResultDTOS = Lists.newArrayList();
-//            middlePageSPIRequest.getMiddlePageFloorDTOList().forEach(middlePageFloorDTO -> {
-//
-//
-//                PageFloorResultDTO pageFloorResultDTO = new PageFloorResultDTO();
-//                pageFloorResultDTO.setPageFloorId(middlePageFloorDTO.getPageFloorId());
-//
-//                List<PageFloorAtomicDTO> pageFloorAtomicDTOS = Optional.of(middlePageFloorDTO).map(MiddlePageFloorDTO::getPageFloorDetailDTO).map(PageFloorDetailDTO::getPageFloorAtomicDTOList).orElse(Lists.newArrayList());
-//                List<PageFloorAtomicResultDTO> pageFloorAtomicResultDTOList = pageFloorAtomicDTOS.stream()
-//                        .map(this::processAtomic)
-//                        .filter(Objects::nonNull)
-//                        .collect(Collectors.toList());
-//                PageFloorResultDetailDTO pageFloorResultDetailDTO = new PageFloorResultDetailDTO();
-//                pageFloorResultDetailDTO.setPageFloorAtomicResultDTOList(pageFloorAtomicResultDTOList);
-//                pageFloorResultDTO.setPageFloorResultDetailDTO(pageFloorResultDetailDTO);
-//
-//                floorResultDTOS.add(pageFloorResultDTO);
-//
-//            });
-//
-//            middlePageSPIResponse.setPageFloorResultDTOList(floorResultDTOS);
-//
-//            PageFloorResultDTO pageFloorResultDTO = new PageFloorResultDTO();
-//            pageFloorResultDTO.setPageFloorId("111");
-//            PageFloorResultDetailDTO pageFloorResultDetailDTO = new PageFloorResultDetailDTO();
-//            pageFloorResultDTO.setPageFloorResultDetailDTO(pageFloorResultDetailDTO);
-//            PageFloorAtomicResultDTO pageFloorAtomicResultDTO1 = new PageFloorAtomicResultDTO();
-//            pageFloorAtomicResultDTO1.setAtomCardTemplateId("原子模版ID");
-//            pageFloorAtomicResultDTO1.setDataId("???");
-//            pageFloorResultDetailDTO.setPageFloorAtomicResultDTOList(Lists.newArrayList(pageFloorAtomicResultDTO1));
-//            List<JSONObject> cardData1 = Lists.newArrayList();
-//            pageFloorAtomicResultDTO1.setCardData(cardData1);
-//            cardData1.add(itemAndContentList.get(0));
-//            cardData1.add(itemAndContentList.get(0));
-//
-//
-//
-//            PageFloorResultDTO pageFloorResultDTO2 = new PageFloorResultDTO();
-//            pageFloorResultDTO2.setPageFloorId("222");
-//            PageFloorResultDetailDTO pageFloorResultDetailDTO2 = new PageFloorResultDetailDTO();
-//            pageFloorResultDTO2.setPageFloorResultDetailDTO(pageFloorResultDetailDTO2);
-//            PageFloorAtomicResultDTO pageFloorAtomicResultDTO2 = new PageFloorAtomicResultDTO();
-//            pageFloorResultDetailDTO2.setPageFloorAtomicResultDTOList(Lists.newArrayList(pageFloorAtomicResultDTO2));
-//            List<JSONObject> cardData2 = Lists.newArrayList();
-//            cardData2.addAll(itemAndContentList);
-//            pageFloorAtomicResultDTO2.setCardData(cardData2);
-//
-//            middlePageSPIResponse.setPageFloorResultDTOList(Lists.newArrayList(pageFloorResultDTO2, pageFloorResultDTO));
-//
-//
-//            return middlePageSPIResponse;
-//        });
+
+        GeneralItem aldData = aldService.getAldData(357133924L, "330100");
+
+        MiddlePageSPIResponse middlePageSPIResponse = new MiddlePageSPIResponse();
+
+        // 头部区
+        PageFloorHeaderDTO pageFloorHeaderDTO = new PageFloorHeaderDTO();
+        pageFloorHeaderDTO.setType("image");
+        pageFloorHeaderDTO.setTitle(aldData.getString(headSubTitleAldKey));
+        pageFloorHeaderDTO.setSubtitle(aldData.getString(headSubTitleAldKey));
+        pageFloorHeaderDTO.setBgColor(aldData.getString(headColorAldKey));
+        pageFloorHeaderDTO.setSubTitleImgUrl(aldData.getString(headBgPicAldKey));
+
+        // 导航栏
+        PageFloorNavigationDTO pageFloorNavigationDTO = new PageFloorNavigationDTO();
+        pageFloorNavigationDTO.setTitle(aldData.getString(navigationTitleAldKey));
+        pageFloorNavigationDTO.setTitleImage(aldData.getString(navigationIconPicAldKey));
+        pageFloorNavigationDTO.setStyle("light");
+        pageFloorNavigationDTO.setTitleLightImageUrl(aldData.getString(navigationIconPicAldKey));
+        middlePageSPIResponse.setPageFloorNavigationDTO(pageFloorNavigationDTO);
+
+        BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+                ScenarioConstantApp.LOC_TYPE_B2C,
+                ScenarioConstantApp.SCENARIO_ALI_PAY_FIRST_PAGE);
+
+
+        return shoppingguideSdkItemService.recommend(context, bizScenario).map(re -> {
+
+            List<ItemEntityVO> itemAndContentList = re.getItemAndContentList();
+            List<PageFloorResultDTO> floorResultDTOS = Lists.newArrayList();
+            middlePageSPIRequest.getMiddlePageFloorDTOList().forEach(middlePageFloorDTO -> {
+
+
+                PageFloorResultDTO pageFloorResultDTO = new PageFloorResultDTO();
+                pageFloorResultDTO.setPageFloorId(middlePageFloorDTO.getPageFloorId());
+
+                List<PageFloorAtomicDTO> pageFloorAtomicDTOS = Optional.of(middlePageFloorDTO).map(MiddlePageFloorDTO::getPageFloorDetailDTO).map(PageFloorDetailDTO::getPageFloorAtomicDTOList).orElse(Lists.newArrayList());
+                List<PageFloorAtomicResultDTO> pageFloorAtomicResultDTOList = pageFloorAtomicDTOS.stream()
+                        .map(this::processAtomic)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+                PageFloorResultDetailDTO pageFloorResultDetailDTO = new PageFloorResultDetailDTO();
+                pageFloorResultDetailDTO.setPageFloorAtomicResultDTOList(pageFloorAtomicResultDTOList);
+                pageFloorResultDTO.setPageFloorResultDetailDTO(pageFloorResultDetailDTO);
+
+                floorResultDTOS.add(pageFloorResultDTO);
+
+            });
+
+            middlePageSPIResponse.setPageFloorResultDTOList(floorResultDTOS);
+
+            PageFloorResultDTO pageFloorResultDTO = new PageFloorResultDTO();
+            pageFloorResultDTO.setPageFloorId("111");
+            PageFloorResultDetailDTO pageFloorResultDetailDTO = new PageFloorResultDetailDTO();
+            pageFloorResultDTO.setPageFloorResultDetailDTO(pageFloorResultDetailDTO);
+            PageFloorAtomicResultDTO pageFloorAtomicResultDTO1 = new PageFloorAtomicResultDTO();
+            pageFloorAtomicResultDTO1.setAtomCardTemplateId("原子模版ID");
+            pageFloorAtomicResultDTO1.setDataId("???");
+            pageFloorResultDetailDTO.setPageFloorAtomicResultDTOList(Lists.newArrayList(pageFloorAtomicResultDTO1));
+            List<JSONObject> cardData1 = Lists.newArrayList();
+            pageFloorAtomicResultDTO1.setCardData(cardData1);
+            cardData1.add(itemAndContentList.get(0));
+            cardData1.add(itemAndContentList.get(0));
+
+
+
+            PageFloorResultDTO pageFloorResultDTO2 = new PageFloorResultDTO();
+            pageFloorResultDTO2.setPageFloorId("222");
+            PageFloorResultDetailDTO pageFloorResultDetailDTO2 = new PageFloorResultDetailDTO();
+            pageFloorResultDTO2.setPageFloorResultDetailDTO(pageFloorResultDetailDTO2);
+            PageFloorAtomicResultDTO pageFloorAtomicResultDTO2 = new PageFloorAtomicResultDTO();
+            pageFloorResultDetailDTO2.setPageFloorAtomicResultDTOList(Lists.newArrayList(pageFloorAtomicResultDTO2));
+            List<JSONObject> cardData2 = Lists.newArrayList();
+            cardData2.addAll(itemAndContentList);
+            pageFloorAtomicResultDTO2.setCardData(cardData2);
+
+            middlePageSPIResponse.setPageFloorResultDTOList(Lists.newArrayList(pageFloorResultDTO2, pageFloorResultDTO));
+
+
+            return middlePageSPIResponse;
+        });
 
     }
 
