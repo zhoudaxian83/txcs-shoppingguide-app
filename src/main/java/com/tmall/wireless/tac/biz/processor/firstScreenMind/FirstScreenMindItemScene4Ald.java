@@ -31,6 +31,8 @@ import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +44,8 @@ import java.util.Optional;
 @Service
 public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
 
+    Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindItemScene4Ald.class);
+
     @Autowired
     TacLogger tacLogger;
     @Autowired
@@ -51,6 +55,10 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
     ContentInfoSupport contentInfoSupport;
 
     public Flowable<TacResult<List<GeneralItem>>> recommend4Ald(RequestContext4Ald requestContext4Ald) {
+
+        tacLogger.info("requestContext4Ald"+JSON.toJSONString(requestContext4Ald));
+        LOGGER.info("requestContext4Ald"+JSON.toJSONString(requestContext4Ald));
+
 
         Long smAreaId = MapUtil.getLongWithDefault(requestContext4Ald.getAldParam(), "smAreaId", 330100L);
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
