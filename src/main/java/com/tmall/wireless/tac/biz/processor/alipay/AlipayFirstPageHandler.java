@@ -31,13 +31,6 @@ public class AlipayFirstPageHandler extends RpmReactiveHandler<MixerCollectRecRe
     public Flowable<TacResult<MixerCollectRecResult>> executeFlowable(Context context) throws Exception {
 
         MixerCollectRecResult mixerCollectRecResult = new MixerCollectRecResult();
-        Object param = Optional.of(context).map(Context::getParams).map(m -> m.get(AlipayMiddlePageHandler.PARAM_KEY)).orElse(null);
-
-        if (!(param instanceof MixerCollectRecRequest)) {
-            mixerCollectRecResult.setErrorCode("PARAMS_IS_NULL");
-            return Flowable.just(TacResult.newResult(mixerCollectRecResult));
-        }
-        MixerCollectRecRequest mixerCollectRecRequest = (MixerCollectRecRequest) param;
 
         HadesLogUtil.stream("AlipayFirstPageHandler").kv("request", JSON.toJSONString(mixerCollectRecRequest)).error();
         return aliPayServiceImpl.processFirstPage(context, mixerCollectRecRequest).map(
