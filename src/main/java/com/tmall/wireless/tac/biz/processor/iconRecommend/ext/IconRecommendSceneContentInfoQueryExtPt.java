@@ -55,6 +55,7 @@ public class IconRecommendSceneContentInfoQueryExtPt implements ContentInfoQuery
 
     @Autowired
     TairFactorySpi tairFactorySpi;
+
     private static final int labelSceneNamespace = 184;
 
     @Override
@@ -154,21 +155,6 @@ public class IconRecommendSceneContentInfoQueryExtPt implements ContentInfoQuery
         return Flowable.just(Response.success(contentDTOMap));
     }
 
-
-//    private static String getItemSetIds(TairSceneDTO labelSceneContentInfo) {
-//
-//        List<SceneDetailValue> sceneDetailValues = Optional.ofNullable(labelSceneContentInfo)
-//                .map(TairSceneDTO::getDetails)
-//                .orElse(Lists.newArrayList());
-//
-//        if (CollectionUtils.isEmpty(sceneDetailValues)) {
-//            return "";
-//        }
-//
-//        List<Long> itemSetIds = sceneDetailValues.stream().map(SceneDetailValue::getItemsetId).collect(Collectors.toList());
-//        return Joiner.on(",").join(itemSetIds);
-//
-//    }
     private static List<SubContentModel> buildSubContentBaseInfoV2(Map<String, Object> contentInfo, TairSceneDTO labelSceneContentInfo){
 
         List<SceneDetailValue> details = labelSceneContentInfo.getDetails();
