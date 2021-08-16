@@ -183,9 +183,9 @@ public class FirstPageBannerItemInfoScene {
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
 
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoInv = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoInv.setSourceName("inventory");
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoInv);
+//        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoInv = new ItemInfoSourceMetaInfo();
+//        itemInfoSourceMetaInfoInv.setSourceName("inventory");
+//        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoInv);
 
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         return itemMetaInfo;

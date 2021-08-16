@@ -10,10 +10,9 @@
     <name>txcs-shoppingguide-app</name>
     <url>http://maven.apache.org</url>
 
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <common.rpm.version>1.0.7.1-SNAPSHOT</common.rpm.version>
+        <common.rpm.version>1.0.12</common.rpm.version>
     </properties>
 
 
@@ -35,28 +34,22 @@
             <artifactId>txcs-sg-base</artifactId>
             <version>${common.rpm.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.tmall.txcs</groupId>
             <artifactId>txcs-sg-spi</artifactId>
             <version>${common.rpm.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>com.tmall.txcs</groupId>
             <artifactId>txcs-sg-service</artifactId>
             <version>${common.rpm.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>5.2.11.RELEASE</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba.cola</groupId>
             <artifactId>cola-core</artifactId>
@@ -73,11 +66,38 @@
             <artifactId>cola-common</artifactId>
             <version>2.0.4</version>
         </dependency>
+        <dependency>
+            <groupId>com.taobao.tair</groupId>
+            <artifactId>tair-mc-client</artifactId>
+            <version>4.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.taobao.tair</groupId>
+            <artifactId>tair-client</artifactId>
+            <version>4.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.aladdin</groupId>
+            <artifactId>ald-lamp-client</artifactId>
+            <version>2.0.15</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.taobao.csp</groupId>
+            <artifactId>switchcenter</artifactId>
+            <version>2.1.1.2-fix-fastjson-noneautotype</version>
 <!--        <dependency>-->
 <!--            <groupId>com.tmall.aself</groupId>-->
 <!--            <artifactId>aselfmanager-client</artifactId>-->
 <!--            <version>1.0.26-RELEASE</version>-->
 <!--        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>com.tmall.aself</groupId>
             <artifactId>aselfmanager-client</artifactId>
@@ -91,31 +111,18 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.alibaba.cola</groupId>
-            <artifactId>cola-core</artifactId>
-            <version>2.0.4</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.logging</groupId>
-                    <artifactId>jboss-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.cola</groupId>
-            <artifactId>cola-common</artifactId>
-            <version>2.0.4</version>
-        </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
+            <groupId>com.taobao.freshx</groupId>
+            <artifactId>freshx-homepage-client</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.hyperlocalretail.sdk</groupId>
+            <artifactId>sdk-module-member-o2otbmc</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
 
     <build>
         <plugins>
