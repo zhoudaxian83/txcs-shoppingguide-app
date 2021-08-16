@@ -12,17 +12,15 @@ import org.springframework.stereotype.Service;
 public class CardHeadIAtomicCardProcessor implements IAtomicCardProcessor {
 
     public static final String TEMPLATE_JSON = "{\n" +
-            "  \"containerStyle\":{\n" +
-            "    \"backgroundColor\":\"#FFE5D3\",//背景色\n" +
-            "  },\n" +
-            "  \"image\": \"xxxxxx\",//百亿补贴图片的cloudid,\n" +
-            "  \"title\":\"<span style=\\\"font-size:15sp;color:#FF2F2D;font-weight:700\\\">特价门票</span>\",\n" +
-            "  \"dot\":\"<span style=\\\"font-size:12sp;color:#FE392F\\\">·</span>\",\n" +
-            "  \"subtitle\":\"<span style=\\\"font-size:12sp;color:#FE392F\\\">全网景点最低价</span>\",\n" +
-            "  \"scm\":\"xxxx\",\n" +
-            "  \"spmC\":\"xxx\",\n" +
-            "  \"hasBottomDivider\":\"true\",\n" +
-            "  \"rightImage\":\"\"\n" +
+            "\t\"containerStyle\": {\n" +
+            "\t\t\"backgroundColor\": \"#FFE5D3\"\n" +
+            "\t},\n" +
+            "\t\"title\": \"<span style=\\\"font-size:15sp;color:#FF2F2D;font-weight:700\\\">特价门票</span>\",\n" +
+            "\t\"dot\": \"<span style=\\\"font-size:12sp;color:#FE392F\\\">·</span>\",\n" +
+            "\t\"subtitle\": \"<span style=\\\"font-size:12sp;color:#FE392F\\\">全网景点最低价</span>\",\n" +
+            "\t\"scm\": \"xxxx\",\n" +
+            "\t\"spmC\": \"xxx\",\n" +
+            "\t\"hasBottomDivider\": \"true\"\n" +
             "}";
 
     @Override
