@@ -50,33 +50,22 @@ public class IconRecommendClassifierWordOriginDataRequestExtPt implements Conten
         recommendRequest.setLogResult(true);
 
         Map<String, String> params = Maps.newHashMap();
-        // 固定前缀
-//        params.put("smAreaId", "330110");
-//        params.put("regionCode", "107");
-//        params.put("itemBusinessType", "B2C");
-        // 其余参数
-        // 曝光过滤数据
         params.put("index", String.valueOf(Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getUserPageInfo)
                 .map(PageInfoDO::getIndex)
                 .orElse(0)));
         params.put("pageSize", "4");
-//        params.put("pageSize", String.valueOf(Optional.ofNullable(sgFrameworkContextContent)
-//                .map(SgFrameworkContext::getUserPageInfo)
-//                .map(PageInfoDO::getPageSize)
-//                .orElse(3)));
-//        params.put("detailItemIdList", Joiner.on(",").join((List<Long>) Optional.ofNullable(sgFrameworkContextContent)
-//                .map(SgFrameworkContext::getRequestParams)
-//                .map(map -> map.get("itemIdList"))
-//                .orElse(Lists.newArrayList())));
         params.put("detailItemIdList", Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getRequestParams)
                 .map(map -> map.get("itemIdList"))
                 .map(Object::toString)
                 .orElse(""));
         logger.info("[Classifier Word]: ItemIds: " + params.get("detailItemIdList"));
-        // 曝光过滤开关
-        params.put("exposureSwitch", "true");
+        // 曝光过滤
+        boolean FirstPage = Optional.ofNullable(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getUserPageInfo)
+                .map(PageInfoDO::getIndex).orElse(0) == 0;
+        params.put("isFirstPage", String.valueOf(FirstPage));
         params.put("itemCountPerContent", "21");
         params.put("contentSetIdList", "1");
         params.put("contentSetSource", "contentPlatform2000");
