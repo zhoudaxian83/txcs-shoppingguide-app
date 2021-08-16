@@ -159,35 +159,6 @@ public class AliPayServiceImpl implements IAliPayService {
             });
 
             middlePageSPIResponse.setPageFloorResultDTOList(floorResultDTOS);
-
-            PageFloorResultDTO pageFloorResultDTO = new PageFloorResultDTO();
-            pageFloorResultDTO.setPageFloorId("111");
-            PageFloorResultDetailDTO pageFloorResultDetailDTO = new PageFloorResultDetailDTO();
-            pageFloorResultDTO.setPageFloorResultDetailDTO(pageFloorResultDetailDTO);
-            PageFloorAtomicResultDTO pageFloorAtomicResultDTO1 = new PageFloorAtomicResultDTO();
-            pageFloorAtomicResultDTO1.setAtomCardTemplateId("原子模版ID");
-            pageFloorAtomicResultDTO1.setDataId("???");
-            pageFloorResultDetailDTO.setPageFloorAtomicResultDTOList(Lists.newArrayList(pageFloorAtomicResultDTO1));
-            List<JSONObject> cardData1 = Lists.newArrayList();
-            pageFloorAtomicResultDTO1.setCardData(cardData1);
-            cardData1.add(itemAndContentList.get(0));
-            cardData1.add(itemAndContentList.get(0));
-
-
-
-            PageFloorResultDTO pageFloorResultDTO2 = new PageFloorResultDTO();
-            pageFloorResultDTO2.setPageFloorId("222");
-            PageFloorResultDetailDTO pageFloorResultDetailDTO2 = new PageFloorResultDetailDTO();
-            pageFloorResultDTO2.setPageFloorResultDetailDTO(pageFloorResultDetailDTO2);
-            PageFloorAtomicResultDTO pageFloorAtomicResultDTO2 = new PageFloorAtomicResultDTO();
-            pageFloorResultDetailDTO2.setPageFloorAtomicResultDTOList(Lists.newArrayList(pageFloorAtomicResultDTO2));
-            List<JSONObject> cardData2 = Lists.newArrayList();
-            cardData2.addAll(itemAndContentList);
-            pageFloorAtomicResultDTO2.setCardData(cardData2);
-
-            middlePageSPIResponse.setPageFloorResultDTOList(Lists.newArrayList(pageFloorResultDTO2, pageFloorResultDTO));
-
-
             return middlePageSPIResponse;
         });
 
@@ -221,7 +192,6 @@ public class AliPayServiceImpl implements IAliPayService {
         subTitle = StringUtils.isEmpty(subTitle) ? aldData.getString(itemLabelAldKey) : subTitle;
         Map<String, String> ext = Maps.newHashMap();
         ext.put("subScript", subTitle);
-//        ext.put("subTitle", subTitle);
         ext.put("sellingPrice", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.SELLING_PRICE));
         ext.put("originPrice", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.ORIGIN_PRICE));
 
