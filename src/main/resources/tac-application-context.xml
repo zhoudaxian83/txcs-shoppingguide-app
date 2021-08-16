@@ -22,6 +22,8 @@
     <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.AliPayFirstPageItemOriginDataRequestBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.AliPayFirstPageBuildItemVoSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.AliPayItemUserCommonParamsBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.AlipayItemContextCheckSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.AlipayDefaultOriginDataItemQuerySdkExtPt"/>
     <!-- shoppingguide sdk end -->
 
 
