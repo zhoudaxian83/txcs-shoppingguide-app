@@ -83,7 +83,7 @@ public class SxlContentRecService {
                 Map<String,Object> aldMap = (Map<String,Object>)sgFrameworkContextContent.getUserParams().get(Constant.SXL_ITEMSET_PRE_KEY);
 
                 response.getItemAndContentList().forEach(e->{
-                    Map<String,Object> objectMap = (Map<String,Object>)aldMap.get("crm_"+e.get(" "));
+                    Map<String,Object> objectMap = (Map<String,Object>)aldMap.get("crm_"+e.get("contentId"));
                     objectMap.keySet().forEach(ob->{
                         e.put(ob,objectMap.get(ob));
                     });
