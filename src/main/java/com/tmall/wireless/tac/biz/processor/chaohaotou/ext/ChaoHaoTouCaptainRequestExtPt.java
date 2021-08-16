@@ -1,11 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.chaohaotou.ext;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.alibaba.cola.extension.Extension;
-
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.iteminfo.request.CaptainRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
@@ -14,15 +9,19 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.model.spi.model.DataTubeParams;
 import com.tmall.txcs.gs.model.spi.model.ItemDataRequest;
-import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.utils.SmAreaIdUtil;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.utils.TairUtil;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author luojunchong
@@ -40,6 +39,9 @@ public class ChaoHaoTouCaptainRequestExtPt implements CaptainRequestExtPt {
 
     @Override
     public ItemDataRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
+
+        //ResultResponse<Boolean> a = applyItem(ApplyRequest request);
+
         ItemDataRequest itemDataRequest = new ItemDataRequest();
         Long getSmAreaId = SmAreaIdUtil.getSmAreaId(sgFrameworkContextItem);
         Map<String, Object> userParam = sgFrameworkContextItem.getUserParams();
