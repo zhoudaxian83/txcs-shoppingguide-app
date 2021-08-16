@@ -94,17 +94,32 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     }
 
     private void sortItemEntityList(OriginDataDTO<ItemEntity> originDataDTO, Map<Long, Long> stringLongMap) {
+        List<SortItemEntity> resultItemEntityList = Lists.newArrayList();
         List<SortItemEntity> sortItemEntityList = Lists.newArrayList();
         originDataDTO.getResult().forEach(itemEntity -> {
+            Long index = stringLongMap.get(itemEntity.getItemId());
             SortItemEntity sortItemEntity = new SortItemEntity();
             sortItemEntity.setItemEntity(itemEntity);
             sortItemEntity.setIndex(stringLongMap.get(itemEntity.getItemId()));
-            sortItemEntityList.add(sortItemEntity);
+            if (index != null && index != Constant.INDEX) {
+                sortItemEntityList.add(sortItemEntity);
+            } else {
+                resultItemEntityList.add(sortItemEntity);
+            }
         });
         List<SortItemEntity> sortItemEntityList2 = sortItemEntityList.stream().sorted(
                 Comparator.comparing(SortItemEntity::getIndex)).collect(
                 Collectors.toList());
-        List<ItemEntity> itemEntityList = sortItemEntityList2.stream().map(
+        //如果能按顺序插入按顺序插入，大于总数放最后面
+        for (SortItemEntity sortItemEntity : sortItemEntityList2) {
+            long index = sortItemEntity.getIndex();
+            if (index > resultItemEntityList.size()) {
+                resultItemEntityList.add(sortItemEntity);
+            } else {
+                resultItemEntityList.add((int) index - 1, sortItemEntity);
+            }
+        }
+        List<ItemEntity> itemEntityList = resultItemEntityList.stream().map(
                 SortItemEntity::getItemEntity).collect(Collectors.toList());
         originDataDTO.setResult(itemEntityList);
     }

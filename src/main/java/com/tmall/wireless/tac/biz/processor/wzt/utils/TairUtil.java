@@ -21,6 +21,7 @@ import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TodayCrazyUtils;
+import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.enums.LogicalArea;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -103,7 +104,6 @@ public class TairUtil {
     public List<ColumnCenterDataSetItemRuleDTO> getOriginalRecommend(Long smAreaId) {
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = getCachePmtRuleDataItemRuleDTOList(smAreaId);
         tacLogger.info("验证定投数据_排序前：" + JSON.toJSONString(pmtRuleDataItemRuleDTOS));
-        Long stickMax = 10000L;
         if (com.ali.unit.rule.util.lang.CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOS)) {
             tacLogger.info(LOG_PREFIX + "getOriginalRecommend获取tair原始数据为空，请检查tair数据源配置");
             return Lists.newArrayList();
@@ -119,7 +119,7 @@ public class TairUtil {
                     if (item.getDataRule().getStick() != null) {
                         item.setIndex(item.getDataRule().getStick());
                     } else {
-                        item.setIndex(stickMax);
+                        item.setIndex(Constant.INDEX);
                     }
                 });
 //                return columnCenterDataSetItemRuleDTOS.stream().sorted(
