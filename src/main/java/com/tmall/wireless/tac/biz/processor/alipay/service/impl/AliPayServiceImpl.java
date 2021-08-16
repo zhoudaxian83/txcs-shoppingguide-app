@@ -220,8 +220,8 @@ public class AliPayServiceImpl implements IAliPayService {
         String subTitle = item.getString(AliPayFirstPageBuildItemVoSdkExtPt.PROMOTION_POINT);
         subTitle = StringUtils.isEmpty(subTitle) ? aldData.getString(itemLabelAldKey) : subTitle;
         Map<String, String> ext = Maps.newHashMap();
-//        ext.put("subScript", subTitle);
-        ext.put("subTitle", subTitle);
+        ext.put("subScript", subTitle);
+//        ext.put("subTitle", subTitle);
         ext.put("sellingPrice", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.SELLING_PRICE));
         ext.put("originPrice", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.ORIGIN_PRICE));
 
