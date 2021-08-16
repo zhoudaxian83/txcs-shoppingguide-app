@@ -50,8 +50,13 @@ public class IconRecommendClassifierContentInfoQueryExtPt implements ContentInfo
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
 
         Map<Long, ContentInfoDTO> resMap = Maps.newHashMap();
+        Map<String, Object> contentInfo = Maps.newHashMap();
+        contentInfo.put("url","111");
+        ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
+        contentInfoDTO.setContentInfo(contentInfo);
+        resMap.put(5233L,contentInfoDTO);
+        resMap.put(322385L,contentInfoDTO);
         return Flowable.just(Response.success(resMap));
-
     }
 }
 
