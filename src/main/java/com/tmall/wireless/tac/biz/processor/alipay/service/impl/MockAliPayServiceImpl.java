@@ -23,7 +23,7 @@ import java.util.Map;
 @Service("mockAliPayServiceImpl")
 public class MockAliPayServiceImpl implements IAliPayService {
     @Override
-    public Flowable<MixerCollectRecResult> processFirstPage(Context context, MixerCollectRecRequest mixerCollectRecRequest) {
+    public Flowable<MixerCollectRecResult> processFirstPage(Context context) {
 
         MixerCollectRecResult mixerCollectRecResult = new MixerCollectRecResult();
         mixerCollectRecResult.setSuccess(true);

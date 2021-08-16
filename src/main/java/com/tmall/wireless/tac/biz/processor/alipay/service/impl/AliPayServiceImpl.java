@@ -74,7 +74,7 @@ public class AliPayServiceImpl implements IAliPayService {
     ShoppingguideSdkItemService shoppingguideSdkItemService;
 
     @Override
-    public Flowable<MixerCollectRecResult> processFirstPage(Context context, MixerCollectRecRequest mixerCollectRecRequest) {
+    public Flowable<MixerCollectRecResult> processFirstPage(Context context) {
 
         BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,

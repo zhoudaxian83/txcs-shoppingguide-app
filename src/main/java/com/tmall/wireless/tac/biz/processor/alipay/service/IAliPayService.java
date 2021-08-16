@@ -12,6 +12,6 @@ import io.reactivex.Flowable;
  * Created by yangqing.byq on 2021/8/6.
  */
 public interface IAliPayService {
-    Flowable<MixerCollectRecResult> processFirstPage(Context context, MixerCollectRecRequest mixerCollectRecRequest);
+    Flowable<MixerCollectRecResult> processFirstPage(Context context);
     Flowable<MiddlePageSPIResponse> processMiddlePage(Context context, MiddlePageSPIRequest middlePageSPIResponse) ;
 }
