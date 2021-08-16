@@ -49,13 +49,13 @@ public class TairUtil {
                 tairKey = LimitTairkeyEnum.FLASH_SALE_HD.getKey();
                 break;
         }
-        if(commonFactoryAbs.getEnviroment().isPreline()){
+        /*if(commonFactoryAbs.getEnviroment().isPreline()){
             return tairKey+"_pre";
         }else if(commonFactoryAbs.getEnviroment().isOnline()){
             return tairKey;
         }else if(commonFactoryAbs.getEnviroment().isDaily()){
             return tairKey;
-        }
+        }*/
         //return tairKey+"_pre";
         return tairKey;
     }
