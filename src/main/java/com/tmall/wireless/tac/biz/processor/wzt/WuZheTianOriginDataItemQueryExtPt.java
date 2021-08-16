@@ -101,7 +101,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             SortItemEntity sortItemEntity = new SortItemEntity();
             sortItemEntity.setItemEntity(itemEntity);
             sortItemEntity.setIndex(stringLongMap.get(itemEntity.getItemId()));
-            if (index != null && index != Constant.INDEX) {
+            if (index != null && !Constant.INDEX.equals(index)) {
                 sortItemEntityList.add(sortItemEntity);
             } else {
                 resultItemEntityList.add(sortItemEntity);
