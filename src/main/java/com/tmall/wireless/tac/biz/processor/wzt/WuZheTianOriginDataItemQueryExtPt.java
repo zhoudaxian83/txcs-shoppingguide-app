@@ -38,8 +38,8 @@ import org.springframework.stereotype.Service;
  * @author luojunchong
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-    scenario = ScenarioConstantApp.WU_ZHE_TIAN)
+        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+        scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
@@ -70,21 +70,22 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         dataContext.setPageSize(pageSize);
         //tair获取推荐商品
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
-            smAreaId);
-        tacLogger.info("验证定投数据_排序后："+ JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
+                smAreaId);
+        tacLogger.info("验证定投数据_排序后：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
         List<Long> items = columnCenterDataSetItemRuleDTOList.stream().map(
-            ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
+                ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
         dataContext.setItems(items);
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
-            .map(recommendResponseEntityResponse -> {
-                if (!recommendResponseEntityResponse.isSuccess()
-                    || recommendResponseEntityResponse.getValue() == null
-                    || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
-                    return new OriginDataDTO<>();
-                }
-                OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-                return this.getItemPage(originDataDTO, dataContext);
-            });
+                .map(recommendResponseEntityResponse -> {
+                    if (!recommendResponseEntityResponse.isSuccess()
+                            || recommendResponseEntityResponse.getValue() == null
+                            || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
+                        return new OriginDataDTO<>();
+                    }
+                    OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
+                    tacLogger.info("分页前_排序：" + JSON.toJSONString(originDataDTO));
+                    return this.getItemPage(originDataDTO, dataContext);
+                });
     }
 
     /**
@@ -114,10 +115,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      */
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
         Pair<Boolean, List<ItemEntity>> pair = LogicPageUtil.getPage(originDataDTO.getResult(), dataContext.getIndex(),
-            dataContext.getPageSize());
+                dataContext.getPageSize());
         List<ItemEntity> itemEntities = pair.getRight();
         originDataDTO.setHasMore(pair.getLeft());
         originDataDTO.setResult(itemEntities);
+        tacLogger.info("分页结果_排序：" + JSON.toJSONString(itemEntities));
         return originDataDTO;
     }
 
@@ -135,9 +137,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         originDataDTO.setScm(recommendResponseEntity.getScm());
         originDataDTO.setTppBuckets(recommendResponseEntity.getTppBuckets());
         originDataDTO.setResult(recommendResponseEntity
-            .getResult()
-            .stream()
-            .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
+                .getResult()
+                .stream()
+                .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
         return originDataDTO;
     }
 
