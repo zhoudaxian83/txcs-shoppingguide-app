@@ -50,10 +50,6 @@ public class IconRecommendClassifierWordOriginDataRequestExtPt implements Conten
         recommendRequest.setLogResult(true);
 
         Map<String, String> params = Maps.newHashMap();
-        params.put("index", String.valueOf(Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getUserPageInfo)
-                .map(PageInfoDO::getIndex)
-                .orElse(0)));
         params.put("pageSize", "4");
         params.put("detailItemIdList", Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getRequestParams)
