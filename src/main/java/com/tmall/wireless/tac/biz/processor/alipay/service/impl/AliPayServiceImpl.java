@@ -81,7 +81,10 @@ public class AliPayServiceImpl implements IAliPayService {
                 ScenarioConstantApp.SCENARIO_ALI_PAY_FIRST_PAGE);
 
         return shoppingguideSdkItemService.recommend(context, bizScenario)
-                .map(re -> convertMixerCollectRecResult(re, (GeneralItem) context.get(CONTEXT_KEY)));
+                .map(re -> {
+                    Object o = context.get(CONTEXT_KEY);
+                    return convertMixerCollectRecResult(re, (GeneralItem) o);
+                });
 
     }
 
