@@ -60,7 +60,7 @@ public class IconRecommendClassifierWordOriginDataRequestExtPt implements Conten
                 .map(SgFrameworkContext::getUserPageInfo)
                 .map(PageInfoDO::getIndex)
                 .orElse(0)));
-        params.put("pageSize", "3");
+        params.put("pageSize", "4");
 //        params.put("pageSize", String.valueOf(Optional.ofNullable(sgFrameworkContextContent)
 //                .map(SgFrameworkContext::getUserPageInfo)
 //                .map(PageInfoDO::getPageSize)
