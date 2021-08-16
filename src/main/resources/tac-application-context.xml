@@ -44,7 +44,7 @@
 
     <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlContentOriginDataRequestExtPt"/>
-    <!--<bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlContentInfoQueryExtPt"/>-->
+    <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlContentInfoQueryExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.newproduct.ext.SxlItemInfoPostProcessorExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindItemOriginDataFailProcessorExtPt"/>
