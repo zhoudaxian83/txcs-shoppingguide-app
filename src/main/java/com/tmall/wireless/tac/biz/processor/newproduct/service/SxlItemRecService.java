@@ -127,6 +127,7 @@ public class SxlItemRecService {
             }else{
                 /**格物不支持未登录用户的ab能力，未登录用户默认走人工选品**/
                 activityId = String.valueOf(itemSetIdSw);
+                entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetIdSw));
                 sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(String.valueOf(itemSetIdSw))));
             }
         }
