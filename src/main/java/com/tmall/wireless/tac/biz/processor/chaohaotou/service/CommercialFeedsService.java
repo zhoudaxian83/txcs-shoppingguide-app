@@ -4,7 +4,7 @@ import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
-import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
+import com.tmall.wireless.tac.biz.processor.chaohaotou.constant.Constant;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,17 +42,14 @@ public class CommercialFeedsService {
         Long smAreaId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "smAreaId", 330100L);
         String csa = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "csa", "");
         String regionCode = AddressUtil.parseCSA(csa).getRegionCode();
-
-//        String feedsType;
-//        String commerce;
-//        paramMap.put("userId", userId);
-//        paramMap.put("feedsType", feedsType);
-//        paramMap.put("regionCode", regionCode);
-//        paramMap.put("smAreaId", smAreaId);
-//        paramMap.put("index", index);
-//        paramMap.put("pageSize", pageSize);
-//        paramMap.put("commerce", commerce);
-//        paramsValue.put("TmcsZntFeedsRequest", paramMap);
+        paramMap.put("userId", userId);
+        paramMap.put("feedsType", Constant.FEEDS_TYPE);
+        paramMap.put("regionCode", regionCode);
+        paramMap.put("smAreaId", smAreaId);
+        paramMap.put("index", index);
+        paramMap.put("pageSize", pageSize);
+        paramMap.put("commerce", Constant.COMMERCE);
+        paramsValue.put("TmcsZntFeedsRequest", paramMap);
         return paramsValue;
     }
 }

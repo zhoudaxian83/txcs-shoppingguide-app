@@ -11,5 +11,9 @@ public class Constant {
     public static final String SUCCESS =  "success";
     public static final String TODAY_CRAZY_LIMIT ="todayCrazyLimit";
     public static final Long APP_ID = 21431L;
-
+    public static final String FEEDS_TYPE = "B2C";
+    /**
+     * newProduct 和 fashionProduct
+     */
+    public static final String COMMERCE = "newProduct";
 }
