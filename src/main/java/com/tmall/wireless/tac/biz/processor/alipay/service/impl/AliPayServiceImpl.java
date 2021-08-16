@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
+import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.txcs.gs.spi.recommend.AldSpi;
@@ -102,24 +103,26 @@ public class AliPayServiceImpl implements IAliPayService {
 
 
         return shoppingguideSdkItemService.recommend(context, bizScenario)
-                .map(re -> {
-                    MixerCollectRecResult mixerCollectRecResult = new MixerCollectRecResult();
-                    mixerCollectRecResult.setSuccess(true);
-                    CategoryContentRet categoryContentRet = new CategoryContentRet();
-                    Map<String, CategoryContentRet> categoryContentRetMap = Maps.newHashMap();
-                    categoryContentRetMap.put(AliPayConstant.CATEGORY_CODE, categoryContentRet);
-                    mixerCollectRecResult.setCategoryContentMap(categoryContentRetMap);
-                    List<ServiceContentRec>	serviceContentRecList = Lists.newArrayList();
-                    categoryContentRet.setTitle(aldData.getString(fpTitleAldKey));
-                    categoryContentRet.setSubTitle(aldData.getString(fpServiceTextAldKey));
-                    categoryContentRet.setActionImgUrl(aldData.getString(fpServiceTextAldKey));
-                    categoryContentRet.setServiceList(serviceContentRecList);
-                    List<ServiceContentRec> collect = re.getItemAndContentList().stream().map(e -> convert(e, aldData)).collect(Collectors.toList());
-                    categoryContentRet.setServiceList(collect);
-                    categoryContentRet.setSuccess(true);
-                    return mixerCollectRecResult;
-                });
+                .map(re -> convertMixerCollectRecResult(re, aldData));
 
+    }
+
+    private MixerCollectRecResult convertMixerCollectRecResult(SgFrameworkResponse<ItemEntityVO> re, GeneralItem aldData) {
+        MixerCollectRecResult mixerCollectRecResult = new MixerCollectRecResult();
+        mixerCollectRecResult.setSuccess(true);
+        CategoryContentRet categoryContentRet = new CategoryContentRet();
+        Map<String, CategoryContentRet> categoryContentRetMap = Maps.newHashMap();
+        categoryContentRetMap.put(AliPayConstant.CATEGORY_CODE, categoryContentRet);
+        mixerCollectRecResult.setCategoryContentMap(categoryContentRetMap);
+        List<ServiceContentRec>	serviceContentRecList = Lists.newArrayList();
+        categoryContentRet.setTitle(aldData.getString(fpTitleAldKey));
+        categoryContentRet.setSubTitle(aldData.getString(fpServiceTextAldKey));
+        categoryContentRet.setActionImgUrl(aldData.getString(fpServiceTextAldKey));
+        categoryContentRet.setServiceList(serviceContentRecList);
+        List<ServiceContentRec> collect = re.getItemAndContentList().stream().map(e -> convert(e, aldData)).collect(Collectors.toList());
+        categoryContentRet.setServiceList(collect);
+        categoryContentRet.setSuccess(true);
+        return mixerCollectRecResult;
     }
 
     @Override
