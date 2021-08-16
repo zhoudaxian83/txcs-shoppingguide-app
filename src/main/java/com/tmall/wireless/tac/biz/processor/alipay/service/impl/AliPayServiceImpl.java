@@ -36,6 +36,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.tmall.tcls.gs.sdk.ext.extension.AsyncExtPt.LOGGER;
 import static com.tmall.wireless.tac.biz.processor.alipay.service.ext.AliPayItemUserCommonParamsBuildSdkExtPt.CONTEXT_KEY;
 
 @Service("aliPayServiceImpl")
@@ -159,6 +160,8 @@ public class AliPayServiceImpl implements IAliPayService {
             });
 
             middlePageSPIResponse.setPageFloorResultDTOList(floorResultDTOS);
+
+            LOGGER.warn("middlePageSPIResponse:{}", JSONObject.toJSONString(middlePageSPIResponse));
             return middlePageSPIResponse;
         });
 
