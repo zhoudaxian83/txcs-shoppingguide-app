@@ -41,7 +41,6 @@ public class AlipayFirstPageHandler extends RpmReactiveHandler<MixerCollectRecRe
 
         HadesLogUtil.stream("AlipayFirstPageHandler").kv("request", JSON.toJSONString(mixerCollectRecRequest)).error();
         return aliPayServiceImpl.processFirstPage(context, mixerCollectRecRequest).map(
-
                 re -> TacResult.newResult(re)
         );
 
