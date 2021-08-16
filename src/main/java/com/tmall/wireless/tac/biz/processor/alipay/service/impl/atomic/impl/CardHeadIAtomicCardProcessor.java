@@ -32,7 +32,9 @@ public class CardHeadIAtomicCardProcessor implements IAtomicCardProcessor {
     public PageFloorAtomicResultDTO process(AtomicCardProcessRequest atomicCardProcessRequest) {
         PageFloorAtomicResultDTO pageFloorAtomicResultDTO = new PageFloorAtomicResultDTO();
         pageFloorAtomicResultDTO.setAtomCardTemplateId(atomicCardProcessRequest.getPageFloorAtomicDTO().getAtomCardTemplateId());
-        pageFloorAtomicResultDTO.setCardData(Lists.newArrayList(JSON.parseObject("TEMPLATE_JSON")));
+        pageFloorAtomicResultDTO.setCardData(Lists.newArrayList(JSON.parseObject(TEMPLATE_JSON)));
         return pageFloorAtomicResultDTO;
     }
+
+
 }
