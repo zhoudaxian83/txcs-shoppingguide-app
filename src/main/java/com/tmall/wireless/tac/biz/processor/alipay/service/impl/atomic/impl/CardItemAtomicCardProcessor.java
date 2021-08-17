@@ -72,7 +72,6 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
                     "\t\t\t}\n" +
                     "\t\t}\n" +
                     "\t]\n" +
-                    "\t'</span>\"\n" +
                     "}";
 
 
@@ -111,8 +110,8 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
         String replace = ITEM_TEMPLATE.replace(PLACE_HOLDER_ITEM_IMG, itemEntityVO.getString("itemImg"))
                 .replace(PLACE_HOLDER_ITEM_TITTLE, itemEntityVO.getString("shortTitle"))
                 .replace(PLACE_HOLDER_ITEM_URL, itemEntityVO.getString("itemUrl"))
-                .replace(PLACE_HOLDER_ITEM_ORIGIN_PRICE, itemEntityVO.getString("678"))
-                .replace(PLACE_HOLDER_ITEM_PROMOTION_LABEL, itemEntityVO.getString("超市热卖"))
+                .replace(PLACE_HOLDER_ITEM_ORIGIN_PRICE, "678")
+                .replace(PLACE_HOLDER_ITEM_PROMOTION_LABEL, "超市热卖")
                 ;
         return JSON.parseObject(replace);
     }
