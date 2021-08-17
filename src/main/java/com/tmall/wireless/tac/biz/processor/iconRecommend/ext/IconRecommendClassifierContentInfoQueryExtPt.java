@@ -45,6 +45,7 @@ public class IconRecommendClassifierContentInfoQueryExtPt implements ContentInfo
             contentInfo.put("uniqueId", contentEntity.getUnique_id());
             contentInfo.put("trackPoint", contentEntity.getTrack_point());
             contentInfo.put("Rn", contentEntity.getRn());
+            contentInfo.put("ext", contentEntity.getExt());
 
             ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
             contentInfoDTO.setContentInfo(contentInfo);
