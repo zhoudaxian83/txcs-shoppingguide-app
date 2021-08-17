@@ -138,7 +138,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
                 ;
 
 
-        return JSON.parseObject(JSON.toJSONString(MOCK_ITEM));
+        return JSON.parseObject(MOCK_ITEM);
     }
 
 
