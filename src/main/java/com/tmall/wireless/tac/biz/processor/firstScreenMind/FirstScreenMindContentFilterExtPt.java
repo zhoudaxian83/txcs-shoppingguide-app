@@ -68,12 +68,12 @@ public class FirstScreenMindContentFilterExtPt implements ContentFilterExtPt {
                 }
             });
             List<ContentVO> contentListAfterFilter1 = Lists.newArrayList();
-            if(CollectionUtils.isEmpty(contentListAfterFilter1)){
+            if(CollectionUtils.isEmpty(contentListAfterFilter)){
                 LogUtil.errorCode(contentFilterRequest.getSgFrameworkContextContent().getBizScenario().getUniqueIdentity(),
                     "CONTENT_FILTER_RESULT_EMPTY",
                     "");
             }
-            contentVOSgFrameworkResponse.setItemAndContentList(contentListAfterFilter1);
+            contentVOSgFrameworkResponse.setItemAndContentList(contentListAfterFilter);
             return contentVOSgFrameworkResponse;
 
         } catch (Exception e) {
