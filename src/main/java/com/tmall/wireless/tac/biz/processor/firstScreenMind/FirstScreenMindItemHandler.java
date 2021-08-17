@@ -25,8 +25,7 @@ public class FirstScreenMindItemHandler extends RpmReactiveHandler<SgFrameworkRe
     FirstScreenMindItemScene firstScreenMindItemScene;
     @Override
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
-        tacLogger.info("context"+ JSON.toJSONString(context));
-        LOGGER.info("context"+JSON.toJSONString(context));
+
         return firstScreenMindItemScene.recommend(context);
     }
 }
