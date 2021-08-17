@@ -20,9 +20,11 @@ import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.util.AldUrlParamUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -30,12 +32,14 @@ import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -55,19 +59,23 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
     ContentInfoSupport contentInfoSupport;
 
     public Flowable<TacResult<List<GeneralItem>>> recommend4Ald(RequestContext4Ald requestContext4Ald) {
-
-        tacLogger.info("requestContext4Ald"+JSON.toJSONString(requestContext4Ald));
-        LOGGER.info("requestContext4Ald"+JSON.toJSONString(requestContext4Ald));
-
-
-        Long smAreaId = MapUtil.getLongWithDefault(requestContext4Ald.getAldParam(), "smAreaId", 330100L);
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
             .kv("step", "requestLog")
             .kv("requestContext4Ald", JSON.toJSONString(requestContext4Ald))
             .info();
+
+        Long smAreaId = MapUtil.getLongWithDefault(requestContext4Ald.getAldParam(), "smAreaId", 330100L);
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
 
         sgFrameworkContextItem.setRequestParams(AldUrlParamUtil.getAldUrlKv(requestContext4Ald));
+
+        /**兼容前端无效请求**/
+        List<Long> exposureContentIds = ContentSetIdListUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(),
+            RequestKeyConstantApp.FIRST_SCREEN_EXPOSURE_CONTENT_IDS);
+        if(CollectionUtils.isNotEmpty(exposureContentIds)){
+            return Flowable.just(TacResult.newResult(new ArrayList<>()));
+        }
+
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
             .kv("step", "requestLog")
             .kv("sgFrameworkContextItem1", JSON.toJSONString(sgFrameworkContextItem))
