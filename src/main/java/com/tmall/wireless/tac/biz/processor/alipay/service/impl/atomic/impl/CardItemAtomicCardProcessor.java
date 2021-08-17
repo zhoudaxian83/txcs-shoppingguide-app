@@ -118,11 +118,6 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
             "\t\t\t\"borderColor\": \"#FF6010\"\n" +
             "\t\t}\n" +
             "\t}],\n" +
-            "\t\"originalPriceStyle\": {\n" +
-            "\t\t\"color\": \"#FFFFFF\",\n" +
-            "\t\t\"fontSize\": \"10sp\",\n" +
-            "\t\t\"textDecoration\": \"line-through\"\n" +
-            "\t},\n" +
             "\t\"title\": \"<spanstyle=\\\\\\\"font-size:26;color:#333333\\\\\\\">盼盼梅尼耶干蛋糕100g</span>\",\n" +
             "\t\"image\": \"//img.alicdn.com/imgextra/i3/6000000007992/O1CN01VRuIZA28uO03vhrlZ_!!6000000007992-0-at.jpg\",\n" +
             "\t\"remoteLogExt\": \"{\\\"pageBizCode\\\":\\\"product\\\",\\\"cityCode\\\":\\\"330100\\\",\\\"bizCode\\\":\\\"product\\\",\\\"latitude\\\":\\\"30.265642\\\",\\\"source\\\":\\\"homeFeeds\\\",\\\"longitude\\\":\\\"120.108739\\\",\\\"scene\\\":\\\"SSU\\\"}\",\n" +
