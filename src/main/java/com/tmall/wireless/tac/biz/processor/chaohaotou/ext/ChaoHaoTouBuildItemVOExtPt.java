@@ -35,21 +35,18 @@ import org.springframework.stereotype.Service;
  * @Date: 2021/5/14 10:26
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-    scenario = ScenarioConstantApp.CHAO_HAO_TOU)
+        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+        scenario = ScenarioConstantApp.CHAO_HAO_TOU)
 @Service
 public class ChaoHaoTouBuildItemVOExtPt implements BuildItemVOExtPt {
 
     Logger LOGGER = LoggerFactory.getLogger(ChaoHaoTouBuildItemVOExtPt.class);
 
-    @Autowired
-    TacLogger tacLogger;
-
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Map<String, Object> userParams = buildItemVoRequest.getContext().getUserParams();
         String umpChannel = MapUtil.getStringWithDefault(userParams, VoKeyConstantApp.UMP_CHANNEL,
-            VoKeyConstantApp.CHANNEL_KEY);
+                VoKeyConstantApp.CHANNEL_KEY);
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
@@ -68,21 +65,21 @@ public class ChaoHaoTouBuildItemVOExtPt implements BuildItemVOExtPt {
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOMain) {
-                ItemInfoBySourceDTOMain itemInfoBySourceDTOMain = (ItemInfoBySourceDTOMain)itemInfoBySourceDTO;
+                ItemInfoBySourceDTOMain itemInfoBySourceDTOMain = (ItemInfoBySourceDTOMain) itemInfoBySourceDTO;
                 itemUrl = Optional.of(itemInfoBySourceDTOMain)
-                    .map(ItemInfoBySourceDTOMain::getItemDTO)
-                    .map(ItemDataDTO::getDetailUrl)
-                    .orElse("");
+                        .map(ItemInfoBySourceDTOMain::getItemDTO)
+                        .map(ItemDataDTO::getDetailUrl)
+                        .orElse("");
                 ItemDataDTO itemDataDTO = itemInfoBySourceDTOMain.getItemDTO();
                 canBuy = itemDataDTO.isCanBuy();
                 sellout = itemDataDTO.isSellOut();
-                JSONObject itemPromotionResp = (JSONObject)itemDataDTO.getItemPromotionResp();
+                JSONObject itemPromotionResp = (JSONObject) itemDataDTO.getItemPromotionResp();
                 itemDesc = buildItemDesc(itemPromotionResp);
                 specifications = itemDataDTO.getSpecDetail();
                 hasMainSource = true;
             }
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOOrigin) {
-                ItemInfoBySourceDTOOrigin itemInfoBySourceDTOOrigin = (ItemInfoBySourceDTOOrigin)itemInfoBySourceDTO;
+                ItemInfoBySourceDTOOrigin itemInfoBySourceDTOOrigin = (ItemInfoBySourceDTOOrigin) itemInfoBySourceDTO;
                 originScm = itemInfoBySourceDTOOrigin.getScm();
 
             }
@@ -117,15 +114,15 @@ public class ChaoHaoTouBuildItemVOExtPt implements BuildItemVOExtPt {
         String showPriceKey = "showPrice";
         String chaoShiPriceKey = "chaoShiPrice";
         if (itemPromotionResp.getJSONObject(unifyPrice) != null && itemPromotionResp.getJSONObject(unifyPrice)
-            .getJSONObject(showPriceKey) != null && itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(
-            showPriceKey).getBigDecimal(price) != null &&
-            itemPromotionResp.getJSONObject(unifyPrice)
-                .getJSONObject(chaoShiPriceKey) != null && itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(
-            chaoShiPriceKey).getBigDecimal(price) != null) {
+                .getJSONObject(showPriceKey) != null && itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(
+                showPriceKey).getBigDecimal(price) != null &&
+                itemPromotionResp.getJSONObject(unifyPrice)
+                        .getJSONObject(chaoShiPriceKey) != null && itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(
+                chaoShiPriceKey).getBigDecimal(price) != null) {
             BigDecimal showPrice = itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(showPriceKey)
-                .getBigDecimal(price);
+                    .getBigDecimal(price);
             BigDecimal chaoShiPrice = itemPromotionResp.getJSONObject(unifyPrice).getJSONObject(chaoShiPriceKey)
-                .getBigDecimal(price);
+                    .getBigDecimal(price);
             String text = "专享补贴";
             return text + chaoShiPrice.subtract(showPrice) + "元";
         } else {

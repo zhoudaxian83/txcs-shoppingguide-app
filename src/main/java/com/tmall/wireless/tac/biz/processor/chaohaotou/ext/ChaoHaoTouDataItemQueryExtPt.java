@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.chaohaotou.ext;
 import com.ali.com.google.common.base.Joiner;
 import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.alibaba.cola.extension.Extension;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -15,12 +16,10 @@ import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.constant.Constant;
-import com.tmall.wireless.tac.biz.processor.chaohaotou.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.model.DataContext;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.service.CommercialFeedsService;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.utils.LogicPageUtil;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.utils.SmAreaIdUtil;
-import com.tmall.wireless.tac.biz.processor.chaohaotou.utils.TairUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import io.reactivex.Flowable;
 import org.apache.commons.lang3.tuple.Pair;
@@ -60,12 +59,7 @@ public class ChaoHaoTouDataItemQueryExtPt implements OriginDataItemQueryExtPt {
         dataContext.setIndex(index);
         dataContext.setPageSize(pageSize);
         commercialFeedsService.getCommercialFeeds(context);
-        //tair获取推荐商品
-        List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
-                smAreaId);
-        List<Long> items = columnCenterDataSetItemRuleDTOList.stream().map(
-                ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
-        dataContext.setItems(items);
+        List<Long> items = Lists.newArrayList();
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
                 .map(recommendResponseEntityResponse -> {
                     if (!recommendResponseEntityResponse.isSuccess()

@@ -87,7 +87,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionBuildItemVOExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.chaohaotou.ext.ChaoHaoTouBuildItemVOExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.chaohaotou.ext.ChaoHaoTouCaptainRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.chaohaotou.ext.ChaoHaoTouDataItemQueryExtPt"/>
 
 </beans>
