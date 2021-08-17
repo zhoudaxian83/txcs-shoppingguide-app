@@ -149,9 +149,9 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
     }
 
     private JSONObject convert(ItemEntityVO itemEntityVO) {
-        ITEM_TEMPLATE.replace(PLACE_HOLDER_ITEM_IMG, itemEntityVO.getString("itemImg"))
+        String replace = ITEM_TEMPLATE.replace(PLACE_HOLDER_ITEM_IMG, itemEntityVO.getString("itemImg"))
                 .replace(PLACE_HOLDER_ITEM_TITTLE, itemEntityVO.getString("shortTitle"))
                 .replace(PLACE_HOLDER_ITEM_URL, itemEntityVO.getString("itemUrl"));
-        return JSON.parseObject(ITEM_TEMPLATE);
+        return JSON.parseObject(replace);
     }
 }
