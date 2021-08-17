@@ -22,7 +22,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 
     public static final String MOCK_ITEM = "{\n" +
             "\t\"saleTags\": [{\n" +
-            "\t\t\"text\": \"<spanstyle='font-size:10sp;color:#FF6010'>超市热卖</span>\",\n" +
+            "\t\t\"text\": \"<span style='font-size:10sp;color:#FF6010'>超市热卖</span>\",\n" +
             "\t\t\"textStyle\": {\n" +
             "\t\t\t\"borderColor\": \"#FF6010\"\n" +
             "\t\t}\n" +
