@@ -40,36 +40,25 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 
     private static final String ITEM_TEMPLATE =
             "{\n" +
-                    "\t\"//\": \"item图片的url\",\n" +
                     "\t\"image\": \"$itemImg\",\n" +
-                    "\t\"//\": \"图片点击跳转链接\",\n" +
                     "\t\"action\": \"{\\\"type\\\":\\\"jump\\\",\\\"link\\\":\\\"$url\\\"}\",\n" +
-                    "\t\"//\": \"小item标题\",\n" +
                     "\t\"title\": \"<span style=\\\\\\\"font-size:26;color:#333333\\\\\\\">$itemTitle</span>\",\n" +
-                    "\t\"//\": \"小item标题（两行样式）\",\n" +
                     "\t\"complexTitle\": \"<span style=\\\\\\\"font-size:26;color:#333333\\\\\\\">红烧牛肉面</span>\",\n" +
                     "\t\"topLabelStyle\": {\n" +
                     "\t\t\"backgroundColor\": \"#FFFFFF\"\n" +
                     "\t},\n" +
-                    "\t\"//\": \"标签顶部图片\",\n" +
-                    "\t\"tagTopImage\": \"imageUrl\",\n" +
-                    "\t\"//\": \"标签底部文字\",\n" +
                     "\t\"originalPrice\": \"￥$originPrice\",\n" +
                     "\t\"originalPriceStyle\": {\n" +
                     "\t\t\"color\": \"#FFFFFF\",\n" +
                     "\t\t\"fontSize\": \"10sp\",\n" +
                     "\t\t\"textDecoration\": \"line-through\"\n" +
                     "\t},\n" +
-                    "\t\"//\": \"标签'纯文案'文字\",\n" +
                     "\t\"pureStringText\": \"<span style=\\\\\\\"font-size:12;color:#999999\\\\\\\">领劵更优惠</span>\",\n" +
                     "\t\"pureStringTextStyle\": {\n" +
                     "\t\t\"backgroundColor\": \"#FFFFFF\"\n" +
                     "\t},\n" +
-                    "\t\"//\": \"单个小item埋点scm\",\n" +
                     "\t\"scm\": \"xxxx\",\n" +
-                    "\t\"//\": \"单个小item埋点扩展参数\",\n" +
                     "\t\"remoteLogExt\": \"xxx\",\n" +
-                    "\t\"//\": \"满减价格标签（二房字段控制，下发就展示）\",\n" +
                     "\t\"saleTags\": [{\n" +
                     "\t\t\t\"text\": \"<span style=\\\"font-size:10sp;color:#FF6010\\\">$promotionLabel</span>\",\n" +
                     "\t\t\t\"textStyle\": {\n" +
@@ -82,8 +71,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
                     "\t\t\t\t\"borderColor\": \"#FF6010\"\n" +
                     "\t\t\t}\n" +
                     "\t\t}\n" +
-                    "\t],\n" +
-                    "\t\"defaultFooterText\": \"<span style=\\\"font-size:12sp;color:#999999\\\">’30分钟送达\n" +
+                    "\t]\n" +
                     "\t'</span>\"\n" +
                     "}";
 
