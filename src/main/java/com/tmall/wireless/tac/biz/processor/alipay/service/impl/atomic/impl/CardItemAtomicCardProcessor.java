@@ -35,6 +35,8 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
     public static final String PLACE_HOLDER_ITEM_IMG = "$itemImg";
     public static final String PLACE_HOLDER_ITEM_URL = "$url";
     public static final String PLACE_HOLDER_ITEM_PROMOTION_LABEL = "$promotionLabel";
+    public static final String PLACE_HOLDER_ITEM_ORIGIN_PRICE = "$originPrice";
+
 
     private static final String ITEM_TEMPLATE =
             "{\n" +
@@ -46,29 +48,13 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
                     "\t\"title\": \"<span style=\\\\\\\"font-size:26;color:#333333\\\\\\\">$itemTitle</span>\",\n" +
                     "\t\"//\": \"小item标题（两行样式）\",\n" +
                     "\t\"complexTitle\": \"<span style=\\\\\\\"font-size:26;color:#333333\\\\\\\">红烧牛肉面</span>\",\n" +
-                    "\t\"//\": \"小item副标题\",\n" +
-                    "\t\"subTitle\": \"<span style=\\\\\\\"font-size:24;color:#999999\\\\\\\">淮阳牛肉面</span>\",\n" +
-                    "\t\"//\": \"左上角标签\",\n" +
-                    "\t\"topLabel\": \"<span style=\\\\\\\"font-size:12;color:#999999\\\\\\\">带娃精选</span>\",\n" +
                     "\t\"topLabelStyle\": {\n" +
                     "\t\t\"backgroundColor\": \"#FFFFFF\"\n" +
                     "\t},\n" +
-                    "\t\"//\": \"口碑特殊供给标签背景图\",\n" +
-                    "\t\"tagImage\": \"imageUrl\",\n" +
-                    "\t\"//\": \"口碑特殊标签左侧文本，要固定大小\",\n" +
-                    "\t\"tagLeftText\": \"<span style=\\\\\\\"font-size:24;color:#FF2F23\\\\\\\">1750起</span>\",\n" +
-                    "\t\"//\": \"口碑特殊标签右侧文本\",\n" +
-                    "\t\"tagRightText\": \"<span style=\\\\\\\"font-size:24;color:#FFFFFF\\\\\\\">抢</span>\",\n" +
-                    "\t\"//\": \"飞猪&商超特殊供给标签背景图\",\n" +
-                    "\t\"tagImageV2\": \"imageUrl\",\n" +
-                    "\t\"//\": \"飞猪&商超特殊供给标签左侧文本，要固定大小\",\n" +
-                    "\t\"tagLeftTextV2\": \"<span style=\\\\\\\"font-size:24;color:#FF2F23\\\\\\\">1750起</span>\",\n" +
-                    "\t\"//\": \"飞猪&商超特殊供给标签右侧文本，要固定大小\",\n" +
-                    "\t\"tagRightTextV2\": \"<span style=\\\\\\\"font-size:24;color:#FF2F23\\\\\\\">1750起</span>\",\n" +
                     "\t\"//\": \"标签顶部图片\",\n" +
                     "\t\"tagTopImage\": \"imageUrl\",\n" +
                     "\t\"//\": \"标签底部文字\",\n" +
-                    "\t\"originalPrice\": \"￥3000\",\n" +
+                    "\t\"originalPrice\": \"￥$originPrice\",\n" +
                     "\t\"originalPriceStyle\": {\n" +
                     "\t\t\"color\": \"#FFFFFF\",\n" +
                     "\t\t\"fontSize\": \"10sp\",\n" +
@@ -97,21 +83,6 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
                     "\t\t\t}\n" +
                     "\t\t}\n" +
                     "\t],\n" +
-                    "\t\"//\": \"商品特性标签（二方字段控制，下发就展示）\",\n" +
-                    "\t\"qualityTags\": [{\n" +
-                    "\t\t\t\"text\": \"<span style=\\\"font-size:10sp;color:#FF6010\\\">养生美食</span>\",\n" +
-                    "\t\t\t\"textStyle\": {\n" +
-                    "\t\t\t\t\"backgroundColor\": \"#FF661A\"\n" +
-                    "\t\t\t}\n" +
-                    "\t\t},\n" +
-                    "\t\t{\n" +
-                    "\t\t\t\"text\": \"<span style=\\\"font-size:10sp;color:#FF6010\\\">汁水很多</span>\",\n" +
-                    "\t\t\t\"textStyle\": {\n" +
-                    "\t\t\t\t\"backgroundColor\": \"#FF661A\"\n" +
-                    "\t\t\t}\n" +
-                    "\t\t}\n" +
-                    "\t],\n" +
-                    "\t\"//\": \"默认兜底字段，展示优先级（完整版 > 标签兜底 > 文字兜底）最低\",\n" +
                     "\t\"defaultFooterText\": \"<span style=\\\"font-size:12sp;color:#999999\\\">’30分钟送达\n" +
                     "\t'</span>\"\n" +
                     "}";
