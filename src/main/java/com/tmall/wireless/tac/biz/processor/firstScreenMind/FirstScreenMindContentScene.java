@@ -112,7 +112,8 @@ public class FirstScreenMindContentScene {
                 }).map(TacResult::newResult)
                 .map(tacResult -> {
                     HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
-                        .kv("tacResult",JSON.toJSONString(tacResult.getData()))
+                        .kv("tacResult.getData()",JSON.toJSONString(tacResult.getData()))
+                        .kv("tacResult.isSuccess()",JSON.toJSONString(tacResult.isSuccess()))
                         .info();
                     if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
                         tacResult.setSuccess(false);
