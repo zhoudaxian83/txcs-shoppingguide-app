@@ -67,13 +67,13 @@ public class FirstScreenMindContentFilterExtPt implements ContentFilterExtPt {
                             "CONTENT_FILTER_BY_ITEM" + "," + contentId + "");
                 }
             });
-            List<ContentVO> contentListAfterFilter1 = Lists.newArrayList();
-            if(CollectionUtils.isEmpty(contentListAfterFilter1)){
+            //List<ContentVO> contentListAfterFilter1 = Lists.newArrayList();
+            if(CollectionUtils.isEmpty(contentListAfterFilter)){
                 LogUtil.errorCode(contentFilterRequest.getSgFrameworkContextContent().getBizScenario().getUniqueIdentity(),
                     "CONTENT_FILTER_RESULT_EMPTY",
                     "");
             }
-            contentVOSgFrameworkResponse.setItemAndContentList(contentListAfterFilter1);
+            contentVOSgFrameworkResponse.setItemAndContentList(contentListAfterFilter);
             return contentVOSgFrameworkResponse;
 
         } catch (Exception e) {
