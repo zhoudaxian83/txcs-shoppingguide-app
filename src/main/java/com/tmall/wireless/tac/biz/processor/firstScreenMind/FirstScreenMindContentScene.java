@@ -111,6 +111,8 @@ public class FirstScreenMindContentScene {
                     return response;
                 }).map(TacResult::newResult)
                 .map(tacResult -> {
+                    tacResult.setSuccess(false);
+                    tacResult.setData(new SgFrameworkResponse<ContentVO>());
                     HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                         .kv("tacResult.getData()",JSON.toJSONString(tacResult.getData()))
                         .kv("tacResult.isSuccess()",JSON.toJSONString(tacResult.isSuccess()))
