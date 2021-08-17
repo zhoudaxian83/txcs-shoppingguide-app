@@ -134,6 +134,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
                 .replace(PLACE_HOLDER_ITEM_URL, itemEntityVO.getString("itemUrl"))
                 .replace(PLACE_HOLDER_ITEM_ORIGIN_PRICE, "678")
                 .replace(PLACE_HOLDER_ITEM_PROMOTION_LABEL, "超市热卖")
+                .replace(PLACE_HOLDER_ITEM_PROMOTION_PRICE, "123")
                 ;
 
 
