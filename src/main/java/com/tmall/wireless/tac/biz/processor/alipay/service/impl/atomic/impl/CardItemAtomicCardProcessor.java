@@ -40,7 +40,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
             "\t},\n" +
             "\t\"defaultTemplateId\": \"\",\n" +
             "\t\"tagImageV2\": \"https://gw.alipayobjects.com/mdn/rms_5bd46e/afts/img/A*IL4aRamkbjIAAAAAAAAAAAAAARQnAQ\",\n" +
-            "\t\"complexTitle\": \"<span style='font-size:13sip;color:#333333'>超长标题看看超过两行会怎么样</span>\",\n" +
+//            "\t\"complexTitle\": \"<span style='font-size:13sip;color:#333333'>超长标题看看超过两行会怎么样</span>\",\n" +
             "\t\"tagLeftTextV2\": \"<span style='font-size:12sp;color:#FFFFFF;'>$promotionLabel</span>\",\n" +
             "\t\"tagRightTextV2\": \"<span style='font-size:15sp;color:#FF2F23'>抢</span>\",\n" +
             "\t\"originalPrice\": \"$originPrice\",\n" +
