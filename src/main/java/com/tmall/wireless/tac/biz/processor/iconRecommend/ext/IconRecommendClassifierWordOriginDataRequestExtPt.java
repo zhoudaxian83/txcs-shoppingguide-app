@@ -58,10 +58,10 @@ public class IconRecommendClassifierWordOriginDataRequestExtPt implements Conten
                 .orElse(""));
         logger.info("[Classifier Word]: ItemIds: " + params.get("detailItemIdList"));
         // 曝光过滤
-        boolean FirstPage = Optional.ofNullable(sgFrameworkContextContent)
+        boolean firstPage = Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getUserPageInfo)
                 .map(PageInfoDO::getIndex).orElse(0) == 0;
-        params.put("isFirstPage", String.valueOf(FirstPage));
+        params.put("isFirstPage", String.valueOf(firstPage));
         params.put("itemCountPerContent", "21");
         params.put("contentSetIdList", "1");
         params.put("contentSetSource", "contentPlatform2000");
