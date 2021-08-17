@@ -40,8 +40,6 @@ import java.util.stream.Collectors;
 @Service
 public class ChaoHaoTouDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
-    @Autowired
-    TairUtil tairUtil;
 
     @Autowired
     RecommendSpi recommendSpi;
