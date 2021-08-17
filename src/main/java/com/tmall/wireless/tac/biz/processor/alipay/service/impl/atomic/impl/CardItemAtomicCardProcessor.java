@@ -43,7 +43,6 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
                     "\t\"image\": \"$itemImg\",\n" +
                     "\t\"action\": \"{\\\"type\\\":\\\"jump\\\",\\\"link\\\":\\\"$url\\\"}\",\n" +
                     "\t\"title\": \"<span style=\\\\\\\"font-size:26;color:#333333\\\\\\\">$itemTitle</span>\",\n" +
-                    "\t\"complexTitle\": \"<span style=\\\\\\\"font-size:26;color:#333333\\\\\\\">红烧牛肉面</span>\",\n" +
                     "\t\"topLabelStyle\": {\n" +
                     "\t\t\"backgroundColor\": \"#FFFFFF\"\n" +
                     "\t},\n" +
@@ -53,7 +52,6 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
                     "\t\t\"fontSize\": \"10sp\",\n" +
                     "\t\t\"textDecoration\": \"line-through\"\n" +
                     "\t},\n" +
-                    "\t\"pureStringText\": \"<span style=\\\\\\\"font-size:12;color:#999999\\\\\\\">领劵更优惠</span>\",\n" +
                     "\t\"pureStringTextStyle\": {\n" +
                     "\t\t\"backgroundColor\": \"#FFFFFF\"\n" +
                     "\t},\n" +
@@ -61,12 +59,6 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
                     "\t\"remoteLogExt\": \"xxx\",\n" +
                     "\t\"saleTags\": [{\n" +
                     "\t\t\t\"text\": \"<span style=\\\"font-size:10sp;color:#FF6010\\\">$promotionLabel</span>\",\n" +
-                    "\t\t\t\"textStyle\": {\n" +
-                    "\t\t\t\t\"borderColor\": \"#FF6010\"\n" +
-                    "\t\t\t}\n" +
-                    "\t\t},\n" +
-                    "\t\t{\n" +
-                    "\t\t\t\"text\": \"<span style=\\\"font-size:10sp;color:#FF6010\\\"></span>\",\n" +
                     "\t\t\t\"textStyle\": {\n" +
                     "\t\t\t\t\"borderColor\": \"#FF6010\"\n" +
                     "\t\t\t}\n" +
