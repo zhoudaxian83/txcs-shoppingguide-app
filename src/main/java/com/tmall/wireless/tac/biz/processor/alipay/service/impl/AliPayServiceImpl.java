@@ -3,7 +3,6 @@ package com.tmall.wireless.tac.biz.processor.alipay.service.impl;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.recmixer.common.service.facade.model.CategoryContentRet;
-import com.alipay.recmixer.common.service.facade.model.MixerCollectRecRequest;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecResult;
 import com.alipay.recmixer.common.service.facade.model.ServiceContentRec;
 import com.alipay.tradecsa.common.service.spi.request.MiddlePageFloorDTO;
@@ -19,7 +18,7 @@ import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.wireless.tac.biz.processor.alipay.constant.AliPayConstant;
 import com.tmall.wireless.tac.biz.processor.alipay.service.IAliPayService;
-import com.tmall.wireless.tac.biz.processor.alipay.service.ext.AliPayFirstPageBuildItemVoSdkExtPt;
+import com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AliPayFirstPageBuildItemVoSdkExtPt;
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.AtomicCardProcessRequest;
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.AtomicCardProcessorFactory;
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.IAtomicCardProcessor;
@@ -37,7 +36,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.tmall.tcls.gs.sdk.ext.extension.AsyncExtPt.LOGGER;
-import static com.tmall.wireless.tac.biz.processor.alipay.service.ext.AliPayItemUserCommonParamsBuildSdkExtPt.CONTEXT_KEY;
+import static com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AliPayItemUserCommonParamsBuildSdkExtPt.CONTEXT_KEY;
 
 @Service("aliPayServiceImpl")
 public class AliPayServiceImpl implements IAliPayService {
@@ -134,7 +133,7 @@ public class AliPayServiceImpl implements IAliPayService {
 
         BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
-                ScenarioConstantApp.SCENARIO_ALI_PAY_FIRST_PAGE);
+                ScenarioConstantApp.SCENARIO_ALI_PAY_MIDDLE_PAGE);
 
 
         return shoppingguideSdkItemService.recommend(context, bizScenario).map(re -> {

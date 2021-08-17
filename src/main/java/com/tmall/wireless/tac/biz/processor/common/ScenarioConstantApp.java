@@ -27,6 +27,7 @@ public class ScenarioConstantApp extends ScenarioConstant {
 
     public static final String SCENARIO_SHANG_XIN_CONTENT= "SHANG_XIN_CONTENT";
     public static final String SCENARIO_ALI_PAY_FIRST_PAGE = "ALI_PAY_FIRST_PAGE";
+    public static final String SCENARIO_ALI_PAY_MIDDLE_PAGE = "ALI_PAY_MIDDLE_PAGE";
 
     /**smartbuy**/
     public static final String SCENE_SMART_BUY_ITEM = "SCENE_SMART_BUY_ITEM";

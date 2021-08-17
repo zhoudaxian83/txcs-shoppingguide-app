@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.alipay.service.ext;
+package com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage;
 
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecRequest;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;

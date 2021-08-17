@@ -19,11 +19,11 @@
 
     <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentInfoQuerySdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentOriginDataRequestBuildSdkExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.AliPayFirstPageItemOriginDataRequestBuildSdkExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.AliPayFirstPageBuildItemVoSdkExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.AliPayItemUserCommonParamsBuildSdkExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.AlipayItemContextCheckSdkExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.AlipayDefaultOriginDataItemQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AliPayFirstPageItemOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AliPayFirstPageBuildItemVoSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AliPayItemUserCommonParamsBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AlipayItemContextCheckSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AlipayDefaultOriginDataItemQuerySdkExtPt"/>
     <!-- shoppingguide sdk end -->
 
 
