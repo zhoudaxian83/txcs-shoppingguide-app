@@ -111,10 +111,13 @@ public class FirstScreenMindContentScene {
                     return response;
                 }).map(TacResult::newResult)
                 .map(tacResult -> {
+                    HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                        .kv("tacResult.getData()",JSON.toJSONString(tacResult))
+                        .info();
                     tacResult.setSuccess(false);
                     tacResult.setData(new SgFrameworkResponse<ContentVO>());
                     HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
-                        .kv("tacResult.getData()",JSON.toJSONString(tacResult))
+                        .kv("tacResult.getData()1",JSON.toJSONString(tacResult))
                         .info();
                     if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
                         tacResult.setSuccess(false);
