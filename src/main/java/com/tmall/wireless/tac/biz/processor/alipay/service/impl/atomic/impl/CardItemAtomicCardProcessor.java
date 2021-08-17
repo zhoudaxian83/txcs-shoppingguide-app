@@ -22,6 +22,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
     public static final String PLACE_HOLDER_ITEM_URL = "$url";
     public static final String PLACE_HOLDER_ITEM_PROMOTION_LABEL = "$promotionLabel";
     public static final String PLACE_HOLDER_ITEM_ORIGIN_PRICE = "$originPrice";
+    public static final String PLACE_HOLDER_ITEM_PROMOTION_PRICE = "$promotionPrice";
 
 
     public static final String TEMPLATE_ITEM = "{\n" +
@@ -32,7 +33,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
             "\t\t}\n" +
             "\t}],\n" +
             "\t\"title\": \"<span style='font-size:26;color:#333333'>$itemTitle</span>\",\n" +
-            "\t\"image\": \"//img.alicdn.com/imgextra/i3/6000000007992/O1CN01VRuIZA28uO03vhrlZ_!!6000000007992-0-at.jpg\",\n" +
+            "\t\"image\": \"$itemImg\",\n" +
             "\t\"remoteLogExt\": \"{\\\"pageBizCode\\\":\\\"product\\\",\\\"cityCode\\\":\\\"330100\\\",\\\"bizCode\\\":\\\"product\\\",\\\"latitude\\\":\\\"30.265642\\\",\\\"source\\\":\\\"homeFeeds\\\",\\\"longitude\\\":\\\"120.108739\\\",\\\"scene\\\":\\\"SSU\\\"}\",\n" +
             "\t\"action\": \"{\\\"link\\\":\\\"$url\\\",\\\"scm\\\":\\\"\\\",\\\"type\\\":\\\"jump\\\"}\",\n" +
             "\t\"topLabelStyle\": {\n" +
@@ -41,7 +42,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
             "\t\"defaultTemplateId\": \"\",\n" +
             "\t\"tagImageV2\": \"https://gw.alipayobjects.com/mdn/rms_5bd46e/afts/img/A*IL4aRamkbjIAAAAAAAAAAAAAARQnAQ\",\n" +
 //            "\t\"complexTitle\": \"<span style='font-size:13sip;color:#333333'>超长标题看看超过两行会怎么样</span>\",\n" +
-            "\t\"tagLeftTextV2\": \"<span style='font-size:12sp;color:#FFFFFF;'>$promotionLabel</span>\",\n" +
+            "\t\"tagLeftTextV2\": \"<span style='font-size:12sp;color:#FFFFFF;'>$promotionPrice</span>\",\n" +
             "\t\"tagRightTextV2\": \"<span style='font-size:15sp;color:#FF2F23'>抢</span>\",\n" +
             "\t\"originalPrice\": \"$originPrice\",\n" +
             "\t\"originalPriceStyle\": {\n" +
