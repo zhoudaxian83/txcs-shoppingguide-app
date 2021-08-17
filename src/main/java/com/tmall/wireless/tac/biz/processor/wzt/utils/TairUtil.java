@@ -96,14 +96,13 @@ public class TairUtil {
     }
 
     /**
-     * 获取原始tair并做排序
+     * 获取原始tair
      *
      * @param smAreaId
      * @return
      */
     public List<ColumnCenterDataSetItemRuleDTO> getOriginalRecommend(Long smAreaId) {
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = getCachePmtRuleDataItemRuleDTOList(smAreaId);
-        tacLogger.info("验证定投数据_排序前：" + JSON.toJSONString(pmtRuleDataItemRuleDTOS));
         if (com.ali.unit.rule.util.lang.CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOS)) {
             tacLogger.info(LOG_PREFIX + "getOriginalRecommend获取tair原始数据为空，请检查tair数据源配置");
             return Lists.newArrayList();
@@ -122,9 +121,6 @@ public class TairUtil {
                         item.setIndex(Constant.INDEX);
                     }
                 });
-//                return columnCenterDataSetItemRuleDTOS.stream().sorted(
-//                    Comparator.comparing(ColumnCenterDataSetItemRuleDTO::getIndex)).collect(
-//                    Collectors.toList());
                 return columnCenterDataSetItemRuleDTOS;
             } catch (Exception e) {
                 tacLogger.error(LOG_PREFIX + "getOriginalRecommend获取tair原始items异常", e);

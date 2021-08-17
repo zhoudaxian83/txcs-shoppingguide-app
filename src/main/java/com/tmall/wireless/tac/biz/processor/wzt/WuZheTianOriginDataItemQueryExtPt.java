@@ -1,13 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import com.alibaba.cola.extension.Extension;
-
 import com.ali.com.google.common.base.Joiner;
 import com.ali.unit.rule.util.lang.CollectionUtils;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.cola.extension.Extension;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
@@ -28,11 +23,13 @@ import com.tmall.wireless.tac.biz.processor.wzt.model.SortItemEntity;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.LogicPageUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.SmAreaIdUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author luojunchong
@@ -49,16 +46,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     RecommendSpi recommendSpi;
 
-    @Autowired
-    TacLogger tacLogger;
-
-    /**
-     * 分大区个性化排序后商品缓存后缀
-     */
-    private static final String AREA_SORT_SUFFIX = "_AREA_SORT";
-
-    private static final String LOG_PREFIX = "WuZheTianOriginDataItemQueryExtPt-";
-
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         DataContext dataContext = new DataContext();
@@ -71,7 +58,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         //tair获取推荐商品
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
                 smAreaId);
-        tacLogger.info("验证定投数据_排序后：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
         //获取id和排序信息
         Map<Long, Long> stringLongMap = new HashMap<>(16);
         List<Long> items = Lists.newArrayList();
@@ -88,7 +74,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                     }
                     OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
                     this.sortItemEntityList(originDataDTO, stringLongMap);
-                    tacLogger.info("分页前_排序：" + JSON.toJSONString(originDataDTO));
                     return this.getItemPage(originDataDTO, dataContext);
                 });
     }
@@ -156,7 +141,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<ItemEntity> itemEntities = pair.getRight();
         originDataDTO.setHasMore(pair.getLeft());
         originDataDTO.setResult(itemEntities);
-        tacLogger.info("分页结果_排序：" + JSON.toJSONString(itemEntities));
         return originDataDTO;
     }
 
