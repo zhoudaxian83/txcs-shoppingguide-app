@@ -149,7 +149,13 @@ public class AliPayServiceImpl implements IAliPayService {
 
                 List<PageFloorAtomicDTO> pageFloorAtomicDTOS = Optional.of(middlePageFloorDTO).map(MiddlePageFloorDTO::getPageFloorDetailDTO).map(PageFloorDetailDTO::getPageFloorAtomicDTOList).orElse(Lists.newArrayList());
                 List<PageFloorAtomicResultDTO> pageFloorAtomicResultDTOList = pageFloorAtomicDTOS.stream()
-                        .map(this::processAtomic)
+                        .map(pageFloorAtomicDTO -> {
+                            AtomicCardProcessRequest atomicCardProcessRequest = new AtomicCardProcessRequest();
+                            atomicCardProcessRequest.setPageFloorAtomicDTO(pageFloorAtomicDTO);
+                            atomicCardProcessRequest.setAldData(aldData);
+                            atomicCardProcessRequest.setItemAndContentList(itemAndContentList);
+                            return processAtomic(atomicCardProcessRequest);
+                        })
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());
                 PageFloorResultDetailDTO pageFloorResultDetailDTO = new PageFloorResultDetailDTO();
@@ -168,15 +174,18 @@ public class AliPayServiceImpl implements IAliPayService {
 
     }
 
-    private PageFloorAtomicResultDTO processAtomic(PageFloorAtomicDTO pageFloorAtomicDTO) {
+    private PageFloorAtomicResultDTO processAtomic(AtomicCardProcessRequest atomicCardProcessRequest) {
 
-        IAtomicCardProcessor processorByFloorId = atomicCardProcessorFactory.getProcessorByFloorId(pageFloorAtomicDTO.getAtomCardTemplateId());
-        if (processorByFloorId == null) {
+        String atomicId = Optional.of(atomicCardProcessRequest).map(AtomicCardProcessRequest::getPageFloorAtomicDTO).map(PageFloorAtomicDTO::getAtomCardTemplateId).orElse("");
+
+        if (StringUtils.isEmpty(atomicId)) {
             return null;
         }
 
-        AtomicCardProcessRequest atomicCardProcessRequest = new AtomicCardProcessRequest();
-        atomicCardProcessRequest.setPageFloorAtomicDTO(pageFloorAtomicDTO);
+        IAtomicCardProcessor processorByFloorId = atomicCardProcessorFactory.getProcessorByFloorId(atomicId);
+        if (processorByFloorId == null) {
+            return null;
+        }
 
         return processorByFloorId.process(atomicCardProcessRequest);
     }
