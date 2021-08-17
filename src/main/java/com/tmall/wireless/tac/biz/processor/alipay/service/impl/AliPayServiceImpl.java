@@ -122,6 +122,7 @@ public class AliPayServiceImpl implements IAliPayService {
         pageFloorHeaderDTO.setSubtitle(aldData.getString(headSubTitleAldKey));
         pageFloorHeaderDTO.setBgColor(aldData.getString(headColorAldKey));
         pageFloorHeaderDTO.setSubTitleImgUrl(aldData.getString(headBgPicAldKey));
+        middlePageSPIResponse.setPageFloorHeaderDTO(pageFloorHeaderDTO);
 
         // 导航栏
         PageFloorNavigationDTO pageFloorNavigationDTO = new PageFloorNavigationDTO();
