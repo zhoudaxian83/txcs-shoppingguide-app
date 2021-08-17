@@ -4,6 +4,7 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.taobao.tair.json.Json;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
@@ -110,10 +111,13 @@ public class FirstScreenMindContentScene {
                     return response;
                 }).map(TacResult::newResult)
                 .map(tacResult -> {
-                    tacResult.getBackupMetaData().setUseBackup(true);
+                    HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                        .kv("tacResult",JSON.toJSONString(tacResult.getData()))
+                        .info();
                     if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
                         tacResult.setSuccess(false);
                     }
+                    tacResult.getBackupMetaData().setUseBackup(true);
                     return tacResult;
                 }).onErrorReturn(r -> TacResult.errorResult(""));
     }
