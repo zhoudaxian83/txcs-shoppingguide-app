@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.tradecsa.common.service.spi.response.PageFloorAtomicResultDTO;
 import com.google.common.collect.Lists;
@@ -9,7 +8,6 @@ import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.AtomicCardProcessRequest;
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.IAtomicCardProcessor;
 import org.springframework.stereotype.Service;
-import sun.security.krb5.internal.PAData;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,27 +17,33 @@ import java.util.stream.Collectors;
 public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 
 
+    public static final String PLACE_HOLDER_ITEM_TITTLE = "$itemTitle";
+    public static final String PLACE_HOLDER_ITEM_IMG = "$itemImg";
+    public static final String PLACE_HOLDER_ITEM_URL = "$url";
+    public static final String PLACE_HOLDER_ITEM_PROMOTION_LABEL = "$promotionLabel";
+    public static final String PLACE_HOLDER_ITEM_ORIGIN_PRICE = "$originPrice";
 
-    public static final String MOCK_ITEM = "{\n" +
+
+    public static final String TEMPLATE_ITEM = "{\n" +
             "\t\"saleTags\": [{\n" +
-            "\t\t\"text\": \"<span style='font-size:10sp;color:#FF6010'>超市热卖</span>\",\n" +
+            "\t\t\"text\": \"<span style='font-size:10sp;color:#FF6010'>$promotionLabel</span>\",\n" +
             "\t\t\"textStyle\": {\n" +
             "\t\t\t\"borderColor\": \"#FF6010\"\n" +
             "\t\t}\n" +
             "\t}],\n" +
-            "\t\"title\": \"<span style='font-size:26;color:#333333'>盼盼梅尼耶干蛋糕100g</span>\",\n" +
+            "\t\"title\": \"<span style='font-size:26;color:#333333'>$itemTitle</span>\",\n" +
             "\t\"image\": \"//img.alicdn.com/imgextra/i3/6000000007992/O1CN01VRuIZA28uO03vhrlZ_!!6000000007992-0-at.jpg\",\n" +
             "\t\"remoteLogExt\": \"{\\\"pageBizCode\\\":\\\"product\\\",\\\"cityCode\\\":\\\"330100\\\",\\\"bizCode\\\":\\\"product\\\",\\\"latitude\\\":\\\"30.265642\\\",\\\"source\\\":\\\"homeFeeds\\\",\\\"longitude\\\":\\\"120.108739\\\",\\\"scene\\\":\\\"SSU\\\"}\",\n" +
-            "\t\"action\": \"{\\\"link\\\":\\\"alipays://platformapi/startapp?appId=77700272&startMultApp=YES&query=itemId%3D631609210471%26x%3D120.108739%26channel%3DBIGBRAND%26y%3D30.265642%26cityId%3D330100%26storeId%3D224637052%26sourceFrom%3D&url=%2Findex.html%23pages%2Findex%2Findex\\\",\\\"scm\\\":\\\"\\\",\\\"type\\\":\\\"jump\\\"}\",\n" +
+            "\t\"action\": \"{\\\"link\\\":\\\"$url\\\",\\\"scm\\\":\\\"\\\",\\\"type\\\":\\\"jump\\\"}\",\n" +
             "\t\"topLabelStyle\": {\n" +
             "\t\t\"backgroundImage\": \"linear-gradient(tobottom,#FF1919,#FF683C)\"\n" +
             "\t},\n" +
             "\t\"defaultTemplateId\": \"\",\n" +
             "\t\"tagImageV2\": \"https://gw.alipayobjects.com/mdn/rms_5bd46e/afts/img/A*IL4aRamkbjIAAAAAAAAAAAAAARQnAQ\",\n" +
             "\t\"complexTitle\": \"<span style='font-size:13sip;color:#333333'>超长标题看看超过两行会怎么样</span>\",\n" +
-            "\t\"tagLeftTextV2\": \"<span style='font-size:12sp;color:#FFFFFF;'>1750起</span>\",\n" +
+            "\t\"tagLeftTextV2\": \"<span style='font-size:12sp;color:#FFFFFF;'>$promotionLabel</span>\",\n" +
             "\t\"tagRightTextV2\": \"<span style='font-size:15sp;color:#FF2F23'>抢</span>\",\n" +
-            "\t\"originalPrice\": \"￥678\",\n" +
+            "\t\"originalPrice\": \"$originPrice\",\n" +
             "\t\"originalPriceStyle\": {\n" +
             "\t\t\"color\": \"#ccffffff\",\n" +
             "\t\t\"fontSize\": \"10sp\",\n" +
@@ -61,12 +65,6 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
         "\t\"items\": [],\n" +
         "\t\"spmC\": \"xxx\"\n" +
         "}";
-
-    public static final String PLACE_HOLDER_ITEM_TITTLE = "$itemTitle";
-    public static final String PLACE_HOLDER_ITEM_IMG = "$itemImg";
-    public static final String PLACE_HOLDER_ITEM_URL = "$url";
-    public static final String PLACE_HOLDER_ITEM_PROMOTION_LABEL = "$promotionLabel";
-    public static final String PLACE_HOLDER_ITEM_ORIGIN_PRICE = "$originPrice";
 
 
     private static final String ITEM_TEMPLATE =
@@ -130,7 +128,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
     }
 
     private JSONObject convert(ItemEntityVO itemEntityVO) {
-        String replace = ITEM_TEMPLATE.replace(PLACE_HOLDER_ITEM_IMG, itemEntityVO.getString("itemImg"))
+        String replace = TEMPLATE_ITEM.replace(PLACE_HOLDER_ITEM_IMG, itemEntityVO.getString("itemImg"))
                 .replace(PLACE_HOLDER_ITEM_TITTLE, itemEntityVO.getString("shortTitle"))
                 .replace(PLACE_HOLDER_ITEM_URL, itemEntityVO.getString("itemUrl"))
                 .replace(PLACE_HOLDER_ITEM_ORIGIN_PRICE, "678")
@@ -138,7 +136,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
                 ;
 
 
-        return JSON.parseObject(MOCK_ITEM);
+        return JSON.parseObject(replace);
     }
 
 
