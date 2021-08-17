@@ -114,8 +114,7 @@ public class FirstScreenMindContentScene {
                     tacResult.setSuccess(false);
                     tacResult.setData(new SgFrameworkResponse<ContentVO>());
                     HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
-                        .kv("tacResult.getData()",JSON.toJSONString(tacResult.getData()))
-                        .kv("tacResult.isSuccess()",JSON.toJSONString(tacResult.isSuccess()))
+                        .kv("tacResult.getData()",JSON.toJSONString(tacResult))
                         .info();
                     if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
                         tacResult.setSuccess(false);
