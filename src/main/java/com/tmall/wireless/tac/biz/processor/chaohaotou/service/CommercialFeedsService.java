@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.chaohaotou.service;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -40,7 +41,7 @@ public class CommercialFeedsService {
 
     private Map<String, Object> buildParam(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<String, Object> paramsValue = new HashMap<>(16);
-        Map<String, Object> paramMap = new HashMap<>();
+        Map<String, Object> paramMap = Maps.newHashMap();
         Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
         Long index = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "index", 0L);
         Long pageSize = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "pageSize", 20L);
