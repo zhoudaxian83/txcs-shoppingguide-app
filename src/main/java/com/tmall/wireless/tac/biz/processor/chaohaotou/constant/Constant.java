@@ -6,14 +6,9 @@ package com.tmall.wireless.tac.biz.processor.chaohaotou.constant;
  * description:
  */
 public class Constant {
-    public static final String ITEM_LIMIT_RESULT = "itemLimitResult";
-    public static final String LIMIT_INFO =  "limitInfo";
-    public static final String SUCCESS =  "success";
-    public static final String TODAY_CRAZY_LIMIT ="todayCrazyLimit";
+    public static final String TMCS_ZNT_ENGINE ="tmcsZntEngine";
     public static final Long APP_ID = 21431L;
-    public static final String FEEDS_TYPE = "B2C";
-    /**
-     * newProduct 和 fashionProduct
-     */
-    public static final String COMMERCE = "newProduct";
+    public static final String BIZ_TYPE_NEW_PRODUCE = "newProduct";
+    public static final String BIZ_TYPE_FASHION_PRODUCT = "fashionProduct";
+    public static final String B2C = "B2C";
 }

@@ -1,14 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.chaohaotou.ext;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import com.alibaba.cola.extension.Extension;
-
 import com.ali.com.google.common.base.Joiner;
 import com.ali.unit.rule.util.lang.CollectionUtils;
+import com.alibaba.cola.extension.Extension;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -23,6 +17,7 @@ import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.model.DataContext;
+import com.tmall.wireless.tac.biz.processor.chaohaotou.service.CommercialFeedsService;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.utils.LogicPageUtil;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.utils.SmAreaIdUtil;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.utils.TairUtil;
@@ -32,12 +27,17 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
  * @author luojunchong
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-    scenario = ScenarioConstantApp.CHAO_HAO_TOU)
+        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+        scenario = ScenarioConstantApp.CHAO_HAO_TOU)
 @Service
 public class ChaoHaoTouDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
@@ -47,12 +47,8 @@ public class ChaoHaoTouDataItemQueryExtPt implements OriginDataItemQueryExtPt {
     @Autowired
     RecommendSpi recommendSpi;
 
-    /**
-     * 分大区个性化排序后商品缓存后缀
-     */
-    private static final String AREA_SORT_SUFFIX = "_AREA_SORT";
-
-    private static final String LOG_PREFIX = "WuZheTianOriginDataItemQueryExtPt-";
+    @Autowired
+    CommercialFeedsService commercialFeedsService;
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
@@ -63,22 +59,23 @@ public class ChaoHaoTouDataItemQueryExtPt implements OriginDataItemQueryExtPt {
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         dataContext.setIndex(index);
         dataContext.setPageSize(pageSize);
+        commercialFeedsService.getCommercialFeeds(context);
         //tair获取推荐商品
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
-            smAreaId);
+                smAreaId);
         List<Long> items = columnCenterDataSetItemRuleDTOList.stream().map(
-            ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
+                ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
         dataContext.setItems(items);
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
-            .map(recommendResponseEntityResponse -> {
-                if (!recommendResponseEntityResponse.isSuccess()
-                    || recommendResponseEntityResponse.getValue() == null
-                    || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
-                    return new OriginDataDTO<>();
-                }
-                OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-                return this.getItemPage(originDataDTO, dataContext);
-            });
+                .map(recommendResponseEntityResponse -> {
+                    if (!recommendResponseEntityResponse.isSuccess()
+                            || recommendResponseEntityResponse.getValue() == null
+                            || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
+                        return new OriginDataDTO<>();
+                    }
+                    OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
+                    return this.getItemPage(originDataDTO, dataContext);
+                });
     }
 
     /**
@@ -108,7 +105,7 @@ public class ChaoHaoTouDataItemQueryExtPt implements OriginDataItemQueryExtPt {
      */
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
         Pair<Boolean, List<ItemEntity>> pair = LogicPageUtil.getPage(originDataDTO.getResult(), dataContext.getIndex(),
-            dataContext.getPageSize());
+                dataContext.getPageSize());
         List<ItemEntity> itemEntities = pair.getRight();
         originDataDTO.setHasMore(pair.getLeft());
         originDataDTO.setResult(itemEntities);
@@ -129,9 +126,9 @@ public class ChaoHaoTouDataItemQueryExtPt implements OriginDataItemQueryExtPt {
         originDataDTO.setScm(recommendResponseEntity.getScm());
         originDataDTO.setTppBuckets(recommendResponseEntity.getTppBuckets());
         originDataDTO.setResult(recommendResponseEntity
-            .getResult()
-            .stream()
-            .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
+                .getResult()
+                .stream()
+                .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
         return originDataDTO;
     }
 

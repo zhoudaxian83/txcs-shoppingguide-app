@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.chaohaotou.service;
 
+import com.alibaba.fastjson.JSON;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -7,6 +8,7 @@ import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.constant.Constant;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +17,7 @@ import java.util.Map;
  * @Author: luoJunChong
  * @Date: 2021/8/16 14:27
  */
+@Component
 public class CommercialFeedsService {
     @Autowired
     RpcSpi rpcSpi;
@@ -26,8 +29,10 @@ public class CommercialFeedsService {
         // 品牌承接页feeds流	导购->Engine TODO:需要跟导购确定入参出参
         //ResultResponse<List<TmcsZntItemDTO>> commercialFeeds (TmcsZntFeedsRequest request);
         Map<String, Object> paramMap = this.buildParam(sgFrameworkContextItem);
+        tacLogger.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
         try {
-            Object o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramMap);
+            Object o = rpcSpi.invokeHsf(Constant.TMCS_ZNT_ENGINE, paramMap);
+            tacLogger.info("getCommercialFeeds_result" + JSON.toJSONString(o));
         } catch (Exception e) {
             tacLogger.error("获取限购信息异常", e);
         }
@@ -41,14 +46,17 @@ public class CommercialFeedsService {
         Long pageSize = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "pageSize", 20L);
         Long smAreaId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "smAreaId", 330100L);
         String csa = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "csa", "");
+        String bizType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "bizType", "");
         String regionCode = AddressUtil.parseCSA(csa).getRegionCode();
         paramMap.put("userId", userId);
-        paramMap.put("feedsType", Constant.FEEDS_TYPE);
         paramMap.put("regionCode", regionCode);
         paramMap.put("smAreaId", smAreaId);
         paramMap.put("index", index);
         paramMap.put("pageSize", pageSize);
-        paramMap.put("commerce", Constant.COMMERCE);
+        paramMap.put("commerce", Constant.B2C);
+        paramMap.put("bizType", bizType);
+        //TODO 兼容二方包多入参,二方包升级后删除
+        paramMap.put("feedsType", bizType);
         paramsValue.put("TmcsZntFeedsRequest", paramMap);
         return paramsValue;
     }
