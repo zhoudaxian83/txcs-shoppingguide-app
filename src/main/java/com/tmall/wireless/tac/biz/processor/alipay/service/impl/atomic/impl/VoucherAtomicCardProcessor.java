@@ -90,11 +90,7 @@ public class VoucherAtomicCardProcessor implements IAtomicCardProcessor {
 
     @Override
     public PageFloorAtomicResultDTO process(AtomicCardProcessRequest atomicCardProcessRequest) {
-        PageFloorAtomicResultDTO pageFloorAtomicResultDTO = new PageFloorAtomicResultDTO();
-        pageFloorAtomicResultDTO.setAtomCardTemplateId(atomicCardProcessRequest.getPageFloorAtomicDTO().getAtomCardTemplateId());
-        List<JSONObject> collect = atomicCardProcessRequest.getItemAndContentList().stream().map(this::convert).collect(Collectors.toList());
-        pageFloorAtomicResultDTO.setCardData(collect);
-        return pageFloorAtomicResultDTO;
+        return null;
     }
 
     private JSONObject convert(ItemEntityVO itemEntityVO) {
