@@ -31,7 +31,7 @@ public class CommercialFeedsService {
         Map<String, Object> paramMap = this.buildParam(sgFrameworkContextItem);
         tacLogger.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
         try {
-            Object o = rpcSpi.invokeHsf(Constant.TMCS_ZNT_ENGINE, paramMap);
+            Object o = rpcSpi.invokeHsf("tmcsZntEngine", paramMap);
             tacLogger.info("tmcsZntEngine接口调用异常" + JSON.toJSONString(o));
         } catch (Exception e) {
             tacLogger.error("获取限购信息异常", e);
@@ -57,7 +57,7 @@ public class CommercialFeedsService {
         paramMap.put("bizType", bizType);
         //TODO 兼容二方包多入参,二方包升级后删除
         paramMap.put("feedsType", bizType);
-        paramsValue.put("TmcsZntFeedsRequest", paramMap);
+        paramsValue.put("tmcsZntFeedsRequest", paramMap);
         return paramsValue;
     }
 }
