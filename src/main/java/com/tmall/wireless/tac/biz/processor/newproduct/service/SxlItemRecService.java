@@ -107,6 +107,7 @@ public class SxlItemRecService {
         }else {
             /**算法选品接入ab实验**/
             String itemSetIdType = getAbData(context);
+            itemSetIdType = "new";
             if(!StringUtils.isBlank(itemSetIdType)){
                 if("old".equals(itemSetIdType)){
                     entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetIdSw));
