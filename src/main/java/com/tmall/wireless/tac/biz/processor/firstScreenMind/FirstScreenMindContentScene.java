@@ -114,8 +114,8 @@ public class FirstScreenMindContentScene {
                     /*HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                         .kv("tacResult.getData()",JSON.toJSONString(tacResult))
                         .info();*/
-                    tacResult.setSuccess(false);
-                    tacResult.setData(new SgFrameworkResponse<ContentVO>());
+                    /*tacResult.setSuccess(false);
+                    tacResult.setData(new SgFrameworkResponse<ContentVO>());*/
                     /*HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                         .kv("tacResult.getData()1",JSON.toJSONString(tacResult))
                         .info();*/
