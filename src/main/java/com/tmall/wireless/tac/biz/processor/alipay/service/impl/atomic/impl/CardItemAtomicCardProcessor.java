@@ -22,12 +22,12 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 
     public static final String MOCK_ITEM = "{\n" +
             "\t\"saleTags\": [{\n" +
-            "\t\t\"text\": \"<spanstyle=\\\"font-size:10sp;color:#FF6010\\\">超市热卖</span>\",\n" +
+            "\t\t\"text\": \"<spanstyle='font-size:10sp;color:#FF6010'>超市热卖</span>\",\n" +
             "\t\t\"textStyle\": {\n" +
             "\t\t\t\"borderColor\": \"#FF6010\"\n" +
             "\t\t}\n" +
             "\t}],\n" +
-            "\t\"title\": \"<spanstyle=\\\\\\\"font-size:26;color:#333333\\\\\\\">盼盼梅尼耶干蛋糕100g</span>\",\n" +
+            "\t\"title\": \"<spanstyle='font-size:26;color:#333333'>盼盼梅尼耶干蛋糕100g</span>\",\n" +
             "\t\"image\": \"//img.alicdn.com/imgextra/i3/6000000007992/O1CN01VRuIZA28uO03vhrlZ_!!6000000007992-0-at.jpg\",\n" +
             "\t\"remoteLogExt\": \"{\\\"pageBizCode\\\":\\\"product\\\",\\\"cityCode\\\":\\\"330100\\\",\\\"bizCode\\\":\\\"product\\\",\\\"latitude\\\":\\\"30.265642\\\",\\\"source\\\":\\\"homeFeeds\\\",\\\"longitude\\\":\\\"120.108739\\\",\\\"scene\\\":\\\"SSU\\\"}\",\n" +
             "\t\"action\": \"{\\\"link\\\":\\\"alipays://platformapi/startapp?appId=77700272&startMultApp=YES&query=itemId%3D631609210471%26x%3D120.108739%26channel%3DBIGBRAND%26y%3D30.265642%26cityId%3D330100%26storeId%3D224637052%26sourceFrom%3D&url=%2Findex.html%23pages%2Findex%2Findex\\\",\\\"scm\\\":\\\"\\\",\\\"type\\\":\\\"jump\\\"}\",\n" +
