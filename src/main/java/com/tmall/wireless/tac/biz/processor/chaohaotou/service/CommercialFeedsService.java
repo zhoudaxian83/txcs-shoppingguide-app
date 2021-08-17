@@ -32,7 +32,7 @@ public class CommercialFeedsService {
         tacLogger.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
         try {
             Object o = rpcSpi.invokeHsf(Constant.TMCS_ZNT_ENGINE, paramMap);
-            tacLogger.info("getCommercialFeeds_result" + JSON.toJSONString(o));
+            tacLogger.info("tmcsZntEngine接口调用异常" + JSON.toJSONString(o));
         } catch (Exception e) {
             tacLogger.error("获取限购信息异常", e);
         }
