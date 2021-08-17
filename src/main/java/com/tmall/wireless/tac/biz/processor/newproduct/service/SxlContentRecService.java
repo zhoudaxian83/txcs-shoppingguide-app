@@ -81,7 +81,6 @@ public class SxlContentRecService {
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_CONTENT)
             .kv("sgFrameworkContextContent",JSON.toJSONString(sgFrameworkContextContent))
             .kv("context",JSON.toJSONString(context))
-            .kv("csa",context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA).toString())
             .info();
 
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
