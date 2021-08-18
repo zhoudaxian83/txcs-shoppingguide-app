@@ -3,7 +3,6 @@ package com.tmall.wireless.tac.biz.processor.chaohaotou.ext;
 import com.ali.com.google.common.base.Joiner;
 import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.alibaba.cola.extension.Extension;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -17,9 +16,9 @@ import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.model.DataContext;
+import com.tmall.wireless.tac.biz.processor.chaohaotou.model.convert.TmcsZntItemDTO;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.service.CommercialFeedsService;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.utils.LogicPageUtil;
-import com.tmall.wireless.tac.biz.processor.chaohaotou.utils.SmAreaIdUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import io.reactivex.Flowable;
 import org.apache.commons.lang3.tuple.Pair;
@@ -49,15 +48,13 @@ public class ChaoHaoTouDataItemQueryExtPt implements OriginDataItemQueryExtPt {
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
-        DataContext dataContext = new DataContext();
-        Long smAreaId = SmAreaIdUtil.getSmAreaId(context);
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
-        Long index = MapUtil.getLongWithDefault(context.getRequestParams(), "index", 1L);
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
-        dataContext.setIndex(index);
-        dataContext.setPageSize(pageSize);
-        commercialFeedsService.getCommercialFeeds(context);
-        List<Long> items = Lists.newArrayList();
+        List<TmcsZntItemDTO> tmcsZntItemDTOList = commercialFeedsService.getCommercialFeeds(context);
+        List<Long> items = tmcsZntItemDTOList.stream().map(TmcsZntItemDTO::getItemId).collect(Collectors.toList());
+        //返回结果为空或者返回结果小于每页条数视为没有数据了
+        boolean hasMore = items.size() == pageSize;
+        context.getUserParams().put("hasMore", hasMore);
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
                 .map(recommendResponseEntityResponse -> {
                     if (!recommendResponseEntityResponse.isSuccess()
@@ -66,7 +63,7 @@ public class ChaoHaoTouDataItemQueryExtPt implements OriginDataItemQueryExtPt {
                         return new OriginDataDTO<>();
                     }
                     OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-                    return this.getItemPage(originDataDTO, dataContext);
+                    return originDataDTO;
                 });
     }
 

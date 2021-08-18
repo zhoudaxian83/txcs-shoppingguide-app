@@ -23,6 +23,7 @@ import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
@@ -37,6 +38,9 @@ public class ChaoHaoTouPageBannerItemInfoScene {
 
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
+
+    @Autowired
+    TacLogger tacLogger;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
         Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 0L);
@@ -57,7 +61,7 @@ public class ChaoHaoTouPageBannerItemInfoScene {
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
         sgFrameworkContextItem.setUserDO(userDO);
         sgFrameworkContextItem.setLocParams(
-            CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
+                CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo());
 
         EntitySetParams entitySetParams = new EntitySetParams();
@@ -78,10 +82,11 @@ public class ChaoHaoTouPageBannerItemInfoScene {
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
         sgFrameworkContextItem.setUserParams(context.getParams());
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-            .map(TacResult::newResult).map(tacResult -> {
-                tacResult.setHasMore(tacResult.getData().isHasMore());
-                return tacResult;
-            }).onErrorReturn(r -> TacResult.errorResult(""));
+                .map(TacResult::newResult).map(tacResult -> {
+                    tacLogger.info("hasMore=" + (boolean) sgFrameworkContextItem.getUserParams().get("hasMore"));
+                    tacResult.setHasMore((boolean) sgFrameworkContextItem.getUserParams().get("hasMore"));
+                    return tacResult;
+                }).onErrorReturn(r -> TacResult.errorResult(""));
 
     }
 

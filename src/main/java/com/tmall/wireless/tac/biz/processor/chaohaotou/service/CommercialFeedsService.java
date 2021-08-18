@@ -1,17 +1,23 @@
 package com.tmall.wireless.tac.biz.processor.chaohaotou.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.constant.Constant;
+import com.tmall.wireless.tac.biz.processor.chaohaotou.model.convert.TmcsZntItemDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,17 +32,32 @@ public class CommercialFeedsService {
     @Autowired
     TacLogger tacLogger;
 
-    public void getCommercialFeeds(SgFrameworkContextItem sgFrameworkContextItem) {
-        // 品牌承接页feeds流	导购->Engine TODO:需要跟导购确定入参出参
-        //ResultResponse<List<TmcsZntItemDTO>> commercialFeeds (TmcsZntFeedsRequest request);
+    public List<TmcsZntItemDTO> getCommercialFeeds(SgFrameworkContextItem sgFrameworkContextItem) {
+        List<TmcsZntItemDTO> tmcsZntItemDTOList = Lists.newArrayList();
         Map<String, Object> paramMap = this.buildParam(sgFrameworkContextItem);
         tacLogger.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
         try {
-            Object o = rpcSpi.invokeHsf("tmcsZntEngine", paramMap);
-            tacLogger.info("tmcsZntEngine接口调用异常" + JSON.toJSONString(o));
+            Object o = rpcSpi.invokeHsf(Constant.TMCS_ZNT_ENGINE, paramMap);
+            if (o == null) {
+                tacLogger.info("tmcsZntEngine接口调用为空" + JSON.toJSONString(o));
+            }
+            tmcsZntItemDTOList = this.convert(o);
         } catch (Exception e) {
-            tacLogger.error("获取限购信息异常", e);
+            tacLogger.error("tmcsZntEngine接口调用异常", e);
         }
+        return tmcsZntItemDTOList;
+    }
+
+    private List<TmcsZntItemDTO> convert(Object o) {
+        JSONObject jsonObject = JSONObject.parseObject(o.toString());
+        if (!jsonObject.getBoolean("success")) {
+            return Lists.newArrayList();
+        }
+        JSONArray jsonArray = jsonObject.getJSONArray("data");
+        if (CollectionUtils.isEmpty(jsonArray)) {
+            return Lists.newArrayList();
+        }
+        return JSONObject.parseArray(jsonArray.toJSONString(), TmcsZntItemDTO.class);
     }
 
     private Map<String, Object> buildParam(SgFrameworkContextItem sgFrameworkContextItem) {
