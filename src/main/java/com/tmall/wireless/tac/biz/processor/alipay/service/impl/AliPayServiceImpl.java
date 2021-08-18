@@ -130,6 +130,7 @@ public class AliPayServiceImpl implements IAliPayService {
 
 
         MiddlePageSPIResponse middlePageSPIResponse = new MiddlePageSPIResponse();
+        middlePageSPIResponse.setHasMore(true);
 
         // 头部区
         PageFloorHeaderDTO pageFloorHeaderDTO = new PageFloorHeaderDTO();
