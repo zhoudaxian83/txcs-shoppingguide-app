@@ -110,7 +110,23 @@ public class AliPayServiceImpl implements IAliPayService {
     public Flowable<MiddlePageSPIResponse> processMiddlePage(Context context, MiddlePageSPIRequest middlePageSPIRequest) {
 
 
-        GeneralItem aldData = aldService.getAldData(357133924L, "330100");
+
+
+        BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+                ScenarioConstantApp.LOC_TYPE_B2C,
+                ScenarioConstantApp.SCENARIO_ALI_PAY_MIDDLE_PAGE);
+
+
+        return shoppingguideSdkItemService.recommend(context, bizScenario).map(re -> {
+
+            Object o = context.get(CONTEXT_KEY);
+            return convertMiddleResult(re, (GeneralItem)o, middlePageSPIRequest);
+        });
+
+    }
+
+    private MiddlePageSPIResponse convertMiddleResult(SgFrameworkResponse<ItemEntityVO> re, GeneralItem aldData, MiddlePageSPIRequest middlePageSPIRequest) {
+
 
         MiddlePageSPIResponse middlePageSPIResponse = new MiddlePageSPIResponse();
 
@@ -131,46 +147,38 @@ public class AliPayServiceImpl implements IAliPayService {
         pageFloorNavigationDTO.setTitleLightImageUrl(aldData.getString(navigationIconPicAldKey));
         middlePageSPIResponse.setPageFloorNavigationDTO(pageFloorNavigationDTO);
 
-        BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-                ScenarioConstantApp.LOC_TYPE_B2C,
-                ScenarioConstantApp.SCENARIO_ALI_PAY_MIDDLE_PAGE);
+
+        List<ItemEntityVO> itemAndContentList = re.getItemAndContentList();
+        List<PageFloorResultDTO> floorResultDTOS = Lists.newArrayList();
+        middlePageSPIRequest.getMiddlePageFloorDTOList().forEach(middlePageFloorDTO -> {
 
 
-        return shoppingguideSdkItemService.recommend(context, bizScenario).map(re -> {
+            PageFloorResultDTO pageFloorResultDTO = new PageFloorResultDTO();
+            pageFloorResultDTO.setPageFloorId(middlePageFloorDTO.getPageFloorId());
 
-            List<ItemEntityVO> itemAndContentList = re.getItemAndContentList();
-            List<PageFloorResultDTO> floorResultDTOS = Lists.newArrayList();
-            middlePageSPIRequest.getMiddlePageFloorDTOList().forEach(middlePageFloorDTO -> {
+            List<PageFloorAtomicDTO> pageFloorAtomicDTOS = Optional.of(middlePageFloorDTO).map(MiddlePageFloorDTO::getPageFloorDetailDTO).map(PageFloorDetailDTO::getPageFloorAtomicDTOList).orElse(Lists.newArrayList());
+            List<PageFloorAtomicResultDTO> pageFloorAtomicResultDTOList = pageFloorAtomicDTOS.stream()
+                    .map(pageFloorAtomicDTO -> {
+                        AtomicCardProcessRequest atomicCardProcessRequest = new AtomicCardProcessRequest();
+                        atomicCardProcessRequest.setPageFloorAtomicDTO(pageFloorAtomicDTO);
+                        atomicCardProcessRequest.setAldData(aldData);
+                        atomicCardProcessRequest.setItemAndContentList(itemAndContentList);
+                        return processAtomic(atomicCardProcessRequest);
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+            PageFloorResultDetailDTO pageFloorResultDetailDTO = new PageFloorResultDetailDTO();
+            pageFloorResultDetailDTO.setPageFloorAtomicResultDTOList(pageFloorAtomicResultDTOList);
+            pageFloorResultDTO.setPageFloorResultDetailDTO(pageFloorResultDetailDTO);
 
+            floorResultDTOS.add(pageFloorResultDTO);
 
-                PageFloorResultDTO pageFloorResultDTO = new PageFloorResultDTO();
-                pageFloorResultDTO.setPageFloorId(middlePageFloorDTO.getPageFloorId());
-
-                List<PageFloorAtomicDTO> pageFloorAtomicDTOS = Optional.of(middlePageFloorDTO).map(MiddlePageFloorDTO::getPageFloorDetailDTO).map(PageFloorDetailDTO::getPageFloorAtomicDTOList).orElse(Lists.newArrayList());
-                List<PageFloorAtomicResultDTO> pageFloorAtomicResultDTOList = pageFloorAtomicDTOS.stream()
-                        .map(pageFloorAtomicDTO -> {
-                            AtomicCardProcessRequest atomicCardProcessRequest = new AtomicCardProcessRequest();
-                            atomicCardProcessRequest.setPageFloorAtomicDTO(pageFloorAtomicDTO);
-                            atomicCardProcessRequest.setAldData(aldData);
-                            atomicCardProcessRequest.setItemAndContentList(itemAndContentList);
-                            return processAtomic(atomicCardProcessRequest);
-                        })
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList());
-                PageFloorResultDetailDTO pageFloorResultDetailDTO = new PageFloorResultDetailDTO();
-                pageFloorResultDetailDTO.setPageFloorAtomicResultDTOList(pageFloorAtomicResultDTOList);
-                pageFloorResultDTO.setPageFloorResultDetailDTO(pageFloorResultDetailDTO);
-
-                floorResultDTOS.add(pageFloorResultDTO);
-
-            });
-
-            middlePageSPIResponse.setPageFloorResultDTOList(floorResultDTOS);
-
-            LOGGER.warn("middlePageSPIResponse:{}", JSONObject.toJSONString(middlePageSPIResponse));
-            return middlePageSPIResponse;
         });
 
+        middlePageSPIResponse.setPageFloorResultDTOList(floorResultDTOS);
+
+        LOGGER.warn("middlePageSPIResponse:{}", JSONObject.toJSONString(middlePageSPIResponse));
+        return middlePageSPIResponse;
     }
 
     private PageFloorAtomicResultDTO processAtomic(AtomicCardProcessRequest atomicCardProcessRequest) {
