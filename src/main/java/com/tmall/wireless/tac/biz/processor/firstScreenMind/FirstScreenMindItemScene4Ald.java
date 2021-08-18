@@ -73,7 +73,10 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
         List<Long> exposureContentIds = ContentSetIdListUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(),
             RequestKeyConstantApp.FIRST_SCREEN_EXPOSURE_CONTENT_IDS);
         if(CollectionUtils.isNotEmpty(exposureContentIds)){
-            return Flowable.just(TacResult.newResult(new ArrayList<>()));
+            GeneralItem generalItem = new GeneralItem();
+            generalItem.put("key","empty")
+            List<GeneralItem> generalItems = Lists.newArrayList(generalItem);
+            return Flowable.just(TacResult.newResult(generalItems));
         }
 
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)

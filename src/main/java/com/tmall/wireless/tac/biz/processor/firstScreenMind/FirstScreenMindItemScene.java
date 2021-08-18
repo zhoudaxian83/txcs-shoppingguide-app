@@ -8,6 +8,7 @@ import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.EntityVO;
+import com.tmall.txcs.gs.framework.model.ErrorCode;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
@@ -66,7 +67,10 @@ public class FirstScreenMindItemScene {
         List<Long> exposureContentIds = ContentSetIdListUtil.getLongWithDefault(context.getParams(),
             RequestKeyConstantApp.FIRST_SCREEN_EXPOSURE_CONTENT_IDS);
         if(CollectionUtils.isNotEmpty(exposureContentIds)){
-            return Flowable.just(TacResult.newResult(new SgFrameworkResponse<EntityVO>()));
+            SgFrameworkResponse<EntityVO> response = new SgFrameworkResponse<>();
+            response.setSuccess(false);
+            response.setErrorCode("empty response");
+            return Flowable.just(TacResult.newResult(response));
         }
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
