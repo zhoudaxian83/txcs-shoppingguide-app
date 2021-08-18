@@ -100,7 +100,8 @@ public class AliPayServiceImpl implements IAliPayService {
         categoryContentRet.setSubTitle(aldData.getString(fpServiceTextAldKey));
         categoryContentRet.setActionImgUrl(aldData.getString(fpServiceTextAldKey));
         categoryContentRet.setServiceList(serviceContentRecList);
-        List<ServiceContentRec> collect = re.getItemAndContentList().stream().map(e -> convert(e, aldData)).collect(Collectors.toList());
+        List<ItemEntityVO> itemEntityVOS = re.getItemAndContentList().subList(0, Math.min(3, re.getItemAndContentList().size()));
+        List<ServiceContentRec> collect = itemEntityVOS.stream().map(e -> convert(e, aldData)).collect(Collectors.toList());
         categoryContentRet.setServiceList(collect);
         categoryContentRet.setSuccess(true);
         return mixerCollectRecResult;
