@@ -16,6 +16,7 @@ import java.util.Map;
 /**
  * @author haixiao.zhang
  * @date 2021/6/10
+ * 废弃代码-xml注释
  */
 @Extension(bizId = ScenarioConstant.BIZ_TYPE_SUPERMARKET,
     useCase = ScenarioConstant.LOC_TYPE_B2C,

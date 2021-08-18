@@ -81,6 +81,10 @@ public class LimitTimeBuyItemInfoPostProcessorExtPt implements ItemInfoPostProce
     private JSONObject getItemLimitResult(Map<String, Object> paramsValue) {
         Object o;
         try {
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                .kv("LimitTimeBuyItemInfoPostProcessorExtPt","getItemLimitResult")
+                .kv("paramsValue",JSON.toJSONString(paramsValue))
+                .info();
             o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramsValue);
             JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
             HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
