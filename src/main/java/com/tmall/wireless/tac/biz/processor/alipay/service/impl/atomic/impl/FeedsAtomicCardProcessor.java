@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 // feeds流
 @Service
@@ -100,11 +101,19 @@ public class FeedsAtomicCardProcessor implements IAtomicCardProcessor {
         pageFloorAtomicResultDTO.setAtomCardTemplateId(atomicCardProcessRequest.getPageFloorAtomicDTO().getAtomCardTemplateId());
         List<ItemEntityVO> itemEntityVOS =
                 Optional.of(atomicCardProcessRequest).map(AtomicCardProcessRequest::getItemAndContentList).orElse(Lists.newArrayList());
-        List<JSONObject> jsonObjects = Lists.newArrayList();
-        for (int i = 0; i < 3 ; i++) {
-           jsonObjects.add(JSON.parseObject(ITEM_TEMP));
-        }
-        pageFloorAtomicResultDTO.setCardData(jsonObjects);
+
+        List<JSONObject> collect = itemEntityVOS.stream().map(itemEntityVO -> {
+            String replace = ITEM_TEMP.replace(PLACE_HOLDER_ITEM_IMG, itemEntityVO.getString("itemImg"))
+                    .replace(PLACE_HOLDER_ITEM_TITTLE, itemEntityVO.getString("shortTitle"))
+                    .replace(PLACE_HOLDER_ITEM_URL, itemEntityVO.getString("itemUrl"))
+                    .replace(PLACE_HOLDER_ITEM_ORIGIN_PRICE, itemEntityVO.getString("chaoshiPrice"))
+                    .replace(PLACE_HOLDER_ITEM_PROMOTION_LABEL, "超市热卖")
+                    .replace(PLACE_HOLDER_ITEM_PROMOTION_PRICE, itemEntityVO.getString("showPrice"));
+            return JSON.parseObject(replace);
+
+        }).collect(Collectors.toList());
+        pageFloorAtomicResultDTO.setCardData(collect);
+
         return pageFloorAtomicResultDTO;
     }
 }
