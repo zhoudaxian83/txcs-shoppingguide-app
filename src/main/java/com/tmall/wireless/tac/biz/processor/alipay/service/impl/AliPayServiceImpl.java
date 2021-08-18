@@ -135,18 +135,19 @@ public class AliPayServiceImpl implements IAliPayService {
         // 头部区
         PageFloorHeaderDTO pageFloorHeaderDTO = new PageFloorHeaderDTO();
         pageFloorHeaderDTO.setType("image");
-        pageFloorHeaderDTO.setTitle(aldData.getString(headSubTitleAldKey));
-        pageFloorHeaderDTO.setSubtitle(aldData.getString(headSubTitleAldKey));
-        pageFloorHeaderDTO.setBgColor(aldData.getString(headColorAldKey));
-        pageFloorHeaderDTO.setSubTitleImgUrl(aldData.getString(headBgPicAldKey));
+//        pageFloorHeaderDTO.setTitle(aldData.getString(headSubTitleAldKey));
+        pageFloorHeaderDTO.setSubtitle("送货上门 品质保证");
+        pageFloorHeaderDTO.setBgColor("#F8FDE4");
+//        pageFloorHeaderDTO.setSubTitleImgUrl(aldData.getString(headBgPicAldKey));
         middlePageSPIResponse.setPageFloorHeaderDTO(pageFloorHeaderDTO);
 
         // 导航栏
         PageFloorNavigationDTO pageFloorNavigationDTO = new PageFloorNavigationDTO();
-        pageFloorNavigationDTO.setTitle(aldData.getString(navigationTitleAldKey));
-        pageFloorNavigationDTO.setTitleImage(aldData.getString(navigationIconPicAldKey));
-        pageFloorNavigationDTO.setStyle("light");
-        pageFloorNavigationDTO.setTitleLightImageUrl(aldData.getString(navigationIconPicAldKey));
+        pageFloorNavigationDTO.setTitle("官方自营 极速送达");
+        pageFloorNavigationDTO.setTitleImage("https://gw.alicdn.com/imgextra/i1/O1CN01FTjVSn1vkEGlrWJCR_!!6000000006210-2-tps-72-72.png");
+//        pageFloorNavigationDTO.setTitleImage(aldData.getString(navigationIconPicAldKey));
+        pageFloorNavigationDTO.setStyle("dark");
+        pageFloorNavigationDTO.setTitleLightImageUrl("https://gw.alicdn.com/imgextra/i1/O1CN01FTjVSn1vkEGlrWJCR_!!6000000006210-2-tps-72-72.png");
         middlePageSPIResponse.setPageFloorNavigationDTO(pageFloorNavigationDTO);
 
 
