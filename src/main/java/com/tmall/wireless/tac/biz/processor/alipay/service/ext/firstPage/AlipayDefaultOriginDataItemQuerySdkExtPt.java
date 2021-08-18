@@ -41,8 +41,8 @@ public class AlipayDefaultOriginDataItemQuerySdkExtPt extends Register implement
     @Autowired
     AldService aldService;
 
-    public static final int ITEM_SIZE = 40;
-    public static final int ITEM_SIZE_HOOK = 20;
+    public static final int ITEM_SIZE = 20;
+    public static final int ITEM_SIZE_HOOK = 10;
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem sgFrameworkContextItem) {
