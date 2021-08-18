@@ -20,26 +20,34 @@ public class FeedsAtomicCardProcessor implements IAtomicCardProcessor {
         return "COMMON_DetailMutablecard";
     }
 
+    public static final String PLACE_HOLDER_ITEM_TITTLE = "$itemTitle";
+    public static final String PLACE_HOLDER_ITEM_IMG = "$itemImg";
+    public static final String PLACE_HOLDER_ITEM_URL = "$url";
+    public static final String PLACE_HOLDER_ITEM_PROMOTION_LABEL = "$promotionLabel";
+    public static final String PLACE_HOLDER_ITEM_ORIGIN_PRICE = "$originPrice";
+    public static final String PLACE_HOLDER_ITEM_PROMOTION_PRICE = "$promotionPrice";
+
+
     public static final String ITEM_TEMP = "{\n" +
             "\t\"url\": \"{\\\"type\\\":\\\"jump\\\",\\\"link\\\":\\\"alipays://xxx\\\"}\",\n" +
-            "\t\"moreAction\": \"{\\\"type\\\":\\\"feedback\\\",\\\"items\\\":[{\\\"reason\\\":\\\"F05\\\",\\\"icon\\\":\\\"https://gw.alipayobjects.com/mdn/wallet_home/afts/img/A*K7xETZ5_tQoAAAAAAAAAAABkARQnAQ\\\",\\\"name\\\":\\\"内容不感兴趣\\\"},{\\\"reason\\\":\\\"F04\\\",\\\"icon\\\":\\\"https://gw.alipayobjects.com/mdn/wallet_home/afts/img/A*K7xETZ5_tQoAAAAAAAAAAABkARQnAQ\\\",\\\"name\\\":\\\"图片引起不适\\\"}]}\",\n" +
-            "\t\"mainImageUrl\": \"https://gw-office.alipayobjects.com/basement_prod/2e57037b-3b50-4672-bf37-084499ef047a.png\",\n" +
+            "\t\"moreAction\": \"{\\\"type\\\":\\\"feedback\\\",\\\"items\\\":[{\\\"reason\\\":\\\"F05\\\",\\\"icon\\\":\\\" \\\",\\\"name\\\":\\\"内容不感兴趣\\\"},{\\\"reason\\\":\\\"F04\\\",\\\"icon\\\":\\\"https://gw.alipayobjects.com/mdn/wallet_home/afts/img/A*K7xETZ5_tQoAAAAAAAAAAABkARQnAQ\\\",\\\"name\\\":\\\"图片引起不适\\\"}]}\",\n" +
+            "\t\"mainImageUrl\": \"$itemImg\",\n" +
             "\t\"aspectRatio\": \"1\",\n" +
             "\t\"topTag\": {\n" +
-            "\t\t\"text\": \"1元抢购\",\n" +
+//            "\t\t\"text\": \"1元抢购\",\n" +
             "\t\t\"textStyle\": {}\n" +
             "\t},\n" +
-            "\t\"topTagImage\": \"https://work.alibaba-inc.com/photo/161767.220x220.jpg\",\n" +
+//            "\t\"topTagImage\": \"https://work.alibaba-inc.com/photo/161767.220x220.jpg\",\n" +
             "\t\"mainTag\": {\n" +
-            "\t\t\"text\": \"西餐·5.5公里\",\n" +
+//            "\t\t\"text\": \"西餐·5.5公里\",\n" +
             "\t\t\"textStyle\": {}\n" +
             "\t},\n" +
-            "\t\"title\": \"Osteria pelecanus鹈鹕餐厅\",\n" +
+            "\t\"title\": \"$itemTitle\",\n" +
             "\t\"scoreValue\": \"<span style=\\\"color:#FF6010\\\">4.7分</span>\",\n" +
-            "\t\"scoreDesc\": \"\\\"鸡汁烩饭好吃\\\"\",\n" +
-            "\t\"description\": \"鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃\",\n" +
+//            "\t\"scoreDesc\": \"\\\"鸡汁烩饭好吃\\\"\",\n" +
+//            "\t\"description\": \"鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃\",\n" +
             "\t\"tags\": [{\n" +
-            "\t\t\t\"text\": \"好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃好吃\",\n" +
+            "\t\t\t\"text\": \"$promotionLabel\",\n" +
             "\t\t\t\"textStyle\": {\n" +
             "\t\t\t\t\"borderColor\": \"#000\"\n" +
             "\t\t\t}\n" +
@@ -59,17 +67,17 @@ public class FeedsAtomicCardProcessor implements IAtomicCardProcessor {
             "\t\t\t}\n" +
             "\t\t}\n" +
             "\t],\n" +
-            "\t\"shortTags\": [{\n" +
-            "\t\t\"text\": \"满39减6\",\n" +
-            "\t\t\"textStyle\": {\n" +
-            "\t\t\t\"borderColor\": \"#000\"\n" +
-            "\t\t}\n" +
-            "\t}],\n" +
+//            "\t\"shortTags\": [{\n" +
+//            "\t\t\"text\": \"满39减6\",\n" +
+//            "\t\t\"textStyle\": {\n" +
+//            "\t\t\t\"borderColor\": \"#000\"\n" +
+//            "\t\t}\n" +
+//            "\t}],\n" +
             "\t\"tagImage\": \"xxxx\",\n" +
             "\t\"tagImageLeftText\": \"首单直降\",\n" +
             "\t\"tagImageRightText\": \"100元\",\n" +
-            "\t\"decideNumber\": \"<span style=\\\"font-size:10sp;\\\">¥</span><span style=\\\"color:#FF6010\\\">456</span>\",\n" +
-            "\t\"decideNumberDesc\": \"¥123465\",\n" +
+            "\t\"decideNumber\": \"<span style=\\\"font-size:10sp;\\\">¥</span><span style=\\\"color:#FF6010\\\">$promotionLabel</span>\",\n" +
+            "\t\"decideNumberDesc\": \"$originPrice\",\n" +
             "\t\"decideNumberDescStyle\": {\n" +
             "\t\t\"textDecoration\": \"line-through\"\n" +
             "\t},\n" +
