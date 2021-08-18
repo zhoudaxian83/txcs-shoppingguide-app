@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C
-        , scenario = ScenarioConstantApp.SCENARIO_ALI_PAY_FIRST_PAGE
+        , scenario = ScenarioConstantApp.SCENARIO_ALI_PAY_MIDDLE_PAGE
 )
 public class AlipayMiddlePageItemContextCheckSdkExtPt extends Register implements ItemContextCheckSdkExtPt {
     @Override
