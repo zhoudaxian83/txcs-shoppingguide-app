@@ -12,6 +12,7 @@ import com.alipay.tradecsa.common.service.spi.request.PageFloorDetailDTO;
 import com.alipay.tradecsa.common.service.spi.response.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
@@ -23,9 +24,12 @@ import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.AtomicCar
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.AtomicCardProcessorFactory;
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.IAtomicCardProcessor;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.WuZheTianBuildItemVOExtPt;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +44,8 @@ import static com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.
 
 @Service("aliPayServiceImpl")
 public class AliPayServiceImpl implements IAliPayService {
+
+    Logger LOGGER = LoggerFactory.getLogger(AliPayServiceImpl.class);
 
     @Autowired
     AtomicCardProcessorFactory atomicCardProcessorFactory;
@@ -76,6 +82,9 @@ public class AliPayServiceImpl implements IAliPayService {
     @Override
     public Flowable<MixerCollectRecResult> processFirstPage(Context context) {
 
+        HadesLogUtil.stream("AliPayServiceImpl.processFirstPage")
+                .kv("","").info();
+        LOGGER.info("AliPayServiceImpl.processFirstPage");
         BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 ScenarioConstantApp.SCENARIO_ALI_PAY_FIRST_PAGE);
