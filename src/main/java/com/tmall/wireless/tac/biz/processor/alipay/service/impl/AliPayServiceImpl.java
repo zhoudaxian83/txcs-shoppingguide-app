@@ -93,6 +93,12 @@ public class AliPayServiceImpl implements IAliPayService {
                 .map(re -> {
                     Object o = context.get(CONTEXT_KEY);
                     return convertMixerCollectRecResult(re, (GeneralItem) o);
+                }).onErrorReturn(throwable -> {
+                    LOGGER.error("shoppingguideSdkItemService.recommend error:", throwable);
+                    MixerCollectRecResult mixerCollectRecResult = new MixerCollectRecResult();
+                    mixerCollectRecResult.setSuccess(false);
+                    mixerCollectRecResult.setErrorCode("convertMixerCollectRecResultError");
+                    return mixerCollectRecResult;
                 });
 
     }
@@ -131,6 +137,12 @@ public class AliPayServiceImpl implements IAliPayService {
 
             Object o = context.get(CONTEXT_KEY);
             return convertMiddleResult(re, (GeneralItem)o, middlePageSPIRequest);
+        }).onErrorReturn(throwable -> {
+            LOGGER.error("convertMiddleResultError", throwable);
+            MiddlePageSPIResponse middlePageSPIResponse = new MiddlePageSPIResponse();
+            middlePageSPIResponse.setSuccess(false);
+            middlePageSPIResponse.setErrorCode("convertMiddleResultError");
+            return middlePageSPIResponse;
         });
 
     }
