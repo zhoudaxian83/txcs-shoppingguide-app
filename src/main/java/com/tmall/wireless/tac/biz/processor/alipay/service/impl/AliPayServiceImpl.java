@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.alipay.service.impl;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.recmixer.common.service.facade.model.CategoryContentRet;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecResult;
@@ -119,6 +120,7 @@ public class AliPayServiceImpl implements IAliPayService {
         List<ServiceContentRec> collect = itemEntityVOS.stream().map(e -> convert(e, aldData)).collect(Collectors.toList());
         categoryContentRet.setServiceList(collect);
         categoryContentRet.setSuccess(true);
+        LOGGER.info("mixerCollectRecResult:{}", JSON.toJSONString(mixerCollectRecResult));
         return mixerCollectRecResult;
     }
 
