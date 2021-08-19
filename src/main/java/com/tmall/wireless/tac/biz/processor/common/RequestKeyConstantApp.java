@@ -38,6 +38,7 @@ public class RequestKeyConstantApp {
 
 
     public static final String CONTENT_TYPE = "contentType";
+    public static final String LOC_TYPE = "locType";
 
 
     /**上新了key**/
