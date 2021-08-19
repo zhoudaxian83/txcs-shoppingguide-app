@@ -109,6 +109,7 @@ public class ContentSetIdListUtil {
      */
     public static Map<String,Object> getExposureContentIds(Map<String, Object> requestParams){
         Map<String,Object> exposureDataMap = Maps.newHashMap();
+        Map<String,Object> exposureContentInfoMap = Maps.newHashMap();
         List<Long> exposureContentIds = getLongWithDefault(requestParams,RequestKeyConstantApp.FIRST_SCREEN_EXPOSURE_CONTENT_IDS);
         if(CollectionUtils.isEmpty(exposureContentIds)){
             return exposureDataMap;
@@ -119,7 +120,8 @@ public class ContentSetIdListUtil {
             contentIdMap.put("contentId",exposureContentIds.get(i));
             contentIdArry[i] = contentIdMap;
         }
-        exposureDataMap.put("exposureData",contentIdArry);
+        exposureContentInfoMap.put("exposureContentInfo",contentIdArry);
+        exposureDataMap.put("exposureData",exposureContentInfoMap);
         return exposureDataMap;
     }
 
