@@ -97,7 +97,8 @@ public class BrowseRecommendItemOriginDataRequestExtPt implements ItemOriginData
     private boolean isO2oScene(SgFrameworkContext sgFrameworkContext) {
         boolean isO2o = false;
         String locType = MapUtil.getStringWithDefault(sgFrameworkContext.getRequestParams(), RequestKeyConstantApp.LOC_TYPE, "B2C");
-        if(TppItemBusinessTypeEnum.OneHour.getType().equals(locType) || TppItemBusinessTypeEnum.HalfDay.getType().equals(locType)){
+        if(TppItemBusinessTypeEnum.OneHour.getType().equals(locType) || TppItemBusinessTypeEnum.HalfDay.getType().equals(locType)
+            || TppItemBusinessTypeEnum.HalfDay.getType().equals(locType)){
             isO2o = true;
         }
         return isO2o;
