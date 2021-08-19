@@ -169,7 +169,7 @@ public class CnPageBannerItemInfoScene {
         itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName(ItemInfoSourceKey.CAPTAIN);
-        itemInfoSourceMetaInfoCaptain.setSceneCode("index.guessULike");
+        //itemInfoSourceMetaInfoCaptain.setSceneCode("index.guessULike");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
