@@ -33,6 +33,7 @@ import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 
 @Service
@@ -64,12 +66,16 @@ public class FirstScreenMindItemScene {
             .info();
 
         /**兼容前端无效请求**/
-        List<Long> exposureContentIds = ContentSetIdListUtil.getLongWithDefault(context.getParams(),
-            RequestKeyConstantApp.FIRST_SCREEN_EXPOSURE_CONTENT_IDS);
-        if(CollectionUtils.isNotEmpty(exposureContentIds)){
+        String isValid = MapUtil.getStringWithDefault(context.getParams(),
+            RequestKeyConstantApp.FIRST_SCREEN_IS_VALID,"true");
+        if(StringUtils.isNotBlank(isValid) && "false".equals(isValid)){
             SgFrameworkResponse<EntityVO> response = new SgFrameworkResponse<>();
-            response.setSuccess(false);
-            response.setErrorCode("empty response");
+            EntityVO entityVO = new EntityVO();
+            entityVO.put("isValid",isValid);
+            List<EntityVO> entityVOS = Lists.newArrayList(entityVO);
+            response.setItemAndContentList(entityVOS);
+            response.setHasMore(true);
+            response.setSuccess(true);
             return Flowable.just(TacResult.newResult(response));
         }
 

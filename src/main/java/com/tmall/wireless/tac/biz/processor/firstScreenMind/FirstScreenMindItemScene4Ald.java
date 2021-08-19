@@ -34,6 +34,7 @@ import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,11 +71,11 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
         sgFrameworkContextItem.setRequestParams(AldUrlParamUtil.getAldUrlKv(requestContext4Ald));
 
         /**兼容前端无效请求**/
-        List<Long> exposureContentIds = ContentSetIdListUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(),
-            RequestKeyConstantApp.FIRST_SCREEN_EXPOSURE_CONTENT_IDS);
-        if(CollectionUtils.isNotEmpty(exposureContentIds)){
+        String isValid = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),
+            RequestKeyConstantApp.FIRST_SCREEN_IS_VALID,"true");
+        if(StringUtils.isNotBlank(isValid) && "false".equals(isValid)){
             GeneralItem generalItem = new GeneralItem();
-            generalItem.put("key","empty");
+            generalItem.put("isValid",isValid);
             List<GeneralItem> generalItems = Lists.newArrayList(generalItem);
             return Flowable.just(TacResult.newResult(generalItems));
         }
