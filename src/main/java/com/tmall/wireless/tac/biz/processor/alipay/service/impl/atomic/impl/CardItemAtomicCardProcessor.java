@@ -36,9 +36,9 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
             "\t\"image\": \"$itemImg\",\n" +
             "\t\"remoteLogExt\": \"{\\\"pageBizCode\\\":\\\"product\\\",\\\"cityCode\\\":\\\"330100\\\",\\\"bizCode\\\":\\\"product\\\",\\\"latitude\\\":\\\"30.265642\\\",\\\"source\\\":\\\"homeFeeds\\\",\\\"longitude\\\":\\\"120.108739\\\",\\\"scene\\\":\\\"SSU\\\"}\",\n" +
             "\t\"action\": \"{\\\"link\\\":\\\"$url\\\",\\\"scm\\\":\\\"\\\",\\\"type\\\":\\\"jump\\\"}\",\n" +
-            "\t\"topLabelStyle\": {\n" +
-            "\t\t\"backgroundImage\": \"linear-gradient(tobottom,#FF1919,#FF683C)\"\n" +
-            "\t},\n" +
+//            "\t\"topLabelStyle\": {\n" +
+//            "\t\t\"backgroundImage\": \"linear-gradient(tobottom,#FF1919,#FF683C)\"\n" +
+//            "\t},\n" +
             "\t\"defaultTemplateId\": \"\",\n" +
             "\t\"tagImageV2\": \"https://gw.alipayobjects.com/mdn/rms_5bd46e/afts/img/A*IL4aRamkbjIAAAAAAAAAAAAAARQnAQ\",\n" +
 //            "\t\"complexTitle\": \"<span style='font-size:13sip;color:#333333'>超长标题看看超过两行会怎么样</span>\",\n" +
