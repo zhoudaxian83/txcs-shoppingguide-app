@@ -91,7 +91,7 @@ public class FeedsAtomicCardProcessor implements IAtomicCardProcessor {
         List<JSONObject> collect = itemEntityVOS.stream().map(itemEntityVO -> {
             String replace = ITEM_TEMP.replace(PLACE_HOLDER_ITEM_IMG, itemEntityVO.getString("itemImg"))
                     .replace(PLACE_HOLDER_ITEM_TITTLE, itemEntityVO.getString("shortTitle"))
-                    .replace(PLACE_HOLDER_ITEM_URL, itemEntityVO.getString("itemUrl"))
+                    .replace(PLACE_HOLDER_ITEM_URL, "https:" + itemEntityVO.getString("itemUrl"))
                     .replace(PLACE_HOLDER_ITEM_ORIGIN_PRICE, itemEntityVO.getString("chaoshiPrice"))
                     .replace(PLACE_HOLDER_ITEM_PROMOTION_LABEL, "超市热卖")
                     .replace(PLACE_HOLDER_ITEM_PROMOTION_PRICE, itemEntityVO.getString("showPrice"));
