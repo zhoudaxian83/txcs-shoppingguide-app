@@ -14,6 +14,7 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.LocTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
@@ -97,8 +98,8 @@ public class BrowseRecommendItemOriginDataRequestExtPt implements ItemOriginData
     private boolean isO2oScene(SgFrameworkContext sgFrameworkContext) {
         boolean isO2o = false;
         String locType = MapUtil.getStringWithDefault(sgFrameworkContext.getRequestParams(), RequestKeyConstantApp.LOC_TYPE, "B2C");
-        if(TppItemBusinessTypeEnum.OneHour.getType().equals(locType) || TppItemBusinessTypeEnum.HalfDay.getType().equals(locType)
-            || TppItemBusinessTypeEnum.HalfDay.getType().equals(locType)){
+        if(LocTypeEnum.O2OOneHour.getType().equals(locType) || LocTypeEnum.O2OHalfDay.getType().equals(locType)
+            || LocTypeEnum.O2ONextDay.getType().equals(locType)){
             isO2o = true;
         }
         return isO2o;
