@@ -95,6 +95,12 @@ public class BrowseRecommendItemOriginDataRequestExtPt implements ItemOriginData
 
         return tppRequest;
     }
+
+    /**
+     * 判断是否为O2O场景
+     * @param sgFrameworkContext
+     * @return
+     */
     private boolean isO2oScene(SgFrameworkContext sgFrameworkContext) {
         boolean isO2o = false;
         String locType = MapUtil.getStringWithDefault(sgFrameworkContext.getRequestParams(), RequestKeyConstantApp.LOC_TYPE, "B2C");
