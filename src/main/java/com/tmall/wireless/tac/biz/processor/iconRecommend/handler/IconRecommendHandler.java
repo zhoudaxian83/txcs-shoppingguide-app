@@ -13,6 +13,7 @@ import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,8 +41,7 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
             contentVOList.addAll(s.getData().getItemAndContentList());
             // 取第1个物品照片作为icon图片
             for (ContentVO contentVO : contentVOList) {
-                JSONArray jsonArray = (JSONArray)contentVO.get("items");
-                contentVO.put("iconPic", jsonArray.getJSONObject(0).getString("itemImg"));
+                contentVO.put("iconPic", contentVO.getJSONArray("items").getJSONObject(0).getString("itemImg"));
             }
             return c;
         });
