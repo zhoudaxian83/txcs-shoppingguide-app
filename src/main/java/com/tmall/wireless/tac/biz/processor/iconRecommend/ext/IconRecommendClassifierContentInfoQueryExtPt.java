@@ -14,9 +14,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import io.reactivex.Flowable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Yushan
@@ -46,21 +44,20 @@ public class IconRecommendClassifierContentInfoQueryExtPt implements ContentInfo
             contentInfo.put("trackPoint", contentEntity.getTrack_point());
             contentInfo.put("Rn", contentEntity.getRn());
             contentInfo.put("ext", contentEntity.getExt());
+            contentInfo.put("contentTitle", contentEntity.getExt().get("name"));
+//            List<ContentDTO> contentDTOList = Optional.of(sgFrameworkContextContent)
+//                    .map(SgFrameworkContextContent::getContentDTOList)
+//                    .orElse(new ArrayList<>());
+//            if (!contentDTOList.isEmpty()) {
+//                ItemInfoBySourceDTO itemInfoBySourceDTO = contentDTOList.get(0).getItemInfoDTOList().get(0).getItemInfos().get(ItemInfoSourceKey.CAPTAIN);
+//                contentInfo.put("contentPic", itemInfoBySourceDTO.getItemInfoVO().get("itemImg"));
+//            }
 
             ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
             contentInfoDTO.setContentInfo(contentInfo);
             resMap.put(contentId, contentInfoDTO);
         }
         return Flowable.just(Response.success(resMap));
-
-//        Map<Long, ContentInfoDTO> resMap = Maps.newHashMap();
-//        Map<String, Object> contentInfo = Maps.newHashMap();
-//        contentInfo.put("url","111");
-//        ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
-//        contentInfoDTO.setContentInfo(contentInfo);
-//        resMap.put(5233L,contentInfoDTO);
-//        resMap.put(322385L,contentInfoDTO);
-//        return Flowable.just(Response.success(resMap));
     }
 }
 

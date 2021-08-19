@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.iconRecommend.handler;
 
+import com.alibaba.fastjson.JSONArray;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
@@ -37,6 +38,11 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
         return Flowable.zip(classifier, scene, (c, s) -> {
             List<ContentVO> contentVOList = c.getData().getItemAndContentList();
             contentVOList.addAll(s.getData().getItemAndContentList());
+            // 取第1个物品照片作为icon图片
+            for (ContentVO contentVO : contentVOList) {
+                JSONArray jsonArray = (JSONArray)contentVO.get("items");
+                contentVO.put("iconPic", jsonArray.getJSONObject(0).getString("itemImg"));
+            }
             return c;
         });
     }
