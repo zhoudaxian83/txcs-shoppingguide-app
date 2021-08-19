@@ -66,12 +66,12 @@ public class FirstScreenMindItemScene {
             .info();
 
         /**兼容前端无效请求**/
-        String isValid = MapUtil.getStringWithDefault(context.getParams(),
-            RequestKeyConstantApp.FIRST_SCREEN_IS_VALID,"true");
-        if(StringUtils.isNotBlank(isValid) && "false".equals(isValid)){
+        String noProcess = MapUtil.getStringWithDefault(context.getParams(),
+            RequestKeyConstantApp.FIRST_SCREEN_NO_PROCESS,"false");
+        if(StringUtils.isNotBlank(noProcess) && "true".equals(noProcess)){
             SgFrameworkResponse<EntityVO> response = new SgFrameworkResponse<>();
             EntityVO entityVO = new EntityVO();
-            entityVO.put("isValid",isValid);
+            entityVO.put("noProcess",noProcess);
             List<EntityVO> entityVOS = Lists.newArrayList(entityVO);
             response.setItemAndContentList(entityVOS);
             response.setHasMore(true);

@@ -71,11 +71,11 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
         sgFrameworkContextItem.setRequestParams(AldUrlParamUtil.getAldUrlKv(requestContext4Ald));
 
         /**兼容前端无效请求**/
-        String isValid = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),
-            RequestKeyConstantApp.FIRST_SCREEN_IS_VALID,"true");
-        if(StringUtils.isNotBlank(isValid) && "false".equals(isValid)){
+        String noProcess = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),
+            RequestKeyConstantApp.FIRST_SCREEN_NO_PROCESS,"false");
+        if(StringUtils.isNotBlank(noProcess) && "true".equals(noProcess)){
             GeneralItem generalItem = new GeneralItem();
-            generalItem.put("isValid",isValid);
+            generalItem.put("noProcess",noProcess);
             List<GeneralItem> generalItems = Lists.newArrayList(generalItem);
             return Flowable.just(TacResult.newResult(generalItems));
         }
