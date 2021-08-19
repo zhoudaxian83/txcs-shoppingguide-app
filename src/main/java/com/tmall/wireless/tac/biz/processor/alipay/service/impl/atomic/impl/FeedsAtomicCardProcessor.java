@@ -30,7 +30,7 @@ public class FeedsAtomicCardProcessor implements IAtomicCardProcessor {
 
 
     public static final String ITEM_TEMP = "{\n" +
-            "\t\"url\": \"{\\\"type\\\":\\\"jump\\\",\\\"link\\\":\\\"alipays://xxx\\\"}\",\n" +
+            "\t\"url\": \"{\\\"type\\\":\\\"jump\\\",\\\"link\\\":\\\"$url\\\"}\",\n" +
             "\t\"moreAction\": \"{\\\"type\\\":\\\"feedback\\\",\\\"items\\\":[{\\\"reason\\\":\\\"F05\\\",\\\"icon\\\":\\\" \\\",\\\"name\\\":\\\"内容不感兴趣\\\"},{\\\"reason\\\":\\\"F04\\\",\\\"icon\\\":\\\"https://gw.alipayobjects.com/mdn/wallet_home/afts/img/A*K7xETZ5_tQoAAAAAAAAAAABkARQnAQ\\\",\\\"name\\\":\\\"图片引起不适\\\"}]}\",\n" +
             "\t\"mainImageUrl\": \"$itemImg\",\n" +
             "\t\"aspectRatio\": \"1\",\n" +
