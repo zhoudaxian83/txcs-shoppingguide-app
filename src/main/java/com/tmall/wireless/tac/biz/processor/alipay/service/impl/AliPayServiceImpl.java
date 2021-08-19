@@ -161,8 +161,13 @@ public class AliPayServiceImpl implements IAliPayService {
 //        pageFloorHeaderDTO.setTitle(aldData.getString(headSubTitleAldKey));
         pageFloorHeaderDTO.setSubtitle("送货上门 品质保证");
         pageFloorHeaderDTO.setBgColor("#F8FDE4");
+        pageFloorHeaderDTO.setFullMediaUrl("https://gw.alicdn.com/imgextra/i1/O1CN01264lUX1wNcKQUsoRT_!!6000000006296-0-tps-1125-492.jpg");
 //        pageFloorHeaderDTO.setSubTitleImgUrl(aldData.getString(headBgPicAldKey));
+        pageFloorHeaderDTO.setPromotion(true);
+        pageFloorHeaderDTO.setType("text");
         middlePageSPIResponse.setPageFloorHeaderDTO(pageFloorHeaderDTO);
+
+
 
         // 导航栏
         PageFloorNavigationDTO pageFloorNavigationDTO = new PageFloorNavigationDTO();
