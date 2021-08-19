@@ -8,6 +8,6 @@ public class AliPayConstant {
 
 
 
-    public static final String BIZ_CODE = "SUPERMARKET";
+    public static final String BIZ_CODE = "FLOOR_THEME_SPI";
     public static final String SOURCE = "BIZ_CONETNT";
 }
