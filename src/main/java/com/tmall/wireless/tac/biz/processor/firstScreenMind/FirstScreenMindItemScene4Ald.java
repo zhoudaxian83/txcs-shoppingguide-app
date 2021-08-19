@@ -74,7 +74,7 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
             RequestKeyConstantApp.FIRST_SCREEN_EXPOSURE_CONTENT_IDS);
         if(CollectionUtils.isNotEmpty(exposureContentIds)){
             GeneralItem generalItem = new GeneralItem();
-            generalItem.put("key","empty")
+            generalItem.put("key","empty");
             List<GeneralItem> generalItems = Lists.newArrayList(generalItem);
             return Flowable.just(TacResult.newResult(generalItems));
         }
