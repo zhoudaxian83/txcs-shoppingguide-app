@@ -238,7 +238,7 @@ public class AliPayServiceImpl implements IAliPayService {
         serviceContentRec.setActionLink(item.getString("itemUrl"));
         serviceContentRec.setBizCode(AliPayConstant.BIZ_CODE);
         serviceContentRec.setSource(AliPayConstant.SOURCE);
-
+        serviceContentRec.setItemType("SSU");
         String subTitle = item.getString(AliPayFirstPageBuildItemVoSdkExtPt.PROMOTION_POINT);
         subTitle = StringUtils.isEmpty(subTitle) ? aldData.getString(itemLabelAldKey) : subTitle;
         Map<String, String> ext = Maps.newHashMap();
