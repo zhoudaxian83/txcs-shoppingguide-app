@@ -41,7 +41,7 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
             if (sceneContentVOList != null
                     && sceneContentVOList.size() > 0
                     && sceneContentVOList.get(0).getJSONArray("items").size() > 6) {
-                    classifierContentVOList.set(-1, sceneContentVOList.get(0));
+                    classifierContentVOList.set(classifierContentVOList.size()-1, sceneContentVOList.get(0));
             }
 //            classifierContentVOList.addAll(s.getData().getItemAndContentList());
             // 取第1个物品照片作为icon图片
