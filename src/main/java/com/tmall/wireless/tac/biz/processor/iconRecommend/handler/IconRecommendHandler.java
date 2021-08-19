@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.iconRecommend.handler;
 
-import com.alibaba.fastjson.JSONArray;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
@@ -13,7 +12,6 @@ import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
