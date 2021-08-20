@@ -70,6 +70,7 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
             for (ContentVO contentVO : classifierContentVOList) {
                 contentVO.put("iconPic", contentVO.getJSONArray("items").getJSONObject(0).getString("itemImg"));
             }
+            c.getData().setItemAndContentList(classifierContentVOList);
             return c;
         });
     }
