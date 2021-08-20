@@ -42,7 +42,7 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
             List<ContentVO> res = new ArrayList<>();
 
             // 场景词item数量少于六个，分类词打底
-            if (sceneContentVOList != null && sceneContentVOList.size() > 0 && classifierContentVOList != null && classifierContentVOList.size() > 0) {
+            if (sceneContentVOList != null && sceneContentVOList.size() > 0 && classifierContentVOList != null && classifierContentVOList.size() >= 3) {
                 if (sceneContentVOList.get(0).getJSONArray("items") != null && sceneContentVOList.get(0).getJSONArray("items").size() < 6) {
                     res = classifierContentVOList;
                 } else {
