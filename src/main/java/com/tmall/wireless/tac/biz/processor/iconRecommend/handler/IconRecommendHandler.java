@@ -46,7 +46,7 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
                 if (sceneContentVOList.get(0).getJSONArray("items") != null && sceneContentVOList.get(0).getJSONArray("items").size() < 6) {
                     res = classifierContentVOList;
                 } else {
-                    res.addAll(classifierContentVOList.subList(0, 2));
+                    res.addAll(classifierContentVOList.subList(0, 3));
                     res.addAll(sceneContentVOList);
                 }
             }
