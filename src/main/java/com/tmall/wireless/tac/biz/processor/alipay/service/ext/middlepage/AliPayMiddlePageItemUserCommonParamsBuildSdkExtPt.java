@@ -10,6 +10,7 @@ import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.contextbuild.ItemUserCommonParamsBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
+import com.tmall.tcls.gs.sdk.framework.model.context.PageInfoDO;
 import com.tmall.tcls.gs.sdk.framework.model.context.UserDO;
 import com.tmall.wireless.store.spi.user.UserProvider;
 import com.tmall.wireless.tac.biz.processor.alipay.AlipayMiddlePageHandler;
@@ -64,6 +65,19 @@ public class AliPayMiddlePageItemUserCommonParamsBuildSdkExtPt extends Register 
         locParams.setRegionCode(107L);
         commonUserParams.setLocParams(locParams);
 
+        Integer pageNo = Optional.of(middlePageSPIRequest)
+                .map(MiddlePageSPIRequest::getMiddlePageClientRequestDTO)
+                .map(MiddlePageClientRequestDTO::getPageNo)
+                .orElse(1);
+        Integer pageSize = Optional.of(middlePageSPIRequest)
+                .map(MiddlePageSPIRequest::getMiddlePageClientRequestDTO)
+                .map(MiddlePageClientRequestDTO::getPageSize)
+                .orElse(20);
+
+        PageInfoDO userPageInfo = new PageInfoDO();
+        userPageInfo.setIndex((pageNo - 1) * pageSize);
+        userPageInfo.setPageSize(pageSize);
+        commonUserParams.setUserPageInfo(userPageInfo);
 
         GeneralItem aldData = aldService.getAldData(taobaoUserInfoDTO.getUserId(), String.valueOf(taobaoUserInfoDTO.getSmAreaId()));
         context.put(CONTEXT_KEY, aldData);

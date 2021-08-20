@@ -2,6 +2,8 @@ package com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alipay.tradecsa.common.service.spi.request.MiddlePageClientRequestDTO;
+import com.alipay.tradecsa.common.service.spi.request.MiddlePageSPIRequest;
 import com.alipay.tradecsa.common.service.spi.response.PageFloorAtomicResultDTO;
 import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
@@ -10,6 +12,7 @@ import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.IAtomicCa
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 // 卡片六宫格商品
@@ -23,6 +26,8 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
     public static final String PLACE_HOLDER_ITEM_PROMOTION_LABEL = "$promotionLabel";
     public static final String PLACE_HOLDER_ITEM_ORIGIN_PRICE = "$originPrice";
     public static final String PLACE_HOLDER_ITEM_PROMOTION_PRICE = "$promotionPrice";
+
+    public static final int CARD_ITEM_SIZE = 6;
 
 
     public static final String TEMPLATE_ITEM = "{\n" +
@@ -118,11 +123,23 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 
     @Override
     public PageFloorAtomicResultDTO process(AtomicCardProcessRequest atomicCardProcessRequest) {
+
+
+
         List<ItemEntityVO> itemAndContentList = atomicCardProcessRequest.getItemAndContentList();
         PageFloorAtomicResultDTO pageFloorAtomicResultDTO = new PageFloorAtomicResultDTO();
         pageFloorAtomicResultDTO.setAtomCardTemplateId(atomicCardProcessRequest.getPageFloorAtomicDTO().getAtomCardTemplateId());
         JSONObject jsonObject = JSON.parseObject(CARD_TEMPLATE);
-        List<JSONObject> collect = itemAndContentList.subList(0, Math.min(6, itemAndContentList.size())).stream().map(this::convert).collect(Collectors.toList());
+
+        if (itemAndContentList == null) {
+            return pageFloorAtomicResultDTO;
+        }
+
+        if (!MiddlePageUtil.isFirstPage(atomicCardProcessRequest.getMiddlePageSPIRequest())) {
+            return pageFloorAtomicResultDTO;
+        }
+
+        List<JSONObject> collect = itemAndContentList.subList(CARD_ITEM_SIZE, Math.min(6, itemAndContentList.size())).stream().map(this::convert).collect(Collectors.toList());
         jsonObject.put("items", collect);
         pageFloorAtomicResultDTO.setCardData(Lists.newArrayList(jsonObject));
         return pageFloorAtomicResultDTO;

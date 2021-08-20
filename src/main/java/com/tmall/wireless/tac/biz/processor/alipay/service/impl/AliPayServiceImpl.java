@@ -118,7 +118,7 @@ public class AliPayServiceImpl implements IAliPayService {
         categoryContentRet.setActionImgUrl(aldData.getString(fpServiceTextAldKey));
         categoryContentRet.setServiceList(serviceContentRecList);
         List<ItemEntityVO> itemEntityVOS = re.getItemAndContentList().subList(0, Math.min(3, re.getItemAndContentList().size()));
-        List<ServiceContentRec> collect = itemEntityVOS.stream().map(e -> convert(e, aldData)).collect(Collectors.toList());
+        List<ServiceContentRec> collect = itemEntityVOS.stream().map(e ->convert(e, aldData)).collect(Collectors.toList());
         categoryContentRet.setServiceList(collect);
         categoryContentRet.setSuccess(true);
         LOGGER.info("mixerCollectRecResult:{}", JSON.toJSONString(mixerCollectRecResult));
@@ -193,6 +193,7 @@ public class AliPayServiceImpl implements IAliPayService {
                     .map(pageFloorAtomicDTO -> {
                         AtomicCardProcessRequest atomicCardProcessRequest = new AtomicCardProcessRequest();
                         atomicCardProcessRequest.setPageFloorAtomicDTO(pageFloorAtomicDTO);
+                        atomicCardProcessRequest.setMiddlePageSPIRequest(middlePageSPIRequest);
                         atomicCardProcessRequest.setAldData(aldData);
                         atomicCardProcessRequest.setItemAndContentList(itemAndContentList);
                         return processAtomic(atomicCardProcessRequest);

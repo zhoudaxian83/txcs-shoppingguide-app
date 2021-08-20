@@ -88,6 +88,12 @@ public class FeedsAtomicCardProcessor implements IAtomicCardProcessor {
         List<ItemEntityVO> itemEntityVOS =
                 Optional.of(atomicCardProcessRequest).map(AtomicCardProcessRequest::getItemAndContentList).orElse(Lists.newArrayList());
 
+        if (MiddlePageUtil.isFirstPage(atomicCardProcessRequest.getMiddlePageSPIRequest())) {
+            if (itemEntityVOS.size() > CardItemAtomicCardProcessor.CARD_ITEM_SIZE) {
+                itemEntityVOS = itemEntityVOS.subList(CardItemAtomicCardProcessor.CARD_ITEM_SIZE, itemEntityVOS.size());
+            }
+        }
+
         List<JSONObject> collect = itemEntityVOS.stream().map(itemEntityVO -> {
             String replace = ITEM_TEMP.replace(PLACE_HOLDER_ITEM_IMG, itemEntityVO.getString("itemImg"))
                     .replace(PLACE_HOLDER_ITEM_TITTLE, itemEntityVO.getString("shortTitle"))
