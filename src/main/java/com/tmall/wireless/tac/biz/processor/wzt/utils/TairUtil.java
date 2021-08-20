@@ -131,7 +131,6 @@ public class TairUtil {
 
     private List<PmtRuleDataItemRuleDTO> getCachePmtRuleDataItemRuleDTOList(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
-        tacLogger.info("缓存key_logicalArea="+logicalArea+"|smAreaId="+smAreaId);
         if (logicalArea == null) {
             tacLogger.warn(LOG_PREFIX + "getTairItems大区id未匹配：smAreaId：" + smAreaId);
             return Lists.newArrayList();

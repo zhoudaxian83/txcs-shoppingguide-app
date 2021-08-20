@@ -70,7 +70,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             stringLongMap.put(columnCenterDataSetItemRuleDTO.getItemId(), columnCenterDataSetItemRuleDTO.getIndex());
             items.add(columnCenterDataSetItemRuleDTO.getItemId());
         });
-        tacLogger.info("tair原始itemIds:"+ JSON.toJSONString(items));
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
                 .map(recommendResponseEntityResponse -> {
                     if (!recommendResponseEntityResponse.isSuccess()
@@ -78,11 +77,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                             || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
                         return new OriginDataDTO<>();
                     }
-                    tacLogger.info("spi后结果集:"+ JSON.toJSONString(recommendResponseEntityResponse.getValue()));
                     OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-                    tacLogger.info("convert后结果集:"+ JSON.toJSONString(originDataDTO.getResult()));
                     this.sortItemEntityList(originDataDTO, stringLongMap);
-                    tacLogger.info("排序后结果集:"+ JSON.toJSONString(originDataDTO.getResult()));
                     return this.getItemPage(originDataDTO, dataContext);
                 });
     }
@@ -144,12 +140,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @return
      */
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
-
         Pair<Boolean, List<ItemEntity>> pair = LogicPageUtil.getPage(originDataDTO.getResult(), dataContext.getIndex(),
                 dataContext.getPageSize());
         List<ItemEntity> itemEntities = pair.getRight();
         originDataDTO.setHasMore(pair.getLeft());
-        tacLogger.info("分页后itemEntities:"+ JSON.toJSONString(itemEntities));
         originDataDTO.setResult(itemEntities);
         return originDataDTO;
     }
