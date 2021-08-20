@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.impl;
 
+import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.tradecsa.common.service.spi.response.PageFloorAtomicResultDTO;
@@ -7,11 +8,14 @@ import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.AtomicCardProcessRequest;
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.IAtomicCardProcessor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.tmall.wireless.tac.biz.processor.alipay.service.impl.AliPayServiceImpl.itemLabelAldKey;
 
 // feeds流
 @Service
@@ -99,7 +103,7 @@ public class FeedsAtomicCardProcessor implements IAtomicCardProcessor {
                     .replace(PLACE_HOLDER_ITEM_TITTLE, itemEntityVO.getString("shortTitle"))
                     .replace(PLACE_HOLDER_ITEM_URL, "https:" + itemEntityVO.getString("itemUrl"))
                     .replace(PLACE_HOLDER_ITEM_ORIGIN_PRICE, itemEntityVO.getString("chaoshiPrice"))
-                    .replace(PLACE_HOLDER_ITEM_PROMOTION_LABEL, "超市热卖")
+                    .replace(PLACE_HOLDER_ITEM_PROMOTION_LABEL, getPromotionPoint(atomicCardProcessRequest.getAldData(), itemEntityVO))
                     .replace(PLACE_HOLDER_ITEM_PROMOTION_PRICE, itemEntityVO.getString("showPrice"));
             return JSON.parseObject(replace);
 
@@ -107,5 +111,25 @@ public class FeedsAtomicCardProcessor implements IAtomicCardProcessor {
         pageFloorAtomicResultDTO.setCardData(collect);
 
         return pageFloorAtomicResultDTO;
+    }
+
+    private CharSequence getPromotionPoint(GeneralItem aldData, ItemEntityVO itemEntityVO) {
+        String promotionPoint = getPromotionPoint(itemEntityVO);
+        return StringUtils.isEmpty(promotionPoint) ? aldData.getString(itemLabelAldKey) : promotionPoint;
+    }
+
+    private String getPromotionPoint(ItemEntityVO itemEntityVO) {
+        try {
+            Object promotionPoint = itemEntityVO.get("promotionPoint");
+            if (promotionPoint instanceof List) {
+                List l = (List) promotionPoint;
+                if (l.size() > 0) {
+                    return l.get(0).toString();
+                }
+            }
+        } catch (Exception e) {
+
+        }
+        return "";
     }
 }
