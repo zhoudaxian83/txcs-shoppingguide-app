@@ -75,7 +75,7 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
             RequestKeyConstantApp.FIRST_SCREEN_NO_PROCESS,"false");
         if(StringUtils.isNotBlank(noProcess) && "true".equals(noProcess)){
             GeneralItem generalItem = new GeneralItem();
-            generalItem.put("noProcess",noProcess);
+            /*generalItem.put("noProcess",noProcess);*/
             List<GeneralItem> generalItems = Lists.newArrayList(generalItem);
             return Flowable.just(TacResult.newResult(generalItems));
         }

@@ -71,7 +71,7 @@ public class FirstScreenMindItemScene {
         if(StringUtils.isNotBlank(noProcess) && "true".equals(noProcess)){
             SgFrameworkResponse<EntityVO> response = new SgFrameworkResponse<>();
             EntityVO entityVO = new EntityVO();
-            entityVO.put("noProcess",noProcess);
+            /*entityVO.put("noProcess",noProcess);*/
             List<EntityVO> entityVOS = Lists.newArrayList(entityVO);
             response.setItemAndContentList(entityVOS);
             response.setHasMore(true);
