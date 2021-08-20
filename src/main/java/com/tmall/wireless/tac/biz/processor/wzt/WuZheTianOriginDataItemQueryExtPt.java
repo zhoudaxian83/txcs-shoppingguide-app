@@ -78,8 +78,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                             || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
                         return new OriginDataDTO<>();
                     }
+                    tacLogger.info("spi后结果集:"+ JSON.toJSONString(recommendResponseEntityResponse.getValue()));
                     OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
+                    tacLogger.info("convert后结果集:"+ JSON.toJSONString(originDataDTO.getResult()));
                     this.sortItemEntityList(originDataDTO, stringLongMap);
+                    tacLogger.info("排序后结果集:"+ JSON.toJSONString(originDataDTO.getResult()));
                     return this.getItemPage(originDataDTO, dataContext);
                 });
     }
