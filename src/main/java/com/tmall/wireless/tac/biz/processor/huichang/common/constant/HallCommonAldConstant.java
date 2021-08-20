@@ -5,7 +5,7 @@ package com.tmall.wireless.tac.biz.processor.huichang.common.constant;
  * 在阿拉丁流程模板，通过McTacHsfSolution定义的参数
  * @author wangguohui
  */
-public class AldConstant {
+public class HallCommonAldConstant {
 
     /**
      * 来源app应用

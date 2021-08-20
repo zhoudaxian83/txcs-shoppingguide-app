@@ -12,6 +12,7 @@ import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
 import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.UserDO;
+import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -30,8 +31,8 @@ public class HallCommonContentUserCommonParamsBuildSdkExtPt implements ContentUs
         Map<String, Object> aldContext = requestContext4Ald.getAldContext();//对应solutionContext
         CommonUserParams commonUserParams = new CommonUserParams();
         UserDO userDO = new UserDO();
-        Long userId = MapUtil.getLongWithDefault(aldContext, "userId", 0L);
-        String userNick = MapUtil.getStringWithDefault(aldContext, "userNick", "");
+        Long userId = MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.UTDID, 0L);
+        String userNick = MapUtil.getStringWithDefault(aldContext, HallCommonAldConstant.USER_NICK, "");
         userDO.setUserId(userId);
         userDO.setNick(userNick);
         commonUserParams.setUserDO(userDO);
