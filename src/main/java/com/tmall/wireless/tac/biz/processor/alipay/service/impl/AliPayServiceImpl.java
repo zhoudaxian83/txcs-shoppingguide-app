@@ -251,8 +251,8 @@ public class AliPayServiceImpl implements IAliPayService {
         MiddlePageRec middlePageRec = new MiddlePageRec();
 
         Map<String, String> extInfoMap = Maps.newHashMap();
-        extInfoMap.put("youSeeYouGetItem", String.valueOf(item.getItemId()));
-        middlePageRec.setExtInfoMap(extInfoMap);
+        extInfoMap.put("topItemIds", String.valueOf(item.getItemId()));
+        middlePageRec.setItemParamMap(extInfoMap);
         serviceContentRec.setMiddlePageRec(middlePageRec);
         return serviceContentRec;
     }
