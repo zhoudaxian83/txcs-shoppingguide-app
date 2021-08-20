@@ -44,7 +44,7 @@ public class FeedsAtomicCardProcessor implements IAtomicCardProcessor {
             "\t\t\"textStyle\": {}\n" +
             "\t},\n" +
             "\t\"title\": \"$itemTitle\",\n" +
-            "\t\"scoreValue\": \"<span style=\\\"color:#FF6010\\\">4.7分</span>\",\n" +
+//            "\t\"scoreValue\": \"<span style=\\\"color:#FF6010\\\">4.7分</span>\",\n" +
 //            "\t\"scoreDesc\": \"\\\"鸡汁烩饭好吃\\\"\",\n" +
 //            "\t\"description\": \"鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃\",\n" +
             "\t\"tags\": [{\n" +
