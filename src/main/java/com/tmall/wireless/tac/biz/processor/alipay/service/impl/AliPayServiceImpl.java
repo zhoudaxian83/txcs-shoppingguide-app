@@ -71,6 +71,7 @@ public class AliPayServiceImpl implements IAliPayService {
     public static final String cardBgPicAldKey = "cardBgPic";
 
 
+    public static final String TOP_ITEM_ID_KEY = "topItemIds";
     @Autowired
     AldService aldService;
 
@@ -252,7 +253,7 @@ public class AliPayServiceImpl implements IAliPayService {
         MiddlePageRec middlePageRec = new MiddlePageRec();
 
         Map<String, String> extInfoMap = Maps.newHashMap();
-        extInfoMap.put("topItemIds", String.valueOf(item.getItemId()));
+        extInfoMap.put(TOP_ITEM_ID_KEY, String.valueOf(item.getItemId()));
         middlePageRec.setItemParamMap(extInfoMap);
         serviceContentRec.setMiddlePageRec(middlePageRec);
         return serviceContentRec;
