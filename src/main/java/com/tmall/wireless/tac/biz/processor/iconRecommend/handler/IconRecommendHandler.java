@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.iconRecommend.handler;
 
+import com.alibaba.fastjson.JSONArray;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
@@ -40,15 +41,20 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
             // 场景词item数量少于六个，分类词打底
             if (sceneContentVOList != null
                     && sceneContentVOList.size() > 0
-                    && sceneContentVOList.get(0).getJSONArray("items").size() > 6) {
-                    classifierContentVOList.set(classifierContentVOList.size()-1, sceneContentVOList.get(0));
+                    && sceneContentVOList.get(0).getJSONArray("items") != null
+                    && sceneContentVOList.get(0).getJSONArray("items").size() >= 6) {
+                    classifierContentVOList.set(classifierContentVOList.size() - 1, sceneContentVOList.get(0));
             }
-//            classifierContentVOList.addAll(s.getData().getItemAndContentList());
             // 取第1个物品照片作为icon图片
             for (ContentVO contentVO : classifierContentVOList) {
+                if (contentVO != null
+                        && contentVO.getJSONArray("items") != null
+                        && contentVO.getJSONArray("items").size() < 6) {
+                    return TacResult.newResult(new SgFrameworkResponse<ContentVO>());
+                }
                 contentVO.put("iconPic", contentVO.getJSONArray("items").getJSONObject(0).getString("itemImg"));
             }
             return c;
-        });
+        }).onErrorReturn((r -> TacResult.errorResult("")));
     }
 }
