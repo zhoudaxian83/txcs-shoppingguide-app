@@ -15,7 +15,15 @@ public class HallScenarioConstant {
 
     public static final String HALL_SCENARIO_SCENARIO = "defaultScenario";
 
-    //会场榜单
-    public static final String HALL_SCENARIO_SCENARIO_INVENTORY = "inventory";
+    //会场清单会场-入口模块
+    public static final String HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE = "inventory_entrance_module";
+
+    //会场清单会场-频道承接页
+    public static final String HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE = "inventory_channel_page";
+
+    //会场清单会场-商品承接页
+    public static final String HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE = "inventory_channel_item_page";
+
+
 
 }

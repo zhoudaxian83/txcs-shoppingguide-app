@@ -13,8 +13,11 @@ import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 清单会场入口模块
+ */
 @Component
-public class InventoryHandler extends TacReactiveHandler4Ald {
+public class InventoryEntranceModuleHandler extends TacReactiveHandler4Ald {
 
     @Autowired
     HallCommonContentRequestProxy hallCommonContentRequestProxy;
