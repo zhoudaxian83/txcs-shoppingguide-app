@@ -10,9 +10,13 @@ import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class InventoryHandler extends TacReactiveHandler4Ald {
 
+    @Autowired
     HallCommonContentRequestProxy hallCommonContentRequestProxy;
 
     @Override
