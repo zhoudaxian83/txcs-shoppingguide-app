@@ -53,7 +53,7 @@ public class AliPayMiddleItemOriginDataRequestBuildSdkExtPt extends Register imp
 
         Map<String, String> params = Maps.newHashMap();
         params.put("pageSize", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getPageSize).map(Objects::toString).orElse("20"));
-        params.put("index", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getPageSize).map(Objects::toString).orElse("0"));
+        params.put("index", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getIndex).map(Objects::toString).orElse("0"));
         params.put("itemSets", Joiner.on(",").join(itemSetIds));
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
