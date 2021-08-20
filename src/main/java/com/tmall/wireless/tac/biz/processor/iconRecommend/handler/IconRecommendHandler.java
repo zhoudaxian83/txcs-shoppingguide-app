@@ -51,9 +51,9 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
                 }
             }
             // 总数量少于4个，传空下发
-//            if (!res.isEmpty() && res.size() <= 4) {
-//                return TacResult.newResult(new SgFrameworkResponse<ContentVO>());
-//            }
+            if (!res.isEmpty() && res.size() <= 4) {
+                return TacResult.newResult(new SgFrameworkResponse<ContentVO>());
+            }
 
             // 取第1个物品照片作为icon图片
             for (ContentVO contentVO : res) {
