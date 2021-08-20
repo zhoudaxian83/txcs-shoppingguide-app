@@ -149,6 +149,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 dataContext.getPageSize());
         List<ItemEntity> itemEntities = pair.getRight();
         originDataDTO.setHasMore(pair.getLeft());
+        tacLogger.info("分页后itemEntities:"+ JSON.toJSONString(itemEntities));
         originDataDTO.setResult(itemEntities);
         return originDataDTO;
     }
