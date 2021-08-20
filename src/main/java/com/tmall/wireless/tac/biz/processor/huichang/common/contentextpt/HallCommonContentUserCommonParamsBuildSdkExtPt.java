@@ -40,6 +40,8 @@ public class HallCommonContentUserCommonParamsBuildSdkExtPt implements ContentUs
         Long smAreaId = MapUtil.getLongWithDefault(aldParam, RequestKeyConstant.SMAREAID, 330100L);
         commonUserParams.setLocParams(parseCsaObj(aldParam.get(RequestKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
 
+        //todo 雾列 补充分页信息
+
         return commonUserParams;
     }
 
