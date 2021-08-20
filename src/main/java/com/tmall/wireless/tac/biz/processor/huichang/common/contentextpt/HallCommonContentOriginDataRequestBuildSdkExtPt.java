@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.huichang.common.contentextpt;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
@@ -10,6 +11,7 @@ import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOrig
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
+import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.util.UrlUtils;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -21,6 +23,9 @@ import org.slf4j.LoggerFactory;
  * 请求tpp数据的入参
  * @author wangguohui
  */
+@Extension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
+    useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
+    scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO)
 public class HallCommonContentOriginDataRequestBuildSdkExtPt implements ContentOriginDataRequestBuildSdkExtPt {
 
     Logger LOGGER = LoggerFactory.getLogger(HallCommonContentOriginDataRequestBuildSdkExtPt.class);
