@@ -62,9 +62,9 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
                 }
                 contentVO.put("iconPic", contentVO.getJSONArray("items").getJSONObject(0).getString("itemImg"));
             }
-            SgFrameworkResponse<ContentVO> sgFrameworkResponse = new SgFrameworkResponse<>();
-            sgFrameworkResponse.setItemAndContentList(res);
-            return TacResult.newResult(sgFrameworkResponse);
+            c.getData().setItemAndContentList(res);
+            return c;
+//            return TacResult.newResult(sgFrameworkResponse);
         });
     }
 }
