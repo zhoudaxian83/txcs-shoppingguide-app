@@ -74,10 +74,10 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
         String noProcess = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),
             RequestKeyConstantApp.FIRST_SCREEN_NO_PROCESS,"false");
         if(StringUtils.isNotBlank(noProcess) && "true".equals(noProcess)){
-            GeneralItem generalItem = new GeneralItem();
+            //GeneralItem generalItem = new GeneralItem();
             /*generalItem.put("noProcess",noProcess);*/
-            List<GeneralItem> generalItems = Lists.newArrayList(generalItem);
-            return Flowable.just(TacResult.newResult(generalItems));
+            //List<GeneralItem> generalItems = Lists.newArrayList(generalItem);
+            return Flowable.just(TacResult.newResult(null));
         }
 
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
