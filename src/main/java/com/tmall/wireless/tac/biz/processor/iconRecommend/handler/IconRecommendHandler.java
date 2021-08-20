@@ -54,9 +54,12 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
                 return TacResult.newResult(new SgFrameworkResponse<>());
             }
 
+            // 4分类 1场景
             if (sceneContentVOList.size() == 1 && classifierContentVOList.size() == 4) {
                 classifierContentVOList.set(4, sceneContentVOList.get(0));
-            } else if (classifierContentVOList.size() == 3) {
+            }
+            // 3分类 1场景
+            else if (classifierContentVOList.size() == 3) {
                 classifierContentVOList.add(sceneContentVOList.get(0));
             }
 
