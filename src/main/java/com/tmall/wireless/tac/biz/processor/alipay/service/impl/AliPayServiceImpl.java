@@ -4,6 +4,7 @@ import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.recmixer.common.service.facade.model.CategoryContentRet;
+import com.alipay.recmixer.common.service.facade.model.MiddlePageRec;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecResult;
 import com.alipay.recmixer.common.service.facade.model.ServiceContentRec;
 import com.alipay.tradecsa.common.service.spi.request.MiddlePageFloorDTO;
@@ -247,7 +248,12 @@ public class AliPayServiceImpl implements IAliPayService {
         ext.put("originPrice", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.ORIGIN_PRICE));
 
         serviceContentRec.setExtMap(ext);
+        MiddlePageRec middlePageRec = new MiddlePageRec();
 
+        Map<String, String> extInfoMap = Maps.newHashMap();
+        extInfoMap.put("youSeeYouGetItem", String.valueOf(item.getItemId()));
+        middlePageRec.setExtInfoMap(extInfoMap);
+        serviceContentRec.setMiddlePageRec(middlePageRec);
         return serviceContentRec;
     }
 
