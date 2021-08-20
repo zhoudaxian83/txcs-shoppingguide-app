@@ -51,7 +51,7 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
                 }
             }
             // 总数量少于4个，传空下发
-            if (!res.isEmpty() && res.size() <= 4) {
+            if (res.size() < 4) {
                 return TacResult.newResult(new SgFrameworkResponse<ContentVO>());
             }
 
