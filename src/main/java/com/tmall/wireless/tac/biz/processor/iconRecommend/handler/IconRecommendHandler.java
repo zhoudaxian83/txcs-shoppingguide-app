@@ -62,7 +62,7 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
             }
             // 3分类 1场景
             else if (classifierContentVOList.size() == 3) {
-                classifierContentVOList.add(sceneContentVOList.get(0));
+                classifierContentVOList.addAll(sceneContentVOList);
             }
 
             // 取第1个物品照片作为icon图片
