@@ -139,7 +139,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
             return pageFloorAtomicResultDTO;
         }
 
-        List<JSONObject> collect = itemAndContentList.subList(CARD_ITEM_SIZE, Math.min(6, itemAndContentList.size())).stream().map(this::convert).collect(Collectors.toList());
+        List<JSONObject> collect = itemAndContentList.subList(0, Math.min(CARD_ITEM_SIZE, itemAndContentList.size())).stream().map(this::convert).collect(Collectors.toList());
         jsonObject.put("items", collect);
         pageFloorAtomicResultDTO.setCardData(Lists.newArrayList(jsonObject));
         return pageFloorAtomicResultDTO;
