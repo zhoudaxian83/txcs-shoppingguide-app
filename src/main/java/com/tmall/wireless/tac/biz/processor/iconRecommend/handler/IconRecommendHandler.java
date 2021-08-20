@@ -58,13 +58,14 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
 
             // 4分类 1场景
             if (sceneContentVOList.size() == 1 && classifierContentVOList.size() == 4) {
-                classifierContentVOList.set(4, sceneContentVOList.get(0));
+                classifierContentVOList.set(3, sceneContentVOList.get(0));
             }
             // 3分类 1场景
             else if (classifierContentVOList.size() == 3) {
                 classifierContentVOList.addAll(sceneContentVOList);
             }
 
+            logger.info("[IconRecommendHandler] Size of content: " + classifierContentVOList.size());
             // 取第1个物品照片作为icon图片
             for (ContentVO contentVO : classifierContentVOList) {
                 contentVO.put("iconPic", contentVO.getJSONArray("items").getJSONObject(0).getString("itemImg"));
