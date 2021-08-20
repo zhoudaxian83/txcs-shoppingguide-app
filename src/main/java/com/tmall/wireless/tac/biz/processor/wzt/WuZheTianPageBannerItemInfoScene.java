@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ali.unit.rule.util.lang.CollectionUtils;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
@@ -25,6 +26,7 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.LimitItemUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
@@ -39,6 +41,9 @@ public class WuZheTianPageBannerItemInfoScene {
 
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
+
+    @Autowired
+    TacLogger tacLogger;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
         Long level1Id = MapUtil.getLongWithDefault(context.getParams(), "level1Id", 0L);
@@ -82,6 +87,7 @@ public class WuZheTianPageBannerItemInfoScene {
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult).map(tacResult -> {
                 List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
+                    tacLogger.info("过滤前originalEntityVOList:"+ JSON.toJSONString(originalEntityVOList));
                 if (!CollectionUtils.isEmpty(originalEntityVOList)) {
                     List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
                     if (noLimitEntityVOList.size() != originalEntityVOList.size() && noLimitEntityVOList.size() != 0) {
