@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.chaohaotou.ext;
 import com.ali.com.google.common.base.Joiner;
 import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.alibaba.cola.extension.Extension;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -49,11 +50,15 @@ public class ChaoHaoTouDataItemQueryExtPt implements OriginDataItemQueryExtPt {
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         Long userId = MapUtil.getLongWithDefault(context.getRequestParams(), "userId", 0L);
-        Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
-        List<TmcsZntItemDTO> tmcsZntItemDTOList = commercialFeedsService.getCommercialFeeds(context);
-        List<Long> items = tmcsZntItemDTOList.stream().map(TmcsZntItemDTO::getItemId).collect(Collectors.toList());
+        Pair<Boolean, List<TmcsZntItemDTO>> booleanListPair = commercialFeedsService.getCommercialFeeds(context);
+        List<Long> items = Lists.newArrayList();
+        boolean hasMore = false;
+        if (booleanListPair != null) {
+            List<TmcsZntItemDTO> tmcsZntItemDTOList = booleanListPair.getRight();
+            hasMore = booleanListPair.getLeft();
+            items = tmcsZntItemDTOList.stream().map(TmcsZntItemDTO::getItemId).collect(Collectors.toList());
+        }
         //返回结果为空或者返回结果小于每页条数视为没有数据了
-        boolean hasMore = items.size() == pageSize;
         context.getUserParams().put("hasMore", hasMore);
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
                 .map(recommendResponseEntityResponse -> {

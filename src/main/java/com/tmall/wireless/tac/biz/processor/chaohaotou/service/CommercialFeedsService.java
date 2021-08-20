@@ -13,6 +13,7 @@ import com.tmall.wireless.tac.biz.processor.chaohaotou.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.model.convert.TmcsZntItemDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,39 +33,42 @@ public class CommercialFeedsService {
     @Autowired
     TacLogger tacLogger;
 
-    public List<TmcsZntItemDTO> getCommercialFeeds(SgFrameworkContextItem sgFrameworkContextItem) {
-        List<TmcsZntItemDTO> tmcsZntItemDTOList = Lists.newArrayList();
+    public Pair<Boolean, List<TmcsZntItemDTO>> getCommercialFeeds(SgFrameworkContextItem sgFrameworkContextItem) {
+        Pair<Boolean, List<TmcsZntItemDTO>> booleanListPair = null;
         Map<String, Object> paramMap = this.buildParam(sgFrameworkContextItem);
         tacLogger.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
         try {
             Object o = rpcSpi.invokeHsf(Constant.TMCS_ZNT_ENGINE, paramMap);
             if (o == null) {
-                tacLogger.info("tmcsZntEngine接口调用为空" + JSON.toJSONString(o));
+                return null;
             }
-            tmcsZntItemDTOList = this.convert(o);
+            booleanListPair = this.convert(o);
         } catch (Exception e) {
             tacLogger.error("tmcsZntEngine接口调用异常", e);
         }
-        return tmcsZntItemDTOList;
+        return booleanListPair;
     }
 
-    private List<TmcsZntItemDTO> convert(Object o) {
+    private Pair<Boolean, List<TmcsZntItemDTO>> convert(Object o) {
+        List<TmcsZntItemDTO> tmcsZntItemDTOList = Lists.newArrayList();
         JSONObject jsonObject = JSONObject.parseObject(o.toString());
         if (!jsonObject.getBoolean("success")) {
-            return Lists.newArrayList();
+            return null;
         }
-        JSONArray jsonArray = jsonObject.getJSONArray("data");
-        if (CollectionUtils.isEmpty(jsonArray)) {
-            return Lists.newArrayList();
+        JSONObject data = jsonObject.getJSONObject("data");
+        JSONArray jsonArray = data.getJSONArray("listInfo");
+        JSONObject pageInfo = jsonObject.getJSONObject("pageInfo");
+        if (!CollectionUtils.isEmpty(jsonArray)) {
+            tmcsZntItemDTOList = JSONObject.parseArray(jsonArray.toJSONString(), TmcsZntItemDTO.class);
         }
-        return JSONObject.parseArray(jsonArray.toJSONString(), TmcsZntItemDTO.class);
+        return Pair.of(pageInfo.getBoolean("hasMore"), tmcsZntItemDTOList);
     }
 
     private Map<String, Object> buildParam(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<String, Object> paramsValue = new HashMap<>(16);
         Map<String, Object> paramMap = Maps.newHashMap();
         Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
-        Long index = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "index", 0L);
+        Long index = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "index", 1L);
         Long pageSize = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "pageSize", 20L);
         Long smAreaId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "smAreaId", 330100L);
         String csa = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "csa", "");
