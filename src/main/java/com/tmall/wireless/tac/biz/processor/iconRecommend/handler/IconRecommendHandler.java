@@ -40,6 +40,7 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
             List<ContentVO> classifierContentVOList = c.getData().getItemAndContentList();
             List<ContentVO> sceneContentVOList = s.getData().getItemAndContentList();
             List<ContentVO> res = new ArrayList<>();
+
             // 场景词item数量少于六个，分类词打底
             if (sceneContentVOList != null && sceneContentVOList.size() > 0 && classifierContentVOList != null && classifierContentVOList.size() > 0) {
                 if (sceneContentVOList.get(0).getJSONArray("items") != null && sceneContentVOList.get(0).getJSONArray("items").size() < 6) {
@@ -56,7 +57,7 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
 
             // 取第1个物品照片作为icon图片
             for (ContentVO contentVO : res) {
-                if (contentVO != null && contentVO.getJSONArray("items") != null && contentVO.getJSONArray("items").size() < 6) {
+                if (contentVO == null || contentVO.getJSONArray("items") == null || contentVO.getJSONArray("items").size() < 6) {
                     return TacResult.newResult(new SgFrameworkResponse<ContentVO>());
                 }
                 contentVO.put("iconPic", contentVO.getJSONArray("items").getJSONObject(0).getString("itemImg"));
