@@ -12,6 +12,6 @@ public class MiddlePageUtil {
         return   Optional.ofNullable(middlePageSPIRequest)
                 .map(MiddlePageSPIRequest::getMiddlePageClientRequestDTO)
                 .map(MiddlePageClientRequestDTO::getPageNo)
-                .orElse(1) > 1;
+                .orElse(1) == 1;
     }
 }
