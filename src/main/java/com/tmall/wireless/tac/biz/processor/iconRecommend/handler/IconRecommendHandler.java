@@ -45,9 +45,11 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
             classifierContentVOList = classifierContentVOList.stream()
                     .filter(contentVO -> contentVO.getJSONArray("items").size() >= 6)
                     .collect(Collectors.toList());
+            logger.info("[IconRecommendHandler] Size of classifier content: " + classifierContentVOList.size());
             sceneContentVOList = sceneContentVOList.stream()
                     .filter(contentVO -> contentVO.getJSONArray("items").size() >= 6)
                     .collect(Collectors.toList());
+            logger.info("[IconRecommendHandler] Size of scene content: " + sceneContentVOList.size());
 
             // 少于4个，不下发
             if (classifierContentVOList.size() + sceneContentVOList.size() < 4) {
