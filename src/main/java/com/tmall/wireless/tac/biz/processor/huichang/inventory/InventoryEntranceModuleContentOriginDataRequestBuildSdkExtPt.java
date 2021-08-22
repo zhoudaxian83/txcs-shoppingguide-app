@@ -7,6 +7,7 @@ import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
+import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
@@ -24,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * 请求tpp数据的入参
  * @author wangguohui
  */
-@Extension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
+@SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
     useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
     scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE)
 public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
