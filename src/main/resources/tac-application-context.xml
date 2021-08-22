@@ -76,8 +76,15 @@
     <!--会场相关开始-->
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModuleHandler"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModuleContentInfoQuerySdkExtPt"/>
 
-    <!---会场相关技术-->
+    <!--内容渲染场景-->
+    <bean id="entityRenderService" class="com.taobao.hsf.app.spring.util.HSFSpringConsumerBean"
+          init-method="init">
+        <property name="interfaceName" value="com.tmall.aselfcaptain.cloudrec.api.EntityRenderService"/>
+        <property name="version" value="1.0.0"/>
+    </bean>
+    <!---会场相关结束-->
 
 
 
