@@ -9,12 +9,15 @@ import com.tmall.aselfcaptain.cloudrec.domain.Entity;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityId;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityQueryOption;
 import com.tmall.aselfcaptain.item.model.ChannelDataDO;
+import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
+import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.contentinfo.ContentInfoQuerySdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.Response;
 import com.tmall.tcls.gs.sdk.framework.model.context.ContentEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.ContentInfoDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
+import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -27,7 +30,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class InventoryChannelPageContentInfoQuerySdkExtPt implements ContentInfoQuerySdkExtPt {
+@SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
+        useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
+        scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE)
+public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register implements ContentInfoQuerySdkExtPt {
     @Resource
     EntityRenderService entityRenderService;
     public static final String CHANNELNAME = "sceneLdb";

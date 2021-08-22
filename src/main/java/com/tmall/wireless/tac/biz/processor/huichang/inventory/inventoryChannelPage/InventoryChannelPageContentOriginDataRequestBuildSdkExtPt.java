@@ -2,10 +2,13 @@ package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannel
 
 import com.alibaba.cola.extension.Extension;
 import com.google.common.collect.Maps;
+import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
+import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -18,11 +21,10 @@ import java.util.Optional;
 /**
  * Tpp请求场景，入参组装
  */
-@Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_O2O,
-        scenario = ScenarioConstantApp.O2O_BANG_DAN)
-@Service
-public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt implements ContentOriginDataRequestBuildSdkExtPt {
+@SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
+        useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
+        scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE)
+public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
     private static final Long DefaultSmAreaId = 310100L;
     private static final Long DefaultLogAreaId = 107L;
     private static final String SCENE_SET_PREFIX = "intelligentCombinationItems_";

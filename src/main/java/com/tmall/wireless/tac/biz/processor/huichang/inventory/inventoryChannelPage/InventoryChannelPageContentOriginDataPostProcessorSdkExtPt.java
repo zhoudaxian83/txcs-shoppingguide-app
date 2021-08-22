@@ -1,6 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage;
 
 import com.google.common.collect.Lists;
+import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
+import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataPostProcessorSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataProcessRequest;
 import com.tmall.tcls.gs.sdk.framework.model.context.ContentEntity;
@@ -9,6 +11,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.txcs.gs.model.item.BizType;
 import com.tmall.txcs.gs.model.item.O2oType;
+import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.collections.CollectionUtils;
@@ -19,7 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt implements ContentOriginDataPostProcessorSdkExtPt {
+@SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
+        useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
+        scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE)
+public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends Register implements ContentOriginDataPostProcessorSdkExtPt {
     @Override
     public OriginDataDTO<ContentEntity> process(ContentOriginDataProcessRequest contentOriginDataProcessRequest) {
         SgFrameworkContextContent sgFrameworkContextContent = Optional.of(contentOriginDataProcessRequest.getSgFrameworkContextContent()).orElse(new SgFrameworkContextContent());
