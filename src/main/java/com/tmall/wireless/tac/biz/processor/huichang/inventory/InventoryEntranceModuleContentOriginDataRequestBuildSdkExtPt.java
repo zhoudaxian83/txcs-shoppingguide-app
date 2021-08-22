@@ -3,10 +3,11 @@ package com.tmall.wireless.tac.biz.processor.huichang.inventory;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
+import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
+import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
@@ -23,12 +24,15 @@ import org.slf4j.LoggerFactory;
  * 请求tpp数据的入参
  * @author wangguohui
  */
-@Extension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
+@SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
     useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
     scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE)
-public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt implements ContentOriginDataRequestBuildSdkExtPt {
+public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
 
     Logger LOGGER = LoggerFactory.getLogger(InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.class);
+
+
+    public static final Long SCENE_RECOMMEND_APPID = 26563L;
 
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
@@ -53,12 +57,24 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt implem
         recommendRequest.setParams(tppRequestParams);
         recommendRequest.setLogResult(true);
         recommendRequest.setUserId(Long.valueOf(String.valueOf(userId)));
-        //TODO 雾列 这个地方怎么扩展
-        recommendRequest.setAppId(0L);
+        recommendRequest.setAppId(SCENE_RECOMMEND_APPID);
+
+        buildTppParams(tppRequestParams, aldParam);
 
         return recommendRequest;
     }
-
-
+    //https://tui.taobao.com/recommend?appid=26563&sceneSet=intelligentCombinationItems_182009&commerce=B2C
+    // &regionCode=107&smAreaId=330110&pageSize=10
+    private void buildTppParams(Map<String, String> params, Map<String, Object> aldParam){
+        params.put("index", "0");
+        params.put("pageSize", "1"); //
+        params.put("commerce","B2C");
+        params.put("smAreaId", "330110");
+        params.put("regionCode", "107");
+        Object sceneSet = aldParam.get("sceneSet");
+        String sceneSetId = String.valueOf(sceneSet);
+        params.put("sceneSet", sceneSetId); // 场景集id
+        params.put("appId", String.valueOf(SCENE_RECOMMEND_APPID));
+    }
 
 }

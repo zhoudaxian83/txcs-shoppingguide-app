@@ -14,10 +14,9 @@ import java.util.Map;
  */
 public class PageUrlUtil {
 
+    public static String getParamFromCurPageUrl(Map<String, Object> aldParams, SolutionContext solutionContext, String param) {
 
-    public static String getParamFromCurPageUrl(RequestItem requestItem, SolutionContext solutionContext, String param) {
-
-        String curPageUrl = getCurPageUrl(requestItem, solutionContext);
+        String curPageUrl = getCurPageUrl(aldParams, solutionContext);
         if(StringUtils.isEmpty(curPageUrl)){
             return null;
         }
@@ -37,15 +36,21 @@ public class PageUrlUtil {
         return null;
     }
 
-    public static String getCurPageUrl(RequestItem requestItem, SolutionContext solutionContext) {
-        Map<String, Object> data = requestItem.getData();
-        Object currentPageUrl = data.get("curPageUrl");
+    public static String getCurPageUrl(Map<String, Object> aldParams, SolutionContext solutionContext) {
+        Object currentPageUrl = aldParams.get("curPageUrl");
         if(currentPageUrl == null){
             solutionContext.debug("curPageUrl", "curPageUrl is empty");
             return null;
         }
-
         return String.valueOf(currentPageUrl);
+    }
+
+    public static String addParams(String pageUrl, String paramKey, String paramValue) {
+        if (pageUrl == null) {
+            return null;
+        }
+
+        return pageUrl + "&" + paramKey + "=" + paramValue;
     }
 
     public static void main(String[] args)throws Exception{

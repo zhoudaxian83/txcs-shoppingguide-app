@@ -1,4 +1,4 @@
-package com.alibaba.aladdin.app.util;
+package com.tmall.wireless.tac.biz.processor.huichang.common.utils;
 
 import java.util.HashMap;
 import java.util.Map;
