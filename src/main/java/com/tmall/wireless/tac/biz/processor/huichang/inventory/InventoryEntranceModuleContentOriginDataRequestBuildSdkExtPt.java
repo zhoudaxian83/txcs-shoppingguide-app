@@ -67,7 +67,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
     // &regionCode=107&smAreaId=330110&pageSize=10
     private void buildTppParams(Map<String, String> params, Map<String, Object> aldParam){
         params.put("index", "0");
-        params.put("pageSize", "10"); //
+        params.put("pageSize", "1"); //
         params.put("commerce","B2C");
         params.put("smAreaId", "330110");
         params.put("regionCode", "107");
