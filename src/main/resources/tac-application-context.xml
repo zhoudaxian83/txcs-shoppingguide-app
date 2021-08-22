@@ -73,6 +73,15 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenItemBuildItemVOExtPt"/>
 
 
+    <!--会场相关开始-->
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModuleHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt"/>
+
+    <!---会场相关技术-->
+
+
+
+
     <bean class="com.tmall.wireless.tac.biz.processor.o2obd.ext.O2oBangdanContentOriginDataRequestExPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.o2obd.ext.O2oBangdanContentInfoQueryExtPt"/>
 
