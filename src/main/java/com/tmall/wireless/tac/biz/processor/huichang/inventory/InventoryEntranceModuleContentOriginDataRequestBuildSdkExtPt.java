@@ -3,7 +3,6 @@ package com.tmall.wireless.tac.biz.processor.huichang.inventory;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
@@ -32,6 +31,9 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
 
     Logger LOGGER = LoggerFactory.getLogger(InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.class);
 
+
+    public static final Long SCENE_RECOMMEND_APPID = 26563L;
+
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
 
@@ -55,12 +57,23 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         recommendRequest.setParams(tppRequestParams);
         recommendRequest.setLogResult(true);
         recommendRequest.setUserId(Long.valueOf(String.valueOf(userId)));
-        //TODO 雾列 这个地方怎么扩展
-        recommendRequest.setAppId(0L);
+
+        buildTppParams(tppRequestParams, aldParam);
 
         return recommendRequest;
     }
-
-
+    //https://tui.taobao.com/recommend?appid=26563&sceneSet=intelligentCombinationItems_182009&commerce=B2C
+    // &regionCode=107&smAreaId=330110&pageSize=10
+    private void buildTppParams(Map<String, String> params, Map<String, Object> aldParam){
+        params.put("index", "0");
+        params.put("pageSize", "10"); //
+        params.put("commerce","B2C");
+        params.put("smAreaId", "330110");
+        params.put("regionCode", "107");
+        Object sceneSet = aldParam.get("sceneSet");
+        String sceneSetId = String.valueOf(sceneSet);
+        params.put("sceneSet", sceneSetId); // 场景集id
+        params.put("appId", String.valueOf(SCENE_RECOMMEND_APPID));
+    }
 
 }
