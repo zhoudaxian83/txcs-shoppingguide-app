@@ -57,6 +57,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         recommendRequest.setParams(tppRequestParams);
         recommendRequest.setLogResult(true);
         recommendRequest.setUserId(Long.valueOf(String.valueOf(userId)));
+        recommendRequest.setAppId(SCENE_RECOMMEND_APPID);
 
         buildTppParams(tppRequestParams, aldParam);
 
