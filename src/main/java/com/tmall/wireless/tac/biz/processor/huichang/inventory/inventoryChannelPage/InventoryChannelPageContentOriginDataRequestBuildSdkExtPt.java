@@ -90,7 +90,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
         recommendRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent.getCommonUserParams().getUserDO().getUserId()).orElse(0L));
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
-
+        tacLogger.debug("Tpp请求参数是：" + JSONObject.toJSONString(recommendRequest));
         return recommendRequest;
 
     }

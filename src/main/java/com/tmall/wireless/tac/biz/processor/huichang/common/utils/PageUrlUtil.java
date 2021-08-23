@@ -30,7 +30,6 @@ public class PageUrlUtil {
             tacLogger.debug("curPageUrl decode exception" + e.getMessage());
         }
 
-        tacLogger.debug(curPageUrl);
         Map<String, String> paramsMap = URLUtil.URLRequest(curPageUrl);
         if(MapUtils.isNotEmpty(paramsMap) && StringUtils.isNotEmpty(paramsMap.get(param))){
             return paramsMap.get(param);
