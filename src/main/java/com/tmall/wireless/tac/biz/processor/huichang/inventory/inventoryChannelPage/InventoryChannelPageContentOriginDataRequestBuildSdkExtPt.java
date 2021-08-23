@@ -64,6 +64,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
         params.put("smAreaId", String.valueOf(smAreaId));
 
         LocParams locParams = ParseCsa.parseCsaObj(aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA), smAreaId);
+
         params.put("regionCode", String.valueOf(Optional.ofNullable(locParams.getRegionCode()).orElse(DefaultLogAreaId)));
 
         String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
@@ -96,7 +97,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
 
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setAppId(APPID);
-        recommendRequest.setUserId(MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.UTDID, 0L));
+        recommendRequest.setUserId(MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, 0L));
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
         tacLogger.debug("Tpp请求参数是：" + JSONObject.toJSONString(recommendRequest));
