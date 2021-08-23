@@ -52,12 +52,12 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
         Map<String, String> params = Maps.newHashMap();
         tacLogger.debug("aldParams: " + JSONObject.toJSONString(aldParams));
 
-        String index = PageUrlUtil.getParamFromCurPageUrl(aldParams, "index", tacLogger);
-        if(StringUtils.isNotBlank(index)) {
-            params.put("index", index);
-        } else {
-            params.put("index", String.valueOf(Optional.ofNullable(aldParams.get("pageIndex")).orElse("0"))); // Todo
+        String pageIndex = PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger);
+        if(StringUtils.isBlank(pageIndex)) {
+            pageIndex = "0";
         }
+        int index = Integer.valueOf(pageIndex) * PAGE_SIZE;
+        params.put("index", String.valueOf(index));
 
         params.put("pageSize", String.valueOf(PAGE_SIZE)); // Todo
         Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, DefaultSmAreaId);

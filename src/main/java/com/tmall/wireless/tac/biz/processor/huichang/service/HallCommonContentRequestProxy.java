@@ -39,8 +39,6 @@ public class HallCommonContentRequestProxy {
     @Autowired
     TacLogger tacLogger;
 
-    private static final String SceneCode = "superMarket_todayCrazy";
-
     public Flowable<TacResult<List<GeneralItem>>> recommend(RequestContext4Ald requestContext4Ald, BizScenario bizScenario) {
         return shoppingguideSdkContentService.recommend(requestContext4Ald, bizScenario)
             .map(response -> {

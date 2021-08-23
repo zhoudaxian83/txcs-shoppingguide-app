@@ -55,8 +55,6 @@ public class HallCommonItemRequestProxy {
     @Autowired
     TacLogger tacLogger;
 
-    private static final String SceneCode = "superMarket_todayCrazy";
-
     public Flowable<TacResult<List<GeneralItem>>> recommend(RequestContext4Ald requestContext4Ald, BizScenario bizScenario) {
         tacLogger.info("***huichang context.getParams()****:"+requestContext4Ald.getParams());
         LOGGER.info("***huichang context.getParams()****:"+requestContext4Ald.getParams());
