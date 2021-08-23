@@ -81,7 +81,6 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         if(MapUtils.isEmpty(itemSetMap)){
             return tppRequest;
         }
-        tppRequest.setAppId(APPID);
         params.put("itemSets",  String.join(",", itemSetMap.keySet()));
         params.put("commerce", "B2C");
         params.put("regionCode", String.valueOf(sgFrameworkContextContent.getLocParams().getRegionCode()));
