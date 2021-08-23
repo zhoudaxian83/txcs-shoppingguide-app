@@ -1,11 +1,14 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage;
 
 import com.google.common.collect.Lists;
+import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
+import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataPostProcessorSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProcessRequest;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.txcs.gs.model.item.BizType;
 import com.tmall.txcs.gs.model.item.O2oType;
+import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.lang.StringUtils;
@@ -13,7 +16,10 @@ import org.apache.commons.lang.StringUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt implements ItemOriginDataPostProcessorSdkExtPt {
+@SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
+        useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
+        scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE)
+public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Register implements ItemOriginDataPostProcessorSdkExtPt {
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {

@@ -20,7 +20,7 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
         BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
                 HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
-                HallScenarioConstant.);
+                HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE);
         bizScenario.addProducePackage("huichang");
         return hallCommonContentRequestProxy.recommend(requestContext4Ald, bizScenario);
     }
