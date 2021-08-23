@@ -130,6 +130,7 @@ public class O2oBangdanService {
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         //captain SceneCode场景code
         itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
+        itemInfoSourceMetaInfoCaptain.setFilterSoldOut(true);
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 
         ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
@@ -153,7 +154,6 @@ public class O2oBangdanService {
 
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
-
         contentMetaInfo.setItemMetaInfo(itemMetaInfo);
         ContentRecommendMetaInfo contentRecommendMetaInfo = new ContentRecommendMetaInfo();
         contentRecommendMetaInfo.setUseRecommendSpiV2(false);
