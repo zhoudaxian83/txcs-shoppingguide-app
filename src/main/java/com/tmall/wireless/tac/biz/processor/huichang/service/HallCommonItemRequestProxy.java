@@ -9,13 +9,16 @@ import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.tcls.gs.sdk.ext.BizScenario;
+import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
+import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
+import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
-import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
 import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
@@ -44,7 +47,7 @@ public class HallCommonItemRequestProxy {
 
     Logger LOGGER = LoggerFactory.getLogger(LimitTimeBuyScene.class);
     @Autowired
-    SgFrameworkServiceItem sgFrameworkServiceItem;
+    ShoppingguideSdkItemService shoppingguideSdkItemService;
 
     @Autowired
     AldInfoUtil aldInfoUtil;
@@ -54,41 +57,11 @@ public class HallCommonItemRequestProxy {
 
     private static final String SceneCode = "superMarket_todayCrazy";
 
-    public Flowable<TacResult<List<GeneralItem>>> recommend(RequestContext4Ald requestContext4Ald) {
-        tacLogger.info("***LimitTimeBuyScene context.getParams()****:"+requestContext4Ald.getParams());
-        LOGGER.info("***LimitTimeBuyScene context.getParams()****:"+requestContext4Ald.getParams());
+    public Flowable<TacResult<List<GeneralItem>>> recommend(RequestContext4Ald requestContext4Ald, BizScenario bizScenario) {
+        tacLogger.info("***huichang context.getParams()****:"+requestContext4Ald.getParams());
+        LOGGER.info("***huichang context.getParams()****:"+requestContext4Ald.getParams());
 
-        Long smAreaId = MapUtil.getLongWithDefault(requestContext4Ald.getParams(), "smAreaId", 330100L);
-        SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
-
-        sgFrameworkContextItem.setRequestParams(requestContext4Ald.getParams());
-
-        SceneInfo sceneInfo = new SceneInfo();
-        sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
-        sceneInfo.setSubBiz(ScenarioConstantApp.LOC_TYPE_B2C);
-        sceneInfo.setScene(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY);
-        sgFrameworkContextItem.setSceneInfo(sceneInfo);
-
-        UserDO userDO = new UserDO();
-        userDO.setUserId(Optional.of(requestContext4Ald).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
-        userDO.setNick(Optional.of(requestContext4Ald).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
-        sgFrameworkContextItem.setUserDO(userDO);
-
-        sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(requestContext4Ald.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
-        sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo());
-
-
-        PageInfoDO pageInfoDO = new PageInfoDO();
-        pageInfoDO.setIndex(0);
-        pageInfoDO.setPageSize(20);
-        sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("step", "requestLog")
-            .kv("userId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
-                Objects::toString).orElse("0"))
-            .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
-            .info();
-        return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+        return shoppingguideSdkItemService.recommend(requestContext4Ald, bizScenario)
             .map(response -> {
                 List<GeneralItem> re = Lists.newArrayList();
                 re.add(convertAldItem(response));
@@ -98,9 +71,7 @@ public class HallCommonItemRequestProxy {
             .onErrorReturn(r -> TacResult.errorResult(""));
     }
 
-
-
-    public GeneralItem convertAldItem(SgFrameworkResponse<EntityVO> response) {
+    public GeneralItem convertAldItem(SgFrameworkResponse<ItemEntityVO> response) {
         GeneralItem generalItem = new GeneralItem();
         generalItem.put("success", response.isSuccess());
         generalItem.put("errorCode", response.getErrorCode());
@@ -112,43 +83,4 @@ public class HallCommonItemRequestProxy {
 
         return generalItem;
     }
-
-
-    public static ItemMetaInfo getItemMetaInfo() {
-        ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
-        List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
-        List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
-        ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
-        itemGroupMetaInfoList.add(itemGroupMetaInfo);
-        itemGroupMetaInfo.setGroupName("sm_B2C");
-        itemGroupMetaInfo.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
-        ItemGroupMetaInfo itemGroupMetaInfo1 = new ItemGroupMetaInfo();
-        itemGroupMetaInfoList.add(itemGroupMetaInfo1);
-        itemGroupMetaInfo1.setGroupName("sm_O2OOneHour");
-        itemGroupMetaInfo1.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
-        ItemGroupMetaInfo itemGroupMetaInfo2 = new ItemGroupMetaInfo();
-        itemGroupMetaInfoList.add(itemGroupMetaInfo2);
-        itemGroupMetaInfo2.setGroupName("sm_O2OHalfDay");
-        itemGroupMetaInfo2.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
-        ItemGroupMetaInfo itemGroupMetaInfo3 = new ItemGroupMetaInfo();
-        itemGroupMetaInfoList.add(itemGroupMetaInfo3);
-        itemGroupMetaInfo3.setGroupName("sm_O2ONextDay");
-        itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-        itemInfoSourceMetaInfoCaptain.setSceneCode(SceneCode);
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
-        itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoTpp.setSourceName("tpp");
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
-
-        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoInv = new ItemInfoSourceMetaInfo();
-        itemInfoSourceMetaInfoInv.setSourceName("inventory");
-        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoInv);
-
-        itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
-        return itemMetaInfo;
-    }
-
 }

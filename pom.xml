@@ -101,11 +101,11 @@
             <groupId>com.taobao.csp</groupId>
             <artifactId>switchcenter</artifactId>
             <version>2.1.1.2-fix-fastjson-noneautotype</version>
-<!--        <dependency>-->
-<!--            <groupId>com.tmall.aself</groupId>-->
-<!--            <artifactId>aselfmanager-client</artifactId>-->
-<!--            <version>1.0.26-RELEASE</version>-->
-<!--        </dependency>-->
+            <!--        <dependency>-->
+            <!--            <groupId>com.tmall.aself</groupId>-->
+            <!--            <artifactId>aselfmanager-client</artifactId>-->
+            <!--            <version>1.0.26-RELEASE</version>-->
+            <!--        </dependency>-->
         </dependency>
         <dependency>
             <groupId>com.tmall.aself</groupId>
@@ -166,3 +166,4 @@
         </plugins>
     </build>
 </project>
+

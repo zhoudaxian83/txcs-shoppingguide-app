@@ -52,8 +52,6 @@ public class HallCommonContentRequestProxy {
             .onErrorReturn(r -> TacResult.errorResult(""));
     }
 
-
-
     public GeneralItem convertAldItem(SgFrameworkResponse<ContentVO> response) {
         GeneralItem generalItem = new GeneralItem();
         generalItem.put("success", response.isSuccess());
