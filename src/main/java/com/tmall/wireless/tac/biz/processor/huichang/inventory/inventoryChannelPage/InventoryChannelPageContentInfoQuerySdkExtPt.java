@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannel
 
 import com.alibaba.cola.dto.MultiResponse;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.cloudrec.api.EntityRenderService;
@@ -95,7 +96,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
             }
         }
         catch (Exception e) {
-                tacLogger.debug("查询异常");
+            tacLogger.debug("查询异常");
             return Flowable.just(Response.fail("captain error"));
         }
     }
@@ -110,7 +111,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
         contentMap.put("subtitle",jsonObject.getString("subtitle"));
         contentMap.put("marketChannel",jsonObject.getString("marketChannel"));
         contentMap.put("setSource", jsonObject.getString("setSource"));
-        contentMap.put("setId", (String) JSONObject.parseObject(jsonObject.getString("setIds")).get(0)); // 默认返回setId列表
+        contentMap.put("setId", (String) JSONArray.parseArray(jsonObject.getString("setIds")).get(0)); // 默认返回setId列表
         String urlParam = "";
 
         urlParam = PageUrlUtil.addParams(urlParam, "sceneId", String.valueOf(contentMap.get("id")));
