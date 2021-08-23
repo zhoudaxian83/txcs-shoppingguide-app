@@ -3,9 +3,12 @@ package com.tmall.wireless.tac.biz.processor.gul.promotion;
 import java.util.Map;
 import java.util.Optional;
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -98,7 +101,9 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
-
+        HadesLogUtil.stream(ScenarioConstantApp.GUL_PROMOTION)
+            .kv("tppRequest", JSON.toJSONString(tppRequest))
+            .info();
         return tppRequest;
     }
 }
