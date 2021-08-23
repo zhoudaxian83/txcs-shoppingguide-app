@@ -77,12 +77,10 @@ public class CommercialFeedsService {
         paramMap.put("userId", userId);
         paramMap.put("regionCode", regionCode);
         paramMap.put("smAreaId", smAreaId);
-        paramMap.put("index", index);
+        paramMap.put("currentPage", index);
         paramMap.put("pageSize", pageSize);
         paramMap.put("commerce", Constant.B2C);
         paramMap.put("bizType", bizType);
-        //TODO 兼容二方包多入参,二方包升级后删除
-        paramMap.put("feedsType", bizType);
         paramsValue.put("tmcsZntFeedsRequest", paramMap);
         return paramsValue;
     }

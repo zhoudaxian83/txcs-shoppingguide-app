@@ -1,10 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.chaohaotou.constant;
 
-/**
- * @Author: luoJunChong
- * @Date: 2021/5/21 11:12
- * description:
- */
+
 public class Constant {
     public static final String TMCS_ZNT_ENGINE ="tmcsZntEngine";
     public static final Long APP_ID = 21431L;
