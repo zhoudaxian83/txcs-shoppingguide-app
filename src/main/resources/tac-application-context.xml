@@ -121,11 +121,5 @@
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionScene"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionBuildItemVOExtPt"/>
-    <!--内容渲染场景-->
-    <bean id="entityRenderService" class="com.taobao.hsf.app.spring.util.HSFSpringConsumerBean"
-          init-method="init">
-        <property name="interfaceName" value="com.tmall.aselfcaptain.cloudrec.api.EntityRenderService"/>
-        <property name="version" value="1.0.0"/>
-    </bean>
 
 </beans>
