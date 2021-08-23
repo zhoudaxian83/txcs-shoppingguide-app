@@ -42,11 +42,11 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
         tacLogger.debug("扩展点InventoryChannelPageContentOriginDataRequestBuildSdkExtPt");
         Context context = sgFrameworkContextContent.getTacContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald) context;
-        Map<String, Object> aldParams = requestContext4Ald.getAldContext();
+        Map<String, Object> aldParams = requestContext4Ald.getAldParam();
         Map<String, String> params = Maps.newHashMap();
         tacLogger.debug("aldParams: " + JSONObject.toJSONString(aldParams));
 
-        String index = PageUrlUtil.getParamFromCurPageUrl(aldParams, "index");
+        String index = PageUrlUtil.getParamFromCurPageUrl(aldParams, "index", tacLogger);
         if(StringUtils.isNotBlank(index)) {
             params.put("index", index); // Todo
         } else {
@@ -57,7 +57,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
         params.put("smAreaId", String.valueOf(Optional.of(sgFrameworkContextContent.getCommonUserParams().getLocParams().getSmAreaId()).orElse(DefaultSmAreaId)));
         params.put("regionCode", String.valueOf(Optional.ofNullable(sgFrameworkContextContent.getCommonUserParams().getLocParams().getRegionCode()).orElse(DefaultLogAreaId)));
 
-        String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
+        String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
         if("B2C".equals(locType) || locType == null){
             params.put("commerce","B2C");
         }else {
@@ -69,18 +69,18 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
             }
         }
 
-        String sceneSetId = PageUrlUtil.getParamFromCurPageUrl(aldParams, "sceneSet"); // Todo likunlin
+        String sceneSetId = PageUrlUtil.getParamFromCurPageUrl(aldParams, "sceneSet", tacLogger); // Todo likunlin
         if(!sceneSetId.contains(SCENE_SET_PREFIX)) {
             sceneSetId = SCENE_SET_PREFIX + sceneSetId;
         }
         params.put("sceneSet", sceneSetId); // 场景集id
 
-        String sceneExclude = PageUrlUtil.getParamFromCurPageUrl(aldParams, "filter"); // Todo likunlin
+        String sceneExclude = PageUrlUtil.getParamFromCurPageUrl(aldParams, "filter", tacLogger); // Todo likunlin
         if(StringUtils.isNotBlank(sceneExclude)) {
             params.put("sceneExclude", sceneExclude); // 过滤的场景
         }
 
-        String sceneTop = PageUrlUtil.getParamFromCurPageUrl(aldParams, "sceneTop"); // Todo likunlin
+        String sceneTop = PageUrlUtil.getParamFromCurPageUrl(aldParams, "sceneTop", tacLogger); // Todo likunlin
         if(StringUtils.isNotBlank(sceneTop)) {
             params.put("sceneTop", sceneTop); // 置顶的场景
         }

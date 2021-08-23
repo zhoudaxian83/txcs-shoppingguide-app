@@ -7,6 +7,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.swing.table.TableCellEditor;
 import java.net.URLDecoder;
 import java.util.Map;
 
@@ -15,11 +16,10 @@ import java.util.Map;
  * Created by likunlin on 2021-08-20.
  */
 public class PageUrlUtil {
-    @Autowired
-    public static TacLogger tacLogger;
-    public static String getParamFromCurPageUrl(Map<String, Object> aldParams, String param) {
 
-        String curPageUrl = getCurPageUrl(aldParams);
+    public static String getParamFromCurPageUrl(Map<String, Object> aldParams, String param, TacLogger tacLogger) {
+
+        String curPageUrl = getCurPageUrl(aldParams, tacLogger);
         if(StringUtils.isEmpty(curPageUrl)){
             return null;
         }
@@ -39,7 +39,7 @@ public class PageUrlUtil {
         return null;
     }
 
-    public static String getCurPageUrl(Map<String, Object> aldParams) {
+    public static String getCurPageUrl(Map<String, Object> aldParams, TacLogger tacLogger) {
         Object currentPageUrl = aldParams.get("curPageUrl");
         if(currentPageUrl == null){
             tacLogger.debug( "curPageUrl is empty");

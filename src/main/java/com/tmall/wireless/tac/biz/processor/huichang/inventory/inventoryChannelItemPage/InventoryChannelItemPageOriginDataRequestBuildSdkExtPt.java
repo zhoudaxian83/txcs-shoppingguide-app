@@ -8,10 +8,13 @@ import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
+import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import lombok.SneakyThrows;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +29,9 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
     public static final Long defaultSmAreaId = 330100L;
     public static final int DEFAULT_PAGE_SIZE = 10;
 
+    @Autowired
+    TacLogger tacLogger;
+
     @SneakyThrows
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
@@ -34,7 +40,7 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
 
         Map<String, String> params = Maps.newHashMap();
-        String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemSet"); // Todo likunlin
+        String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemSet", tacLogger); // Todo likunlin
         if(StringUtils.isNotBlank(itemSets)) {
             if(!itemSets.startsWith(ITEM_SET_PREFIX)) {
                 itemSets = ITEM_SET_PREFIX + itemSets;
@@ -44,14 +50,15 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
             throw new Exception("url参数itemSet为空");
         }
 
-        String scene = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentId"); // Todo likunlin
+        String scene = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentId", tacLogger); // Todo likunlin
         if(StringUtils.isNotBlank(scene)) {
             params.put("scene", scene);
         } else {
+            tacLogger.debug("url参数contentId为空");
             throw new Exception("url参数contentId为空");
         }
 
-        String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
+        String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
         if("B2C".equals(locType) || locType == null){
             params.put("commerce","B2C");
         }else {
