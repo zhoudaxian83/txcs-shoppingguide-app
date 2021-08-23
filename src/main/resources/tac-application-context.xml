@@ -21,6 +21,7 @@
     <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentOriginDataRequestBuildSdkExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.middlepage.AliPayMiddleItemOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.middlepage.AlipayMiddleItemOriginDataPostProcessorSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AliPayFirstPageBuildItemVoSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AliPayItemUserCommonParamsBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AlipayItemContextCheckSdkExtPt"/>

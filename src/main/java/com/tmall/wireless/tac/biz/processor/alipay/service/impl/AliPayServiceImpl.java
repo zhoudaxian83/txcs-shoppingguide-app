@@ -4,6 +4,7 @@ import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.recmixer.common.service.facade.model.CategoryContentRet;
+import com.alipay.recmixer.common.service.facade.model.MiddlePageRec;
 import com.alipay.recmixer.common.service.facade.model.MixerCollectRecResult;
 import com.alipay.recmixer.common.service.facade.model.ServiceContentRec;
 import com.alipay.tradecsa.common.service.spi.request.MiddlePageFloorDTO;
@@ -70,6 +71,7 @@ public class AliPayServiceImpl implements IAliPayService {
     public static final String cardBgPicAldKey = "cardBgPic";
 
 
+    public static final String TOP_ITEM_ID_KEY = "topItemIds";
     @Autowired
     AldService aldService;
 
@@ -117,7 +119,7 @@ public class AliPayServiceImpl implements IAliPayService {
         categoryContentRet.setActionImgUrl(aldData.getString(fpServiceTextAldKey));
         categoryContentRet.setServiceList(serviceContentRecList);
         List<ItemEntityVO> itemEntityVOS = re.getItemAndContentList().subList(0, Math.min(3, re.getItemAndContentList().size()));
-        List<ServiceContentRec> collect = itemEntityVOS.stream().map(e -> convert(e, aldData)).collect(Collectors.toList());
+        List<ServiceContentRec> collect = itemEntityVOS.stream().map(e ->convert(e, aldData)).collect(Collectors.toList());
         categoryContentRet.setServiceList(collect);
         categoryContentRet.setSuccess(true);
         LOGGER.info("mixerCollectRecResult:{}", JSON.toJSONString(mixerCollectRecResult));
@@ -192,6 +194,7 @@ public class AliPayServiceImpl implements IAliPayService {
                     .map(pageFloorAtomicDTO -> {
                         AtomicCardProcessRequest atomicCardProcessRequest = new AtomicCardProcessRequest();
                         atomicCardProcessRequest.setPageFloorAtomicDTO(pageFloorAtomicDTO);
+                        atomicCardProcessRequest.setMiddlePageSPIRequest(middlePageSPIRequest);
                         atomicCardProcessRequest.setAldData(aldData);
                         atomicCardProcessRequest.setItemAndContentList(itemAndContentList);
                         return processAtomic(atomicCardProcessRequest);
@@ -247,7 +250,12 @@ public class AliPayServiceImpl implements IAliPayService {
         ext.put("originPrice", item.getString(AliPayFirstPageBuildItemVoSdkExtPt.ORIGIN_PRICE));
 
         serviceContentRec.setExtMap(ext);
+        MiddlePageRec middlePageRec = new MiddlePageRec();
 
+        Map<String, String> extInfoMap = Maps.newHashMap();
+        extInfoMap.put(TOP_ITEM_ID_KEY, String.valueOf(item.getItemId()));
+        middlePageRec.setItemParamMap(extInfoMap);
+        serviceContentRec.setMiddlePageRec(middlePageRec);
         return serviceContentRec;
     }
 
