@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class PageUrlUtil {
     @Autowired
-    static TacLogger tacLogger;
+    public static TacLogger tacLogger;
     public static String getParamFromCurPageUrl(Map<String, Object> aldParams, String param) {
 
         String curPageUrl = getCurPageUrl(aldParams);

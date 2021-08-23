@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -43,6 +44,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald) context;
         Map<String, Object> aldParams = requestContext4Ald.getParams();
         Map<String, String> params = Maps.newHashMap();
+        tacLogger.debug("aldParams: " + JSONObject.toJSONString(aldParams));
 
         String index = PageUrlUtil.getParamFromCurPageUrl(aldParams, "index");
         if(StringUtils.isNotBlank(index)) {
