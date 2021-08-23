@@ -31,7 +31,7 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
         Context context = sgFrameworkContextItem.getTacContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald) context;
-        Map<String, Object> aldParams = requestContext4Ald.getParams();
+        Map<String, Object> aldParams = requestContext4Ald.getAldParam();
 
         Map<String, String> params = Maps.newHashMap();
         String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemSet"); // Todo likunlin

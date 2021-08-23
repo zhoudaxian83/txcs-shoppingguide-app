@@ -40,7 +40,7 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
         List<ContentEntity> contentEntityList =  Optional.of(contentEntityOriginDataDTO).map(OriginDataDTO::getResult).orElse(Lists.newArrayList());
         tacLogger.debug("调顺序之前 " + JSONObject.toJSONString(contentEntityList));
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextContent.getTacContext());
-        Map<String, Object> aldParams = requestContext4Ald.getParams();
+        Map<String, Object> aldParams = requestContext4Ald.getAldParam();
         String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemRecommand"); // 为你推荐商品
 
         int index = Optional.ofNullable(sgFrameworkContextContent.getCommonUserParams().getUserPageInfo().getIndex()).orElse(0);

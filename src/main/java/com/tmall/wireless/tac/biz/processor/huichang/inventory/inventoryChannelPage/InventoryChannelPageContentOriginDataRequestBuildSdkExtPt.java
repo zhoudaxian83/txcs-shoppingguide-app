@@ -42,7 +42,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
         tacLogger.debug("扩展点InventoryChannelPageContentOriginDataRequestBuildSdkExtPt");
         Context context = sgFrameworkContextContent.getTacContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald) context;
-        Map<String, Object> aldParams = requestContext4Ald.getParams();
+        Map<String, Object> aldParams = requestContext4Ald.getAldContext();
         Map<String, String> params = Maps.newHashMap();
         tacLogger.debug("aldParams: " + JSONObject.toJSONString(aldParams));
 

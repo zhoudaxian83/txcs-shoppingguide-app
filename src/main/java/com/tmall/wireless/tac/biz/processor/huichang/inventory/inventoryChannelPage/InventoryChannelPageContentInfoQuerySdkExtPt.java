@@ -102,7 +102,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
     private ContentInfoDTO parseCaptainResult(JSONObject jsonObject, Map<Long, ContentEntity> contentEntityListMap, SgFrameworkContextContent sgFrameworkContextContent) {
         Context context = sgFrameworkContextContent.getTacContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald) context;
-        Map<String, Object> aldParams = requestContext4Ald.getParams();
+        Map<String, Object> aldParams = requestContext4Ald.getAldParam();
 
         Map<String, Object> contentMap = Maps.newHashMap();
         contentMap.put("id", jsonObject.getString("id"));

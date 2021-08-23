@@ -28,7 +28,7 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
         List<ItemEntity> itemEntityList =  Optional.of(itemEntityOriginDataDTO).map(OriginDataDTO::getResult).orElse(Lists.newArrayList());
 
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
-        Map<String, Object> aldParams = requestContext4Ald.getParams();
+        Map<String, Object> aldParams = requestContext4Ald.getAldParam();
         String items = PageUrlUtil.getParamFromCurPageUrl(aldParams, "items"); // 二跳页展示的6个商品
         if(StringUtils.isNotBlank(items)) {
             List<String> itemList = Arrays.asList(items.split(","));
