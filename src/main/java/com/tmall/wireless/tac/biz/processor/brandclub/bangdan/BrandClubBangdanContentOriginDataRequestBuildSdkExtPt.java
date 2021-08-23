@@ -1,16 +1,14 @@
-package com.tmall.wireless.tac.biz.processor.brandclub.fp;
+package com.tmall.wireless.tac.biz.processor.brandclub.bangdan;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
-import com.tmall.tcls.gs.sdk.ext.annotation.SdkPackage;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
-import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
@@ -25,10 +23,10 @@ import java.util.stream.Collectors;
 @SdkExtension(
         bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.BRAND_CLUB_FP
+        scenario = ScenarioConstantApp.BRAND_CLUB_BANGDAN
 )
 @Service
-public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
+public class BrandClubBangdanContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
 
 
     @Override

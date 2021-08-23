@@ -26,7 +26,7 @@ public class BrandClubBangdanHandler extends RpmReactiveHandler<SgFrameworkRespo
         BizScenario b = BizScenario.valueOf(
                 ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
-                ScenarioConstantApp.BRAND_CLUB_FP
+                ScenarioConstantApp.BRAND_CLUB_BANGDAN
         );
 
         b.addProducePackage(PackageNameKey.CONTENT_FEEDS);
