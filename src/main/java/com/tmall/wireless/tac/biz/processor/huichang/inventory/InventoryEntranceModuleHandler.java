@@ -16,6 +16,10 @@ import org.springframework.stereotype.Component;
 
 /**
  * 清单会场入口模块
+ * 1、拿到运营填写的所有数据
+ * 2、去请求tpp做个性化
+ * 3、拿到个性化结果组装
+ * 4、查询
  */
 @Component
 public class InventoryEntranceModuleHandler extends TacReactiveHandler4Ald {

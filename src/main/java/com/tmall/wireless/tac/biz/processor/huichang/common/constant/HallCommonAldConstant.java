@@ -31,4 +31,14 @@ public class HallCommonAldConstant {
     public static final String LOAD_TEST_USER_NICK = "tUserNick";
     public static final String STATIC_SCHEDULE_DATA = "static_schedule_data";
 
+
+
+
+    //-----------------aldParams start--------------------
+    public static final String SM_AREAID = "smAreaId";
+    public static final String LOGIC_AREA_ID = "logicAreaId";
+    public static final String CSA = "csa";
+    public static final String LOC_TYPE = "locType";
+    //-----------------aldParams end--------------------
+
 }
