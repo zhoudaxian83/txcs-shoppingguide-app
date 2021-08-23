@@ -87,7 +87,7 @@ public class InventoryChannelPageBuildItemVoSdkExtPt extends Register implements
         // 给为你推荐商品打上特殊标签
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
         Map<String, Object> aldParams = requestContext4Ald.getParams();
-        String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "itemRecommand"); // 为你推荐商品
+        String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemRecommand"); // 为你推荐商品
         if(StringUtils.isNotBlank(itemRecommand) && itemEntityVO.getItemId().equals(Long.valueOf(itemRecommand))) {
             itemEntityVO.put("type", "recommand");
         }

@@ -34,7 +34,7 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
         Map<String, Object> aldParams = requestContext4Ald.getParams();
 
         Map<String, String> params = Maps.newHashMap();
-        String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "itemSet"); // Todo likunlin
+        String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemSet"); // Todo likunlin
         if(StringUtils.isNotBlank(itemSets)) {
             if(!itemSets.startsWith(ITEM_SET_PREFIX)) {
                 itemSets = ITEM_SET_PREFIX + itemSets;
@@ -44,14 +44,14 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
             throw new Exception("url参数itemSet为空");
         }
 
-        String scene = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "contentId"); // Todo likunlin
+        String scene = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentId"); // Todo likunlin
         if(StringUtils.isNotBlank(scene)) {
             params.put("scene", scene);
         } else {
             throw new Exception("url参数contentId为空");
         }
 
-        String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "locType");
+        String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
         if("B2C".equals(locType) || locType == null){
             params.put("commerce","B2C");
         }else {

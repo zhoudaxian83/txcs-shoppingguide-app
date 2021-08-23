@@ -41,13 +41,13 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
         tacLogger.debug("调顺序之前 " + JSONObject.toJSONString(contentEntityList));
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextContent.getTacContext());
         Map<String, Object> aldParams = requestContext4Ald.getParams();
-        String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "itemRecommand"); // 为你推荐商品
+        String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemRecommand"); // 为你推荐商品
 
         int index = Optional.ofNullable(sgFrameworkContextContent.getCommonUserParams().getUserPageInfo().getIndex()).orElse(0);
         if(StringUtils.isNotBlank(itemRecommand) && index == 0) {
             ItemEntity itemRecommandEntity = new ItemEntity();
             itemRecommandEntity.setItemId(Long.valueOf(itemRecommand));
-            String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "locType");
+            String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
             String detailLocType = getDetailLocType(locType, sgFrameworkContextContent);
             itemRecommandEntity.setO2oType(detailLocType);
             itemRecommandEntity.setBusinessType(detailLocType);

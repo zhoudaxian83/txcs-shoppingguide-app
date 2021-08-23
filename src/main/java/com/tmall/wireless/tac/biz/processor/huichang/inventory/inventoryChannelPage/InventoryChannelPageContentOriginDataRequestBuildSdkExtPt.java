@@ -44,7 +44,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
         Map<String, Object> aldParams = requestContext4Ald.getParams();
         Map<String, String> params = Maps.newHashMap();
 
-        String index = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "index");
+        String index = PageUrlUtil.getParamFromCurPageUrl(aldParams, "index");
         if(StringUtils.isNotBlank(index)) {
             params.put("index", index); // Todo
         } else {
@@ -55,7 +55,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
         params.put("smAreaId", String.valueOf(Optional.of(sgFrameworkContextContent.getCommonUserParams().getLocParams().getSmAreaId()).orElse(DefaultSmAreaId)));
         params.put("regionCode", String.valueOf(Optional.ofNullable(sgFrameworkContextContent.getCommonUserParams().getLocParams().getRegionCode()).orElse(DefaultLogAreaId)));
 
-        String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "locType");
+        String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
         if("B2C".equals(locType) || locType == null){
             params.put("commerce","B2C");
         }else {
@@ -67,18 +67,18 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
             }
         }
 
-        String sceneSetId = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "sceneSet"); // Todo likunlin
+        String sceneSetId = PageUrlUtil.getParamFromCurPageUrl(aldParams, "sceneSet"); // Todo likunlin
         if(!sceneSetId.contains(SCENE_SET_PREFIX)) {
             sceneSetId = SCENE_SET_PREFIX + sceneSetId;
         }
         params.put("sceneSet", sceneSetId); // 场景集id
 
-        String sceneExclude = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "filter"); // Todo likunlin
+        String sceneExclude = PageUrlUtil.getParamFromCurPageUrl(aldParams, "filter"); // Todo likunlin
         if(StringUtils.isNotBlank(sceneExclude)) {
             params.put("sceneExclude", sceneExclude); // 过滤的场景
         }
 
-        String sceneTop = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "sceneTop"); // Todo likunlin
+        String sceneTop = PageUrlUtil.getParamFromCurPageUrl(aldParams, "sceneTop"); // Todo likunlin
         if(StringUtils.isNotBlank(sceneTop)) {
             params.put("sceneTop", sceneTop); // 置顶的场景
         }

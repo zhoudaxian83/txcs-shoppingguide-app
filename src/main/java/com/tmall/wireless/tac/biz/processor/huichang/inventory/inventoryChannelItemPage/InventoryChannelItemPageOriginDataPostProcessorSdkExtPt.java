@@ -29,7 +29,7 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
 
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
         Map<String, Object> aldParams = requestContext4Ald.getParams();
-        String items = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "items"); // 二跳页展示的6个商品
+        String items = PageUrlUtil.getParamFromCurPageUrl(aldParams, "items"); // 二跳页展示的6个商品
         if(StringUtils.isNotBlank(items)) {
             List<String> itemList = Arrays.asList(items.split(","));
             Set<Long> itemSet = itemList.stream().map(Long::valueOf).collect(Collectors.toSet());
@@ -39,7 +39,7 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
                 for(String itemId: itemList) {
                     ItemEntity item = new ItemEntity();
                     item.setItemId(Long.valueOf(itemId));
-                    String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "locType");
+                    String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams,"locType");
                     String detailLocType = getDetailLocType(locType, sgFrameworkContextItem);
                     item.setO2oType(detailLocType);
                     item.setBusinessType(detailLocType);
