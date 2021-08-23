@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.huichang.inventory.acceptancePage;
+package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage;
 
 import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
@@ -13,7 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import java.util.Map;
 import java.util.Optional;
 
-public class AcceptancePageItemOriginDataRequestBuildSdkExtPt implements ItemOriginDataRequestBuildSdkExtPt {
+public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt implements ItemOriginDataRequestBuildSdkExtPt {
     private static final String ITEM_SET_PREFIX = "crm_";
     public static final Long defaultLogAreaId = 107L;
     public static final Long SCENE_ITEM_RECOMMEND_APPID = 26562L;

@@ -15,9 +15,11 @@ import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.captain.ItemInfoBySourceCaptai
 import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.tpp.ItemInfoBySourceTppDTO;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 import java.util.Optional;
@@ -26,8 +28,12 @@ import java.util.Optional;
         useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
         scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE)
 public class InventoryChannelPageBuildItemVoSdkExtPt extends Register implements BuildItemVoSdkExtPt {
+    @Autowired
+    TacLogger tacLogger;
+
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
+        tacLogger.debug("扩展点InventoryChannelPageBuildItemVoSdkExtPt");
         ItemEntityVO itemEntityVO = new ItemEntityVO();
 
         if (buildItemVoRequest == null || buildItemVoRequest.getItemInfoDTO() == null) {
@@ -78,7 +84,7 @@ public class InventoryChannelPageBuildItemVoSdkExtPt extends Register implements
 
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
-        // 下面是我覆盖扩展点的原因
+        // 给为你推荐商品打上特殊标签
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
         Map<String, Object> aldParams = requestContext4Ald.getParams();
         String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, null, "itemRecommand"); // 为你推荐商品

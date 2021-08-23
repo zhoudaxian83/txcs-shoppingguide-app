@@ -1,8 +1,6 @@
-package com.tmall.wireless.tac.biz.processor.huichang.inventory.acceptancePage;
+package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataProcessRequest;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataPostProcessorSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProcessRequest;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
@@ -11,12 +9,11 @@ import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.lang.StringUtils;
-import org.apache.xmlbeans.impl.xb.xsdschema.BlockSet;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AcceptanceItemOriginDataPostProcessorSdkExtPt implements ItemOriginDataPostProcessorSdkExtPt {
+public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt implements ItemOriginDataPostProcessorSdkExtPt {
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {

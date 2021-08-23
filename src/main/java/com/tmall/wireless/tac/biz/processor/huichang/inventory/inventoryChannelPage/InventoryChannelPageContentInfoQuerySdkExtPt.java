@@ -19,9 +19,11 @@ import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import io.reactivex.Flowable;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -34,6 +36,9 @@ import java.util.stream.Collectors;
         useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
         scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE)
 public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register implements ContentInfoQuerySdkExtPt {
+    @Autowired
+    TacLogger tacLogger;
+
     @Resource
     EntityRenderService entityRenderService;
     public static final String CHANNELNAME = "sceneLdb";
@@ -45,6 +50,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
     @Override
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
         // Todo likunlin
+        tacLogger.debug("扩展点InventoryChannelPageContentInfoQuerySdkExtPt");
         Map<Long, ContentInfoDTO> captainsContent = Maps.newHashMap();
         List<EntityId> ids = new ArrayList<>();
         List<ContentEntity> contentEntityList = sgFrameworkContextContent.getContentEntityOriginDataDTO().getResult();
@@ -84,11 +90,12 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
             }
             else {
                 // throw new Exception("查询不成功");
+                tacLogger.debug("查询不成功");
                 return Flowable.just(Response.fail("captain fail"));
             }
         }
         catch (Exception e) {
-                // solutionContext.debug("getOnlyScenesFromCaptain", "渲染场景数据异常:{}", StackTraceUtil.stackTrace(e));
+                tacLogger.debug("查询异常");
             return Flowable.just(Response.fail("captain error"));
         }
     }
