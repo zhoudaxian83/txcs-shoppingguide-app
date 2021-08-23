@@ -38,13 +38,13 @@ public class InventoryChannelPageBuildItemVoSdkExtPt extends DefaultBuildItemVoS
         Response<ItemEntityVO> result = super.process(buildItemVoRequest);
         // 给为你推荐商品打上特殊标签
         ItemEntityVO itemEntityVO = result.getValue();
-//        SgFrameworkContextItem sgFrameworkContextItem = buildItemVoRequest.getContext();
-//        RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
-//        Map<String, Object> aldParams = requestContext4Ald.getAldParam();
-//        String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemRecommand", tacLogger); // 为你推荐商品
-//        if(StringUtils.isNotBlank(itemRecommand) && itemEntityVO.getItemId().equals(Long.valueOf(itemRecommand))) {
-//            itemEntityVO.put("type", "recommand");
-//        }
+        SgFrameworkContextItem sgFrameworkContextItem = buildItemVoRequest.getContext();
+        RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
+        Map<String, Object> aldParams = requestContext4Ald.getAldParam();
+        String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemRecommand", tacLogger); // 为你推荐商品
+        if(StringUtils.isNotBlank(itemRecommand) && itemEntityVO.getItemId().equals(Long.valueOf(itemRecommand))) {
+            itemEntityVO.put("type", "recommand");
+        }
         result.setValue(itemEntityVO);
         return result;
     }
