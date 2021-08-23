@@ -2,8 +2,10 @@ package com.tmall.wireless.tac.biz.processor.huichang.common.utils;
 
 import com.alibaba.aladdin.lamp.domain.request.RequestItem;
 import com.alibaba.aladdin.lamp.sdk.solution.context.SolutionContext;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URLDecoder;
 import java.util.Map;
@@ -13,10 +15,11 @@ import java.util.Map;
  * Created by likunlin on 2021-08-20.
  */
 public class PageUrlUtil {
+    @Autowired
+    static TacLogger tacLogger;
+    public static String getParamFromCurPageUrl(Map<String, Object> aldParams, String param) {
 
-    public static String getParamFromCurPageUrl(Map<String, Object> aldParams, SolutionContext solutionContext, String param) {
-
-        String curPageUrl = getCurPageUrl(aldParams, solutionContext);
+        String curPageUrl = getCurPageUrl(aldParams);
         if(StringUtils.isEmpty(curPageUrl)){
             return null;
         }
@@ -24,10 +27,10 @@ public class PageUrlUtil {
         try {
             curPageUrl = URLDecoder.decode(URLDecoder.decode(curPageUrl, "UTF-8"),"UTF-8");
         } catch (Exception e) {
-            solutionContext.debug("curPageUrl decode exception", e.getMessage());
+            tacLogger.debug("curPageUrl decode exception" + e.getMessage());
         }
 
-        solutionContext.debug("",curPageUrl);
+        tacLogger.debug(curPageUrl);
         Map<String, String> paramsMap = URLUtil.URLRequest(curPageUrl);
         if(MapUtils.isNotEmpty(paramsMap) && StringUtils.isNotEmpty(paramsMap.get(param))){
             return paramsMap.get(param);
@@ -36,10 +39,10 @@ public class PageUrlUtil {
         return null;
     }
 
-    public static String getCurPageUrl(Map<String, Object> aldParams, SolutionContext solutionContext) {
+    public static String getCurPageUrl(Map<String, Object> aldParams) {
         Object currentPageUrl = aldParams.get("curPageUrl");
         if(currentPageUrl == null){
-            solutionContext.debug("curPageUrl", "curPageUrl is empty");
+            tacLogger.debug( "curPageUrl is empty");
             return null;
         }
         return String.valueOf(currentPageUrl);
