@@ -3,14 +3,19 @@ package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannel
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataRequestBuildSdkExtPt;
+import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
+import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
+import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -43,6 +48,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
         Context context = sgFrameworkContextContent.getTacContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald) context;
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
+        Map<String, Object> aldContext = requestContext4Ald.getAldContext();
         Map<String, String> params = Maps.newHashMap();
         tacLogger.debug("aldParams: " + JSONObject.toJSONString(aldParams));
 
@@ -54,17 +60,20 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
         }
 
         params.put("pageSize", String.valueOf(PAGE_SIZE)); // Todo
-        params.put("smAreaId", String.valueOf(Optional.of(sgFrameworkContextContent.getCommonUserParams().getLocParams().getSmAreaId()).orElse(DefaultSmAreaId)));
-        params.put("regionCode", String.valueOf(Optional.ofNullable(sgFrameworkContextContent.getCommonUserParams().getLocParams().getRegionCode()).orElse(DefaultLogAreaId)));
+        Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, 330100L);
+        params.put("smAreaId", String.valueOf(smAreaId));
+
+        LocParams locParams = ParseCsa.parseCsaObj(aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA), smAreaId);
+        params.put("regionCode", String.valueOf(Optional.ofNullable(locParams.getRegionCode()).orElse(DefaultLogAreaId)));
 
         String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
         if("B2C".equals(locType) || locType == null){
             params.put("commerce","B2C");
         }else {
             params.put("commerce","O2O");
-            if (Optional.of(sgFrameworkContextContent.getCommonUserParams().getLocParams().getRt1HourStoreId()).orElse(0L) > 0){
+            if (Optional.of(locParams.getRt1HourStoreId()).orElse(0L) > 0){
                 params.put("rtOneHourStoreId", String.valueOf(sgFrameworkContextContent.getCommonUserParams().getLocParams().getRt1HourStoreId()));
-            }else if(Optional.of(sgFrameworkContextContent.getCommonUserParams().getLocParams().getRtHalfDayStoreId()).orElse(0L) > 0){
+            }else if(Optional.of(locParams.getRtHalfDayStoreId()).orElse(0L) > 0){
                 params.put("rtHalfDayStoreId", String.valueOf(sgFrameworkContextContent.getCommonUserParams().getLocParams().getRtHalfDayStoreId()));
             }
         }
@@ -87,7 +96,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
 
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setAppId(APPID);
-        recommendRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent.getCommonUserParams().getUserDO().getUserId()).orElse(0L));
+        recommendRequest.setUserId(MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.UTDID, 0L));
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
         tacLogger.debug("Tpp请求参数是：" + JSONObject.toJSONString(recommendRequest));
