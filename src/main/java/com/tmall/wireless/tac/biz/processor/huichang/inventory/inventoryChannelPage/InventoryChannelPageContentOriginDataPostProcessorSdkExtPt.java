@@ -2,18 +2,18 @@ package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannel
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataPostProcessorSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataProcessRequest;
-import com.tmall.tcls.gs.sdk.framework.model.context.ContentEntity;
-import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
-import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
-import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
+import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
+import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.txcs.gs.model.item.BizType;
 import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
+import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.collections.CollectionUtils;
@@ -48,14 +48,14 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
         if(StringUtils.isNotBlank(indexStr)) {
             index = Integer.valueOf(indexStr);
         } else {
-            index = Optional.ofNullable(sgFrameworkContextContent.getCommonUserParams().getUserPageInfo().getIndex()).orElse(0);
+            index = Optional.ofNullable(Integer.valueOf((String)aldParams.get("pageIndex"))).orElse(0);
         }
 
         if(StringUtils.isNotBlank(itemRecommand) && index == 0) {
             ItemEntity itemRecommandEntity = new ItemEntity();
             itemRecommandEntity.setItemId(Long.valueOf(itemRecommand));
             String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
-            String detailLocType = getDetailLocType(locType, sgFrameworkContextContent);
+            String detailLocType = getDetailLocType(locType, aldParams);
             itemRecommandEntity.setO2oType(detailLocType);
             itemRecommandEntity.setBusinessType(detailLocType);
             itemRecommandEntity.setBizType(BizType.SM.getCode());
@@ -79,16 +79,18 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
         return contentEntityOriginDataDTO;
     }
 
-    private String getDetailLocType(String locType, SgFrameworkContextContent sgFrameworkContextContent) {
+    private String getDetailLocType(String locType, Map<String, Object> aldParams) {
         if("B2C".equals(locType) || locType == null) {
             if(StringUtils.isBlank(locType)) {
                 tacLogger.debug("locType是空");
             }
             return O2oType.B2C.name();
         } else {
-            if(Optional.ofNullable(sgFrameworkContextContent.getCommonUserParams().getLocParams().getRt1HourStoreId()).orElse(0L) > 0) {
+            Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, 310100L);
+            LocParams locParams = ParseCsa.parseCsaObj(aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA), smAreaId);
+            if(Optional.ofNullable(locParams.getRt1HourStoreId()).orElse(0L) > 0) {
                 return O2oType.O2OOneHour.name();
-            } else if(Optional.ofNullable(sgFrameworkContextContent.getCommonUserParams().getLocParams().getRtHalfDayStoreId()).orElse(0L) > 0){
+            } else if(Optional.ofNullable(locParams.getRtHalfDayStoreId()).orElse(0L) > 0){
                 return O2oType.O2OHalfDay.name();
             } else {
                 return O2oType.O2O.name();

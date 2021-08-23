@@ -14,6 +14,7 @@ import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.contentinfo.ContentInfoQuerySdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.Response;
+import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
 import com.tmall.tcls.gs.sdk.framework.model.context.ContentEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.ContentInfoDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
@@ -55,7 +56,8 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
         Map<Long, ContentInfoDTO> captainsContent = Maps.newHashMap();
         List<EntityId> ids = new ArrayList<>();
         List<ContentEntity> contentEntityList = sgFrameworkContextContent.getContentEntityOriginDataDTO().getResult();
-
+        RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextContent.getTacContext());
+        Map<String, Object> aldParams = requestContext4Ald.getAldParam();
         Map<Long, ContentEntity> contentEntityListMap = contentEntityList.stream().collect(Collectors.toMap(contentEntity -> contentEntity.getContentId(),contentEntity -> contentEntity, (key1, key2) -> key1));
 
         contentEntityList.forEach(e -> {
@@ -63,8 +65,8 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
             ids.add(entityId);
         });
         EntityQueryOption entityQueryOption = new EntityQueryOption();
-        Long smAreaId = Optional.ofNullable(sgFrameworkContextContent.getCommonUserParams().getLocParams().getSmAreaId()).orElse(defaultSmAreaId) ;
-        entityQueryOption.setSmAreaId(Long.valueOf(smAreaId));
+        Long smAreaId = Optional.ofNullable(Long.valueOf((String)aldParams.get(RequestKeyConstant.SMAREAID))).orElse(defaultSmAreaId);
+        entityQueryOption.setSmAreaId(smAreaId);
 
         List<ChannelDataDO> channelDataDOList = new ArrayList<>();
         ChannelDataDO channelDataDO = new ChannelDataDO();
@@ -87,6 +89,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
                             }
                         }
                 );
+                tacLogger.debug("请求Captain返回结果" + JSONObject.toJSONString(captainsContent));
                 return Flowable.just(Response.success(captainsContent));
             }
             else {

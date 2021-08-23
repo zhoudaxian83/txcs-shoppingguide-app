@@ -39,7 +39,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
     private static final Long DefaultSmAreaId = 310100L;
     private static final Long DefaultLogAreaId = 107L;
     private static final String SCENE_SET_PREFIX = "intelligentCombinationItems_";
-    public static final Long APPID = 26563L;  //Todo likunlin
+    public static final Long APPID = 27401L;  //Todo likunlin
     private static final Long DefaultUserId = 0L; // Todo likunlin
     private static final int PAGE_SIZE = 2; //Todo likunlin
     @Override
@@ -54,13 +54,13 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
 
         String index = PageUrlUtil.getParamFromCurPageUrl(aldParams, "index", tacLogger);
         if(StringUtils.isNotBlank(index)) {
-            params.put("index", index); // Todo
+            params.put("index", index);
         } else {
-            params.put("index", String.valueOf(sgFrameworkContextContent.getCommonUserParams().getUserPageInfo().getIndex())); // Todo
+            params.put("index", String.valueOf(Optional.ofNullable(aldParams.get("pageIndex")).orElse("0"))); // Todo
         }
 
         params.put("pageSize", String.valueOf(PAGE_SIZE)); // Todo
-        Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, 330100L);
+        Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, DefaultSmAreaId);
         params.put("smAreaId", String.valueOf(smAreaId));
 
         LocParams locParams = ParseCsa.parseCsaObj(aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA), smAreaId);
@@ -73,9 +73,9 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
         }else {
             params.put("commerce","O2O");
             if (Optional.of(locParams.getRt1HourStoreId()).orElse(0L) > 0){
-                params.put("rtOneHourStoreId", String.valueOf(sgFrameworkContextContent.getCommonUserParams().getLocParams().getRt1HourStoreId()));
+                params.put("rtOneHourStoreId", String.valueOf(locParams.getRt1HourStoreId()));
             }else if(Optional.of(locParams.getRtHalfDayStoreId()).orElse(0L) > 0){
-                params.put("rtHalfDayStoreId", String.valueOf(sgFrameworkContextContent.getCommonUserParams().getLocParams().getRtHalfDayStoreId()));
+                params.put("rtHalfDayStoreId", String.valueOf(locParams.getRtHalfDayStoreId()));
             }
         }
 
