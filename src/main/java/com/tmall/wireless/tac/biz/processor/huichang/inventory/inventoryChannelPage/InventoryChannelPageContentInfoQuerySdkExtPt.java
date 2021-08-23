@@ -89,7 +89,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
                             }
                         }
                 );
-                tacLogger.debug("请求Captain返回结果" + JSONObject.toJSONString(captainsContent));
+                tacLogger.debug("请求Captain返回结果：" + JSONObject.toJSONString(captainsContent));
                 return Flowable.just(Response.success(captainsContent));
             }
             else {
@@ -124,14 +124,6 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
             urlParam = PageUrlUtil.addParams(urlParam, "locType", "B2C");
         }else {
             urlParam = PageUrlUtil.addParams(urlParam, "locType", "O2O");
-        }
-        Long id = jsonObject.getLong("id");
-        if(contentEntityListMap.keySet().contains(id)) {
-            ContentEntity contentEntity = contentEntityListMap.get(id);
-            List<ItemEntity> itemEntityList = contentEntity.getItems();
-            List<String> itemIds = itemEntityList.stream().map(itemEntity -> String.valueOf(itemEntity.getItemId())).collect(Collectors.toList());
-            String itemsParam = String.join(",", itemIds);
-            urlParam = PageUrlUtil.addParams(urlParam, "items", itemsParam);
         }
 
         contentMap.put("urlParams", urlParam);

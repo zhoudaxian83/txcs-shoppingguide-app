@@ -97,7 +97,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
 
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setAppId(APPID);
-        recommendRequest.setUserId(MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, 0L));
+        recommendRequest.setUserId(MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, DefaultUserId));
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
         tacLogger.debug("Tpp请求参数是：" + JSONObject.toJSONString(recommendRequest));
