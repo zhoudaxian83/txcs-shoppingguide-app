@@ -82,6 +82,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
                 .map(
                         entity -> JSON.parseObject(JSON.toJSONString(entity.get("data")))
                 ).collect(Collectors.toList());
+                tacLogger.debug("请求Captain返回结果: " + JSONObject.toJSONString(captainMaps));
                 captainMaps.forEach(
                         captainMap -> {
                             if(captainMap.containsKey("id")) {
@@ -89,7 +90,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
                             }
                         }
                 );
-                tacLogger.debug("请求Captain返回结果：" + JSONObject.toJSONString(captainsContent));
+                tacLogger.debug("请求Captain结果整理：" + JSONObject.toJSONString(captainsContent));
                 return Flowable.just(Response.success(captainsContent));
             }
             else {
