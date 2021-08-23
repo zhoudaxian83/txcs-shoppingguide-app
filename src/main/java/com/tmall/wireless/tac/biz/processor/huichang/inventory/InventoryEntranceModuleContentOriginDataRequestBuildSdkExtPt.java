@@ -1,14 +1,18 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 
+import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataRequestBuildSdkExtPt;
+import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
@@ -20,19 +24,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * 请求tpp数据的入参
+ *
  * @author wangguohui
  */
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
     useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
     scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE)
-public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
+public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extends Register
+    implements ContentOriginDataRequestBuildSdkExtPt {
 
     Logger LOGGER = LoggerFactory.getLogger(InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.class);
 
+    public static final Long SCENE_RECOMMEND_APPID = 27401L;
 
-    public static final Long SCENE_RECOMMEND_APPID = 26563L;
+    private static final String prex_sceneSet = "intelligentCombinationItems_";
+
 
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
@@ -51,7 +58,6 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         String uniqueIdentity = bizScenario.getUniqueIdentity();
         tppRequestParams.put("uniqueIdentity", uniqueIdentity);
         String urlParamsByMap = UrlUtils.getUrlParamsByMap(tppRequestParams);
-        LOGGER.error("urlParamsByMap:{}", JSON.toJSONString(urlParamsByMap));
 
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setParams(tppRequestParams);
@@ -59,22 +65,61 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         recommendRequest.setUserId(Long.valueOf(String.valueOf(userId)));
         recommendRequest.setAppId(SCENE_RECOMMEND_APPID);
 
-        buildTppParams(tppRequestParams, aldParam);
-
+        Map<String, Object> userParams = sgFrameworkContextContent.getUserParams();
+        buildTppParams(tppRequestParams, aldParam, aldContext, userParams);
+        LOGGER.error("recommendRequest:{}", JSON.toJSONString(recommendRequest));
         return recommendRequest;
     }
-    //https://tui.taobao.com/recommend?appid=26563&sceneSet=intelligentCombinationItems_182009&commerce=B2C
-    // &regionCode=107&smAreaId=330110&pageSize=10
-    private void buildTppParams(Map<String, String> params, Map<String, Object> aldParam){
+
+    //http://tuipre.taobao.com/recommend?appid=27401&index=0&pageSize=3&commerce=B2C&smAreaId=330110
+    // &sceneSet=intelligentCombinationItems_155012,intelligentCombinationItems_162002,
+    // intelligentCombinationItems_153017&regionCode=107
+    private void buildTppParams(Map<String, String> params, Map<String, Object> aldParam,
+        Map<String, Object> aldContext, Map<String, Object> userParams) {
         params.put("index", "0");
         params.put("pageSize", "1"); //
-        params.put("commerce","B2C");
-        params.put("smAreaId", "330110");
-        params.put("regionCode", "107");
-        Object sceneSet = aldParam.get("sceneSet");
-        String sceneSetId = String.valueOf(sceneSet);
-        params.put("sceneSet", sceneSetId); // 场景集id
+
+        String smAreaId = MapUtil.getStringWithDefault(aldParam, HallCommonAldConstant.SM_AREAID, "330100");
+        params.put("smAreaId", smAreaId);
+
+        String logicAreaId = MapUtil.getStringWithDefault(aldParam, HallCommonAldConstant.LOGIC_AREA_ID, "107");
+        params.put("regionCode", logicAreaId);
+
+        String locType = MapUtil.getStringWithDefault(aldParam, HallCommonAldConstant.LOC_TYPE, "B2C");
+        params.put("commerce", locType);
+
+        Object staticScheduleData = aldContext.get(HallCommonAldConstant.STATIC_SCHEDULE_DATA);
+        if(staticScheduleData == null){
+            //todo 雾列 需要处理
+        }
+        List<Map<String, Object>> staticScheduleDataList = (List<Map<String, Object>>)staticScheduleData;
+        List<Map<String, String>> dealStaticDataList = new ArrayList<>();
+        StringBuilder contentSetBuilder = new StringBuilder();
+        for(Map<String, Object> data : staticScheduleDataList){
+            Map<String, String> dataMap = new HashMap<>();
+            String contentSetId = MapUtil.getStringWithDefault(data, "contentSetId", "");
+            contentSetBuilder.append(prex_sceneSet + contentSetId).append(",");
+            String contentSetTitle = MapUtil.getStringWithDefault(data, "contentSetTitle", "");
+            String contentSetSubTitle = MapUtil.getStringWithDefault(data, "contentSetSubTitle", "");
+            String contentSetBgImage = MapUtil.getStringWithDefault(data, "contentSetBgImage", "");
+            String backgroundColor = MapUtil.getStringWithDefault(data, "backgroundColor", "");
+            String banner = MapUtil.getStringWithDefault(data, "banner", "");
+            dataMap.put("contentSetId", contentSetId);
+            dataMap.put("contentSetTitle", contentSetTitle);
+            dataMap.put("contentSetSubTitle", contentSetSubTitle);
+            dataMap.put("contentSetBgImage", contentSetBgImage);
+            dataMap.put("contentSetBgImage", contentSetBgImage);
+            dataMap.put("backgroundColor", backgroundColor);
+            dataMap.put("banner", banner);
+            dealStaticDataList.add(dataMap);
+        }
+
+        params.put("sceneSet", contentSetBuilder.toString()); // 场景集id
         params.put("appId", String.valueOf(SCENE_RECOMMEND_APPID));
+
+        //把处理好的静态数从新设置一下，后面还需要
+        userParams.put("dealStaticDataList", JSON.toJSONString(dealStaticDataList));
+
     }
 
 }

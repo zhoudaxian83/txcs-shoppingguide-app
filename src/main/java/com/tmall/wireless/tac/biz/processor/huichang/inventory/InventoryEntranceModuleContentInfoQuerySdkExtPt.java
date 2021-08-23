@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -53,6 +54,17 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
         Map<Long, ContentInfoDTO> contentDTOMap = Maps.newHashMap();
         try{
+            Map<String, Object> userParams = sgFrameworkContextContent.getUserParams();
+            Object dealStaticData = userParams.get("dealStaticDataList");
+            List<Map<String, String>> dealStaticDataList = new ArrayList<>();
+            if(dealStaticDataList != null){
+                dealStaticDataList = (List<Map<String, String>>)dealStaticData;
+            }
+            Map<String, Map<String, String>> staticDataMap = new HashMap<>();
+            for(Map<String, String> data : dealStaticDataList){
+                String contentSetId = data.get("contentSetId");
+                staticDataMap.put(contentSetId, data);
+            }
             List<ContentEntity> contentEntities  = Optional.of(sgFrameworkContextContent).map(SgFrameworkContextContent::getContentEntityOriginDataDTO).map(
                 OriginDataDTO::getResult).orElse(com.ali.com.google.common.collect.Lists.newArrayList());
             List<String> sceneIdList = contentEntities.stream().map(ContentEntity::getContentId).map(String::valueOf).collect(
@@ -70,6 +82,23 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
                     contentInfo.put("title", sceneDTO.getTitle());
                     contentInfo.put("subtitle", sceneDTO.getSubtitle());
                     contentInfo.put("sceneId", sceneDTO.getId());
+
+                    //补全场景集的信息
+                    String contentSetId = contentEntity.getContentSetId();
+                    String[] content = contentSetId.split("_");
+                    String contentSetIdStr = content[1];
+                    Map<String, String> staticData = staticDataMap.get(contentSetIdStr);
+                    String contentSetTitle = staticData.get("contentSetTitle");
+                    contentInfo.put("contentSetTitle", contentSetTitle);
+                    String contentSetSubTitle = staticData.get("contentSetSubTitle");
+                    contentInfo.put("contentSetSubTitle", contentSetSubTitle);
+                    String backgroundImage = staticData.get("backgroundImage");
+                    contentInfo.put("backgroundImage", backgroundImage);
+                    String backgroundColor = staticData.get("backgroundColor");
+                    contentInfo.put("backgroundColor", backgroundColor);
+                    String banner = staticData.get("banner");
+                    contentInfo.put("banner", banner);
+
                     contentInfoDTO.setContentInfo(contentInfo);
                     contentDTOMap.put(contentId, contentInfoDTO);
                 }
