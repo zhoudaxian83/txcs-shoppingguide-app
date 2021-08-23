@@ -39,7 +39,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
     private static final Long DefaultSmAreaId = 310100L;
     private static final Long DefaultLogAreaId = 107L;
     private static final String SCENE_SET_PREFIX = "intelligentCombinationItems_";
-    public static final Long APPID = 27401L;  //Todo likunlin
+    public static final Long APPID = 26563L;  //Todo likunlin
     private static final Long DefaultUserId = 0L; // Todo likunlin
     private static final int PAGE_SIZE = 2; //Todo likunlin
     @Override
