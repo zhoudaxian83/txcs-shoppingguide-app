@@ -49,6 +49,17 @@ public class ScenarioConstantApp extends ScenarioConstant {
     /**会场猜你喜欢**/
     public static final String GUL_PROMOTION = "GulPromotion";
 
+    /**
+     * 品牌馆首页
+     */
+    public static final String BRAND_CLUB_FP = "BRAND_CLUB_FP";
+
+
+    /**
+     * 品牌馆榜单
+     */
+    public static final String BRAND_CLUB_BANGDAN = "BRAND_CLUB_BANGDAN";
+
 
 
 }
