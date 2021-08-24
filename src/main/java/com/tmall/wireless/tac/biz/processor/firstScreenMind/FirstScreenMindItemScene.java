@@ -6,7 +6,9 @@ import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
+import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.EntityVO;
+import com.tmall.txcs.gs.framework.model.ErrorCode;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
@@ -19,15 +21,19 @@ import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +44,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 
 @Service
@@ -52,11 +59,26 @@ public class FirstScreenMindItemScene {
     ContentInfoSupport contentInfoSupport;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
-        tacLogger.info("***FirstScreenMindItemScene context.toString():***"+context.toString());
+
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
             .kv("FirstScreenMindItemScene", "recommend")
-            .kv("context","context")
+            .kv("context",JSON.toJSONString(context))
             .info();
+
+        /**兼容前端无效请求**/
+        String noProcess = MapUtil.getStringWithDefault(context.getParams(),
+            RequestKeyConstantApp.FIRST_SCREEN_NO_PROCESS,"false");
+        if(StringUtils.isNotBlank(noProcess) && "true".equals(noProcess)){
+            SgFrameworkResponse<EntityVO> response = new SgFrameworkResponse<>();
+            EntityVO entityVO = new EntityVO();
+            /*entityVO.put("noProcess",noProcess);*/
+            List<EntityVO> entityVOS = Lists.newArrayList(entityVO);
+            response.setItemAndContentList(entityVOS);
+            response.setHasMore(true);
+            response.setSuccess(true);
+            return Flowable.just(TacResult.newResult(response));
+        }
+
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
 
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();

@@ -46,5 +46,8 @@ public class RequestKeyConstantApp {
 
     /**tpp推荐剔除召回key**/
     public static final String FIRST_SCREEN_EXPOSURE_CONTENT_IDS = "exposureContentIds";
+    /**兼容前端无效请求**/
+    public static final String FIRST_SCREEN_NO_PROCESS = "noProcess";
+
 
 }
