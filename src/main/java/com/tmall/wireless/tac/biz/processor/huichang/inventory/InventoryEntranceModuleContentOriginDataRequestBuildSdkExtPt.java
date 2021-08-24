@@ -101,16 +101,9 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
             contentSetBuilder.append(prex_sceneSet + contentSetId).append(",");
             String contentSetTitle = MapUtil.getStringWithDefault(data, "contentSetTitle", "");
             String contentSetSubTitle = MapUtil.getStringWithDefault(data, "contentSetSubTitle", "");
-            String contentSetBgImage = MapUtil.getStringWithDefault(data, "contentSetBgImage", "");
-            String backgroundColor = MapUtil.getStringWithDefault(data, "backgroundColor", "");
-            String banner = MapUtil.getStringWithDefault(data, "banner", "");
             dataMap.put("contentSetId", contentSetId);
             dataMap.put("contentSetTitle", contentSetTitle);
             dataMap.put("contentSetSubTitle", contentSetSubTitle);
-            dataMap.put("contentSetBgImage", contentSetBgImage);
-            dataMap.put("contentSetBgImage", contentSetBgImage);
-            dataMap.put("backgroundColor", backgroundColor);
-            dataMap.put("banner", banner);
             dealStaticDataList.add(dataMap);
         }
 
