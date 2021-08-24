@@ -31,7 +31,7 @@ public class CardHeadIAtomicCardProcessor implements IAtomicCardProcessor {
     public static final String TEMPLATE_JSON_NEW = "{\n" +
             "    \"data\": {\n" +
             "        \"//\":\"图片标题 - 即今日福利\",\n" +
-            "        \"image\": \"$titlePic\",\n" +
+            "        \"image\": \"https://gw.alipayobjects.com/mdn/rms_5bd46e/afts/img/A*gKwGToTcNHEAAAAAAAAAAAAAARQnAQ\",\n" +
             "        \"//\":\"不用动\",\n" +
             "        \"imageRatio\": \"4.93\",\n" +
             "        \"title\": \"<span style=\\\"font-size:15sp;color:#FFFFFF;font-weight:700\\\">$title</span>\",\n" +
