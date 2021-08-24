@@ -164,9 +164,9 @@ public class AliPayServiceImpl implements IAliPayService {
         // 头部区
         PageFloorHeaderDTO pageFloorHeaderDTO = new PageFloorHeaderDTO();
         pageFloorHeaderDTO.setType("image");
-        pageFloorHeaderDTO.setSubtitle(headSubTitleAldKey);
+        pageFloorHeaderDTO.setSubtitle(aldData.getString(headSubTitleAldKey));
         pageFloorHeaderDTO.setBgColor("#F8FDE4");
-        pageFloorHeaderDTO.setFullMediaUrl(headBgPicAldKey);
+        pageFloorHeaderDTO.setFullMediaUrl(aldData.getString(headBgPicAldKey));
         pageFloorHeaderDTO.setPromotion(true);
         pageFloorHeaderDTO.setType("text");
         middlePageSPIResponse.setPageFloorHeaderDTO(pageFloorHeaderDTO);
@@ -175,11 +175,11 @@ public class AliPayServiceImpl implements IAliPayService {
 
         // 导航栏
         PageFloorNavigationDTO pageFloorNavigationDTO = new PageFloorNavigationDTO();
-        pageFloorNavigationDTO.setTitle(navigationTitleAldKey);
-        pageFloorNavigationDTO.setTitleImage(navigationIconPicAldKey);
+        pageFloorNavigationDTO.setTitle(aldData.getString(navigationTitleAldKey));
+        pageFloorNavigationDTO.setTitleImage(aldData.getString(navigationIconPicAldKey));
 //        pageFloorNavigationDTO.setTitleImage(aldData.getString(navigationIconPicAldKey));
         pageFloorNavigationDTO.setStyle("dark");
-        pageFloorNavigationDTO.setTitleLightImageUrl(navigationIconPicAldKey);
+        pageFloorNavigationDTO.setTitleLightImageUrl(aldData.getString(navigationIconPicAldKey));
         middlePageSPIResponse.setPageFloorNavigationDTO(pageFloorNavigationDTO);
 
 
