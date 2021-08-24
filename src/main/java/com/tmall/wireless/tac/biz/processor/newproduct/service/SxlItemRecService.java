@@ -242,7 +242,6 @@ public class SxlItemRecService {
     private String getAbData(Context context){
         StringBuilder itemSetIdType = new StringBuilder();
         try {
-            LOGGER.error("context.getParams().get(AB_TEST_RESULT):{}", context.getParams().get(AB_TEST_RESULT));
             if(context.getParams().get(AB_TEST_RESULT) == null
                 || StringUtils.isBlank(context.getParams().get(AB_TEST_RESULT).toString())){
                 HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
@@ -273,6 +272,9 @@ public class SxlItemRecService {
                 .kv("SxlItemRecService getAbData",JSON.toJSONString(context.getParams()))
                 .info();
         }
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+            .kv("SxlItemRecService itemSetIdType",itemSetIdType.toString())
+            .info();
         return itemSetIdType.toString();
     }
 }
