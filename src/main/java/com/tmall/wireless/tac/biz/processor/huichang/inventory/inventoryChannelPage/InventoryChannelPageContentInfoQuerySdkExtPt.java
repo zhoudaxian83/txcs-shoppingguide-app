@@ -21,10 +21,12 @@ import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
+import com.tmall.wireless.tac.biz.processor.huichang.inventory.SceneDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import io.reactivex.Flowable;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
@@ -78,16 +80,15 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
         try{
             MultiResponse<Entity> render = entityRenderService.render(ids, entityQueryOption);
             if(render.isSuccess()) {
-                List<JSONObject> captainMaps = render.getData().stream()
+                List<SceneDTO> sceneDTOList = render.getData().stream()
                 .map(
-                        entity -> JSON.parseObject(JSON.toJSONString(entity.get("data")))
+                        entity -> JSON.parseObject(JSON.toJSONString(entity.get("data")), SceneDTO.class)
                 ).collect(Collectors.toList());
-                tacLogger.debug("请求Captain返回结果: " + JSONObject.toJSONString(captainMaps));
-                captainMaps.forEach(
-                        captainMap -> {
-                            if(captainMap.containsKey("id")) {
-                                captainsContent.put(captainMap.getLong("id"), parseCaptainResult(captainMap, contentEntityListMap, sgFrameworkContextContent));
-                            }
+                tacLogger.debug("请求Captain返回结果: " + JSONObject.toJSONString(sceneDTOList));
+                sceneDTOList.forEach(
+                        sceneDTO -> {
+                            captainsContent.put(Long.valueOf(sceneDTO.getId()), parseCaptainResult(sceneDTO, sgFrameworkContextContent));
+
                         }
                 );
                 tacLogger.debug("请求Captain结果整理：" + JSONObject.toJSONString(captainsContent));
@@ -104,27 +105,31 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
             return Flowable.just(Response.fail("captain error"));
         }
     }
-    private ContentInfoDTO parseCaptainResult(JSONObject jsonObject, Map<Long, ContentEntity> contentEntityListMap, SgFrameworkContextContent sgFrameworkContextContent) {
+    private ContentInfoDTO parseCaptainResult(SceneDTO sceneDTO, SgFrameworkContextContent sgFrameworkContextContent) {
         Context context = sgFrameworkContextContent.getTacContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald) context;
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
 
         Map<String, Object> contentMap = Maps.newHashMap();
-        contentMap.put("id", jsonObject.getString("id"));
-        contentMap.put("title",jsonObject.getString("title"));
-        contentMap.put("subtitle",jsonObject.getString("subtitle"));
-        contentMap.put("marketChannel",jsonObject.getString("marketChannel"));
-        contentMap.put("setSource", jsonObject.getString("setSource"));
-        contentMap.put("setId", (String) JSONArray.parseArray(jsonObject.getString("setIds")).get(0)); // 默认返回setId列表
+        contentMap.put("id", sceneDTO.getId());
+        contentMap.put("title",sceneDTO.getTitle());
+        contentMap.put("subtitle",sceneDTO.getSubtitle());
+        contentMap.put("marketChannel",sceneDTO.getMarketChannel());
+        contentMap.put("setSource", sceneDTO.getMarketChannel());
+        contentMap.put("setId", sceneDTO.getSetIds().get(0)); // 默认返回setId列表
         String urlParam = "";
 
-        urlParam = PageUrlUtil.addParams(urlParam, "sceneId", String.valueOf(contentMap.get("id")));
-        urlParam = PageUrlUtil.addParams(urlParam, "setId", String.valueOf(contentMap.get("setId")));
+        urlParam = PageUrlUtil.addParams(urlParam, "sceneId", String.valueOf(sceneDTO.getId()));
+        urlParam = PageUrlUtil.addParams(urlParam, "setId", String.valueOf(sceneDTO.getSetIds().get(0)));
         String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
         if("B2C".equals(locType) || locType == null){
             urlParam = PageUrlUtil.addParams(urlParam, "locType", "B2C");
         }else {
             urlParam = PageUrlUtil.addParams(urlParam, "locType", "O2O");
+        }
+        String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemRecommand", tacLogger);
+        if(StringUtils.isNotBlank(itemRecommand)) {
+            urlParam = PageUrlUtil.addParams(urlParam, "itemRecommand", itemRecommand);
         }
 
         contentMap.put("urlParams", urlParam);

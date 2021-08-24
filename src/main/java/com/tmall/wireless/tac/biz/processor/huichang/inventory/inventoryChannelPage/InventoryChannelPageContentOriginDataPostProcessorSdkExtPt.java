@@ -43,15 +43,12 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
         String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemRecommand", tacLogger); // 为你推荐商品
 
-        String indexStr = PageUrlUtil.getParamFromCurPageUrl(aldParams, "index", tacLogger);
-        int index = 0;
-        if(StringUtils.isNotBlank(indexStr)) {
-            index = Integer.valueOf(indexStr);
-        } else {
-            index = Optional.ofNullable(Integer.valueOf((String)aldParams.get("pageIndex"))).orElse(0);
+        String pageIndex = PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger);
+        if(StringUtils.isBlank(pageIndex)) {
+            pageIndex = "0";
         }
 
-        if(StringUtils.isNotBlank(itemRecommand) && index == 0) {
+        if(StringUtils.isNotBlank(itemRecommand) && "0".equals(pageIndex)) {
             ItemEntity itemRecommandEntity = new ItemEntity();
             itemRecommandEntity.setItemId(Long.valueOf(itemRecommand));
             String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
