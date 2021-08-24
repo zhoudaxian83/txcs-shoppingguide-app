@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
@@ -99,6 +100,7 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
         recommendRequest.setUserId(MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, DefaultUserId));
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
+        tacLogger.debug("Tpp参数：" + JSONObject.toJSONString(recommendRequest));
         return recommendRequest;
     }
 }
