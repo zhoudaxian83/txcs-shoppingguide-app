@@ -89,12 +89,6 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
                     contentInfo.put("contentSetTitle", contentSetTitle);
                     String contentSetSubTitle = staticData.get("contentSetSubTitle");
                     contentInfo.put("contentSetSubTitle", contentSetSubTitle);
-                    String backgroundImage = staticData.get("backgroundImage");
-                    contentInfo.put("backgroundImage", backgroundImage);
-                    String backgroundColor = staticData.get("backgroundColor");
-                    contentInfo.put("backgroundColor", backgroundColor);
-                    String banner = staticData.get("banner");
-                    contentInfo.put("banner", banner);
 
                     contentInfoDTO.setContentInfo(contentInfo);
                     contentDTOMap.put(contentId, contentInfoDTO);
