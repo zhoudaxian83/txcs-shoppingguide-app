@@ -26,9 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Map;
 import java.util.Optional;
 
-//@SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
-//        useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
-//        scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE)
+@SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
+        useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
+        scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE)
 public class InventoryChannelPageBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt implements BuildItemVoSdkExtPt {
     @Autowired
     TacLogger tacLogger;

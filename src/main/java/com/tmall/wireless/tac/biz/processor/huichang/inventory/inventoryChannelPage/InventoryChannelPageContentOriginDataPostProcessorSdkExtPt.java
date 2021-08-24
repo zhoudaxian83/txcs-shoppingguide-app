@@ -60,7 +60,7 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
 
             int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 0));
 
-            if(StringUtils.isNotBlank(itemRecommand) && pageIndex == 0) {
+            if(StringUtils.isNotBlank(itemRecommand) && pageIndex == 0) { // 第一页的第一个场景需要插入为你推荐商品以及过滤为你推荐商品
                 ItemEntity itemRecommandEntity = new ItemEntity();
                 itemRecommandEntity.setItemId(Long.valueOf(itemRecommand));
                 String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
@@ -70,6 +70,7 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
                 itemRecommandEntity.setBizType(BizType.SM.getCode());
 
                 if(CollectionUtils.isNotEmpty(contentEntityList)) {
+                    // 第一个场景的商品列表
                     List<ItemEntity> itemEntityList = Optional.ofNullable(contentEntityList.get(0)).map(contentEntityList1 -> contentEntityList1.getItems()).orElse(new ArrayList<ItemEntity>());
                     List<ItemEntity> newItemEntityList = Lists.newArrayList();
                     newItemEntityList.add(itemRecommandEntity);
