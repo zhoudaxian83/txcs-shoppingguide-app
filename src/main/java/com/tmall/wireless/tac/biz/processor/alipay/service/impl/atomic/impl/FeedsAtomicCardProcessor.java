@@ -55,7 +55,7 @@ public class FeedsAtomicCardProcessor implements IAtomicCardProcessor {
             "\t\t\t\"text\": \"$promotionLabel\",\n" +
             "\t\t\t\"borderColor\": \"#FF6010\",\n" +
             "\t\t\t\"textStyle\": {\n" +
-            "\t\t\t\t\"borderColor\": \"#000\"\n" +
+            "\t\t\t\t\"borderColor\": \"#FF6010\"\n" +
             "\t\t\t}\n" +
             "\t\t}\n" +
             "\t],\n" +
