@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.tmall.wireless.tac.biz.processor.alipay.service.impl.AliPayServiceImpl.cardBgPicAldKey;
 import static com.tmall.wireless.tac.biz.processor.alipay.service.impl.AliPayServiceImpl.fpIconPicAldKey;
 
 @Service
@@ -24,17 +25,7 @@ public class CardHeadIAtomicCardProcessor implements IAtomicCardProcessor {
     public static final String PLACE_HOLDER_BG_COLOR = "$bgColor";
     public static final String PLACE_HOLDER_BG_IP = "$bgPic";
 
-    public static final String TEMPLATE_JSON = "{\n" +
-            "\t\"containerStyle\": {\n" +
-            "\t\t\"backgroundColor\": \"#FFE5D3\"\n" +
-            "\t},\n" +
-            "\t\"title\": \"<span style=\\\"font-size:15sp;color:#FF2F2D;font-weight:700\\\">$title</span>\",\n" +
-            "\t\"dot\": \"<span style=\\\"font-size:12sp;color:#FE392F\\\">·</span>\",\n" +
-            "\t\"subtitle\": \"<span style=\\\"font-size:12sp;color:#FE392F\\\">$subTitle</span>\",\n" +
-            "\t\"scm\": \"xxxx\",\n" +
-            "\t\"spmC\": \"xxx\",\n" +
-            "\t\"hasBottomDivider\": \"true\"\n" +
-            "}";
+
 
 
     public static final String TEMPLATE_JSON_NEW = "{\n" +
@@ -80,7 +71,7 @@ public class CardHeadIAtomicCardProcessor implements IAtomicCardProcessor {
                 .replace(PLACE_HOLDER_SUB_TITTLE, subTitle)
                 .replace(PLACE_HOLDER_TITTLE_PIC, "https://gw.alipayobjects.com/mdn/rms_5bd46e/afts/img/A*gKwGToTcNHEAAAAAAAAAAAAAARQnAQ")
                 .replace(PLACE_HOLDER_BG_COLOR, "#FF3D29")
-                .replace(PLACE_HOLDER_BG_IP, aldDate.getString(fpIconPicAldKey));
+                .replace(PLACE_HOLDER_BG_IP, aldDate.getString(cardBgPicAldKey));
 
         pageFloorAtomicResultDTO.setCardData(Lists.newArrayList(JSON.parseObject(replace)));
         return pageFloorAtomicResultDTO;
