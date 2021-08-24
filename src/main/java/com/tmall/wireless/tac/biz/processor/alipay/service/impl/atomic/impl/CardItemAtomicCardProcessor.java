@@ -35,13 +35,18 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 
 
     public static final String TEMPLATE_ITEM = "{\n" +
+
+            "\t\"containerStyle\": {\n" +
+            "\t\t\"//\": \"整个grid背景框的底色，依赖服务端下发,写成这样是为了方便写css样式代码\",\n" +
+            "\t\t\"backgroundImage\": \"linear-gradient(tobottom,#FF3D29,#FF1919)\"\n" +
+            "\t},\n" +
             "\t\"saleTags\": [{\n" +
             "\t\t\"text\": \"<span style='font-size:10sp;color:#FF6010'>$promotionLabel</span>\",\n" +
             "\t\t\"textStyle\": {\n" +
             "\t\t\t\"borderColor\": \"#FF6010\"\n" +
             "\t\t}\n" +
             "\t}],\n" +
-            "\t\"title\": \"<span style='font-size:26;color:#333333'>$itemTitle</span>\",\n" +
+//            "\t\"title\": \"<span style='font-size:26;color:#333333'>$itemTitle</span>\",\n" +
             "\t\"image\": \"$itemImg\",\n" +
             "\t\"remoteLogExt\": \"{\\\"pageBizCode\\\":\\\"product\\\",\\\"cityCode\\\":\\\"330100\\\",\\\"bizCode\\\":\\\"product\\\",\\\"latitude\\\":\\\"30.265642\\\",\\\"source\\\":\\\"homeFeeds\\\",\\\"longitude\\\":\\\"120.108739\\\",\\\"scene\\\":\\\"SSU\\\"}\",\n" +
             "\t\"action\": \"{\\\"link\\\":\\\"$url\\\",\\\"scm\\\":\\\"\\\",\\\"type\\\":\\\"jump\\\"}\",\n" +
@@ -50,7 +55,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 //            "\t},\n" +
             "\t\"defaultTemplateId\": \"\",\n" +
             "\t\"tagImageV2\": \"https://gw.alipayobjects.com/mdn/rms_5bd46e/afts/img/A*IL4aRamkbjIAAAAAAAAAAAAAARQnAQ\",\n" +
-//            "\t\"complexTitle\": \"<span style='font-size:13sip;color:#333333'>超长标题看看超过两行会怎么样</span>\",\n" +
+            "\t\"complexTitle\": \"<span style='font-size:13sip;color:#333333'>$itemTitle</span>\",\n" +
             "\t\"tagLeftTextV2\": \"<span style='font-size:12sp;color:#FFFFFF;'>$promotionPrice</span>\",\n" +
             "\t\"tagRightTextV2\": \"<span style='font-size:15sp;color:#FF2F23'>抢</span>\",\n" +
 //            "\t\"originalPrice\": \"$originPrice\",\n" +
