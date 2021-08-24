@@ -107,10 +107,10 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
         }
     }
 
-    public static void main(String[] args){
-        Map<String, List<Integer>> map = Maps.newHashMap();
-        map.put("9", new ArrayList<Integer>());
-        int a = Optional.ofNullable(map.get("8").get(0)).orElse(0);
-        System.out.println(a);
-    }
+//    public static void main(String[] args){
+//        Map<String, List<Integer>> map = Maps.newHashMap();
+//        map.put("9", new ArrayList<Integer>());
+//        int a = Optional.ofNullable(map.get("8").get(0)).orElse(0);
+//        System.out.println(a);
+//    }
 }
