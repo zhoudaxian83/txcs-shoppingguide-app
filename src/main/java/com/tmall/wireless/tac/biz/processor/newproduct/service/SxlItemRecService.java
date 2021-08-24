@@ -176,6 +176,9 @@ public class SxlItemRecService {
         String finalAbTestType = abTestType;
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(response -> {
+                if(StringUtils.isNotBlank(finalAbTestType)){
+                    response.getExtInfos().put("abTestType", finalAbTestType);
+                }
                 HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
                     .kv("SxlItemRecService finalAbTestType",finalAbTestType)
                     .info();
