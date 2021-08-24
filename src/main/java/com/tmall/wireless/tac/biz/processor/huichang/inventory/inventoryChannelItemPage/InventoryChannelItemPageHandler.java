@@ -52,9 +52,11 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         Flowable<TacResult<List<GeneralItem>>> itemVOs = hallCommonItemRequestProxy.recommend(requestContext4Ald, bizScenario);
         SceneDTO sceneDTO = getScenesInfoFromCaptain(requestContext4Ald, tacLogger);
         GeneralItem sceneGeneralItem = buildSceneGeneralItem(sceneDTO, tacLogger);
-        sceneGeneralItem.put("itemList", itemVOs.blockingFirst().getData());
-        List<GeneralItem> sceneWithItems = Lists.newArrayList(sceneGeneralItem);
-        return Flowable.just(TacResult.newResult(sceneWithItems));
+        List<GeneralItem> generalItemList = itemVOs.blockingFirst().getData();
+        if(CollectionUtils.isNotEmpty(generalItemList)){
+            generalItemList.get(0).put("extInfos", sceneGeneralItem);
+        }
+        return Flowable.just(TacResult.newResult(generalItemList));
     }
 
     private SceneDTO getScenesInfoFromCaptain(RequestContext4Ald requestContext4Ald, TacLogger tacLogger) throws Exception {
