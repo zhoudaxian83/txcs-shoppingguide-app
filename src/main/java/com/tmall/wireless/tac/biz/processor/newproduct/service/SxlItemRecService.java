@@ -100,6 +100,7 @@ public class SxlItemRecService {
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
         EntitySetParams entitySetParams = new EntitySetParams();
         entitySetParams.setItemSetSource("crm");
+        String abTestType = "";
         /**主题系列新品承接页**/
         if(!StringUtils.isBlank(activityId) && itemSetId > 0){
             entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
@@ -107,11 +108,13 @@ public class SxlItemRecService {
         }else {
             /**算法选品接入ab实验**/
             String itemSetIdType = getAbData(context);
+            //todo
             itemSetIdType = "new";
             if(!StringUtils.isBlank(itemSetIdType)){
                 if("old".equals(itemSetIdType)){
                     entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetIdSw));
                     sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(String.valueOf(itemSetIdSw))));
+                    abTestType = "Artificial";
                 }else if("new".equals(itemSetIdType)){
                     List<Long> itemSetIds = Lists.newArrayList();
                     itemSetIds.add(itemSetIdSw);
@@ -121,9 +124,11 @@ public class SxlItemRecService {
                     activityIds.add(String.valueOf(itemSetIdSw));
                     activityIds.add(String.valueOf(itemSetIdAlgSw));
                     sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(activityIds));
+                    abTestType = "Artificial-Algorithm";
                 }else{
                     entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetIdSw));
                     sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(String.valueOf(itemSetIdSw))));
+                    abTestType = "Artificial";
                 }
             }else{
                 /**格物不支持未登录用户的ab能力，未登录用户默认走人工选品**/
@@ -162,7 +167,14 @@ public class SxlItemRecService {
             sgFrameworkContextItem.getUserParams().put(Constant.SXL_TOP_ITEM_IDS,topItemIds);
         }
 
+        String finalAbTestType = abTestType;
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+            .map(response -> {
+                if(StringUtils.isNotBlank(finalAbTestType)){
+                    response.getExtInfos().put("abTestType", finalAbTestType);
+                }
+                return response;
+            })
             .map(TacResult::newResult)
             .onErrorReturn(r -> TacResult.errorResult(""));
 
