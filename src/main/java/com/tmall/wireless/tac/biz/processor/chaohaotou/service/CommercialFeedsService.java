@@ -59,11 +59,10 @@ public class CommercialFeedsService {
         }
         JSONObject data = jsonObject.getJSONObject("data");
         JSONArray jsonArray = data.getJSONArray("listInfo");
-        JSONObject pageInfo = jsonObject.getJSONObject("pageInfo");
+        JSONObject pageInfo = data.getJSONObject("pageInfo");
         if (!CollectionUtils.isEmpty(jsonArray)) {
             tmcsZntItemDTOList = JSONObject.parseArray(jsonArray.toJSONString(), TmcsZntItemDTO.class);
         }
-        tacLogger.info("hasMore_" + pageInfo.getBoolean("hasMore"));
         return Pair.of(pageInfo.getBoolean("hasMore"), tmcsZntItemDTOList);
     }
 
@@ -84,6 +83,7 @@ public class CommercialFeedsService {
         paramMap.put("pageSize", pageSize);
         paramMap.put("commerce", Constant.B2C);
         paramMap.put("bizType", bizType);
+        paramMap.put("itemId", "0");
         paramsValue.put("tmcsZntFeedsRequest", paramMap);
         return paramsValue;
     }
