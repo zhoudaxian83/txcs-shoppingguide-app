@@ -56,7 +56,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
             "\t\"defaultTemplateId\": \"\",\n" +
             "\t\"tagImageV2\": \"https://gw.alipayobjects.com/mdn/rms_5bd46e/afts/img/A*IL4aRamkbjIAAAAAAAAAAAAAARQnAQ\",\n" +
             "\t\"complexTitle\": \"<span style='font-size:13sip;color:#333333'>$itemTitle</span>\",\n" +
-            "\t\"tagLeftTextV2\": \"<span style='font-size:12sp;color:#FFFFFF;'>$promotionPrice</span>\",\n" +
+            "\t\"tagLeftTextV2\": \"<span style='font-size:18sp;color:#FFFFFF;'>¥ </span><span style='font-size:16sp;color:#FFFFFF;'>$promotionPrice</span>\",\n" +
             "\t\"tagRightTextV2\": \"<span style='font-size:15sp;color:#FF2F23'>抢</span>\",\n" +
 //            "\t\"originalPrice\": \"$originPrice\",\n" +
             "\t\"originalPriceStyle\": {\n" +
