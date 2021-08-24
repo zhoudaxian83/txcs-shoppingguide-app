@@ -157,14 +157,16 @@ public class AliPayServiceImpl implements IAliPayService {
         MiddlePageSPIResponse middlePageSPIResponse = new MiddlePageSPIResponse();
         middlePageSPIResponse.setHasMore(true);
 
+
+//        public static final String headColorAldKey = "headColor";
+//        public static final String headSubTitleAldKey = "headSubTitle";
+//        public static final String headBgPicAldKey = "headBgPic";
         // 头部区
         PageFloorHeaderDTO pageFloorHeaderDTO = new PageFloorHeaderDTO();
         pageFloorHeaderDTO.setType("image");
-//        pageFloorHeaderDTO.setTitle(aldData.getString(headSubTitleAldKey));
-        pageFloorHeaderDTO.setSubtitle("送货上门 品质保证");
+        pageFloorHeaderDTO.setSubtitle(headSubTitleAldKey);
         pageFloorHeaderDTO.setBgColor("#F8FDE4");
-        pageFloorHeaderDTO.setFullMediaUrl("https://gw.alicdn.com/imgextra/i1/O1CN01264lUX1wNcKQUsoRT_!!6000000006296-0-tps-1125-492.jpg");
-//        pageFloorHeaderDTO.setSubTitleImgUrl(aldData.getString(headBgPicAldKey));
+        pageFloorHeaderDTO.setFullMediaUrl(headBgPicAldKey);
         pageFloorHeaderDTO.setPromotion(true);
         pageFloorHeaderDTO.setType("text");
         middlePageSPIResponse.setPageFloorHeaderDTO(pageFloorHeaderDTO);
@@ -173,11 +175,11 @@ public class AliPayServiceImpl implements IAliPayService {
 
         // 导航栏
         PageFloorNavigationDTO pageFloorNavigationDTO = new PageFloorNavigationDTO();
-        pageFloorNavigationDTO.setTitle("官方自营 极速送达");
-        pageFloorNavigationDTO.setTitleImage("https://gw.alicdn.com/imgextra/i1/O1CN01FTjVSn1vkEGlrWJCR_!!6000000006210-2-tps-72-72.png");
+        pageFloorNavigationDTO.setTitle(navigationTitleAldKey);
+        pageFloorNavigationDTO.setTitleImage(navigationIconPicAldKey);
 //        pageFloorNavigationDTO.setTitleImage(aldData.getString(navigationIconPicAldKey));
         pageFloorNavigationDTO.setStyle("dark");
-        pageFloorNavigationDTO.setTitleLightImageUrl("https://gw.alicdn.com/imgextra/i1/O1CN01FTjVSn1vkEGlrWJCR_!!6000000006210-2-tps-72-72.png");
+        pageFloorNavigationDTO.setTitleLightImageUrl(navigationIconPicAldKey);
         middlePageSPIResponse.setPageFloorNavigationDTO(pageFloorNavigationDTO);
 
 
