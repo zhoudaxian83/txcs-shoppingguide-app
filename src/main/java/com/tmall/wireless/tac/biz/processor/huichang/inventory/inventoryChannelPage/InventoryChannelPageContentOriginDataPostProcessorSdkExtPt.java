@@ -59,7 +59,7 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
 //            itemRecommandEntity.setTop(true); // Todo likunlin
 
             if(CollectionUtils.isNotEmpty(contentEntityList)) {
-                List<ItemEntity> itemEntityList = Optional.ofNullable(contentEntityList.get(0).getItems()).orElse(new ArrayList<ItemEntity>());
+                List<ItemEntity> itemEntityList = Optional.ofNullable(contentEntityList.get(0)).map(contentEntityList1 -> contentEntityList1.getItems()).orElse(new ArrayList<ItemEntity>());
                 List<ItemEntity> newItemEntityList = Lists.newArrayList();
                 newItemEntityList.add(itemRecommandEntity);
                 for(ItemEntity itemEntity: itemEntityList) {
@@ -85,9 +85,9 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
         } else {
             Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, 310100L);
             LocParams locParams = ParseCsa.parseCsaObj(aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA), smAreaId);
-            if(Optional.ofNullable(locParams.getRt1HourStoreId()).orElse(0L) > 0) {
+            if (Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRt1HourStoreId()).orElse(0L) > 0){
                 return O2oType.O2OOneHour.name();
-            } else if(Optional.ofNullable(locParams.getRtHalfDayStoreId()).orElse(0L) > 0){
+            }else if(Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRtHalfDayStoreId()).orElse(0L) > 0){
                 return O2oType.O2OHalfDay.name();
             } else {
                 return O2oType.O2O.name();

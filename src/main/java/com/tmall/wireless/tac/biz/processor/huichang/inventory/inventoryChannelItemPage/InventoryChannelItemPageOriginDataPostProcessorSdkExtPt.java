@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannel
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -50,7 +51,7 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
             if(StringUtils.isNotBlank(indexStr)) {
                 index = Integer.valueOf(indexStr);
             } else {
-                index = Optional.ofNullable(Integer.valueOf((String)aldParams.get("pageIndex"))).orElse(0);
+                index = Optional.ofNullable((String)(aldParams.get("pageIndex"))).map(Integer::valueOf).orElse(0);
             }
 
             if(index == 0) {
@@ -86,13 +87,22 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
         } else {
             Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, 310100L);
             LocParams locParams = ParseCsa.parseCsaObj(aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA), smAreaId);
-            if(Optional.ofNullable(locParams.getRt1HourStoreId()).orElse(0L) > 0) {
+            if(Optional.ofNullable(locParams).map(params -> params.getRt1HourStoreId()).orElse(0L) > 0) {
                 return O2oType.O2OOneHour.name();
-            } else if(Optional.ofNullable(locParams.getRtHalfDayStoreId()).orElse(0L) > 0){
+            } else if(Optional.ofNullable(locParams).map(params -> params.getRtHalfDayStoreId()).orElse(0L) > 0){
                 return O2oType.O2OHalfDay.name();
             } else {
                 return O2oType.O2O.name();
             }
+
+
         }
+    }
+
+    public static void main(String[] args){
+        Map<String, String> map = Maps.newHashMap();
+        map.put("9", "9");
+        int a = Optional.ofNullable(map).map(myMap -> myMap.get("9")).map(Integer::valueOf).orElse(0);
+        System.out.println(a);
     }
 }

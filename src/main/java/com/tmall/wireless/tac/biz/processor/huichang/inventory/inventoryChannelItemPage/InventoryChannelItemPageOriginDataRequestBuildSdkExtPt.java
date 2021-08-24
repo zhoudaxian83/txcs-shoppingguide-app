@@ -72,27 +72,21 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
         params.put("smAreaId", String.valueOf(smAreaId));
 
         LocParams locParams = ParseCsa.parseCsaObj(aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA), smAreaId);
-        params.put("regionCode", String.valueOf(Optional.ofNullable(locParams.getRegionCode()).orElse(DefaultLogAreaId)));
+        params.put("regionCode", Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode()).map(String::valueOf).orElse(String.valueOf(DefaultLogAreaId)));
 
         String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
         if("B2C".equals(locType) || locType == null){
             params.put("commerce","B2C");
         }else {
             params.put("commerce","O2O");
-            if (Optional.of(locParams.getRt1HourStoreId()).orElse(0L) > 0){
+            if (Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRt1HourStoreId()).orElse(0L) > 0){
                 params.put("rtOneHourStoreId", String.valueOf(locParams.getRt1HourStoreId()));
-            }else if(Optional.of(locParams.getRtHalfDayStoreId()).orElse(0L) > 0){
+            }else if(Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRtHalfDayStoreId()).orElse(0L) > 0){
                 params.put("rtHalfDayStoreId", String.valueOf(locParams.getRtHalfDayStoreId()));
             }
         }
 
-        String index = PageUrlUtil.getParamFromCurPageUrl(aldParams, "index", tacLogger);
-        if(StringUtils.isNotBlank(index)) {
-            params.put("index", index);
-        } else {
-            params.put("index", String.valueOf(Optional.ofNullable(aldParams.get("pageIndex")).orElse("0"))); // Todo
-        }
-
+        params.put("index", "0");
         params.put("pageSize", String.valueOf(PAGE_SIZE)); //
 
         RecommendRequest recommendRequest = new RecommendRequest();

@@ -24,6 +24,8 @@ import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import com.tmall.wireless.tac.dataservice.log.TacLogConsts;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -62,6 +64,10 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         final String CHANNELNAME = "sceneLdb";
 
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
+        if(MapUtils.isEmpty(aldParams)) {
+            tacLogger.debug("aldParams为空");
+            throw new Exception("aldParams为空");
+        }
         String contentId = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentId", tacLogger); // Todo likunlin
         if(StringUtils.isBlank(contentId)) {
             tacLogger.debug("contentId为空");
@@ -73,7 +79,7 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         List<EntityId> ids = Arrays.asList(EntityId.of(contentId, "content"));
         tacLogger.debug("EntityId: " + JSON.toJSONString(ids));
         EntityQueryOption entityQueryOption = new EntityQueryOption();
-        Long smAreaId = Optional.ofNullable(Long.valueOf((String)aldParams.get(RequestKeyConstant.SMAREAID))).orElse(defaultSmAreaId);
+        Long smAreaId = Optional.ofNullable((String)aldParams.get(RequestKeyConstant.SMAREAID)).map(Long::valueOf).orElse(defaultSmAreaId);
         entityQueryOption.setSmAreaId(smAreaId);
 
         List<ChannelDataDO> channelDataDOList = new ArrayList<>();
