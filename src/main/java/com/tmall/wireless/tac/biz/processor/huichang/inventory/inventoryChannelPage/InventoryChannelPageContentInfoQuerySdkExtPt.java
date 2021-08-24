@@ -66,7 +66,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
             ids.add(entityId);
         });
         EntityQueryOption entityQueryOption = new EntityQueryOption();
-        Long smAreaId = Optional.ofNullable(Long.valueOf((String)aldParams.get(RequestKeyConstant.SMAREAID))).orElse(defaultSmAreaId);
+        Long smAreaId = Optional.ofNullable((String)aldParams.get(RequestKeyConstant.SMAREAID)).map(Long::valueOf).orElse(defaultSmAreaId);
         entityQueryOption.setSmAreaId(smAreaId);
 
         List<ChannelDataDO> channelDataDOList = new ArrayList<>();
