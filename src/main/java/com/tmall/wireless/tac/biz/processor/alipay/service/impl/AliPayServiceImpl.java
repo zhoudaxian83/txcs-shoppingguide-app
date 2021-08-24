@@ -56,7 +56,7 @@ public class AliPayServiceImpl implements IAliPayService {
     public static final String hookItemSetAldKey = "hookItemSet";
     public static final String itemLabelAldKey = "itemLabel";
     public static final String fpTitleAldKey = "fpTitle";
-    public static final String fpServiceTextAldKey = "fpService";
+    public static final String fpServiceTextAldKey = "fpServiceText";
     public static final String fpIconPicAldKey = "fpIconPic";
 
     public static final String headColorAldKey = "headColor";
