@@ -18,10 +18,13 @@ import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.util.UrlUtils;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import com.tmall.wireless.tac.client.dataservice.TacOptLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 请求tpp数据的入参
@@ -34,6 +37,12 @@ import org.slf4j.LoggerFactory;
 public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extends Register
     implements ContentOriginDataRequestBuildSdkExtPt {
 
+    @Autowired
+    TacLogger tacLogger;
+
+    @Autowired
+    private TacOptLogger tacOptLogger;
+
     Logger LOGGER = LoggerFactory.getLogger(InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.class);
 
     public static final Long SCENE_RECOMMEND_APPID = 27401L;
@@ -43,6 +52,8 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
 
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
+        tacLogger.debug("tacLogger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.start");
+        tacOptLogger.debug("tacOptLogger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.start");
 
         Context tacContext = sgFrameworkContextContent.getTacContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)tacContext;
@@ -57,7 +68,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         BizScenario bizScenario = sgFrameworkContextContent.getBizScenario();
         String uniqueIdentity = bizScenario.getUniqueIdentity();
         tppRequestParams.put("uniqueIdentity", uniqueIdentity);
-        String urlParamsByMap = UrlUtils.getUrlParamsByMap(tppRequestParams);
+
 
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setParams(tppRequestParams);
@@ -67,7 +78,8 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
 
         Map<String, Object> userParams = sgFrameworkContextContent.getUserParams();
         buildTppParams(tppRequestParams, aldParam, aldContext, userParams);
-        LOGGER.error("recommendRequest:{}", JSON.toJSONString(recommendRequest));
+        String urlParamsByMap = UrlUtils.getUrlParamsByMap(tppRequestParams);
+        tacLogger.debug("urlParamsByMap:" + JSON.toJSONString(urlParamsByMap));
         return recommendRequest;
     }
 
