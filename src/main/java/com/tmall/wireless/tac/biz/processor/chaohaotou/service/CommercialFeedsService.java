@@ -75,6 +75,7 @@ public class CommercialFeedsService {
         Long smAreaId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "smAreaId", 330100L);
         String csa = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "csa", "");
         String bizType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "bizType", "");
+        String itemId = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "itemId", "0");
         String regionCode = AddressUtil.parseCSA(csa).getRegionCode();
         paramMap.put("userId", userId);
         paramMap.put("regionCode", regionCode);
@@ -83,7 +84,7 @@ public class CommercialFeedsService {
         paramMap.put("pageSize", pageSize);
         paramMap.put("commerce", Constant.B2C);
         paramMap.put("bizType", bizType);
-        paramMap.put("itemId", "0");
+        paramMap.put("itemId", itemId);
         paramsValue.put("tmcsZntFeedsRequest", paramMap);
         return paramsValue;
     }
