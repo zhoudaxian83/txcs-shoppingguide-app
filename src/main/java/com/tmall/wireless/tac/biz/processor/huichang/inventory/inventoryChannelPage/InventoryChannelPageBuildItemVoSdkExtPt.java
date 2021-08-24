@@ -40,6 +40,7 @@ public class InventoryChannelPageBuildItemVoSdkExtPt extends DefaultBuildItemVoS
         try{
             // 给为你推荐商品打上特殊标签
             ItemEntityVO itemEntityVO = result.getValue();
+            tacLogger.debug(JSONObject.toJSONString(itemEntityVO));
             SgFrameworkContextItem sgFrameworkContextItem = buildItemVoRequest.getContext();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
             Map<String, Object> aldParams = requestContext4Ald.getAldParam();
@@ -49,7 +50,6 @@ public class InventoryChannelPageBuildItemVoSdkExtPt extends DefaultBuildItemVoS
             } else {
                 itemEntityVO.put("isRecommand", "false");
             }
-            tacLogger.debug(JSONObject.toJSONString(itemEntityVO));
             result.setValue(itemEntityVO);
             return result;
         } catch (Exception e) {
