@@ -165,7 +165,7 @@ public class AliPayServiceImpl implements IAliPayService {
         PageFloorHeaderDTO pageFloorHeaderDTO = new PageFloorHeaderDTO();
         pageFloorHeaderDTO.setType("image");
         pageFloorHeaderDTO.setSubtitle(aldData.getString(headSubTitleAldKey));
-        pageFloorHeaderDTO.setBgColor("#F8FDE4");
+        pageFloorHeaderDTO.setBgColor(aldData.getString(headColorAldKey));
         pageFloorHeaderDTO.setFullMediaUrl(aldData.getString(headBgPicAldKey));
         pageFloorHeaderDTO.setPromotion(true);
         pageFloorHeaderDTO.setType("text");
