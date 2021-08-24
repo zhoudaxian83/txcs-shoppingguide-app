@@ -11,5 +11,6 @@ public class Constant {
     public static final String SUCCESS =  "success";
     public static final String TODAY_CRAZY_LIMIT ="todayCrazyLimit";
     public static final Long APP_ID = 21431L;
+    public static final Long INDEX = 10000L;
 
 }

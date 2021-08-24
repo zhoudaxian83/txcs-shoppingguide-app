@@ -13,6 +13,11 @@ import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.LocTypeEnum;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -49,7 +54,28 @@ public class BrowseRecommendItemOriginDataRequestExtPt implements ItemOriginData
         params.put("pageSize", "20");
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(0L).toString());
         params.put("logicAreaId", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
-        params.put("itemBusinessType","B2C");
+
+        Long rt1HourStoreId = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
+        Long rtHalfDayStoreId = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getRtHalfDayStoreId).orElse(0L);
+
+        boolean rt1HourStoreCover = rt1HourStoreId > 0L;
+        boolean rtHalfDayStoreCover = rtHalfDayStoreId > 0L;
+        boolean isO2o = isO2oScene(sgFrameworkContextItem);
+        //默认优先级 一小时达 > 半日达 > 外仓
+        if (isO2o) {
+            if(rt1HourStoreCover){
+                params.put("itemBusinessType", TppItemBusinessTypeEnum.OneHour.getType());
+                params.put("rt1HourStoreId", RenderLangUtil.safeString(rt1HourStoreId));
+            } else if(rtHalfDayStoreCover){
+                params.put("itemBusinessType", TppItemBusinessTypeEnum.HalfDay.getType());
+                params.put("rtHalfDayStoreId", RenderLangUtil.safeString(rtHalfDayStoreId));
+            } else {
+                params.put("itemBusinessType", TppItemBusinessTypeEnum.B2C.getType());
+            }
+        } else {
+            params.put("itemBusinessType", TppItemBusinessTypeEnum.B2C.getType());
+        }
+
         params.put("detailItemIdList", MapUtil.getStringWithDefault(
                 Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getRequestParams).orElse(Maps.newHashMap()),
                 "detailItemIdList",
@@ -70,5 +96,19 @@ public class BrowseRecommendItemOriginDataRequestExtPt implements ItemOriginData
         return tppRequest;
     }
 
+    /**
+     * 判断是否为O2O场景
+     * @param sgFrameworkContext
+     * @return
+     */
+    private boolean isO2oScene(SgFrameworkContext sgFrameworkContext) {
+        boolean isO2o = false;
+        String locType = MapUtil.getStringWithDefault(sgFrameworkContext.getRequestParams(), RequestKeyConstantApp.LOC_TYPE, "B2C");
+        if(LocTypeEnum.O2OOneHour.getType().equals(locType) || LocTypeEnum.O2OHalfDay.getType().equals(locType)
+            || LocTypeEnum.O2ONextDay.getType().equals(locType)){
+            isO2o = true;
+        }
+        return isO2o;
+    }
 
 }
