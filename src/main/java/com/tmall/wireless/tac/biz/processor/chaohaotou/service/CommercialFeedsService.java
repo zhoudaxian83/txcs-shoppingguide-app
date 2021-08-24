@@ -50,7 +50,6 @@ public class CommercialFeedsService {
     }
 
     private Pair<Boolean, List<TmcsZntItemDTO>> convert(Object o) {
-        tacLogger.info("convert_" + o.toString());
         String jsonStr = JSONObject.toJSONString(o);
         tacLogger.info("convert_2" + jsonStr);
         JSONObject jsonObject = JSONObject.parseObject(jsonStr);
@@ -64,6 +63,7 @@ public class CommercialFeedsService {
         if (!CollectionUtils.isEmpty(jsonArray)) {
             tmcsZntItemDTOList = JSONObject.parseArray(jsonArray.toJSONString(), TmcsZntItemDTO.class);
         }
+        tacLogger.info("hasMore_" + pageInfo.getBoolean("hasMore"));
         return Pair.of(pageInfo.getBoolean("hasMore"), tmcsZntItemDTOList);
     }
 
