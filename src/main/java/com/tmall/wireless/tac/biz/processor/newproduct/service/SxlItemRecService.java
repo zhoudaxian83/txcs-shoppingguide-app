@@ -260,8 +260,14 @@ public class SxlItemRecService {
                 .kv("SxlItemRecService abTestRest",JSON.toJSONString(abTestRest))
                 .info();
             abTestRest.forEach(variation ->{
-                if(SxlSwitch.getValue("SM_NEW_ARRIVAL").equals(variation.get("bizType")) &&
+                /*if(SxlSwitch.getValue("SM_NEW_ARRIVAL").equals(variation.get("bizType")) &&
                     SxlSwitch.getValue("SXL_ALG_ITEMSET_ID_AB").equals(variation.get("tclsExpId"))){
+                    if(variation.get("itemSetId") != null){
+                        itemSetIdType.append(String.valueOf(variation.get("itemSetId")));
+                    }
+                }*/
+                if("SM_NEW_ARRIVAL".equals(variation.get("bizType")) &&
+                    "SXL_ALG_ITEMSET_ID_AB".equals(variation.get("tclsExpId"))){
                     if(variation.get("itemSetId") != null){
                         itemSetIdType.append(String.valueOf(variation.get("itemSetId")));
                     }
