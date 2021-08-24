@@ -83,7 +83,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageContentInfoQuerySdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageContentOriginDataPostProcessorSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageContentOriginDataRequestBuildSdkExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageBuildItemVoSdkExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageHandler"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageOriginDataPostProcessorSdkExtPt"/>
