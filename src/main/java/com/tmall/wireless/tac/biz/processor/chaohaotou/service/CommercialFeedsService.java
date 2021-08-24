@@ -51,8 +51,10 @@ public class CommercialFeedsService {
 
     private Pair<Boolean, List<TmcsZntItemDTO>> convert(Object o) {
         tacLogger.info("convert_" + o.toString());
+        String jsonStr = JSONObject.toJSONString(o);
+        tacLogger.info("convert_2" + jsonStr);
+        JSONObject jsonObject = JSONObject.parseObject(jsonStr);
         List<TmcsZntItemDTO> tmcsZntItemDTOList = Lists.newArrayList();
-        JSONObject jsonObject = JSONObject.parseObject(o.toString());
         if (!jsonObject.getBoolean("success")) {
             return null;
         }
