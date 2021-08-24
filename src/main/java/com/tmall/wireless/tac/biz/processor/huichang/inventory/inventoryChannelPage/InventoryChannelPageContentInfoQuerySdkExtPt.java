@@ -10,6 +10,7 @@ import com.tmall.aselfcaptain.cloudrec.domain.Entity;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityId;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityQueryOption;
 import com.tmall.aselfcaptain.item.model.ChannelDataDO;
+import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.contentinfo.ContentInfoQuerySdkExtPt;
@@ -46,63 +47,68 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
     @Resource
     EntityRenderService entityRenderService;
     public static final String CHANNELNAME = "sceneLdb";
-    public static final Long defaultSmAreaId = 310100L;
-    public static final String defaultLogAreaId = "107";
+    public static final Long DEFAULT_SMAREAID = 310100L;
 
     private static final String ACTIVITY_SCENE_PREFIX = "tcls_ugc_scene_v1_";
     @Override
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
         // Todo likunlin
         tacLogger.debug("扩展点InventoryChannelPageContentInfoQuerySdkExtPt");
-        Map<Long, ContentInfoDTO> captainsContent = Maps.newHashMap();
-        List<EntityId> ids = new ArrayList<>();
-        List<ContentEntity> contentEntityList = sgFrameworkContextContent.getContentEntityOriginDataDTO().getResult();
-        RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextContent.getTacContext());
-        Map<String, Object> aldParams = requestContext4Ald.getAldParam();
-        Map<Long, ContentEntity> contentEntityListMap = contentEntityList.stream().collect(Collectors.toMap(contentEntity -> contentEntity.getContentId(),contentEntity -> contentEntity, (key1, key2) -> key1));
-
-        contentEntityList.forEach(e -> {
-            EntityId entityId =  EntityId.of(ACTIVITY_SCENE_PREFIX + e.getContentId(), "content");
-            ids.add(entityId);
-        });
-        EntityQueryOption entityQueryOption = new EntityQueryOption();
-        Long smAreaId = Optional.ofNullable((String)aldParams.get(RequestKeyConstant.SMAREAID)).map(Long::valueOf).orElse(defaultSmAreaId);
-        entityQueryOption.setSmAreaId(smAreaId);
-
-        List<ChannelDataDO> channelDataDOList = new ArrayList<>();
-        ChannelDataDO channelDataDO = new ChannelDataDO();
-        channelDataDO.setDataKey("data");
-        channelDataDO.setChannelField("data");
-        channelDataDO.setChannelName(CHANNELNAME);
-        channelDataDOList.add(channelDataDO);
-        entityQueryOption.setChannelDataDOS(channelDataDOList);
         try{
-            MultiResponse<Entity> render = entityRenderService.render(ids, entityQueryOption);
-            if(render.isSuccess()) {
-                List<SceneDTO> sceneDTOList = render.getData().stream()
-                .map(
-                        entity -> JSON.parseObject(JSON.toJSONString(entity.get("data")), SceneDTO.class)
-                ).collect(Collectors.toList());
-                tacLogger.debug("请求Captain返回结果: " + JSONObject.toJSONString(sceneDTOList));
-                sceneDTOList.forEach(
-                        sceneDTO -> {
-                            captainsContent.put(Long.valueOf(sceneDTO.getId()), parseCaptainResult(sceneDTO, contentEntityListMap, sgFrameworkContextContent));
+            List<ContentEntity> contentEntityList = sgFrameworkContextContent.getContentEntityOriginDataDTO().getResult();
+            RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextContent.getTacContext());
+            Map<String, Object> aldParams = requestContext4Ald.getAldParam();
+            Map<Long, ContentEntity> contentEntityListMap = contentEntityList.stream().collect(Collectors.toMap(contentEntity -> contentEntity.getContentId(),contentEntity -> contentEntity, (key1, key2) -> key1));
 
-                        }
-                );
-                tacLogger.debug("请求Captain结果整理：" + JSONObject.toJSONString(captainsContent));
-                return Flowable.just(Response.success(captainsContent));
+            Map<Long, ContentInfoDTO> captainsContent = Maps.newHashMap();
+            List<EntityId> ids = new ArrayList<>();
+            contentEntityList.forEach(e -> {
+                EntityId entityId =  EntityId.of(ACTIVITY_SCENE_PREFIX + e.getContentId(), "content");
+                ids.add(entityId);
+            });
+            EntityQueryOption entityQueryOption = new EntityQueryOption();
+            Long smAreaId = Optional.ofNullable((String)aldParams.get(RequestKeyConstant.SMAREAID)).map(Long::valueOf).orElse(DEFAULT_SMAREAID);
+            entityQueryOption.setSmAreaId(smAreaId);
+
+            List<ChannelDataDO> channelDataDOList = new ArrayList<>();
+            ChannelDataDO channelDataDO = new ChannelDataDO();
+            channelDataDO.setDataKey("data");
+            channelDataDO.setChannelField("data");
+            channelDataDO.setChannelName(CHANNELNAME);
+            channelDataDOList.add(channelDataDO);
+            entityQueryOption.setChannelDataDOS(channelDataDOList);
+            try{
+                MultiResponse<Entity> render = entityRenderService.render(ids, entityQueryOption);
+                if(render.isSuccess()) {
+                    List<SceneDTO> sceneDTOList = render.getData().stream()
+                            .map(
+                                    entity -> JSON.parseObject(JSON.toJSONString(entity.get("data")), SceneDTO.class)
+                            ).collect(Collectors.toList());
+                    tacLogger.debug("请求Captain返回结果: " + JSONObject.toJSONString(sceneDTOList));
+                    sceneDTOList.forEach(
+                            sceneDTO -> {
+                                captainsContent.put(Long.valueOf(sceneDTO.getId()), parseCaptainResult(sceneDTO, contentEntityListMap, sgFrameworkContextContent));
+
+                            }
+                    );
+                    tacLogger.debug("请求Captain结果整理：" + JSONObject.toJSONString(captainsContent));
+                    return Flowable.just(Response.success(captainsContent));
+                }
+                else {
+                    // throw new Exception("查询不成功");
+                    tacLogger.debug("查询不成功");
+                    return Flowable.just(Response.fail("captain fail"));
+                }
             }
-            else {
-                // throw new Exception("查询不成功");
-                tacLogger.debug("查询不成功");
-                return Flowable.just(Response.fail("captain fail"));
+            catch (Exception e) {
+                tacLogger.debug("查询异常");
+                return Flowable.just(Response.fail("captain error"));
             }
-        }
-        catch (Exception e) {
-            tacLogger.debug("查询异常");
+        } catch (Exception e) {
+            tacLogger.debug("查询异常"+ StackTraceUtil.stackTrace(e));
             return Flowable.just(Response.fail("captain error"));
         }
+
     }
     private ContentInfoDTO parseCaptainResult(SceneDTO sceneDTO, Map<Long, ContentEntity> contentEntityListMap, SgFrameworkContextContent sgFrameworkContextContent) {
         Context context = sgFrameworkContextContent.getTacContext();
