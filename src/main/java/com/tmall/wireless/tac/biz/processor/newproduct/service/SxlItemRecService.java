@@ -60,10 +60,12 @@ public class SxlItemRecService {
     SgFrameworkServiceItem sgFrameworkServiceItem;
     @Autowired
     HyperlocalRetailABTestClient hyperlocalRetailABTestClient;
-
-    private final static String AB_TEST_RESULT = "abTestVariationsResult";//ab实验分桶结果
-
-    private final static String AB_TEST_TRACE_INFO = "abTestTraceInfo";//ab实验
+    /**ab实验分桶结果**/
+    private final static String AB_TEST_RESULT = "abTestVariationsResult";
+    /**人工选品**/
+    private final static String ARTIFICIAL = "Artificial";
+    /**人工选品-算法选品**/
+    private final static String ARTIFICIAL_ALGORITHM = "Artificial-Algorithm";
 
     static List<Pair<String, String>> dataTubeKeyList = Lists.newArrayList(
         Pair.of("recommendWords","recommendWords"),
@@ -108,13 +110,11 @@ public class SxlItemRecService {
         }else {
             /**算法选品接入ab实验**/
             String itemSetIdType = getAbData(context);
-            //todo
-            itemSetIdType = "new";
             if(!StringUtils.isBlank(itemSetIdType)){
                 if("old".equals(itemSetIdType)){
                     entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetIdSw));
                     sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(String.valueOf(itemSetIdSw))));
-                    abTestType = "Artificial";
+                    abTestType = ARTIFICIAL;
                 }else if("new".equals(itemSetIdType)){
                     List<Long> itemSetIds = Lists.newArrayList();
                     itemSetIds.add(itemSetIdSw);
@@ -124,11 +124,11 @@ public class SxlItemRecService {
                     activityIds.add(String.valueOf(itemSetIdSw));
                     activityIds.add(String.valueOf(itemSetIdAlgSw));
                     sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(activityIds));
-                    abTestType = "Artificial-Algorithm";
+                    abTestType = ARTIFICIAL_ALGORITHM;
                 }else{
                     entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetIdSw));
                     sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(String.valueOf(itemSetIdSw))));
-                    abTestType = "Artificial";
+                    abTestType = ARTIFICIAL;
                 }
             }else{
                 /**格物不支持未登录用户的ab能力，未登录用户默认走人工选品**/
