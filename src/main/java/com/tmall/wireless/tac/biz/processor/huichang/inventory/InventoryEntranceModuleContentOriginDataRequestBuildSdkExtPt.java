@@ -45,7 +45,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
 
     Logger LOGGER = LoggerFactory.getLogger(InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.class);
 
-    public static final Long SCENE_RECOMMEND_APPID = 27401L;
+    public static final Long SCENE_RECOMMEND_APPID = 26563L;
 
     private static final String prex_sceneSet = "intelligentCombinationItems_";
 
