@@ -132,10 +132,16 @@ public class SxlItemRecService {
                 }
             }else{
                 /**格物不支持未登录用户的ab能力，未登录用户默认走人工选品**/
+                abTestType = ARTIFICIAL;
                 activityId = String.valueOf(itemSetIdSw);
                 entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetIdSw));
                 sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(String.valueOf(itemSetIdSw))));
             }
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                .kv("SxlItemRecService","recommend")
+                .kv("abTestType",abTestType)
+                .kv("itemSetIdType",itemSetIdType)
+                .info();
         }
         sgFrameworkContextItem.setRequestParams(context.getParams());
         sgFrameworkContextItem.setEntitySetParams(entitySetParams);
@@ -170,9 +176,6 @@ public class SxlItemRecService {
         String finalAbTestType = abTestType;
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(response -> {
-                if(StringUtils.isNotBlank(finalAbTestType)){
-                    response.getExtInfos().put("abTestType", finalAbTestType);
-                }
                 HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
                     .kv("SxlItemRecService finalAbTestType",finalAbTestType)
                     .info();
