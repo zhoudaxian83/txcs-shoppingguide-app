@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
@@ -33,6 +34,7 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
         tacLogger.debug("扩展点InventoryChannelItemPageOriginDataPostProcessorSdkExtPt");
         SgFrameworkContextItem sgFrameworkContextItem = Optional.of(originDataProcessRequest.getSgFrameworkContextItem()).orElse(new SgFrameworkContextItem());
         OriginDataDTO<ItemEntity> itemEntityOriginDataDTO = Optional.of(originDataProcessRequest.getItemEntityOriginDataDTO()).orElse(new OriginDataDTO<ItemEntity>());
+        tacLogger.debug("商品旧顺序：" + JSONObject.toJSONString(itemEntityOriginDataDTO.getResult()));
 
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
@@ -71,7 +73,7 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
             }
             itemEntityOriginDataDTO.setResult(newItemEntityList);
         }
-
+        tacLogger.debug("商品新顺序：" + JSONObject.toJSONString(itemEntityOriginDataDTO.getResult()));
         return itemEntityOriginDataDTO;
     }
 

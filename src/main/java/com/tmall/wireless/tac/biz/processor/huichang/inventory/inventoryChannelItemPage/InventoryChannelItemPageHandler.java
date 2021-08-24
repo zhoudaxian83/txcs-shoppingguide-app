@@ -26,12 +26,13 @@ import com.tmall.wireless.tac.dataservice.log.TacLogConsts;
 import io.reactivex.Flowable;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
 
-@Service
+@Component
 public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
     @Autowired
     HallCommonItemRequestProxy hallCommonItemRequestProxy;
@@ -55,6 +56,7 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
     }
 
     private SceneDTO getScenesInfoFromCaptain(RequestContext4Ald requestContext4Ald, TacLogger tacLogger) throws Exception {
+        tacLogger.debug("组装场景信息");
         final String ACTIVITY_SCENE_PREFIX = "tcls_ugc_scene_v1_";
         final Long defaultSmAreaId = 310100L;
         final String CHANNELNAME = "sceneLdb";
@@ -69,7 +71,7 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
             contentId = ACTIVITY_SCENE_PREFIX + contentId;
         }
         List<EntityId> ids = Arrays.asList(EntityId.of(contentId, "content"));
-        tacLogger.debug("EntityId:{}" + JSON.toJSONString(ids));
+        tacLogger.debug("EntityId: " + JSON.toJSONString(ids));
         EntityQueryOption entityQueryOption = new EntityQueryOption();
         Long smAreaId = Optional.ofNullable(Long.valueOf((String)aldParams.get(RequestKeyConstant.SMAREAID))).orElse(defaultSmAreaId);
         entityQueryOption.setSmAreaId(smAreaId);

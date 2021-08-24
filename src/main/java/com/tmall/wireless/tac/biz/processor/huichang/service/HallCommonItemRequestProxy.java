@@ -38,11 +38,13 @@ import io.reactivex.Flowable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * 会场通用参数组装服务
  * @author wangguohui
  */
+@Service
 public class HallCommonItemRequestProxy {
 
     Logger LOGGER = LoggerFactory.getLogger(LimitTimeBuyScene.class);
