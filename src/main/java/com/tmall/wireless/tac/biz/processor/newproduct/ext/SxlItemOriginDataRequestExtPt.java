@@ -61,6 +61,7 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         params.put("regionCode", (regionCode == null || regionCode == 0) ? "107" : String.valueOf(regionCode));
 
         tppRequest.setParams(params);
+        tppRequest.setLogResult(true);
 
         tacLogger.info("SxlItemOriginDataRequestExtPt tppRequest:"+ JSON.toJSONString(tppRequest));
         return tppRequest;
