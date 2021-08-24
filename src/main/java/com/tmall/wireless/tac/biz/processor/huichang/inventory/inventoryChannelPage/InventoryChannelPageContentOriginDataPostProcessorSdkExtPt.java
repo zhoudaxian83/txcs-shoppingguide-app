@@ -44,7 +44,7 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
             contentEntityOriginDataDTO = contentOriginDataProcessRequest.getContentEntityOriginDataDTO();
             contentEntityList = contentEntityOriginDataDTO.getResult();
             if(CollectionUtils.isEmpty(contentEntityList)) {
-                throw new Exception("contentEntityList");
+                throw new Exception("contentEntityList为空");
             }
             tacLogger.debug("调顺序之前 " + JSONObject.toJSONString(contentEntityList));
         } catch (Exception e) {

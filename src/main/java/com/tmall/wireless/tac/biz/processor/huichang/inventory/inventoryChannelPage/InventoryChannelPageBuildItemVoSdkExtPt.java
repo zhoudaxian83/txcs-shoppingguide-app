@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
@@ -48,6 +49,7 @@ public class InventoryChannelPageBuildItemVoSdkExtPt extends DefaultBuildItemVoS
             } else {
                 itemEntityVO.put("isRecommand", "false");
             }
+            tacLogger.debug(JSONObject.toJSONString(itemEntityVO));
             result.setValue(itemEntityVO);
             return result;
         } catch (Exception e) {
