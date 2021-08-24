@@ -66,7 +66,6 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
             PageInfoDO::getIndex).orElse(0);
         /*params.put("index", String.valueOf(index));*/
         params.put("isFirstPage", index > 0 ? "false" : "true");
-        tppRequest.setAppId(APPID);
 
         String moduleId = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getPmtParams).map(
             PmtParams::getModuleId).orElse("1217");
@@ -101,9 +100,6 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
-        HadesLogUtil.stream(ScenarioConstantApp.GUL_PROMOTION)
-            .kv("tppRequest", JSON.toJSONString(tppRequest))
-            .info();
         return tppRequest;
     }
 }
