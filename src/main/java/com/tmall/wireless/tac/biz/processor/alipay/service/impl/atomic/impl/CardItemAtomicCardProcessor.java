@@ -41,7 +41,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
             "\t\t\"backgroundImage\": \"linear-gradient(tobottom,#FF3D29,#FF1919)\"\n" +
             "\t},\n" +
             "\t\"saleTags\": [{\n" +
-            "\t\t\"text\": \"<span style='font-size:10sp;color:#FF6010'>$promotionLabel</span>\",\n" +
+            "\t\t\"text\": \"<span style='font-size:18sp;color:#FFFFFF;'>¥ </span><span style='font-size:16sp;color:#FF6010'>$promotionLabel</span>\",\n" +
             "\t\t\"textStyle\": {\n" +
             "\t\t\t\"borderColor\": \"#FF6010\"\n" +
             "\t\t}\n" +
