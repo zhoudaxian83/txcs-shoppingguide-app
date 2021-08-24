@@ -28,8 +28,8 @@ public class CardHeadIAtomicCardProcessor implements IAtomicCardProcessor {
 
 
 
-    public static final String TEMPLATE_JSON_NEW = "{\n" +
-            "    \"data\": {\n" +
+    public static final String TEMPLATE_JSON_NEW =
+            "{\n" +
             "        \"//\":\"图片标题 - 即今日福利\",\n" +
             "        \"image\": \"https://gw.alipayobjects.com/mdn/rms_5bd46e/afts/img/A*gKwGToTcNHEAAAAAAAAAAAAAARQnAQ\",\n" +
             "        \"//\":\"不用动\",\n" +
@@ -48,10 +48,7 @@ public class CardHeadIAtomicCardProcessor implements IAtomicCardProcessor {
             "        \"hasBottomDivider\": \"true\",\n" +
             "        \"//\":\"右侧金钱图片，可以直接copy这个值\",\n" +
             "        \"rightImage\": \"$bgPic\"\n" +
-            "    },\n" +
-            "    \"templateId\": \"CSDTemplate_Special_Supply_Header\",\n" +
-            "    \"templateVersion\": 2\n" +
-            "}";
+            "    }";
 
     @Override
     public String atomicCardId() {
