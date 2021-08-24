@@ -44,7 +44,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 //            "\t\"complexTitle\": \"<span style='font-size:13sip;color:#333333'>超长标题看看超过两行会怎么样</span>\",\n" +
             "\t\"tagLeftTextV2\": \"<span style='font-size:12sp;color:#FFFFFF;'>$promotionPrice</span>\",\n" +
             "\t\"tagRightTextV2\": \"<span style='font-size:15sp;color:#FF2F23'>抢</span>\",\n" +
-            "\t\"originalPrice\": \"$originPrice\",\n" +
+//            "\t\"originalPrice\": \"$originPrice\",\n" +
             "\t\"originalPriceStyle\": {\n" +
             "\t\t\"color\": \"#ccffffff\",\n" +
             "\t\t\"fontSize\": \"10sp\",\n" +
@@ -66,36 +66,6 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
         "\t\"items\": [],\n" +
         "\t\"spmC\": \"xxx\"\n" +
         "}";
-
-
-    private static final String ITEM_TEMPLATE =
-            "{\n" +
-                    "\t\"image\": \"$itemImg\",\n" +
-                    "\t\"action\": \"{\\\"type\\\":\\\"jump\\\",\\\"link\\\":\\\"$url\\\"}\",\n" +
-                    "\t\"title\": \"<span style=\\\\\\\"font-size:26;color:#333333\\\\\\\">$itemTitle</span>\",\n" +
-                    "\t\"topLabelStyle\": {\n" +
-                    "\t\t\"backgroundColor\": \"#FFFFFF\"\n" +
-                    "\t},\n" +
-                    "\t\"originalPrice\": \"￥$originPrice\",\n" +
-                    "\t\"originalPriceStyle\": {\n" +
-                    "\t\t\"color\": \"#FFFFFF\",\n" +
-                    "\t\t\"fontSize\": \"10sp\",\n" +
-                    "\t\t\"textDecoration\": \"line-through\"\n" +
-                    "\t},\n" +
-                    "\t\"pureStringTextStyle\": {\n" +
-                    "\t\t\"backgroundColor\": \"#FFFFFF\"\n" +
-                    "\t},\n" +
-                    "\t\"scm\": \"xxxx\",\n" +
-                    "\t\"remoteLogExt\": \"xxx\",\n" +
-                    "\t\"saleTags\": [{\n" +
-                    "\t\t\t\"text\": \"<span style=\\\"font-size:10sp;color:#FF6010\\\">$promotionLabel</span>\",\n" +
-                    "\t\t\t\"textStyle\": {\n" +
-                    "\t\t\t\t\"borderColor\": \"#FF6010\"\n" +
-                    "\t\t\t}\n" +
-                    "\t\t}\n" +
-                    "\t]\n" +
-                    "}";
-
 
 
 //        result.put("title", iteminfo.getItemDTO().getTitle());
