@@ -238,7 +238,6 @@ public class SxlItemRecService {
      */
     private String getAbData(Context context){
         StringBuilder itemSetIdType = new StringBuilder();
-        LOGGER.error("itemSetIdType:{}", JSON.toJSONString(itemSetIdType));
         try {
             LOGGER.error("context.getParams().get(AB_TEST_RESULT):{}", context.getParams().get(AB_TEST_RESULT));
             if(context.getParams().get(AB_TEST_RESULT) == null
