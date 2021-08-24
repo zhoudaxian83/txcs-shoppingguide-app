@@ -10,7 +10,9 @@ public class Constants {
 
     public static final String ALL_FRESH_ITEMSET_ID = "198684";
 
-    public static final String APP_ID = "22171";
+    public static final String APP_ID = "27154";
 
+    public static final String SOURCE_CHANEL_MMC_HALF_DAY = "mmc-halfday";
 
+    public static final String SOURCE_CHANEL_MMC_ONE_HOUR = "mmc-onehour";
 }

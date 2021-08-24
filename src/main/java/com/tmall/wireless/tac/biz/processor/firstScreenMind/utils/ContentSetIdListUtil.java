@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections.set.MapBackedSet;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -98,6 +100,29 @@ public class ContentSetIdListUtil {
                 getLongWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING));
 
         return result.stream().filter(contentSetId -> contentSetId > 0).collect(Collectors.toList());
+    }
+
+    /**
+     * 构建tpp曝光过滤的内容id
+     * @param requestParams
+     * @return
+     */
+    public static Map<String,Object> getExposureContentIds(Map<String, Object> requestParams){
+        Map<String,Object> exposureDataMap = Maps.newHashMap();
+        Map<String,Object> exposureContentInfoMap = Maps.newHashMap();
+        List<Long> exposureContentIds = getLongWithDefault(requestParams,RequestKeyConstantApp.FIRST_SCREEN_EXPOSURE_CONTENT_IDS);
+        if(CollectionUtils.isEmpty(exposureContentIds)){
+            return exposureDataMap;
+        }
+        Map[] contentIdArry = new Map[exposureContentIds.size()];
+        for(int i=0;i<exposureContentIds.size();i++){
+            Map<String,Object> contentIdMap = Maps.newHashMap();
+            contentIdMap.put("contentId",exposureContentIds.get(i));
+            contentIdArry[i] = contentIdMap;
+        }
+        exposureContentInfoMap.put("exposureContentInfo",contentIdArry);
+        exposureDataMap.put("exposureData",exposureContentInfoMap);
+        return exposureDataMap;
     }
 
     /**

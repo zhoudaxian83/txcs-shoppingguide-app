@@ -26,6 +26,7 @@ import com.taobao.freshx.homepage.client.domain.ItemRecallModeDO;
 import com.taobao.freshx.homepage.client.domain.ItemType;
 import com.taobao.freshx.homepage.client.domain.RecallType;
 import com.taobao.poi2.client.result.StoreResult;
+import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -107,7 +108,7 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             itemRecallModeDO.setExtendData(extendDataMap);
             itemRecallModeDO.setType(RecallType.ASSIGN_ITEM_ID);
             Long totalEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("MmcItemQueryHandler inner|totalCost" + (totalEnd - totalStart))
+            HadesLogUtil.stream("MmcItemQueryHandler inner|totalCost|" + (totalEnd - totalStart))
                 .kv("totalCost", String.valueOf(totalEnd - totalStart))
                 .error();
             HadesLogUtil.stream("MmcItemQueryHandler inner|main process|success")
@@ -182,9 +183,12 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
             if (MapUtils.isNotEmpty(aldResponseMap)) {
                 ResResponse resResponse = aldResponseMap.get(MMC_HOT_ITEM_ALD_RES_ID);
                 if (resResponse != null) {
-                    List<Map<String, Object>> dataList = (List<Map<String, Object>>)aldResponseMap.get(
-                        MMC_HOT_ITEM_ALD_RES_ID)
-                        .get("data");
+                    Object data = resResponse.get("data");
+                    HadesLogUtil.stream("MmcItemQueryHandler inner|resResponse.get(data)|")
+                        .kv("request", JSON.toJSONString(request))
+                        .kv("data", JSON.toJSONString(data))
+                        .error();
+                    List<Map<String, Object>> dataList = (List<Map<String, Object>>)data;
                     if (CollectionUtils.isNotEmpty(dataList)) {
                         List<ItemDO> oldItemIdList = dataList.stream().map(e -> {
                             Long contentId = Long.valueOf(String.valueOf(e.get("contentId")));
@@ -264,6 +268,10 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
 
     }
 
+    private static String aldUrl = "https://ald-lamp.tmall.com/recommend?resIds=%s&_d=true&rp_%s=userId"
+        + ":%s;csa:%s&locationInfo"
+        + ".wdkCodes=%s";
+
     public static void main(String[] args) {
         //List<ItemDO> oldItemIdList = new ArrayList<>();
         //ItemDO itemDO1 = new ItemDO();
@@ -278,10 +286,10 @@ public class MmcItemQueryHandler implements TacHandler<ItemRecallModeDO> {
         //System.out.println("原始:" + JSON.toJSONString(oldItemIdList));
         //removeDuplicateItems(oldItemIdList);
         //System.out.println("去重后："+JSON.toJSONString(oldItemIdList));
-        Long time = 0L;
+
+        System.out.println(String.format(aldUrl, "1111", "1111", 1832025789, "3333", "SG_TMCS_HALF_DAY_DS:3333"));
 
     }
-
 
 
 }

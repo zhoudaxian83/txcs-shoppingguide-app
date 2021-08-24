@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.ext;
 
 import com.alibaba.cola.extension.Extension;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
@@ -20,14 +21,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author haixiao.zhang
  * @date 2021/7/6
  */
 @Extension(bizId = ScenarioConstant.BIZ_TYPE_SUPERMARKET,
-    useCase = ScenarioConstant.LOC_TYPE_B2C,
-    scenario = ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+        useCase = ScenarioConstant.LOC_TYPE_B2C,
+        scenario = ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
 @Service
 public class SxlOriginDataPostProcessorExtPt implements OriginDataPostProcessorExtPt {
 
@@ -44,30 +46,37 @@ public class SxlOriginDataPostProcessorExtPt implements OriginDataPostProcessorE
 
         tacLogger.info("SxlOriginDataPostProcessorExtPt index:"+index);
 
-        if(StringUtils.isBlank(topItemIds) || index > 0){
+        if(StringUtils.isBlank(topItemIds)){
             return originDataDTO;
-        }else{
+        }
+
+        List<String> topItemIdListString = Splitter.on(",").trimResults().omitEmptyStrings().splitToList(topItemIds);
+
+        List<Long> topItemIdList = topItemIdListString.stream().filter(StringUtils::isNumeric).map(Long::valueOf).collect(Collectors.toList());
+
+        List<ItemEntity> topItemEntityList = topItemIdList.stream().map(itemId -> {
             ItemEntity itemEntity = new ItemEntity();
-            itemEntity.setItemId(Long.valueOf(topItemIds.split(",")[0]));
+            itemEntity.setItemId(itemId);
             itemEntity.setBizType(BizType.SM.getCode());
             itemEntity.setO2oType(O2oType.B2C.name());
             itemEntity.setBusinessType(O2oType.B2C.name());
-            originDataDTO.getResult().add(0,itemEntity);
-        }
+            return itemEntity;
+        }).collect(Collectors.toList());
 
         List<ItemEntity> finalItemEntities = Lists.newArrayList();
-        Set<String> itemUniqueKeySet = Sets.newHashSet();
-        originDataDTO.getResult().forEach(itemEntity -> {
-            String itemId = String.valueOf(itemEntity.getItemId());
-            if (itemUniqueKeySet.contains(itemId)) {
-                return;
-            }
-            itemUniqueKeySet.add(itemId);
-            finalItemEntities.add(itemEntity);
 
+        if (index == 0) {
+            finalItemEntities.addAll(topItemEntityList);
+        }
+        List<ItemEntity> originList = Optional.of(originDataDTO).map(OriginDataDTO::getResult).orElse(Lists.newArrayList());
+
+        originList.forEach(itemEntity -> {
+            if (!topItemIdList.contains(itemEntity.getItemId())) {
+                finalItemEntities.add(itemEntity);
+            }
         });
+
         originDataDTO.setResult(finalItemEntities);
-        //acLogger.info("SxlOriginDataPostProcessorExtPt originDataDTO:"+ JSON.toJSONString(finalItemEntities));
 
         return originDataDTO;
 
