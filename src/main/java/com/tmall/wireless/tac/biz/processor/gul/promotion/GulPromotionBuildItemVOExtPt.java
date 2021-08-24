@@ -7,6 +7,7 @@ import com.alibaba.cola.extension.Extension;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.origindate.ItemInfoBySourceDTOOrigin;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVOExtPt;
@@ -83,6 +84,10 @@ public class GulPromotionBuildItemVOExtPt implements BuildItemVOExtPt {
         itemEntityVO.put("itemUrl", itemUrl);
 
         if (!canBuy) {
+            HadesLogUtil.stream(ScenarioConstantApp.GUL_PROMOTION)
+                .kv("GulPromotionBuildItemVOExtPt","process")
+                .kv("ItemId",itemEntityVO.getItemId().toString())
+                .info();
             return Response.fail("ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F");
         }
 
