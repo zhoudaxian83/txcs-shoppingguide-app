@@ -123,7 +123,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         params.put("appId", String.valueOf(SCENE_RECOMMEND_APPID));
 
         //把处理好的静态数从新设置一下，后面还需要
-        userParams.put("dealStaticDataList", JSON.toJSONString(dealStaticDataList));
+        userParams.put("dealStaticDataList", dealStaticDataList);
 
     }
 
