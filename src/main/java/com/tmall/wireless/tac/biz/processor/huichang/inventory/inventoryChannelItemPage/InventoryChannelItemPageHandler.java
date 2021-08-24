@@ -26,12 +26,13 @@ import com.tmall.wireless.tac.dataservice.log.TacLogConsts;
 import io.reactivex.Flowable;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
 
-@Service
+@Component
 public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
     @Autowired
     HallCommonItemRequestProxy hallCommonItemRequestProxy;

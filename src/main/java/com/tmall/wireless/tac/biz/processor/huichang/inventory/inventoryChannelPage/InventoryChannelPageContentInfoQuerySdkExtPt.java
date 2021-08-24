@@ -50,7 +50,6 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
     public static final String defaultLogAreaId = "107";
 
     private static final String ACTIVITY_SCENE_PREFIX = "tcls_ugc_scene_v1_";
-    private static final String CUSTOMER_SUM_PREFIX = "customerSum_";
     @Override
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
         // Todo likunlin
@@ -87,7 +86,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
                 tacLogger.debug("请求Captain返回结果: " + JSONObject.toJSONString(sceneDTOList));
                 sceneDTOList.forEach(
                         sceneDTO -> {
-                            captainsContent.put(Long.valueOf(sceneDTO.getId()), parseCaptainResult(sceneDTO, sgFrameworkContextContent));
+                            captainsContent.put(Long.valueOf(sceneDTO.getId()), parseCaptainResult(sceneDTO, contentEntityListMap, sgFrameworkContextContent));
 
                         }
                 );
@@ -105,18 +104,22 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
             return Flowable.just(Response.fail("captain error"));
         }
     }
-    private ContentInfoDTO parseCaptainResult(SceneDTO sceneDTO, SgFrameworkContextContent sgFrameworkContextContent) {
+    private ContentInfoDTO parseCaptainResult(SceneDTO sceneDTO, Map<Long, ContentEntity> contentEntityListMap, SgFrameworkContextContent sgFrameworkContextContent) {
         Context context = sgFrameworkContextContent.getTacContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald) context;
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
+        ContentEntity contentEntity = contentEntityListMap.get(Long.valueOf(sceneDTO.getId()));
 
         Map<String, Object> contentMap = Maps.newHashMap();
-        contentMap.put("id", sceneDTO.getId());
-        contentMap.put("title",sceneDTO.getTitle());
-        contentMap.put("subtitle",sceneDTO.getSubtitle());
+        contentMap.put("contentId", sceneDTO.getId());
+        contentMap.put("contentTitle",sceneDTO.getTitle());
+        contentMap.put("contentSubTitle",sceneDTO.getSubtitle());
+        contentMap.put("itemSetIds", sceneDTO.getSetIds()); // 默认返回setId列表
+//        contentMap.put("contentPic", ) //Todo 是avatarUrl还是bannerUrl
+//        contentMap.put("contentType",) //Todo
+        contentMap.put("scm", contentEntity.getTrack_point()); //Todo
         contentMap.put("marketChannel",sceneDTO.getMarketChannel());
         contentMap.put("setSource", sceneDTO.getMarketChannel());
-        contentMap.put("setId", sceneDTO.getSetIds().get(0)); // 默认返回setId列表
         String urlParam = "";
 
         urlParam = PageUrlUtil.addParams(urlParam, "sceneId", String.valueOf(sceneDTO.getId()));
