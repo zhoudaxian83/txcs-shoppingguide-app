@@ -77,7 +77,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
     private void buildTppParams(Map<String, String> params, Map<String, Object> aldParam,
         Map<String, Object> aldContext, Map<String, Object> userParams) {
         params.put("index", "0");
-        params.put("pageSize", "1"); //
+        params.put("pageSize", "2"); //
 
         String smAreaId = MapUtil.getStringWithDefault(aldParam, HallCommonAldConstant.SM_AREAID, "330100");
         params.put("smAreaId", smAreaId);
