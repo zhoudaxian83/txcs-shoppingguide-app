@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -106,6 +107,10 @@ public class GulPromotionBuildItemVOExtPt implements BuildItemVOExtPt {
                 itemEntityVO.put("contentType", 0);
             }
         }
+        HadesLogUtil.stream(ScenarioConstantApp.GUL_PROMOTION)
+            .kv("GulPromotionBuildItemVOExtPt","process")
+            .kv("itemEntityVO", JSON.toJSONString(itemEntityVO))
+            .info();
         return Response.success(itemEntityVO);
     }
     private boolean canBuy(ItemInfoBySourceDTOMain itemInfoBySourceDTO) {
