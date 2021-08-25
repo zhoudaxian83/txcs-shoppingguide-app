@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -84,10 +85,13 @@ public class GulPromotionBuildItemVOExtPt implements BuildItemVOExtPt {
         itemEntityVO.put("itemUrl", itemUrl);
 
         if (!canBuy) {
-            HadesLogUtil.stream(ScenarioConstantApp.GUL_PROMOTION)
-                .kv("GulPromotionBuildItemVOExtPt","process")
-                .kv("ItemId",itemEntityVO.getItemId().toString())
-                .info();
+            if(itemEntityVO.get("itemId") != null){
+                HadesLogUtil.stream(ScenarioConstantApp.GUL_PROMOTION)
+                    .kv("GulPromotionBuildItemVOExtPt","process")
+                    .kv("canBuy filter ItemId",itemEntityVO.get("itemId").toString())
+                    .kv("Response","ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F")
+                    .info();
+            }
             return Response.fail("ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F");
         }
 
