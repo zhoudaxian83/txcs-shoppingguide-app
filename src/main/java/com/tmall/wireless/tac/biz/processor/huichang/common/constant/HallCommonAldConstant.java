@@ -39,6 +39,9 @@ public class HallCommonAldConstant {
     public static final String LOGIC_AREA_ID = "logicAreaId";
     public static final String CSA = "csa";
     public static final String LOC_TYPE = "locType";
+    public static final String PAGE_SIZE = "pageSize";
+    public static final String PAGE_INDEX = "pageIndex";
+
     //-----------------aldParams end--------------------
 
 }

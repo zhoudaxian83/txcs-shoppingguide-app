@@ -7,10 +7,12 @@ import com.alibaba.cola.extension.Extension;
 import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
+import com.tmall.tcls.gs.sdk.ext.annotation.SdkPackage;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.context.ContentUserCommonParamsBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
 import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
+import com.tmall.tcls.gs.sdk.framework.model.context.PageInfoDO;
 import com.tmall.tcls.gs.sdk.framework.model.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
@@ -18,11 +20,8 @@ import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.lang3.StringUtils;
 
-@Extension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
-    useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
-    scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO)
+@SdkPackage(packageName = HallScenarioConstant.HALL_SDK_PACKAGE)
 public class HallCommonContentUserCommonParamsBuildSdkExtPt implements ContentUserCommonParamsBuildSdkExtPt {
-
 
     @Override
     public CommonUserParams process(Context context) {
@@ -37,10 +36,16 @@ public class HallCommonContentUserCommonParamsBuildSdkExtPt implements ContentUs
         userDO.setNick(userNick);
         commonUserParams.setUserDO(userDO);
 
-        Long smAreaId = MapUtil.getLongWithDefault(aldParam, RequestKeyConstant.SMAREAID, 330100L);
-        commonUserParams.setLocParams(parseCsaObj(aldParam.get(RequestKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
+        Long smAreaId = MapUtil.getLongWithDefault(aldParam, HallCommonAldConstant.SM_AREAID, 330100L);
+        commonUserParams.setLocParams(parseCsaObj(aldParam.get(HallCommonAldConstant.CSA), smAreaId));
 
-        //todo 雾列 补充分页信息
+        Integer pageSize = MapUtil.getIntWithDefault(aldContext, HallCommonAldConstant.PAGE_SIZE, 20);
+        Integer pageIndex = MapUtil.getIntWithDefault(aldContext, HallCommonAldConstant.PAGE_INDEX, 1);
+
+        PageInfoDO pageInfoDO = new PageInfoDO();
+        pageInfoDO.setPageSize(pageSize);
+        pageInfoDO.setIndex(pageIndex);
+        commonUserParams.setUserPageInfo(pageInfoDO);
 
         return commonUserParams;
     }

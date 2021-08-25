@@ -9,6 +9,11 @@ public class HallScenarioConstant {
     //二级：B2C/O2O
     //三级：规范：前缀 HALL_SCENARIO_SCENARIO_XXX
 
+
+
+    public static final String HALL_SDK_PACKAGE = "hall_package";
+
+
     public static final String HALL_SCENARIO_BIZ_ID = "hall";
     public static final String HALL_SCENARIO_USE_CASE_B2C = "B2C";
     public static final String HALL_SCENARIO_USE_CASE_O2O = "O2O";
