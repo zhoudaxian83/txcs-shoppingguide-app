@@ -6,7 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.tradecsa.common.service.spi.request.MiddlePageClientRequestDTO;
 import com.alipay.tradecsa.common.service.spi.request.MiddlePageSPIRequest;
 import com.alipay.tradecsa.common.service.spi.response.PageFloorAtomicResultDTO;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.AtomicCardProcessRequest;
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.IAtomicCardProcessor;
@@ -14,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
     public static final String PLACE_HOLDER_ITEM_TITTLE = "$itemTitle";
     public static final String PLACE_HOLDER_ITEM_IMG = "$itemImg";
     public static final String PLACE_HOLDER_ITEM_URL = "$url";
+    public static final String PLACE_HOLDER_ITEM_SCM = "$SCM";
     public static final String PLACE_HOLDER_ITEM_PROMOTION_LABEL = "$promotionLabel";
     public static final String PLACE_HOLDER_ITEM_ORIGIN_PRICE = "$originPrice";
     public static final String PLACE_HOLDER_ITEM_PROMOTION_PRICE = "$promotionPrice";
@@ -65,7 +69,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
             "\t\t\"fontSize\": \"10sp\",\n" +
             "\t\t\"textDecoration\": \"line-through\"\n" +
             "\t},\n" +
-            "\t\"scm\": \"a1001.b1001.product.631609210471.0be91e0416121510059374417eb10a.KOUBEI.CSDTemplate_koubei_5zhe_2line6.tradecsa__a933df203250ad1ff35c..222757029\",\n" +
+            "\t\"scm\": \"$scm\",\n" +
             "\t\"tagImage\": \"https://gw.alipayobjects.com/mdn/rms_5bd46e/afts/img/A*7PK3R6MjqtMAAAAAAAAAAAAAARQnAQ\"\n" +
             "}";
 
@@ -132,12 +136,19 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 //        result.put("promotionPoint", getPromotionPoint(itemInfoBySourceCaptainDTO));
 
     private JSONObject convert(ItemEntityVO itemEntityVO, GeneralItem aldData) {
+
+        Map<String, String> scmMap = Maps.newHashMap();
+        scmMap.put("uid", "357133924");
+        scmMap.put("iid", "357133924");
+        scmMap.put("abid", "357133924");
+        String scm = Joiner.on(",").withKeyValueSeparator(":").join(scmMap);
         String replace = TEMPLATE_ITEM.replace(PLACE_HOLDER_ITEM_IMG, itemEntityVO.getString("itemImg"))
                 .replace(PLACE_HOLDER_ITEM_TITTLE, itemEntityVO.getString("shortTitle"))
                 .replace(PLACE_HOLDER_ITEM_URL, "https:" + itemEntityVO.getString("itemUrl"))
                 .replace(PLACE_HOLDER_ITEM_ORIGIN_PRICE, itemEntityVO.getString("chaoshiPrice"))
                 .replace(PLACE_HOLDER_ITEM_PROMOTION_LABEL, getPromotionPoint(aldData, itemEntityVO))
                 .replace(PLACE_HOLDER_ITEM_PROMOTION_PRICE, itemEntityVO.getString("showPrice"))
+                .replace(PLACE_HOLDER_ITEM_SCM, scm)
                 ;
 
 
