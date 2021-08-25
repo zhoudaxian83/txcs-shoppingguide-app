@@ -48,8 +48,11 @@ public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register i
 
         Map<String, Object> stringObjectMap = groupAndBrandMapping.values().stream().findFirst().orElse(Maps.newHashMap());
 
-        List<String> contentSetIdList = stringObjectMap.values().stream().map(Object::toString).collect(Collectors.toList());
-
+        List<Integer> contentSetIdList = Lists.newArrayList();
+        stringObjectMap.values().stream().forEach(setIdList -> {
+            List<Integer> setIds = (List<Integer>) setIdList;
+            contentSetIdList.addAll(setIds);
+        });
         RecommendRequest tppRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
         tppRequest.setParams(params);
