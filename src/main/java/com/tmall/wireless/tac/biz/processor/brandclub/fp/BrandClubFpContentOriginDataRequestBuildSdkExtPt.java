@@ -15,6 +15,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.client.domain.Enviroment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,9 +31,22 @@ import java.util.stream.Collectors;
 @Service
 public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
 
+    @Autowired
+    BrandContentSetIdService brandContentSetIdService;
 
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
+
+        Long brandId = Optional.of(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getUserParams)
+                .map(m -> m.get("brandId")).map(Object::toString).map(Long::valueOf).orElse(0L);
+        Map<String, Map<String, Object>> groupAndBrandMapping =
+                brandContentSetIdService.getGroupAndBrandMapping(Lists.newArrayList(brandId));
+
+        Map<String, Object> stringObjectMap = groupAndBrandMapping.values().stream().findFirst().orElse(Maps.newHashMap());
+
+        List<String> contentSetIdList = stringObjectMap.values().stream().map(Object::toString).collect(Collectors.toList());
+
         RecommendRequest tppRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
         tppRequest.setParams(params);
@@ -43,7 +57,6 @@ public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register i
         tppRequest.setAppId(25379L);
 
 
-        List<Long> contentSetIdList = Lists.newArrayList(182011L);
         List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id)
                 .collect(
                         Collectors.toList());
