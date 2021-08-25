@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,6 @@ import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenari
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.URLUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
-import org.elasticsearch.common.inject.internal.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -68,10 +66,11 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
             }
             for(ContentVO contentVO : itemAndContentList){
                 String urlParams = contentVO.getString("urlParams");
-                contentVO.put("urlParams", urlParams + "&filterContentIds=" + Join.join(",", filterContentIds));
+                contentVO.put("urlParams", urlParams + "&filterContentIds=" + String.join(",", filterContentIds));
             }
         }
         return contentVOSgFrameworkResponse;
     }
+
 
 }
