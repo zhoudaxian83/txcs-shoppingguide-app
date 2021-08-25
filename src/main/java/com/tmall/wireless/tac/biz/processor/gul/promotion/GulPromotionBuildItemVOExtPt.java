@@ -36,10 +36,6 @@ import org.springframework.stereotype.Service;
 public class GulPromotionBuildItemVOExtPt implements BuildItemVOExtPt {
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
-        HadesLogUtil.stream(ScenarioConstantApp.GUL_PROMOTION)
-            .kv("GulPromotionBuildItemVOExtPt","process")
-            .kv("buildItemVoRequest", JSON.toJSONString(buildItemVoRequest))
-            .info();
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         itemEntityVO.put("contentType", 0);
         boolean hasMainSource = false;
