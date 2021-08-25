@@ -50,8 +50,8 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
                 HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE);
         bizScenario.addProducePackage("huichang");
         Flowable<TacResult<List<GeneralItem>>> itemVOs = hallCommonItemRequestProxy.recommend(requestContext4Ald, bizScenario);
-        SceneDTO sceneDTO = getScenesInfoFromCaptain(requestContext4Ald, tacLogger);
-        GeneralItem sceneGeneralItem = buildSceneGeneralItem(sceneDTO, tacLogger);
+        SceneDTO sceneDTO = getScenesInfoFromCaptain(requestContext4Ald);
+        GeneralItem sceneGeneralItem = buildSceneGeneralItem(sceneDTO);
         List<GeneralItem> generalItemList = itemVOs.blockingFirst().getData();
         if(CollectionUtils.isNotEmpty(generalItemList)){
             generalItemList.get(0).put("extInfos", sceneGeneralItem);
@@ -59,7 +59,7 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         return Flowable.just(TacResult.newResult(generalItemList));
     }
 
-    private SceneDTO getScenesInfoFromCaptain(RequestContext4Ald requestContext4Ald, TacLogger tacLogger) throws Exception {
+    private SceneDTO getScenesInfoFromCaptain(RequestContext4Ald requestContext4Ald) throws Exception {
         tacLogger.debug("组装场景信息");
         final String ACTIVITY_SCENE_PREFIX = "tcls_ugc_scene_v1_";
         final Long defaultSmAreaId = 310100L;
@@ -117,10 +117,11 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
             throw new Exception("渲染场景数据异常", e);
         }
     }
-    private GeneralItem buildSceneGeneralItem(SceneDTO sceneDTO, TacLogger tacLogger){
+    private GeneralItem buildSceneGeneralItem(SceneDTO sceneDTO) throws Exception {
         GeneralItem item = new GeneralItem();
         if(sceneDTO == null) {
             tacLogger.debug("场景渲染信息为空");
+            throw new Exception("场景渲染信息为空");
         }
         item.put("contentId", sceneDTO.getId());
         item.put("contentTitle",sceneDTO.getTitle());

@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannel
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -16,6 +17,7 @@ import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
+import lombok.SneakyThrows;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,42 +37,54 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
     @Override
     public OriginDataDTO<ContentEntity> process(ContentOriginDataProcessRequest contentOriginDataProcessRequest) {
         tacLogger.debug("扩展点InventoryChannelPageContentOriginDataPostProcessorSdkExtPt");
-        SgFrameworkContextContent sgFrameworkContextContent = Optional.of(contentOriginDataProcessRequest.getSgFrameworkContextContent()).orElse(new SgFrameworkContextContent());
-        OriginDataDTO<ContentEntity> contentEntityOriginDataDTO = Optional.of(contentOriginDataProcessRequest.getContentEntityOriginDataDTO()).orElse(new OriginDataDTO<ContentEntity>());
-        List<ContentEntity> contentEntityList =  Optional.of(contentEntityOriginDataDTO).map(OriginDataDTO::getResult).orElse(Lists.newArrayList());
-        tacLogger.debug("调顺序之前 " + JSONObject.toJSONString(contentEntityList));
-        RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextContent.getTacContext());
-        Map<String, Object> aldParams = requestContext4Ald.getAldParam();
-        String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemRecommand", tacLogger); // 为你推荐商品
-
-        String pageIndex = PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger);
-        if(StringUtils.isBlank(pageIndex)) {
-            pageIndex = "0";
+        OriginDataDTO<ContentEntity> contentEntityOriginDataDTO = new OriginDataDTO<>();
+        List<ContentEntity> contentEntityList = Lists.newArrayList();
+        contentEntityOriginDataDTO.setResult(contentEntityList);
+        try{
+            contentEntityOriginDataDTO = contentOriginDataProcessRequest.getContentEntityOriginDataDTO();
+            contentEntityList = contentEntityOriginDataDTO.getResult();
+            if(CollectionUtils.isEmpty(contentEntityList)) {
+                throw new Exception("contentEntityList为空");
+            }
+            tacLogger.debug("调顺序之前 " + JSONObject.toJSONString(contentEntityList));
+        } catch (Exception e) {
+            tacLogger.debug("场景信息解析出错：" + StackTraceUtil.stackTrace(e));
+            return contentEntityOriginDataDTO;
         }
 
-        if(StringUtils.isNotBlank(itemRecommand) && "0".equals(pageIndex)) {
-            ItemEntity itemRecommandEntity = new ItemEntity();
-            itemRecommandEntity.setItemId(Long.valueOf(itemRecommand));
-            String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
-            String detailLocType = getDetailLocType(locType, aldParams);
-            itemRecommandEntity.setO2oType(detailLocType);
-            itemRecommandEntity.setBusinessType(detailLocType);
-            itemRecommandEntity.setBizType(BizType.SM.getCode());
-//            itemRecommandEntity.setTop(true); // Todo likunlin
+        try{
+            SgFrameworkContextContent sgFrameworkContextContent = contentOriginDataProcessRequest.getSgFrameworkContextContent();
+            RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextContent.getTacContext());
+            Map<String, Object> aldParams = requestContext4Ald.getAldParam();
+            String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryItemId", tacLogger); // 为你推荐商品
 
-            if(CollectionUtils.isNotEmpty(contentEntityList)) {
-                List<ItemEntity> itemEntityList = Optional.ofNullable(contentEntityList.get(0)).map(contentEntityList1 -> contentEntityList1.getItems()).orElse(new ArrayList<ItemEntity>());
-                List<ItemEntity> newItemEntityList = Lists.newArrayList();
-                newItemEntityList.add(itemRecommandEntity);
-                for(ItemEntity itemEntity: itemEntityList) {
-                    if(!itemEntity.getItemId().equals(itemRecommandEntity.getItemId())) {
-                        newItemEntityList.add(itemEntity);
+            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 0));
+
+            if(StringUtils.isNotBlank(itemRecommand) && pageIndex == 0) { // 第一页的第一个场景需要插入为你推荐商品以及过滤为你推荐商品
+                ItemEntity itemRecommandEntity = new ItemEntity();
+                itemRecommandEntity.setItemId(Long.valueOf(itemRecommand));
+                String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
+                String detailLocType = getDetailLocType(locType, aldParams);
+                itemRecommandEntity.setO2oType(detailLocType);
+                itemRecommandEntity.setBusinessType(detailLocType);
+                itemRecommandEntity.setBizType(BizType.SM.getCode());
+
+                if(CollectionUtils.isNotEmpty(contentEntityList)) {
+                    // 第一个场景的商品列表
+                    List<ItemEntity> itemEntityList = Optional.ofNullable(contentEntityList.get(0)).map(contentEntityList1 -> contentEntityList1.getItems()).orElse(new ArrayList<ItemEntity>());
+                    List<ItemEntity> newItemEntityList = Lists.newArrayList();
+                    newItemEntityList.add(itemRecommandEntity);
+                    for(ItemEntity itemEntity: itemEntityList) {
+                        if(!itemEntity.getItemId().equals(itemRecommandEntity.getItemId())) {
+                            newItemEntityList.add(itemEntity);
+                        }
                     }
+                    contentEntityList.get(0).setItems(newItemEntityList);
                 }
-                contentEntityList.get(0).setItems(newItemEntityList);
+                contentEntityOriginDataDTO.setResult(contentEntityList);
             }
-
-            contentEntityOriginDataDTO.setResult(contentEntityList);
+        } catch (Exception e) {
+            tacLogger.debug("场景重排序失败,使用原来顺序" + StackTraceUtil.stackTrace(e));
         }
         tacLogger.debug("调顺序之后 " + JSONObject.toJSONString(contentEntityOriginDataDTO.getResult()));
         return contentEntityOriginDataDTO;
