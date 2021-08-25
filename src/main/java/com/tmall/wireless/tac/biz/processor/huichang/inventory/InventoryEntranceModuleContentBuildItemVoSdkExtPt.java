@@ -36,41 +36,49 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
     @Override
     public SgFrameworkResponse<ContentVO> process(SgFrameworkContextContent sgFrameworkContextContent) {
         tacLogger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.start");
-        SgFrameworkResponse<ContentVO> contentVOSgFrameworkResponse = super.process(sgFrameworkContextContent);
-        Map<String, Object> userParams = sgFrameworkContextContent.getUserParams();
-        String locType = MapUtil.getStringWithDefault(userParams, "locType", "B2C");
-        List<ContentVO> itemAndContentList = contentVOSgFrameworkResponse.getItemAndContentList();
-        List<String> filterContentIds = new ArrayList<>();//入口一排三  需要把入口一排三的每个清单透出的每个场景带到下一页
-        if(CollectionUtils.isNotEmpty(itemAndContentList)){
-            for (int i = 0; i < itemAndContentList.size(); i++) {
-                ContentVO contentVO = itemAndContentList.get(i);
-                Map<String, String> paramsMap = new HashMap<>();
-                String contentId = contentVO.getString("contentId");
-                paramsMap.put("entryContentIds", contentId);
-                //入口只展示三个
-                if(i < 3){
-                    filterContentIds.add(contentId);
+        SgFrameworkResponse<ContentVO> response = new SgFrameworkResponse();
+        try{
+            SgFrameworkResponse<ContentVO> contentVOSgFrameworkResponse = super.process(sgFrameworkContextContent);
+            Map<String, Object> userParams = sgFrameworkContextContent.getUserParams();
+            String locType = MapUtil.getStringWithDefault(userParams, "locType", "B2C");
+            List<ContentVO> itemAndContentList = contentVOSgFrameworkResponse.getItemAndContentList();
+            List<String> filterContentIds = new ArrayList<>();//入口一排三  需要把入口一排三的每个清单透出的每个场景带到下一页
+            if(CollectionUtils.isNotEmpty(itemAndContentList)){
+                for (int i = 0; i < itemAndContentList.size(); i++) {
+                    ContentVO contentVO = itemAndContentList.get(i);
+                    Map<String, String> paramsMap = new HashMap<>();
+                    String contentId = contentVO.getString("contentId");
+                    paramsMap.put("entryContentIds", contentId);
+                    //入口只展示三个
+                    if(i < 3){
+                        filterContentIds.add(contentId);
+                    }
+                    String contentSetId = contentVO.getString("contentSetId");
+                    paramsMap.put("contentSetId", contentSetId);
+                    paramsMap.put("locType", locType);
+                    Object items = contentVO.get("items");
+                    if(items != null){
+                        JSONArray jsonArray = JSON.parseArray(items.toString());
+                        Object singleItem = jsonArray.get(0);
+                        JSONObject jsonObject = JSON.parseObject(singleItem.toString());
+                        String itemId = jsonObject.getString("itemId");
+                        paramsMap.put("entryItemId", itemId);
+                    }
+                    String urlParamsByMap = URLUtil.getUrlParamsByMap(paramsMap);
+                    contentVO.put("urlParams", urlParamsByMap);
                 }
-                String contentSetId = contentVO.getString("contentSetId");
-                paramsMap.put("contentSetId", contentSetId);
-                paramsMap.put("locType", locType);
-                Object items = contentVO.get("items");
-                if(items != null){
-                    JSONArray jsonArray = JSON.parseArray(items.toString());
-                    Object singleItem = jsonArray.get(0);
-                    JSONObject jsonObject = JSON.parseObject(singleItem.toString());
-                    String itemId = jsonObject.getString("itemId");
-                    paramsMap.put("entryItemId", itemId);
+                for(ContentVO contentVO : itemAndContentList){
+                    String urlParams = contentVO.getString("urlParams");
+                    contentVO.put("urlParams", urlParams + "&filterContentIds=" + String.join(",", filterContentIds));
                 }
-                String urlParamsByMap = URLUtil.getUrlParamsByMap(paramsMap);
-                contentVO.put("urlParams", urlParamsByMap);
             }
-            for(ContentVO contentVO : itemAndContentList){
-                String urlParams = contentVO.getString("urlParams");
-                contentVO.put("urlParams", urlParams + "&filterContentIds=" + String.join(",", filterContentIds));
-            }
+            return contentVOSgFrameworkResponse;
+        }catch (Exception e){
+            tacLogger.error("InventoryEntranceModuleContentBuildItemVoSdkExtPt.error", e);
+            response.setErrorMsg("InventoryEntranceModuleContentBuildItemVoSdkExtPt.error");
+            return response;
         }
-        return contentVOSgFrameworkResponse;
+
     }
 
 
