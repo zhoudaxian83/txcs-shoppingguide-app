@@ -14,6 +14,7 @@ import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
+import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.Enviroment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,8 +39,10 @@ public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register i
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
 
         Long brandId = Optional.of(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getUserParams)
-                .map(m -> m.get("brandId")).map(Object::toString).map(Long::valueOf).orElse(0L);
+                .map(SgFrameworkContext::getTacContext)
+                .map(Context::getParams)
+                .map(m -> m.get("brandId"))
+                .map(Object::toString).map(Long::valueOf).orElse(0L);
         Map<String, Map<String, Object>> groupAndBrandMapping =
                 brandContentSetIdService.getGroupAndBrandMapping(Lists.newArrayList(brandId));
 
