@@ -58,7 +58,7 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
                     paramsMap.put("locType", locType);
                     Object items = contentVO.get("items");
                     if(items != null){
-                        JSONArray jsonArray = JSON.parseArray(items.toString());
+                        JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(items));
                         Object singleItem = jsonArray.get(0);
                         JSONObject jsonObject = JSON.parseObject(singleItem.toString());
                         String itemId = jsonObject.getString("itemId");
