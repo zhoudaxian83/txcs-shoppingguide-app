@@ -33,11 +33,11 @@ import java.util.stream.Collectors;
 public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Register implements ItemOriginDataPostProcessorSdkExtPt {
     @Autowired
     TacLogger tacLogger;
-    @SneakyThrows
+
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         tacLogger.debug("扩展点InventoryChannelItemPageOriginDataPostProcessorSdkExtPt");
-        OriginDataDTO<ItemEntity> itemEntityOriginDataDTO = null;
+        OriginDataDTO<ItemEntity> itemEntityOriginDataDTO = new OriginDataDTO<>();
         List<ItemEntity> itemEntityList = null;
         try{
             itemEntityOriginDataDTO = originDataProcessRequest.getItemEntityOriginDataDTO();
@@ -48,7 +48,7 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
             tacLogger.debug("商品旧顺序：" + JSONObject.toJSONString(itemEntityList));
         } catch (Exception e) {
             tacLogger.debug("商品信息解析出错：" + StackTraceUtil.stackTrace(e));
-            throw new Exception("商品信息解析出错", e);
+            return itemEntityOriginDataDTO;
         }
         try{
             SgFrameworkContextItem sgFrameworkContextItem = originDataProcessRequest.getSgFrameworkContextItem();

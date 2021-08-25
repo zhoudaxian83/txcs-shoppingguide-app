@@ -41,10 +41,10 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
     @Autowired
     TacLogger tacLogger;
 
-    @SneakyThrows
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
         tacLogger.debug("扩展点InventoryChannelItemPageOriginDataRequestBuildSdkExtPt");
+        RecommendRequest recommendRequest = new RecommendRequest();
         try{
             Context context = sgFrameworkContextItem.getTacContext();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald) context;
@@ -112,7 +112,6 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
             params.put("index", "0"); // 不要求分页
             params.put("pageSize", String.valueOf(PAGE_SIZE));
 
-            RecommendRequest recommendRequest = new RecommendRequest();
             recommendRequest.setAppId(SCENE_ITEM_RECOMMEND_APPID);
             recommendRequest.setUserId(MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, DefaultUserId));
             recommendRequest.setParams(params);
@@ -121,7 +120,7 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
             return recommendRequest;
         } catch (Exception e) {
             tacLogger.debug("扩展点InventoryChannelItemPageOriginDataRequestBuildSdkExtPt 失败" + StackTraceUtil.stackTrace(e));
-            throw new Exception("扩展点InventoryChannelItemPageOriginDataRequestBuildSdkExtPt 失败", e);
+            return recommendRequest;
         }
     }
 }

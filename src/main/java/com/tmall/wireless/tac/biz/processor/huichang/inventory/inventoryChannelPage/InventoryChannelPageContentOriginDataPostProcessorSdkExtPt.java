@@ -34,11 +34,10 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
     @Autowired
     TacLogger tacLogger;
 
-    @SneakyThrows
     @Override
     public OriginDataDTO<ContentEntity> process(ContentOriginDataProcessRequest contentOriginDataProcessRequest) {
         tacLogger.debug("扩展点InventoryChannelPageContentOriginDataPostProcessorSdkExtPt");
-        OriginDataDTO<ContentEntity> contentEntityOriginDataDTO = null;
+        OriginDataDTO<ContentEntity> contentEntityOriginDataDTO = new OriginDataDTO<>();
         List<ContentEntity> contentEntityList = null;
         try{
             contentEntityOriginDataDTO = contentOriginDataProcessRequest.getContentEntityOriginDataDTO();
@@ -49,14 +48,14 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
             tacLogger.debug("调顺序之前 " + JSONObject.toJSONString(contentEntityList));
         } catch (Exception e) {
             tacLogger.debug("场景信息解析出错：" + StackTraceUtil.stackTrace(e));
-            throw new Exception("场景信息解析出错", e);
+            return contentEntityOriginDataDTO;
         }
 
         try{
             SgFrameworkContextContent sgFrameworkContextContent = contentOriginDataProcessRequest.getSgFrameworkContextContent();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextContent.getTacContext());
             Map<String, Object> aldParams = requestContext4Ald.getAldParam();
-            String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemRecommand", tacLogger); // 为你推荐商品
+            String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryItemId", tacLogger); // 为你推荐商品
 
             int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 0));
 

@@ -44,7 +44,7 @@ public class InventoryChannelPageBuildItemVoSdkExtPt extends DefaultBuildItemVoS
             SgFrameworkContextItem sgFrameworkContextItem = buildItemVoRequest.getContext();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
             Map<String, Object> aldParams = requestContext4Ald.getAldParam();
-            String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemRecommand", tacLogger); // 为你推荐商品
+            String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryItemId", tacLogger); // 为你推荐商品
             if(StringUtils.isNotBlank(itemRecommand) && itemEntityVO.getItemId().equals(Long.valueOf(itemRecommand))) {
                 itemEntityVO.put("isRecommand", "true");
             } else {

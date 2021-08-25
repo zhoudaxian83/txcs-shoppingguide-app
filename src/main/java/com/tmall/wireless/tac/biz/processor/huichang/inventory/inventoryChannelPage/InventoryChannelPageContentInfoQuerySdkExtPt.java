@@ -108,7 +108,6 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
             tacLogger.debug("查询异常"+ StackTraceUtil.stackTrace(e));
             return Flowable.just(Response.fail("captain error"));
         }
-
     }
     private ContentInfoDTO parseCaptainResult(SceneDTO sceneDTO, Map<Long, ContentEntity> contentEntityListMap, SgFrameworkContextContent sgFrameworkContextContent) {
         Context context = sgFrameworkContextContent.getTacContext();
@@ -128,18 +127,19 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
         contentMap.put("setSource", sceneDTO.getMarketChannel());
         String urlParam = "";
 
-        urlParam = PageUrlUtil.addParams(urlParam, "sceneId", String.valueOf(sceneDTO.getId()));
-        urlParam = PageUrlUtil.addParams(urlParam, "setId", String.valueOf(sceneDTO.getSetIds().get(0)));
+        urlParam = PageUrlUtil.addParams(urlParam, "contentId", String.valueOf(sceneDTO.getId()));
+        urlParam = PageUrlUtil.addParams(urlParam, "itemSet", String.valueOf(sceneDTO.getSetIds().get(0)));
         String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
         if("B2C".equals(locType) || locType == null){
             urlParam = PageUrlUtil.addParams(urlParam, "locType", "B2C");
         }else {
             urlParam = PageUrlUtil.addParams(urlParam, "locType", "O2O");
         }
-        String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemRecommand", tacLogger);
-        if(StringUtils.isNotBlank(itemRecommand)) {
-            urlParam = PageUrlUtil.addParams(urlParam, "itemRecommand", itemRecommand);
-        }
+        // 不用在url塞为你推荐商品
+//        String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemRecommand", tacLogger);
+//        if(StringUtils.isNotBlank(itemRecommand)) {
+//            urlParam = PageUrlUtil.addParams(urlParam, "itemRecommand", itemRecommand);
+//        }
 
         contentMap.put("urlParams", urlParam);
         ContentInfoDTO contentInfoDTO = new ContentInfoDTO();

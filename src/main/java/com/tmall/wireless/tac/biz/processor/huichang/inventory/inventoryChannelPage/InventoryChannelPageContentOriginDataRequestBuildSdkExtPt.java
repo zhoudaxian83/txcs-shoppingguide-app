@@ -45,10 +45,11 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
     public static final Long APPID = 26563L;  //Todo likunlin
     private static final Long DEFAULT_USERID = 0L; // Todo likunlin
     private static final int PAGE_SIZE = 1; //Todo likunlin
-    @SneakyThrows
+
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
         tacLogger.debug("扩展点InventoryChannelPageContentOriginDataRequestBuildSdkExtPt");
+        RecommendRequest recommendRequest = new RecommendRequest();
         try{
             Context context = sgFrameworkContextContent.getTacContext();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald) context;
@@ -88,23 +89,22 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
                 }
             }
 
-            String sceneSet = PageUrlUtil.getParamFromCurPageUrl(aldParams, "sceneSet", tacLogger); // Todo likunlin
+            String sceneSet = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetId", tacLogger); // Todo likunlin
             if(!sceneSet.contains(SCENE_SET_PREFIX)) {
                 sceneSet = SCENE_SET_PREFIX + sceneSet;
             }
             params.put("sceneSet", sceneSet); // 场景集id
 
-            String sceneExclude = PageUrlUtil.getParamFromCurPageUrl(aldParams, "filter", tacLogger); // Todo likunlin
+            String sceneExclude = PageUrlUtil.getParamFromCurPageUrl(aldParams, "filterContentIds", tacLogger); // Todo likunlin
             if(StringUtils.isNotBlank(sceneExclude)) {
                 params.put("sceneExclude", sceneExclude); // 过滤的场景
             }
-
-            String sceneTop = PageUrlUtil.getParamFromCurPageUrl(aldParams, "sceneTop", tacLogger); // Todo likunlin
+            // 这个参数名就是entryContentIds，这里该参数只会带一个id
+            String sceneTop = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryContentIds", tacLogger); // Todo likunlin
             if(StringUtils.isNotBlank(sceneTop)) {
                 params.put("sceneTop", sceneTop); // 置顶的场景
             }
 
-            RecommendRequest recommendRequest = new RecommendRequest();
             recommendRequest.setAppId(APPID);
             recommendRequest.setUserId(MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, DEFAULT_USERID));
             recommendRequest.setParams(params);
@@ -113,7 +113,8 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
             return recommendRequest;
         } catch (Exception e) {
             tacLogger.debug("扩展点InventoryChannelPageOriginDataRequestBuildSdkExtPt 失败" + StackTraceUtil.stackTrace(e));
-            throw new Exception("扩展点InventoryChannelPageOriginDataRequestBuildSdkExtPt 失败", e);
+//            throw new Exception("扩展点InventoryChannelPageOriginDataRequestBuildSdkExtPt 失败", e);
+            return recommendRequest;
         }
     }
 }
