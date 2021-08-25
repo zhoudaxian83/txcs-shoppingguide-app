@@ -41,7 +41,7 @@ public class BrandClubBangdanContentOriginDataRequestBuildSdkExtPt extends Regis
         tppRequest.setAppId(25379L);
 
 
-        List<Long> contentSetIdList = Lists.newArrayList(182011L);
+        List<Long> contentSetIdList = Lists.newArrayList(160002L);
         List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id)
                 .collect(
                         Collectors.toList());
