@@ -12,16 +12,19 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.FirstScreenConstant;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author guijian
@@ -79,7 +82,7 @@ public class OriginDataRequestGcsContentFeeds implements OriginDataRequest{
         /**判断是否为纯榜单推荐，不为空则为纯榜单推荐**/
         if(CollectionUtils.isNotEmpty(ContentSetIdListUtil.getRankingList(requestParams))){
             /**剔除首页曝光过滤内容数据**/
-            Map<String,Object> exposureDataMap = ContentSetIdListUtil.getExposureContentIds(requestParams);
+            /*Map<String,Object> exposureDataMap = ContentSetIdListUtil.getExposureContentIds(requestParams);
             if(exposureDataMap != null && !exposureDataMap.isEmpty()){
                 params.put("exposureDataParams", JSON.toJSONString(exposureDataMap));
             }
@@ -88,7 +91,11 @@ public class OriginDataRequestGcsContentFeeds implements OriginDataRequest{
                 .kv("exposureDataMap",JSON.toJSONString(exposureDataMap))
                 .info();
             List<Long> rankingList = ContentSetIdListUtil.getRankingList(requestParams);
-            params.put("contentSetIdList", Joiner.on(",").join(rankingList));
+            params.put("contentSetIdList", Joiner.on(",").join(rankingList));*/
+            String exposureContentIds = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_EXPOSURE_CONTENT_IDS, "");
+            if(StringUtils.isNotBlank(exposureContentIds))  {
+                params.put("exposedContentIds", exposureContentIds);
+            }
             tppRequest.setAppId(26548L);
         }else{
             tppRequest.setAppId(23198L);
