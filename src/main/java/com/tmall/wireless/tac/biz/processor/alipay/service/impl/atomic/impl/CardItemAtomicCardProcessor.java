@@ -80,6 +80,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
         "\t\"hideTopDivider\": \"true\",\n" +
         "\t\"items\": [],\n" +
         "\t\"spmC\": \"xxx\"\n" +
+        "\t\"itemBackground\": \"#FFFFFF\"\n" +
         "}";
 
 
