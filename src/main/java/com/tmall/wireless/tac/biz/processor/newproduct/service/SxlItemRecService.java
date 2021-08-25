@@ -260,18 +260,20 @@ public class SxlItemRecService {
                 .kv("SxlItemRecService abTestRest",JSON.toJSONString(abTestRest))
                 .info();
             abTestRest.forEach(variation ->{
-                /*if(SxlSwitch.getValue("SM_NEW_ARRIVAL").equals(variation.get("bizType")) &&
-                    SxlSwitch.getValue("SXL_ALG_ITEMSET_ID_AB").equals(variation.get("tclsExpId"))){
+                String smNewArrival = (String)JSON.parse(SxlSwitch.getValue("SM_NEW_ARRIVAL"));
+                String sxlAlgItemsetIdAb = (String)JSON.parse(SxlSwitch.getValue("SXL_ALG_ITEMSET_ID_AB"));
+                if(smNewArrival.equals(variation.get("bizType")) &&
+                    sxlAlgItemsetIdAb.equals(variation.get("tclsExpId"))){
                     if(variation.get("itemSetId") != null){
-                        itemSetIdType.append(String.valueOf(variation.get("itemSetId")));
+                        itemSetIdType.append(variation.get("itemSetId"));
                     }
-                }*/
-                if("SM_NEW_ARRIVAL".equals(variation.get("bizType")) &&
+                }
+                /*if("SM_NEW_ARRIVAL".equals(variation.get("bizType")) &&
                     "102".equals(variation.get("tclsExpId"))){
                     if(variation.get("itemSetId") != null){
                         itemSetIdType.append(String.valueOf(variation.get("itemSetId")));
                     }
-                }
+                }*/
             });
         }catch (Exception e){
             HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
