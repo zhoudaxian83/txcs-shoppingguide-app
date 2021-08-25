@@ -77,6 +77,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModuleHandler"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModuleContentInfoQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModuleContentBuildItemVoSdkExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageHandler"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageBuildItemVoSdkExtPt"/>
@@ -87,6 +88,8 @@
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageHandler"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageOriginDataPostProcessorSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageOriginDataRequestBuildSdkExtPt"/>
+
+
 
     <!--内容渲染场景-->
     <bean id="entityRenderService" class="com.taobao.hsf.app.spring.util.HSFSpringConsumerBean"

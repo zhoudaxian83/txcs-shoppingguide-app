@@ -28,9 +28,9 @@ import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.contentextpt.HallCommonContentOriginDataRequestBuildSdkExtPt;
-import com.tmall.wireless.tac.biz.processor.huichang.common.util.UrlUtils;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
+import com.tmall.wireless.tac.biz.processor.huichang.common.utils.URLUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.dataservice.TacOptLogger;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -108,7 +108,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
 
             Map<String, Object> userParams = sgFrameworkContextContent.getUserParams();
             buildTppParams(tppRequestParams, aldParam, aldContext, userParams);
-            String urlParamsByMap = UrlUtils.getUrlParamsByMap(tppRequestParams);
+            String urlParamsByMap = URLUtil.getUrlParamsByMap(tppRequestParams);
             tacLogger.debug("urlParamsByMap:" + JSON.toJSONString(urlParamsByMap));
             return recommendRequest;
         }catch (Exception e){
@@ -185,6 +185,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
 
         //把处理好的静态数从新设置一下，后面还需要
         userParams.put("dealStaticDataList", dealStaticDataList);
+        userParams.put("locType", locType);
 
     }
 

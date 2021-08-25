@@ -79,11 +79,13 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
                     contentInfo.put("title", sceneDTO.getTitle());
                     contentInfo.put("subtitle", sceneDTO.getSubtitle());
                     contentInfo.put("sceneId", sceneDTO.getId());
+                    contentInfo.put("contentId", sceneDTO.getId());
 
                     //补全场景集的信息
                     String contentSetId = contentEntity.getContentSetId();
                     String[] content = contentSetId.split("_");
                     String contentSetIdStr = content[1];
+                    contentInfo.put("contentSetId", contentSetIdStr);
                     Map<String, String> staticData = staticDataMap.get(contentSetIdStr);
                     String contentSetTitle = staticData.get("contentSetTitle");
                     contentInfo.put("contentSetTitle", contentSetTitle);
