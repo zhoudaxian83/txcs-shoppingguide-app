@@ -62,7 +62,7 @@ public class IconRecommendClassifierWordOriginDataRequestExtPt implements Conten
                 .map(SgFrameworkContext::getUserPageInfo)
                 .map(PageInfoDO::getIndex).orElse(0) == 0;
         params.put("isFirstPage", String.valueOf(firstPage));
-        params.put("itemCountPerContent", "20");
+        params.put("itemCountPerContent", "21");
         params.put("contentSetIdList", "1");
         params.put("contentSetSource", "contentPlatform2000");
         recommendRequest.setParams(params);
