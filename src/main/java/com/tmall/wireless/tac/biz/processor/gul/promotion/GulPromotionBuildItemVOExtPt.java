@@ -91,7 +91,7 @@ public class GulPromotionBuildItemVOExtPt implements BuildItemVOExtPt {
         if (!canBuy) {
             HadesLogUtil.stream(ScenarioConstantApp.GUL_PROMOTION)
                 .kv("GulPromotionBuildItemVOExtPt","process")
-                .kv("ItemId",itemEntityVO.getItemId().toString())
+                .kv("ItemId",itemEntityVO.get("itemId").toString())
                 .info();
             return Response.fail("ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F");
         }
