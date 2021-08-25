@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.impl;
 
+import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.tradecsa.common.service.spi.request.MiddlePageClientRequestDTO;
@@ -9,11 +10,14 @@ import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.AtomicCardProcessRequest;
 import com.tmall.wireless.tac.biz.processor.alipay.service.impl.atomic.IAtomicCardProcessor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.tmall.wireless.tac.biz.processor.alipay.service.impl.AliPayServiceImpl.itemLabelAldKey;
 
 // 卡片六宫格商品
 @Service
@@ -31,13 +35,18 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 
 
     public static final String TEMPLATE_ITEM = "{\n" +
+
+            "\t\"containerStyle\": {\n" +
+            "\t\t\"//\": \"整个grid背景框的底色，依赖服务端下发,写成这样是为了方便写css样式代码\",\n" +
+            "\t\t\"backgroundImage\": \"linear-gradient(tobottom,#FF3D29,#FF1919)\"\n" +
+            "\t},\n" +
             "\t\"saleTags\": [{\n" +
             "\t\t\"text\": \"<span style='font-size:10sp;color:#FF6010'>$promotionLabel</span>\",\n" +
             "\t\t\"textStyle\": {\n" +
             "\t\t\t\"borderColor\": \"#FF6010\"\n" +
             "\t\t}\n" +
             "\t}],\n" +
-            "\t\"title\": \"<span style='font-size:26;color:#333333'>$itemTitle</span>\",\n" +
+//            "\t\"title\": \"<span style='font-size:26;color:#333333'>$itemTitle</span>\",\n" +
             "\t\"image\": \"$itemImg\",\n" +
             "\t\"remoteLogExt\": \"{\\\"pageBizCode\\\":\\\"product\\\",\\\"cityCode\\\":\\\"330100\\\",\\\"bizCode\\\":\\\"product\\\",\\\"latitude\\\":\\\"30.265642\\\",\\\"source\\\":\\\"homeFeeds\\\",\\\"longitude\\\":\\\"120.108739\\\",\\\"scene\\\":\\\"SSU\\\"}\",\n" +
             "\t\"action\": \"{\\\"link\\\":\\\"$url\\\",\\\"scm\\\":\\\"\\\",\\\"type\\\":\\\"jump\\\"}\",\n" +
@@ -46,10 +55,10 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 //            "\t},\n" +
             "\t\"defaultTemplateId\": \"\",\n" +
             "\t\"tagImageV2\": \"https://gw.alipayobjects.com/mdn/rms_5bd46e/afts/img/A*IL4aRamkbjIAAAAAAAAAAAAAARQnAQ\",\n" +
-//            "\t\"complexTitle\": \"<span style='font-size:13sip;color:#333333'>超长标题看看超过两行会怎么样</span>\",\n" +
-            "\t\"tagLeftTextV2\": \"<span style='font-size:12sp;color:#FFFFFF;'>$promotionPrice</span>\",\n" +
+            "\t\"complexTitle\": \"<span style='font-size:13sip;color:#333333'>$itemTitle</span>\",\n" +
+            "\t\"tagLeftTextV2\": \"<span style='font-size:18sp;color:#FFFFFF;'>¥ </span><span style='font-size:16sp;color:#FFFFFF;'>$promotionPrice</span>\",\n" +
             "\t\"tagRightTextV2\": \"<span style='font-size:15sp;color:#FF2F23'>抢</span>\",\n" +
-            "\t\"originalPrice\": \"$originPrice\",\n" +
+//            "\t\"originalPrice\": \"$originPrice\",\n" +
             "\t\"originalPriceStyle\": {\n" +
             "\t\t\"color\": \"#ccffffff\",\n" +
             "\t\t\"fontSize\": \"10sp\",\n" +
@@ -71,36 +80,6 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
         "\t\"items\": [],\n" +
         "\t\"spmC\": \"xxx\"\n" +
         "}";
-
-
-    private static final String ITEM_TEMPLATE =
-            "{\n" +
-                    "\t\"image\": \"$itemImg\",\n" +
-                    "\t\"action\": \"{\\\"type\\\":\\\"jump\\\",\\\"link\\\":\\\"$url\\\"}\",\n" +
-                    "\t\"title\": \"<span style=\\\\\\\"font-size:26;color:#333333\\\\\\\">$itemTitle</span>\",\n" +
-                    "\t\"topLabelStyle\": {\n" +
-                    "\t\t\"backgroundColor\": \"#FFFFFF\"\n" +
-                    "\t},\n" +
-                    "\t\"originalPrice\": \"￥$originPrice\",\n" +
-                    "\t\"originalPriceStyle\": {\n" +
-                    "\t\t\"color\": \"#FFFFFF\",\n" +
-                    "\t\t\"fontSize\": \"10sp\",\n" +
-                    "\t\t\"textDecoration\": \"line-through\"\n" +
-                    "\t},\n" +
-                    "\t\"pureStringTextStyle\": {\n" +
-                    "\t\t\"backgroundColor\": \"#FFFFFF\"\n" +
-                    "\t},\n" +
-                    "\t\"scm\": \"xxxx\",\n" +
-                    "\t\"remoteLogExt\": \"xxx\",\n" +
-                    "\t\"saleTags\": [{\n" +
-                    "\t\t\t\"text\": \"<span style=\\\"font-size:10sp;color:#FF6010\\\">$promotionLabel</span>\",\n" +
-                    "\t\t\t\"textStyle\": {\n" +
-                    "\t\t\t\t\"borderColor\": \"#FF6010\"\n" +
-                    "\t\t\t}\n" +
-                    "\t\t}\n" +
-                    "\t]\n" +
-                    "}";
-
 
 
 //        result.put("title", iteminfo.getItemDTO().getTitle());
@@ -139,7 +118,8 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
             return pageFloorAtomicResultDTO;
         }
 
-        List<JSONObject> collect = itemAndContentList.subList(0, Math.min(CARD_ITEM_SIZE, itemAndContentList.size())).stream().map(this::convert).collect(Collectors.toList());
+        List<JSONObject> collect = itemAndContentList.subList(0, Math.min(CARD_ITEM_SIZE, itemAndContentList.size())).stream().
+                map(itemEntityVO -> convert(itemEntityVO, atomicCardProcessRequest.getAldData())).collect(Collectors.toList());
         jsonObject.put("items", collect);
         pageFloorAtomicResultDTO.setCardData(Lists.newArrayList(jsonObject));
         return pageFloorAtomicResultDTO;
@@ -149,17 +129,37 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 //        result.put("chaoshiPrice", getOriginPrice(itemInfoBySourceCaptainDTO));
 //        result.put("promotionPoint", getPromotionPoint(itemInfoBySourceCaptainDTO));
 
-    private JSONObject convert(ItemEntityVO itemEntityVO) {
+    private JSONObject convert(ItemEntityVO itemEntityVO, GeneralItem aldData) {
         String replace = TEMPLATE_ITEM.replace(PLACE_HOLDER_ITEM_IMG, itemEntityVO.getString("itemImg"))
                 .replace(PLACE_HOLDER_ITEM_TITTLE, itemEntityVO.getString("shortTitle"))
                 .replace(PLACE_HOLDER_ITEM_URL, "https:" + itemEntityVO.getString("itemUrl"))
                 .replace(PLACE_HOLDER_ITEM_ORIGIN_PRICE, itemEntityVO.getString("chaoshiPrice"))
-                .replace(PLACE_HOLDER_ITEM_PROMOTION_LABEL, "超市热卖")
+                .replace(PLACE_HOLDER_ITEM_PROMOTION_LABEL, getPromotionPoint(aldData, itemEntityVO))
                 .replace(PLACE_HOLDER_ITEM_PROMOTION_PRICE, itemEntityVO.getString("showPrice"))
                 ;
 
 
         return JSON.parseObject(replace);
+    }
+
+    private CharSequence getPromotionPoint(GeneralItem aldData, ItemEntityVO itemEntityVO) {
+        String promotionPoint = getPromotionPoint(itemEntityVO);
+        return StringUtils.isEmpty(promotionPoint) ? aldData.getString(itemLabelAldKey) : promotionPoint;
+    }
+
+    private String getPromotionPoint(ItemEntityVO itemEntityVO) {
+        try {
+            Object promotionPoint = itemEntityVO.get("promotionPoint");
+            if (promotionPoint instanceof List) {
+                List l = (List) promotionPoint;
+                if (l.size() > 0) {
+                    return l.get(0).toString();
+                }
+            }
+        } catch (Exception e) {
+
+        }
+        return "";
     }
 
 

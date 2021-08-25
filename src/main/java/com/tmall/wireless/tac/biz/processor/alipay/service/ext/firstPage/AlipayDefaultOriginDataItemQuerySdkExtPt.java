@@ -78,7 +78,7 @@ public class AlipayDefaultOriginDataItemQuerySdkExtPt extends Register implement
         }
         List<ItemEntity> itemEntityList = Lists.newArrayList();
         itemEntityList.addAll(random(itemEntityOriginDataDTOHook.getResult(), 1));
-        itemEntityList.addAll(random(itemEntityOriginDataDTO.getResult(), 2));
+        itemEntityList.addAll(random(itemEntityOriginDataDTO.getResult(), 4));
 
         itemEntityOriginDataDTOHook.setResult(itemEntityList);
         return itemEntityOriginDataDTOHook;

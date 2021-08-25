@@ -53,8 +53,9 @@ public class FeedsAtomicCardProcessor implements IAtomicCardProcessor {
 //            "\t\"description\": \"鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃鸡汁烩饭好吃\",\n" +
             "\t\"tags\": [{\n" +
             "\t\t\t\"text\": \"$promotionLabel\",\n" +
+            "\t\t\t\"borderColor\": \"#FF6010\",\n" +
             "\t\t\t\"textStyle\": {\n" +
-            "\t\t\t\t\"borderColor\": \"#000\"\n" +
+            "\t\t\t\t\"borderColor\": \"#FF6010\"\n" +
             "\t\t\t}\n" +
             "\t\t}\n" +
             "\t],\n" +
