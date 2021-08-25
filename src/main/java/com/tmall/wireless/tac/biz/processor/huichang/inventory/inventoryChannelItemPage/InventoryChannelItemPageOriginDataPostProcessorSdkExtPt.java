@@ -38,7 +38,8 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         tacLogger.debug("扩展点InventoryChannelItemPageOriginDataPostProcessorSdkExtPt");
         OriginDataDTO<ItemEntity> itemEntityOriginDataDTO = new OriginDataDTO<>();
-        List<ItemEntity> itemEntityList = null;
+        List<ItemEntity> itemEntityList = Lists.newArrayList();
+        itemEntityOriginDataDTO.setResult(itemEntityList);
         try{
             itemEntityOriginDataDTO = originDataProcessRequest.getItemEntityOriginDataDTO();
             itemEntityList = itemEntityOriginDataDTO.getResult();

@@ -44,11 +44,11 @@ public class InventoryChannelPageHandler extends TacReactiveHandler4Ald {
 
     private GeneralItem buildSceneSet(RequestContext4Ald requestContext4Ald) {
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
-        String contentSetTitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "ContentSetTitle", tacLogger);
+        String contentSetTitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetTitle", tacLogger);
         if(StringUtils.isBlank(contentSetTitle)) {
             contentSetTitle = "contentSetSubtitle打底";
         }
-        String contentSetSubtitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "ContentSetSubtitle", tacLogger);
+        String contentSetSubtitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetSubTitle", tacLogger);
         if(StringUtils.isBlank(contentSetSubtitle)) {
             contentSetSubtitle = "contentSetSubtitle打底";
         }

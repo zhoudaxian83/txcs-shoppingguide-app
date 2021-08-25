@@ -38,7 +38,8 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
     public OriginDataDTO<ContentEntity> process(ContentOriginDataProcessRequest contentOriginDataProcessRequest) {
         tacLogger.debug("扩展点InventoryChannelPageContentOriginDataPostProcessorSdkExtPt");
         OriginDataDTO<ContentEntity> contentEntityOriginDataDTO = new OriginDataDTO<>();
-        List<ContentEntity> contentEntityList = null;
+        List<ContentEntity> contentEntityList = Lists.newArrayList();
+        contentEntityOriginDataDTO.setResult(contentEntityList);
         try{
             contentEntityOriginDataDTO = contentOriginDataProcessRequest.getContentEntityOriginDataDTO();
             contentEntityList = contentEntityOriginDataDTO.getResult();
