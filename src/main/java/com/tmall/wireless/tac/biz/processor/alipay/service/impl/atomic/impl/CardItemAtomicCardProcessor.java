@@ -36,10 +36,10 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 
     public static final String TEMPLATE_ITEM = "{\n" +
 
-            "\t\"containerStyle\": {\n" +
-            "\t\t\"//\": \"整个grid背景框的底色，依赖服务端下发,写成这样是为了方便写css样式代码\",\n" +
-            "\t\t\"backgroundImage\": \"linear-gradient(tobottom,#FF3D29,#FF1919)\"\n" +
-            "\t},\n" +
+//            "\t\"containerStyle\": {\n" +
+//            "\t\t\"//\": \"整个grid背景框的底色，依赖服务端下发,写成这样是为了方便写css样式代码\",\n" +
+//            "\t\t\"backgroundImage\": \"linear-gradient(tobottom,#FF3D29,#FF1919)\"\n" +
+//            "\t},\n" +
             "\t\"saleTags\": [{\n" +
             "\t\t\"text\": \"<span style='font-size:10sp;color:#FF6010'>$promotionLabel</span>\",\n" +
             "\t\t\"textStyle\": {\n" +
@@ -79,7 +79,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
         "\t\"//\": \"是否有头部间隔，因为头部卡片背景里有图片，所以只在头部卡片背景里有图片的case下发为true，默认false\",\n" +
         "\t\"hideTopDivider\": \"true\",\n" +
         "\t\"items\": [],\n" +
-        "\t\"spmC\": \"xxx\"\n" +
+        "\t\"spmC\": \"xxx\",\n" +
         "\t\"itemBackground\": \"#FFFFFF\"\n" +
         "}";
 
