@@ -35,6 +35,7 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
 
     @Override
     public SgFrameworkResponse<ContentVO> process(SgFrameworkContextContent sgFrameworkContextContent) {
+        tacLogger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.start");
         SgFrameworkResponse<ContentVO> contentVOSgFrameworkResponse = super.process(sgFrameworkContextContent);
         Map<String, Object> userParams = sgFrameworkContextContent.getUserParams();
         String locType = MapUtil.getStringWithDefault(userParams, "locType", "B2C");
