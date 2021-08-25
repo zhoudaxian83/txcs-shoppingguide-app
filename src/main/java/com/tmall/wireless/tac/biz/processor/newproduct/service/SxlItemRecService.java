@@ -264,16 +264,11 @@ public class SxlItemRecService {
                         itemSetIdType.append(variation.get("itemSetId"));
                     }
                 }
-                /*if("SM_NEW_ARRIVAL".equals(variation.get("bizType")) &&
-                    "102".equals(variation.get("tclsExpId"))){
-                    if(variation.get("itemSetId") != null){
-                        itemSetIdType.append(String.valueOf(variation.get("itemSetId")));
-                    }
-                }*/
             });
         }catch (Exception e){
             HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
                 .kv("SxlItemRecService getAbData",JSON.toJSONString(context.getParams()))
+                .kv("e.getMessage()",e.getMessage())
                 .info();
         }
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
