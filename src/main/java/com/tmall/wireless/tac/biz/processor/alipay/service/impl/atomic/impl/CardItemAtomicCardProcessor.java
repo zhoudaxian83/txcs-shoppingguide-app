@@ -74,7 +74,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
         "{\n" +
         "\t\"containerStyle\": {\n" +
         "\t\t\"//\": \"整个grid背景框的底色，依赖服务端下发,写成这样是为了方便写css样式代码\",\n" +
-        "\t\t\"backgroundImage\": \"linear-gradient(to bottom,#FFE5D3,#FFDCC4)\"\n" +
+        "\t\t\"backgroundImage\": \"linear-gradient(tobottom,#FF3D29,#FF1919)\"\n" +
         "\t},\n" +
         "\t\"//\": \"是否有头部间隔，因为头部卡片背景里有图片，所以只在头部卡片背景里有图片的case下发为true，默认false\",\n" +
         "\t\"hideTopDivider\": \"true\",\n" +
