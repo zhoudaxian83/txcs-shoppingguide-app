@@ -89,10 +89,13 @@ public class GulPromotionBuildItemVOExtPt implements BuildItemVOExtPt {
         itemEntityVO.put("itemUrl", itemUrl);
 
         if (!canBuy) {
-            HadesLogUtil.stream(ScenarioConstantApp.GUL_PROMOTION)
-                .kv("GulPromotionBuildItemVOExtPt","process")
-                .kv("ItemId",itemEntityVO.get("itemId").toString())
-                .info();
+            if(itemEntityVO.get("itemId") != null){
+                HadesLogUtil.stream(ScenarioConstantApp.GUL_PROMOTION)
+                    .kv("GulPromotionBuildItemVOExtPt","process")
+                    .kv("canBuy filter ItemId",itemEntityVO.get("itemId").toString())
+                    .kv("Response","ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F")
+                    .info();
+            }
             return Response.fail("ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F");
         }
 
@@ -111,10 +114,6 @@ public class GulPromotionBuildItemVOExtPt implements BuildItemVOExtPt {
                 itemEntityVO.put("contentType", 0);
             }
         }
-        HadesLogUtil.stream(ScenarioConstantApp.GUL_PROMOTION)
-            .kv("GulPromotionBuildItemVOExtPt","process")
-            .kv("itemEntityVO", JSON.toJSONString(itemEntityVO))
-            .info();
         return Response.success(itemEntityVO);
     }
     private boolean canBuy(ItemInfoBySourceDTOMain itemInfoBySourceDTO) {
