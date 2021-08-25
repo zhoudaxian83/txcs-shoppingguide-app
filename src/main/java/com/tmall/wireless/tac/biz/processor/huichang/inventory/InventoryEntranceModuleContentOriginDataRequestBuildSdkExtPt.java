@@ -124,7 +124,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
     private void buildTppParams(Map<String, String> params, Map<String, Object> aldParams,
         Map<String, Object> aldContext, Map<String, Object> userParams) throws Exception{
         params.put("index", "0");
-        params.put("pageSize", "2"); //
+        params.put("pageSize", "3"); //
 
         Long smAreaId = MapUtil.getLongWithDefault(aldParams, HallCommonAldConstant.SM_AREAID, 330100L);
         params.put("smAreaId", String.valueOf(smAreaId));
