@@ -1,13 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.tcls.experiment.client.domain.HyperlocalRetailABTestBaseParam;
-import com.alibaba.tcls.experiment.client.domain.HyperlocalRetailABTestGroup;
-import com.alibaba.tcls.experiment.client.domain.HyperlocalRetailABTestResult;
 import com.alibaba.tcls.experiment.client.router.HyperlocalRetailABTestClient;
-
 import com.google.common.collect.Lists;
-import com.taobao.tddl.optimizer.config.table.parse.TableMetaParser;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
@@ -31,14 +26,10 @@ import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -262,6 +253,11 @@ public class SxlItemRecService {
             abTestRest.forEach(variation ->{
                 String smNewArrival = (String)JSON.parse(SxlSwitch.getValue("SM_NEW_ARRIVAL"));
                 String sxlAlgItemsetIdAb = (String)JSON.parse(SxlSwitch.getValue("SXL_ALG_ITEMSET_ID_AB"));
+                HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                    .kv("SxlItemRecService","getAbData")
+                    .kv("smNewArrival",smNewArrival)
+                    .kv("sxlAlgItemsetIdAb",sxlAlgItemsetIdAb)
+                    .info();
                 if(smNewArrival.equals(variation.get("bizType")) &&
                     sxlAlgItemsetIdAb.equals(variation.get("tclsExpId"))){
                     if(variation.get("itemSetId") != null){
