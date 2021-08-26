@@ -46,7 +46,7 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
             if(CollectionUtils.isEmpty(contentEntityList)) {
                 throw new Exception("contentEntityList为空");
             }
-            tacLogger.debug("调顺序之前 " + JSONObject.toJSONString(contentEntityList));
+            tacLogger.debug("调顺序之前场景数量" + contentEntityList.size() +"，顺序是" + JSONObject.toJSONString(contentEntityList));
         } catch (Exception e) {
             tacLogger.debug("场景信息解析出错：" + StackTraceUtil.stackTrace(e));
             return contentEntityOriginDataDTO;
@@ -86,7 +86,7 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
         } catch (Exception e) {
             tacLogger.debug("场景重排序失败,使用原来顺序" + StackTraceUtil.stackTrace(e));
         }
-        tacLogger.debug("调顺序之后 " + JSONObject.toJSONString(contentEntityOriginDataDTO.getResult()));
+        tacLogger.debug("调顺序之后场景数量是" + contentEntityOriginDataDTO.getResult().size() + "，顺序是" + JSONObject.toJSONString(contentEntityOriginDataDTO.getResult()));
         return contentEntityOriginDataDTO;
     }
 

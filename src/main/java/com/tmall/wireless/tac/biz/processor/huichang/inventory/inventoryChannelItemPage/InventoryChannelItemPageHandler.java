@@ -11,6 +11,7 @@ import com.tmall.aselfcaptain.cloudrec.domain.EntityId;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityQueryOption;
 import com.tmall.aselfcaptain.item.model.ChannelDataDO;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
@@ -50,7 +51,7 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
                 HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE);
         bizScenario.addProducePackage("huichang");
         Flowable<TacResult<List<GeneralItem>>> itemVOs = hallCommonItemRequestProxy.recommend(requestContext4Ald, bizScenario);
-        SceneDTO sceneDTO = getScenesInfoFromCaptain(requestContext4Ald);
+        TairSceneDTO sceneDTO = getScenesInfoFromCaptain(requestContext4Ald);
         GeneralItem sceneGeneralItem = buildSceneGeneralItem(sceneDTO);
         List<GeneralItem> generalItemList = itemVOs.blockingFirst().getData();
         if(CollectionUtils.isNotEmpty(generalItemList)){
@@ -59,7 +60,7 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         return Flowable.just(TacResult.newResult(generalItemList));
     }
 
-    private SceneDTO getScenesInfoFromCaptain(RequestContext4Ald requestContext4Ald) throws Exception {
+    private TairSceneDTO getScenesInfoFromCaptain(RequestContext4Ald requestContext4Ald) throws Exception {
         tacLogger.debug("组装场景信息");
         final String ACTIVITY_SCENE_PREFIX = "tcls_ugc_scene_v1_";
         final Long defaultSmAreaId = 310100L;
@@ -96,9 +97,9 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
             MultiResponse<Entity> render = entityRenderService.render(ids, entityQueryOption);
             if(render.isSuccess()) {
                 tacLogger.debug("render:" + JSON.toJSONString(render.getData()));
-                SceneDTO sceneDTO = JSON.parseObject(
+                TairSceneDTO sceneDTO = JSON.parseObject(
                         JSON.toJSONString(render.getData().get(0).get("data")),
-                        SceneDTO.class
+                        TairSceneDTO.class
                 );
                 if(sceneDTO == null) {
                     tacLogger.debug("场景信息没有渲染出来");
@@ -117,7 +118,7 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
             throw new Exception("渲染场景数据异常", e);
         }
     }
-    private GeneralItem buildSceneGeneralItem(SceneDTO sceneDTO) throws Exception {
+    private GeneralItem buildSceneGeneralItem(TairSceneDTO sceneDTO) throws Exception {
         GeneralItem item = new GeneralItem();
         if(sceneDTO == null) {
             tacLogger.debug("场景渲染信息为空");
@@ -127,6 +128,7 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         item.put("contentTitle",sceneDTO.getTitle());
         item.put("contentSubtitle",sceneDTO.getSubtitle());
         item.put("contentPic", sceneDTO.getProperty().get("bannerUrl"));
+        item.put("contentType", sceneDTO.getType());
 //        item.put("rankType", sceneDTO.getProperty().get("rankType"));
 //        item.put("shortTitle", sceneDTO.getProperty().get("shortTitle"));
         return item;
