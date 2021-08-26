@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -42,11 +43,11 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
             List<ContentVO> sceneContentVOList = s.getData().getItemAndContentList();
 
             // 商品数量过滤
-            classifierContentVOList = classifierContentVOList.stream()
+            classifierContentVOList = Optional.ofNullable(classifierContentVOList).orElse(new ArrayList<>()).stream()
                     .filter(contentVO -> contentVO.getJSONArray("items").size() >= 6)
                     .collect(Collectors.toList());
             logger.info("[IconRecommendHandler] Size of classifier content: " + classifierContentVOList.size());
-            sceneContentVOList = sceneContentVOList.stream()
+            sceneContentVOList = Optional.ofNullable(sceneContentVOList).orElse(new ArrayList<>()).stream()
                     .filter(contentVO -> contentVO.getJSONArray("items").size() >= 6)
                     .collect(Collectors.toList());
             logger.info("[IconRecommendHandler] Size of scene content: " + sceneContentVOList.size());

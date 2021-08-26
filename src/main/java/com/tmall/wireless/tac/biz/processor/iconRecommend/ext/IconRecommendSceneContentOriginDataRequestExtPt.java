@@ -65,25 +65,7 @@ public class IconRecommendSceneContentOriginDataRequestExtPt implements ContentO
         }
         // 其余参数
         // 曝光过滤数据
-        Integer index = Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getUserPageInfo)
-                .map(PageInfoDO::getIndex)
-                .orElse(1);
-        if (index == 1) {
-            params.put("index", "0");
-        } else {
-            params.put("index", "1");
-        }
-//        params.put("index", String.valueOf(Optional.ofNullable(sgFrameworkContextContent)
-//                .map(SgFrameworkContext::getUserPageInfo)
-//                .map(PageInfoDO::getIndex)
-//                .orElse(1)));
-        params.put("pageSize", "1");
         params.put("sceneSet", "intelligentCombinationItems");
-//        params.put("itemIds", Joiner.on(",").join((List<Long>) Optional.ofNullable(sgFrameworkContextContent)
-//                .map(SgFrameworkContext::getRequestParams)
-//                .map(map -> map.get("itemIdList"))
-//                .orElse(Lists.newArrayList())));
         params.put("itemIds", Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getRequestParams)
                 .map(map -> map.get("itemIdList"))
@@ -91,7 +73,10 @@ public class IconRecommendSceneContentOriginDataRequestExtPt implements ContentO
                 .orElse(""));
         logger.info("[Scene Word]: ItemIds: " + params.get("itemIds"));
         // 曝光过滤开关
-        params.put("exposureSwitch", "true");
+        boolean firstPage = Optional.ofNullable(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getUserPageInfo)
+                .map(PageInfoDO::getIndex).orElse(1) == 1;
+        params.put("isFirstPage", String.valueOf(firstPage));
         params.put("maxItemReturn", "21");
         // 设备id
         params.put("manufacturerId", Optional.ofNullable(sgFrameworkContextContent)
