@@ -35,7 +35,7 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
     public static final Long DEFAULT_LOGAREAID = 107L;
     public static final Long SCENE_ITEM_RECOMMEND_APPID = 24179L;
     public static final Long DEFAULT_SMAREAID = 330100L;
-    public static final int PAGE_SIZE = 10;
+    public static final int PAGE_SIZE = 40;
     private static final Long DefaultUserId = 0L;
 
     @Autowired
