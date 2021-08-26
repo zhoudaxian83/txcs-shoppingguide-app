@@ -65,10 +65,19 @@ public class IconRecommendSceneContentOriginDataRequestExtPt implements ContentO
         }
         // 其余参数
         // 曝光过滤数据
-        params.put("index", String.valueOf(Optional.ofNullable(sgFrameworkContextContent)
+        Integer index = Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getUserPageInfo)
                 .map(PageInfoDO::getIndex)
-                .orElse(0)));
+                .orElse(1);
+        if (index == 1) {
+            params.put("index", "0");
+        } else {
+            params.put("index", "1");
+        }
+//        params.put("index", String.valueOf(Optional.ofNullable(sgFrameworkContextContent)
+//                .map(SgFrameworkContext::getUserPageInfo)
+//                .map(PageInfoDO::getIndex)
+//                .orElse(1)));
         params.put("pageSize", "1");
         params.put("sceneSet", "intelligentCombinationItems");
 //        params.put("itemIds", Joiner.on(",").join((List<Long>) Optional.ofNullable(sgFrameworkContextContent)
