@@ -119,6 +119,8 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
         contentMap.put("contentId", sceneDTO.getId());
         contentMap.put("contentTitle",sceneDTO.getTitle());
         contentMap.put("contentSubTitle",sceneDTO.getSubtitle());
+        contentMap.put("",sceneDTO.getSubtitle());
+
         contentMap.put("itemSetIds", sceneDTO.getSetIds()); // 默认返回setId列表
 //        contentMap.put("contentPic", ) //Todo 是avatarUrl还是bannerUrl
 //        contentMap.put("contentType",) //Todo
