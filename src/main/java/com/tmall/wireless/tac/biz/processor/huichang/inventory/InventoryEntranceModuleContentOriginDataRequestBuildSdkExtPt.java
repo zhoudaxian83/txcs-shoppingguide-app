@@ -124,7 +124,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
     private void buildTppParams(Map<String, String> params, Map<String, Object> aldParams,
         Map<String, Object> aldContext, Map<String, Object> userParams) throws Exception{
         params.put("index", "0");
-        params.put("pageSize", "3"); //
+
 
         Long smAreaId = MapUtil.getLongWithDefault(aldParams, HallCommonAldConstant.SM_AREAID, 330100L);
         params.put("smAreaId", String.valueOf(smAreaId));
@@ -167,11 +167,11 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         }
         List<Map<String, Object>> staticScheduleDataList = (List<Map<String, Object>>)staticScheduleData;
         List<Map<String, String>> dealStaticDataList = new ArrayList<>();
-        StringBuilder contentSetBuilder = new StringBuilder();
+        List<String> sceneSetIdList = new ArrayList<>();
         for(Map<String, Object> data : staticScheduleDataList){
             Map<String, String> dataMap = new HashMap<>();
             String contentSetId = MapUtil.getStringWithDefault(data, "contentSetId", "");
-            contentSetBuilder.append(prex_sceneSet + contentSetId).append(",");
+            sceneSetIdList.add(prex_sceneSet + contentSetId + ",");
             String contentSetTitle = MapUtil.getStringWithDefault(data, "contentSetTitle", "");
             String contentSetSubTitle = MapUtil.getStringWithDefault(data, "contentSetSubTitle", "");
             dataMap.put("contentSetId", contentSetId);
@@ -180,7 +180,8 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
             dealStaticDataList.add(dataMap);
         }
 
-        params.put("sceneSet", contentSetBuilder.toString()); // 场景集id
+        params.put("sceneSet", String.join(",", sceneSetIdList)); // 场景集id
+        params.put("pageSize", String.valueOf(sceneSetIdList.size())); // 场景集id
         params.put("appId", String.valueOf(SCENE_RECOMMEND_APPID));
 
         //把处理好的静态数从新设置一下，后面还需要
