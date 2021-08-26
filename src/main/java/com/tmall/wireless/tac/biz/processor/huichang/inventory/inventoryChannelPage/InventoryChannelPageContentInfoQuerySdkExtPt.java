@@ -119,10 +119,9 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
         contentMap.put("contentId", sceneDTO.getId());
         contentMap.put("contentTitle",sceneDTO.getTitle());
         contentMap.put("contentSubTitle",sceneDTO.getSubtitle());
-        contentMap.put("",sceneDTO.getSubtitle());
 
         contentMap.put("itemSetIds", sceneDTO.getSetIds()); // 默认返回setId列表
-//        contentMap.put("contentPic", ) //Todo 是avatarUrl还是bannerUrl
+        contentMap.put("contentPic", sceneDTO.getProperty().get("avatarUrl")); //Todo 是avatarUrl还是bannerUrl
 //        contentMap.put("contentType",) //Todo
         contentMap.put("scm", contentEntity.getTrack_point()); //Todo
         contentMap.put("marketChannel",sceneDTO.getMarketChannel());
@@ -130,7 +129,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
         String urlParam = "";
 
         urlParam = PageUrlUtil.addParams(urlParam, "contentId", String.valueOf(sceneDTO.getId()));
-        urlParam = PageUrlUtil.addParams(urlParam, "itemSet", String.valueOf(sceneDTO.getSetIds().get(0)));
+        urlParam = PageUrlUtil.addParams(urlParam, "itemSetId", String.valueOf(sceneDTO.getSetIds().get(0)));
         String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
         if("B2C".equals(locType) || locType == null){
             urlParam = PageUrlUtil.addParams(urlParam, "locType", "B2C");

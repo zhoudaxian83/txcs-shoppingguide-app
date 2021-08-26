@@ -69,7 +69,7 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
                 throw new Exception("url参数contentId为空");
             }
 
-            String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemSet", tacLogger); // Todo likunlin
+            String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemSetId", tacLogger); // Todo likunlin
             if(StringUtils.isNotBlank(itemSets)) {
                 if(!itemSets.startsWith(ITEM_SET_PREFIX)) {
                     itemSets = ITEM_SET_PREFIX + itemSets;
