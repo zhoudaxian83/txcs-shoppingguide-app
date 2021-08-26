@@ -55,6 +55,13 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
                     }
                     String contentSetId = contentVO.getString("contentSetId");
                     paramsMap.put("contentSetId", contentSetId);
+
+                    String contentSetTitle = contentVO.getString("contentSetTitle");
+                    paramsMap.put("contentSetTitle", contentSetTitle);
+
+                    String contentSetSubTitle = contentVO.getString("contentSetSubTitle");
+                    paramsMap.put("contentSetSubTitle", contentSetSubTitle);
+
                     paramsMap.put("locType", locType);
                     Object items = contentVO.get("items");
                     if(items != null){
