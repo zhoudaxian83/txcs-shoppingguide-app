@@ -11,6 +11,7 @@ import com.tmall.aselfcaptain.cloudrec.domain.EntityId;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityQueryOption;
 import com.tmall.aselfcaptain.item.model.ChannelDataDO;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.contentinfo.ContentInfoQuerySdkExtPt;
@@ -80,9 +81,9 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
             try{
                 MultiResponse<Entity> render = entityRenderService.render(ids, entityQueryOption);
                 if(render.isSuccess()) {
-                    List<SceneDTO> sceneDTOList = render.getData().stream()
+                    List<TairSceneDTO> sceneDTOList = render.getData().stream()
                             .map(
-                                    entity -> JSON.parseObject(JSON.toJSONString(entity.get("data")), SceneDTO.class)
+                                    entity -> JSON.parseObject(JSON.toJSONString(entity.get("data")), TairSceneDTO.class)
                             ).collect(Collectors.toList());
                     tacLogger.debug("请求Captain返回结果: " + JSONObject.toJSONString(sceneDTOList));
                     sceneDTOList.forEach(
@@ -109,7 +110,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
             return Flowable.just(Response.fail("captain error"));
         }
     }
-    private ContentInfoDTO parseCaptainResult(SceneDTO sceneDTO, Map<Long, ContentEntity> contentEntityListMap, SgFrameworkContextContent sgFrameworkContextContent) {
+    private ContentInfoDTO parseCaptainResult(TairSceneDTO sceneDTO, Map<Long, ContentEntity> contentEntityListMap, SgFrameworkContextContent sgFrameworkContextContent) {
         Context context = sgFrameworkContextContent.getTacContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald) context;
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
@@ -119,17 +120,16 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
         contentMap.put("contentId", sceneDTO.getId());
         contentMap.put("contentTitle",sceneDTO.getTitle());
         contentMap.put("contentSubTitle",sceneDTO.getSubtitle());
-
-        contentMap.put("itemSetIds", sceneDTO.getSetIds()); // 默认返回setId列表
+        contentMap.put("itemSetIds", sceneDTO.getItemsetIds()); // 默认返回setId列表
         contentMap.put("contentPic", sceneDTO.getProperty().get("avatarUrl")); //Todo 是avatarUrl还是bannerUrl
-//        contentMap.put("contentType",) //Todo
+        contentMap.put("contentType",sceneDTO.getType()); //Todo
         contentMap.put("scm", contentEntity.getTrack_point()); //Todo
         contentMap.put("marketChannel",sceneDTO.getMarketChannel());
         contentMap.put("setSource", sceneDTO.getMarketChannel());
         String urlParam = "";
 
         urlParam = PageUrlUtil.addParams(urlParam, "contentId", String.valueOf(sceneDTO.getId()));
-        urlParam = PageUrlUtil.addParams(urlParam, "itemSetId", String.valueOf(sceneDTO.getSetIds().get(0)));
+        urlParam = PageUrlUtil.addParams(urlParam, "itemSetId", String.valueOf(sceneDTO.getItemsetIds().get(0)));
         String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
         if("B2C".equals(locType) || locType == null){
             urlParam = PageUrlUtil.addParams(urlParam, "locType", "B2C");
