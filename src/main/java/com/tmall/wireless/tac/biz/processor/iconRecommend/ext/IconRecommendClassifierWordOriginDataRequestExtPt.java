@@ -62,9 +62,13 @@ public class IconRecommendClassifierWordOriginDataRequestExtPt implements Conten
                 .map(SgFrameworkContext::getUserPageInfo)
                 .map(PageInfoDO::getIndex).orElse(1) == 1;
         params.put("firstPage", String.valueOf(firstPage));
-        params.put("itemCountPerContent", "20");
+        params.put("itemCountPerContent", "21");
         params.put("contentSetIdList", "1");
         params.put("contentSetSource", "contentPlatform2000");
+        params.put("exposureDataUserId", Optional.ofNullable(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getUserDO)
+                .map(UserDO::getUtdid)
+                .orElse(""));
         recommendRequest.setParams(params);
 
         logger.info("[ClassifierWordOriginDataRequestExtPt] tppRequest: " + JSON.toJSONString(recommendRequest));
