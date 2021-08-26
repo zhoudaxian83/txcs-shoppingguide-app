@@ -33,9 +33,9 @@ import java.util.Optional;
 public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
     private static final String ITEM_SET_PREFIX = "crm_";
     public static final Long DEFAULT_LOGAREAID = 107L;
-    public static final Long SCENE_ITEM_RECOMMEND_APPID = 26562L;
+    public static final Long SCENE_ITEM_RECOMMEND_APPID = 24179L;
     public static final Long DEFAULT_SMAREAID = 330100L;
-    public static final int PAGE_SIZE = 10;
+    public static final int PAGE_SIZE = 40;
     private static final Long DefaultUserId = 0L;
 
     @Autowired
@@ -69,7 +69,7 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
                 throw new Exception("url参数contentId为空");
             }
 
-            String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemSet", tacLogger); // Todo likunlin
+            String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemSetId", tacLogger); // Todo likunlin
             if(StringUtils.isNotBlank(itemSets)) {
                 if(!itemSets.startsWith(ITEM_SET_PREFIX)) {
                     itemSets = ITEM_SET_PREFIX + itemSets;

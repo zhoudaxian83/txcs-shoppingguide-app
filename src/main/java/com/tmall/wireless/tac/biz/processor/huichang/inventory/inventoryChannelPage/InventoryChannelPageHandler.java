@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
+import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.biz.processor.huichang.service.HallCommonContentRequestProxy;
@@ -44,6 +45,7 @@ public class InventoryChannelPageHandler extends TacReactiveHandler4Ald {
 
     private GeneralItem buildSceneSet(RequestContext4Ald requestContext4Ald) {
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
+        Map<String, Object> aldContext = requestContext4Ald.getAldContext();
         String contentSetTitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetTitle", tacLogger);
         if(StringUtils.isBlank(contentSetTitle)) {
             contentSetTitle = "contentSetSubtitle打底";
@@ -55,6 +57,7 @@ public class InventoryChannelPageHandler extends TacReactiveHandler4Ald {
         GeneralItem generalItem = new GeneralItem();
         generalItem.put("contentSetTitle", contentSetTitle);
         generalItem.put("contentSetSubtitle", contentSetSubtitle);
+        generalItem.put("resourceId", String.valueOf(aldContext.get(HallCommonAldConstant.ALD_CURRENT_RES_ID)));
         return generalItem;
     }
 }
