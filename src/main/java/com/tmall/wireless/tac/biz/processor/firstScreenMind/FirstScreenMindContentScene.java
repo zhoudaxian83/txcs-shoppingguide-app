@@ -97,7 +97,7 @@ public class FirstScreenMindContentScene {
                             response.setHasMore(true);
 //                            response.setIndex(0);
                         }
-                    } else if(StringUtils.equalsIgnoreCase("false",String.valueOf(isFixPositionBanner))){
+                    } else{
                         propertyMap.put("isFixPositionBanner", false);
                     }
                     if (response.getExtInfos() == null) {
