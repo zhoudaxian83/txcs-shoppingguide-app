@@ -58,9 +58,9 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
             Map<String, Object> aldParams = requestContext4Ald.getAldParam();
             String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryItemId", tacLogger); // 为你推荐商品
 
-            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 0));
+            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 1));
 
-            if(StringUtils.isNotBlank(itemRecommand) && pageIndex == 0) { // 第一页的第一个场景需要插入为你推荐商品以及过滤为你推荐商品
+            if(StringUtils.isNotBlank(itemRecommand) && pageIndex == 1) { // 第一页的第一个场景需要插入为你推荐商品以及过滤为你推荐商品
                 ItemEntity itemRecommandEntity = new ItemEntity();
                 itemRecommandEntity.setItemId(Long.valueOf(itemRecommand));
                 String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);

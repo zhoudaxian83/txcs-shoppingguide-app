@@ -33,7 +33,7 @@ import java.util.Optional;
 public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
     private static final String ITEM_SET_PREFIX = "crm_";
     public static final Long DEFAULT_LOGAREAID = 107L;
-    public static final Long SCENE_ITEM_RECOMMEND_APPID = 26562L;
+    public static final Long SCENE_ITEM_RECOMMEND_APPID = 24179L;
     public static final Long DEFAULT_SMAREAID = 330100L;
     public static final int PAGE_SIZE = 10;
     private static final Long DefaultUserId = 0L;

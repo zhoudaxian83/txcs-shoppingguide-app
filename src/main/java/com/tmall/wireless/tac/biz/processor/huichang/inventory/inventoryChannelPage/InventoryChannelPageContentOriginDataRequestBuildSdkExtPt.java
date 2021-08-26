@@ -42,7 +42,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
     private static final Long DEFAULT_SMAREAID = 310100L;
     private static final Long DEFAULT_LOGAREAID = 107L;
     private static final String SCENE_SET_PREFIX = "intelligentCombinationItems_";
-    public static final Long APPID = 26563L;  //Todo likunlin
+    public static final Long APPID = 27401L;  //Todo likunlin
     private static final Long DEFAULT_USERID = 0L; // Todo likunlin
     private static final int PAGE_SIZE = 1; //Todo likunlin
 
@@ -66,8 +66,8 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
             }
 
             tacLogger.debug("aldParams: " + JSONObject.toJSONString(aldParams));
-            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 0));
-            int index = pageIndex * PAGE_SIZE;
+            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 1));
+            int index = (pageIndex - 1) * PAGE_SIZE;
             params.put("index", String.valueOf(index));
 
             params.put("pageSize", String.valueOf(PAGE_SIZE));
