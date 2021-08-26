@@ -171,7 +171,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         for(Map<String, Object> data : staticScheduleDataList){
             Map<String, String> dataMap = new HashMap<>();
             String contentSetId = MapUtil.getStringWithDefault(data, "contentSetId", "");
-            sceneSetIdList.add(prex_sceneSet + contentSetId + ",");
+            sceneSetIdList.add(prex_sceneSet + contentSetId);
             String contentSetTitle = MapUtil.getStringWithDefault(data, "contentSetTitle", "");
             String contentSetSubTitle = MapUtil.getStringWithDefault(data, "contentSetSubTitle", "");
             dataMap.put("contentSetId", contentSetId);
