@@ -59,7 +59,7 @@ public class ChaoHaoTouDataItemQueryExtPt implements OriginDataItemQueryExtPt {
             items = tmcsZntItemDTOList.stream().map(TmcsZntItemDTO::getItemId).collect(Collectors.toList());
         }
         //返回结果为空或者返回结果小于每页条数视为没有数据了
-        context.getUserParams().put("hasMore", hasMore);
+        context.getUserParams().put(Constant.HAS_MORE, hasMore);
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
                 .map(recommendResponseEntityResponse -> {
                     if (!recommendResponseEntityResponse.isSuccess()

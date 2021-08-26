@@ -21,6 +21,7 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.PmtParams;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.wireless.tac.biz.processor.chaohaotou.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -68,14 +69,12 @@ public class ChaoHaoTouPageBannerItemInfoScene {
         entitySetParams.setItemSetSource("crm");
         entitySetParams.setItemSetIdList(Lists.newArrayList(5233L));
         sgFrameworkContextItem.setEntitySetParams(entitySetParams);
-
         PmtParams pmtParams = new PmtParams();
         pmtParams.setPmtSource("sm_manager");
         pmtParams.setPmtName("chaoHaoTou");
         pmtParams.setPageId("chaoHaoTou");
         pmtParams.setModuleId(level1Id.toString());
         sgFrameworkContextItem.setPmtParams(pmtParams);
-
         PageInfoDO pageInfoDO = new PageInfoDO();
         pageInfoDO.setIndex(index.intValue());
         pageInfoDO.setPageSize(pageSize.intValue());
@@ -83,8 +82,9 @@ public class ChaoHaoTouPageBannerItemInfoScene {
         sgFrameworkContextItem.setUserParams(context.getParams());
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(TacResult::newResult).map(tacResult -> {
-                    tacLogger.info("hasMore=" + (boolean) sgFrameworkContextItem.getUserParams().get("hasMore"));
-                    tacResult.setHasMore((boolean) sgFrameworkContextItem.getUserParams().get("hasMore"));
+                    boolean hasMore = (boolean) sgFrameworkContextItem.getUserParams().get(Constant.HAS_MORE);
+                    tacResult.setHasMore(hasMore);
+                    tacResult.getData().setHasMore(hasMore);
                     return tacResult;
                 }).onErrorReturn(r -> TacResult.errorResult(""));
 

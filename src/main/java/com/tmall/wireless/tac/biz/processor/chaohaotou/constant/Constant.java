@@ -10,4 +10,6 @@ public class Constant {
     public static final String BIZ_TYPE_NEW_PRODUCE = "newProduct";
     public static final String BIZ_TYPE_FASHION_PRODUCT = "fashionProduct";
     public static final String B2C = "B2C";
+    public static final String HAS_MORE = "hasMore";
+
 }
