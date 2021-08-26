@@ -14,4 +14,5 @@ public class AtomicCardProcessRequest {
     GeneralItem aldData;
     List<ItemEntityVO> itemAndContentList;
     MiddlePageSPIRequest middlePageSPIRequest;
+    Long userId;
 }
