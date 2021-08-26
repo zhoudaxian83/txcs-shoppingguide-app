@@ -58,6 +58,7 @@ public class IconRecommendSceneContentOriginDataRequestExtPt implements ContentO
         params.put("commerce", "B2C");
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getLocParams).map(LocParams::getSmAreaId).orElse(330110L).toString());
         params.put("_devEnv_", "1");
+        params.put("pageSize", "1");
         params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(
                 SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
         if (params.get("regionCode") == null || "".equals(params.get("regionCode"))) {
