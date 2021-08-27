@@ -12,8 +12,6 @@ import com.taobao.csp.switchcenter.core.SwitchManager;
 @NameSpace(nameSpace = "sxl")
 public class SxlSwitch {
 
-    private static final String APP_NAME = "txcs-shoppingguide";
-
     @AppSwitch(des = "人工选品推荐选品集id", level = Switch.Level.p4)
     public static Long SXL_ITEMSET_ID = 322385L;
 
@@ -34,12 +32,6 @@ public class SxlSwitch {
 
     @AppSwitch(des = "上新了超市算法选品ab实验id", level = Switch.Level.p4)
     public static String SXL_ALG_ITEMSET_ID_AB = "102";
-
-    public static String getValue(String key){
-
-        return SwitchManager.getStrValue(APP_NAME,"sxl."+key);
-
-    }
 
 
 }
