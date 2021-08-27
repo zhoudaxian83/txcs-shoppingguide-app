@@ -61,7 +61,7 @@ public class IconRecommendClassifierWordOriginDataRequestExtPt implements Conten
         boolean firstPage = Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getUserPageInfo)
                 .map(PageInfoDO::getIndex).orElse(1) == 1;
-        params.put("firstPage", String.valueOf(firstPage));
+        params.put("isFirstPage", String.valueOf(firstPage));
         params.put("itemCountPerContent", "21");
         params.put("contentSetIdList", "1");
         params.put("contentSetSource", "contentPlatform2000");
