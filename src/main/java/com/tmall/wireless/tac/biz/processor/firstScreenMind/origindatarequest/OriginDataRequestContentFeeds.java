@@ -102,6 +102,10 @@ public class OriginDataRequestContentFeeds implements OriginDataRequest{
             }
             tppRequest.setAppId(26548L);
         }else{
+            /**承接页内容推荐不进行场景的曝光数据清除-除了更多榜单承接页**/
+            if(isItemFeeds(requestParams)){
+                params.put("isFirstPage", "false");
+            }
             tppRequest.setAppId(25409L);
         }
         tppRequest.setParams(params);

@@ -53,7 +53,13 @@ public class OriginDataRequestGcsContentFeeds implements OriginDataRequest{
             return null;
         }
 
-        List<Long> contentSetIdList = ContentSetIdListUtil.getGcsContentSetIdList(requestParams);
+        List<Long> contentSetIdList = Lists.newArrayList();
+
+        if(isItemFeeds(requestParams)){
+            contentSetIdList = ContentSetIdListUtil.getGcsContentSetIdListItem(requestParams);
+        }else{
+            contentSetIdList = ContentSetIdListUtil.getGcsContentSetIdList(requestParams);
+        }
 
         params.put("contentSetIdList", Joiner.on(",").join(contentSetIdList));
 
@@ -98,6 +104,10 @@ public class OriginDataRequestGcsContentFeeds implements OriginDataRequest{
             }
             tppRequest.setAppId(26548L);
         }else{
+            /**承接页内容推荐不进行场景的曝光数据清除-除了更多榜单承接页**/
+            if(isItemFeeds(requestParams)){
+                params.put("isFirstPage", "false");
+            }
             tppRequest.setAppId(23198L);
         }
 
@@ -110,6 +120,14 @@ public class OriginDataRequestGcsContentFeeds implements OriginDataRequest{
             .kv("tppRequest", JSON.toJSONString(tppRequest))
             .info();
         return tppRequest;
+    }
+    private boolean isItemFeeds(Map<String, Object> requestParams){
+        Boolean isItemFeeds = false;
+        String requestFrom = MapUtil.getStringWithDefault(requestParams,"requestFrom","");
+        if("gcsItemFeeds".equals(requestFrom)){
+            isItemFeeds = true;
+        }
+        return isItemFeeds;
     }
 
 }
