@@ -193,6 +193,7 @@ public class AliPayServiceImpl implements IAliPayService {
 
         PageFloorTabDTO pageFloorTabDTO = new PageFloorTabDTO();
         pageFloorTabDTO.setTabTitle("全部");
+        pageFloorTabDTO.setTabId("-1");
         middlePageSPIResponse.setPageFloorTabDTOList(Lists.newArrayList(pageFloorTabDTO));
 
         List<ItemEntityVO> itemAndContentList = re.getItemAndContentList();
