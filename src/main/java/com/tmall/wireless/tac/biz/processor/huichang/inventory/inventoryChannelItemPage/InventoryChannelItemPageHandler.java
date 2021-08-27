@@ -127,10 +127,13 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         item.put("contentId", sceneDTO.getId());
         item.put("contentTitle",sceneDTO.getTitle());
         item.put("contentSubtitle",sceneDTO.getSubtitle());
-        item.put("contentPic", sceneDTO.getProperty().get("bannerUrl"));
+        item.put("contentBackgroundPic", sceneDTO.getProperty().get("bannerUrl"));
+        item.put("contentPic", sceneDTO.getProperty().get("avatarUrl"));
         item.put("contentType", sceneDTO.getType());
 //        item.put("rankType", sceneDTO.getProperty().get("rankType"));
 //        item.put("shortTitle", sceneDTO.getProperty().get("shortTitle"));
-        return item;
+        GeneralItem contentModel = new GeneralItem();
+        contentModel.put("contentModel", item);
+        return contentModel;
     }
 }
