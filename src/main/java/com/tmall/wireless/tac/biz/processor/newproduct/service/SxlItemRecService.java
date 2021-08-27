@@ -74,9 +74,9 @@ public class SxlItemRecService {
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
         /**招商人工选品集id集合**/
-        Long itemSetIdSw = Long.valueOf(SxlSwitch.getValue("SXL_ITEMSET_ID"));
+        Long itemSetIdSw = Long.valueOf(SxlSwitch.SXL_ITEMSET_ID);
         /**算法选品集id集合**/
-        Long itemSetIdAlgSw = Long.valueOf(SxlSwitch.getValue("SXL_ALG_ITEMSET_ID"));
+        Long itemSetIdAlgSw = Long.valueOf(SxlSwitch.SXL_ALG_ITEMSET_ID);
         /**主题承接页圈品集id**/
         Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,0L);
         /**招商主活动id-管道tair key**/
@@ -251,8 +251,8 @@ public class SxlItemRecService {
                 .kv("SxlItemRecService abTestRest",JSON.toJSONString(abTestRest))
                 .info();
             abTestRest.forEach(variation ->{
-                String smNewArrival = (String)JSON.parse(SxlSwitch.getValue("SM_NEW_ARRIVAL"));
-                String sxlAlgItemsetIdAb = (String)JSON.parse(SxlSwitch.getValue("SXL_ALG_ITEMSET_ID_AB"));
+                String smNewArrival = (String)JSON.parse(SxlSwitch.SM_NEW_ARRIVAL);
+                String sxlAlgItemsetIdAb = (String)JSON.parse(SxlSwitch.SXL_ALG_ITEMSET_ID_AB);
                 HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
                     .kv("SxlItemRecService","getAbData")
                     .kv("smNewArrival",smNewArrival)
