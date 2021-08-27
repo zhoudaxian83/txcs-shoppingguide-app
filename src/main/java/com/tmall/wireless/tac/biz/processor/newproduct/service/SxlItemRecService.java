@@ -24,6 +24,7 @@ import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -148,6 +149,13 @@ public class SxlItemRecService {
         UserDO userDO = new UserDO();
         userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
+        if (MapUtils.isNotEmpty(context.getParams())) {
+            Object cookies = context.getParams().get("cookies");
+            if (cookies != null && cookies instanceof Map) {
+                String cna = (String)((Map)cookies).get("cna");
+                userDO.setCna(cna);
+            }
+        }
         sgFrameworkContextItem.setUserDO(userDO);
 
         sgFrameworkContextItem.setLocParams(CsaUtil

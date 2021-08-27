@@ -58,6 +58,8 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
             .map(UserDO::getUserId).orElse(0L));
         params.put("commerce", "B2C");
         params.put("regionCode", String.valueOf(sgFrameworkContextItem.getLocParams().getRegionCode()));
+        params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextItem).map(
+            SgFrameworkContext::getUserDO).map(UserDO::getCna).orElse(""));
 
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
