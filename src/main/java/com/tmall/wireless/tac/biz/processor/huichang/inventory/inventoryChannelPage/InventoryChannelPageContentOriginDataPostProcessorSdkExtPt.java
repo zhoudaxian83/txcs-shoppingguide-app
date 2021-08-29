@@ -1,6 +1,12 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.alibaba.fastjson.JSONObject;
+
 import com.google.common.collect.Lists;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
@@ -9,7 +15,11 @@ import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataPostProcessorSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataProcessRequest;
 import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
-import com.tmall.tcls.gs.sdk.framework.model.context.*;
+import com.tmall.tcls.gs.sdk.framework.model.context.ContentEntity;
+import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
+import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
+import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
+import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.txcs.gs.model.item.BizType;
 import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
@@ -17,15 +27,9 @@ import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
-import lombok.SneakyThrows;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
         useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,

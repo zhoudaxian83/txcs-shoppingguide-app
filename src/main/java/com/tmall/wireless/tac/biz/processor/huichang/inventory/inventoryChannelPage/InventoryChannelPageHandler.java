@@ -1,5 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage;
+
+import java.util.List;
+import java.util.Map;
+
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
@@ -14,9 +19,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  *  清单会场

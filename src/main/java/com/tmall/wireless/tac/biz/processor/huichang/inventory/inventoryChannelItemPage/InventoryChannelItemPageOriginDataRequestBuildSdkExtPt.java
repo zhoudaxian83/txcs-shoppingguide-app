@@ -1,6 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage;
 
+import java.util.Map;
+import java.util.Optional;
+
 import com.alibaba.fastjson.JSONObject;
+
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
@@ -18,14 +22,9 @@ import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
-import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
-import lombok.SneakyThrows;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Map;
-import java.util.Optional;
 
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
         useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,

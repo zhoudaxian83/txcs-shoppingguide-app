@@ -1,10 +1,18 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.annotation.Resource;
+
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.cola.dto.MultiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Lists;
+
 import com.tmall.aselfcaptain.cloudrec.api.EntityRenderService;
 import com.tmall.aselfcaptain.cloudrec.domain.Entity;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityId;
@@ -16,24 +24,17 @@ import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
-import com.tmall.wireless.tac.biz.processor.huichang.inventory.SceneDTO;
-import com.tmall.wireless.tac.biz.processor.huichang.service.HallCommonContentRequestProxy;
 import com.tmall.wireless.tac.biz.processor.huichang.service.HallCommonItemRequestProxy;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
-import com.tmall.wireless.tac.dataservice.log.TacLogConsts;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.*;
 
 @Component
 public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {

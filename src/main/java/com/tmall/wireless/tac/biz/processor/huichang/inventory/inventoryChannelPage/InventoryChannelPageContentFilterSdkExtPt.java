@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -14,8 +16,6 @@ import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenari
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
         useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,

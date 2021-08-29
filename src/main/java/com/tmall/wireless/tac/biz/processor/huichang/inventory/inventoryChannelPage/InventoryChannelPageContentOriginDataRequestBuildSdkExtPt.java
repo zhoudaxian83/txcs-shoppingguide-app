@@ -1,7 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage;
 
-import com.alibaba.cola.extension.Extension;
+import java.util.Map;
+import java.util.Optional;
+
 import com.alibaba.fastjson.JSONObject;
+
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
@@ -12,7 +15,6 @@ import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
-import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
@@ -20,14 +22,9 @@ import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
-import lombok.SneakyThrows;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * Tpp请求场景，入参组装
