@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.huichang.inventory;
+package com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +19,8 @@ import com.tmall.aselfcaptain.cloudrec.domain.Entity;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityId;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityQueryOption;
 import com.tmall.aselfcaptain.item.model.ChannelDataDO;
+import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.contentinfo.ContentInfoQuerySdkExtPt;
@@ -28,8 +30,10 @@ import com.tmall.tcls.gs.sdk.framework.model.context.ContentInfoDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import com.tmall.wireless.tac.client.dataservice.TacOptLogger;
 import io.reactivex.Flowable;
-import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 查询场景信息扩展点
@@ -41,6 +45,12 @@ import org.apache.commons.collections.CollectionUtils;
     scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE)
 public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register implements ContentInfoQuerySdkExtPt {
 
+    @Autowired
+    TacLogger tacLogger;
+
+    @Autowired
+    private TacOptLogger tacOptLogger;
+
     private static final String ACTIVITY_SCENE_PREFIX = "tcls_ugc_scene_v1_";
     public static final String CHANNELNAME = "sceneLdb";
 
@@ -50,60 +60,74 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
     @Override
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
         Map<Long, ContentInfoDTO> contentDTOMap = Maps.newHashMap();
-        try{
+        try {
             Map<String, Object> userParams = sgFrameworkContextContent.getUserParams();
             Object dealStaticData = userParams.get("dealStaticDataList");
             List<Map<String, String>> dealStaticDataList = new ArrayList<>();
-            if(dealStaticDataList != null){
+            if (dealStaticDataList != null) {
                 dealStaticDataList = (List<Map<String, String>>)dealStaticData;
             }
             Map<String, Map<String, String>> staticDataMap = new HashMap<>();
-            for(Map<String, String> data : dealStaticDataList){
+            for (Map<String, String> data : dealStaticDataList) {
                 String contentSetId = data.get("contentSetId");
                 staticDataMap.put(contentSetId, data);
             }
-            List<ContentEntity> contentEntities  = Optional.of(sgFrameworkContextContent).map(SgFrameworkContextContent::getContentEntityOriginDataDTO).map(
+            List<ContentEntity> contentEntities = Optional.of(sgFrameworkContextContent).map(
+                SgFrameworkContextContent::getContentEntityOriginDataDTO).map(
                 OriginDataDTO::getResult).orElse(com.ali.com.google.common.collect.Lists.newArrayList());
-            List<String> sceneIdList = contentEntities.stream().map(ContentEntity::getContentId).map(String::valueOf).collect(
-                Collectors.toList());
-            List<SceneDTO> onlyScenesFromCaptainResult = getOnlyScenesFromCaptain(sceneIdList);
 
-            Map<String, SceneDTO> sceneDTOMap = onlyScenesFromCaptainResult.stream().collect(
-                Collectors.toMap(SceneDTO::getId, a -> a, (k1, k2) -> k1));
-            if(CollectionUtils.isNotEmpty(onlyScenesFromCaptainResult)){
-                for(ContentEntity contentEntity : contentEntities){
-                    Long contentId = contentEntity.getContentId();
-                    SceneDTO sceneDTO = sceneDTOMap.get(String.valueOf(contentId));
-                    ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
-                    Map<String, Object> contentInfo = Maps.newHashMap();
-                    contentInfo.put("title", sceneDTO.getTitle());
-                    contentInfo.put("subtitle", sceneDTO.getSubtitle());
-                    contentInfo.put("sceneId", sceneDTO.getId());
-                    contentInfo.put("contentId", sceneDTO.getId());
-
-                    //补全场景集的信息
-                    String contentSetId = contentEntity.getContentSetId();
-                    String[] content = contentSetId.split("_");
-                    String contentSetIdStr = content[1];
-                    contentInfo.put("contentSetId", contentSetIdStr);
-                    Map<String, String> staticData = staticDataMap.get(contentSetIdStr);
-                    String contentSetTitle = staticData.get("contentSetTitle");
-                    contentInfo.put("contentSetTitle", contentSetTitle);
-                    String contentSetSubTitle = staticData.get("contentSetSubTitle");
-                    contentInfo.put("contentSetSubTitle", contentSetSubTitle);
-
-                    contentInfoDTO.setContentInfo(contentInfo);
-                    contentDTOMap.put(contentId, contentInfoDTO);
+            Map<String, List<ContentEntity>> contentEntitiesMap = contentEntities.stream().collect(Collectors.groupingBy(ContentEntity::getContentSetId));
+            contentEntitiesMap.forEach((k, v) ->{
+                if(v.size() > 1){
+                    //todo 需要打印日志
+                    HadesLogUtil.stream("InventoryEntranceModule")
+                        .kv("InventoryEntranceModuleContentInfoQuerySdkExtPt","process")
+                        .kv("scene size", String.valueOf(v.size()))
+                        .kv("sceneSetId", k)
+                        .error();
                 }
+            });
+
+            List<String> sceneIdList = contentEntities.stream().map(ContentEntity::getContentId).map(String::valueOf)
+                .collect(
+                    Collectors.toList());
+            List<TairSceneDTO> onlyScenesFromCaptainResult = getOnlyScenesFromCaptain(sceneIdList);
+
+            Map<String, TairSceneDTO> tairSceneDTOMap = onlyScenesFromCaptainResult.stream().collect(
+                Collectors.toMap(TairSceneDTO::getId, a -> a, (k1, k2) -> k1));
+
+            for (ContentEntity contentEntity : contentEntities) {
+                Long contentId = contentEntity.getContentId();
+                TairSceneDTO tairSceneDTO = tairSceneDTOMap.get(String.valueOf(contentId));
+                ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
+                Map<String, Object> contentInfo = Maps.newHashMap();
+                contentInfo.put("title", tairSceneDTO.getTitle());
+                contentInfo.put("subtitle", tairSceneDTO.getSubtitle());
+                contentInfo.put("sceneId", tairSceneDTO.getId());
+                contentInfo.put("contentId", tairSceneDTO.getId());
+
+                //补全场景集的信息
+                String contentSetId = contentEntity.getContentSetId();
+                String[] content = contentSetId.split("_");
+                String contentSetIdStr = content[1];
+                contentInfo.put("contentSetId", contentSetIdStr);
+                Map<String, String> staticData = staticDataMap.get(contentSetIdStr);
+                String contentSetTitle = staticData.get("contentSetTitle");
+                contentInfo.put("contentSetTitle", contentSetTitle);
+                String contentSetSubTitle = staticData.get("contentSetSubTitle");
+                contentInfo.put("contentSetSubTitle", contentSetSubTitle);
+
+                contentInfoDTO.setContentInfo(contentInfo);
+                contentDTOMap.put(contentId, contentInfoDTO);
             }
             return Flowable.just(Response.success(contentDTOMap));
-        }catch (Exception e){
+        } catch (Exception e) {
             return Flowable.just(Response.fail("query scene info error"));
         }
     }
 
-    private List<SceneDTO> getOnlyScenesFromCaptain(List<String> sceneIdList) throws Exception {
-        List<SceneDTO> scenesFromCaptain = Lists.newArrayList();
+    private List<TairSceneDTO> getOnlyScenesFromCaptain(List<String> sceneIdList) throws Exception {
+        List<TairSceneDTO> scenesFromCaptain = Lists.newArrayList();
         List<EntityId> ids = new ArrayList<>();
         sceneIdList.forEach(e -> {
             EntityId entityId = EntityId.of(ACTIVITY_SCENE_PREFIX + e, "content");
@@ -124,7 +148,7 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
             if (render.isSuccess()) {
                 scenesFromCaptain = render.getData().stream()
                     .map(
-                        entity -> JSON.parseObject(JSON.toJSONString(entity.get("data")), SceneDTO.class)
+                        entity -> JSON.parseObject(JSON.toJSONString(entity.get("data")), TairSceneDTO.class)
                     ).collect(Collectors.toList());
             } else {
                 throw new Exception("查询不成功");

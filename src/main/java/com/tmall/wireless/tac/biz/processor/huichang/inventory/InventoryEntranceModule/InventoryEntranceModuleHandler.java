@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.huichang.inventory;
+package com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule;
 
 import java.util.List;
 

@@ -29,6 +29,10 @@ public class SxlSwitch {
     @AppSwitch(des = "买买菜跳转链接", level = Switch.Level.p4)
     public static String MMC_JUMP_UTL = "https://pre-wormhole.tmall.com/wow/an/cs/act/wupr?disableNav=YES&wh_biz=tm&wh_pid=o2o-mmc/dev&sourceChannel=mmc-halfday&channel=halfday&pha=true";
 
+    @AppSwitch(des = "清单会场入口请求tpp个数上线", level = Switch.Level.p4)
+    public static Integer inventoryEntranceModuleQueryTppSizeLimit = 6;
+
+
     public static String getValue(String key){
 
         return SwitchManager.getStrValue(APP_NAME,"sxl."+key);

@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.huichang.inventory;
+package com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +25,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.txcs.gs.spi.recommend.AldSpi;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.contentextpt.HallCommonContentOriginDataRequestBuildSdkExtPt;
@@ -181,7 +182,13 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         }
 
         params.put("sceneSet", String.join(",", sceneSetIdList)); // 场景集id
-        params.put("pageSize", String.valueOf(sceneSetIdList.size())); // 场景集id
+        //如果大于上限，那么就取上限值
+        if(sceneSetIdList.size() > SxlSwitch.inventoryEntranceModuleQueryTppSizeLimit){
+            params.put("pageSize", String.valueOf(SxlSwitch.inventoryEntranceModuleQueryTppSizeLimit)); // 场景集id
+        }else {
+            params.put("pageSize", String.valueOf(sceneSetIdList.size())); // 场景集id
+        }
+
         params.put("appId", String.valueOf(SCENE_RECOMMEND_APPID));
 
         //把处理好的静态数从新设置一下，后面还需要
