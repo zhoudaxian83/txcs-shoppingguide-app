@@ -64,10 +64,10 @@ public class IconRecommendSceneContentOriginDataRequestExtPt implements ContentO
         Map<String, String> params = Maps.newHashMap();
         // 阿拉丁拉取鸿雁配置
         Map<String, ResResponse> resResponseMap = aldSpi.queryAldInfoSync(buildAldRequest(sgFrameworkContextContent));
-        logger.info("[Scene Word]: Query Ald Info: resResponseMap " + JSON.toJSONString(resResponseMap));
+//        logger.info("[Scene Word]: Query Ald Info: resResponseMap " + JSON.toJSONString(resResponseMap));
         if (MapUtils.isNotEmpty(resResponseMap)) {
             List<Map<String, Object>> dataList = (List<Map<String, Object>>)resResponseMap.get(ConstantValue.ALD_RES_ID).get("data");
-            logger.info("[Scene Word]: Query Ald Info: dataList" + JSON.toJSONString(dataList));
+//            logger.info("[Scene Word]: Query Ald Info: dataList " + JSON.toJSONString(dataList));
             if (dataList != null && dataList.size() > 0) {
                 String sceneGroupId = (String)dataList.get(0).get("sceneGroupId");
                 params.put("sceneSet", sceneGroupId);
