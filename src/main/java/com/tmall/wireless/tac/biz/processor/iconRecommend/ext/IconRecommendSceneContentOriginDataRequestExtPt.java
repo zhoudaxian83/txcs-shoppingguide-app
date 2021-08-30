@@ -92,7 +92,6 @@ public class IconRecommendSceneContentOriginDataRequestExtPt implements ContentO
                 .map(map -> map.get("itemIdList"))
                 .map(Object::toString)
                 .orElse(""));
-        logger.info("[Scene Word]: ItemIds: " + params.get("itemIds"));
         // 曝光过滤开关
         boolean firstPage = Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getUserPageInfo)

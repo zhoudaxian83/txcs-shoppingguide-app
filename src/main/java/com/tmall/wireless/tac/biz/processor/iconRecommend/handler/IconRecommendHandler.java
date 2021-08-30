@@ -46,6 +46,10 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
         return Flowable.zip(classifier, scene, (c, s) -> {
             List<ContentVO> classifierContentVOList = c.getData().getItemAndContentList();
             List<ContentVO> sceneContentVOList = s.getData().getItemAndContentList();
+            if (sceneContentVOList == null || sceneContentVOList.isEmpty()) {
+                logger.info("[IconRecommendHandler] 场景词推荐为空！");
+                LOGGER.error("[IconRecommendHandler] 场景词推荐为空！");
+            }
 
             // 商品数量过滤
             classifierContentVOList = Optional.ofNullable(classifierContentVOList).orElse(new ArrayList<>()).stream()
