@@ -70,7 +70,7 @@ public class IconRecommendSceneContentOriginDataRequestExtPt implements ContentO
 //            logger.info("[Scene Word]: Query Ald Info: dataList " + JSON.toJSONString(dataList));
             if (dataList != null && dataList.size() > 0) {
                 String sceneGroupId = (String)dataList.get(0).get("sceneGroupId");
-                params.put("sceneSet", sceneGroupId);
+                params.put("sceneSet", "intelligentCombinationItems_" + sceneGroupId);
             }
         }
 
