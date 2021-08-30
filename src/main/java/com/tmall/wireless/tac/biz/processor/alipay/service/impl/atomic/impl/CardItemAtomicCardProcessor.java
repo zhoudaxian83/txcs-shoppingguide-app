@@ -136,6 +136,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
 //        result.put("promotionPoint", getPromotionPoint(itemInfoBySourceCaptainDTO));
 
     private JSONObject convert(ItemEntityVO itemEntityVO, GeneralItem aldData) {
+        String itemUrl = itemEntityVO.getString("itemUrl") + "&flowChannel=smAlipayHomeCard";
 
         Map<String, String> scmMap = Maps.newHashMap();
         scmMap.put("uid", "357133924");
@@ -144,7 +145,7 @@ public class CardItemAtomicCardProcessor implements IAtomicCardProcessor {
         String scm = Joiner.on(",").withKeyValueSeparator(":").join(scmMap);
         String replace = TEMPLATE_ITEM.replace(PLACE_HOLDER_ITEM_IMG, itemEntityVO.getString("itemImg"))
                 .replace(PLACE_HOLDER_ITEM_TITTLE, itemEntityVO.getString("shortTitle"))
-                .replace(PLACE_HOLDER_ITEM_URL, "https:" + itemEntityVO.getString("itemUrl"))
+                .replace(PLACE_HOLDER_ITEM_URL, "https:" + itemUrl)
                 .replace(PLACE_HOLDER_ITEM_ORIGIN_PRICE, itemEntityVO.getString("chaoshiPrice"))
                 .replace(PLACE_HOLDER_ITEM_PROMOTION_LABEL, getPromotionPoint(aldData, itemEntityVO))
                 .replace(PLACE_HOLDER_ITEM_PROMOTION_PRICE, itemEntityVO.getString("showPrice"))
