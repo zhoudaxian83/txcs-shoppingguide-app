@@ -1,9 +1,12 @@
 package com.tmall.wireless.tac.biz.processor.iconRecommend.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentInfoQueryExtPt;
 import com.tmall.wireless.tac.biz.processor.iconRecommend.constant.ConstantValue;
 import com.tmall.wireless.tac.biz.processor.iconRecommend.service.IconRecommendService;
@@ -48,7 +51,9 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
             List<ContentVO> sceneContentVOList = s.getData().getItemAndContentList();
             if (sceneContentVOList == null || sceneContentVOList.isEmpty()) {
                 logger.info("[IconRecommendHandler] 场景词推荐为空！");
-                LOGGER.error("[IconRecommendHandler] 场景词推荐为空！");
+                HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_ICON_RECOMMEND_SCENE)
+                        .kv("[IconRecommendHandler] ", "场景词推荐为空！")
+                        .info();
             }
 
             // 商品数量过滤
@@ -59,7 +64,9 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
                     .filter(contentVO -> contentVO.getJSONArray("items").size() >= 6)
                     .collect(Collectors.toList());
             logger.info("[IconRecommendHandler] Classifier content: " + classifierContentVOList.size() + " and scene content: " + sceneContentVOList.size());
-            LOGGER.error("[IconRecommendHandler] Classifier content: " + classifierContentVOList.size() + " and scene content: " + sceneContentVOList.size());
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_ICON_RECOMMEND_SCENE)
+                    .code("[IconRecommendHandler] ", "Classifier content: " + classifierContentVOList.size() + " and scene content: " + sceneContentVOList.size())
+                    .info();
 
             // 少于4个，不下发
             if (classifierContentVOList.size() + sceneContentVOList.size() < 4) {

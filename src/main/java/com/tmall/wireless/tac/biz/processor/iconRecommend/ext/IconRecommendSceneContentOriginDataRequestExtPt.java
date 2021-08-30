@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
@@ -105,6 +106,9 @@ public class IconRecommendSceneContentOriginDataRequestExtPt implements ContentO
                 .orElse(""));
         recommendRequest.setParams(params);
 
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_ICON_RECOMMEND_SCENE)
+                .kv("tppRequest", JSON.toJSONString(recommendRequest))
+                .info();
         logger.info("[SceneContentOriginDataRequestExtPt] tppRequest: " + JSON.toJSONString(recommendRequest));
         return recommendRequest;
     }

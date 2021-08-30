@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.iconRecommend.ext;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
@@ -71,6 +72,9 @@ public class IconRecommendClassifierWordOriginDataRequestExtPt implements Conten
                 .orElse(""));
         recommendRequest.setParams(params);
 
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_ICON_RECOMMEND_CLASSIFIER)
+                .kv("tppRequest", JSON.toJSONString(recommendRequest))
+                .info();
         logger.info("[ClassifierWordOriginDataRequestExtPt] tppRequest: " + JSON.toJSONString(recommendRequest));
         return recommendRequest;
     }
