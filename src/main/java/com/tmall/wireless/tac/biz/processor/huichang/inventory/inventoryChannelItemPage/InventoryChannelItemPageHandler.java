@@ -128,10 +128,10 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         item.put("contentId", sceneDTO.getId());
         item.put("contentTitle",sceneDTO.getTitle());
         item.put("contentSubtitle",sceneDTO.getSubtitle());
-        item.put("contentBackgroundPic", sceneDTO.getProperty().get("bannerUrl"));
-        item.put("contentPic", sceneDTO.getProperty().get("avatarUrl"));
+        item.put("contentBackgroundPic", Optional.ofNullable(sceneDTO.getProperty()).map(property -> property.get("bannerUrl")).orElse(""));
+        item.put("contentPic", Optional.ofNullable(sceneDTO.getProperty()).map(property -> property.get("avatarUrl")).orElse(""));
         item.put("contentType", sceneDTO.getType());
-        item.put("itemSetIds", sceneDTO.getItemsetIds());
+        item.put("itemSetIds", Optional.ofNullable(sceneDTO.getItemsetIds()).map(itemSetIds -> itemSetIds.get(0)).orElse(0L));
 //        item.put("rankType", sceneDTO.getProperty().get("rankType"));
 //        item.put("shortTitle", sceneDTO.getProperty().get("shortTitle"));
         GeneralItem contentModel = new GeneralItem();
