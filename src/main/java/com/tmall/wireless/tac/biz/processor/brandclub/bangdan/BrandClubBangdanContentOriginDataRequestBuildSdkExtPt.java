@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.brandclub.bangdan;
 
+import com.alibaba.citrus.util.StringUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -15,6 +16,7 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusines
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.Enviroment;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,13 +42,13 @@ public class BrandClubBangdanContentOriginDataRequestBuildSdkExtPt extends Regis
                 .map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams)
                 .map(m -> m.get("topContentIdList"))
-                .map(Object::toString).map(Long::valueOf).orElse(0L);
+                .map(Object::toString).filter(StringUtils::isNumeric).map(Long::valueOf).orElse(0L);
 
         Long brandId = Optional.of(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams)
                 .map(m -> m.get("brandId"))
-                .map(Object::toString).map(Long::valueOf).orElse(0L);
+                .map(Object::toString).filter(StringUtils::isNumeric).map(Long::valueOf).orElse(0L);
 
         Map<String, Map<String, Object>> groupAndBrandMapping =
                 brandContentSetIdService.getGroupAndBrandMapping(Lists.newArrayList(brandId));
