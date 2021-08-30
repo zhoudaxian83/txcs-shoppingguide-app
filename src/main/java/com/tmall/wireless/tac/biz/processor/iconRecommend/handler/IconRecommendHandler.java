@@ -4,12 +4,15 @@ import com.alibaba.fastjson.JSONArray;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenMindContentInfoQueryExtPt;
 import com.tmall.wireless.tac.biz.processor.iconRecommend.constant.ConstantValue;
 import com.tmall.wireless.tac.biz.processor.iconRecommend.service.IconRecommendService;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +30,8 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
 
     @Autowired
     TacLogger logger;
+
+    Logger LOGGER = LoggerFactory.getLogger(IconRecommendHandler.class);
 
     @Autowired
     IconRecommendService iconRecommendService;
@@ -46,11 +51,11 @@ public class IconRecommendHandler extends RpmReactiveHandler<SgFrameworkResponse
             classifierContentVOList = Optional.ofNullable(classifierContentVOList).orElse(new ArrayList<>()).stream()
                     .filter(contentVO -> contentVO.getJSONArray("items").size() >= 6)
                     .collect(Collectors.toList());
-            logger.info("[IconRecommendHandler] Size of classifier content: " + classifierContentVOList.size());
             sceneContentVOList = Optional.ofNullable(sceneContentVOList).orElse(new ArrayList<>()).stream()
                     .filter(contentVO -> contentVO.getJSONArray("items").size() >= 6)
                     .collect(Collectors.toList());
-            logger.info("[IconRecommendHandler] Size of scene content: " + sceneContentVOList.size());
+            logger.info("[IconRecommendHandler] Classifier content: " + classifierContentVOList.size() + " and scene content: " + sceneContentVOList.size());
+            LOGGER.error("[IconRecommendHandler] Classifier content: " + classifierContentVOList.size() + " and scene content: " + sceneContentVOList.size());
 
             // 少于4个，不下发
             if (classifierContentVOList.size() + sceneContentVOList.size() < 4) {
