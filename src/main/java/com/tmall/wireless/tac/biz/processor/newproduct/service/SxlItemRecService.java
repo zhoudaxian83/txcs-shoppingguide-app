@@ -276,7 +276,7 @@ public class SxlItemRecService {
         }catch (Exception e){
             HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
                 .kv("SxlItemRecService getAbData",JSON.toJSONString(context.getParams()))
-                .kv("e.getMessage()",e.getMessage())
+                .kv("e.getMessage()",JSON.toJSONString(e))
                 .info();
         }
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
