@@ -9,10 +9,13 @@ import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOrig
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.brandclub.fp.BrandContentSetIdService;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
+import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.Enviroment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,9 +31,33 @@ import java.util.stream.Collectors;
 @Service
 public class BrandClubBangdanContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
 
-
+    @Autowired
+    BrandContentSetIdService brandContentSetIdService;
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
+
+        Long topContentIdList = Optional.of(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getTacContext)
+                .map(Context::getParams)
+                .map(m -> m.get("topContentIdList"))
+                .map(Object::toString).map(Long::valueOf).orElse(0L);
+
+        Long brandId = Optional.of(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getTacContext)
+                .map(Context::getParams)
+                .map(m -> m.get("brandId"))
+                .map(Object::toString).map(Long::valueOf).orElse(0L);
+
+        Map<String, Map<String, Object>> groupAndBrandMapping =
+                brandContentSetIdService.getGroupAndBrandMapping(Lists.newArrayList(brandId));
+
+        List<Integer> contentSetIdList = groupAndBrandMapping.values().stream().findFirst()
+                .map(m -> m.get("boardSceneGroupIds")).map(o -> {
+                    List<Integer> contentSetIds = (List<Integer>) o;
+                    return contentSetIds;
+                }).orElse(Lists.newArrayList());
+
+
         RecommendRequest tppRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
         tppRequest.setParams(params);
@@ -38,14 +65,14 @@ public class BrandClubBangdanContentOriginDataRequestBuildSdkExtPt extends Regis
         tppRequest.setUserId(Optional.of(sgFrameworkContextContent).
                 map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO)
                 .map(UserDO::getUserId).orElse(0L));
-        tppRequest.setAppId(25379L);
+        tppRequest.setAppId(27402L);
 
 
-        List<Long> contentSetIdList = Lists.newArrayList(160002L);
         List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id)
                 .collect(
                         Collectors.toList());
         params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
+        params.put("sceneTop", String.valueOf(topContentIdList));
         /**心智场景支持O2O场景**/
         Long oneHour = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
         Long halfDay = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtHalfDayStoreId).orElse(0L);

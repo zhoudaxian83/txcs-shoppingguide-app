@@ -60,7 +60,7 @@ public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register i
         tppRequest.setUserId(Optional.of(sgFrameworkContextContent).
                 map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO)
                 .map(UserDO::getUserId).orElse(0L));
-        tppRequest.setAppId(25379L);
+        tppRequest.setAppId(27402L);
 
 
         List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id)
