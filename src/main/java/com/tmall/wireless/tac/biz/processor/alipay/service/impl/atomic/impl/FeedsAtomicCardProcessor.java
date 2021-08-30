@@ -111,7 +111,7 @@ public class FeedsAtomicCardProcessor implements IAtomicCardProcessor {
             scmMap.put("abid", "357133924");
             String scm = Joiner.on(",").withKeyValueSeparator(":").join(scmMap);
 
-            String itemUrl = itemEntityVO.getString("itemUrl") + "&" + "flowChannel=smAlipayHomeCard";
+            String itemUrl = itemEntityVO.getString("itemUrl") + "&flowChannel=smAlipayHomeCard";
 
             String replace = ITEM_TEMP.replace(PLACE_HOLDER_ITEM_IMG, itemEntityVO.getString("itemImg"))
                     .replace(PLACE_HOLDER_ITEM_TITTLE, itemEntityVO.getString("shortTitle"))
