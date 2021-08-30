@@ -69,8 +69,8 @@ public class IconRecommendSceneContentOriginDataRequestExtPt implements ContentO
             List<Map<String, Object>> dataList = (List<Map<String, Object>>)resResponseMap.get(ConstantValue.ALD_RES_ID).get("data");
             logger.info("[Scene Word]: Query Ald Info: dataList" + JSON.toJSONString(dataList));
             if (dataList != null && dataList.size() > 0) {
-                String contentId = (String)dataList.get(0).get("ContentId");
-                params.put("sceneSet", contentId);
+                String sceneGroupId = (String)dataList.get(0).get("sceneGroupId");
+                params.put("sceneSet", sceneGroupId);
             }
         }
 
