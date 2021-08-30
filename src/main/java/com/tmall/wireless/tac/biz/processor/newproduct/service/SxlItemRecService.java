@@ -259,8 +259,8 @@ public class SxlItemRecService {
                 .kv("SxlItemRecService abTestRest",JSON.toJSONString(abTestRest))
                 .info();
             abTestRest.forEach(variation ->{
-                String smNewArrival = (String)JSON.parse(SxlSwitch.SM_NEW_ARRIVAL);
-                String sxlAlgItemsetIdAb = (String)JSON.parse(SxlSwitch.SXL_ALG_ITEMSET_ID_AB);
+                String smNewArrival = SxlSwitch.SM_NEW_ARRIVAL;
+                String sxlAlgItemsetIdAb = SxlSwitch.SXL_ALG_ITEMSET_ID_AB;
                 HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
                     .kv("SxlItemRecService","getAbData")
                     .kv("smNewArrival",smNewArrival)
