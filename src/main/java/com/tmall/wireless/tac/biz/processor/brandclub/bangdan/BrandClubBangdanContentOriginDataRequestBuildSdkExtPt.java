@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.brandclub.bangdan;
 
-import com.alibaba.citrus.util.StringUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
