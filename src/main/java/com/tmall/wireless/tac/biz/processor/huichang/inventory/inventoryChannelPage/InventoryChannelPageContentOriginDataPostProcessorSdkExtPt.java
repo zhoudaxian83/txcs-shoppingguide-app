@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.collect.Lists;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -31,6 +32,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Tpp请求的后置处理。这里的处理就是在第一个场景里插入为你推荐商品
+ */
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
         useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
         scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE)
@@ -51,8 +55,17 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
                 throw new Exception("contentEntityList为空");
             }
             tacLogger.debug("调顺序之前场景数量" + contentEntityList.size() +"，顺序是" + JSONObject.toJSONString(contentEntityList));
+            HadesLogUtil.stream("InventoryChannelPage")
+                    .kv("InventoryChannelPageContentOriginDataPostProcessorSdkExtPt", "process")
+                    .kv("调顺序之前场景数量", String.valueOf(contentEntityList.size()))
+                    .kv("调顺序之前的顺序", JSONObject.toJSONString(contentEntityList))
+                    .info();
         } catch (Exception e) {
             tacLogger.debug("场景信息解析出错：" + StackTraceUtil.stackTrace(e));
+            HadesLogUtil.stream("InventoryChannelPage")
+                    .kv("InventoryChannelPageContentOriginDataPostProcessorSdkExtPt", "process")
+                    .kv("场景信息解析出错", StackTraceUtil.stackTrace(e))
+                    .error();
             return contentEntityOriginDataDTO;
         }
 
@@ -62,12 +75,14 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
             Map<String, Object> aldParams = requestContext4Ald.getAldParam();
             String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryItemId", tacLogger); // 为你推荐商品
 
-            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 1));
-
-            if(StringUtils.isNotBlank(itemRecommand) && pageIndex == 1) { // 第一页的第一个场景需要插入为你推荐商品以及过滤为你推荐商品
+            // 如果url有带，从url取，否则从aldParams取
+            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 0));
+            // Todo pageIndex 改成第0页
+            if(StringUtils.isNotBlank(itemRecommand) && pageIndex == 0) { // 第一页的第一个场景需要插入为你推荐商品以及过滤为你推荐商品
                 ItemEntity itemRecommandEntity = new ItemEntity();
                 itemRecommandEntity.setItemId(Long.valueOf(itemRecommand));
                 String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
+                // 获取详细的履约类型。例如O2O场景下的半日达，一小时达
                 String detailLocType = getDetailLocType(locType, aldParams);
                 itemRecommandEntity.setO2oType(detailLocType);
                 itemRecommandEntity.setBusinessType(detailLocType);
@@ -75,9 +90,10 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
 
                 if(CollectionUtils.isNotEmpty(contentEntityList)) {
                     // 第一个场景的商品列表
-                    List<ItemEntity> itemEntityList = Optional.ofNullable(contentEntityList.get(0)).map(contentEntityList1 -> contentEntityList1.getItems()).orElse(new ArrayList<ItemEntity>());
+                    List<ItemEntity> itemEntityList = Optional.ofNullable(contentEntityList.get(0).getItems()).orElse(new ArrayList<ItemEntity>());
                     List<ItemEntity> newItemEntityList = Lists.newArrayList();
                     newItemEntityList.add(itemRecommandEntity);
+                    // 将商品列表中 和 为你推荐商品 重复的商品过滤掉
                     for(ItemEntity itemEntity: itemEntityList) {
                         if(!itemEntity.getItemId().equals(itemRecommandEntity.getItemId())) {
                             newItemEntityList.add(itemEntity);
@@ -89,11 +105,21 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
             }
         } catch (Exception e) {
             tacLogger.debug("场景重排序失败,使用原来顺序" + StackTraceUtil.stackTrace(e));
+            HadesLogUtil.stream("InventoryChannelPage")
+                    .kv("InventoryChannelPageContentOriginDataPostProcessorSdkExtPt", "process")
+                    .kv("场景重排序失败", StackTraceUtil.stackTrace(e))
+                    .error();
         }
         tacLogger.debug("调顺序之后场景数量是" + contentEntityOriginDataDTO.getResult().size() + "，顺序是" + JSONObject.toJSONString(contentEntityOriginDataDTO.getResult()));
+        HadesLogUtil.stream("InventoryChannelPage")
+                .kv("InventoryChannelPageContentOriginDataPostProcessorSdkExtPt", "process")
+                .kv("调顺序之后场景数量是", String.valueOf(contentEntityOriginDataDTO.getResult().size()))
+                .kv("新顺序是", JSONObject.toJSONString(contentEntityOriginDataDTO.getResult()))
+                .info();
         return contentEntityOriginDataDTO;
     }
 
+    // 获取详细的履约类型。例如O2O场景下的半日达，一小时达
     private String getDetailLocType(String locType, Map<String, Object> aldParams) {
         if("B2C".equals(locType) || locType == null) {
             if(StringUtils.isBlank(locType)) {

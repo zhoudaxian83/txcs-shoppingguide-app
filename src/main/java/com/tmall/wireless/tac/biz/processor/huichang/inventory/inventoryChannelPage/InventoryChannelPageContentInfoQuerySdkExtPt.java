@@ -20,6 +20,7 @@ import com.tmall.aselfcaptain.cloudrec.domain.EntityQueryOption;
 import com.tmall.aselfcaptain.item.model.ChannelDataDO;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.contentinfo.ContentInfoQuerySdkExtPt;
@@ -36,6 +37,9 @@ import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * 场景请求captain渲染
+ */
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
         useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
         scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE)
@@ -51,7 +55,6 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
     private static final String ACTIVITY_SCENE_PREFIX = "tcls_ugc_scene_v1_";
     @Override
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
-        // Todo likunlin
         tacLogger.debug("扩展点InventoryChannelPageContentInfoQuerySdkExtPt");
         try{
             List<ContentEntity> contentEntityList = sgFrameworkContextContent.getContentEntityOriginDataDTO().getResult();
@@ -84,10 +87,13 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
                                     entity -> JSON.parseObject(JSON.toJSONString(entity.get("data")), TairSceneDTO.class)
                             ).collect(Collectors.toList());
                     tacLogger.debug("请求Captain返回结果: " + JSONObject.toJSONString(sceneDTOList));
+                    HadesLogUtil.stream("InventoryChannelPage")
+                            .kv("InventoryChannelPageContentInfoQuerySdkExtPt", "process")
+                            .kv("请求场景Captain返回结果", JSONObject.toJSONString(sceneDTOList))
+                            .info();
                     sceneDTOList.forEach(
                             sceneDTO -> {
                                 captainsContent.put(Long.valueOf(sceneDTO.getId()), parseCaptainResult(sceneDTO, contentEntityListMap, sgFrameworkContextContent));
-
                             }
                     );
                     tacLogger.debug("请求Captain结果整理：" + JSONObject.toJSONString(captainsContent));
@@ -96,15 +102,27 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
                 else {
                     // throw new Exception("查询不成功");
                     tacLogger.debug("查询不成功");
+                    HadesLogUtil.stream("InventoryChannelPage")
+                            .kv("InventoryChannelPageContentInfoQuerySdkExtPt", "process")
+                            .kv("查询不成功","render.isSuccess() == false")
+                            .error();
                     return Flowable.just(Response.fail("captain fail"));
                 }
             }
             catch (Exception e) {
                 tacLogger.debug("查询异常");
+                HadesLogUtil.stream("InventoryChannelPage")
+                        .kv("InventoryChannelPageContentInfoQuerySdkExtPt", "process")
+                        .kv("查询异常", StackTraceUtil.stackTrace(e))
+                        .error();
                 return Flowable.just(Response.fail("captain error"));
             }
         } catch (Exception e) {
             tacLogger.debug("查询异常"+ StackTraceUtil.stackTrace(e));
+            HadesLogUtil.stream("InventoryChannelPage")
+                    .kv("InventoryChannelPageContentInfoQuerySdkExtPt", "process")
+                    .kv("查询异常", StackTraceUtil.stackTrace(e))
+                    .error();
             return Flowable.just(Response.fail("captain error"));
         }
     }
@@ -119,13 +137,13 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
         contentMap.put("contentTitle",sceneDTO.getTitle());
         contentMap.put("contentSubTitle",sceneDTO.getSubtitle());
         contentMap.put("itemSetIds", sceneDTO.getItemsetIds()); // 默认返回setId列表
-        contentMap.put("contentPic", sceneDTO.getProperty().get("avatarUrl")); //Todo 是avatarUrl还是bannerUrl
-        contentMap.put("contentType",sceneDTO.getType()); //Todo
-        contentMap.put("scm", contentEntity.getTrack_point()); //Todo
+        contentMap.put("contentPic", sceneDTO.getProperty().get("avatarUrl")); //二跳页用小图
+        contentMap.put("contentType",sceneDTO.getType());
+        contentMap.put("scm", contentEntity.getTrack_point());
         contentMap.put("marketChannel",sceneDTO.getMarketChannel());
         contentMap.put("setSource", sceneDTO.getMarketChannel());
+        // 场景承接页(三跳页)的url参数
         String urlParam = "";
-
         urlParam = PageUrlUtil.addParams(urlParam, "contentId", String.valueOf(sceneDTO.getId()));
         urlParam = PageUrlUtil.addParams(urlParam, "itemSetId", String.valueOf(sceneDTO.getItemsetIds().get(0)));
         String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
@@ -139,7 +157,6 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
 //        if(StringUtils.isNotBlank(itemRecommand)) {
 //            urlParam = PageUrlUtil.addParams(urlParam, "itemRecommand", itemRecommand);
 //        }
-
         contentMap.put("urlParams", urlParam);
         ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
         contentInfoDTO.setContentInfo(contentMap);

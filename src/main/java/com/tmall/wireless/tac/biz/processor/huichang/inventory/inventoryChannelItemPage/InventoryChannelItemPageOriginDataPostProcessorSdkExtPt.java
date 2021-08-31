@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.collect.Lists;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -32,6 +33,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Tpp返回的后置处理 把二跳页的6个商品放到承接页最前面
+ */
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
         useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
         scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE)
@@ -52,8 +56,17 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
                 throw new Exception("itemEntity为空");
             }
             tacLogger.debug("商品旧顺序：" + JSONObject.toJSONString(itemEntityList));
+            HadesLogUtil.stream("InventoryChannelItemPage")
+                    .kv("扩展点InventoryChannelItemPageOriginDataPostProcessorSdkExtPt", "process")
+                    .kv("商品重排序之前数量", String.valueOf(itemEntityList.size()))
+                    .kv("商品重排序之前顺序", JSONObject.toJSONString(itemEntityList))
+                    .info();
         } catch (Exception e) {
             tacLogger.debug("商品信息解析出错：" + StackTraceUtil.stackTrace(e));
+            HadesLogUtil.stream("InventoryChannelItemPage")
+                    .kv("扩展点InventoryChannelItemPageOriginDataPostProcessorSdkExtPt", "process")
+                    .kv("商品信息解析出错", StackTraceUtil.stackTrace(e))
+                    .error();
             return itemEntityOriginDataDTO;
         }
         try{
@@ -63,9 +76,10 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
             String items = PageUrlUtil.getParamFromCurPageUrl(aldParams, "items", tacLogger); // 二跳页展示的6个商品
             if(StringUtils.isNotBlank(items)) {
                 List<String> itemList = Arrays.asList(items.split(","));
+                // 用来过滤重复商品
                 Set<Long> itemSet = itemList.stream().map(Long::valueOf).collect(Collectors.toSet());
                 List<ItemEntity> newItemEntityList = Lists.newArrayList();
-                // 如果是第一页，要把二跳页的商品置顶(后来改成没有分页了)
+                // 把二跳页的商品置顶
                 for(String itemId: itemList) {
                     ItemEntity item = new ItemEntity();
                     item.setItemId(Long.valueOf(itemId));
@@ -76,7 +90,7 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
                     item.setBizType(BizType.SM.getCode());
                     newItemEntityList.add(item);
                 }
-
+                // 过滤重复商品
                 for(ItemEntity itemEntity : itemEntityList) {
                     if(!itemSet.contains(itemEntity.getItemId())) {
                         newItemEntityList.add(itemEntity);
@@ -86,9 +100,17 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
             }
         } catch (Exception e) {
             tacLogger.debug("商品重排序失败,使用原来顺序" + StackTraceUtil.stackTrace(e));
+            HadesLogUtil.stream("InventoryChannelItemPage")
+                    .kv("扩展点InventoryChannelItemPageOriginDataPostProcessorSdkExtPt", "process")
+                    .kv("商品重排序失败,使用原来顺序", StackTraceUtil.stackTrace(e))
+                    .error();
         }
 
         tacLogger.debug("商品新顺序：" + JSONObject.toJSONString(itemEntityOriginDataDTO.getResult()));
+        HadesLogUtil.stream("InventoryChannelItemPage")
+                .kv("扩展点InventoryChannelItemPageOriginDataPostProcessorSdkExtPt", "process")
+                .kv("商品新顺序", JSONObject.toJSONString(itemEntityOriginDataDTO.getResult()))
+                .info();
         return itemEntityOriginDataDTO;
     }
 

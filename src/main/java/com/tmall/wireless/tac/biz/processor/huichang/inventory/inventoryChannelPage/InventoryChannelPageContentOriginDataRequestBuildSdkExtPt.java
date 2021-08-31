@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -39,9 +40,9 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
     private static final Long DEFAULT_SMAREAID = 310100L;
     private static final Long DEFAULT_LOGAREAID = 107L;
     private static final String SCENE_SET_PREFIX = "intelligentCombinationItems_";
-    public static final Long APPID = 27401L;  //Todo likunlin
-    private static final Long DEFAULT_USERID = 0L; // Todo likunlin
-    private static final int PAGE_SIZE = 5; //Todo likunlin
+    public static final Long APPID = 27401L;
+    private static final Long DEFAULT_USERID = 0L;
+    private static final int PAGE_SIZE = 5;
 
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
@@ -55,16 +56,29 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
             Map<String, String> params = Maps.newHashMap();
             if(MapUtils.isEmpty(aldParams)) {
                 tacLogger.debug("aldParams数据缺失");
+                HadesLogUtil.stream("InventoryChannelPage")
+                        .kv("InventoryChannelPageContentOriginDataRequestBuildSdkExtPt", "process")
+                        .kv("数据缺失", "aldParams")
+                        .error();
                 throw new Exception("aldParams数据缺失");
             }
             if(MapUtils.isEmpty(aldContext)) {
                 tacLogger.debug("aldContext数据缺失");
+                HadesLogUtil.stream("InventoryChannelPage")
+                        .kv("InventoryChannelPageContentOriginDataRequestBuildSdkExtPt", "process")
+                        .kv("数据缺失", "aldContext")
+                        .error();
                 aldContext = Maps.newHashMap();
             }
-
             tacLogger.debug("aldParams: " + JSONObject.toJSONString(aldParams));
-            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 1));
-            int index = (pageIndex - 1) * PAGE_SIZE;
+            HadesLogUtil.stream("InventoryChannelPage")
+                    .kv("InventoryChannelPageContentOriginDataRequestBuildSdkExtPt", "process")
+                    .kv("aldParams", JSONObject.toJSONString(aldParams))
+                    .info();
+            // 如果url有带，从url取，否则从aldParams取
+            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 0));
+            // 前端的pageIndex换算到Tpp感知的index
+            int index = pageIndex * PAGE_SIZE;
             params.put("index", String.valueOf(index));
 
             params.put("pageSize", String.valueOf(PAGE_SIZE));
@@ -96,7 +110,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
             if(StringUtils.isNotBlank(sceneExclude)) {
                 params.put("sceneExclude", sceneExclude); // 过滤的场景
             }
-            // 这个参数名就是entryContentIds，这里该参数只会带一个id
+            // 这里参数entryContentIds只会带一个id
             String sceneTop = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryContentIds", tacLogger); // Todo likunlin
             if(StringUtils.isNotBlank(sceneTop)) {
                 params.put("sceneTop", sceneTop); // 置顶的场景
@@ -107,10 +121,17 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
             recommendRequest.setParams(params);
             recommendRequest.setLogResult(true);
             tacLogger.debug("Tpp请求参数是：" + JSONObject.toJSONString(recommendRequest));
+            HadesLogUtil.stream("InventoryChannelPage")
+                    .kv("InventoryChannelPageContentOriginDataRequestBuildSdkExtPt", "process")
+                    .kv("Tpp request params", JSONObject.toJSONString(recommendRequest))
+                    .info();
             return recommendRequest;
         } catch (Exception e) {
             tacLogger.debug("扩展点InventoryChannelPageOriginDataRequestBuildSdkExtPt 失败" + StackTraceUtil.stackTrace(e));
-//            throw new Exception("扩展点InventoryChannelPageOriginDataRequestBuildSdkExtPt 失败", e);
+            HadesLogUtil.stream("InventoryChannelPage")
+                    .kv("InventoryChannelPageContentOriginDataRequestBuildSdkExtPt", "process")
+                    .kv("扩展点InventoryChannelPageOriginDataRequestBuildSdkExtPt失败", StackTraceUtil.stackTrace(e))
+                    .error();
             return recommendRequest;
         }
     }
