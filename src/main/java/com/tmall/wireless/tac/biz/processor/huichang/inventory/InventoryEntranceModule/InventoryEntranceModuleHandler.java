@@ -28,7 +28,6 @@ import org.springframework.stereotype.Component;
 public class InventoryEntranceModuleHandler extends TacReactiveHandler4Ald {
 
     Logger LOGGER = LoggerFactory.getLogger(InventoryEntranceModuleHandler.class);
-    @Autowired
     TacLogger tacLogger;
 
     @Autowired
@@ -36,12 +35,18 @@ public class InventoryEntranceModuleHandler extends TacReactiveHandler4Ald {
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
-        tacLogger.info("tacLogger.InventoryEntranceModuleHandler.statr");
-        LOGGER.warn("LOGGER.InventoryEntranceModuleHandler.statr");
-        BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
-            HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
-            HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE);
-        //bizScenario.addProducePackage("huichang");
-        return hallCommonContentRequestProxy.recommend(requestContext4Ald, bizScenario);
+        try {
+            tacLogger.info("tacLogger.InventoryEntranceModuleHandler.statr");
+            LOGGER.warn("LOGGER.InventoryEntranceModuleHandler.statr");
+            BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
+                HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
+                HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE);
+            //bizScenario.addProducePackage("huichang");
+            return hallCommonContentRequestProxy.recommend(requestContext4Ald, bizScenario);
+        }catch (Exception e){
+            LOGGER.error("LOGGER.InventoryEntranceModuleHandler.error.", e);
+            return Flowable.error(e);
+        }
+
     }
 }
