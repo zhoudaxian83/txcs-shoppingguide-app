@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 public class InventoryEntranceModuleHandler extends TacReactiveHandler4Ald {
 
     Logger LOGGER = LoggerFactory.getLogger(InventoryEntranceModuleHandler.class);
+    @Autowired
     TacLogger tacLogger;
 
     @Autowired
