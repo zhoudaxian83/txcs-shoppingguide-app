@@ -1,12 +1,15 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.handler;
 
 import com.alibaba.fastjson.JSON;
+
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.service.SxlContentRecService;
 import com.tmall.wireless.tac.biz.processor.newproduct.service.SxlItemRecService;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -43,7 +46,10 @@ public class SxlItemAndContentHandler extends RpmReactiveHandler<SgFrameworkResp
 
         Flowable<TacResult<SgFrameworkResponse<ContentVO>>> content = sxlContentRecService.recommend(context);
 
-        tacLogger.info("SxlItemAndContentHandler content"+ JSON.toJSONString(content));
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_CONTENT)
+            .kv("SxlItemAndContentHandler","executeFlowable")
+            .kv("content",JSON.toJSONString(content))
+            .info();
 
         Flowable<TacResult<SgFrameworkResponse<EntityVO>>> item = sxlItemRecService.recommend(context);
 
