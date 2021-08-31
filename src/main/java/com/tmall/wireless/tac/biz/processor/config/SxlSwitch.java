@@ -31,6 +31,9 @@ public class SxlSwitch {
     /**预发**/
     //public static String O2O_BD_JUMP_UTL = "https://pre-wormhole.wapa.tmall.com/wow/an/cs/act/wupr?wh_biz=tm&wh_pid=go-shopping/1773d7acee3&disableNav=YES&contentId=%s&contentType=%s&itemSetIds=%s&entryItemIds=%s";
 
+    @AppSwitch(des = "买买菜跳转链接", level = Switch.Level.p4)
+    public static String MMC_JUMP_UTL = "https://pre-wormhole.tmall.com/wow/an/cs/act/wupr?disableNav=YES&wh_biz=tm&wh_pid=o2o-mmc/dev&sourceChannel=mmc-halfday&channel=halfday&pha=true";
+
     @AppSwitch(des = "上新了超市格物abTest业务域code", level = Switch.Level.p4)
     public static String SM_NEW_ARRIVAL = "SM_NEW_ARRIVAL";
 

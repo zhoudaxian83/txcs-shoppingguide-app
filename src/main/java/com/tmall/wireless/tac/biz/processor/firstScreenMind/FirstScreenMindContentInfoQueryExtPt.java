@@ -14,8 +14,10 @@ import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
 import com.tmall.txcs.gs.model.Response;
+import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.content.ContentInfoDTO;
 import com.tmall.txcs.gs.model.model.dto.ContentEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
@@ -38,6 +40,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -67,12 +70,26 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
             for (ContentEntity contentEntity : contentEntities) {
                 sKeyList.add(pKey + "_" + contentEntity.getContentId());
             }
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+                    Objects::toString).orElse("0"))
+                .kv("FirstScreenMindContentInfoQueryExtPt","process")
+                .kv("sKeyList",JSON.toJSONString(sKeyList))
+                .info();
             Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
             HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                 .kv("sKeyList",JSON.toJSONString(sKeyList))
                 .kv("mgetResult.getValue()",JSON.toJSONString(mgetResult.getValue()))
                 .info();
-            if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
+            if(mgetResult != null && mgetResult.getValue() != null){
+                HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                    .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+                        Objects::toString).orElse("0"))
+                    .kv("FirstScreenMindContentInfoQueryExtPt","process")
+                    .kv("mgetResult.getValue().size()",JSON.toJSONString(mgetResult.getValue().size()))
+                    .info();
+            }
+            if (mgetResult == null || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail("READ_CONTENT_FROM_TAIR_RETURN_EMPTY"));
             }
             List<DataEntry> dataEntryList = mgetResult.getValue();
@@ -137,6 +154,8 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                     contentInfo.put("contentType",RenderContentTypeEnum.recipeContent.getType());
                 } else if (type.equals(SceneType.MEDIA.name())) {
                     contentInfo.put("contentType",RenderContentTypeEnum.mediaContent.getType());
+                } else if (marketChannel.equals(GcsMarketChannel.O2O.name()) && type.equals(SceneType.BOARD.name())) {
+                    contentInfo.put("contentType",RenderContentTypeEnum.bangdanO2OContent.getType());
                 } else if (type.equals(SceneType.BOARD.name())) {
                     contentInfo.put("contentType",RenderContentTypeEnum.bangdanContent.getType());
                 } else {
@@ -147,6 +166,12 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 contentDTO.setContentInfo(contentInfo);
                 contentDTOMap.put(contentId,contentDTO);
             }
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+                    Objects::toString).orElse("0"))
+                .kv("FirstScreenMindContentInfoQueryExtPt","process")
+                .kv("contentDTOMap",JSON.toJSONString(contentDTOMap))
+                .info();
         }catch (Exception e){
             LOGGER.info(RenderErrorEnum.contentBatchTairExc.getCode(), RenderErrorEnum.contentBatchTairExc.getMessage());
             return Flowable.just(Response.fail(RenderErrorEnum.contentBatchTairExc.getCode()));

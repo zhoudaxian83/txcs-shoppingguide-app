@@ -57,7 +57,9 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
         params.put("commerce", "B2C");
-        params.put("regionCode", String.valueOf(sgFrameworkContextItem.getLocParams().getRegionCode()));
+
+        Long regionCode = sgFrameworkContextItem.getLocParams().getRegionCode();
+        params.put("regionCode", (regionCode == null || regionCode == 0) ? "107" : String.valueOf(regionCode));
         params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextItem).map(
             SgFrameworkContext::getUserDO).map(UserDO::getCna).orElse(""));
 
@@ -66,6 +68,7 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
             .kv("tppRequest",JSON.toJSONString(tppRequest))
             .info();
+
         return tppRequest;
     }
 

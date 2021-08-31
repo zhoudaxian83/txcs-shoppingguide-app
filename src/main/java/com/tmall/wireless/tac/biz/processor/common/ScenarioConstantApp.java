@@ -26,13 +26,15 @@ public class ScenarioConstantApp extends ScenarioConstant {
     public static final String SCENARIO_SHANG_XIN_ITEM= "SHANG_XIN_ITEM";
 
     public static final String SCENARIO_SHANG_XIN_CONTENT= "SHANG_XIN_CONTENT";
+    public static final String SCENARIO_ALI_PAY_FIRST_PAGE = "ALI_PAY_FIRST_PAGE";
+    public static final String SCENARIO_ALI_PAY_MIDDLE_PAGE = "ALI_PAY_MIDDLE_PAGE";
 
     /**smartbuy**/
     public static final String SCENE_SMART_BUY_ITEM = "SCENE_SMART_BUY_ITEM";
 
     public static final String O2O_BANG_DAN = "O2O_BANG_DAN";
 
-    /**
+     /**
      * o2o猜你喜欢
      */
     public static final String O2O_CNXH = "o2o_cnxh";
@@ -44,11 +46,20 @@ public class ScenarioConstantApp extends ScenarioConstant {
      * 五折天
      */
     public static final String WU_ZHE_TIAN = "WU_ZHE_TIAN";
+    /**会场猜你喜欢**/
+    public static final String GUL_PROMOTION = "GulPromotion";
+
+    /**
+     * 品牌馆首页
+     */
+    public static final String BRAND_CLUB_FP = "BRAND_CLUB_FP";
 
 
     /**
-     * 五折天
+     * 品牌馆榜单
      */
-    /*public static final String SCENE_FIRST_SCREEN_MIND_CONTENT = "SCENE_FIRST_SCREEN_MIND_CONTENT";*/
+    public static final String BRAND_CLUB_BANGDAN = "BRAND_CLUB_BANGDAN";
+
+
 
 }

@@ -46,9 +46,6 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
 
     Logger LOGGER = LoggerFactory.getLogger(WuZheTianBuildItemVOExtPt.class);
 
-    @Autowired
-    TacLogger tacLogger;
-
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Map<String, Object> userParams = buildItemVoRequest.getContext().getUserParams();
@@ -80,7 +77,6 @@ public class WuZheTianBuildItemVOExtPt implements BuildItemVOExtPt {
                 ItemDataDTO itemDataDTO = itemInfoBySourceDTOMain.getItemDTO();
                 canBuy = itemDataDTO.isCanBuy();
                 sellout = itemDataDTO.isSellOut();
-                tacLogger.info("sellout:sellout=" + sellout + "itemId=" + itemDataDTO.getItemId());
                 JSONObject itemPromotionResp = (JSONObject)itemDataDTO.getItemPromotionResp();
                 itemDesc = buildItemDesc(itemPromotionResp);
                 specifications = itemDataDTO.getSpecDetail();

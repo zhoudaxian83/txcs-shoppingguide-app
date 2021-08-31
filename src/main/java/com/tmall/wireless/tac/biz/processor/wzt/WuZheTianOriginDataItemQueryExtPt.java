@@ -1,15 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import com.alibaba.cola.extension.Extension;
-import com.alibaba.fastjson.JSON;
-
 import com.ali.com.google.common.base.Joiner;
 import com.ali.unit.rule.util.lang.CollectionUtils;
+import com.alibaba.cola.extension.Extension;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -25,41 +19,32 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.DataContext;
+import com.tmall.wireless.tac.biz.processor.wzt.model.SortItemEntity;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.LogicPageUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.SmAreaIdUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author luojunchong
  */
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-    scenario = ScenarioConstantApp.WU_ZHE_TIAN)
+        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+        scenario = ScenarioConstantApp.WU_ZHE_TIAN)
 @Service
 public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExtPt {
-
-    @Autowired
-    TacLogger tacLogger;
 
     @Autowired
     TairUtil tairUtil;
 
     @Autowired
     RecommendSpi recommendSpi;
-
-    /**
-     * 分大区个性化排序后商品缓存后缀
-     */
-    private static final String AREA_SORT_SUFFIX = "_AREA_SORT";
-
-    private static final String LOG_PREFIX = "WuZheTianOriginDataItemQueryExtPt-";
 
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
@@ -72,24 +57,56 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         dataContext.setPageSize(pageSize);
         //tair获取推荐商品
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
-            smAreaId);
-        tacLogger.info("columnCenterDataSetItemRuleDTOList size:" + columnCenterDataSetItemRuleDTOList.size());
-        List<Long> items = columnCenterDataSetItemRuleDTOList.stream().map(
-            ColumnCenterDataSetItemRuleDTO::getItemId).collect(Collectors.toList());
-        dataContext.setItems(items);
-        tacLogger.info("items" + items.size());
-        tacLogger.info("itemsData" + JSON.toJSONString(items));
+                smAreaId);
+        //获取id和排序信息
+        Map<Long, Long> stringLongMap = new HashMap<>(16);
+        List<Long> items = Lists.newArrayList();
+        columnCenterDataSetItemRuleDTOList.forEach(columnCenterDataSetItemRuleDTO -> {
+            stringLongMap.put(columnCenterDataSetItemRuleDTO.getItemId(), columnCenterDataSetItemRuleDTO.getIndex());
+            items.add(columnCenterDataSetItemRuleDTO.getItemId());
+        });
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
-            .map(recommendResponseEntityResponse -> {
-                if (!recommendResponseEntityResponse.isSuccess()
-                    || recommendResponseEntityResponse.getValue() == null
-                    || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
-                    tacLogger.info("tpp个性化排序返回异常了：" + JSON.toJSONString(recommendResponseEntityResponse));
-                    return new OriginDataDTO<>();
-                }
-                OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-                return this.getItemPage(originDataDTO, dataContext);
-            });
+                .map(recommendResponseEntityResponse -> {
+                    if (!recommendResponseEntityResponse.isSuccess()
+                            || recommendResponseEntityResponse.getValue() == null
+                            || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
+                        return new OriginDataDTO<>();
+                    }
+                    OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
+                    this.sortItemEntityList(originDataDTO, stringLongMap);
+                    return this.getItemPage(originDataDTO, dataContext);
+                });
+    }
+
+    private void sortItemEntityList(OriginDataDTO<ItemEntity> originDataDTO, Map<Long, Long> stringLongMap) {
+        List<SortItemEntity> resultItemEntityList = Lists.newArrayList();
+        List<SortItemEntity> sortItemEntityList = Lists.newArrayList();
+        originDataDTO.getResult().forEach(itemEntity -> {
+            Long index = stringLongMap.get(itemEntity.getItemId());
+            SortItemEntity sortItemEntity = new SortItemEntity();
+            sortItemEntity.setItemEntity(itemEntity);
+            sortItemEntity.setIndex(stringLongMap.get(itemEntity.getItemId()));
+            if (index != null && !Constant.INDEX.equals(index)) {
+                sortItemEntityList.add(sortItemEntity);
+            } else {
+                resultItemEntityList.add(sortItemEntity);
+            }
+        });
+        List<SortItemEntity> sortItemEntityList2 = sortItemEntityList.stream().sorted(
+                Comparator.comparing(SortItemEntity::getIndex)).collect(
+                Collectors.toList());
+        //如果能按顺序插入按顺序插入，大于总数放最后面
+        for (SortItemEntity sortItemEntity : sortItemEntityList2) {
+            long index = sortItemEntity.getIndex();
+            if (index > resultItemEntityList.size()) {
+                resultItemEntityList.add(sortItemEntity);
+            } else {
+                resultItemEntityList.add((int) index - 1, sortItemEntity);
+            }
+        }
+        List<ItemEntity> itemEntityList = resultItemEntityList.stream().map(
+                SortItemEntity::getItemEntity).collect(Collectors.toList());
+        originDataDTO.setResult(itemEntityList);
     }
 
     /**
@@ -118,8 +135,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @return
      */
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
+
         Pair<Boolean, List<ItemEntity>> pair = LogicPageUtil.getPage(originDataDTO.getResult(), dataContext.getIndex(),
-            dataContext.getPageSize());
+                dataContext.getPageSize());
         List<ItemEntity> itemEntities = pair.getRight();
         originDataDTO.setHasMore(pair.getLeft());
         originDataDTO.setResult(itemEntities);
@@ -140,9 +158,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         originDataDTO.setScm(recommendResponseEntity.getScm());
         originDataDTO.setTppBuckets(recommendResponseEntity.getTppBuckets());
         originDataDTO.setResult(recommendResponseEntity
-            .getResult()
-            .stream()
-            .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
+                .getResult()
+                .stream()
+                .filter(Objects::nonNull).map(ConvertUtil::convert).collect(Collectors.toList()));
         return originDataDTO;
     }
 

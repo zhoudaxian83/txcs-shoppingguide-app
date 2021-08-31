@@ -17,6 +17,13 @@
 
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.tcls.shoppingguide</groupId>
+            <artifactId>shoppingguide-biz</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>com.tmall.txcs</groupId>
             <artifactId>txcs-sg-biz</artifactId>
@@ -29,6 +36,30 @@
             </exclusions>
         </dependency>
 
+
+
+        <!-- spi store-->
+        <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>render-part-spi</artifactId>
+            <version>1.0.1-jinzhou-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tmall.aselfcaptain</groupId>
+            <artifactId>aselfcaptain-client</artifactId>
+            <version>3.6.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>hsf-app-api</artifactId>
+                    <groupId>com.taobao.hsf</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>hsf-app-spring</artifactId>
+                    <groupId>com.taobao.hsf</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- spi store-->
         <dependency>
             <groupId>com.tmall.txcs</groupId>
             <artifactId>txcs-sg-base</artifactId>
@@ -111,6 +142,37 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.taobao.freshx</groupId>
+            <artifactId>freshx-homepage-client</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.hyperlocalretail.sdk</groupId>
+            <artifactId>sdk-module-member-o2otbmc</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- alipay begin -->
+        <dependency>
+            <groupId>com.alipay.recmixer</groupId>
+            <artifactId>recmixer-common-service-facade</artifactId>
+            <version>1.0.0.20210526</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.tradecsa</groupId>
+            <artifactId>tradecsa-common-service-spi</artifactId>
+            <version>1.0.0.2021071317</version>
+        </dependency>
+        <!-- alipay end-->
+
+        <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>user-part</artifactId>
+            <version>1.0.4-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <build>

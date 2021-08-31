@@ -12,6 +12,7 @@ import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tmall.aselfcommon.model.gcs.domain.GcsTairContentDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ContentFailProcessorRequest;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ContentOriginDataFailProcessorExtPt;
@@ -25,8 +26,10 @@ import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import jdk.nashorn.internal.runtime.linker.LinkerCallSite;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +52,11 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
     /**场景内容兜底缓存前缀**/
     private static final String pKey = "txcs_scene_collection_v1";
     private static final int labelSceneNamespace = 184;
+    /**打底内容最大数量**/
+    private static int needSize = 8;
     /**打底商品最大数量**/
-    private static int needSize = 10;
+    private static int needSizeItems = 20;
+
 
 
     @Override
@@ -61,11 +67,21 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
             SgFrameworkContext::getUserPageInfo).map(
             PageInfoDO::getPageSize).orElse(needSize);
         boolean isSuccess = checkSuccess(originDataDTO);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+            .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
+            .kv("isSuccess",String.valueOf(isSuccess))
+            .info();
         if(isSuccess){
             return originDataDTO;
         }
         List<String> sKeyList = Lists.newArrayList();
         sKeyList = getContentSetIdList(requestParams);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+            .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","process")
+            .kv("labelSceneNamespace",String.valueOf(labelSceneNamespace))
+            .kv("pKey",pKey)
+            .kv("sKeyList",JSON.toJSONString(sKeyList))
+            .info();
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         Result<Map<Object, Result<DataEntry>>> labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey,sKeyList);
         if(labelSceneResult != null && labelSceneResult.getValue() !=null){
@@ -74,8 +90,6 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                 return originDataDTO;
             };
             OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap,needSize);
-            LOGGER.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
-            tacLogger.info("FirstScreenMindContentOriginDataFailProcessorExtPt baseOriginDataDTO:"+baseOriginDataDTO);
             return baseOriginDataDTO;
         }
         return originDataDTO;
@@ -84,7 +98,7 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
     public OriginDataDTO<ContentEntity> buildOriginDataDTO(Map<Object, Result<DataEntry>> resultMap,int needSize){
         OriginDataDTO<ContentEntity> originDataDTO = new OriginDataDTO<>();
         List<ContentEntity> contentEntities = Lists.newArrayList();
-        //内容集list-圈品集list-商品
+        //内容集list-内容id-商品
         for(Object sKey : resultMap.keySet()) {
             Result<DataEntry> result = resultMap.get(sKey);
             if (!result.isSuccess()) {
@@ -101,9 +115,13 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                 LOGGER.error("FirstScreenMindContentOriginDataFailProcessorExtPt gcsTairContentDTOList:"+ JSON.toJSONString(gcsTairContentDTOList));
                 continue;
             }
-
-
-            gcsTairContentDTOList.forEach(gcsTairContentDTO -> {
+            List<GcsTairContentDTO> finalList = Lists.newArrayList();
+            if(gcsTairContentDTOList.size() > needSize){
+                finalList.addAll(gcsTairContentDTOList.subList(0,needSize));
+            }else{
+                finalList.addAll(gcsTairContentDTOList);
+            }
+            finalList.forEach(gcsTairContentDTO -> {
                 ContentEntity contentEntity = new ContentEntity();
                 contentEntity.setContentId(Long.valueOf(gcsTairContentDTO.getSceneId()));
                 List<Long> items = gcsTairContentDTO.getItems();
@@ -116,19 +134,21 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
                     /*itemEntity.setBusinessType(gcsTairContentDTO.getMarketChannel());*/
                     itemEntities.add(itemEntity);
                 });
-                if(itemEntities.size() > needSize){
-                    contentEntity.setItems(itemEntities.subList(0,needSize));
+                if(itemEntities.size() > needSizeItems){
+                    contentEntity.setItems(itemEntities.subList(0,needSizeItems));
                 }else{
                     contentEntity.setItems(itemEntities);
                 }
+                HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                    .kv("FirstScreenMindContentOriginDataFailProcessorExtPt","buildOriginDataDTO")
+                    .kv("sKey",String.valueOf(sKey))
+                    .kv("contentId",gcsTairContentDTO.getSceneId())
+                    .kv("contentEntity.getItems().size()",String.valueOf(contentEntity.getItems().size()))
+                    .info();
                 contentEntities.add(contentEntity);
             });
         }
-        if(contentEntities.size() > needSize){
-            originDataDTO.setResult(contentEntities.subList(0,needSize));
-        }else{
-            originDataDTO.setResult(contentEntities);
-        }
+        originDataDTO.setResult(contentEntities);
         return originDataDTO;
     }
 
@@ -140,7 +160,13 @@ public class FirstScreenMindContentOriginDataFailProcessorExtPt implements Conte
 //        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_BRAND, ""));
 //        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_MIND, ""));
 //        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_O2O, ""));
-        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, ""));
+        String contentSetIdB2c = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, "");
+        if(StringUtils.isNotEmpty(contentSetIdB2c)){
+            result.add(contentSetIdB2c);
+        }else{
+            String contentSetIdRanking = MapUtil.getStringWithDefault(requestParams,RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING, "");
+            result.add(contentSetIdRanking);
+        }
 
         return result.stream().filter(contentSetId -> !("".equals(contentSetId) || "0".equals(contentSetId))).collect(Collectors.toList());
     }

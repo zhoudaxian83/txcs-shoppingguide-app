@@ -135,6 +135,7 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
 
         }
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("ItemId",itemEntityVO.getItemId().toString())
             .kv("totalLimit",String.valueOf(totalLimit))
             .kv("usedCount",String.valueOf(usedCount))
             .kv("userLimit",String.valueOf(userLimit))

@@ -5,9 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
+
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemOriginDataFailProcessorExtPt;
@@ -57,31 +60,39 @@ public class FirstScreenMindItemOriginDataFailProcessorExtPt implements ItemOrig
         Map<String, Object> requestParams = itemFailProcessorRequest.getSgFrameworkContextItem().getRequestParams();
         OriginDataDTO<ItemEntity> originDataDTO = itemFailProcessorRequest.getItemEntityOriginDataDTO();
         boolean isSuccess = checkSuccess(originDataDTO);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("FirstScreenMindItemOriginDataFailProcessorExtPt","process")
+            .kv("isSuccess",String.valueOf(isSuccess))
+            .info();
         if(isSuccess){
             return originDataDTO;
         }
         String sKey = MapUtil.getStringWithDefault(requestParams,"moduleId","");
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         Result<DataEntry> labelSceneResult = multiClusterTairManager.prefixGet(nameSpace,pKey,sKey);
-        if(!labelSceneResult.isSuccess()){
-            LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt labelSceneResult:"+labelSceneResult);
-            tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt labelSceneResult:"+labelSceneResult);
+        if (labelSceneResult == null){
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+                .kv("FirstScreenMindItemOriginDataFailProcessorExtPt","process")
+                .kv("labelSceneResult", "tair打底数据获取失败")
+                .info();
             return originDataDTO;
         }
-        DataEntry dataEntry = labelSceneResult.getValue();
-        if(dataEntry == null || dataEntry.getValue() == null){
-            LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry为空!");
-            tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt dataEntry为空!");
+        if(!labelSceneResult.isSuccess() || labelSceneResult.getValue() == null || labelSceneResult.getValue().getValue() == null){
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+                .kv("FirstScreenMindItemOriginDataFailProcessorExtPt","process")
+                .kv("labelSceneResult", JSON.toJSONString(labelSceneResult))
+                .info();
             return originDataDTO;
         }
-        List<Long> itemIdList = (List<Long>) dataEntry.getValue();
+        List<Long> itemIdList  = (List<Long>)(labelSceneResult.getValue().getValue());
         if(CollectionUtils.isEmpty(itemIdList)){
             return originDataDTO;
         }
         OriginDataDTO<ItemEntity> baseOriginDataDTO = buildOriginDataDTO(itemIdList,itemFailProcessorRequest.getSgFrameworkContextItem());
-        tacLogger.info("FirstScreenMindItemOriginDataFailProcessorExtPt baseOriginDataDTO.getResult().size()"+baseOriginDataDTO.getResult().size());
-        LOGGER.info("FirstScreenMindItemOriginDataFailProcessorExtPt baseOriginDataDTO.getResult().size()"+baseOriginDataDTO.getResult().size());
-
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("FirstScreenMindItemOriginDataFailProcessorExtPt","process")
+            .kv("baseOriginDataDTO.getResult().size()", String.valueOf(baseOriginDataDTO.getResult().size()))
+            .info();
         return baseOriginDataDTO;
     }
     public OriginDataDTO<ItemEntity> buildOriginDataDTO(List<Long> itemIdList,SgFrameworkContextItem contextItem){
