@@ -54,12 +54,12 @@ public class InventoryChannelPageHandler extends TacReactiveHandler4Ald {
         // 从url获取主标题
         String contentSetTitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetTitle", tacLogger);
         if(StringUtils.isBlank(contentSetTitle)) {
-            contentSetTitle = "contentSetSubtitle打底"; // Todo likunlin
+            contentSetTitle = "购物车好物"; // Todo likunlin
         }
         // 从url获取副标题
         String contentSetSubtitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetSubTitle", tacLogger);
         if(StringUtils.isBlank(contentSetSubtitle)) {
-            contentSetSubtitle = "contentSetSubtitle打底"; // Todo likunlin
+            contentSetSubtitle = "超市购物攻略推荐"; // Todo likunlin
         }
         GeneralItem generalItem = new GeneralItem();
         generalItem.put("contentSetTitle", contentSetTitle);
