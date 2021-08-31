@@ -13,6 +13,7 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.*;
 import com.tmall.txcs.gs.spi.recommend.AldSpi;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.newproduct.service.SxlItemRecService;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -52,8 +53,6 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
     @Override
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
 
-        LOGGER.error("SxlItemFeedsHandler ITEM_REQUEST:{}", JSON.toJSONString(context));
-
         HadesLogUtil.debug("SxlItemFeedsHandler ITEM_REQUEST:{}" + JSON.toJSONString(context));
 
         Flowable<TacResult<SgFrameworkResponse<EntityVO>>> tacResultFlowable = sxlItemRecService.recommend(context);
@@ -63,7 +62,10 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
          */
         List<Map<String, Object>> aldResList = getAldInfo(context);
 
-        tacLogger.info("aldResList:"+JSON.toJSONString(aldResList));
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+            .kv("SxlItemFeedsHandler","executeFlowable")
+            .kv("aldResList",JSON.toJSONString(aldResList))
+            .info();
         if(CollectionUtils.isEmpty(aldResList)){
             return tacResultFlowable;
         }else{
