@@ -136,6 +136,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
 
         //先从绑定的流程模板参数中拿，如果拿不到，代表是二跳页面的模块，这个时候从URL里面获取，如果还获取不到，则默认是B2C
         String locType = MapUtil.getStringWithDefault(aldParams, HallCommonAldConstant.LOC_TYPE, "");
+        tacLogger.info("----locType---" + locType);
         if(StringUtils.isEmpty(locType)){
              locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
              if(StringUtils.isEmpty(locType)){
