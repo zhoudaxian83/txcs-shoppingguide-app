@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -26,6 +27,9 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * 请求Tpp参数
+ */
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
         useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
         scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE)
@@ -51,24 +55,36 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
             Map<String, Object> aldContext = requestContext4Ald.getAldContext();
             if(MapUtils.isEmpty(aldParams)) {
                 tacLogger.debug("aldParams数据缺失");
+                HadesLogUtil.stream("InventoryChannelItemPage")
+                        .kv("InventoryChannelItemPageOriginDataRequestBuildSdkExtPt", "process")
+                        .kv("aldParams", "数据缺失")
+                        .error();
                 throw new Exception("aldParams数据缺失");
             }
             if(MapUtils.isEmpty(aldContext)) {
                 tacLogger.debug("aldContext数据缺失");
+                HadesLogUtil.stream("InventoryChannelItemPage")
+                        .kv("InventoryChannelItemPageOriginDataRequestBuildSdkExtPt", "process")
+                        .kv("aldContext", "数据缺失")
+                        .error();
                 aldContext = Maps.newHashMap();
             }
 
             Map<String, String> params = Maps.newHashMap();
-            String scene = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentId", tacLogger); // Todo likunlin
+            String scene = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentId", tacLogger);
             if(StringUtils.isNotBlank(scene)) {
                 params.put("scene", scene);
             } else {
                 // 强依赖参数scene，如果缺失，直接异常
                 tacLogger.debug("url参数contentId为空");
+                HadesLogUtil.stream("InventoryChannelItemPage")
+                        .kv("InventoryChannelItemPageOriginDataRequestBuildSdkExtPt", "process")
+                        .kv("url参数为空", "contentId")
+                        .error();
                 throw new Exception("url参数contentId为空");
             }
 
-            String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemSetId", tacLogger); // Todo likunlin
+            String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemSetId", tacLogger);
             if(StringUtils.isNotBlank(itemSets)) {
                 if(!itemSets.startsWith(ITEM_SET_PREFIX)) {
                     itemSets = ITEM_SET_PREFIX + itemSets;
@@ -77,6 +93,10 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
             } else {
                 // 强依赖参数itemSets，如果缺失，直接异常
                 tacLogger.debug("url参数itemSet为空");
+                HadesLogUtil.stream("InventoryChannelItemPage")
+                        .kv("InventoryChannelItemPageOriginDataRequestBuildSdkExtPt", "process")
+                        .kv("url参数为空", "itemSet")
+                        .error();
                 throw new Exception("url参数itemSet为空");
             }
 
@@ -87,10 +107,18 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
             LocParams locParams = null;
             if(csa == null){
                 tacLogger.debug("csa为空");
+                HadesLogUtil.stream("InventoryChannelItemPage")
+                        .kv("InventoryChannelItemPageOriginDataRequestBuildSdkExtPt", "process")
+                        .kv("url参数为空", "csa")
+                        .error();
             } else {
                 locParams = ParseCsa.parseCsaObj(csa, smAreaId);
                 if(locParams == null) {
                     tacLogger.debug("csa解析异常");
+                    HadesLogUtil.stream("InventoryChannelItemPage")
+                            .kv("InventoryChannelItemPageOriginDataRequestBuildSdkExtPt", "process")
+                            .kv("csa", "csa解析异常")
+                            .error();
                 }
             }
 
@@ -116,9 +144,17 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
             recommendRequest.setParams(params);
             recommendRequest.setLogResult(true);
             tacLogger.debug("Tpp参数：" + JSONObject.toJSONString(recommendRequest));
+            HadesLogUtil.stream("InventoryChannelItemPage")
+                    .kv("InventoryChannelItemPageOriginDataRequestBuildSdkExtPt", "process")
+                    .kv("Tpp参数", JSONObject.toJSONString(recommendRequest))
+                    .info();
             return recommendRequest;
         } catch (Exception e) {
             tacLogger.debug("扩展点InventoryChannelItemPageOriginDataRequestBuildSdkExtPt 失败" + StackTraceUtil.stackTrace(e));
+            HadesLogUtil.stream("InventoryChannelItemPage")
+                    .kv("InventoryChannelItemPageOriginDataRequestBuildSdkExtPt", "process")
+                    .kv("扩展点InventoryChannelItemPageOriginDataRequestBuildSdkExtPt失败", StackTraceUtil.stackTrace(e))
+                    .error();
             return recommendRequest;
         }
     }

@@ -35,26 +35,31 @@ public class InventoryChannelPageHandler extends TacReactiveHandler4Ald {
         BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
                 HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
                 HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE);
-        bizScenario.addProducePackage("huichang");
+//        bizScenario.addProducePackage("huichang");
         Flowable<TacResult<List<GeneralItem>>> ContentVOs = hallCommonContentRequestProxy.recommend(requestContext4Ald, bizScenario);
+        // 获取场景组的信息（从url带来的主标题副标题等）
         GeneralItem sceneSetGeneralItem = buildSceneSet(requestContext4Ald);
-        List<GeneralItem> generalItemList = ContentVOs.blockingFirst().getData();
-        if(CollectionUtils.isNotEmpty(generalItemList)){
-            generalItemList.get(0).put("extInfos", sceneSetGeneralItem);
+        // 获取场景信息
+        List<GeneralItem> generalContentList = ContentVOs.blockingFirst().getData();
+        if(CollectionUtils.isNotEmpty(generalContentList)){
+            // generalContentList 只有一个元素 itemAndContentList在这个元素里面
+            generalContentList.get(0).put("extInfos", sceneSetGeneralItem);
         }
-        return Flowable.just(TacResult.newResult(generalItemList));
+        return Flowable.just(TacResult.newResult(generalContentList));
     }
 
     private GeneralItem buildSceneSet(RequestContext4Ald requestContext4Ald) {
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
         Map<String, Object> aldContext = requestContext4Ald.getAldContext();
+        // 从url获取主标题
         String contentSetTitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetTitle", tacLogger);
         if(StringUtils.isBlank(contentSetTitle)) {
-            contentSetTitle = "contentSetSubtitle打底";
+            contentSetTitle = "contentSetSubtitle打底"; // Todo likunlin
         }
+        // 从url获取副标题
         String contentSetSubtitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetSubTitle", tacLogger);
         if(StringUtils.isBlank(contentSetSubtitle)) {
-            contentSetSubtitle = "contentSetSubtitle打底";
+            contentSetSubtitle = "contentSetSubtitle打底"; // Todo likunlin
         }
         GeneralItem generalItem = new GeneralItem();
         generalItem.put("contentSetTitle", contentSetTitle);

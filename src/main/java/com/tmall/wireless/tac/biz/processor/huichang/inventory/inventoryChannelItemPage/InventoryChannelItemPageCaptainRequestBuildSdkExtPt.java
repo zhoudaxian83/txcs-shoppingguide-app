@@ -10,6 +10,9 @@ import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenari
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * 修改captain的sceneCode，获得卖点数据
+ */
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
         useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
         scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE)

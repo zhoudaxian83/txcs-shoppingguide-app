@@ -20,6 +20,7 @@ import com.tmall.aselfcaptain.cloudrec.domain.EntityQueryOption;
 import com.tmall.aselfcaptain.item.model.ChannelDataDO;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
@@ -36,6 +37,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 清单商品承接页(三跳页)
+ */
 @Component
 public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
     @Autowired
@@ -50,7 +54,7 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
                 HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
                 HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE);
-        bizScenario.addProducePackage("huichang");
+//        bizScenario.addProducePackage("huichang");
         Flowable<TacResult<List<GeneralItem>>> itemVOs = hallCommonItemRequestProxy.recommend(requestContext4Ald, bizScenario);
         TairSceneDTO sceneDTO = getScenesInfoFromCaptain(requestContext4Ald);
         GeneralItem sceneGeneralItem = buildSceneGeneralItem(sceneDTO);
@@ -70,11 +74,19 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
         if(MapUtils.isEmpty(aldParams)) {
             tacLogger.debug("aldParams为空");
+            HadesLogUtil.stream("InventoryChannelItemPage")
+                    .kv("InventoryChannelItemPageHandler", "getScenesInfoFromCaptain")
+                    .kv("数据缺失", "aldParams")
+                    .error();
             throw new Exception("aldParams为空");
         }
         String contentId = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentId", tacLogger); // Todo likunlin
         if(StringUtils.isBlank(contentId)) {
             tacLogger.debug("contentId为空");
+            HadesLogUtil.stream("InventoryChannelItemPage")
+                    .kv("InventoryChannelItemPageHandler", "getScenesInfoFromCaptain")
+                    .kv("url参数缺失", "contentId")
+                    .error();
             throw new Exception("contentId为空");
         }
         if(!contentId.startsWith(ACTIVITY_SCENE_PREFIX)){
@@ -82,6 +94,10 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         }
         List<EntityId> ids = Arrays.asList(EntityId.of(contentId, "content"));
         tacLogger.debug("EntityId: " + JSON.toJSONString(ids));
+        HadesLogUtil.stream("InventoryChannelItemPage")
+                .kv("InventoryChannelItemPageHandler", "getScenesInfoFromCaptain")
+                .kv("EntityId", JSON.toJSONString(ids))
+                .info();
         EntityQueryOption entityQueryOption = new EntityQueryOption();
         Long smAreaId = Optional.ofNullable((String)aldParams.get(RequestKeyConstant.SMAREAID)).map(Long::valueOf).orElse(defaultSmAreaId);
         entityQueryOption.setSmAreaId(smAreaId);
@@ -94,28 +110,52 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         channelDataDOList.add(channelDataDO);
         entityQueryOption.setChannelDataDOS(channelDataDOList);
         tacLogger.debug("channelDataDOList:" + JSON.toJSONString(channelDataDOList));
+        HadesLogUtil.stream("InventoryChannelItemPage")
+                .kv("InventoryChannelItemPageHandler", "getScenesInfoFromCaptain")
+                .kv("channelDataDOList", JSON.toJSONString(channelDataDOList))
+                .info();
         try{
             MultiResponse<Entity> render = entityRenderService.render(ids, entityQueryOption);
             if(render.isSuccess()) {
                 tacLogger.debug("render:" + JSON.toJSONString(render.getData()));
+                HadesLogUtil.stream("InventoryChannelItemPage")
+                        .kv("InventoryChannelItemPageHandler", "getScenesInfoFromCaptain")
+                        .kv("render", JSON.toJSONString(render.getData()))
+                        .info();
                 TairSceneDTO sceneDTO = JSON.parseObject(
                         JSON.toJSONString(render.getData().get(0).get("data")),
                         TairSceneDTO.class
                 );
                 if(sceneDTO == null) {
                     tacLogger.debug("场景信息没有渲染出来");
+                    HadesLogUtil.stream("InventoryChannelItemPage")
+                            .kv("InventoryChannelItemPageHandler", "getScenesInfoFromCaptain")
+                            .kv("场景信息没有渲染出来","sceneDTO为空")
+                            .error();
                     throw new Exception("场景信息没有渲染出来");
                 }
                 tacLogger.debug("渲染的场景信息:" + JSONObject.toJSONString(sceneDTO));
+                HadesLogUtil.stream("InventoryChannelItemPage")
+                        .kv("InventoryChannelItemPageHandler", "getScenesInfoFromCaptain")
+                        .kv("渲染的场景信息", JSONObject.toJSONString(sceneDTO))
+                        .info();
                 return sceneDTO;
             }
             else {
                 tacLogger.debug("查询失败");
+                HadesLogUtil.stream("InventoryChannelItemPage")
+                        .kv("InventoryChannelItemPageHandler", "getScenesInfoFromCaptain")
+                        .kv("查询失败", "render.isSuccess() == false")
+                        .error();
                 throw new Exception("查询不成功");
             }
         }
         catch (Exception e) {
-            tacLogger.debug( "渲染场景数据异常:"+ StackTraceUtil.stackTrace(e));
+            tacLogger.debug( "查询异常:"+ StackTraceUtil.stackTrace(e));
+            HadesLogUtil.stream("InventoryChannelItemPage")
+                    .kv("InventoryChannelItemPageHandler", "getScenesInfoFromCaptain")
+                    .kv("查询异常",  StackTraceUtil.stackTrace(e))
+                    .error();
             throw new Exception("渲染场景数据异常", e);
         }
     }

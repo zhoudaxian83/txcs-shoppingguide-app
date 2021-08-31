@@ -2,6 +2,8 @@ package com.tmall.wireless.tac.biz.processor.huichang.common.utils;
 
 import com.alibaba.aladdin.lamp.domain.request.RequestItem;
 import com.alibaba.aladdin.lamp.sdk.solution.context.SolutionContext;
+import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -28,6 +30,10 @@ public class PageUrlUtil {
             curPageUrl = URLDecoder.decode(URLDecoder.decode(curPageUrl, "UTF-8"),"UTF-8");
         } catch (Exception e) {
             tacLogger.debug("curPageUrl decode exception" + e.getMessage());
+            HadesLogUtil.stream("utils")
+                    .kv("PageUrlUtil", "getParamFromCurPageUrl")
+                    .kv("curPageUrl decode exception", StackTraceUtil.stackTrace(e))
+                    .error();
         }
 
         Map<String, String> paramsMap = URLUtil.URLRequest(curPageUrl);
@@ -42,6 +48,10 @@ public class PageUrlUtil {
         Object currentPageUrl = aldParams.get("curPageUrl");
         if(currentPageUrl == null){
             tacLogger.debug( "curPageUrl is empty");
+            HadesLogUtil.stream("utils")
+                    .kv("PageUrlUtil", "getCurPageUrl")
+                    .kv("getCurPageUrl exception", "curPageUrl is empty")
+                    .error();
             return null;
         }
         return String.valueOf(currentPageUrl);

@@ -4,6 +4,8 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 
+import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.biz.extensions.item.vo.DefaultBuildItemVoSdkExtPt;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoRequest;
@@ -18,6 +20,9 @@ import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * 给商品VO增加字段
+ */
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
         useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
         scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE)
@@ -30,7 +35,7 @@ public class InventoryChannelPageBuildItemVoSdkExtPt extends DefaultBuildItemVoS
         tacLogger.debug("扩展点InventoryChannelPageBuildItemVoSdkExtPt");
         Response<ItemEntityVO> result = super.process(buildItemVoRequest);
         try{
-            // 给为你推荐商品打上特殊标签
+            // 给为你推荐商品打上特殊标签（isRecommand字段）
             ItemEntityVO itemEntityVO = result.getValue();
             tacLogger.debug(JSONObject.toJSONString(itemEntityVO));
             SgFrameworkContextItem sgFrameworkContextItem = buildItemVoRequest.getContext();
@@ -46,6 +51,10 @@ public class InventoryChannelPageBuildItemVoSdkExtPt extends DefaultBuildItemVoS
             return result;
         } catch (Exception e) {
             tacLogger.debug("给为你推荐商品打标签失败");
+            HadesLogUtil.stream("InventoryChannelPage")
+                    .kv("InventoryChannelPageBuildItemVoSdkExtPt", "process")
+                    .kv("给为你推荐商品打标签失败", StackTraceUtil.stackTrace(e))
+                    .error();
             return result;
         }
     }
