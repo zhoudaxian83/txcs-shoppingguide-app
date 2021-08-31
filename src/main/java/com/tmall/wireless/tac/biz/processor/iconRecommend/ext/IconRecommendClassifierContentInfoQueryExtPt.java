@@ -45,13 +45,6 @@ public class IconRecommendClassifierContentInfoQueryExtPt implements ContentInfo
             contentInfo.put("Rn", contentEntity.getRn());
             contentInfo.put("ext", contentEntity.getExt());
             contentInfo.put("contentTitle", contentEntity.getExt().get("name"));
-//            List<ContentDTO> contentDTOList = Optional.of(sgFrameworkContextContent)
-//                    .map(SgFrameworkContextContent::getContentDTOList)
-//                    .orElse(new ArrayList<>());
-//            if (!contentDTOList.isEmpty()) {
-//                ItemInfoBySourceDTO itemInfoBySourceDTO = contentDTOList.get(0).getItemInfoDTOList().get(0).getItemInfos().get(ItemInfoSourceKey.CAPTAIN);
-//                contentInfo.put("contentPic", itemInfoBySourceDTO.getItemInfoVO().get("itemImg"));
-//            }
 
             ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
             contentInfoDTO.setContentInfo(contentInfo);
