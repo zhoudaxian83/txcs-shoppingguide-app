@@ -137,9 +137,12 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
 
         //先从绑定的流程模板参数中拿，如果拿不到，代表是二跳页面的模块，这个时候从URL里面获取，如果还获取不到，则默认是B2C
         // 年羽改的
+        String locType = "";
         String tacParams = MapUtil.getStringWithDefault(aldParams, "tacParams", "");
-        JSONObject tacParamsMap = JSON.parseObject(tacParams);
-        String locType = Optional.ofNullable(tacParamsMap.getString(HallCommonAldConstant.LOC_TYPE)).orElse("");
+        if(StringUtils.isNotBlank(tacParams)){
+            JSONObject tacParamsMap = JSON.parseObject(tacParams);
+            locType = Optional.ofNullable(tacParamsMap.getString(HallCommonAldConstant.LOC_TYPE)).orElse("");
+        }
 
         if(StringUtils.isEmpty(locType)){
              locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
@@ -244,5 +247,4 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
 
         return request;
     }
-
 }
