@@ -69,9 +69,6 @@ public class SxlItemRecService {
     );
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
-        LOGGER.error("ITEM_REQUEST:{}", JSON.toJSONString(context));
-
-        HadesLogUtil.debug("ITEM_REQUEST:{}"+JSON.toJSONString(context));
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
         /**招商人工选品集id集合**/
