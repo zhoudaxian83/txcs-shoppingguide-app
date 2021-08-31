@@ -140,6 +140,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         String tacParams = MapUtil.getStringWithDefault(aldParams, "tacParams", "");
         JSONObject tacParamsMap = JSON.parseObject(tacParams);
         String locType = Optional.ofNullable(tacParamsMap.getString(HallCommonAldConstant.LOC_TYPE)).orElse("");
+
         if(StringUtils.isEmpty(locType)){
              locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
              if(StringUtils.isEmpty(locType)){
