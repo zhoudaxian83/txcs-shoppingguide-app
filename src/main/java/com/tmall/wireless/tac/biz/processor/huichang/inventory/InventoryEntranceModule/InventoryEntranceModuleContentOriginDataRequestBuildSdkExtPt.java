@@ -12,6 +12,7 @@ import com.alibaba.aladdin.lamp.domain.request.modules.LocationInfo;
 import com.alibaba.aladdin.lamp.domain.response.ResResponse;
 import com.alibaba.fastjson.JSON;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.taobao.mtop.api.agent.MtopContext;
 import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
@@ -135,7 +136,10 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         params.put("regionCode", Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode()).map(String::valueOf).orElse(String.valueOf(defaultLogAreaId)));
 
         //先从绑定的流程模板参数中拿，如果拿不到，代表是二跳页面的模块，这个时候从URL里面获取，如果还获取不到，则默认是B2C
-        String locType = MapUtil.getStringWithDefault(aldParams, HallCommonAldConstant.LOC_TYPE, "");
+        // 年羽改的
+        String tacParams = MapUtil.getStringWithDefault(aldParams, "tacParams", "");
+        JSONObject tacParamsMap = JSON.parseObject(tacParams);
+        String locType = Optional.ofNullable(tacParamsMap.getString(HallCommonAldConstant.LOC_TYPE)).orElse("");
         if(StringUtils.isEmpty(locType)){
              locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
              if(StringUtils.isEmpty(locType)){
