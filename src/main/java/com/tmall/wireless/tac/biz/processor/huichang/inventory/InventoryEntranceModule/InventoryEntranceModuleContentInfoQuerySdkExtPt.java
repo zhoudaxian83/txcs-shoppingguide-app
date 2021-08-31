@@ -99,6 +99,9 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
             for (ContentEntity contentEntity : contentEntities) {
                 Long contentId = contentEntity.getContentId();
                 TairSceneDTO tairSceneDTO = tairSceneDTOMap.get(String.valueOf(contentId));
+                if(tairSceneDTO == null){
+                    continue;
+                }
                 ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
                 Map<String, Object> contentInfo = Maps.newHashMap();
                 contentInfo.put("title", tairSceneDTO.getTitle());
