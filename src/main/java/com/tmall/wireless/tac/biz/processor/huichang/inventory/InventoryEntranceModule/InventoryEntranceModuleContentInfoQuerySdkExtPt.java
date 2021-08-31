@@ -33,6 +33,7 @@ import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenari
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.dataservice.TacOptLogger;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -92,6 +93,14 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
                 .collect(
                     Collectors.toList());
             List<TairSceneDTO> onlyScenesFromCaptainResult = getOnlyScenesFromCaptain(sceneIdList);
+            if(CollectionUtils.isNotEmpty(onlyScenesFromCaptainResult)){
+                HadesLogUtil.stream("InventoryEntranceModule")
+                    .kv("InventoryEntranceModuleContentInfoQuerySdkExtPt", "process")
+                    .kv("查询场景缓存为空", "onlyScenesFromCaptainResult is empty")
+                    .kv("sceneIdList", JSON.toJSONString(sceneIdList))
+                    .error();
+            }
+            //TODO 雾列 给的场景和查询出来的场景不一致的，需要打印个日志
 
             Map<String, TairSceneDTO> tairSceneDTOMap = onlyScenesFromCaptainResult.stream().collect(
                 Collectors.toMap(TairSceneDTO::getId, a -> a, (k1, k2) -> k1));
