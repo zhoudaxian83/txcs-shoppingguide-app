@@ -91,8 +91,8 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)tacContext;
             Map<String, Object> aldParam = requestContext4Ald.getAldParam();//对应requestItem
             Map<String, Object> aldContext = requestContext4Ald.getAldContext();//对应solutionContext
-            logger.debug("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.aldParam:{}", JSON.toJSONString(aldParam));
-            logger.debug("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.aldContext:{}", JSON.toJSONString(aldContext));
+            logger.info("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.aldParam:{}", JSON.toJSONString(aldParam));
+            logger.info("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.aldContext:{}", JSON.toJSONString(aldContext));
             Map<String, String> tppRequestParams = new HashMap<>();
 
             Object aldCurrentResId = aldContext.get(HallCommonAldConstant.ALD_CURRENT_RES_ID);
@@ -113,7 +113,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
             buildTppParams(tppRequestParams, aldParam, aldContext, userParams);
             String urlParamsByMap = URLUtil.getUrlParamsByMap(tppRequestParams);
             tacLogger.debug("urlParamsByMap:" + JSON.toJSONString(urlParamsByMap));
-            logger.debug("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.urlParamsByMap:{}", JSON.toJSONString(urlParamsByMap));
+            logger.info("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.urlParamsByMap:{}", JSON.toJSONString(urlParamsByMap));
             return recommendRequest;
         }catch (Exception e){
             tacLogger.error("tacLogger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.error,", e);
