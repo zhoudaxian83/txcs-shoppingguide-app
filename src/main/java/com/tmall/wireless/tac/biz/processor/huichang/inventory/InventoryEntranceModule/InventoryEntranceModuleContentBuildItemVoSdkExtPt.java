@@ -45,6 +45,7 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
         SgFrameworkResponse<ContentVO> response = new SgFrameworkResponse();
         try{
             SgFrameworkResponse<ContentVO> contentVOSgFrameworkResponse = super.process(sgFrameworkContextContent);
+            logger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.super.process.contentVOSgFrameworkResponse:{}",JSON.toJSONString(contentVOSgFrameworkResponse));
             Context tacContext = sgFrameworkContextContent.getTacContext();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)tacContext;
             Map<String, Object> aldContext = requestContext4Ald.getAldContext();
