@@ -124,6 +124,13 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
                 })
                 .map(TacResult::newResult)
                 .map(tacResult -> {
+                    if(tacResult.getData() == null || tacResult.getData() == null || tacResult.getData().isEmpty()){
+                        tacResult = TacResult.errorResult("test");
+                        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+                            .kv("FirstScreenMindItemScene4Ald","recommend4Ald")
+                            .kv("tacResult",JSON.toJSONString(tacResult))
+                            .info();
+                    }
                     tacResult.getBackupMetaData().setUseBackup(true);
                     return tacResult;
                 })
