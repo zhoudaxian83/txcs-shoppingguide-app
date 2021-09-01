@@ -114,6 +114,12 @@ public class FirstScreenMindItemScene {
                 })
                 .map(TacResult::newResult)
                 .map(tacResult -> {
+                    if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
+                        tacResult = TacResult.errorResult("test");
+                        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+                            .kv("tacResult",JSON.toJSONString(tacResult))
+                            .info();
+                    }
                     tacResult.getBackupMetaData().setUseBackup(true);
                     return tacResult;
                 })
