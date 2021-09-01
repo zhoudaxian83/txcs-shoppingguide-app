@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.tcls.gs.sdk.biz.extensions.content.vo.DefaultContentVoBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
@@ -23,6 +24,8 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -33,12 +36,12 @@ import org.springframework.beans.factory.annotation.Autowired;
     scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE)
 public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
     extends DefaultContentVoBuildSdkExtPt implements ContentVoBuildSdkExtPt {
-    @Autowired
-    TacLogger tacLogger;
+
+    Logger logger = LoggerFactory.getLogger(InventoryEntranceModuleContentBuildItemVoSdkExtPt.class);
 
     @Override
     public SgFrameworkResponse<ContentVO> process(SgFrameworkContextContent sgFrameworkContextContent) {
-        tacLogger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.start");
+        logger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.start.sgFrameworkContextContent:{}",JSON.toJSONString(sgFrameworkContextContent));
         SgFrameworkResponse<ContentVO> response = new SgFrameworkResponse();
         try{
             SgFrameworkResponse<ContentVO> contentVOSgFrameworkResponse = super.process(sgFrameworkContextContent);
@@ -91,7 +94,7 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
             }
             return contentVOSgFrameworkResponse;
         }catch (Exception e){
-            tacLogger.error("InventoryEntranceModuleContentBuildItemVoSdkExtPt.error", e);
+            logger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.start.error:{}", StackTraceUtil.stackTrace(e));
             response.setErrorMsg("InventoryEntranceModuleContentBuildItemVoSdkExtPt.error");
             return response;
         }

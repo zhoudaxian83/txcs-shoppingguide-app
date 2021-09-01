@@ -19,6 +19,7 @@ import com.tmall.aselfcaptain.cloudrec.domain.Entity;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityId;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityQueryOption;
 import com.tmall.aselfcaptain.item.model.ChannelDataDO;
+import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
@@ -34,6 +35,8 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.dataservice.TacOptLogger;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -45,6 +48,8 @@ import org.springframework.beans.factory.annotation.Autowired;
     useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
     scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE)
 public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register implements ContentInfoQuerySdkExtPt {
+
+    Logger logger = LoggerFactory.getLogger(InventoryEntranceModuleContentInfoQuerySdkExtPt.class);
 
     @Autowired
     TacLogger tacLogger;
@@ -60,6 +65,7 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
 
     @Override
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
+        logger.info("InventoryEntranceModuleContentInfoQuerySdkExtPt.start.sgFrameworkContextContent:{}", JSON.toJSONString(sgFrameworkContextContent));
         Map<Long, ContentInfoDTO> contentDTOMap = Maps.newHashMap();
         try {
             Map<String, Object> userParams = sgFrameworkContextContent.getUserParams();
@@ -134,6 +140,7 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
             }
             return Flowable.just(Response.success(contentDTOMap));
         } catch (Exception e) {
+            logger.error("InventoryEntranceModuleContentInfoQuerySdkExtPt.error:{}", StackTraceUtil.stackTrace(e));
             return Flowable.just(Response.fail("query scene info error"));
         }
     }
