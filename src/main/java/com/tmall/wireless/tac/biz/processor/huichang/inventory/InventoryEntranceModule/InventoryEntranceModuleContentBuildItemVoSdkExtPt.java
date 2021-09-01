@@ -16,9 +16,12 @@ import com.tmall.tcls.gs.sdk.framework.extensions.content.vo.ContentVoBuildSdkEx
 import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
+import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.URLUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import com.tmall.wireless.tac.client.domain.Context;
+import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -39,6 +42,10 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
         SgFrameworkResponse<ContentVO> response = new SgFrameworkResponse();
         try{
             SgFrameworkResponse<ContentVO> contentVOSgFrameworkResponse = super.process(sgFrameworkContextContent);
+            Context tacContext = sgFrameworkContextContent.getTacContext();
+            RequestContext4Ald requestContext4Ald = (RequestContext4Ald)tacContext;
+            Map<String, Object> aldContext = requestContext4Ald.getAldContext();
+            Object aldCurrentResId = aldContext.get(HallCommonAldConstant.ALD_CURRENT_RES_ID);
             Map<String, Object> userParams = sgFrameworkContextContent.getUserParams();
             String locType = MapUtil.getStringWithDefault(userParams, "locType", "B2C");
             List<ContentVO> itemAndContentList = contentVOSgFrameworkResponse.getItemAndContentList();
@@ -71,6 +78,9 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
                         String itemId = jsonObject.getString("itemId");
                         paramsMap.put("entryItemId", itemId);
                     }
+                    //绑定资源位id
+                    paramsMap.put("entryResourceId", String.valueOf(aldCurrentResId));
+
                     String urlParamsByMap = URLUtil.getUrlParamsByMap(paramsMap);
                     contentVO.put("urlParams", urlParamsByMap);
                 }
