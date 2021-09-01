@@ -8,9 +8,12 @@ import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.service.HallCommonContentRequestProxy;
 import com.tmall.wireless.tac.client.common.TacResult;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,15 +27,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class InventoryEntranceModuleHandler extends TacReactiveHandler4Ald {
 
+    Logger LOGGER = LoggerFactory.getLogger(InventoryEntranceModuleHandler.class);
+    @Autowired
+    TacLogger tacLogger;
+
     @Autowired
     HallCommonContentRequestProxy hallCommonContentRequestProxy;
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
-        BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
-            HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
-            HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE);
-        //bizScenario.addProducePackage("huichang");
-        return hallCommonContentRequestProxy.recommend(requestContext4Ald, bizScenario);
+        try {
+            tacLogger.info("tacLogger.InventoryEntranceModuleHandler.statr");
+            LOGGER.warn("LOGGER.InventoryEntranceModuleHandler.statr");
+            BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
+                HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
+                HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE);
+            //bizScenario.addProducePackage("huichang");
+            return hallCommonContentRequestProxy.recommend(requestContext4Ald, bizScenario);
+        }catch (Exception e){
+            LOGGER.error("LOGGER.InventoryEntranceModuleHandler.error.", e);
+            return Flowable.error(e);
+        }
+
     }
 }
