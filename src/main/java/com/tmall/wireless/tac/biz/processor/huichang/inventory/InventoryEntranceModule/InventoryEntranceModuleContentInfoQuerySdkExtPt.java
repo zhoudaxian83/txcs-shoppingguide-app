@@ -93,7 +93,7 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
                 .collect(
                     Collectors.toList());
             List<TairSceneDTO> onlyScenesFromCaptainResult = getOnlyScenesFromCaptain(sceneIdList);
-            if(CollectionUtils.isNotEmpty(onlyScenesFromCaptainResult)){
+            if(CollectionUtils.isEmpty(onlyScenesFromCaptainResult)){
                 HadesLogUtil.stream("InventoryEntranceModule")
                     .kv("InventoryEntranceModuleContentInfoQuerySdkExtPt", "process")
                     .kv("查询场景缓存为空", "onlyScenesFromCaptainResult is empty")
