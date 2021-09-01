@@ -204,6 +204,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         //把处理好的静态数从新设置一下，后面还需要
         userParams.put("dealStaticDataList", dealStaticDataList);
         userParams.put("locType", locType);
+        userParams.put("name", "雾列");
 
     }
 
