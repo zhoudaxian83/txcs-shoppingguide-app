@@ -31,6 +31,9 @@
     <!-- shoppingguide sdk end -->
 
 
+    <bean class="com.tmall.aselfcommon.model.column.KeyUtil"/>
+
+
     <bean id="springSwitchBean" class="com.tmall.wireless.tac.biz.processor.config.SwitchConfigBean" init-method="init"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene"/>
     <bean class="com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendItemOriginDataRequestExtPt"/>

@@ -21,18 +21,7 @@ import java.util.Optional;
         , scenario = ScenarioConstantApp.ICON_CONTENT_LEVEL2
 )
 public class IconLevel2ContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
-    /**
-     * &pmtName=icon
-     * &rtNextDayStoreId=0
-     * &logicAreaId=107
-     * &rtHalfDayStoreId=236635411
-     * &pmtSource=sm_manager
-     * &pageId=categoryliangyoumimian
-     * &itemBusinessType=B2C,OneHour,HalfDay,NextDay
-     * &contentType=1
-     * @param sgFrameworkContextContent
-     * @return
-     */
+
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
         Level2Request level2Request =(Level2Request) Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getTacContext).map(c -> c.get(Level2RecommendService.level2Request)).orElse(null);
