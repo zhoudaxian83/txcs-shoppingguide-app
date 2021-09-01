@@ -116,8 +116,12 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
                 params.put("sceneTop", sceneTop); // 置顶的场景
             }
 
+            Long userId = MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, DEFAULT_USERID);
+            if(userId.equals(DEFAULT_USERID)) {
+                userId = MapUtil.getLongWithDefault(aldContext, "deviceId", DEFAULT_USERID);
+            }
+            recommendRequest.setUserId(userId);
             recommendRequest.setAppId(APPID);
-            recommendRequest.setUserId(MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, DEFAULT_USERID));
             recommendRequest.setParams(params);
             recommendRequest.setLogResult(true);
             tacLogger.debug("Tpp请求参数是：" + JSONObject.toJSONString(recommendRequest));

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 
+import com.alibaba.fastjson.JSONObject;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
@@ -16,6 +18,7 @@ import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,9 +51,21 @@ public class InventoryChannelPageHandler extends TacReactiveHandler4Ald {
         return Flowable.just(TacResult.newResult(generalContentList));
     }
 
-    private GeneralItem buildSceneSet(RequestContext4Ald requestContext4Ald) {
+    private GeneralItem buildSceneSet(RequestContext4Ald requestContext4Ald) throws Exception {
         Map<String, Object> aldParams = requestContext4Ald.getAldParam();
         Map<String, Object> aldContext = requestContext4Ald.getAldContext();
+        if(MapUtils.isEmpty(aldParams)) {
+            tacLogger.debug("aldParams为空");
+            HadesLogUtil.stream("InventoryChannelPage")
+                    .kv("InventoryChannelPageHandler", "buildSceneSet")
+                    .kv("数据缺失", "aldParams")
+                    .error();
+            throw new Exception("aldParams为空");
+        }
+        HadesLogUtil.stream("inventoryChannelPage")
+                .kv("InventoryChannelPageHandler", "buildSceneSet")
+                .kv("aldParams", JSONObject.toJSONString(aldParams))
+                .info();
         // 从url获取主标题
         String contentSetTitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetTitle", tacLogger);
         if(StringUtils.isBlank(contentSetTitle)) {

@@ -80,6 +80,10 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
                     .error();
             throw new Exception("aldParams为空");
         }
+        HadesLogUtil.stream("inventoryChannelItemPage")
+                .kv("InventoryChannelItemPageHandler", "getScenesInfoFromCaptain")
+                .kv("aldParams", JSONObject.toJSONString(aldParams))
+                .info();
         String contentId = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentId", tacLogger); // Todo likunlin
         if(StringUtils.isBlank(contentId)) {
             tacLogger.debug("contentId为空");
