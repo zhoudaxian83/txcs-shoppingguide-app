@@ -172,7 +172,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
             staticScheduleData = aldContext.get(HallCommonAldConstant.STATIC_SCHEDULE_DATA);
         }
         if(staticScheduleData == null){
-            tacLogger.debug("-------------staticScheduleData is empty-------------");
+            logger.error("staticScheduleData is empty.entryResourceId:{}", entryResourceId);
             throw new Exception("获取静态数据为空");
 
         }
