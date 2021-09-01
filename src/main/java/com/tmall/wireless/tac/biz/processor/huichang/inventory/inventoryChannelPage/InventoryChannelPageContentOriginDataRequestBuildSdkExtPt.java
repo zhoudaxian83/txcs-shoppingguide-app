@@ -118,7 +118,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
 
             Long userId = MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, DEFAULT_USERID);
             if(userId.equals(DEFAULT_USERID)) {
-                userId = MapUtil.getLongWithDefault(aldContext, "deviceId", DEFAULT_USERID);
+                userId = MapUtil.getLongWithDefault(aldContext, "utdid", DEFAULT_USERID);
             }
             recommendRequest.setUserId(userId);
             recommendRequest.setAppId(APPID);
