@@ -64,7 +64,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
     @Autowired
     private AldSpi aldSpi;
 
-    Logger LOGGER = LoggerFactory.getLogger(InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.class);
+    Logger logger = LoggerFactory.getLogger(InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.class);
 
     public static final Long SCENE_RECOMMEND_APPID = 27401L;
 
@@ -84,14 +84,15 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
         RecommendRequest recommendRequest = new RecommendRequest();
         try{
-            tacLogger.debug("tacLogger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.start");
             tacOptLogger.debug("tacOptLogger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.start");
+            logger.debug("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.start");
 
             Context tacContext = sgFrameworkContextContent.getTacContext();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)tacContext;
             Map<String, Object> aldParam = requestContext4Ald.getAldParam();//对应requestItem
             Map<String, Object> aldContext = requestContext4Ald.getAldContext();//对应solutionContext
-
+            logger.debug("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.aldParam:{}", JSON.toJSONString(aldParam));
+            logger.debug("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.aldContext:{}", JSON.toJSONString(aldContext));
             Map<String, String> tppRequestParams = new HashMap<>();
 
             Object aldCurrentResId = aldContext.get(HallCommonAldConstant.ALD_CURRENT_RES_ID);
@@ -112,6 +113,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
             buildTppParams(tppRequestParams, aldParam, aldContext, userParams);
             String urlParamsByMap = URLUtil.getUrlParamsByMap(tppRequestParams);
             tacLogger.debug("urlParamsByMap:" + JSON.toJSONString(urlParamsByMap));
+            logger.debug("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.urlParamsByMap:{}", JSON.toJSONString(urlParamsByMap));
             return recommendRequest;
         }catch (Exception e){
             tacLogger.error("tacLogger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.error,", e);
