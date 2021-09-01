@@ -117,6 +117,7 @@ public class FirstScreenMindItemScene {
                     if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
                         tacResult = TacResult.errorResult("test");
                         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+                            .kv("FirstScreenMindItemScene","recommend")
                             .kv("tacResult",JSON.toJSONString(tacResult))
                             .info();
                     }
