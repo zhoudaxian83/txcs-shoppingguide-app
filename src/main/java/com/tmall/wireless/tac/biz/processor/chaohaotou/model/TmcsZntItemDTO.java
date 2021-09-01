@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.chaohaotou.model.convert;
+package com.tmall.wireless.tac.biz.processor.chaohaotou.model;
 
 import lombok.Data;
 

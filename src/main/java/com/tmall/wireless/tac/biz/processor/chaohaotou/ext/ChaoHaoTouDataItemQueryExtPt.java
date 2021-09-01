@@ -16,10 +16,8 @@ import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.constant.Constant;
-import com.tmall.wireless.tac.biz.processor.chaohaotou.model.DataContext;
-import com.tmall.wireless.tac.biz.processor.chaohaotou.model.convert.TmcsZntItemDTO;
+import com.tmall.wireless.tac.biz.processor.chaohaotou.model.TmcsZntItemDTO;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.service.CommercialFeedsService;
-import com.tmall.wireless.tac.biz.processor.chaohaotou.utils.LogicPageUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import io.reactivex.Flowable;
 import org.apache.commons.lang3.tuple.Pair;
@@ -90,21 +88,6 @@ public class ChaoHaoTouDataItemQueryExtPt implements OriginDataItemQueryExtPt {
         return recommendRequest;
     }
 
-    /**
-     * 分页
-     *
-     * @param originDataDTO
-     * @param dataContext
-     * @return
-     */
-    private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
-        Pair<Boolean, List<ItemEntity>> pair = LogicPageUtil.getPage(originDataDTO.getResult(), dataContext.getIndex(),
-                dataContext.getPageSize());
-        List<ItemEntity> itemEntities = pair.getRight();
-        originDataDTO.setHasMore(pair.getLeft());
-        originDataDTO.setResult(itemEntities);
-        return originDataDTO;
-    }
 
     /**
      * 未缓存前

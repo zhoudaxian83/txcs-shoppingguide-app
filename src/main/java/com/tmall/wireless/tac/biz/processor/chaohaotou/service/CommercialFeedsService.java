@@ -10,7 +10,7 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.constant.Constant;
-import com.tmall.wireless.tac.biz.processor.chaohaotou.model.convert.TmcsZntItemDTO;
+import com.tmall.wireless.tac.biz.processor.chaohaotou.model.TmcsZntItemDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
