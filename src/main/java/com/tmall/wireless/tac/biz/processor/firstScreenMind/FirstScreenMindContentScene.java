@@ -150,8 +150,6 @@ public class FirstScreenMindContentScene {
         UserDO userDO = new UserDO();
         userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
-        tacLogger.info("****FirstScreenMindContentScene context.getParams().get(\"cookies\"))***:"+context.getParams().get("cookies"));
-        LOGGER.info("****FirstScreenMindContentScene context.getParams().get(\"cookies\"))***:"+context.getParams().get("cookies"));
         if (MapUtils.isNotEmpty(context.getParams())) {
             Object cookies = context.getParams().get("cookies");
             if (cookies != null && cookies instanceof Map) {

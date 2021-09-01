@@ -191,6 +191,10 @@ public class AliPayServiceImpl implements IAliPayService {
         pageFloorNavigationDTO.setTitleLightImageUrl(aldData.getString(navigationIconPicAldKey));
         middlePageSPIResponse.setPageFloorNavigationDTO(pageFloorNavigationDTO);
 
+        PageFloorTabDTO pageFloorTabDTO = new PageFloorTabDTO();
+        pageFloorTabDTO.setTabTitle("全部");
+        pageFloorTabDTO.setTabId("-1");
+        middlePageSPIResponse.setPageFloorTabDTOList(Lists.newArrayList(pageFloorTabDTO));
 
         List<ItemEntityVO> itemAndContentList = re.getItemAndContentList();
         List<PageFloorResultDTO> floorResultDTOS = Lists.newArrayList();
