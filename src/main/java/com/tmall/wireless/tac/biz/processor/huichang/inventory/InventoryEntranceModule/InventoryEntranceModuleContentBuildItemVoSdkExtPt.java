@@ -92,9 +92,10 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
                     contentVO.put("urlParams", urlParams + "&filterContentIds=" + String.join(",", filterContentIds));
                 }
             }
+            logger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.result:{}", JSON.toJSONString(contentVOSgFrameworkResponse));
             return contentVOSgFrameworkResponse;
         }catch (Exception e){
-            logger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.start.error:{}", StackTraceUtil.stackTrace(e));
+            logger.error("InventoryEntranceModuleContentBuildItemVoSdkExtPt.start.error:{}", StackTraceUtil.stackTrace(e));
             response.setErrorMsg("InventoryEntranceModuleContentBuildItemVoSdkExtPt.error");
             return response;
         }
