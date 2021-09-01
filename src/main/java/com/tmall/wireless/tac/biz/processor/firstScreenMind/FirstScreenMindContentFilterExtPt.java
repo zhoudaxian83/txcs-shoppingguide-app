@@ -73,7 +73,7 @@ public class FirstScreenMindContentFilterExtPt implements ContentFilterExtPt {
                     "CONTENT_FILTER_RESULT_EMPTY",
                     "");
             }
-            contentVOSgFrameworkResponse.setItemAndContentList(contentListAfterFilter);
+            contentVOSgFrameworkResponse.setItemAndContentList(contentListAfterFilter1);
             return contentVOSgFrameworkResponse;
 
         } catch (Exception e) {
