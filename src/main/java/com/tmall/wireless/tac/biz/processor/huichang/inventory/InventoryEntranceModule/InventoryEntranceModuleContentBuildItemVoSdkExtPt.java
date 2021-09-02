@@ -41,11 +41,12 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
 
     @Override
     public SgFrameworkResponse<ContentVO> process(SgFrameworkContextContent sgFrameworkContextContent) {
-        logger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.start.sgFrameworkContextContent:{}",JSON.toJSONString(sgFrameworkContextContent));
+        logger.info("-------InventoryEntranceModuleContentBuildItemVoSdkExtPt.start.---------");
+
         SgFrameworkResponse<ContentVO> response = new SgFrameworkResponse();
         try{
             SgFrameworkResponse<ContentVO> contentVOSgFrameworkResponse = super.process(sgFrameworkContextContent);
-            logger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.super.process.contentVOSgFrameworkResponse:{}",JSON.toJSONString(contentVOSgFrameworkResponse));
+            logger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.super.process.getItemAndContentList:{}",JSON.toJSONString(contentVOSgFrameworkResponse.getItemAndContentList()));
             Context tacContext = sgFrameworkContextContent.getTacContext();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)tacContext;
             Map<String, Object> aldContext = requestContext4Ald.getAldContext();
@@ -93,7 +94,7 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
                     contentVO.put("urlParams", urlParams + "&filterContentIds=" + String.join(",", filterContentIds));
                 }
             }
-            logger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.result:{}", JSON.toJSONString(contentVOSgFrameworkResponse));
+            logger.info("InventoryEntranceModuleContentBuildItemVoSdkExtPt.result:{}", JSON.toJSONString(contentVOSgFrameworkResponse.getItemAndContentList()));
             return contentVOSgFrameworkResponse;
         }catch (Exception e){
             logger.error("InventoryEntranceModuleContentBuildItemVoSdkExtPt.start.error:{}", StackTraceUtil.stackTrace(e));
