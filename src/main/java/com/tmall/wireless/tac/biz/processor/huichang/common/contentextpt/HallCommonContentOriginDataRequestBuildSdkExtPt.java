@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.alibaba.cola.extension.Extension;
+
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkPackage;
@@ -31,7 +33,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * !!!!!!!!!!!!!请求tpp的参数需要重新添加pageSize和index
  * @author wangguohui
  */
-@SdkPackage(packageName = HallScenarioConstant.HALL_SDK_PACKAGE)
+@Extension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
+    useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
+    scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO)
 public class HallCommonContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
 
 
