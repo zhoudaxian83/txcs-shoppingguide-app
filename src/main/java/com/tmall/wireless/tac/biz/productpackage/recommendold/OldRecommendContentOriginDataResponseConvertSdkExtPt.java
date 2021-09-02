@@ -9,7 +9,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
 import org.springframework.stereotype.Service;
 
-@Service
+
 @SdkPackage(packageName = PackageNameKey.OLD_RECOMMEND)
 public class OldRecommendContentOriginDataResponseConvertSdkExtPt extends Register implements ContentOriginDataResponseConvertSdkExtPt {
     @Override
