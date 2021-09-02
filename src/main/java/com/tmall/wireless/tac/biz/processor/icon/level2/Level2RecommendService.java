@@ -2,20 +2,15 @@ package com.tmall.wireless.tac.biz.processor.icon.level2;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.taobao.mtop.api.agent.MtopContext;
 import com.tmall.aself.shoppingguide.client.cat.model.LabelDTO;
-import com.tmall.aself.shoppingguide.client.cat.model.LabelRankDTO;
-import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.aselfcommon.model.column.ColumnStatus;
 import com.tmall.aselfcommon.model.column.MainColumnDTO;
 import com.tmall.aselfcommon.model.column.MaterialDTO;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkContentService;
-import com.tmall.wireless.tac.biz.processor.browsrec.BrowseRecommendScene;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.icon.level2.ext.IconLevel2ContentInfoQuerySdkExtPt;
-import com.tmall.wireless.tac.biz.processor.icon.model.IconTabDTO;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
@@ -25,7 +20,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +40,7 @@ public class Level2RecommendService {
 
     public static String level2Request = "level2Request";
 
-    Flowable<List<LabelDTO>> recommend(Level2Request level2Request, Context context) {
+    public Flowable<List<LabelDTO>> recommend(Level2Request level2Request, Context context) {
         BizScenario b = BizScenario.valueOf(
                 ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
