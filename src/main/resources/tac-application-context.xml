@@ -74,6 +74,11 @@
 
 
     <!--会场相关开始-->
+        <!--会场通用开始-->
+         <bean class="com.tmall.wireless.tac.biz.processor.huichang.common.contentextpt.HallCommonContentUserCommonParamsBuildSdkExtPt"/>
+        <!--会场通用结束-->
+
+
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleHandler"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleContentInfoQuerySdkExtPt"/>
