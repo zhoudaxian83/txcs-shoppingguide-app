@@ -18,7 +18,9 @@ import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+@Service
 @SdkPackage(packageName = HallScenarioConstant.HALL_SDK_PACKAGE)
 public class HallCommonContentUserCommonParamsBuildSdkExtPt implements ContentUserCommonParamsBuildSdkExtPt {
 
