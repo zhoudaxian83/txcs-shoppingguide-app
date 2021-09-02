@@ -39,7 +39,7 @@ public class Level2RecommendService {
 
     Logger LOGGER = LoggerFactory.getLogger(Level2RecommendService.class);
 
-    public static String level2Request = "level2Request";
+    public static String level2RequestKey = "level2Request";
 
     public Flowable<List<LabelDTO>> recommend(Level2Request level2Request, Context context) {
         BizScenario b = BizScenario.valueOf(
@@ -49,7 +49,7 @@ public class Level2RecommendService {
         );
         b.addProducePackage(PackageNameKey.OLD_RECOMMEND);
         List<LabelDTO> empty = Lists.newArrayList();
-        context.put("level2Request", level2Request);
+        context.put(level2RequestKey, level2Request);
         return shoppingguideSdkContentService.recommendWitchContext(context, b)
         .map(sgFrameworkContextContent -> {
             List<ContentDTO> contentDTOList = sgFrameworkContextContent.getContentDTOList();

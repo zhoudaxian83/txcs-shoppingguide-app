@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class IconLevel2ContentContextCheckSdkExtPt extends Register implements ContentContextCheckSdkExtPt {
     @Override
     public ContextCheckResult process(Context context) {
-        Object o = context.get(Level2RecommendService.level2Request);
+        Object o = context.get(Level2RecommendService.level2RequestKey);
         if (o instanceof Level2Request) {
             return ContextCheckResult.success();
         } else {

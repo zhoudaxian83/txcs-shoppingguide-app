@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.icon.level2.ext;
+package com.tmall.wireless.tac.biz.processor.icon.level3.ext;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
@@ -12,6 +12,8 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.icon.ColumnCacheService;
 import com.tmall.wireless.tac.biz.processor.icon.level2.Level2RecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.level2.Level2Request;
+import com.tmall.wireless.tac.biz.processor.icon.level3.Level3RecommendService;
+import com.tmall.wireless.tac.biz.processor.icon.level3.Level3Request;
 import io.reactivex.Flowable;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
@@ -25,29 +27,32 @@ import java.util.*;
 @Service
 @SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C
-        , scenario = ScenarioConstantApp.ICON_CONTENT_LEVEL2
+        , scenario = ScenarioConstantApp.ICON_CONTENT_LEVEL3
 )
-public class IconLevel2ContentInfoQuerySdkExtPt extends Register implements ContentInfoQuerySdkExtPt {
-    Logger LOGGER = LoggerFactory.getLogger(IconLevel2ContentInfoQuerySdkExtPt.class);
+public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements ContentInfoQuerySdkExtPt {
+    Logger LOGGER = LoggerFactory.getLogger(IconLevel3ContentInfoQuerySdkExtPt.class);
 
-    public static final String MainColumnDTOKey = "MainColumnDTOKey";
+    public static final String SUB_COLUMN_DTO_KEY = "SUB_COLUMN_DTO_KEY";
 
     @Autowired
     ColumnCacheService columnCacheService;
     @Override
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
-        Level2Request level2Request =(Level2Request) Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getTacContext).map(c -> c.get(Level2RecommendService.level2RequestKey)).orElse(null);
-        Preconditions.checkArgument(level2Request != null);
+        Level3Request level3Request =(Level3Request) Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getTacContext).map(c -> c.get(Level3RecommendService.level3RequestKey)).orElse(null);
+        Preconditions.checkArgument(level3Request != null);
 
         OriginDataDTO<ContentEntity> contentEntityOriginDataDTO = sgFrameworkContextContent.getContentEntityOriginDataDTO();
         List<ContentEntity> result = contentEntityOriginDataDTO.getResult();
-        Map<Long, MainColumnDTO> mainColumnMap = getMainColumnMap(level2Request.getLevel1Id());
+        MainColumnDTO column = columnCacheService.getColumn(Long.valueOf(level3Request.getLevel2Id()));
+        if (column == null || MapUtils.isEmpty(column.getSubColumnDTOMap())) {
+            return Flowable.just(Response.fail("MainColumnDTO_IS_EMPTY_OR_SUB_COLUMN_EMPRTY"));
+        }
         Map<Long, ContentInfoDTO> contentInfoDTOMap = Maps.newHashMap();
         for (ContentEntity contentEntity : result) {
-            if (mainColumnMap.get(contentEntity.getContentId()) != null) {
+            if (column.getSubColumnDTOMap().get(contentEntity.getContentId()) != null) {
                 ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
                 Map<String, Object> contentInfo = Maps.newHashMap();
-                contentInfo.put(MainColumnDTOKey, mainColumnMap.get(contentEntity.getContentId()));
+                contentInfo.put(SUB_COLUMN_DTO_KEY, column.getSubColumnDTOMap().get(contentEntity.getContentId()));
                 contentInfoDTO.setContentInfo(contentInfo);
                 contentInfoDTOMap.put(contentEntity.getContentId(), contentInfoDTO);
             }
@@ -56,30 +61,6 @@ public class IconLevel2ContentInfoQuerySdkExtPt extends Register implements Cont
     }
 
 
-    private Map<Long, MainColumnDTO> getMainColumnMap(String level1IdString) {
-        Map<Long, MainColumnDTO> level1IdToMainColumnDTOMap = null;
-        try {
-            HashMap<String, ArrayList<Long>> stringArrayListHashMap = columnCacheService.queryColumnTypeToLevel1IdList();
-            ArrayList<Long> level1IdList = stringArrayListHashMap.get(level1IdString);
-
-            level1IdToMainColumnDTOMap = Maps.newHashMap();
-
-            for (Long level1Id : level1IdList) {
-                MainColumnDTO column = columnCacheService.getColumn(level1Id);
-                if (column != null) {
-                    level1IdToMainColumnDTOMap.put(level1Id, column);
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.error("getMainColumnMap error", e);
-        }
 
 
-        if (MapUtils.isEmpty(level1IdToMainColumnDTOMap)) {
-            LOGGER.error("category getMainColumnMap error:{}", level1IdString);
-        }
-
-        return level1IdToMainColumnDTOMap;
-
-    }
 }
