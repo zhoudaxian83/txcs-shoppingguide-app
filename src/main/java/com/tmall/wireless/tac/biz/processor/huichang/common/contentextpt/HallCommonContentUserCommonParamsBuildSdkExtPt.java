@@ -6,6 +6,7 @@ import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkPackage;
+import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.context.ContentUserCommonParamsBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @SdkPackage(packageName = HallScenarioConstant.HALL_SDK_PACKAGE)
-public class HallCommonContentUserCommonParamsBuildSdkExtPt implements ContentUserCommonParamsBuildSdkExtPt {
+public class HallCommonContentUserCommonParamsBuildSdkExtPt extends Register implements ContentUserCommonParamsBuildSdkExtPt {
 
 
     Logger logger = LoggerFactory.getLogger(HallCommonContentUserCommonParamsBuildSdkExtPt.class);
