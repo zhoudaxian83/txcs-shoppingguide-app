@@ -9,6 +9,7 @@ import com.tmall.aselfcommon.model.column.MaterialDTO;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkContentService;
+import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.icon.level2.ext.IconLevel2ContentInfoQuerySdkExtPt;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -46,6 +47,7 @@ public class Level2RecommendService {
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 ScenarioConstantApp.ICON_CONTENT_LEVEL2
         );
+        b.addProducePackage(PackageNameKey.OLD_RECOMMEND);
         List<LabelDTO> empty = Lists.newArrayList();
         context.put("level2Request", level2Request);
         return shoppingguideSdkContentService.recommendWitchContext(context, b)
