@@ -7,7 +7,6 @@ import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentResp
 import com.tmall.tcls.gs.sdk.framework.model.context.ContentEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
-import org.springframework.stereotype.Service;
 
 
 @SdkPackage(packageName = PackageNameKey.OLD_RECOMMEND)
