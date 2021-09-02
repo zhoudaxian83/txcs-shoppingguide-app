@@ -45,7 +45,7 @@ public class IconLevel1Handler extends RpmReactiveHandler<Map<String, Object>> {
                     level3Request.setLevel2Id(level2TabDtoList.stream().findFirst().map(LabelDTO::getId).map(Objects::toString).orElse(""));
 
                     return level3RecommendService.recommend(level3Request, context).map(level3TabDtoList -> {
-                        result.put("thrirdList", level3Request);
+                        result.put("thrirdList", level3TabDtoList);
                         return result;
                     }).map(TacResult::newResult);
 
