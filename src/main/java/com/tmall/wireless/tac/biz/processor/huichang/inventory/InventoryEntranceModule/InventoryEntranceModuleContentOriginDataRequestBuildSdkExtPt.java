@@ -228,6 +228,10 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         RequestItem item = new RequestItem();
         item.setCount(50);
         item.setResId(resourceId);
+        JSONObject data = new JSONObject();
+        //渠道参数，流程模板需要识别，识别到以后流程模板内部只返回静态数据，也就是只拿到商品id，不走渲染逻辑
+        data.put("onlyGetStaticData", "true");
+        item.setData(data);
         request.setRequestItems(Lists.newArrayList(item));
         //地址信息
         LocationInfo locationInfo = request.getLocationInfo();
