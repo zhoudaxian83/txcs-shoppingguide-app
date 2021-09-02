@@ -205,6 +205,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         userParams.put("dealStaticDataList", dealStaticDataList);
         userParams.put("locType", locType);
 
+        //入口透出的场景id，需要在二跳页面的入口过滤掉
         String sceneExclude = PageUrlUtil.getParamFromCurPageUrl(aldParams, "filterContentIds"); // Todo likunlin
         if(org.apache.commons.lang.StringUtils.isNotBlank(sceneExclude)) {
             params.put("sceneExclude", sceneExclude); // 过滤的场景

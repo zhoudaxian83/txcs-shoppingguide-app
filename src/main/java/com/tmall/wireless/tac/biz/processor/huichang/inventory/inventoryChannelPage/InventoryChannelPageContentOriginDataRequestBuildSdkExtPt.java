@@ -106,10 +106,10 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
             }
             params.put("sceneSet", sceneSet); // 场景集id
 
-            String sceneExclude = PageUrlUtil.getParamFromCurPageUrl(aldParams, "filterContentIds"); // Todo likunlin
-            if(StringUtils.isNotBlank(sceneExclude)) {
-                params.put("sceneExclude", sceneExclude); // 过滤的场景
-            }
+            //String sceneExclude = PageUrlUtil.getParamFromCurPageUrl(aldParams, "filterContentIds"); // Todo likunlin
+            //if(StringUtils.isNotBlank(sceneExclude)) {
+            //    params.put("sceneExclude", sceneExclude); // 过滤的场景
+            //}
             // 这里参数entryContentIds只会带一个id
             String sceneTop = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryContentIds"); // Todo likunlin
             if(StringUtils.isNotBlank(sceneTop)) {
