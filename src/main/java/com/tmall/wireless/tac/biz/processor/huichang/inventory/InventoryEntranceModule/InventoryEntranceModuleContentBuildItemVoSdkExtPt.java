@@ -87,7 +87,9 @@ public class InventoryEntranceModuleContentBuildItemVoSdkExtPt
                         paramsMap.put("entryItemId", itemId);
                     }
                     //绑定资源位id
-                    if(StringUtils.isEmpty(entryResourceId)){
+                    if(StringUtils.isNotEmpty(entryResourceId)){
+                        paramsMap.put("entryResourceId", entryResourceId);
+                    }else {
                         paramsMap.put("entryResourceId", String.valueOf(aldCurrentResId));
                     }
                     String urlParamsByMap = URLUtil.getUrlParamsByMap(paramsMap);
