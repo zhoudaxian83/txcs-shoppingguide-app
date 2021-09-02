@@ -4,9 +4,12 @@ import com.alibaba.aladdin.lamp.domain.request.RequestItem;
 import com.alibaba.aladdin.lamp.sdk.solution.context.SolutionContext;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleContentInfoQuerySdkExtPt;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.swing.table.TableCellEditor;
@@ -19,9 +22,9 @@ import java.util.Map;
  */
 public class PageUrlUtil {
 
-    public static String getParamFromCurPageUrl(Map<String, Object> aldParams, String param, TacLogger tacLogger) {
+    public static String getParamFromCurPageUrl(Map<String, Object> aldParams, String param) {
 
-        String curPageUrl = getCurPageUrl(aldParams, tacLogger);
+        String curPageUrl = getCurPageUrl(aldParams);
         if(StringUtils.isEmpty(curPageUrl)){
             return null;
         }
@@ -29,7 +32,6 @@ public class PageUrlUtil {
         try {
             curPageUrl = URLDecoder.decode(URLDecoder.decode(curPageUrl, "UTF-8"),"UTF-8");
         } catch (Exception e) {
-            tacLogger.debug("curPageUrl decode exception" + e.getMessage());
             HadesLogUtil.stream("utils")
                     .kv("PageUrlUtil", "getParamFromCurPageUrl")
                     .kv("curPageUrl decode exception", StackTraceUtil.stackTrace(e))
@@ -44,10 +46,9 @@ public class PageUrlUtil {
         return null;
     }
 
-    public static String getCurPageUrl(Map<String, Object> aldParams, TacLogger tacLogger) {
+    public static String getCurPageUrl(Map<String, Object> aldParams) {
         Object currentPageUrl = aldParams.get("curPageUrl");
         if(currentPageUrl == null){
-            tacLogger.debug( "curPageUrl is empty");
             HadesLogUtil.stream("utils")
                     .kv("PageUrlUtil", "getCurPageUrl")
                     .kv("getCurPageUrl exception", "curPageUrl is empty")

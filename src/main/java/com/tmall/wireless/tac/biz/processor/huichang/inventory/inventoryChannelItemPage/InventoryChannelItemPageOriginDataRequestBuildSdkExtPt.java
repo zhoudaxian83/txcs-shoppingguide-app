@@ -71,7 +71,7 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
             }
 
             Map<String, String> params = Maps.newHashMap();
-            String scene = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentId", tacLogger);
+            String scene = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentId");
             if(StringUtils.isNotBlank(scene)) {
                 params.put("scene", scene);
             } else {
@@ -84,7 +84,7 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
                 throw new Exception("url参数contentId为空");
             }
 
-            String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemSetId", tacLogger);
+            String itemSets = PageUrlUtil.getParamFromCurPageUrl(aldParams, "itemSetId");
             if(StringUtils.isNotBlank(itemSets)) {
                 if(!itemSets.startsWith(ITEM_SET_PREFIX)) {
                     itemSets = ITEM_SET_PREFIX + itemSets;
@@ -124,7 +124,7 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
 
             params.put("regionCode", Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode()).map(String::valueOf).orElse(String.valueOf(DEFAULT_LOGAREAID)));
 
-            String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
+            String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
             if("B2C".equals(locType) || locType == null){
                 params.put("commerce","B2C");
             }else {

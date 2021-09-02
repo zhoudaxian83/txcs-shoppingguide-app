@@ -67,12 +67,12 @@ public class InventoryChannelPageHandler extends TacReactiveHandler4Ald {
                 .kv("aldParams", JSONObject.toJSONString(aldParams))
                 .info();
         // 从url获取主标题
-        String contentSetTitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetTitle", tacLogger);
+        String contentSetTitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetTitle");
         if(StringUtils.isBlank(contentSetTitle)) {
             contentSetTitle = "购物车好物"; // Todo likunlin
         }
         // 从url获取副标题
-        String contentSetSubtitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetSubTitle", tacLogger);
+        String contentSetSubtitle = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetSubTitle");
         if(StringUtils.isBlank(contentSetSubtitle)) {
             contentSetSubtitle = "超市购物攻略推荐"; // Todo likunlin
         }

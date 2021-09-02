@@ -73,15 +73,15 @@ public class InventoryChannelPageContentOriginDataPostProcessorSdkExtPt extends 
             SgFrameworkContextContent sgFrameworkContextContent = contentOriginDataProcessRequest.getSgFrameworkContextContent();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextContent.getTacContext());
             Map<String, Object> aldParams = requestContext4Ald.getAldParam();
-            String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryItemId", tacLogger); // 为你推荐商品
+            String itemRecommand = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryItemId"); // 为你推荐商品
 
             // 如果url有带，从url取，否则从aldParams取
-            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 0));
+            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex")).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 0));
             // Todo pageIndex 改成第0页
             if(StringUtils.isNotBlank(itemRecommand) && pageIndex == 0) { // 第一页的第一个场景需要插入为你推荐商品以及过滤为你推荐商品
                 ItemEntity itemRecommandEntity = new ItemEntity();
                 itemRecommandEntity.setItemId(Long.valueOf(itemRecommand));
-                String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
+                String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
                 // 获取详细的履约类型。例如O2O场景下的半日达，一小时达
                 String detailLocType = getDetailLocType(locType, aldParams);
                 itemRecommandEntity.setO2oType(detailLocType);

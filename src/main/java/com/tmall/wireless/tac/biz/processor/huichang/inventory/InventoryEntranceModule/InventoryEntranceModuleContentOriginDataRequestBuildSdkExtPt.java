@@ -11,8 +11,8 @@ import com.alibaba.aladdin.lamp.domain.request.RequestItem;
 import com.alibaba.aladdin.lamp.domain.request.modules.LocationInfo;
 import com.alibaba.aladdin.lamp.domain.response.ResResponse;
 import com.alibaba.fastjson.JSON;
-
 import com.alibaba.fastjson.JSONObject;
+
 import com.google.common.collect.Lists;
 import com.taobao.mtop.api.agent.MtopContext;
 import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
@@ -147,7 +147,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         }
 
         if(StringUtils.isEmpty(locType)){
-             locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
+             locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
              if(StringUtils.isEmpty(locType)){
                  locType = "B2C";
              }
@@ -163,7 +163,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
             }
         }
         Object staticScheduleData = null;
-        String entryResourceId = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryResourceId", tacLogger);
+        String entryResourceId = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryResourceId");
 
         //需要在加个其他的参数来共同决定
         if(StringUtils.isNotEmpty(entryResourceId)){

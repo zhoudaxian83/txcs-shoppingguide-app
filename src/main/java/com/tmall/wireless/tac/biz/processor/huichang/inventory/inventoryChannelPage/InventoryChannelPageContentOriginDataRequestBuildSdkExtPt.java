@@ -76,7 +76,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
                     .kv("aldParams", JSONObject.toJSONString(aldParams))
                     .info();
             // 如果url有带，从url取，否则从aldParams取
-            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex", tacLogger)).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 0));
+            int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex")).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 0));
             // 前端的pageIndex换算到Tpp感知的index
             int index = pageIndex * PAGE_SIZE;
             params.put("index", String.valueOf(index));
@@ -88,7 +88,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
             LocParams locParams = ParseCsa.parseCsaObj(aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA), smAreaId);
             params.put("regionCode", Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode()).map(String::valueOf).orElse(String.valueOf(DEFAULT_LOGAREAID)));
 
-            String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
+            String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
             if("B2C".equals(locType) || locType == null){
                 params.put("commerce","B2C");
             }else {
@@ -100,18 +100,18 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
                 }
             }
 
-            String sceneSet = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetId", tacLogger); // Todo likunlin
+            String sceneSet = PageUrlUtil.getParamFromCurPageUrl(aldParams, "contentSetId"); // Todo likunlin
             if(!sceneSet.contains(SCENE_SET_PREFIX)) {
                 sceneSet = SCENE_SET_PREFIX + sceneSet;
             }
             params.put("sceneSet", sceneSet); // 场景集id
 
-            String sceneExclude = PageUrlUtil.getParamFromCurPageUrl(aldParams, "filterContentIds", tacLogger); // Todo likunlin
+            String sceneExclude = PageUrlUtil.getParamFromCurPageUrl(aldParams, "filterContentIds"); // Todo likunlin
             if(StringUtils.isNotBlank(sceneExclude)) {
                 params.put("sceneExclude", sceneExclude); // 过滤的场景
             }
             // 这里参数entryContentIds只会带一个id
-            String sceneTop = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryContentIds", tacLogger); // Todo likunlin
+            String sceneTop = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryContentIds"); // Todo likunlin
             if(StringUtils.isNotBlank(sceneTop)) {
                 params.put("sceneTop", sceneTop); // 置顶的场景
             }

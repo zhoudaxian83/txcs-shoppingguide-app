@@ -146,7 +146,7 @@ public class InventoryChannelPageContentInfoQuerySdkExtPt extends Register imple
         String urlParam = "";
         urlParam = PageUrlUtil.addParams(urlParam, "contentId", String.valueOf(sceneDTO.getId()));
         urlParam = PageUrlUtil.addParams(urlParam, "itemSetId", String.valueOf(sceneDTO.getItemsetIds().get(0)));
-        String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType", tacLogger);
+        String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
         if("B2C".equals(locType) || locType == null){
             urlParam = PageUrlUtil.addParams(urlParam, "locType", "B2C");
         }else {

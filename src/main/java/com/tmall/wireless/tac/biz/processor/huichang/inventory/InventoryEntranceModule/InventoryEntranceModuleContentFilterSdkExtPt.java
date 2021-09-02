@@ -1,7 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule;
 
-import com.alibaba.fastjson.JSON;
-
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.vo.ContentFilterSdkExtPt;

@@ -73,7 +73,7 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
             SgFrameworkContextItem sgFrameworkContextItem = originDataProcessRequest.getSgFrameworkContextItem();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
             Map<String, Object> aldParams = requestContext4Ald.getAldParam();
-            String items = PageUrlUtil.getParamFromCurPageUrl(aldParams, "items", tacLogger); // 二跳页展示的6个商品
+            String items = PageUrlUtil.getParamFromCurPageUrl(aldParams, "items"); // 二跳页展示的6个商品
             if(StringUtils.isNotBlank(items)) {
                 List<String> itemList = Arrays.asList(items.split(","));
                 // 用来过滤重复商品
@@ -83,7 +83,7 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
                 for(String itemId: itemList) {
                     ItemEntity item = new ItemEntity();
                     item.setItemId(Long.valueOf(itemId));
-                    String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams,"locType", tacLogger);
+                    String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams,"locType");
                     String detailLocType = getDetailLocType(locType, aldParams);
                     item.setO2oType(detailLocType);
                     item.setBusinessType(detailLocType);
