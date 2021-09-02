@@ -2,7 +2,6 @@ package com.tmall.wireless.tac.biz.processor.icon.level3;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.tmall.aself.shoppingguide.client.cat.model.LabelDTO;
 import com.tmall.aselfcommon.model.column.ColumnStatus;
@@ -17,21 +16,19 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.icon.ColumnCacheService;
 import com.tmall.wireless.tac.biz.processor.icon.level2.BusinessTypeUtil;
 import com.tmall.wireless.tac.biz.processor.icon.level2.Level2RecommendService;
-import com.tmall.wireless.tac.biz.processor.icon.level2.Level2Request;
-import com.tmall.wireless.tac.biz.processor.icon.level2.ext.IconLevel2ContentInfoQuerySdkExtPt;
 import com.tmall.wireless.tac.biz.processor.icon.level3.ext.IconLevel3ContentInfoQuerySdkExtPt;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.ecs.html.Col;
-import org.apache.zookeeper.Op;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
