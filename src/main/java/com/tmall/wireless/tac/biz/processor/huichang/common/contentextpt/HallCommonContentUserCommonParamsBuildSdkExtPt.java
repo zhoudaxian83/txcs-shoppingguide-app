@@ -2,14 +2,11 @@ package com.tmall.wireless.tac.biz.processor.huichang.common.contentextpt;
 
 import java.util.Map;
 
-import com.alibaba.cola.extension.Extension;
-
 import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkPackage;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.context.ContentUserCommonParamsBuildSdkExtPt;
-import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
 import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.PageInfoDO;
@@ -19,12 +16,19 @@ import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenari
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SdkPackage(packageName = HallScenarioConstant.HALL_SDK_PACKAGE)
 public class HallCommonContentUserCommonParamsBuildSdkExtPt implements ContentUserCommonParamsBuildSdkExtPt {
 
+
+    Logger logger = LoggerFactory.getLogger(HallCommonContentUserCommonParamsBuildSdkExtPt.class);
+
     @Override
     public CommonUserParams process(Context context) {
+        logger.info("-------HallCommonContentUserCommonParamsBuildSdkExtPt.start------------");
+
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)context;
         Map<String, Object> aldParam = requestContext4Ald.getAldParam();//对应requestItem
         Map<String, Object> aldContext = requestContext4Ald.getAldContext();//对应solutionContext
