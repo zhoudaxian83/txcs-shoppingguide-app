@@ -40,7 +40,7 @@ public class HallCommonContentUserCommonParamsBuildSdkExtPt implements ContentUs
         commonUserParams.setLocParams(parseCsaObj(aldParam.get(HallCommonAldConstant.CSA), smAreaId));
 
         Integer pageSize = MapUtil.getIntWithDefault(aldContext, HallCommonAldConstant.PAGE_SIZE, 20);
-        Integer pageIndex = MapUtil.getIntWithDefault(aldContext, HallCommonAldConstant.PAGE_INDEX, 1);
+        Integer pageIndex = MapUtil.getIntWithDefault(aldContext, HallCommonAldConstant.PAGE_INDEX, 0);
 
         PageInfoDO pageInfoDO = new PageInfoDO();
         pageInfoDO.setPageSize(pageSize);
