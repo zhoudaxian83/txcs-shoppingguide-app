@@ -38,14 +38,22 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
     ColumnCacheService columnCacheService;
     @Override
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
+
+        Map<Long, ContentInfoDTO> contentInfoDTOMap = processContentMap(sgFrameworkContextContent);
+
+        return Flowable.just(Response.success(contentInfoDTOMap));
+    }
+
+    private Map<Long, ContentInfoDTO> processContentMap(SgFrameworkContextContent sgFrameworkContextContent) {
         Level3Request level3Request =(Level3Request) Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getTacContext).map(c -> c.get(Level3RecommendService.level3RequestKey)).orElse(null);
         Preconditions.checkArgument(level3Request != null);
 
         OriginDataDTO<ContentEntity> contentEntityOriginDataDTO = sgFrameworkContextContent.getContentEntityOriginDataDTO();
         List<ContentEntity> result = contentEntityOriginDataDTO.getResult();
-        MainColumnDTO column = columnCacheService.getColumn(Long.valueOf(level3Request.getLevel2Id()));
+
+        MainColumnDTO column = getMainColumn(level3Request);
         if (column == null || MapUtils.isEmpty(column.getSubColumnDTOMap())) {
-            return Flowable.just(Response.fail("MainColumnDTO_IS_EMPTY_OR_SUB_COLUMN_EMPRTY"));
+            return Maps.newHashMap();
         }
         Map<Long, ContentInfoDTO> contentInfoDTOMap = Maps.newHashMap();
         for (ContentEntity contentEntity : result) {
@@ -57,10 +65,12 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
                 contentInfoDTOMap.put(contentEntity.getContentId(), contentInfoDTO);
             }
         }
-        return Flowable.just(Response.success(contentInfoDTOMap));
+        return contentInfoDTOMap;
     }
 
-
+    private MainColumnDTO getMainColumn(Level3Request level3Request) {
+        return columnCacheService.getColumn(Long.valueOf(level3Request.getLevel2Id()));
+    }
 
 
 }
