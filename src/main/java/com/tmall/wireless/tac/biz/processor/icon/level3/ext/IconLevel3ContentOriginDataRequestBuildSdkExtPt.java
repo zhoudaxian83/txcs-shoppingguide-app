@@ -38,7 +38,7 @@ public class IconLevel3ContentOriginDataRequestBuildSdkExtPt extends Register im
         params.put("pageId", level3Request.getLevel1Id());
         params.put("moduleId", level3Request.getLevel2Id());
         params.put("itemBusinessType", "B2C,OneHour,HalfDay,NextDay");
-        params.put("contentType", "1");
+        params.put("contentType", "2");
         params.put("rtNextDayStoreId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtNextDayStoreId).map(Object::toString).orElse("0"));
         params.put("rtHalfDayStoreId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtHalfDayStoreId).map(Object::toString).orElse("0"));
         params.put("rtOneHourStoreId",  Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).map(Object::toString).orElse("0"));
