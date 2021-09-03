@@ -43,15 +43,17 @@ public class LimitService {
     private Map<String, Object> buildGetItemLimitParam(SgFrameworkContextItem sgFrameworkContextItem) {
         Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
         Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
-            .getItemInfoGroupResponseMap();
+                .getItemInfoGroupResponseMap();
         ItemGroup itemGroup = new ItemGroup("sm", "B2C");
         //captain获取skuId
         List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
-            itemGroup).getValue()
-            .values()), ItemInfoDTO.class);
-        tacLogger.info("itemGroupItemInfoGroupResponseMap_"+JSON.toJSONString(itemGroupItemInfoGroupResponseMap));
+                itemGroup).getValue()
+                .values()), ItemInfoDTO.class);
+        tacLogger.info("itemGroupItemInfoGroupResponseMap_" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap));
+        tacLogger.info("itemInfoDTOS_" + JSON.toJSONString(itemInfoDTOS));
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
-            tacLogger.info("报错itemId="+itemInfoDTO.getItemEntity().getItemId());
+            tacLogger.info("itemInfoDTO_" + JSON.toJSONString(itemInfoDTO));
+            tacLogger.info("报错itemId=" + itemInfoDTO.getItemEntity().getItemId());
             ItemDTO itemDTO = itemInfoDTO.getItemInfos().get("captain").getItemDTO();
             Map<String, Object> skuMap = Maps.newHashMap();
             skuMap.put("skuId", itemDTO.getSkuId() == null ? 0L : itemDTO.getSkuId());
@@ -70,20 +72,20 @@ public class LimitService {
         Object o;
         try {
             o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramsValue);
-            JSONObject jsonObject = (JSONObject)JSON.toJSON(o);
+            JSONObject jsonObject = (JSONObject) JSON.toJSON(o);
             Boolean success = jsonObject.getBoolean(Constant.SUCCESS);
             //适配异常情况
             if (success == null) {
                 tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue + "|jsonObject：" + JSON
-                    .toJSONString(jsonObject));
+                        .toJSONString(jsonObject));
                 LOGGER.error("限购接口RPC调用返回异常");
                 return null;
             }
             if (success) {
-                return JSONObject.parseObject(((JSONObject)jsonObject.get(
-                    Constant.LIMIT_INFO)).toJSONString(),
-                    new TypeReference<Map<Long, List<ItemLimitDTO>>>() {
-                    });
+                return JSONObject.parseObject(((JSONObject) jsonObject.get(
+                        Constant.LIMIT_INFO)).toJSONString(),
+                        new TypeReference<Map<Long, List<ItemLimitDTO>>>() {
+                        });
             } else {
                 tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
                 return null;
