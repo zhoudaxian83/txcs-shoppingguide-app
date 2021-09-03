@@ -86,7 +86,7 @@ public class InventoryEntranceModuleContentFilterSdkExtPt extends Register imple
      * @return
      */
     private boolean isValid(ItemEntityVO item){
-        if(canBuy(item) && itemInfoError(item)){
+        if(canBuy(item) && !itemInfoError(item)){
             return true;
         }else {
             return false;
