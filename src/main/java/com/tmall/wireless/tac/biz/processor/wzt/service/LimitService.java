@@ -49,7 +49,9 @@ public class LimitService {
         List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
             itemGroup).getValue()
             .values()), ItemInfoDTO.class);
+        tacLogger.info("itemGroupItemInfoGroupResponseMap_"+JSON.toJSONString(itemGroupItemInfoGroupResponseMap));
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
+            tacLogger.info("报错itemId="+itemInfoDTO.getItemEntity().getItemId());
             ItemDTO itemDTO = itemInfoDTO.getItemInfos().get("captain").getItemDTO();
             Map<String, Object> skuMap = Maps.newHashMap();
             skuMap.put("skuId", itemDTO.getSkuId() == null ? 0L : itemDTO.getSkuId());
