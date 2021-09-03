@@ -73,9 +73,9 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
             SgFrameworkContextItem sgFrameworkContextItem = originDataProcessRequest.getSgFrameworkContextItem();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
             Map<String, Object> aldParams = requestContext4Ald.getAldParam();
-            String items = PageUrlUtil.getParamFromCurPageUrl(aldParams, "items"); // 二跳页展示的6个商品
-            if(StringUtils.isNotBlank(items)) {
-                List<String> itemList = Arrays.asList(items.split(","));
+            String entryItemIds = PageUrlUtil.getParamFromCurPageUrl(aldParams, "entryItemIds"); // 二跳页展示的6个商品
+            if(StringUtils.isNotBlank(entryItemIds)) {
+                List<String> itemList = Arrays.asList(entryItemIds.split(","));
                 // 用来过滤重复商品
                 Set<Long> itemSet = itemList.stream().map(Long::valueOf).collect(Collectors.toSet());
                 List<ItemEntity> newItemEntityList = Lists.newArrayList();
