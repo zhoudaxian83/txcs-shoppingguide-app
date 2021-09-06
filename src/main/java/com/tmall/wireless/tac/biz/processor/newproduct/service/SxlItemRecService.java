@@ -56,8 +56,8 @@ public class SxlItemRecService {
     SgFrameworkServiceItem sgFrameworkServiceItem;
     @Autowired
     HyperlocalRetailABTestClient hyperlocalRetailABTestClient;
-    @Autowired
-    ChannelQueryService channelQueryService;
+    /*@Autowired
+    ChannelQueryService channelQueryService;*/
 
     /**ab实验分桶结果**/
     private final static String AB_TEST_RESULT = "abTestVariationsResult";
@@ -243,7 +243,7 @@ public class SxlItemRecService {
      * @return
      */
     private String getAbData(Context context){
-        getChannelDate();
+        /*getChannelDate();*/
         StringBuilder itemSetIdType = new StringBuilder();
         try {
             if(context.getParams().get(AB_TEST_RESULT) == null
@@ -289,7 +289,7 @@ public class SxlItemRecService {
             .info();
         return itemSetIdType.toString();
     }
-    public void getChannelDate(){
+/*    public void getChannelDate(){
         List<ChannelDataDO> channelDataDOS = dataTubeKeyList.stream().map(k -> {
             ChannelDataDO channelDataDO = new ChannelDataDO();
             channelDataDO.setChannelName("itemExtLdb");
@@ -310,7 +310,5 @@ public class SxlItemRecService {
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
             .kv("singleResponse",JSON.toJSONString(singleResponse))
             .info();
-
-
-    }
+    }*/
 }
