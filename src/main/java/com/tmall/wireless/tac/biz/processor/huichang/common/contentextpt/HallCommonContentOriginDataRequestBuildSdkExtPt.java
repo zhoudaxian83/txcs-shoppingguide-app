@@ -73,7 +73,7 @@ public class HallCommonContentOriginDataRequestBuildSdkExtPt extends Register im
 
         //先从绑定的流程模板参数中拿，如果拿不到，代表是二跳页面的模块，这个时候从URL里面获取，如果还获取不到，则默认是B2C
         String locType = MapUtil.getStringWithDefault(aldParams, HallCommonAldConstant.LOC_TYPE, "B2C");
-        if("B2C".equals(locType) || locType == null){
+        if(locType == null || "B2C".equals(locType)){
             tppRequestParams.put("commerce","B2C");
         }else {
             tppRequestParams.put("commerce","O2O");

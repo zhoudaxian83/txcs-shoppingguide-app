@@ -152,7 +152,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
                  locType = "B2C";
              }
         }
-        if("B2C".equals(locType) || locType == null){
+        if(locType == null || "B2C".equals(locType)){
             params.put("commerce","B2C");
         }else {
             params.put("commerce","O2O");

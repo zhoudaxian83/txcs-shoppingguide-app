@@ -115,7 +115,7 @@ public class InventoryChannelItemPageOriginDataPostProcessorSdkExtPt extends Reg
     }
 
     private String getDetailLocType(String locType, Map<String, Object> aldParams) {
-        if("B2C".equals(locType) || locType == null) {
+        if(locType == null || "B2C".equals(locType)) {
             if(StringUtils.isBlank(locType)) {
                 tacLogger.debug("locType是空");
             }

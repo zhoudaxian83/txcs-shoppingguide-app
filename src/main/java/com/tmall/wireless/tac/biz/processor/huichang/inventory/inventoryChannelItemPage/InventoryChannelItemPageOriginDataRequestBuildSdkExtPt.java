@@ -125,7 +125,7 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
             params.put("regionCode", Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode()).map(String::valueOf).orElse(String.valueOf(DEFAULT_LOGAREAID)));
 
             String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
-            if("B2C".equals(locType) || locType == null){
+            if(locType == null || "B2C".equals(locType)){
                 params.put("commerce","B2C");
             }else {
                 params.put("commerce","O2O");
