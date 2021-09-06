@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.huichang.common.contentextpt;
+package com.tmall.wireless.tac.biz.processor.huichang.common.itemextpt;
 
 import java.util.Map;
 
@@ -7,7 +7,7 @@ import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkPackage;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
-import com.tmall.tcls.gs.sdk.framework.extensions.content.context.ContentUserCommonParamsBuildSdkExtPt;
+import com.tmall.tcls.gs.sdk.framework.extensions.item.contextbuild.ItemUserCommonParamsBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.PageInfoDO;
@@ -21,15 +21,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //@Service
-@SdkPackage(packageName = HallScenarioConstant.HALL_CONTENT_SDK_PACKAGE)
-public class HallCommonContentUserCommonParamsBuildSdkExtPt extends Register implements ContentUserCommonParamsBuildSdkExtPt {
+@SdkPackage(packageName = HallScenarioConstant.HALL_ITEM_SDK_PACKAGE)
+public class HallCommonItemUserCommonParamsBuildSdkExtPt extends Register implements ItemUserCommonParamsBuildSdkExtPt {
 
 
-    Logger logger = LoggerFactory.getLogger(HallCommonContentUserCommonParamsBuildSdkExtPt.class);
+    Logger logger = LoggerFactory.getLogger(HallCommonItemUserCommonParamsBuildSdkExtPt.class);
 
     @Override
     public CommonUserParams process(Context context) {
-        logger.info("-------HallCommonContentUserCommonParamsBuildSdkExtPt.start------------");
+        logger.info("-------HallCommonItemUserCommonParamsBuildSdkExtPt.start------------");
 
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)context;
         Map<String, Object> aldParam = requestContext4Ald.getAldParam();//对应requestItem

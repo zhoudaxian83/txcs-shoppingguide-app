@@ -11,7 +11,8 @@ public class HallScenarioConstant {
 
 
 
-    public static final String HALL_SDK_PACKAGE = "hall_package";
+    public static final String HALL_CONTENT_SDK_PACKAGE = "hall_content_package";
+    public static final String HALL_ITEM_SDK_PACKAGE = "hall_item_package";
 
 
     public static final String HALL_SCENARIO_BIZ_ID = "hall";

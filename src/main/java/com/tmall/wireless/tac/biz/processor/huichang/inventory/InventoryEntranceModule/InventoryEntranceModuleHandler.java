@@ -43,7 +43,7 @@ public class InventoryEntranceModuleHandler extends TacReactiveHandler4Ald {
             BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
                 HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
                 HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE);
-            bizScenario.addProducePackage(HallScenarioConstant.HALL_SDK_PACKAGE);
+            bizScenario.addProducePackage(HallScenarioConstant.HALL_CONTENT_SDK_PACKAGE);
             return hallCommonContentRequestProxy.recommend(requestContext4Ald, bizScenario);
         }catch (Exception e){
             logger.error("LOGGER.InventoryEntranceModuleHandler.error.", e);

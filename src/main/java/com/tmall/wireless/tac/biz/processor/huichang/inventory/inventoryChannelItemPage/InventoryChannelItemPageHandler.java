@@ -54,7 +54,7 @@ public class InventoryChannelItemPageHandler extends TacReactiveHandler4Ald {
         BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
                 HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
                 HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE);
-        bizScenario.addProducePackage(HallScenarioConstant.HALL_SDK_PACKAGE);
+        bizScenario.addProducePackage(HallScenarioConstant.HALL_ITEM_SDK_PACKAGE);
         Flowable<TacResult<List<GeneralItem>>> itemVOs = hallCommonItemRequestProxy.recommend(requestContext4Ald, bizScenario);
         TairSceneDTO sceneDTO = getScenesInfoFromCaptain(requestContext4Ald);
         GeneralItem sceneGeneralItem = buildSceneGeneralItem(sceneDTO);
