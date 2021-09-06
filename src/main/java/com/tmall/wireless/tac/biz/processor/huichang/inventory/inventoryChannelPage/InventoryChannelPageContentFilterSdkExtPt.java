@@ -2,6 +2,8 @@ package com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannel
 
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
+
 import com.google.common.collect.Lists;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
@@ -43,6 +45,7 @@ public class InventoryChannelPageContentFilterSdkExtPt extends Register implemen
         // 过滤场景下的商品
         for (ContentVO contentVO : itemAndContentList) {
             List<ItemEntityVO> itemEntityVOList = (List<ItemEntityVO>) contentVO.get("items");
+            logger.error("InventoryChannelPageContentFilterSdkExtPt.content:{}, items:{}", JSON.toJSONString(contentVO), JSON.toJSONString(itemEntityVOList));
             List<ItemEntityVO> itemEntityVOListFilter = Lists.newArrayList();
             for(ItemEntityVO itemEntityVO: itemEntityVOList) {
                 if (itemEntityVO != null) {
