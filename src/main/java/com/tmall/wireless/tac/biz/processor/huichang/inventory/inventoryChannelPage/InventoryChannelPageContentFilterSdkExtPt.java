@@ -39,6 +39,7 @@ public class InventoryChannelPageContentFilterSdkExtPt extends Register implemen
         List<ContentVO> itemAndContentList = entityVOSgFrameworkResponse.getItemAndContentList();
 
         if (CollectionUtils.isEmpty(itemAndContentList)) {
+            logger.info("InventoryChannelPageContentFilterSdkExtPt.itemAndContentList is empty");
             return entityVOSgFrameworkResponse;
         }
         List<ContentVO> itemAndContentListAfterFilter = Lists.newArrayList();
