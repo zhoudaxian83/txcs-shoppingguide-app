@@ -1,8 +1,16 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.service;
 
+import com.alibaba.cola.dto.SingleResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.tcls.experiment.client.router.HyperlocalRetailABTestClient;
+import com.alibaba.tmf.session.OnceInvoker;
+
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.tmall.aselfcaptain.item.api.ChannelQueryService;
+import com.tmall.aselfcaptain.item.model.ChannelDataDO;
+import com.tmall.aselfcaptain.item.model.ChannelWriteDO;
+import com.tmall.aselfcaptain.item.model.ChannelWriteResp;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
@@ -14,6 +22,7 @@ import com.tmall.txcs.gs.model.biz.context.EntitySetParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.txcs.gs.spi.recommend.ChannelQuerySpi;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
@@ -52,6 +61,9 @@ public class SxlItemRecService {
     SgFrameworkServiceItem sgFrameworkServiceItem;
     @Autowired
     HyperlocalRetailABTestClient hyperlocalRetailABTestClient;
+    @Autowired
+    ChannelQueryService channelQueryService;
+
     /**ab实验分桶结果**/
     private final static String AB_TEST_RESULT = "abTestVariationsResult";
     /**人工选品**/
@@ -236,6 +248,7 @@ public class SxlItemRecService {
      * @return
      */
     private String getAbData(Context context){
+        getChannelDate();
         StringBuilder itemSetIdType = new StringBuilder();
         try {
             if(context.getParams().get(AB_TEST_RESULT) == null
@@ -280,5 +293,29 @@ public class SxlItemRecService {
             .kv("SxlItemRecService itemSetIdType",itemSetIdType.toString())
             .info();
         return itemSetIdType.toString();
+    }
+    public void getChannelDate(){
+        List<ChannelDataDO> channelDataDOS = dataTubeKeyList.stream().map(k -> {
+            ChannelDataDO channelDataDO = new ChannelDataDO();
+            channelDataDO.setChannelName("itemExtLdb");
+            channelDataDO.setDataKey(k.getLeft());
+            channelDataDO.setChannelField(k.getRight());
+            return channelDataDO;
+        }).collect(Collectors.toList());
+        Map<String, String> extraMap = Maps.newHashMap();
+        extraMap.put("extraMap","387450");
+        List<String> ids = Lists.newArrayList();
+        ids.add("645680838597");
+        ids.add("646347368790");
+        ids.add("645302542674");
+        ids.add("645372039727");
+        ids.add("645659627308");
+        ids.add("644965793165");
+        SingleResponse<Map<String, Map<String, Object>>> singleResponse = channelQueryService.query(channelDataDOS,ids,extraMap);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+            .kv("singleResponse",JSON.toJSONString(singleResponse))
+            .info();
+
+
     }
 }
