@@ -38,7 +38,7 @@ public class InventoryChannelPageHandler extends TacReactiveHandler4Ald {
         BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
                 HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
                 HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_PAGE);
-//        bizScenario.addProducePackage("huichang");
+        bizScenario.addProducePackage(HallScenarioConstant.HALL_SDK_PACKAGE);
         Flowable<TacResult<List<GeneralItem>>> ContentVOs = hallCommonContentRequestProxy.recommend(requestContext4Ald, bizScenario);
         // 获取场景组的信息（从url带来的主标题副标题等）
         GeneralItem sceneSetGeneralItem = buildSceneSet(requestContext4Ald);
