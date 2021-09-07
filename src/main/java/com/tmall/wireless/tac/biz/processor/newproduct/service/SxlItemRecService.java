@@ -215,7 +215,7 @@ public class SxlItemRecService {
             if(itemId == null || channelMap.get(itemId.toString()).isEmpty()){
                 return;
             }
-            Map<String,Object> itemChannelData = channelMap.get(itemId);
+            Map<String,Object> itemChannelData = channelMap.get(itemId.toString());
             Object sellingPointDesc = itemChannelData.get("sellingPointDesc");
             Object recommendWords = itemChannelData.get("recommendWords");
             if(sellingPointDesc != null && StringUtils.isNotBlank(sellingPointDesc.toString())){
