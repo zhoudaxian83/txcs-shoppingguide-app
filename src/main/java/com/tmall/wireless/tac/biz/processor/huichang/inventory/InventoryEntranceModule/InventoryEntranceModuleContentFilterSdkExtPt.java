@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -41,7 +42,15 @@ public class InventoryEntranceModuleContentFilterSdkExtPt extends Register imple
         }
         List<ContentVO> itemAndContentListAfterFilter = Lists.newArrayList();
         // 过滤场景下的商品
+        List<String> sceneSetIdList = new ArrayList<>();
         for (ContentVO contentVO : itemAndContentList) {
+            String contentSetId = String.valueOf(contentVO.get("contentSetId"));
+            if(sceneSetIdList.contains(contentSetId)){
+                logger.info("InventoryEntranceModuleContentInfoQuerySdkExtPt.重复场景过滤,场景id:{}" , contentSetId);
+                continue;
+            }else {
+                sceneSetIdList.add(contentSetId);
+            }
             List<ItemEntityVO> itemEntityVOList = (List<ItemEntityVO>) contentVO.get("items");
             List<ItemEntityVO> itemEntityVOListFilter = Lists.newArrayList();
             for(ItemEntityVO itemEntityVO: itemEntityVOList) {

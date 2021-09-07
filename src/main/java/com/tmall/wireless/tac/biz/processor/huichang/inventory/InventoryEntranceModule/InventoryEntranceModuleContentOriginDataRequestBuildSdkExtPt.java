@@ -196,7 +196,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
         if(sceneSetIdList.size() > SxlSwitch.inventoryEntranceModuleQueryTppSizeLimit){
             params.put("pageSize", String.valueOf(SxlSwitch.inventoryEntranceModuleQueryTppSizeLimit)); // 场景集id
         }else {
-            params.put("pageSize", String.valueOf(sceneSetIdList.size())); // 场景集id
+            params.put("pageSize", String.valueOf(SxlSwitch.inventoryEntranceModuleQueryTppSizeLimit)); // 场景集id
         }
 
         params.put("appId", String.valueOf(SCENE_RECOMMEND_APPID));

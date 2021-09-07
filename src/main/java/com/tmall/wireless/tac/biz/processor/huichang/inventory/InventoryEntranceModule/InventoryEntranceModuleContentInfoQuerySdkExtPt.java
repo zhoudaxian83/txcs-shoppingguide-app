@@ -113,17 +113,12 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
             Map<String, TairSceneDTO> tairSceneDTOMap = onlyScenesFromCaptainResult.stream().collect(
                 Collectors.toMap(TairSceneDTO::getId, a -> a, (k1, k2) -> k1));
 
-            List<String> sceneSetIdList = new ArrayList<>();
+
             for (ContentEntity contentEntity : contentEntities) {
                 String contentSetId = contentEntity.getContentSetId();
                 String[] content = contentSetId.split("_");
                 String contentSetIdStr = content[1];
-                if(sceneSetIdList.contains(contentSetIdStr)){
-                    logger.info("InventoryEntranceModuleContentInfoQuerySdkExtPt.重复场景过滤,场景id:{}" , contentSetIdStr);
-                    continue;
-                }else {
-                    sceneSetIdList.add(contentSetIdStr);
-                }
+
                 Long contentId = contentEntity.getContentId();
                 TairSceneDTO tairSceneDTO = tairSceneDTOMap.get(String.valueOf(contentId));
                 if(tairSceneDTO == null){
