@@ -175,6 +175,9 @@ public class SxlItemRecService {
     }
 
     public SgFrameworkResponse<EntityVO> getChannelDate(String activityId, SgFrameworkResponse<EntityVO> response){
+        if(response == null || response.getItemAndContentList() == null || CollectionUtils.isEmpty(response.getItemAndContentList())){
+            return response;
+        }
         List<String> itemIds = Lists.newArrayList();
         response.getItemAndContentList().forEach(entityVO -> {
             Object itemId = entityVO.get("itemId");
@@ -202,6 +205,7 @@ public class SxlItemRecService {
             HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
                 .kv("itemIds",JSON.toJSONString(itemIds))
                 .kv("extraMap",JSON.toJSONString(extraMap))
+                .kv("singleResponse","isEmpty")
                 .info();
             return response;
         }
@@ -225,10 +229,6 @@ public class SxlItemRecService {
                 entityVO.put("recommendWords",recommendWords);
             }
         });
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
-            .kv("SxlItemRecService","getChannelDate")
-            .kv("response",JSON.toJSONString(response))
-            .info();
         return response;
     }
 
