@@ -161,7 +161,6 @@ public class SxlItemRecService {
                 /**管道查询算法选品人工卖点**/
                 if(StringUtils.isNotBlank(finalAbTestType) && ARTIFICIAL_ALGORITHM.equals(finalAbTestType)
                     && itemSetIdAlgSw != null){
-
                     getChannelDate(String.valueOf(itemSetIdAlgSw),response);
                 }
                 return response;
@@ -188,7 +187,11 @@ public class SxlItemRecService {
         }).collect(Collectors.toList());
         Map<String, String> extraMap = Maps.newHashMap();
         extraMap.put("activityId",activityId);
-
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+            .kv("channelDataDOS",JSON.toJSONString(channelDataDOS))
+            .kv("itemIds",JSON.toJSONString(itemIds))
+            .kv("extraMap",JSON.toJSONString(extraMap))
+            .info();
         SingleResponse<Map<String, Map<String, Object>>> singleResponse = channelQuerySpi.query(channelDataDOS,itemIds,extraMap);
 
         if(singleResponse == null || !singleResponse.isSuccess() || singleResponse.getData() == null || singleResponse.getData().isEmpty()){
