@@ -163,10 +163,6 @@ public class SxlItemRecService {
                     && itemSetIdAlgSw != null){
                     getChannelDate(String.valueOf(itemSetIdAlgSw),response);
                 }
-                HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
-                    .kv("SxlItemRecService","recommend")
-                    .kv("response",JSON.toJSONString(response))
-                    .info();
                 return response;
             })
             .map(TacResult::newResult)
