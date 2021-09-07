@@ -2,10 +2,8 @@ package com.tmall.wireless.tac.biz.processor.newproduct.service;
 
 import com.alibaba.cola.dto.SingleResponse;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.tcls.experiment.client.router.HyperlocalRetailABTestClient;
+import com.ali.com.google.common.collect.Maps;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.tmall.aselfcaptain.item.api.ChannelQueryService;
 import com.tmall.aselfcaptain.item.model.ChannelDataDO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
@@ -18,6 +16,7 @@ import com.tmall.txcs.gs.model.biz.context.EntitySetParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.txcs.gs.spi.recommend.ChannelQuerySpi;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
@@ -55,9 +54,7 @@ public class SxlItemRecService {
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
     @Autowired
-    HyperlocalRetailABTestClient hyperlocalRetailABTestClient;
-    /*@Autowired
-    ChannelQueryService channelQueryService;*/
+    ChannelQuerySpi channelQuerySpi;
 
     /**ab实验分桶结果**/
     private final static String AB_TEST_RESULT = "abTestVariationsResult";
@@ -243,7 +240,7 @@ public class SxlItemRecService {
      * @return
      */
     private String getAbData(Context context){
-        /*getChannelDate();*/
+        getChannelDate();
         StringBuilder itemSetIdType = new StringBuilder();
         try {
             if(context.getParams().get(AB_TEST_RESULT) == null
@@ -289,7 +286,7 @@ public class SxlItemRecService {
             .info();
         return itemSetIdType.toString();
     }
-/*    public void getChannelDate(){
+    public void getChannelDate(){
         List<ChannelDataDO> channelDataDOS = dataTubeKeyList.stream().map(k -> {
             ChannelDataDO channelDataDO = new ChannelDataDO();
             channelDataDO.setChannelName("itemExtLdb");
@@ -306,9 +303,9 @@ public class SxlItemRecService {
         ids.add("645372039727");
         ids.add("645659627308");
         ids.add("644965793165");
-        SingleResponse<Map<String, Map<String, Object>>> singleResponse = channelQueryService.query(channelDataDOS,ids,extraMap);
+        SingleResponse<Map<String, Map<String, Object>>> singleResponse = channelQuerySpi.query(channelDataDOS,ids,extraMap);
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
             .kv("singleResponse",JSON.toJSONString(singleResponse))
             .info();
-    }*/
+    }
 }
