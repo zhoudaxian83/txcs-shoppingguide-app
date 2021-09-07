@@ -53,6 +53,7 @@ public class SxlItemRecService {
 
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
+
     @Autowired
     ChannelQuerySpi channelQuerySpi;
 
@@ -295,7 +296,7 @@ public class SxlItemRecService {
             return channelDataDO;
         }).collect(Collectors.toList());
         Map<String, String> extraMap = Maps.newHashMap();
-        extraMap.put("extraMap","387450");
+        extraMap.put("activityId","387450");
         List<String> ids = Lists.newArrayList();
         ids.add("645680838597");
         ids.add("646347368790");

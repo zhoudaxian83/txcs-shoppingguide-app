@@ -103,7 +103,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionScene"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionBuildItemVOExtPt"/>
-    <!--<import resource="classpath*:mc-channel.xml"/>-->
 
 
 </beans>
