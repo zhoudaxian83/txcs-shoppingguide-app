@@ -174,13 +174,24 @@ public class SxlItemRecService {
         if(response == null || response.getItemAndContentList() == null || CollectionUtils.isEmpty(response.getItemAndContentList())){
             return response;
         }
-        List<String> itemIds = Lists.newArrayList();
+        List<String> itemIds1 = Lists.newArrayList();
         response.getItemAndContentList().forEach(entityVO -> {
             Object itemId = entityVO.get("itemId");
             if(itemId != null){
-                itemIds.add(itemId.toString());
+                itemIds1.add(itemId.toString());
             }
         });
+        List<String> itemIds = Lists.newArrayList();
+        itemIds.add("651331007059");
+        itemIds.add("645743271262");
+        itemIds.add("650787754677");
+        itemIds.add("649712487173");
+        itemIds.add("649653691960");
+        itemIds.add("644946621188");
+        itemIds.add("598907736928");
+        itemIds.add("642503715125");
+        itemIds.add("649360837837");
+        itemIds.add("644650455761");
         List<ChannelDataDO> channelDataDOS = dataTubeKeyList.stream().map(k -> {
             ChannelDataDO channelDataDO = new ChannelDataDO();
             channelDataDO.setChannelName("itemExtLdb");
@@ -228,6 +239,10 @@ public class SxlItemRecService {
                 entityVO.put("recommendWords",recommendWords);
             }
         });
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+            .kv("SxlItemRecService","getChannelDate")
+            .kv("response",JSON.toJSONString(response))
+            .info();
         return response;
     }
 
