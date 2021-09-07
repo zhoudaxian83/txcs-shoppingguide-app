@@ -212,7 +212,7 @@ public class SxlItemRecService {
         Map<String, Map<String, Object>> channelMap = singleResponse.getData();
         response.getItemAndContentList().forEach(entityVO -> {
             Object itemId = entityVO.get("itemId");
-            if(itemId == null || channelMap.get(itemId).isEmpty()){
+            if(itemId == null || channelMap.get(itemId.toString()).isEmpty()){
                 return;
             }
             Map<String,Object> itemChannelData = channelMap.get(itemId);
