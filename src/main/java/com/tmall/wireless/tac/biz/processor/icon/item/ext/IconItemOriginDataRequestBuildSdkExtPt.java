@@ -40,6 +40,7 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
         Map<String, String> params = Maps.newHashMap();
         recommendRequest.setParams(params);
 
+        recommendRequest.setUserId(Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L));
         params.put("pmtSource", "sm_manager");
         params.put("pmtName", "icon");
         params.put("pageId", itemRequest.getLevel1Id());
