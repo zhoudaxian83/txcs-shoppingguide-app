@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.icon.hander;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.tmall.aself.shoppingguide.client.cat.model.LabelDTO;
 import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
@@ -9,9 +10,12 @@ import com.tmall.wireless.tac.biz.processor.icon.level2.Level2RecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.level2.Level2Request;
 import com.tmall.wireless.tac.biz.processor.icon.level3.Level3RecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.level3.Level3Request;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyScene;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +27,16 @@ import java.util.Optional;
 @Service
 public class IconLevel1Handler extends RpmReactiveHandler<Map<String, Object>> {
 
+    Logger LOGGER = LoggerFactory.getLogger(IconLevel1Handler.class);
+
     @Autowired
     Level2RecommendService level2RecommendService;
     @Autowired
     Level3RecommendService level3RecommendService;
     @Override
     public Flowable<TacResult<Map<String, Object>>> executeFlowable(Context context) throws Exception {
+
+
         Level2Request level2Request = new Level2Request();
         level2Request.setLevel1Id(Optional.ofNullable(context.get("iconType")).map(Object::toString).orElse(""));
 
@@ -49,7 +57,11 @@ public class IconLevel1Handler extends RpmReactiveHandler<Map<String, Object>> {
                         return result;
                     }).map(TacResult::newResult);
 
-                });
+                }).onErrorReturn(throwable -> {
+                    LOGGER.error("IconLevel1Handler error:{}", JSON.toJSONString(level2Request), throwable);
+                    result.put("errorMsg", throwable.getMessage());
+                    return TacResult.newResult(result);
+                }).defaultIfEmpty(TacResult.newResult(result));
 
     }
 }
