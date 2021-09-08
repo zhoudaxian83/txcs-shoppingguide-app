@@ -23,15 +23,15 @@ import java.util.Optional;
  * @author Yushan
  * @date 2021/8/31 4:22 下午
 */
-@SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+@SdkExtension(
+        bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.B2C_CNXH_CONTENT_FEEDS)
+        scenario = ScenarioConstantApp.B2C_CNXH_MENU_FEEDS
+)
 @Service
-public class GuessWhatYouLikeMenuOriginDataRequestExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
-
+public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
     @Resource
     TacLogger logger;
-
 
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
@@ -72,6 +72,7 @@ public class GuessWhatYouLikeMenuOriginDataRequestExtPt extends Register impleme
                 .map(PageInfoDO::getPageSize)
                 .orElse(8)
                 .toString());
+        Map<String, Object> map = Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getRequestParams).orElse(Maps.newHashMap());
 
         tppRequest.setParams(params);
         return tppRequest;

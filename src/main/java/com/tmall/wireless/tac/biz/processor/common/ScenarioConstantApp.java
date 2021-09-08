@@ -63,5 +63,5 @@ public class ScenarioConstantApp extends ScenarioConstant {
     /**
      * B2C猜你喜欢
      */
-    public static final String B2C_CNXH_CONTENT_FEEDS = "B2C_CNXH_CONTENT_FEEDS";
+    public static final String B2C_CNXH_MENU_FEEDS = "B2C_CNXH_MENU_FEEDS";
 }
