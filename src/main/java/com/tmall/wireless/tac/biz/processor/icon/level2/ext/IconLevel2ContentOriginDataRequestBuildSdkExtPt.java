@@ -34,7 +34,7 @@ public class IconLevel2ContentOriginDataRequestBuildSdkExtPt extends Register im
 
         params.put("pmtName", "icon");
         params.put("pmtSource", "sm_manager");
-        params.put("pageId", level2Request.getLevel1Id());
+        params.put("pageId", level2Request.getLevel1Id() + "asa");
         params.put("itemBusinessType", "B2C,OneHour,HalfDay,NextDay");
         params.put("contentType", "1");
         params.put("rtNextDayStoreId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtNextDayStoreId).map(Object::toString).orElse("0"));
