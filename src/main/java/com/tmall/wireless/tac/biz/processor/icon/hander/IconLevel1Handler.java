@@ -66,7 +66,7 @@ public class IconLevel1Handler extends RpmReactiveHandler<IconResponse> {
 
                     return level3RecommendService.recommend(level3Request, context).map(level3TabDtoList -> {
 //                        LOGGER.info("level3RecommendService.recommend returnObj:{}", JSON.toJSONString(level3TabDtoList));
-                        iconResponse.setThrirdList(level2TabDtoList);
+                        iconResponse.setThrirdList(level3TabDtoList);
                         return iconResponse;
                     }).onErrorReturn(throwable -> {
                                 LOGGER.error("level3RecommendService.recommend error", throwable);
