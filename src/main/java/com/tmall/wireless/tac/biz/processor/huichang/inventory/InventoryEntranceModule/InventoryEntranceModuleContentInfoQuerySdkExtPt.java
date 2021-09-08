@@ -130,6 +130,7 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
                 contentInfo.put("subtitle", tairSceneDTO.getSubtitle());
                 contentInfo.put("sceneId", tairSceneDTO.getId());
                 contentInfo.put("contentId", tairSceneDTO.getId());
+                contentInfo.put("scm", contentEntity.getTrack_point());
 
                 //补全场景集的信息
 
@@ -140,6 +141,7 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
                 contentInfo.put("contentSetTitle", contentSetTitle);
                 String contentSetSubTitle = staticData.get("contentSetSubTitle");
                 contentInfo.put("contentSetSubTitle", contentSetSubTitle);
+
 
                 contentInfoDTO.setContentInfo(contentInfo);
                 contentDTOMap.put(contentId, contentInfoDTO);
