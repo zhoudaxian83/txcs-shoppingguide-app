@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.huichang.common.contentextpt;
+package com.tmall.wireless.tac.biz.productpackage.hall;
 
 import java.util.Map;
 

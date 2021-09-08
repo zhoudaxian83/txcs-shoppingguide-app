@@ -75,7 +75,7 @@
 
     <!--会场相关开始-->
         <!--会场通用开始-->
-         <bean class="com.tmall.wireless.tac.biz.processor.huichang.common.contentextpt.HallCommonContentUserCommonParamsBuildSdkExtPt"/>
+         <bean class="com.tmall.wireless.tac.biz.productpackage.hall.HallCommonContentUserCommonParamsBuildSdkExtPt"/>
          <bean class="com.tmall.wireless.tac.biz.processor.huichang.common.itemextpt.HallCommonItemUserCommonParamsBuildSdkExtPt"/>
         <!--会场通用结束-->
 
