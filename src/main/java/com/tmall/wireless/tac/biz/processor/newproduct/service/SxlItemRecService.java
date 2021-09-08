@@ -213,7 +213,7 @@ public class SxlItemRecService {
         response.getItemAndContentList().forEach(entityVO -> {
             Object itemId = entityVO.get("itemId");
             Map<String,Object> itemChannelData = channelMap.get(itemId.toString());
-            if(itemId == null || itemChannelData ==null || itemChannelData.isEmpty()){
+            if(itemId == null || itemChannelData == null || itemChannelData.isEmpty()){
                 return;
             }
             Object sellingPointDesc = itemChannelData.get("sellingPointDesc");
@@ -225,10 +225,6 @@ public class SxlItemRecService {
                 entityVO.put("recommendWords",recommendWords);
             }
         });
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
-            .kv("SxlItemRecService","getChannelDate")
-            .kv("response",JSON.toJSONString(response))
-            .info();
         return response;
     }
 
