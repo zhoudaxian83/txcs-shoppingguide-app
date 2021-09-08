@@ -35,7 +35,7 @@ public class IconLevel3ContentOriginDataRequestBuildSdkExtPt extends Register im
 
         params.put("pmtName", "icon");
         params.put("pmtSource", "sm_manager");
-        params.put("pageId", level3Request.getLevel1Id() + "asa");
+        params.put("pageId", level3Request.getLevel1Id());
         params.put("moduleId", level3Request.getLevel2Id());
         params.put("itemBusinessType", "B2C,OneHour,HalfDay,NextDay");
         params.put("contentType", "2");
