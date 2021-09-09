@@ -45,8 +45,10 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         ItemInfoSourceMetaInfo item = ItemInfoSourceMetaInfo.build("captain");
         ItemInfoSourceMetaInfo tppItemInfoSource = ItemInfoSourceMetaInfo.build("tpp");
         ItemInfoSourceMetaInfo smartUiItemInfoSource = ItemInfoSourceMetaInfo.build("smartui");
-        smartUiItemInfoSource.setStrategyPackageId("707_11169");
-        smartUiItemInfoSource.setAppId(27642L);
+        /*smartUiItemInfoSource.setStrategyPackageId("707_11169");*/
+        smartUiItemInfoSource.setStrategyPackageId("637_10576");
+        /*smartUiItemInfoSource.setAppId(27642L);*/
+        smartUiItemInfoSource.setAppId(26777L);
         itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(new ItemInfoSourceMetaInfo[]{item,
             tppItemInfoSource,smartUiItemInfoSource}));
         HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
