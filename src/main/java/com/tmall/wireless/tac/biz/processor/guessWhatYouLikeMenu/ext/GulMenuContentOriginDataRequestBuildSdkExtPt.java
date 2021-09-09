@@ -2,12 +2,14 @@ package com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext;
 
 import com.ali.com.google.common.collect.Maps;
 import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
@@ -15,12 +17,15 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil
 import com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.constant.ConstantValue;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Yushan
@@ -86,21 +91,54 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .map(LocParams::getRtHalfDayStoreId)
                 .orElse(0L);
         List<String> itemBusinessTypeList = Lists.newArrayList();
-        // TppItemBusinessTypeEnum.B2C.getType()
         if (oneHourStoreId > 0L) {
             itemBusinessTypeList.add(TppItemBusinessTypeEnum.OneHour.getType());
-            params.put("rtOneHourStoreId", RenderLangUtil.safeString(oneHourStoreId));
+            params.put("rt1HourStoreId", RenderLangUtil.safeString(oneHourStoreId));
         } else if (halfDayStoreId > 0L) {
             itemBusinessTypeList.add(TppItemBusinessTypeEnum.HalfDay.getType());
             params.put("rtHalfDayStoreId", RenderLangUtil.safeString(halfDayStoreId));
         }
-        params.put("commerce", Joiner.on(",").join(itemBusinessTypeList));
-
-        Map<String, Object> map = Optional.ofNullable(sgFrameworkContextContent)
+        params.put("itemBusinessType", Joiner.on(",").join(itemBusinessTypeList));
+        params.put("majorCityCode", Optional.ofNullable(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getLocParams)
+                .map(LocParams::getMajorCityCode)
+                .orElse(0L)
+                .toString());
+        params.put("logicAreaId", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getLocParams)
+                .map(LocParams::getLogicIdByPriority)
+                .orElse(Lists.newArrayList())));
+        params.put("contentType", "7");
+        Map<String, Object> requestMap = Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getRequestParams)
                 .orElse(Maps.newHashMap());
+        List<Long> contentSetIdList = getLongWithDefault(requestMap, "sceneGroupId")
+                .stream()
+                .filter(contentSetId -> contentSetId > 0)
+                .collect(Collectors.toList());
+        List<String> contentSetSource = contentSetIdList.stream()
+                .map(id -> "intelligentCombinationItems_" + id)
+                .collect(Collectors.toList());
+        params.put("contentSetIdList", Joiner.on(",").join(contentSetIdList));
+        params.put("contentSetSource", Joiner.on(",").join(contentSetSource));
+        params.put("itemCountPerContent", "5");
+        params.put("topContentCount", "2");
 
         tppRequest.setParams(params);
         return tppRequest;
+    }
+
+    public static List<Long> getLongWithDefault(Map<String, Object> map, String key) {
+
+        String longListStr = MapUtil.getStringWithDefault(map, key, "");
+
+        if (StringUtils.isEmpty(longListStr)) {
+            return Lists.newArrayList();
+        }
+        List<String> longList = Splitter.on(",").trimResults().omitEmptyStrings().splitToList(longListStr);
+
+        return longList.stream().filter(StringUtils::isNumeric).map(Long::valueOf).collect(Collectors.toList());
     }
 }

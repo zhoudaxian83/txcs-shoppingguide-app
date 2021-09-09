@@ -33,29 +33,14 @@ public class GulMenuContentItemMetaInfoBuildSdkExtPt extends Register implements
     public ItemMetaInfo process(Context context) {
 
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
-        /*
-        ItemGroupMetaInfo itemGroupMetaInfoSmB2c = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.B2C.name());
-        itemGroupMetaInfoSmB2c.setItemInfoNodes(buildDefaultItemInfoNodes());
-         */
 
         ItemGroupMetaInfo itemGroupMetaInfoSmOneHour = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.O2OOneHour.name());
         itemGroupMetaInfoSmOneHour.setItemInfoNodes(buildDefaultItemInfoNodes());
 
-        /*
         ItemGroupMetaInfo itemGroupMetaInfoSmHalfDay = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.O2OHalfDay.name());
         itemGroupMetaInfoSmHalfDay.setItemInfoNodes(buildDefaultItemInfoNodes());
 
-        ItemGroupMetaInfo itemGroupMetaInfoSmNextDay = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.O2ONextDay.name());
-        itemGroupMetaInfoSmNextDay.setItemInfoNodes(buildDefaultItemInfoNodes());
-
-        itemMetaInfo.setItemGroupRenderInfoList(Lists.newArrayList(
-                itemGroupMetaInfoSmB2c
-                ,itemGroupMetaInfoSmOneHour
-                ,itemGroupMetaInfoSmHalfDay
-                ,itemGroupMetaInfoSmNextDay
-        ));
-         */
-        itemMetaInfo.setItemGroupRenderInfoList(Lists.newArrayList(itemGroupMetaInfoSmOneHour));
+        itemMetaInfo.setItemGroupRenderInfoList(Lists.newArrayList(itemGroupMetaInfoSmOneHour, itemGroupMetaInfoSmHalfDay));
         return itemMetaInfo;
     }
 
@@ -64,7 +49,6 @@ public class GulMenuContentItemMetaInfoBuildSdkExtPt extends Register implements
         ItemInfoSourceMetaInfo item= ItemInfoSourceMetaInfo.build(ItemInfoSourceKey.CAPTAIN);
         item.setMktSceneCode(ConstantValue.SCENE_CODE);
 
-        // tpp返回的数据获取埋点、品牌、类目等数据
         ItemInfoSourceMetaInfo tppItemInfoSource = ItemInfoSourceMetaInfo.build(ItemInfoSourceKey.TPP);
 
         itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource));
