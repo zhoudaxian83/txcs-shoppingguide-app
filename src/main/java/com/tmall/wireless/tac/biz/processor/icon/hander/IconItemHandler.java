@@ -53,7 +53,6 @@ public class IconItemHandler extends RpmReactiveHandler<IconResponse> {
                 }).map(TacResult::newResult)
                 .onErrorReturn(throwable -> {
                     LOGGER.error("IconLevel1Handler error:{}", JSON.toJSONString(itemRequest), throwable);
-
                     return TacResult.newResult(iconResponse);
                 }).defaultIfEmpty(TacResult.newResult(iconResponse));
 
