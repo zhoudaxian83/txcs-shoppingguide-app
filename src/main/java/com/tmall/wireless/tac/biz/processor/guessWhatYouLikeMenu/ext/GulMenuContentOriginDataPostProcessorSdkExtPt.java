@@ -7,6 +7,9 @@ import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOrig
 import com.tmall.tcls.gs.sdk.framework.model.context.ContentEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author Yushan
@@ -17,11 +20,14 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.B2C_CNXH_MENU_FEEDS
 )
+@Service
 public class GulMenuContentOriginDataPostProcessorSdkExtPt extends Register implements ContentOriginDataPostProcessorSdkExtPt {
     @Override
     public OriginDataDTO<ContentEntity> process(ContentOriginDataProcessRequest contentOriginDataProcessRequest) {
+        List<ContentEntity> contentEntities = contentOriginDataProcessRequest.getContentEntityOriginDataDTO().getResult();
+        for (ContentEntity contentEntity : contentEntities) {
 
-
+        }
         return null;
     }
 }
