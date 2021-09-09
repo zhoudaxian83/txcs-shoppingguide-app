@@ -10,12 +10,15 @@ import com.tmall.tcls.gs.sdk.framework.model.context.*;
 
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.constant.ConstantValue;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -72,7 +75,30 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .map(PageInfoDO::getPageSize)
                 .orElse(8)
                 .toString());
-        Map<String, Object> map = Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getRequestParams).orElse(Maps.newHashMap());
+        Long oneHourStoreId = Optional.ofNullable(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getLocParams)
+                .map(LocParams::getRt1HourStoreId)
+                .orElse(0L);
+        Long halfDayStoreId = Optional.ofNullable(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getLocParams)
+                .map(LocParams::getRtHalfDayStoreId)
+                .orElse(0L);
+        List<String> itemBusinessTypeList = Lists.newArrayList();
+        // TppItemBusinessTypeEnum.B2C.getType()
+        if (oneHourStoreId > 0L) {
+            itemBusinessTypeList.add(TppItemBusinessTypeEnum.OneHour.getType());
+            params.put("rtOneHourStoreId", RenderLangUtil.safeString(oneHourStoreId));
+        } else if (halfDayStoreId > 0L) {
+            itemBusinessTypeList.add(TppItemBusinessTypeEnum.HalfDay.getType());
+            params.put("rtHalfDayStoreId", RenderLangUtil.safeString(halfDayStoreId));
+        }
+        params.put("commerce", Joiner.on(",").join(itemBusinessTypeList));
+
+        Map<String, Object> map = Optional.ofNullable(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getRequestParams)
+                .orElse(Maps.newHashMap());
 
         tppRequest.setParams(params);
         return tppRequest;

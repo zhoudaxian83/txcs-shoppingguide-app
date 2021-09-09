@@ -33,12 +33,15 @@ public class GulMenuContentItemMetaInfoBuildSdkExtPt extends Register implements
     public ItemMetaInfo process(Context context) {
 
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
+        /*
         ItemGroupMetaInfo itemGroupMetaInfoSmB2c = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.B2C.name());
         itemGroupMetaInfoSmB2c.setItemInfoNodes(buildDefaultItemInfoNodes());
+         */
 
         ItemGroupMetaInfo itemGroupMetaInfoSmOneHour = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.O2OOneHour.name());
         itemGroupMetaInfoSmOneHour.setItemInfoNodes(buildDefaultItemInfoNodes());
 
+        /*
         ItemGroupMetaInfo itemGroupMetaInfoSmHalfDay = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.O2OHalfDay.name());
         itemGroupMetaInfoSmHalfDay.setItemInfoNodes(buildDefaultItemInfoNodes());
 
@@ -51,6 +54,8 @@ public class GulMenuContentItemMetaInfoBuildSdkExtPt extends Register implements
                 ,itemGroupMetaInfoSmHalfDay
                 ,itemGroupMetaInfoSmNextDay
         ));
+         */
+        itemMetaInfo.setItemGroupRenderInfoList(Lists.newArrayList(itemGroupMetaInfoSmOneHour));
         return itemMetaInfo;
     }
 
