@@ -35,7 +35,6 @@
     <!-- shoppingguide sdk end -->
 
     <bean class="com.tmall.wireless.tac.biz.processor.icon.item.ext.IconItemOriginDataRequestBuildSdkExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.icon.item.ext.IconItemOriginDataRequestBuildSdkExtPt"/>
 
     <bean class="com.tmall.aselfcommon.model.column.KeyUtil"/>
 
