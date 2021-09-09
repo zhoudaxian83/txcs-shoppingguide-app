@@ -42,8 +42,6 @@ public class IconItemHandler extends RpmReactiveHandler<IconResponse> {
         itemRequest.setLevel2Id(Optional.ofNullable(context.get("level2Id")).map(Object::toString).orElse(""));
         itemRequest.setLevel3Id(Optional.ofNullable(context.get("level3Id")).map(Object::toString).orElse(""));
 
-//        Map<String, Object> result = Maps.newHashMap();
-
         IconResponse iconResponse = new IconResponse();
 
         return itemRecommendService.recommend(itemRequest, context)
