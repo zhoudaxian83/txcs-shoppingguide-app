@@ -70,7 +70,7 @@ public class IconItemOriginDataFailProcessorSdkExtPt extends Register implements
             LOGGER.error("IconItemOriginDataFailProcessorSdkExtPt error", e);
             return originDataProcessRequest.getItemEntityOriginDataDTO();
         } finally {
-            LOGGER.warn("IconItemOriginDataFailProcessorSdkExtPt_result:{}", success);
+            LOGGER.warn("IconItemOriginDataFailProcessorSdkExtPt_result:{}, {}",tairKey, success);
         }
 
     }
