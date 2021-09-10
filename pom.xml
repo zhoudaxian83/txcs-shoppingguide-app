@@ -45,6 +45,12 @@
             <version>1.0.1-jinzhou-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>data-part-spi</artifactId>
+            <version>1.0.8-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.tmall.aselfcaptain</groupId>
             <artifactId>aselfcaptain-client</artifactId>
             <version>3.6.9</version>
