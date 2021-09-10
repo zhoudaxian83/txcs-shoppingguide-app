@@ -61,7 +61,7 @@ public class Level2RecommendService {
         }).onErrorReturn(throwable -> {
             LOGGER.error("shoppingguideSdkContentService.recommendWitchContext error", throwable);
             return empty;
-        });
+        }).defaultIfEmpty(empty);
 
     }
 

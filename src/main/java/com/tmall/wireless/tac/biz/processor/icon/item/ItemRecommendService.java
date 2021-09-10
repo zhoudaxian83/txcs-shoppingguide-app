@@ -22,7 +22,9 @@ public class ItemRecommendService {
 
     public Flowable<SgFrameworkResponse<ItemEntityVO>> recommend(ItemRequest itemRequest, Context context) {
 
-
+        SgFrameworkResponse<ItemEntityVO> itemRecommendErrorResponse = new SgFrameworkResponse<>();
+        itemRecommendErrorResponse.setSuccess(false);
+        itemRecommendErrorResponse.setErrorMsg("shoppingguideSdkItemService.recommendWitchContext defaultEmpty");
         BizScenario b = BizScenario.valueOf(
                 ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
@@ -31,7 +33,16 @@ public class ItemRecommendService {
         b.addProducePackage(PackageNameKey.OLD_RECOMMEND);
         context.put(ITEM_REQUEST_KEY, itemRequest);
         return shoppingguideSdkItemService.recommendWitchContext(context, b)
-                .map(SgFrameworkContextItem::getEntityVOSgFrameworkResponse);
+                .map(contentContext -> {
+
+                    if (contentContext.getEntityVOSgFrameworkResponse() != null) {
+                        return contentContext.getEntityVOSgFrameworkResponse();
+                    }
+
+                    itemRecommendErrorResponse.setErrorMsg("shoppingguideSdkItemService.recommendWitchContext returnEmpty");
+                    return itemRecommendErrorResponse;
+
+                }).defaultIfEmpty(itemRecommendErrorResponse);
     }
 
 }
