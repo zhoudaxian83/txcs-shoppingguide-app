@@ -122,7 +122,8 @@ public class IconRecommendClassifierContentFilterExtPt implements ContentFilterE
     }
 
     private boolean itemInfoError(ItemEntityVO item, SgFrameworkContextContent sgFrameworkContextContent, Long contentId) {
-        return StringUtils.isEmpty(item.getString("shortTitle")) || StringUtils.isEmpty(item.getString("itemImg"));
-
+        return StringUtils.isEmpty(item.getString("shortTitle"))
+                || StringUtils.isEmpty(item.getString("itemImg"))
+                || StringUtils.isEmpty(item.getString("itemMPrice"));
     }
 }
