@@ -8,8 +8,11 @@ import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.icon.hander.IconLevel2Handler;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,7 @@ public class ItemRecommendService {
     public static final String ITEM_REQUEST_KEY = "itemRequestKey";
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
+    Logger LOGGER = LoggerFactory.getLogger(ItemRecommendService.class);
 
     public Flowable<SgFrameworkResponse<ItemEntityVO>> recommend(ItemRequest itemRequest, Context context) {
 
@@ -34,13 +38,17 @@ public class ItemRecommendService {
         context.put(ITEM_REQUEST_KEY, itemRequest);
         return shoppingguideSdkItemService.recommendWitchContext(context, b)
                 .map(contentContext -> {
+                    if (contentContext.getEntityVOSgFrameworkResponse() == null) {
+                        LOGGER.error("shoppingguideSdkItemService.recommendWitchContext returnEmpty");
 
-                    if (contentContext.getEntityVOSgFrameworkResponse() != null) {
-                        return contentContext.getEntityVOSgFrameworkResponse();
                     }
-
-                    itemRecommendErrorResponse.setErrorMsg("shoppingguideSdkItemService.recommendWitchContext returnEmpty");
-                    return itemRecommendErrorResponse;
+                    return contentContext.getEntityVOSgFrameworkResponse();
+//                    if (contentContext.getEntityVOSgFrameworkResponse() != null) {
+//                        return contentContext.getEntityVOSgFrameworkResponse();
+//                    }
+//
+//                    itemRecommendErrorResponse.setErrorMsg("shoppingguideSdkItemService.recommendWitchContext returnEmpty");
+//                    return itemRecommendErrorResponse;
 
                 }).defaultIfEmpty(itemRecommendErrorResponse);
     }
