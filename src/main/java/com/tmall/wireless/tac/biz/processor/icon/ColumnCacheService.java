@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.icon;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
@@ -10,6 +11,7 @@ import com.tmall.aselfcommon.model.column.KeyUtil;
 import com.tmall.aselfcommon.model.column.MainColumnDTO;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
+import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -82,6 +85,33 @@ public class ColumnCacheService {
             LOGGER.error("queryColumnTypeToLevel1IdList error:", e);
         }
         return null;
+    }
+
+    public Map<Long, MainColumnDTO> getMainColumnMap(String level1IdString) {
+        Map<Long, MainColumnDTO> level1IdToMainColumnDTOMap = Maps.newHashMap();
+        try {
+            HashMap<String, ArrayList<Long>> stringArrayListHashMap = this.queryColumnTypeToLevel1IdList();
+            ArrayList<Long> level1IdList = stringArrayListHashMap.get(level1IdString);
+
+            level1IdToMainColumnDTOMap = Maps.newHashMap();
+
+            for (Long level1Id : level1IdList) {
+                MainColumnDTO column = this.getColumn(level1Id);
+                if (column != null) {
+                    level1IdToMainColumnDTOMap.put(level1Id, column);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("getMainColumnMap error", e);
+        }
+
+
+        if (MapUtils.isEmpty(level1IdToMainColumnDTOMap)) {
+            LOGGER.error("category getMainColumnMap error:{}", level1IdString);
+        }
+
+        return level1IdToMainColumnDTOMap;
+
     }
 
     public MainColumnDTO getColumn(Long columnId) {
