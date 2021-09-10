@@ -11,6 +11,7 @@ import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.txcs.gs.framework.support.LogUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.constant.ConstantValue;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
             if (CollectionUtils.isEmpty(itemAndContentList)) {
                 return sgFrameworkResponse;
             }
+            List<ContentVO> contentListAfterFilter = Lists.newArrayList();
             itemAndContentList.forEach(contentVO -> {
                 Long contentId = contentVO.getLong("contentId");
                 List<ItemEntityVO> canBuyItemList = Lists.newArrayList();
@@ -49,6 +51,7 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
                 if (CollectionUtils.isEmpty(items)) {
                     return;
                 }
+                // 库存过滤
                 for (ItemEntityVO item : items) {
                     if (canBuy(item, sgFrameworkContextContent, contentId)) {
                         canBuyItemList.add(item);
@@ -59,16 +62,28 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
                                 .error();
                     }
                 }
-                if (CollectionUtils.isEmpty(canBuyItemList)) {
+                // 主料筛查 --> 菜谱过滤
+                List<ItemEntityVO> mainMaterials = Lists.newArrayList();
+                for (ItemEntityVO itemCanBuy : canBuyItemList) {
+                    String contentItemSets = itemCanBuy.getString("contentItemSets");
+                    if (mainMaterials.size() >= ConstantValue.MAIN_MATERIAL_NUMBER) {
+                        break;
+                    }
+                    if (CollectionUtils.isEmpty(mainMaterials) || !mainMaterials.get(0).getString("contentItemSets").equals(contentItemSets)) {
+                        mainMaterials.add(itemCanBuy);
+                    }
+                }
+                if (!CollectionUtils.isEmpty(mainMaterials) && mainMaterials.size() == ConstantValue.MAIN_MATERIAL_NUMBER) {
+                    contentVO.put("items", mainMaterials);
+                    contentListAfterFilter.add(contentVO);
+                } else {
                     HadesLogUtil.stream(ScenarioConstantApp.B2C_CNXH_MENU_FEEDS)
                             .kv("GulMenuContentFilterSdkExtPt","executeFlowable")
-                            .kv("ITEM_EMPTY", "contentId: " + contentId)
+                            .kv("MAIN_MATERIAL_INSUFFICIENT", "contentId: " + contentId)
                             .error();
-                } else {
-                    contentVO.put("items", canBuyItemList);
                 }
             });
-            sgFrameworkResponse.setItemAndContentList(itemAndContentList);
+            sgFrameworkResponse.setItemAndContentList(contentListAfterFilter);
             return sgFrameworkResponse;
         } catch (Exception e) {
             logger.error("GulMenuContentFilterSdkExtPt_error", e);
@@ -91,6 +106,8 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
     }
 
     private boolean itemInfoError(ItemEntityVO item) {
-        return StringUtils.isEmpty(item.getString("shortTitle")) || StringUtils.isEmpty(item.getString("itemImg"));
+        return StringUtils.isEmpty(item.getString("shortTitle"))
+                || StringUtils.isEmpty(item.getString("itemImg"))
+                || StringUtils.isEmpty(item.getString("ItemMprice"));
     }
 }

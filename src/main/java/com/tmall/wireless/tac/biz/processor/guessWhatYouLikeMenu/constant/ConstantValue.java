@@ -10,4 +10,9 @@ public class ConstantValue {
 
     public static final String SCENE_CODE = "index.guessULike";
 
+    /**
+     * 主料商品簇数量
+     */
+    public static final Integer MAIN_MATERIAL_NUMBER = 2;
+
 }
