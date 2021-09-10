@@ -40,13 +40,13 @@ public class ItemRecommendService {
                         LOGGER.error("shoppingguideSdkItemService.recommendWitchContext returnEmpty");
 
                     }
-                    return contentContext.getEntityVOSgFrameworkResponse();
-//                    if (contentContext.getEntityVOSgFrameworkResponse() != null) {
-//                        return contentContext.getEntityVOSgFrameworkResponse();
-//                    }
-//
-//                    itemRecommendErrorResponse.setErrorMsg("shoppingguideSdkItemService.recommendWitchContext returnEmpty");
-//                    return itemRecommendErrorResponse;
+//                    return contentContext.getEntityVOSgFrameworkResponse();
+                    if (contentContext.getEntityVOSgFrameworkResponse() != null) {
+                        return contentContext.getEntityVOSgFrameworkResponse();
+                    }
+
+                    itemRecommendErrorResponse.setErrorMsg("shoppingguideSdkItemService.recommendWitchContext returnEmpty");
+                    return itemRecommendErrorResponse;
 
                 }).defaultIfEmpty(itemRecommendErrorResponse);
     }
