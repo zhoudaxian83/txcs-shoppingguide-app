@@ -41,7 +41,7 @@ public class IconLevel2ContentInfoQuerySdkExtPt extends Register implements Cont
 
         OriginDataDTO<ContentEntity> contentEntityOriginDataDTO = sgFrameworkContextContent.getContentEntityOriginDataDTO();
         List<ContentEntity> result = contentEntityOriginDataDTO.getResult();
-        Map<Long, MainColumnDTO> mainColumnMap = getMainColumnMap(level2Request.getLevel1Id());
+        Map<Long, MainColumnDTO> mainColumnMap = columnCacheService.getMainColumnMap(level2Request.getLevel1Id());
         Map<Long, ContentInfoDTO> contentInfoDTOMap = Maps.newHashMap();
         for (ContentEntity contentEntity : result) {
             if (mainColumnMap.get(contentEntity.getContentId()) != null) {
@@ -56,30 +56,5 @@ public class IconLevel2ContentInfoQuerySdkExtPt extends Register implements Cont
     }
 
 
-    private Map<Long, MainColumnDTO> getMainColumnMap(String level1IdString) {
-        Map<Long, MainColumnDTO> level1IdToMainColumnDTOMap = null;
-        try {
-            HashMap<String, ArrayList<Long>> stringArrayListHashMap = columnCacheService.queryColumnTypeToLevel1IdList();
-            ArrayList<Long> level1IdList = stringArrayListHashMap.get(level1IdString);
 
-            level1IdToMainColumnDTOMap = Maps.newHashMap();
-
-            for (Long level1Id : level1IdList) {
-                MainColumnDTO column = columnCacheService.getColumn(level1Id);
-                if (column != null) {
-                    level1IdToMainColumnDTOMap.put(level1Id, column);
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.error("getMainColumnMap error", e);
-        }
-
-
-        if (MapUtils.isEmpty(level1IdToMainColumnDTOMap)) {
-            LOGGER.error("category getMainColumnMap error:{}", level1IdString);
-        }
-
-        return level1IdToMainColumnDTOMap;
-
-    }
 }
