@@ -139,4 +139,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionBuildItemVOExtPt"/>
 
+    <!--详情相关-->
+    <import resource="classpath*:spring/aselfcommon-loc.xml" />
+
 </beans>

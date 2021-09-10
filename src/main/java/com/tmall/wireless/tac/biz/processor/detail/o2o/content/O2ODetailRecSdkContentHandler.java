@@ -6,6 +6,7 @@ import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkContentService;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
+import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
@@ -26,9 +27,9 @@ public class O2ODetailRecSdkContentHandler extends RpmReactiveHandler<SgFramewor
     @Override
     public Flowable<TacResult<SgFrameworkResponse<ContentVO>>> executeFlowable(Context context) throws Exception {
         BizScenario b = BizScenario.valueOf(
-                 "supermarket",
-                 "o2o",
-                 "contentRec"
+            DetailConstant.BIZ_ID,
+                 DetailConstant.USE_CASE_O2O,
+                 DetailConstant.CONTENT_SCENERIO
         );
          b.addProducePackage(PackageNameKey.CONTENT_FEEDS);
 

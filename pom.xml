@@ -181,6 +181,16 @@
             <version>1.0.1-jinzhou-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
+        <!--详情-->
+
+        <dependency>
+            <groupId>com.tmall.aself</groupId>
+            <artifactId>aselfcommon-lbs</artifactId>
+            <version>2.4.36</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
