@@ -6,7 +6,7 @@ package com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.constant;
  */
 public class ConstantValue {
 
-    public static final Long APPID = 22825L;
+    public static final Long APPID = 25102L;
 
     public static final String SCENE_CODE = "index.guessULike";
 

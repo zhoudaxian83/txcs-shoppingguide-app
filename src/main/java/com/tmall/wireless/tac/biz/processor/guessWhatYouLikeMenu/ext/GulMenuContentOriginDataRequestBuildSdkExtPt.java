@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext;
 
 import com.ali.com.google.common.collect.Maps;
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -17,6 +18,7 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil
 import com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.constant.ConstantValue;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ import java.util.stream.Collectors;
 */
 @SdkExtension(
         bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_O2O,
+        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
 )
 @Service
@@ -69,12 +71,12 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .map(LocParams::getSmAreaId)
                 .orElse(0L)
                 .toString());
-        Integer index = Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getUserPageInfo)
-                .map(PageInfoDO::getIndex)
-                .orElse(0);
-        params.put("isFirstPage", index > 0 ? "false" : "true");
+//        Integer index = Optional.ofNullable(sgFrameworkContextContent)
+//                .map(SgFrameworkContext::getCommonUserParams)
+//                .map(CommonUserParams::getUserPageInfo)
+//                .map(PageInfoDO::getIndex)
+//                .orElse(0);
+//        params.put("isFirstPage", index > 0 ? "false" : "true");
         params.put("pageSize", Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getUserPageInfo)
@@ -116,6 +118,7 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams)
                 .orElse(Maps.newHashMap());
+        params.put("isFirstPage", String.valueOf(MapUtils.getBoolean(requestMap, "isFirstPage", false)));
         List<Long> contentSetIdList = getLongWithDefault(requestMap, "sceneGroupId")
                 .stream()
                 .filter(contentSetId -> contentSetId > 0)
@@ -135,6 +138,7 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         params.put("topContentCount", "2");
 
         tppRequest.setParams(params);
+        logger.info("GulMenuContentOriginDataRequestBuildSdkExtPt: tppRequest: " + JSON.toJSONString(tppRequest));
         return tppRequest;
     }
 

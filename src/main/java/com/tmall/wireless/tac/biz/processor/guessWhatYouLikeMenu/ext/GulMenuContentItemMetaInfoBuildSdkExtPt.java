@@ -24,7 +24,7 @@ import java.util.List;
  */
 @SdkExtension(
         bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_O2O,
+        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
 )
 @Service
