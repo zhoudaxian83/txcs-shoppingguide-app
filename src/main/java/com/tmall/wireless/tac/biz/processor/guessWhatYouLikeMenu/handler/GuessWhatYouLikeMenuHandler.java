@@ -27,7 +27,8 @@ public class GuessWhatYouLikeMenuHandler extends RpmReactiveHandler<SgFrameworkR
 
     @Override
     public Flowable<TacResult<SgFrameworkResponse<ContentVO>>> executeFlowable(Context context) throws Exception {
-        BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+        BizScenario bizScenario = BizScenario.valueOf(
+                ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 ScenarioConstantApp.CNXH_MENU_FEEDS);
         bizScenario.addProducePackage(PackageNameKey.CONTENT_FEEDS);
