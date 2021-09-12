@@ -29,7 +29,6 @@ import java.util.List;
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
 )
-@Service
 public class GulMenuContentFilterSdkExtPt extends Register implements ContentFilterSdkExtPt {
 
     @Resource

@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
 )
-@Service
 public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
     @Resource
     TacLogger logger;
