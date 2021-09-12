@@ -122,11 +122,12 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .stream()
                 .filter(contentSetId -> contentSetId > 0)
                 .collect(Collectors.toList());
-        List<String> contentSetSource = contentSetIdList.stream()
-                .map(id -> "intelligentCombinationItems_" + id)
-                .collect(Collectors.toList());
+//        List<String> contentSetSource = contentSetIdList.stream()
+//                .map(id -> "intelligentCombinationItems_" + id)
+//                .collect(Collectors.toList());
         params.put("contentSetIdList", Joiner.on(",").join(contentSetIdList));
-        params.put("contentSetSource", Joiner.on(",").join(contentSetSource));
+//        params.put("contentSetSource", Joiner.on(",").join(contentSetSource));
+        params.put("contentSetSource", "intelligentCombinationItems");
         List<Long> topContentIdList = getLongWithDefault(requestMap, "sceneTopIdList")
                 .stream()
                 .filter(topContentId -> topContentId > 0)
@@ -134,7 +135,7 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         params.put("exposureDataUserId", Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getUserDO)
-                .map(UserDO::getUtdid)
+                .map(UserDO::getCna)
                 .orElse(""));
         // TODO
         params.put("topContentIdList", Joiner.on(",").join(topContentIdList));
