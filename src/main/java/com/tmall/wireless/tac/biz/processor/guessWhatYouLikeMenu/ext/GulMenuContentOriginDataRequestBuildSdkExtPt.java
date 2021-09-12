@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.taobao.eagleeye.EagleEye;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -22,7 +21,6 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -63,7 +61,12 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         if (StringUtils.isEmpty(regionCode)) {
             regionCode = "107";
         }
-        params.put("regionCode", regionCode);
+//        params.put("regionCode", regionCode);
+//        params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(
+//                SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
+//        if (params.get("regionCode") == null || "".equals(params.get("regionCode"))) {
+//            params.put("regionCode", "107");
+//        }
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams)
