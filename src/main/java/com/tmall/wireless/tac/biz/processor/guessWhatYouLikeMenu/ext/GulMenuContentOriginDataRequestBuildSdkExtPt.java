@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.taobao.eagleeye.EagleEye;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -142,6 +143,9 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
 
         tppRequest.setParams(params);
         logger.info("GulMenuContentOriginDataRequestBuildSdkExtPt: tppRequest: " + JSON.toJSONString(tppRequest));
+        String requestLog = "https://tui.taobao.com/recommend?appid=" + tppRequest.getAppId() + "&" +
+                Joiner.on("&").withKeyValueSeparator("=").join(tppRequest.getParams());
+        logger.info("TPP_REQUEST: " + requestLog);
         HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
                 .kv("GulMenuContentOriginDataRequestBuildSdkExtPt","tppRequest")
                 .kv("tppResult", JSON.toJSONString(tppRequest))
