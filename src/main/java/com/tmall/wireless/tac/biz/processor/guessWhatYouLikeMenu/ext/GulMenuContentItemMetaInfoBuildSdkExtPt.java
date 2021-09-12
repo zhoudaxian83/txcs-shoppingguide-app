@@ -24,8 +24,8 @@ import java.util.List;
  */
 @SdkExtension(
         bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.B2C_CNXH_MENU_FEEDS
+        useCase = ScenarioConstantApp.LOC_TYPE_O2O,
+        scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
 )
 @Service
 public class GulMenuContentItemMetaInfoBuildSdkExtPt extends Register implements ContentItemMetaInfoBuildSdkExtPt {

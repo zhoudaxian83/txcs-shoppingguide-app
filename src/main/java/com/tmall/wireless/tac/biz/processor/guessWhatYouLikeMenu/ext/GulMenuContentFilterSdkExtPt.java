@@ -26,8 +26,8 @@ import java.util.List;
  */
 @SdkExtension(
         bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.B2C_CNXH_MENU_FEEDS
+        useCase = ScenarioConstantApp.LOC_TYPE_O2O,
+        scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
 )
 @Service
 public class GulMenuContentFilterSdkExtPt extends Register implements ContentFilterSdkExtPt {
@@ -56,7 +56,7 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
                     if (canBuy(item, sgFrameworkContextContent, contentId)) {
                         canBuyItemList.add(item);
                     } else {
-                        HadesLogUtil.stream(ScenarioConstantApp.B2C_CNXH_MENU_FEEDS)
+                        HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
                                 .kv("GulMenuContentFilterSdkExtPt","executeFlowable")
                                 .kv("ITEM_CANBUY_FALSE", "contentId: " + contentId + " itemId: " + item.getString("itemId"))
                                 .error();
@@ -77,7 +77,7 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
                     contentVO.put("items", mainMaterials);
                     contentListAfterFilter.add(contentVO);
                 } else {
-                    HadesLogUtil.stream(ScenarioConstantApp.B2C_CNXH_MENU_FEEDS)
+                    HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
                             .kv("GulMenuContentFilterSdkExtPt","executeFlowable")
                             .kv("MAIN_MATERIAL_INSUFFICIENT", "contentId: " + contentId)
                             .error();

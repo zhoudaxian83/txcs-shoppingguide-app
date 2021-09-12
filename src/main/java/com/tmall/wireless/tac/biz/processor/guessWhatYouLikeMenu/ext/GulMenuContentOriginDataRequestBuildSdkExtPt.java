@@ -16,6 +16,7 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusines
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.constant.ConstantValue;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Service;
@@ -33,8 +34,8 @@ import java.util.stream.Collectors;
 */
 @SdkExtension(
         bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.B2C_CNXH_MENU_FEEDS
+        useCase = ScenarioConstantApp.LOC_TYPE_O2O,
+        scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
 )
 @Service
 public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
@@ -112,7 +113,8 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .orElse(Lists.newArrayList())));
         params.put("contentType", "7");
         Map<String, Object> requestMap = Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getRequestParams)
+                .map(SgFrameworkContext::getTacContext)
+                .map(Context::getParams)
                 .orElse(Maps.newHashMap());
         List<Long> contentSetIdList = getLongWithDefault(requestMap, "sceneGroupId")
                 .stream()
@@ -123,6 +125,12 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .collect(Collectors.toList());
         params.put("contentSetIdList", Joiner.on(",").join(contentSetIdList));
         params.put("contentSetSource", Joiner.on(",").join(contentSetSource));
+        List<Long> topContentIdList = getLongWithDefault(requestMap, "sceneTopIdList")
+                .stream()
+                .filter(topContentId -> topContentId > 0)
+                .collect(Collectors.toList());
+        // TODO
+        params.put("topContentIdList", Joiner.on(",").join(topContentIdList));
         params.put("itemCountPerContent", "5");
         params.put("topContentCount", "2");
 

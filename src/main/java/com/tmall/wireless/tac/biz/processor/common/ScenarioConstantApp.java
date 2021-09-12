@@ -61,7 +61,7 @@ public class ScenarioConstantApp extends ScenarioConstant {
     public static final String BRAND_CLUB_BANGDAN = "BRAND_CLUB_BANGDAN";
 
     /**
-     * B2C猜你喜欢
+     * 猜你喜欢副TAB菜谱流推荐
      */
-    public static final String B2C_CNXH_MENU_FEEDS = "B2C_CNXH_MENU_FEEDS";
+    public static final String CNXH_MENU_FEEDS = "CNXH_MENU_FEEDS";
 }

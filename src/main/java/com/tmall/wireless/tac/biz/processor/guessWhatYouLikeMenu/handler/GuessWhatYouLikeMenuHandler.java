@@ -29,7 +29,7 @@ public class GuessWhatYouLikeMenuHandler extends RpmReactiveHandler<SgFrameworkR
     public Flowable<TacResult<SgFrameworkResponse<ContentVO>>> executeFlowable(Context context) throws Exception {
         BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
-                ScenarioConstantApp.B2C_CNXH_MENU_FEEDS);
+                ScenarioConstantApp.CNXH_MENU_FEEDS);
         bizScenario.addProducePackage(PackageNameKey.CONTENT_FEEDS);
         return shoppingguideSdkContentService.recommend(context, bizScenario).map(TacResult::newResult);
     }
