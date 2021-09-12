@@ -15,6 +15,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.Map;
         useCase = ScenarioConstant.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.SCENARIO_ICON_RECOMMEND_SCENE
 )
+@Service
 public class IconRecommendSceneContentFilterExtPt implements ContentFilterExtPt {
 
     @Resource
