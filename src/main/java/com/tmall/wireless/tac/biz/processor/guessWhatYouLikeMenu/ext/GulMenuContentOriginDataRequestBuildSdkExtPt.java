@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataRequestBuildSdkExtPt;
@@ -132,6 +133,11 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .stream()
                 .filter(topContentId -> topContentId > 0)
                 .collect(Collectors.toList());
+        params.put("exposureDataUserId", Optional.ofNullable(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getUserDO)
+                .map(UserDO::getUtdid)
+                .orElse(""));
         // TODO
         params.put("topContentIdList", Joiner.on(",").join(topContentIdList));
         params.put("itemCountPerContent", "5");
@@ -139,6 +145,10 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
 
         tppRequest.setParams(params);
         logger.info("GulMenuContentOriginDataRequestBuildSdkExtPt: tppRequest: " + JSON.toJSONString(tppRequest));
+        HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
+                .kv("GulMenuContentOriginDataRequestBuildSdkExtPt","tppRequest")
+                .kv("tppResult", JSON.toJSONString(tppRequest))
+                .info();
         return tppRequest;
     }
 
