@@ -72,6 +72,8 @@ public abstract class AbstractConverter {
     private DetailRecommendContentVO convertContent(ContentVO contentVO, List<String> scmJoin) {
         DetailRecommendContentVO recommendContentVO = new DetailRecommendContentVO();
         recommendContentVO.setContentId(contentVO.getLong("contentId"));
+        recommendContentVO.setItemSetIds(contentVO.getString("itemSetIds"));
+
         String shortTile = contentVO.getString(FrontBackMapEnum.contentShortTitle.getFront());
         String title = StringUtils.isNotBlank(shortTile) ? shortTile : contentVO.getString("contentTitle");
         String subTitle = contentVO.getString("contentSubtitle");

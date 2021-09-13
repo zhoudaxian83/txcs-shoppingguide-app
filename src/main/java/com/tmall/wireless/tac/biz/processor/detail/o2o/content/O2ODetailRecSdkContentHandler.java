@@ -59,7 +59,7 @@ public class O2ODetailRecSdkContentHandler extends RpmReactiveHandler<DetailRecC
         return shoppingguideSdkContentService.recommend0(context, b)
             .map(response -> {
                 String recType =(String) context.getParams().get("recType");
-               return converters.get(recType).convert(recType,response);
+               return converters.get(recType).convert(response);
             })
             .map(TacResult::newResult);
     }

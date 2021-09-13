@@ -14,6 +14,8 @@ public class DetailRecommendContentVO extends DetailRecommendVO{
 
     private Long contentId;
 
+    private String itemSetIds;
+
     List<DetailRecommendItemVO> recommendItemVOS;
 
 }
