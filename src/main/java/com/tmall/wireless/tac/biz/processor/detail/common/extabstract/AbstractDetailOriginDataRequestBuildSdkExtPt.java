@@ -19,7 +19,6 @@ import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.tcls.gs.sdk.framework.model.context.UserDO;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
-import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.TppItemBusinessType;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.TppParmasConstant;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
@@ -30,16 +29,14 @@ import com.tmall.wireless.tac.biz.processor.detail.util.CommonUtil;
  * @Data: 2021/9/10
  * @Description:
  */
-public abstract class DetailCommonContentOriginDataRequestBuildSdkExtPt extends Register
-    implements ContentOriginDataRequestBuildSdkExtPt {
+public abstract class AbstractDetailOriginDataRequestBuildSdkExtPt extends Register {
 
     @Resource
     private LocationReadService locationReadService;
 
     protected abstract Long getAppId();
 
-    @Override
-    public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
+    public RecommendRequest process(SgFrameworkContext sgFrameworkContextContent) {
         RecommendRequest recommendRequest=new RecommendRequest();
         recommendRequest.setAppId(getAppId());
         recommendRequest.setUserId(Optional.of(sgFrameworkContextContent).
@@ -62,14 +59,20 @@ public abstract class DetailCommonContentOriginDataRequestBuildSdkExtPt extends 
             .orElse(20)));
         tppParams.put(TppParmasConstant.IS_FIRST_PAGE,String.valueOf(1 <=detailRequest.getIndex()));
 
-        //3.其他信息
+        //3.店铺等信息
         buildTppRequest(tppParams,detailRequest.getLocType(),readTairAddressDTO(recommendRequest.getUserId()));
 
+        //4.扩展信息
+        buildExtraTppParams(tppParams,detailRequest);
 
         return recommendRequest;
     }
 
-    public  void buildTppRequest(Map<String, String> tppParams, String locType,
+    public void buildExtraTppParams(Map<String, String> tppParams, DetailRecommendRequest detailRequest){
+
+    }
+
+    private void buildTppRequest(Map<String, String> tppParams, String locType,
         LocationReadService.AddressTairDTO address) {
 
         if (Objects.isNull(address)) {

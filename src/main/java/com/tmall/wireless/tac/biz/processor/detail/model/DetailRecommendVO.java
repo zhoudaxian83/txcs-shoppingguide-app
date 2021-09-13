@@ -22,6 +22,7 @@ public class DetailRecommendVO extends ContentVO {
     private List<DetailTextComponentVO> subTitle;
     private String img;
     private List<DetailLabelVO> imgIconList;
+    private List<DetailLabelVO> promotionAtmosphereList;
     private String titleMaxLine="2";
     private String type;
 
@@ -31,6 +32,7 @@ public class DetailRecommendVO extends ContentVO {
     @Data
     @NoArgsConstructor
     public class DetailLabelVO {
+        private String title;
         private String text;
         private String url;
         private String bgUrl;

@@ -13,7 +13,7 @@ import lombok.Data;
  * @Description:
  */
 @Data
-public class DetailRecContentResultVO extends SgFrameworkResponse {
+public class DetailRecContentResultVO {
 
 
     /**

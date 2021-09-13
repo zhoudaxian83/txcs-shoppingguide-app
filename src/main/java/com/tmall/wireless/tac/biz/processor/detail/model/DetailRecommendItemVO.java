@@ -17,6 +17,5 @@ import lombok.NoArgsConstructor;
 public class DetailRecommendItemVO extends DetailRecommendVO {
 
     private Long itemId;
-    private String countText;
     private List<DetailTextComponentVO> price;
 }
