@@ -41,7 +41,7 @@ public class IconLevel2ContentOriginDataRequestBuildSdkExtPt extends Register im
         Long halfdayStoreId = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtHalfDayStoreId).orElse(0L);
         params.put("rtNextDayStoreId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtNextDayStoreId).map(Object::toString).orElse("0"));
         if (onehourStore > 0) {
-            params.put("rtOneHourStoreId", onehourStore.toString());
+            params.put("rt1HourStoreId", onehourStore.toString());
         } else {
             params.put("rtHalfDayStoreId", halfdayStoreId.toString());
         }

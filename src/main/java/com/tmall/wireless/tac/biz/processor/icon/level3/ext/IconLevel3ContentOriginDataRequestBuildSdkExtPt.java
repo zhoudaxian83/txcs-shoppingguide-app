@@ -46,7 +46,7 @@ public class IconLevel3ContentOriginDataRequestBuildSdkExtPt extends Register im
             params.put("rtHalfDayStoreId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtHalfDayStoreId).map(Object::toString).orElse("0"));
         }
         if (StringUtils.isNotEmpty(level3Request.getLevel2Business()) && level3Request.getLevel2Business().contains(BusinessTypeUtil.OneHour)) {
-            params.put("rtOneHourStoreId",  Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).map(Object::toString).orElse("0"));
+            params.put("rt1HourStoreId",  Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).map(Object::toString).orElse("0"));
         }
 
         return recommendRequest;
