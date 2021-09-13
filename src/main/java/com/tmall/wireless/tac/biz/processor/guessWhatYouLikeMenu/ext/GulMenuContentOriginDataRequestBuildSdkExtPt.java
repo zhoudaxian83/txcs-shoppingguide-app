@@ -141,7 +141,7 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .map(UserDO::getCna)
                 .orElse(""));
         // TODO
-        params.put("topContentIdList", Joiner.on(",").join(topContentIdList));
+//        params.put("topContentIdList", Joiner.on(",").join(topContentIdList));
         params.put("itemCountPerContent", "5");
         params.put("topContentCount", "2");
 
@@ -152,7 +152,7 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         logger.info("TPP_REQUEST: " + requestLog);
         HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
                 .kv("GulMenuContentOriginDataRequestBuildSdkExtPt","tppRequest")
-                .kv("tppResult", JSON.toJSONString(tppRequest))
+                .kv("tppRequest", JSON.toJSONString(tppRequest))
                 .info();
         return tppRequest;
     }
