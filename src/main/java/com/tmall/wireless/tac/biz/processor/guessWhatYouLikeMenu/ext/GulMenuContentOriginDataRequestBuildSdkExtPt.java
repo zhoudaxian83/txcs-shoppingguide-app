@@ -12,6 +12,7 @@ import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOrig
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
+import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
@@ -19,6 +20,7 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil
 import com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.constant.ConstantValue;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
+import com.tmall.wireless.tac.client.domain.Enviroment;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -120,15 +122,15 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams)
                 .orElse(Maps.newHashMap());
-        params.put("isFirstPage", String.valueOf(MapUtils.getBoolean(requestMap, "isFirstPage", false)));
-        List<Long> contentSetIdList = getLongWithDefault(requestMap, "sceneGroupId")
+        params.put("isFirstPage", String.valueOf(MapUtils.getBoolean(requestMap, "isFirstPage", true)));
+        List<Long> contentSetIds = getLongWithDefault(requestMap, "recipeContentSetIds")
                 .stream()
                 .filter(contentSetId -> contentSetId > 0)
                 .collect(Collectors.toList());
 //        List<String> contentSetSource = contentSetIdList.stream()
 //                .map(id -> "intelligentCombinationItems_" + id)
 //                .collect(Collectors.toList());
-        params.put("contentSetIdList", Joiner.on(",").join(contentSetIdList));
+        params.put("contentSetIdList", Joiner.on(",").join(contentSetIds));
 //        params.put("contentSetSource", Joiner.on(",").join(contentSetSource));
         params.put("contentSetSource", "intelligentCombinationItems");
         List<Long> topContentIdList = getLongWithDefault(requestMap, "sceneTopIdList")
