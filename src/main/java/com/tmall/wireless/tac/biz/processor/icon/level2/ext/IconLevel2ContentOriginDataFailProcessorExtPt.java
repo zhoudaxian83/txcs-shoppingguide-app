@@ -54,7 +54,6 @@ public class IconLevel2ContentOriginDataFailProcessorExtPt extends Register impl
         int i = 1;
         List<ContentEntity> contentEntityList = Lists.newArrayList();
         for (MainColumnDTO mainColumnDTO : mainColumnMap.values()) {
-
             if (include(mainColumnDTO, includeOnehour, includeHalfday, includeNextDay)) {
                 ContentEntity contentEntity = new ContentEntity();
                 contentEntity.setContentId(mainColumnDTO.getId());
