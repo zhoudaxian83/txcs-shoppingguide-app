@@ -6,4 +6,5 @@ import lombok.Data;
 public class Level3Request {
     String level1Id;
     String level2Id;
+    String level2Business;
 }

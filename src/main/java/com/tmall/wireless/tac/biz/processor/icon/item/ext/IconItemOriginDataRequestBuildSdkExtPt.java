@@ -14,8 +14,11 @@ import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRequest;
+import com.tmall.wireless.tac.biz.processor.icon.level2.BusinessTypeUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,6 +43,22 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
         Map<String, String> params = Maps.newHashMap();
         recommendRequest.setParams(params);
 
+        List<String> businessList = Lists.newArrayList();
+
+        if (StringUtils.isEmpty(itemRequest.getLevel2Business()) || itemRequest.getLevel2Business().contains(BusinessTypeUtil.B2C)) {
+            businessList.add(BusinessTypeUtil.B2C);
+        } else if (itemRequest.getLevel2Business().contains(BusinessTypeUtil.OneHour)) {
+            businessList.add(BusinessTypeUtil.OneHour);
+        } else if (itemRequest.getLevel2Business().contains(BusinessTypeUtil.HalfDay)) {
+            businessList.add(BusinessTypeUtil.HalfDay);
+        } else if (itemRequest.getLevel2Business().contains(BusinessTypeUtil.NextDay)) {
+            businessList.add(BusinessTypeUtil.NextDay);
+        }
+
+        if (CollectionUtils.isEmpty(businessList)) {
+            businessList.add(BusinessTypeUtil.B2C);
+        }
+
         recommendRequest.setUserId(Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L));
         params.put("pmtSource", "sm_manager");
         params.put("pmtName", "icon");
@@ -50,25 +69,15 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
         params.put("rtHalfDayStoreId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtHalfDayStoreId).map(Object::toString).orElse("0"));
         params.put("rtOneHourStoreId",  Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).map(Object::toString).orElse("0"));
         params.put("smAreaId",  Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).map(Object::toString).orElse("0"));
+        params.put("itemBusinessType", Joiner.on(",").join(businessList));
 
         params.put("logicAreaId", Joiner.on(",").join(Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams).map(LocParams::getLogicIdByPriority).orElse(
                 Lists.newArrayList())));
-//        params.put("itemBusinessType", pipelineRequest.getItemBusinessType());
-        //B2C默认引入外仓
-//        if (ASelfShoppingGuideConfigHolder.instance.isB2cShowNextDay() && StringUtils.isNoneBlank(
-//                pipelineRequest.getItemBusinessType()) && pipelineRequest.getItemBusinessType().contains("B2C")) {
-//            String finalType = pipelineRequest.getItemBusinessType() + ",NextDay";
-//            params.put("itemBusinessType", finalType);
-//        }
 
 
         params.put("userNick", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getNick).orElse(""));
 
-//        String userAbVersion = getAbVersion(pipelineRequest.getColumnType());
-//        if (StringUtils.isNotBlank(userAbVersion)) {
-//            queryContext.getItemRecommendRequest().getExtMap().put("userAbVersion", userAbVersion);
-//        }
 
         return recommendRequest;
     }

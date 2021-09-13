@@ -8,8 +8,11 @@ import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOrig
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.icon.level2.BusinessTypeUtil;
 import com.tmall.wireless.tac.biz.processor.icon.level3.Level3RecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.level3.Level3Request;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ecs.html.S;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -40,8 +43,12 @@ public class IconLevel3ContentOriginDataRequestBuildSdkExtPt extends Register im
         params.put("itemBusinessType", "B2C,OneHour,HalfDay,NextDay");
         params.put("contentType", "2");
         params.put("rtNextDayStoreId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtNextDayStoreId).map(Object::toString).orElse("0"));
-        params.put("rtHalfDayStoreId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtHalfDayStoreId).map(Object::toString).orElse("0"));
-        params.put("rtOneHourStoreId",  Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).map(Object::toString).orElse("0"));
+        if (StringUtils.isNotEmpty(level3Request.getLevel2Business()) && level3Request.getLevel2Business().contains(BusinessTypeUtil.HalfDay)) {
+            params.put("rtHalfDayStoreId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtHalfDayStoreId).map(Object::toString).orElse("0"));
+        }
+        if (StringUtils.isNotEmpty(level3Request.getLevel2Business()) && level3Request.getLevel2Business().contains(BusinessTypeUtil.OneHour)) {
+            params.put("rtOneHourStoreId",  Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).map(Object::toString).orElse("0"));
+        }
 
         return recommendRequest;
     }

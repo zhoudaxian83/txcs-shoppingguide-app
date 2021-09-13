@@ -46,15 +46,17 @@ public class Level3RecommendService {
 
     public static String level3RequestKey = "level3Request";
 
-    public static final LabelDTO DEFAULT_RECOMMEND_TAB;
 
-    static {
+    public Flowable<List<LabelDTO>> recommend(Level3Request level3Request, Context context) {
+
+
+        LabelDTO DEFAULT_RECOMMEND_TAB;
+
         DEFAULT_RECOMMEND_TAB = new LabelDTO();
-        DEFAULT_RECOMMEND_TAB.setBusiness(BusinessTypeUtil.B2C);
+        DEFAULT_RECOMMEND_TAB.setBusiness(level3Request.getLevel2Business());
         DEFAULT_RECOMMEND_TAB.setText("推荐");
         DEFAULT_RECOMMEND_TAB.setId(0L);
-    }
-    public Flowable<List<LabelDTO>> recommend(Level3Request level3Request, Context context) {
+
         BizScenario b = BizScenario.valueOf(
                 ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
@@ -71,7 +73,7 @@ public class Level3RecommendService {
             if (CollectionUtils.isEmpty(contentDTOList) || contentEntityOriginDataDTO == null || CollectionUtils.isEmpty(contentEntityOriginDataDTO.getResult())) {
                 return defaultTab;
             }
-            return buildIconTabList(contentDTOList, contentEntityOriginDataDTO.getResult(), sgFrameworkContextContent, level3Request);
+            return buildIconTabList(contentDTOList, contentEntityOriginDataDTO.getResult(), sgFrameworkContextContent, level3Request, DEFAULT_RECOMMEND_TAB);
         }).onErrorReturn(throwable -> {
             LOGGER.error("shoppingguideSdkContentService.recommendWitchContext error", throwable);
             return defaultTab;
@@ -79,7 +81,7 @@ public class Level3RecommendService {
 
     }
 
-    private List<LabelDTO> buildIconTabList(List<ContentDTO> contentDTOList, List<ContentEntity> contentEntityList, SgFrameworkContextContent sgFrameworkContextContent, Level3Request level3Request) {
+    private List<LabelDTO> buildIconTabList(List<ContentDTO> contentDTOList, List<ContentEntity> contentEntityList, SgFrameworkContextContent sgFrameworkContextContent, Level3Request level3Request, LabelDTO DEFAULT_RECOMMEND_TAB) {
 
         MainColumnDTO column = columnCacheService.getColumn(Long.valueOf(level3Request.getLevel2Id()));
 
