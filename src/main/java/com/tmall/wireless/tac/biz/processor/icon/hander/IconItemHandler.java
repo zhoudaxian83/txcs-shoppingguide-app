@@ -41,6 +41,7 @@ public class IconItemHandler extends RpmReactiveHandler<IconResponse> {
         itemRequest.setLevel1Id(Optional.ofNullable(context.get("iconType")).map(Object::toString).orElse(""));
         itemRequest.setLevel2Id(Optional.ofNullable(context.get("level2Id")).map(Object::toString).orElse(""));
         itemRequest.setLevel3Id(Optional.ofNullable(context.get("level3Id")).map(Object::toString).orElse(""));
+        itemRequest.setLevel3Business(Optional.ofNullable(context.get("business")).map(Object::toString).orElse(""));
 
         IconResponse iconResponse = new IconResponse();
 
