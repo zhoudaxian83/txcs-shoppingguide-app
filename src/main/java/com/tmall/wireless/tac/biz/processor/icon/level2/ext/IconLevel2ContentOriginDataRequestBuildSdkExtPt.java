@@ -37,9 +37,14 @@ public class IconLevel2ContentOriginDataRequestBuildSdkExtPt extends Register im
         params.put("pageId", level2Request.getLevel1Id());
         params.put("itemBusinessType", "B2C,OneHour,HalfDay,NextDay");
         params.put("contentType", "1");
+        Long onehourStore = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
+        Long halfdayStoreId = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtHalfDayStoreId).map(Object::toString).orElse(0L);
         params.put("rtNextDayStoreId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtNextDayStoreId).map(Object::toString).orElse("0"));
-        params.put("rtHalfDayStoreId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtHalfDayStoreId).map(Object::toString).orElse("0"));
-        params.put("rtOneHourStoreId",  Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).map(Object::toString).orElse("0"));
+        if (onehourStore > 0) {
+            params.put("rtOneHourStoreId", onehourStore.toString());
+        } else {
+            params.put("rtHalfDayStoreId", halfdayStoreId.toString());
+        }
 
         return recommendRequest;
     }
