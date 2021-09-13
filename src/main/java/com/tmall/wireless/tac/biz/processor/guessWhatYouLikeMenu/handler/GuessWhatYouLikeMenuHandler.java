@@ -32,6 +32,7 @@ public class GuessWhatYouLikeMenuHandler extends RpmReactiveHandler<SgFrameworkR
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 ScenarioConstantApp.CNXH_MENU_FEEDS);
         bizScenario.addProducePackage(PackageNameKey.OLD_RECOMMEND);
+        bizScenario.addProducePackage(PackageNameKey.CONTENT_FEEDS);
         return shoppingguideSdkContentService.recommend(context, bizScenario).map(TacResult::newResult);
     }
 }
