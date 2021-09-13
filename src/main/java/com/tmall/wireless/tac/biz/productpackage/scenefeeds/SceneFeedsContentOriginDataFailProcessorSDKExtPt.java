@@ -145,11 +145,11 @@ public class SceneFeedsContentOriginDataFailProcessorSDKExtPt extends Register i
                     itemEntities.add(itemEntity);
                 });
                 if(itemEntities.size() > needSizeItems){
-                    contentEntity.setItems(itemEntities.subList(0,needSizeItems));
+                    contentEntity.setItems(itemEntities.subList(0, needSizeItems));
                 }else{
                     contentEntity.setItems(itemEntities);
                 }
-                HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                HadesLogUtil.stream(PackageNameKey.CONTENT_FEEDS)
                         .kv("SceneFeedsContentOriginDataFailProcessorSDKExtPt","buildOriginDataDTO")
                         .kv("sKey",String.valueOf(sKey))
                         .kv("contentId",gcsTairContentDTO.getSceneId())

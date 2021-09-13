@@ -157,6 +157,7 @@
 <!--    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentOriginDataPostProcessorSdkExtPt"/>-->
     <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentItemMetaInfoBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentVoBuildSdkExtPt"/>
 <!--    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.handler.GuessWhatYouLikeMenuHandler"/>-->
 
 </beans>
