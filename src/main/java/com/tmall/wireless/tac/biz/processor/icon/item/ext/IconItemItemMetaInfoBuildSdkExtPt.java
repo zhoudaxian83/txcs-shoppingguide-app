@@ -46,11 +46,11 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         item.setMktSceneCode("index.guessULike");
         ItemInfoSourceMetaInfo tppItemInfoSource = ItemInfoSourceMetaInfo.build("tpp");
         ItemInfoSourceMetaInfo smartUiItemInfoSource = ItemInfoSourceMetaInfo.build("smartui");
-        /*smartUiItemInfoSource.setStrategyPackageId("707_11169");*/
-        smartUiItemInfoSource.setStrategyPackageId("637_10576");
-        /*smartUiItemInfoSource.setAppId(27642L);*/
+        smartUiItemInfoSource.setStrategyPackageId("707_11169");
+        /*smartUiItemInfoSource.setStrategyPackageId("637_10576");*/
+        smartUiItemInfoSource.setAppId(27642L);
         smartUiItemInfoSource.setMktSceneCode("index.guessULike");
-        smartUiItemInfoSource.setAppId(26777L);
+        /*smartUiItemInfoSource.setAppId(26777L);*/
         itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(new ItemInfoSourceMetaInfo[]{item,
             tppItemInfoSource,smartUiItemInfoSource}));
         HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
