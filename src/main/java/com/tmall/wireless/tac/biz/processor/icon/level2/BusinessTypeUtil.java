@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.icon.level2;
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
+import com.tmall.aselfcommon.model.column.MainColumnDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,6 +22,22 @@ public class BusinessTypeUtil {
     public static final String NextDay = "NextDay";
 
     static Logger LOGGER = LoggerFactory.getLogger(BusinessTypeUtil.class);
+
+
+    public static boolean containsB2c(MainColumnDTO mainColumnDTO) {
+        return StringUtils.isEmpty(mainColumnDTO.getO2oBizType()) || mainColumnDTO.getO2oBizType().contains(BusinessTypeUtil.B2C);
+    }
+     public static boolean containsOneHour(MainColumnDTO mainColumnDTO) {
+        return StringUtils.isNotEmpty(mainColumnDTO.getO2oBizType()) && mainColumnDTO.getO2oBizType().contains(BusinessTypeUtil.OneHour);
+    }
+
+     public static boolean containsHalfDay(MainColumnDTO mainColumnDTO) {
+        return StringUtils.isNotEmpty(mainColumnDTO.getO2oBizType()) && mainColumnDTO.getO2oBizType().contains(BusinessTypeUtil.HalfDay);
+    }
+
+     public static boolean containsNextDay(MainColumnDTO mainColumnDTO) {
+        return StringUtils.isNotEmpty(mainColumnDTO.getO2oBizType()) && mainColumnDTO.getO2oBizType().contains(BusinessTypeUtil.NextDay);
+    }
 
 
     public static String processType(LocParams locParams, String o2oBizType) {
