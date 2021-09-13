@@ -218,11 +218,15 @@ public class SxlItemRecService {
             }
             Object sellingPointDesc = itemChannelData.get("sellingPointDesc");
             Object recommendWords = itemChannelData.get("recommendWords");
+            Object type = itemChannelData.get("type");
             if(sellingPointDesc != null && StringUtils.isNotBlank(sellingPointDesc.toString())){
                 entityVO.put("sellingPointDesc",sellingPointDesc);
             }
             if(recommendWords != null && StringUtils.isNotBlank(recommendWords.toString())){
                 entityVO.put("recommendWords",recommendWords);
+            }
+            if(type != null && StringUtils.isNotBlank(type.toString())){
+                entityVO.put("type",type);
             }
         });
         return response;
