@@ -33,13 +33,24 @@ public class GulMenuContentItemMetaInfoBuildSdkExtPt extends Register implements
 
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
 
+        ItemGroupMetaInfo itemGroupMetaInfoSmB2c = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.B2C.name());
+        itemGroupMetaInfoSmB2c.setItemInfoNodes(buildDefaultItemInfoNodes());
+
         ItemGroupMetaInfo itemGroupMetaInfoSmOneHour = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.O2OOneHour.name());
         itemGroupMetaInfoSmOneHour.setItemInfoNodes(buildDefaultItemInfoNodes());
 
         ItemGroupMetaInfo itemGroupMetaInfoSmHalfDay = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.O2OHalfDay.name());
         itemGroupMetaInfoSmHalfDay.setItemInfoNodes(buildDefaultItemInfoNodes());
 
-        itemMetaInfo.setItemGroupRenderInfoList(Lists.newArrayList(itemGroupMetaInfoSmOneHour, itemGroupMetaInfoSmHalfDay));
+        ItemGroupMetaInfo itemGroupMetaInfoSmNextDay = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.O2ONextDay.name());
+        itemGroupMetaInfoSmNextDay.setItemInfoNodes(buildDefaultItemInfoNodes());
+
+        itemMetaInfo.setItemGroupRenderInfoList(Lists.newArrayList(
+                itemGroupMetaInfoSmB2c
+                ,itemGroupMetaInfoSmOneHour
+                ,itemGroupMetaInfoSmHalfDay
+                ,itemGroupMetaInfoSmNextDay
+        ));
         return itemMetaInfo;
     }
 
