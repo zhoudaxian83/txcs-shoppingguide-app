@@ -42,6 +42,7 @@ public class IconLevel2Handler extends RpmReactiveHandler<IconResponse> {
         Level3Request level3Request = new Level3Request();
         level3Request.setLevel1Id(Optional.ofNullable(context.get("iconType")).map(Object::toString).orElse(""));
         level3Request.setLevel2Id(Optional.ofNullable(context.get("level2Id")).map(Object::toString).orElse(""));
+        level3Request.setLevel2Business(Optional.ofNullable(context.get("business")).map(Object::toString).orElse(""));
 
 //        Map<String, Object> result = Maps.newHashMap();
 
