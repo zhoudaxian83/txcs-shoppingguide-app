@@ -70,12 +70,6 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .map(LocParams::getSmAreaId)
                 .orElse(0L)
                 .toString());
-        params.put("pageSize", Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getUserPageInfo)
-                .map(PageInfoDO::getPageSize)
-                .orElse(8)
-                .toString());
         Long oneHourStoreId = Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams)
@@ -111,6 +105,7 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams)
                 .orElse(Maps.newHashMap());
+        params.put("pageSize", MapUtils.getString(requestMap, "pageSize", "8"));
         Boolean isFirstPage = MapUtils.getBoolean(requestMap, "isFirstPage", true);
         params.put("isFirstPage", String.valueOf(isFirstPage));
         List<Long> contentSetIds = getLongWithDefault(requestMap, "recipeContentSetIds")
