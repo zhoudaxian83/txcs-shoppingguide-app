@@ -166,6 +166,25 @@ public class SxlItemRecService {
                 return response;
             })
             .map(TacResult::newResult)
+            .map(tacResult -> {
+                if(tacResult == null){
+                    HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                        .kv("SxlItemRecService","recommend")
+                        .kv("tacResult","tacResult is null!")
+                        .info();
+                    tacResult.getBackupMetaData().setUseBackup(true);
+                    return tacResult;
+                }
+                if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
+                    tacResult = TacResult.errorResult("tac Backup!");
+                    HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                        .kv("SxlItemRecService","recommend")
+                        .kv("tacResult",JSON.toJSONString(tacResult))
+                        .info();
+                }
+                tacResult.getBackupMetaData().setUseBackup(true);
+                return tacResult;
+            })
             .onErrorReturn(r -> TacResult.errorResult(""));
 
     }
