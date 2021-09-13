@@ -3,6 +3,8 @@ package com.tmall.wireless.tac.biz.processor.detail.model;
 import java.util.Map;
 import java.util.Objects;
 
+import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
+import com.tmall.wireless.tac.client.domain.Context;
 import lombok.Data;
 
 /**
@@ -35,5 +37,10 @@ public class DetailRecommendRequest {
         recommendRequest.setIndex((Integer)params.get("index"));
         recommendRequest.setPageSize((Integer)params.get("pageSize"));
         recommendRequest.setRecType((String)params.get("recType"));
+    }
+
+    public static DetailRecommendRequest getDetailRequest(Context tacContext){
+        return (DetailRecommendRequest)tacContext.getParams()
+            .get(DetailConstant.REQUEST);
     }
 }

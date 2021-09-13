@@ -50,9 +50,8 @@ public abstract class DetailCommonContentOriginDataRequestBuildSdkExtPt extends 
         recommendRequest.setParams(tppParams);
 
         //构建tpp参数
-        DetailRecommendRequest detailRequest = (DetailRecommendRequest)sgFrameworkContextContent
-            .getTacContext().getParams()
-            .get(DetailConstant.REQUEST);
+        DetailRecommendRequest detailRequest = DetailRecommendRequest.getDetailRequest(
+            sgFrameworkContextContent.getTacContext());
 
 
         //1.商品
