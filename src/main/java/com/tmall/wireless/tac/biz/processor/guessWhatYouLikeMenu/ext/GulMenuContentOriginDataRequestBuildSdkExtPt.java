@@ -63,7 +63,7 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         if (StringUtils.isEmpty(regionCode)) {
             regionCode = "107";
         }
-//        params.put("regionCode", regionCode);
+        params.put("regionCode", regionCode);
 //        params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(
 //                SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
 //        if (params.get("regionCode") == null || "".equals(params.get("regionCode"))) {
@@ -133,7 +133,7 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         params.put("contentSetIdList", Joiner.on(",").join(contentSetIds));
 //        params.put("contentSetSource", Joiner.on(",").join(contentSetSource));
         params.put("contentSetSource", "intelligentCombinationItems");
-        List<Long> topContentIdList = getLongWithDefault(requestMap, "sceneTopIdList")
+        List<Long> topContentIdList = getLongWithDefault(requestMap, "recipeContentTopIdList")
                 .stream()
                 .filter(topContentId -> topContentId > 0)
                 .collect(Collectors.toList());
