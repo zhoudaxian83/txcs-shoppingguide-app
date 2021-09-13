@@ -4,7 +4,6 @@ package com.tmall.wireless.tac.biz.processor.icon.item.ext;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.taobao.mtop.api.agent.MtopContext;
 import com.tmall.crowd.guava.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -45,13 +44,13 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
 
         List<String> businessList = Lists.newArrayList();
 
-        if (StringUtils.isEmpty(itemRequest.getLevel2Business()) || itemRequest.getLevel2Business().contains(BusinessTypeUtil.B2C)) {
+        if (StringUtils.isEmpty(itemRequest.getLevel3Business()) || itemRequest.getLevel3Business().contains(BusinessTypeUtil.B2C)) {
             businessList.add(BusinessTypeUtil.B2C);
-        } else if (itemRequest.getLevel2Business().contains(BusinessTypeUtil.OneHour)) {
+        } else if (itemRequest.getLevel3Business().contains(BusinessTypeUtil.OneHour)) {
             businessList.add(BusinessTypeUtil.OneHour);
-        } else if (itemRequest.getLevel2Business().contains(BusinessTypeUtil.HalfDay)) {
+        } else if (itemRequest.getLevel3Business().contains(BusinessTypeUtil.HalfDay)) {
             businessList.add(BusinessTypeUtil.HalfDay);
-        } else if (itemRequest.getLevel2Business().contains(BusinessTypeUtil.NextDay)) {
+        } else if (itemRequest.getLevel3Business().contains(BusinessTypeUtil.NextDay)) {
             businessList.add(BusinessTypeUtil.NextDay);
         }
 
