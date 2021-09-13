@@ -21,6 +21,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.icon.level3.ext.IconLevel3ContentMetaInfoBuildSdkExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.productpackage.recommendold.OldRecommendContentOriginDataResponseConvertSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.productpackage.recommendold.OldRecommendItemOriginDataResponseConvertSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentInfoQuerySdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentOriginDataRequestBuildSdkExtPt"/>
 

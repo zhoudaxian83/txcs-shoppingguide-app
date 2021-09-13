@@ -29,6 +29,21 @@ public class TppConvertUtil {
         tppO2oTypeConvertMap.putIfAbsent("B2C", com.tmall.txcs.gs.model.item.O2oType.B2C.name());
     }
 
+    public static OriginDataDTO<ItemEntity> processItemEntity(String res) {
+        JSONObject resObj = JSON.parseObject(res);
+        OriginDataDTO<ItemEntity> responseEntity = processResponse(resObj);
+
+        JSONArray result = resObj.getJSONArray("result");
+        if (CollectionUtils.isEmpty(result)) {
+            responseEntity.setErrorCode("TPP_RETURN_ITEM_LIST_IS_EMPTY");
+            return responseEntity;
+        }
+        List<ItemEntity> itemEntityList = processItemEntityJson(result, responseEntity.getScm());
+
+        responseEntity.setResult(itemEntityList);
+
+        return responseEntity;
+    }
     public static OriginDataDTO<ContentEntity> processContentEntity(String res) {
 
         JSONObject resObj = JSON.parseObject(res);
