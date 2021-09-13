@@ -60,8 +60,10 @@ public class TppConvertUtil {
             JSONObject jsonObject = result.getJSONObject(i);
 
             ContentEntity contentEntity = new ContentEntity();
-
-            contentEntity.setRn(jsonObject.getInteger("rn"));
+            Integer rn = jsonObject.getInteger("rn");
+            if (rn != null) {
+                contentEntity.setRn(rn);
+            }
             contentEntity.setTrack_point(responseEntity.getScm() + "." + jsonObject.getString("trackPoint"));
             contentEntity.setContentId(jsonObject.getLong("contentId"));
             JSONArray itemSets = jsonObject.getJSONArray("itemSets");
