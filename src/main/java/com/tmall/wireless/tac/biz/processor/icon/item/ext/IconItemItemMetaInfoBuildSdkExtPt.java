@@ -47,10 +47,20 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         ItemInfoSourceMetaInfo tppItemInfoSource = ItemInfoSourceMetaInfo.build("tpp");
         ItemInfoSourceMetaInfo smartUiItemInfoSource = ItemInfoSourceMetaInfo.build("smartui");
         smartUiItemInfoSource.setStrategyPackageId("707_11169");
-        /*smartUiItemInfoSource.setStrategyPackageId("637_10576");*/
+        List<String> e1 = Lists.newArrayList(new String[]{"supermarketPrice", "timesBot", "salesLast30d"});
+        List<String> e2 = Lists.newArrayList(new String[]{"priceLabel", "timesBot", "salesLast30d"});
+        List<List<String>> exclusiveMaterials = Lists.newArrayList();
+        exclusiveMaterials.add(e1);
+        exclusiveMaterials.add(e2);
+        smartUiItemInfoSource.setExclusiveMaterials(exclusiveMaterials);
+        List<String> requireList = Lists.newArrayList(new String[]{"extVideo5S", "richPict", "whitePict"});
+        List<String> requireListPrice = Lists.newArrayList(new String[]{"pagePrice"});
+        List<List<String>> requireListList = Lists.newArrayList();
+        requireListList.add(requireList);
+        requireListList.add(requireListPrice);
+        smartUiItemInfoSource.setRequiredMaterials(requireListList);
         smartUiItemInfoSource.setAppId(27642L);
         smartUiItemInfoSource.setMktSceneCode("index.guessULike");
-        /*smartUiItemInfoSource.setAppId(26777L);*/
         itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(new ItemInfoSourceMetaInfo[]{item,
             tppItemInfoSource,smartUiItemInfoSource}));
         HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
