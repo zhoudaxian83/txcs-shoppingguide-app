@@ -11,6 +11,7 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProc
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
+import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.tair.TairSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
@@ -51,9 +52,9 @@ public class IconItemOriginDataFailProcessorSdkExtPt extends Register implements
             Preconditions.checkArgument(itemRequest != null);
 
             tairKey = buildTairKey(itemRequest);
-            Result<DataEntry> dataEntryResult = tairSpi.get(SHOPPING_GUIDE_TAIR_USER_NAME, SHOPPING_GUIDE_NAME_SPACE, tairKey);
+            SPIResult<Result<DataEntry>> resultSPIResult = tairSpi.get(SHOPPING_GUIDE_TAIR_USER_NAME, SHOPPING_GUIDE_NAME_SPACE, tairKey);
 
-            Object o = Optional.ofNullable(dataEntryResult).map(Result::getValue).map(DataEntry::getValue).orElse(null);
+            Object o = Optional.ofNullable(resultSPIResult).map(SPIResult::getData).map(Result::getValue).map(DataEntry::getValue).orElse(null);
             if (o == null) {
                 return originDataProcessRequest.getItemEntityOriginDataDTO();
             }
