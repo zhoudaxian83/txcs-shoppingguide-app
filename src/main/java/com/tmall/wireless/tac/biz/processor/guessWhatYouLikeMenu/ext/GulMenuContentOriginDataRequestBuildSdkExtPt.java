@@ -64,23 +64,12 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
             regionCode = "107";
         }
         params.put("regionCode", regionCode);
-//        params.put("regionCode", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent).map(
-//                SgFrameworkContext::getLocParams).map(LocParams::getLogicIdByPriority).orElse(Lists.newArrayList())));
-//        if (params.get("regionCode") == null || "".equals(params.get("regionCode"))) {
-//            params.put("regionCode", "107");
-//        }
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams)
                 .map(LocParams::getSmAreaId)
                 .orElse(0L)
                 .toString());
-//        Integer index = Optional.ofNullable(sgFrameworkContextContent)
-//                .map(SgFrameworkContext::getCommonUserParams)
-//                .map(CommonUserParams::getUserPageInfo)
-//                .map(PageInfoDO::getIndex)
-//                .orElse(0);
-//        params.put("isFirstPage", index > 0 ? "false" : "true");
         params.put("pageSize", Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getUserPageInfo)
@@ -122,30 +111,28 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams)
                 .orElse(Maps.newHashMap());
-        params.put("isFirstPage", String.valueOf(MapUtils.getBoolean(requestMap, "isFirstPage", true)));
+        Boolean isFirstPage = MapUtils.getBoolean(requestMap, "isFirstPage", true);
+        params.put("isFirstPage", String.valueOf(isFirstPage));
         List<Long> contentSetIds = getLongWithDefault(requestMap, "recipeContentSetIds")
                 .stream()
                 .filter(contentSetId -> contentSetId > 0)
                 .collect(Collectors.toList());
-//        List<String> contentSetSource = contentSetIdList.stream()
-//                .map(id -> "intelligentCombinationItems_" + id)
-//                .collect(Collectors.toList());
         params.put("contentSetIdList", Joiner.on(",").join(contentSetIds));
-//        params.put("contentSetSource", Joiner.on(",").join(contentSetSource));
         params.put("contentSetSource", "intelligentCombinationItems");
-        List<Long> topContentIdList = getLongWithDefault(requestMap, "recipeContentTopIdList")
-                .stream()
-                .filter(topContentId -> topContentId > 0)
-                .collect(Collectors.toList());
         params.put("exposureDataUserId", Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getUserDO)
                 .map(UserDO::getCna)
                 .orElse(""));
-        // TODO
-//        params.put("topContentIdList", Joiner.on(",").join(topContentIdList));
+        List<Long> topContentIdList = getLongWithDefault(requestMap, "recipeContentTopIdList")
+                .stream()
+                .filter(topContentId -> topContentId > 0)
+                .collect(Collectors.toList());
+        // 首页才有置顶坑位
+        if (isFirstPage) {
+            params.put("topContentIds", Joiner.on(",").join(topContentIdList));
+        }
         params.put("itemCountPerContent", "5");
-        params.put("topContentCount", "2");
 
         tppRequest.setParams(params);
         logger.info("GulMenuContentOriginDataRequestBuildSdkExtPt: tppRequest: " + JSON.toJSONString(tppRequest));
