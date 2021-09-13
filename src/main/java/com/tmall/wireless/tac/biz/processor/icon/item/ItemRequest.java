@@ -8,5 +8,5 @@ public class ItemRequest {
     String level1Id;
     String level2Id;
     String level3Id;
-    String level2Business;
+    String level3Business;
 }

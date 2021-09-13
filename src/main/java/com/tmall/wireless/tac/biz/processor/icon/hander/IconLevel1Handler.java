@@ -2,10 +2,7 @@ package com.tmall.wireless.tac.biz.processor.icon.hander;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.tmall.aself.shoppingguide.client.cat.model.LabelDTO;
-import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
-import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRequest;
@@ -14,20 +11,15 @@ import com.tmall.wireless.tac.biz.processor.icon.level2.Level2Request;
 import com.tmall.wireless.tac.biz.processor.icon.level3.Level3RecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.level3.Level3Request;
 import com.tmall.wireless.tac.biz.processor.icon.model.IconResponse;
-import com.tmall.wireless.tac.biz.processor.todaycrazy.LimitTimeBuyScene;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.zookeeper.Op;
-import org.checkerframework.checker.nullness.Opt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -83,6 +75,7 @@ public class IconLevel1Handler extends RpmReactiveHandler<IconResponse> {
 
                     itemRequest.setLevel2Id(labelDTOS.stream().findFirst().map(LabelDTO::getId).map(Object::toString).orElse("0"));
                     itemRequest.setLevel3Id(labelDTOSLevel3.stream().findFirst().map(LabelDTO::getId).map(Object::toString).orElse("0"));
+                    itemRequest.setLevel3Business(labelDTOSLevel3.stream().findFirst().map(LabelDTO::getBusiness).orElse("0"));
                     return itemRecommendService.recommend(itemRequest, context)
                     .map(response -> {
                         iconResponse.setItemList(response);
