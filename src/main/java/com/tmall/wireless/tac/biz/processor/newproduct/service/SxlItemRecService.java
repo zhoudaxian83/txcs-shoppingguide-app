@@ -1,8 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.newproduct.service;
 
+import com.alibaba.cola.dto.SingleResponse;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.tcls.experiment.client.router.HyperlocalRetailABTestClient;
+import com.ali.com.google.common.collect.Maps;
 import com.google.common.collect.Lists;
+import com.tmall.aselfcaptain.item.model.ChannelDataDO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
@@ -14,6 +16,7 @@ import com.tmall.txcs.gs.model.biz.context.EntitySetParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.txcs.gs.spi.recommend.ChannelQuerySpi;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
@@ -27,6 +30,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.http.impl.nio.reactor.ChannelEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +54,10 @@ public class SxlItemRecService {
 
     @Autowired
     SgFrameworkServiceItem sgFrameworkServiceItem;
+
     @Autowired
-    HyperlocalRetailABTestClient hyperlocalRetailABTestClient;
+    ChannelQuerySpi channelQuerySpi;
+
     /**ab实验分桶结果**/
     private final static String AB_TEST_RESULT = "abTestVariationsResult";
     /**人工选品**/
@@ -78,7 +84,7 @@ public class SxlItemRecService {
         /**主题承接页圈品集id**/
         Long itemSetId = MapUtil.getLongWithDefault(context.getParams(), RequestKeyConstantApp.ITEMSET_ID,0L);
         /**招商主活动id-管道tair key**/
-        String activityId = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.SXL_MAIN_ACTIVITY_ID,"");
+        String activityId = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.SXL_MAIN_ACTIVITY_ID,String.valueOf(itemSetIdSw));
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
             .kv("SxlItemRecService itemSetIdSw",JSON.toJSONString(itemSetIdSw))
             .kv("SxlItemRecService itemSetIdAlgSw",JSON.toJSONString(itemSetIdAlgSw))
@@ -95,28 +101,21 @@ public class SxlItemRecService {
         /**主题系列新品承接页**/
         if(!StringUtils.isBlank(activityId) && itemSetId > 0){
             entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetId));
-            sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(activityId)));
         }else {
             /**算法选品接入ab实验**/
             String itemSetIdType = getAbData(context);
             if(!StringUtils.isBlank(itemSetIdType)){
                 if("old".equals(itemSetIdType)){
                     entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetIdSw));
-                    sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(String.valueOf(itemSetIdSw))));
                     abTestType = ARTIFICIAL;
                 }else if("new".equals(itemSetIdType)){
                     List<Long> itemSetIds = Lists.newArrayList();
                     itemSetIds.add(itemSetIdSw);
                     itemSetIds.add(itemSetIdAlgSw);
                     entitySetParams.setItemSetIdList(itemSetIds);
-                    List<String> activityIds = Lists.newArrayList();
-                    activityIds.add(String.valueOf(itemSetIdSw));
-                    activityIds.add(String.valueOf(itemSetIdAlgSw));
-                    sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(activityIds));
                     abTestType = ARTIFICIAL_ALGORITHM;
                 }else{
                     entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetIdSw));
-                    sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(String.valueOf(itemSetIdSw))));
                     abTestType = ARTIFICIAL;
                 }
             }else{
@@ -124,7 +123,6 @@ public class SxlItemRecService {
                 abTestType = ARTIFICIAL;
                 activityId = String.valueOf(itemSetIdSw);
                 entitySetParams.setItemSetIdList(Lists.newArrayList(itemSetIdSw));
-                sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(Lists.newArrayList(String.valueOf(itemSetIdSw))));
             }
             HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
                 .kv("SxlItemRecService","recommend")
@@ -132,38 +130,20 @@ public class SxlItemRecService {
                 .kv("itemSetIdType",itemSetIdType)
                 .info();
         }
+        sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo(activityId));
         sgFrameworkContextItem.setRequestParams(context.getParams());
         sgFrameworkContextItem.setEntitySetParams(entitySetParams);
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
             .kv("activityId",activityId)
             .kv("SxlItemRecService entitySetParams.getItemSetIdList()",JSON.toJSONString(entitySetParams.getItemSetIdList()))
             .info();
-        SceneInfo sceneInfo = new SceneInfo();
-        sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
-        sceneInfo.setSubBiz(ScenarioConstantApp.LOC_TYPE_B2C);
-        sceneInfo.setScene(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM);
-        sgFrameworkContextItem.setSceneInfo(sceneInfo);
-        UserDO userDO = new UserDO();
-        userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
-        userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
-        if (MapUtils.isNotEmpty(context.getParams())) {
-            Object cookies = context.getParams().get("cookies");
-            if (cookies != null && cookies instanceof Map) {
-                String cna = (String)((Map)cookies).get("cna");
-                userDO.setCna(cna);
-            }
-        }
-        sgFrameworkContextItem.setUserDO(userDO);
+
+        sgFrameworkContextItem.setSceneInfo(getSceneInfo(context));
+        sgFrameworkContextItem.setUserDO(getUserDO(context));
 
         sgFrameworkContextItem.setLocParams(CsaUtil
             .parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
-
-        PageInfoDO pageInfoDO = new PageInfoDO();
-        String index = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "0");
-        String pageSize = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.PAGE_SIZE, "20");
-        pageInfoDO.setIndex(Integer.valueOf(index));
-        pageInfoDO.setPageSize(Integer.valueOf(pageSize));
-        sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
+        sgFrameworkContextItem.setUserPageInfo(getPageInfoDO(context));
 
         if(StringUtils.isNotBlank(topItemIds)){
             sgFrameworkContextItem.getUserParams().put(Constant.SXL_TOP_ITEM_IDS,topItemIds);
@@ -178,6 +158,11 @@ public class SxlItemRecService {
                 HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
                     .kv("SxlItemRecService finalAbTestType",finalAbTestType)
                     .info();
+                /**管道查询算法选品人工卖点**/
+                if(StringUtils.isNotBlank(finalAbTestType) && ARTIFICIAL_ALGORITHM.equals(finalAbTestType)
+                    && itemSetIdAlgSw != null){
+                    getChannelDate(String.valueOf(itemSetIdAlgSw),response);
+                }
                 return response;
             })
             .map(TacResult::newResult)
@@ -185,7 +170,101 @@ public class SxlItemRecService {
 
     }
 
-    private static ItemMetaInfo getItemMetaInfo(List<String> activityIds) {
+    public SgFrameworkResponse<EntityVO> getChannelDate(String activityId, SgFrameworkResponse<EntityVO> response){
+        if(response == null || response.getItemAndContentList() == null || CollectionUtils.isEmpty(response.getItemAndContentList())){
+            return response;
+        }
+        List<String> itemIds = Lists.newArrayList();
+        response.getItemAndContentList().forEach(entityVO -> {
+            Object itemId = entityVO.get("itemId");
+            if(itemId != null){
+                itemIds.add(itemId.toString());
+            }
+        });
+        List<ChannelDataDO> channelDataDOS = dataTubeKeyList.stream().map(k -> {
+            ChannelDataDO channelDataDO = new ChannelDataDO();
+            channelDataDO.setChannelName("itemExtLdb");
+            channelDataDO.setDataKey(k.getLeft());
+            channelDataDO.setChannelField(k.getRight());
+            return channelDataDO;
+        }).collect(Collectors.toList());
+        Map<String, String> extraMap = Maps.newHashMap();
+        extraMap.put("activityId",activityId);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+            .kv("channelDataDOS",JSON.toJSONString(channelDataDOS))
+            .kv("itemIds",JSON.toJSONString(itemIds))
+            .kv("extraMap",JSON.toJSONString(extraMap))
+            .info();
+        SingleResponse<Map<String, Map<String, Object>>> singleResponse = channelQuerySpi.query(channelDataDOS,itemIds,extraMap);
+
+        if(singleResponse == null || !singleResponse.isSuccess() || singleResponse.getData() == null || singleResponse.getData().isEmpty()){
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                .kv("itemIds",JSON.toJSONString(itemIds))
+                .kv("extraMap",JSON.toJSONString(extraMap))
+                .kv("singleResponse","isEmpty")
+                .info();
+            return response;
+        }
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+            .kv("itemIds",JSON.toJSONString(itemIds))
+            .kv("singleResponse",JSON.toJSONString(singleResponse))
+            .info();
+        Map<String, Map<String, Object>> channelMap = singleResponse.getData();
+        response.getItemAndContentList().forEach(entityVO -> {
+            Object itemId = entityVO.get("itemId");
+            Map<String,Object> itemChannelData = channelMap.get(itemId.toString());
+            if(itemId == null || itemChannelData == null || itemChannelData.isEmpty()){
+                return;
+            }
+            Object sellingPointDesc = itemChannelData.get("sellingPointDesc");
+            Object recommendWords = itemChannelData.get("recommendWords");
+            Object type = itemChannelData.get("type");
+            if(sellingPointDesc != null && StringUtils.isNotBlank(sellingPointDesc.toString())){
+                entityVO.put("sellingPointDesc",sellingPointDesc);
+            }
+            if(recommendWords != null && StringUtils.isNotBlank(recommendWords.toString())){
+                entityVO.put("recommendWords",recommendWords);
+            }
+            if(type != null && StringUtils.isNotBlank(type.toString())){
+                entityVO.put("type",type);
+            }
+        });
+        return response;
+    }
+
+    public PageInfoDO getPageInfoDO(Context context){
+        PageInfoDO pageInfoDO = new PageInfoDO();
+        String index = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.INDEX, "0");
+        String pageSize = MapUtil.getStringWithDefault(context.getParams(), RequestKeyConstantApp.PAGE_SIZE, "20");
+        pageInfoDO.setIndex(Integer.valueOf(index));
+        pageInfoDO.setPageSize(Integer.valueOf(pageSize));
+        return pageInfoDO;
+    }
+
+    public SceneInfo getSceneInfo(Context context){
+        SceneInfo sceneInfo = new SceneInfo();
+        sceneInfo.setBiz(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET);
+        sceneInfo.setSubBiz(ScenarioConstantApp.LOC_TYPE_B2C);
+        sceneInfo.setScene(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM);
+        return sceneInfo;
+    }
+
+
+    public UserDO getUserDO(Context context){
+        UserDO userDO = new UserDO();
+        userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
+        userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
+        if (MapUtils.isNotEmpty(context.getParams())) {
+            Object cookies = context.getParams().get("cookies");
+            if (cookies != null && cookies instanceof Map) {
+                String cna = (String)((Map)cookies).get("cna");
+                userDO.setCna(cna);
+            }
+        }
+        return userDO;
+    }
+
+    private static ItemMetaInfo getItemMetaInfo(String activityId) {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
@@ -193,21 +272,17 @@ public class SxlItemRecService {
         itemGroupMetaInfoList.add(itemGroupMetaInfo1);
         itemGroupMetaInfo1.setGroupName("sm_B2C");
         itemGroupMetaInfo1.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
-        for(int i=0;i<activityIds.size();i++){
-            ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
-            itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-            itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
-            itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(activityIds.get(i)));
-            itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
-        }
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
+        itemInfoSourceMetaInfoCaptain.setSourceName("captain");
+        itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
+        itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(activityId));
+        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoTpp.setSourceName("tpp");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
 
-
         ItemRecommendMetaInfo itemRecommendMetaInfo = new ItemRecommendMetaInfo();
-
         itemRecommendMetaInfo.setAppId(25385L);
         itemMetaInfo.setItemRecommendMetaInfo(itemRecommendMetaInfo);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
