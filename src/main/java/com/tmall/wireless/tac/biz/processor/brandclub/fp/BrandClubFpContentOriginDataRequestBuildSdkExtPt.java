@@ -48,8 +48,8 @@ public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register i
         Map<String, Map<String, Object>> groupAndBrandMapping =
                 brandContentSetIdService.getGroupAndBrandMapping(Lists.newArrayList(brandId));
 
-        String rankingContentSetId = Optional.of(groupAndBrandMapping).map(m -> m.get("tcls_ugc_scenegroup_mapping_v1_btao_20328")).map(m -> m.get("boardSceneGroupIds")).map(Object::toString).orElse("");
-        String b2cCommonContentSetId = Optional.of(groupAndBrandMapping).map(m -> m.get("tcls_ugc_scenegroup_mapping_v1_btao_20328")).map(m -> m.get("generalSceneGroupIds")).map(Object::toString).orElse("");
+        String rankingContentSetId = Optional.of(groupAndBrandMapping).map(m -> m.get("tcls_ugc_scenegroup_mapping_v1_btao_" + brandId)).map(m -> m.get("boardSceneGroupIds")).map(Object::toString).orElse("");
+        String b2cCommonContentSetId = Optional.of(groupAndBrandMapping).map(m -> m.get("tcls_ugc_scenegroup_mapping_v1_btao_" + brandId)).map(m -> m.get("generalSceneGroupIds")).map(Object::toString).orElse("");
 
         Map<String, Object> requestParams = Optional.of(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getRequestParams)
@@ -79,7 +79,7 @@ public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register i
         List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id)
                 .collect(
                         Collectors.toList());
-        params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
+//        params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
         /**心智场景支持O2O场景**/
         Long oneHour = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
         Long halfDay = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtHalfDayStoreId).orElse(0L);
