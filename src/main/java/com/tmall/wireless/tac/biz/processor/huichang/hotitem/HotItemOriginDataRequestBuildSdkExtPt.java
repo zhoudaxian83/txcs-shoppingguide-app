@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
     useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
-    scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE)
+    scenario = HallScenarioConstant.HALL_SCENARIO_HOT_ITEM)
 public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
     private static final String ITEM_SET_PREFIX = "crm_";
     public static final Long DEFAULT_LOGAREAID = 107L;
