@@ -8,6 +8,7 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginData
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
+import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,7 +54,11 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
                 .map(LocParams::getSmAreaId).orElse(0L).toString());
 
         //解析sgFrameworkContextItem获取参数map
-        Map<String,Object> contextParamsMap = null;
+        Map<String,Object> contextParamsMap = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getTacContext).map(Context::getParams)
+                .orElse(Maps.newHashMap());
+
+        //解析sgFrameworkContextItem获取参数map
+        /*Map<String,Object> contextParamsMap = null;
         try {
             Map<String,Object> sgFrameworkContextItemMap = JSON.parseObject(JSON.toJSONString(sgFrameworkContextItem), Map.class);
             String tacContext = MapUtil.getStringWithDefault(sgFrameworkContextItemMap, "tacContext", "");
@@ -74,7 +79,7 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
             }
         } catch (Exception e) {
             tacLogger.error("参数获取异常",e);
-        }
+        }*/
 
         String type = MapUtil.getStringWithDefault(contextParamsMap, "type", "");
         String logicAreaId = MapUtil.getStringWithDefault(contextParamsMap, "logicAreaId", "");
