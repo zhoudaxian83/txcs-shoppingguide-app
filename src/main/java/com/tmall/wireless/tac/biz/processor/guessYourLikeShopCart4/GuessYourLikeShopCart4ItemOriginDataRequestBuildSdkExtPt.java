@@ -53,40 +53,45 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
                 .map(LocParams::getSmAreaId).orElse(0L).toString());
 
         //解析sgFrameworkContextItem获取参数map
-//        Map<String,Object> sgFrameworkContextItemMap = JSON.parseObject(JSON.toJSONString(sgFrameworkContextItem), Map.class);
-//        String tacContext = MapUtil.getStringWithDefault(sgFrameworkContextItemMap, "tacContext", "");
-//        Map<String,Object> tacContextMap = JSON.parseObject(JSON.toJSONString(tacContext), Map.class);
-//        if(tacContextMap == null || tacContextMap.isEmpty()){
-//            tppRequest.setParams(params);
-//            tacLogger.info("tppRequest="+ JSON.toJSONString(tppRequest));
-//            tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
-//            return tppRequest;
-//        }
-//        String contextParams = MapUtil.getStringWithDefault(tacContextMap, "paramMap", "");
-//        Map<String,Object> contextParamsMap = JSON.parseObject(JSON.toJSONString(contextParams), Map.class);
-//        if(contextParamsMap == null || contextParamsMap.isEmpty()){
-//            tppRequest.setParams(params);
-//            tacLogger.info("tppRequest="+ JSON.toJSONString(tppRequest));
-//            tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
-//            return tppRequest;
-//        }
-//
-//        String type = MapUtil.getStringWithDefault(contextParamsMap, "type", "");
-//        String logicAreaId = MapUtil.getStringWithDefault(contextParamsMap, "logicAreaId", "");
-//        String level1Id = MapUtil.getStringWithDefault(contextParamsMap, "level1Id", "");
-//        String level2Id = MapUtil.getStringWithDefault(contextParamsMap, "level2Id", "");
-//        String detailItemIdList = MapUtil.getStringWithDefault(contextParamsMap, "detailItemIdList", "");
-//        String itemBusinessType = MapUtil.getStringWithDefault(contextParamsMap, "itemBusinessType", "");
-//        String honehourStoreId = MapUtil.getStringWithDefault(contextParamsMap, "honehourStoreId", "");
-//        String isFirstPage = MapUtil.getStringWithDefault(contextParamsMap, "isFirstPage", "true");
-//        params.put("type", type);
-//        params.put("logicAreaId", logicAreaId);
-//        params.put("level1Id", level1Id);
-//        params.put("level2Id", level2Id);
-//        params.put("detailItemIdList", detailItemIdList);
-//        params.put("itemBusinessType", itemBusinessType);
-//        params.put("honehourStoreId", honehourStoreId);
-//        params.put("isFirstPage", Integer.valueOf(index) > 0 ? "false" : "true");
+        Map<String,Object> contextParamsMap = null;
+        try {
+            Map<String,Object> sgFrameworkContextItemMap = JSON.parseObject(JSON.toJSONString(sgFrameworkContextItem), Map.class);
+            String tacContext = MapUtil.getStringWithDefault(sgFrameworkContextItemMap, "tacContext", "");
+            Map<String,Object> tacContextMap = JSON.parseObject(JSON.toJSONString(tacContext), Map.class);
+            if(tacContextMap == null || tacContextMap.isEmpty()){
+                tppRequest.setParams(params);
+                tacLogger.info("tppRequest="+ JSON.toJSONString(tppRequest));
+                tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
+                return tppRequest;
+            }
+            String contextParams = MapUtil.getStringWithDefault(tacContextMap, "paramMap", "");
+            contextParamsMap = JSON.parseObject(JSON.toJSONString(contextParams), Map.class);
+            if(contextParamsMap == null || contextParamsMap.isEmpty()){
+                tppRequest.setParams(params);
+                tacLogger.info("tppRequest="+ JSON.toJSONString(tppRequest));
+                tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
+                return tppRequest;
+            }
+        } catch (Exception e) {
+            tacLogger.error("参数获取异常",e);
+        }
+
+        String type = MapUtil.getStringWithDefault(contextParamsMap, "type", "");
+        String logicAreaId = MapUtil.getStringWithDefault(contextParamsMap, "logicAreaId", "");
+        String level1Id = MapUtil.getStringWithDefault(contextParamsMap, "level1Id", "");
+        String level2Id = MapUtil.getStringWithDefault(contextParamsMap, "level2Id", "");
+        String detailItemIdList = MapUtil.getStringWithDefault(contextParamsMap, "detailItemIdList", "");
+        String itemBusinessType = MapUtil.getStringWithDefault(contextParamsMap, "itemBusinessType", "");
+        String honehourStoreId = MapUtil.getStringWithDefault(contextParamsMap, "honehourStoreId", "");
+        String isFirstPage = MapUtil.getStringWithDefault(contextParamsMap, "isFirstPage", "true");
+        params.put("type", type);
+        params.put("logicAreaId", logicAreaId);
+        params.put("level1Id", level1Id);
+        params.put("level2Id", level2Id);
+        params.put("detailItemIdList", detailItemIdList);
+        params.put("itemBusinessType", itemBusinessType);
+        params.put("honehourStoreId", honehourStoreId);
+        params.put("isFirstPage", Integer.valueOf(index) > 0 ? "false" : "true");
 
 
 
