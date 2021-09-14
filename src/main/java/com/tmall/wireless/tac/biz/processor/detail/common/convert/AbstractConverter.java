@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import com.alibaba.metrics.StringUtils;
 
 import com.google.common.collect.Lists;
 import com.tcls.mkt.atmosphere.model.enums.UnifyPriceType;
@@ -30,6 +28,7 @@ import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author: guichen
@@ -210,7 +209,7 @@ public abstract class AbstractConverter {
     }
 
     private static List<DetailTextComponentVO> buildPrice(String shortText, String price) {
-        if (com.taobao.usa.util.StringUtils.isNotEmpty(shortText)) {
+        if (StringUtils.isNotEmpty(shortText)) {
             shortText = shortText + "￥";
         } else {
             shortText = "￥";
