@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
@@ -63,6 +64,7 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
                 // 主料筛查 --> 菜谱过滤
                 List<ItemEntityVO> mainMaterials = Lists.newArrayList();
                 for (ItemEntityVO itemCanBuy : canBuyItemList) {
+                    logger.info("****ItemEntityVO:****" + JSON.toJSONString(itemCanBuy));
                     String crowdIds = itemCanBuy.getString("crowdId");
                     logger.info("========crowIds:=======" + crowdIds);
                     if (mainMaterials.size() >= ConstantValue.MAIN_MATERIAL_NUMBER) {
