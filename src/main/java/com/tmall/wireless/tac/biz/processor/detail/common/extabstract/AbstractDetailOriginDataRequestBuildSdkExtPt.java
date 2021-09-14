@@ -29,8 +29,8 @@ import com.tmall.wireless.tac.biz.processor.detail.util.CommonUtil;
  */
 public abstract class AbstractDetailOriginDataRequestBuildSdkExtPt extends Register {
 
-    @Resource
-    private LocationReadService locationReadService;
+    //@Resource
+    //private LocationReadService locationReadService;
 
     protected abstract Long getAppId(String recType,SgFrameworkContext sgFrameworkContextContent);
 
@@ -112,7 +112,13 @@ public abstract class AbstractDetailOriginDataRequestBuildSdkExtPt extends Regis
         if(!CommonUtil.validId(userId)){
             return null;
         }
-        return locationReadService.readTairAddressDTO(userId,"CN");
+
+        LocationReadService.AddressTairDTO addressTairDTO=new LocationReadService.AddressTairDTO();
+        addressTairDTO.setDivisionId(330110L);
+        addressTairDTO.setRegionCode("107");
+        addressTairDTO.setRtHalfDayStoreId(236635411L);
+        return addressTairDTO;
+        //return locationReadService.readTairAddressDTO(userId,"CN");
     }
 
 }
