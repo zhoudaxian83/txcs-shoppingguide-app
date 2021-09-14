@@ -15,4 +15,7 @@ public class ConstantValue {
      */
     public static final Integer MAIN_MATERIAL_NUMBER = 2;
 
+    public static final String SOURCE_CHANNEL_MMC_HALF_DAY = "mmc-halfday";
+
+    public static final String SOURCE_CHANNEL_GUL_RECIPE = "gul-recipe";
 }

@@ -80,15 +80,6 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .map(CommonUserParams::getLocParams)
                 .map(LocParams::getRtHalfDayStoreId)
                 .orElse(0L);
-        List<String> itemBusinessTypeList = Lists.newArrayList();
-        if (oneHourStoreId > 0L) {
-            itemBusinessTypeList.add(TppItemBusinessTypeEnum.OneHour.getType());
-            params.put("rt1HourStoreId", RenderLangUtil.safeString(oneHourStoreId));
-        } else if (halfDayStoreId > 0L) {
-            itemBusinessTypeList.add(TppItemBusinessTypeEnum.HalfDay.getType());
-            params.put("rtHalfDayStoreId", RenderLangUtil.safeString(halfDayStoreId));
-        }
-        params.put("itemBusinessType", Joiner.on(",").join(itemBusinessTypeList));
         params.put("majorCityCode", Optional.ofNullable(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams)
@@ -105,7 +96,25 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
                 .map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams)
                 .orElse(Maps.newHashMap());
+        String source = MapUtils.getString(requestMap, "source", "gul-recipe");
+        List<String> itemBusinessTypeList = Lists.newArrayList();
+        if (source.equals(ConstantValue.SOURCE_CHANNEL_GUL_RECIPE)) {
+            if (oneHourStoreId > 0L) {
+                itemBusinessTypeList.add(TppItemBusinessTypeEnum.OneHour.getType());
+                params.put("rt1HourStoreId", RenderLangUtil.safeString(oneHourStoreId));
+            } else if (halfDayStoreId > 0L) {
+                itemBusinessTypeList.add(TppItemBusinessTypeEnum.HalfDay.getType());
+                params.put("rtHalfDayStoreId", RenderLangUtil.safeString(halfDayStoreId));
+            }
+        } else if (source.equals(ConstantValue.SOURCE_CHANNEL_MMC_HALF_DAY)) {
+            if (halfDayStoreId > 0L) {
+                itemBusinessTypeList.add(TppItemBusinessTypeEnum.HalfDay.getType());
+                params.put("rtHalfDayStoreId", RenderLangUtil.safeString(halfDayStoreId));
+            }
+        }
+        params.put("itemBusinessType", Joiner.on(",").join(itemBusinessTypeList));
         params.put("pageSize", MapUtils.getString(requestMap, "pageSize", "8"));
+        params.put("itemCountPerContent", MapUtils.getString(requestMap, "itemCountPerContent", "5"));
         Boolean isFirstPage = MapUtils.getBoolean(requestMap, "isFirstPage", true);
         params.put("isFirstPage", String.valueOf(isFirstPage));
         List<Long> contentSetIds = getLongWithDefault(requestMap, "recipeContentSetIds")
@@ -127,7 +136,6 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         if (isFirstPage) {
             params.put("topContentIds", Joiner.on(",").join(topContentIdList));
         }
-        params.put("itemCountPerContent", "5");
 
         tppRequest.setParams(params);
         logger.info("GulMenuContentOriginDataRequestBuildSdkExtPt: tppRequest: " + JSON.toJSONString(tppRequest));
@@ -136,6 +144,7 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         logger.info("TPP_REQUEST: " + requestLog);
         HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
                 .kv("GulMenuContentOriginDataRequestBuildSdkExtPt","tppRequest")
+                .kv("source", source)
                 .kv("tppRequest", JSON.toJSONString(tppRequest))
                 .info();
         return tppRequest;

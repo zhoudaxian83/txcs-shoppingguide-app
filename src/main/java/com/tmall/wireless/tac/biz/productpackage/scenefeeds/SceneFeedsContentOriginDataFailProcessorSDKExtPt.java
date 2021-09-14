@@ -17,12 +17,10 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
-import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -43,15 +41,21 @@ public class SceneFeedsContentOriginDataFailProcessorSDKExtPt extends Register i
     @Resource
     TacLogger tacLogger;
 
-    /**场景内容兜底缓存前缀**/
+    /**
+     * 场景内容兜底缓存前缀
+     **/
     private static final String pKey = "txcs_scene_collection_v1";
 
     private static final int labelSceneNamespace = 184;
 
-    /**打底内容最大数量**/
+    /**
+     * 打底内容最大数量
+     **/
     private static int needSize = 8;
 
-    /**打底商品最大数量**/
+    /**
+     * 打底商品最大数量
+     **/
     private static int needSizeItems = 20;
 
     @Override
@@ -77,58 +81,59 @@ public class SceneFeedsContentOriginDataFailProcessorSDKExtPt extends Register i
         boolean isSuccess = checkSuccess(contentEntityOriginDataDTO);
 
         HadesLogUtil.stream(PackageNameKey.CONTENT_FEEDS)
-                .kv("SceneFeedsContentOriginDataFailProcessorSDKExtPt","process")
-                .kv("isSuccess",String.valueOf(isSuccess))
+                .kv("SceneFeedsContentOriginDataFailProcessorSDKExtPt", "process")
+                .kv("isSuccess", String.valueOf(isSuccess))
                 .info();
-        if (isSuccess){
+        if (isSuccess) {
             return contentEntityOriginDataDTO;
         }
 
         List<String> sKeyList = Lists.newArrayList();
         sKeyList = getContentSetIdList(requestParams);
         HadesLogUtil.stream(PackageNameKey.CONTENT_FEEDS)
-                .kv("SceneFeedsContentOriginDataFailProcessorSDKExtPt","process")
-                .kv("labelSceneNamespace",String.valueOf(labelSceneNamespace))
-                .kv("pKey",pKey)
+                .kv("SceneFeedsContentOriginDataFailProcessorSDKExtPt", "process")
+                .kv("labelSceneNamespace", String.valueOf(labelSceneNamespace))
+                .kv("pKey", pKey)
                 .kv("sKeyList", JSON.toJSONString(sKeyList))
                 .info();
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
         Result<Map<Object, Result<DataEntry>>> labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNamespace, pKey, sKeyList);
-        if(labelSceneResult != null && labelSceneResult.getValue() !=null){
+        if (labelSceneResult != null && labelSceneResult.getValue() != null) {
             Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
-            if(MapUtils.isEmpty(resultMap)){
+            if (MapUtils.isEmpty(resultMap)) {
                 return contentEntityOriginDataDTO;
-            };
+            }
+            ;
             OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap, needSize);
             return baseOriginDataDTO;
         }
         return contentEntityOriginDataDTO;
     }
 
-    public OriginDataDTO<ContentEntity> buildOriginDataDTO(Map<Object, Result<DataEntry>> resultMap, int needSize){
+    public OriginDataDTO<ContentEntity> buildOriginDataDTO(Map<Object, Result<DataEntry>> resultMap, int needSize) {
         OriginDataDTO<ContentEntity> originDataDTO = new OriginDataDTO<>();
         List<ContentEntity> contentEntities = Lists.newArrayList();
         //内容集list-内容id-商品
-        for(Object sKey : resultMap.keySet()) {
+        for (Object sKey : resultMap.keySet()) {
             Result<DataEntry> result = resultMap.get(sKey);
             if (!result.isSuccess()) {
-                LOGGER.error("SceneFeedsContentOriginDataFailProcessorSDKExtPt sKey:"+sKey+",result:"+ JSON.toJSONString(result));
+                LOGGER.error("SceneFeedsContentOriginDataFailProcessorSDKExtPt sKey:" + sKey + ",result:" + JSON.toJSONString(result));
                 continue;
             }
             DataEntry dataEntry = result.getValue();
-            if(dataEntry == null || dataEntry.getValue() == null){
-                LOGGER.error("SceneFeedsContentOriginDataFailProcessorSDKExtPt dataEntry:"+ JSON.toJSONString(dataEntry));
+            if (dataEntry == null || dataEntry.getValue() == null) {
+                LOGGER.error("SceneFeedsContentOriginDataFailProcessorSDKExtPt dataEntry:" + JSON.toJSONString(dataEntry));
                 continue;
             }
             List<GcsTairContentDTO> gcsTairContentDTOList = (List<GcsTairContentDTO>) dataEntry.getValue();
-            if(CollectionUtils.isEmpty(gcsTairContentDTOList)){
-                LOGGER.error("SceneFeedsContentOriginDataFailProcessorSDKExtPt gcsTairContentDTOList:"+ JSON.toJSONString(gcsTairContentDTOList));
+            if (CollectionUtils.isEmpty(gcsTairContentDTOList)) {
+                LOGGER.error("SceneFeedsContentOriginDataFailProcessorSDKExtPt gcsTairContentDTOList:" + JSON.toJSONString(gcsTairContentDTOList));
                 continue;
             }
             List<GcsTairContentDTO> finalList = Lists.newArrayList();
-            if(gcsTairContentDTOList.size() > needSize){
-                finalList.addAll(gcsTairContentDTOList.subList(0,needSize));
-            }else{
+            if (gcsTairContentDTOList.size() > needSize) {
+                finalList.addAll(gcsTairContentDTOList.subList(0, needSize));
+            } else {
                 finalList.addAll(gcsTairContentDTOList);
             }
             finalList.forEach(gcsTairContentDTO -> {
@@ -144,16 +149,16 @@ public class SceneFeedsContentOriginDataFailProcessorSDKExtPt extends Register i
                     /*itemEntity.setBusinessType(gcsTairContentDTO.getMarketChannel());*/
                     itemEntities.add(itemEntity);
                 });
-                if(itemEntities.size() > needSizeItems){
+                if (itemEntities.size() > needSizeItems) {
                     contentEntity.setItems(itemEntities.subList(0, needSizeItems));
-                }else{
+                } else {
                     contentEntity.setItems(itemEntities);
                 }
                 HadesLogUtil.stream(PackageNameKey.CONTENT_FEEDS)
-                        .kv("SceneFeedsContentOriginDataFailProcessorSDKExtPt","buildOriginDataDTO")
-                        .kv("sKey",String.valueOf(sKey))
-                        .kv("contentId",gcsTairContentDTO.getSceneId())
-                        .kv("contentEntity.getItems().size()",String.valueOf(contentEntity.getItems().size()))
+                        .kv("SceneFeedsContentOriginDataFailProcessorSDKExtPt", "buildOriginDataDTO")
+                        .kv("sKey", String.valueOf(sKey))
+                        .kv("contentId", gcsTairContentDTO.getSceneId())
+                        .kv("contentEntity.getItems().size()", String.valueOf(contentEntity.getItems().size()))
                         .info();
                 contentEntities.add(contentEntity);
             });
@@ -165,19 +170,12 @@ public class SceneFeedsContentOriginDataFailProcessorSDKExtPt extends Register i
     private List<String> getContentSetIdList(Map<String, Object> requestParams) {
 
         List<String> result = Lists.newArrayList();
-//        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING, ""));
-//        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RECIPE, ""));
-//        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_BRAND, ""));
-//        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_MIND, ""));
-//        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_O2O, ""));
-        String contentSetIdB2c = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, "");
-        if(StringUtils.isNotEmpty(contentSetIdB2c)){
-            result.add(contentSetIdB2c);
-        }else{
-            String contentSetIdRecipe = MapUtil.getStringWithDefault(requestParams,RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RECIPE, "");
-            result.add(contentSetIdRecipe);
-        }
-
+        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING, ""));
+        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RECIPE, ""));
+        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_BRAND, ""));
+        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_MIND, ""));
+        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_O2O, ""));
+        result.add(MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, ""));
         return result.stream().filter(contentSetId -> !("".equals(contentSetId) || "0".equals(contentSetId))).collect(Collectors.toList());
     }
 
