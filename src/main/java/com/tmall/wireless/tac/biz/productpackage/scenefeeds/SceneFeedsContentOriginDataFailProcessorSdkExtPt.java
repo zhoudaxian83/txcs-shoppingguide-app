@@ -129,7 +129,7 @@ public class SceneFeedsContentOriginDataFailProcessorSdkExtPt extends Register i
         // 优先用B2C品牌场景打底
         String contentSetIdB2c = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, "");
         if (StringUtils.isNotEmpty(contentSetIdB2c)) {
-            return Lists.newArrayList();
+            return Lists.newArrayList(contentSetIdB2c);
         }
 
         // 榜单打底

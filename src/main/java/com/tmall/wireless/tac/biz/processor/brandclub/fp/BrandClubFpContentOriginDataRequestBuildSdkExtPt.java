@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.brandclub.fp;
 
+import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -48,15 +49,15 @@ public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register i
         Map<String, Map<String, Object>> groupAndBrandMapping =
                 brandContentSetIdService.getGroupAndBrandMapping(Lists.newArrayList(brandId));
 
-        String rankingContentSetId = Optional.of(groupAndBrandMapping).map(m -> m.get("tcls_ugc_scenegroup_mapping_v1_btao_" + brandId)).map(m -> m.get("boardSceneGroupIds")).map(Object::toString).orElse("");
-        String b2cCommonContentSetId = Optional.of(groupAndBrandMapping).map(m -> m.get("tcls_ugc_scenegroup_mapping_v1_btao_" + brandId)).map(m -> m.get("generalSceneGroupIds")).map(Object::toString).orElse("");
+        JSONArray rankingContentSetIdList = (JSONArray) Optional.of(groupAndBrandMapping).map(m -> m.get("tcls_ugc_scenegroup_mapping_v1_btao_" + brandId)).map(m -> m.get("boardSceneGroupIds")).orElse(new JSONArray());
+        JSONArray b2cCommonContentSetIdList = (JSONArray) Optional.of(groupAndBrandMapping).map(m -> m.get("tcls_ugc_scenegroup_mapping_v1_btao_" + brandId)).map(m -> m.get("generalSceneGroupIds")).orElse(new JSONArray());
 
         Map<String, Object> requestParams = Optional.of(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getRequestParams)
                 .orElse(null);
         if (requestParams != null) {
-            requestParams.put(RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING, rankingContentSetId);
-            requestParams.put(RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, b2cCommonContentSetId);
+            requestParams.put(RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING, rankingContentSetIdList.stream().findFirst().map(Object::toString).orElse(""));
+            requestParams.put(RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, b2cCommonContentSetIdList.stream().findFirst().map(Object::toString).orElse(""));
         }
 
         Map<String, Object> stringObjectMap = groupAndBrandMapping.values().stream().findFirst().orElse(Maps.newHashMap());
