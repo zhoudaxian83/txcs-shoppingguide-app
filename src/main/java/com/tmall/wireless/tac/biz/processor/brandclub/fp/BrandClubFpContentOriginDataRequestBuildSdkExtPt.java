@@ -80,7 +80,7 @@ public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register i
         List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id)
                 .collect(
                         Collectors.toList());
-//        params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
+        params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
         /**心智场景支持O2O场景**/
         Long oneHour = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
         Long halfDay = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRtHalfDayStoreId).orElse(0L);
