@@ -182,33 +182,33 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--详情-->
+        <!--&lt;!&ndash;详情&ndash;&gt;-->
 
-        <dependency>
-            <groupId>com.tmall.aself</groupId>
-            <artifactId>aselfcommon-lbs</artifactId>
-            <version>2.4.36</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.tmall.aself</groupId>-->
+            <!--<artifactId>aselfcommon-lbs</artifactId>-->
+            <!--<version>2.4.36</version>-->
+        <!--</dependency>-->
 
-        <dependency>
-            <groupId>com.tmall.aself</groupId>
-            <artifactId>aselfcommon-model</artifactId>
-            <version>2.4.45</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.taobao.kfc</groupId>
-                    <artifactId>kfc-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.taobao.xmp</groupId>
-                    <artifactId>xmp-common-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.taobao.xmp</groupId>
-                    <artifactId>xmp-core-client</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.tmall.aself</groupId>-->
+            <!--<artifactId>aselfcommon-model</artifactId>-->
+            <!--<version>2.4.45</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>com.taobao.kfc</groupId>-->
+                    <!--<artifactId>kfc-client</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>com.taobao.xmp</groupId>-->
+                    <!--<artifactId>xmp-common-client</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>com.taobao.xmp</groupId>-->
+                    <!--<artifactId>xmp-core-client</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
 
 
     </dependencies>
