@@ -103,7 +103,6 @@ public class SceneFeedsContentOriginDataFailProcessorSDKExtPt extends Register i
             if (MapUtils.isEmpty(resultMap)) {
                 return contentEntityOriginDataDTO;
             }
-            ;
             OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap, needSize);
             return baseOriginDataDTO;
         }

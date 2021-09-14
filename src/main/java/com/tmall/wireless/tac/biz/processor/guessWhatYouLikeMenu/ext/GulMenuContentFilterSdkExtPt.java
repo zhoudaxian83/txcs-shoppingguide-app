@@ -1,5 +1,6 @@
 //package com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext;
 //
+//import com.google.common.base.Splitter;
 //import com.google.common.collect.Lists;
 //import com.tmall.hades.monitor.print.HadesLogUtil;
 //import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
@@ -64,11 +65,17 @@
 //                // 主料筛查 --> 菜谱过滤
 //                List<ItemEntityVO> mainMaterials = Lists.newArrayList();
 //                for (ItemEntityVO itemCanBuy : canBuyItemList) {
-//                    String contentItemSets = itemCanBuy.getString("contentItemSets");
+//                    String crowdIds = itemCanBuy.getString("crowdId");
+//                    if (StringUtils.isEmpty(crowdIds)) {
+//                        continue;
+//                    }
+//                    List<String> crowdIdList = Splitter.on(",").trimResults().omitEmptyStrings().splitToList(crowdIds);
+//                    String crowdId = crowdIdList.get(0);
+//
 //                    if (mainMaterials.size() >= ConstantValue.MAIN_MATERIAL_NUMBER) {
 //                        break;
 //                    }
-//                    if (CollectionUtils.isEmpty(mainMaterials) || !mainMaterials.get(0).getString("contentItemSets").equals(contentItemSets)) {
+//                    if (CollectionUtils.isEmpty(mainMaterials) || !mainMaterials.get(0).getString("crowdId").equals(crowdId)) {
 //                        mainMaterials.add(itemCanBuy);
 //                    }
 //                }
