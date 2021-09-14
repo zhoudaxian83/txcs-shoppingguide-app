@@ -34,7 +34,7 @@ public abstract class AbstractDetailOriginDataRequestBuildSdkExtPt extends Regis
     @Resource
     private LocationReadService locationReadService;
 
-    protected abstract Long getAppId(String recType);
+    protected abstract Long getAppId(String recType,SgFrameworkContext sgFrameworkContextContent);
 
     public RecommendRequest process(SgFrameworkContext sgFrameworkContextContent) {
 
@@ -44,7 +44,7 @@ public abstract class AbstractDetailOriginDataRequestBuildSdkExtPt extends Regis
 
 
         RecommendRequest recommendRequest=new RecommendRequest();
-        recommendRequest.setAppId(getAppId(detailRequest.getRecType()));
+        recommendRequest.setAppId(getAppId(detailRequest.getRecType(),sgFrameworkContextContent));
         recommendRequest.setUserId(Optional.of(sgFrameworkContextContent).
             map(SgFrameworkContext::getCommonUserParams).
             map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L));
