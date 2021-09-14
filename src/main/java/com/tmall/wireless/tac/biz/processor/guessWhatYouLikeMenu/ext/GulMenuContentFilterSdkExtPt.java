@@ -104,6 +104,8 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
     }
 
     private boolean itemInfoError(ItemEntityVO item) {
+        LogUtil.errorCode("============",
+                "=======" + item.getString("itemId") + "=====" + item.getString("shortTitle") + "===" + item.getString("itemImg") + "====" + item.getString("itemMprice"));
         return StringUtils.isEmpty(item.getString("shortTitle"))
                 || StringUtils.isEmpty(item.getString("itemImg"))
                 || StringUtils.isEmpty(item.getString("itemMprice"));
