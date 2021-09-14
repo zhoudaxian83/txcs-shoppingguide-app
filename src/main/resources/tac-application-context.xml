@@ -18,6 +18,7 @@
     <context:component-scan base-package="com.tmall.tcls.gs.sdk.sm"/>
 
     <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentInfoQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentFilterSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentOriginDataRequestBuildSdkExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.middlepage.AliPayMiddleItemOriginDataRequestBuildSdkExtPt"/>
