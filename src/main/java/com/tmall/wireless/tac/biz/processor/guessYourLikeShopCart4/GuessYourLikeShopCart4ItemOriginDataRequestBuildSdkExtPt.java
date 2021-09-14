@@ -58,12 +58,12 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
                 .orElse(Maps.newHashMap());
 
         String type = MapUtil.getStringWithDefault(contextParamsMap, "type", "");
-        String logicAreaId = MapUtil.getStringWithDefault(contextParamsMap, "logicAreaId", "");
-        String level1Id = MapUtil.getStringWithDefault(contextParamsMap, "level1Id", "");
-        String level2Id = MapUtil.getStringWithDefault(contextParamsMap, "level2Id", "");
+        String logicAreaId = MapUtil.getStringWithDefault(contextParamsMap, "logicAreaId", "0");
+        String level1Id = MapUtil.getStringWithDefault(contextParamsMap, "level1Id", "0");
+        String level2Id = MapUtil.getStringWithDefault(contextParamsMap, "level2Id", "0");
         String detailItemIdList = MapUtil.getStringWithDefault(contextParamsMap, "detailItemIdList", "");
         String itemBusinessType = MapUtil.getStringWithDefault(contextParamsMap, "itemBusinessType", "");
-        String honehourStoreId = MapUtil.getStringWithDefault(contextParamsMap, "honehourStoreId", "");
+        String honehourStoreId = MapUtil.getStringWithDefault(contextParamsMap, "honehourStoreId", "0");
         String isFirstPage = MapUtil.getStringWithDefault(contextParamsMap, "isFirstPage", "true");
         params.put("type", type);
         params.put("logicAreaId", logicAreaId);
