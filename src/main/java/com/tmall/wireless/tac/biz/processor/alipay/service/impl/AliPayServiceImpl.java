@@ -12,6 +12,7 @@ import com.alipay.tradecsa.common.service.spi.request.MiddlePageSPIRequest;
 import com.alipay.tradecsa.common.service.spi.request.PageFloorAtomicDTO;
 import com.alipay.tradecsa.common.service.spi.request.PageFloorDetailDTO;
 import com.alipay.tradecsa.common.service.spi.response.*;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.hades.monitor.print.HadesLogUtil;
@@ -107,6 +108,13 @@ public class AliPayServiceImpl implements IAliPayService {
     }
 
     private MixerCollectRecResult convertMixerCollectRecResult(SgFrameworkResponse<ItemEntityVO> re, GeneralItem aldData) {
+
+        Map<String, String> trackinfo = Maps.newHashMap();
+        trackinfo.put("uid", "357133924");
+        trackinfo.put("iid", "357133924");
+        trackinfo.put("abid", "357133924");
+        String scm = Joiner.on(",").withKeyValueSeparator(":").join(trackinfo);
+
         MixerCollectRecResult mixerCollectRecResult = new MixerCollectRecResult();
         mixerCollectRecResult.setSuccess(true);
         CategoryContentRet categoryContentRet = new CategoryContentRet();
@@ -122,6 +130,7 @@ public class AliPayServiceImpl implements IAliPayService {
         List<ServiceContentRec> collect = itemEntityVOS.stream().map(e ->convert(e, aldData)).collect(Collectors.toList());
         categoryContentRet.setServiceList(collect);
         categoryContentRet.setSuccess(true);
+        categoryContentRet.setTrackInfo(scm);
         LOGGER.info("mixerCollectRecResult:{}", JSON.toJSONString(mixerCollectRecResult));
         return mixerCollectRecResult;
     }
@@ -182,6 +191,10 @@ public class AliPayServiceImpl implements IAliPayService {
         pageFloorNavigationDTO.setTitleLightImageUrl(aldData.getString(navigationIconPicAldKey));
         middlePageSPIResponse.setPageFloorNavigationDTO(pageFloorNavigationDTO);
 
+        PageFloorTabDTO pageFloorTabDTO = new PageFloorTabDTO();
+        pageFloorTabDTO.setTabTitle("全部");
+        pageFloorTabDTO.setTabId("-1");
+        middlePageSPIResponse.setPageFloorTabDTOList(Lists.newArrayList(pageFloorTabDTO));
 
         List<ItemEntityVO> itemAndContentList = re.getItemAndContentList();
         List<PageFloorResultDTO> floorResultDTOS = Lists.newArrayList();

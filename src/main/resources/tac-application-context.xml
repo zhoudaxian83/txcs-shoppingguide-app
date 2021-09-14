@@ -74,6 +74,41 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenItemBuildItemVOExtPt"/>
 
 
+    <!--会场相关开始-->
+        <!--会场通用开始-->
+         <bean class="com.tmall.wireless.tac.biz.productpackage.hall.HallCommonContentUserCommonParamsBuildSdkExtPt"/>
+         <bean class="com.tmall.wireless.tac.biz.processor.huichang.common.itemextpt.HallCommonItemUserCommonParamsBuildSdkExtPt"/>
+        <!--会场通用结束-->
+
+
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleContentInfoQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleContentBuildItemVoSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleContentFilterSdkExtPt"/>
+
+
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageBuildItemVoSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageContentInfoQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageContentOriginDataPostProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageContentOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageContentFilterSdkExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageOriginDataPostProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageCaptainRequestBuildSdkExtPt"/>
+
+
+    <!--内容渲染场景-->
+    <bean id="entityRenderService" class="com.taobao.hsf.app.spring.util.HSFSpringConsumerBean"
+          init-method="init">
+        <property name="interfaceName" value="com.tmall.aselfcaptain.cloudrec.api.EntityRenderService"/>
+        <property name="version" value="1.0.0"/>
+    </bean>
+    <!---会场相关结束-->
+
     <bean class="com.tmall.wireless.tac.biz.processor.o2obd.ext.O2oBangdanContentOriginDataRequestExPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.o2obd.ext.O2oBangdanContentInfoQueryExtPt"/>
 
@@ -103,6 +138,5 @@
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionScene"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionBuildItemVOExtPt"/>
-
 
 </beans>
