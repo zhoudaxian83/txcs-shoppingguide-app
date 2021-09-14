@@ -13,10 +13,8 @@ import com.alibaba.metrics.StringUtils;
 
 import com.google.common.collect.Lists;
 import com.tcls.mkt.atmosphere.model.enums.UnifyPriceType;
-import com.tcls.mkt.atmosphere.model.response.IconAtmosphereDTO;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tcls.mkt.atmosphere.model.response.PromotionAtmosphereDTO;
-import com.tcls.mkt.atmosphere.model.response.PromotionTextDTO;
 import com.tcls.mkt.atmosphere.model.response.UnifyPriceDTO;
 import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
@@ -59,7 +57,7 @@ public abstract class AbstractConverter {
             recommendContentVO.setEvent(getContentEvents(scene, contentVO, index));
 
             //场景商品信息
-            recommendContentVO.setRecommendItemVOS(convertItems(contentVO.get("items")));
+            recommendContentVO.setRecommendItemVOS(convertItems(scene, contentVO.get("items"),scmJoin));
 
             detailRecommendVOS.add(recommendContentVO);
 
@@ -94,17 +92,23 @@ public abstract class AbstractConverter {
         return recommendContentVO;
     }
 
-    private List<DetailRecommendItemVO> convertItems(Object items) {
+    public List<DetailRecommendVO> convertItems(String scene,Object items, List<String> scmJoin) {
 
         if (Objects.nonNull(items) && items instanceof List) {
-            return ((List<ItemEntityVO>)items).stream()
-                .map(this::convertToItem)
-                .collect(Collectors.toList());
+
+            List<DetailRecommendVO> detailRecommendVOS=new ArrayList<>();
+            for(int index=0;index<((List<ItemEntityVO>)items).size();index++){
+                ItemEntityVO item= ((List<ItemEntityVO>)items).get(index);
+                detailRecommendVOS.add(convertToItem(scene,item,scmJoin,index));
+            }
+
+            return detailRecommendVOS;
         }
+
         return null;
     }
 
-    private DetailRecommendItemVO convertToItem(ItemEntityVO itemInfoBySourceCaptainDTO) {
+    public DetailRecommendItemVO convertToItem(String scene,ItemEntityVO itemInfoBySourceCaptainDTO,List<String> scmJoin,int index) {
         DetailRecommendItemVO detailRecommendItemVO = new DetailRecommendItemVO();
 
         detailRecommendItemVO.setItemId(itemInfoBySourceCaptainDTO.getLong("itemId"));
@@ -129,12 +133,17 @@ public abstract class AbstractConverter {
                 convertLabel(detailRecommendItemVO, itemPromotionResp.getAtmosphereList()));
         }
 
-        if (CollectionUtils.isEmpty(detailRecommendItemVO.getPromotionAtmosphereList())) {
-
-        }
-
         //事件
+        String scm=itemInfoBySourceCaptainDTO.getString("scm");
+        scmJoin.add(scm);
+        detailRecommendItemVO.setEvent(getItemEvents(scene,itemInfoBySourceCaptainDTO,index));
+
         return detailRecommendItemVO;
+    }
+
+    private List<DetailEvent> getItemEvents(String scene, ItemEntityVO itemEntityVO, int index) {
+        return getEvents(scene, itemEntityVO.getItemId(), itemEntityVO.getString("itemUrl"),
+            index + 1, itemEntityVO.getString("scm"));
     }
 
     private static List<DetailLabelVO> convertLabel(DetailRecommendVO detailRecommendVO,

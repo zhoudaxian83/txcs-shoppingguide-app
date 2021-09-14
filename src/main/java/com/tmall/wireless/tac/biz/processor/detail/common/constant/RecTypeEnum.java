@@ -11,7 +11,9 @@ public enum RecTypeEnum {
 
     RECIPE("recipe","菜谱推荐"),
 
-    SIMILAR_ITEM("similarItem","相似商品推荐");
+    SIMILAR_ITEM_CONTENT("similarItemContent","相似商品场景推荐"),
+    SIMILAR_ITEM_ITEM("similarItemItem","相似商品商品推荐"),
+    ;
     @Getter
     private final String type;
     @Getter

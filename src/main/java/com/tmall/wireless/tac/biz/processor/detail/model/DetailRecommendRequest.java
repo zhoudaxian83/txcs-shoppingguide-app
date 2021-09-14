@@ -18,6 +18,8 @@ public class DetailRecommendRequest {
     private Integer pageSize;
     private Long detailItemId;
     private String locType;
+    private Long contentId;
+    private String itemSetsId;
 
     /**
      * 推荐类型，如菜谱或者普通类型

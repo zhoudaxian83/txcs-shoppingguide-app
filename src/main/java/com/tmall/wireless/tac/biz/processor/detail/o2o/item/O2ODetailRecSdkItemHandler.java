@@ -3,13 +3,11 @@ package com.tmall.wireless.tac.biz.processor.detail.o2o.item;
 import javax.annotation.Resource;
 
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
-import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
-import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
-import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
-import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
+import com.tmall.wireless.tac.biz.processor.detail.common.convert.DetailConverterFactory;
+import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
@@ -21,12 +19,12 @@ import org.springframework.stereotype.Service;
  * @Description:
  */
 @Service
-public class O2ODetailRecSdkItemHandler extends RpmReactiveHandler<SgFrameworkResponse<ItemEntityVO>> {
+public class O2ODetailRecSdkItemHandler extends RpmReactiveHandler<DetailRecContentResultVO> {
 
     @Resource
     ShoppingguideSdkItemService shoppingguideSdkItemService;
     @Override
-    public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
+    public Flowable<TacResult<DetailRecContentResultVO>> executeFlowable(Context context) throws Exception {
 
         BizScenario bizScenario = BizScenario.valueOf(
             DetailConstant.BIZ_ID,
@@ -34,9 +32,11 @@ public class O2ODetailRecSdkItemHandler extends RpmReactiveHandler<SgFrameworkRe
             DetailConstant.ITEM_SCENERIO
         );
 
-        bizScenario.addProducePackage(HallScenarioConstant.HALL_ITEM_SDK_PACKAGE);
-
         return shoppingguideSdkItemService.recommend(context, bizScenario)
+            .map(response->{
+                String recType = (String)context.getParams().get("recType");
+                return DetailConverterFactory.instance.getConverter(recType).convert(response);
+            })
             .map(TacResult::newResult);
 
     }
