@@ -7,12 +7,14 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 
 /**
  * @author: guichen
  * @Data: 2021/9/14
  * @Description:
  */
+@Component
 public class DetailConverterFactory implements InitializingBean {
 
     public static DetailConverterFactory instance;
