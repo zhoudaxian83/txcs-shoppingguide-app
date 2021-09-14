@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
-import com.taobao.usa.util.StringUtils;
 //import com.tmall.aselfcommon.constant.LocType;
 //import com.tmall.aselfcommon.lbs.service.LocationReadService;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
