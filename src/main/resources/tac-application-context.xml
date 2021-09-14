@@ -101,6 +101,11 @@
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageCaptainRequestBuildSdkExtPt"/>
 
 
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemModuleHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemOriginDataRequestBuildSdkExtPt"/>
+
+
+
     <!--内容渲染场景-->
     <bean id="entityRenderService" class="com.taobao.hsf.app.spring.util.HSFSpringConsumerBean"
           init-method="init">
