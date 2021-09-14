@@ -32,7 +32,6 @@ public class ReciptConverter extends AbstractConverter {
 
     @Override
     public DetailRecContentResultVO convert(SgFrameworkResponse sgFrameworkResponse) {
-
         return recipeConvert(sgFrameworkResponse.getItemAndContentList());
     }
 

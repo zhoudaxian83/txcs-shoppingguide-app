@@ -7,6 +7,7 @@ import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
 import com.tmall.wireless.tac.biz.processor.detail.common.convert.DetailConverterFactory;
+import com.tmall.wireless.tac.biz.processor.detail.common.convert.ResultConverter;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -33,11 +34,7 @@ public class O2ODetailRecSdkItemHandler extends RpmReactiveHandler<DetailRecCont
         );
 
         return shoppingguideSdkItemService.recommend(context, bizScenario)
-            .map(response->{
-                String recType = (String)context.getParams().get("recType");
-                return DetailConverterFactory.instance.getConverter(recType).convert(response);
-            })
-            .map(TacResult::newResult);
+            .map(response -> ResultConverter.convertToTacResult(response,context));
 
     }
 }
