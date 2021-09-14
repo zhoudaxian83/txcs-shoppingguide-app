@@ -114,7 +114,7 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         }
         params.put("itemBusinessType", Joiner.on(",").join(itemBusinessTypeList));
         params.put("pageSize", MapUtils.getString(requestMap, "pageSize", "8"));
-        params.put("itemCountPerContent", MapUtils.getString(requestMap, "itemCountPerContent", "5"));
+        params.put("itemCountPerContent", MapUtils.getString(requestMap, "itemCountPerContent", "8"));
         Boolean isFirstPage = MapUtils.getBoolean(requestMap, "isFirstPage", true);
         params.put("isFirstPage", String.valueOf(isFirstPage));
         List<Long> contentSetIds = getLongWithDefault(requestMap, "recipeContentSetIds")
