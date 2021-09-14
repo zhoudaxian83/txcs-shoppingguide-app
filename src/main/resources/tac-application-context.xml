@@ -139,4 +139,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionBuildItemVOExtPt"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4SdkItemHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt"/>
+
 </beans>

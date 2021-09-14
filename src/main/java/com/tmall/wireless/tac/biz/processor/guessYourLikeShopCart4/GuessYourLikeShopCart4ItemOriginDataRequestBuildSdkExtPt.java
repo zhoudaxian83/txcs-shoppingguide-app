@@ -1,14 +1,23 @@
 package com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4;
 
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
-import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
+import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
-import org.springframework.stereotype.Service;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
+import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+
 
 /**
- * Created from template by 程斐斐 on 2021-09-14 21:01:53.
+ * Created from template by 程斐斐 on 2021-09-14 14:56:32.
  */
 
 @SdkExtension(
@@ -16,10 +25,74 @@ import org.springframework.stereotype.Service;
         useCase = "b2c",
         scenario = "guessYourLikeShopCart4"
 )
-@Service
+//@Service
 public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
+
+    public static final Long APPID_B2C = 21657L;
+
+    @Autowired
+    TacLoggerImpl tacLogger;
+
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
-        return null;
+
+        tacLogger.info("=================tacLogger+ 已进入tpp参数组装==================");
+        tacLogger.info("sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
+        RecommendRequest tppRequest = new RecommendRequest();
+        tppRequest.setAppId(APPID_B2C);
+        tppRequest.setUserId(Optional.of(sgFrameworkContextItem).
+                map(SgFrameworkContext::getCommonUserParams).
+                map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L));
+        Map<String, String> params = Maps.newHashMap();
+        params.put("pageSize", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getPageSize).map(Objects::toString).orElse("20"));
+        String index = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getIndex).map(Objects::toString).orElse("0");
+        params.put("index", index);
+        params.put("smAreaId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams)
+                .map(LocParams::getSmAreaId).orElse(0L).toString());
+
+        //解析sgFrameworkContextItem获取参数map
+        Map<String,Object> sgFrameworkContextItemMap = JSON.parseObject(JSON.toJSONString(sgFrameworkContextItem), Map.class);
+        String tacContext = MapUtil.getStringWithDefault(sgFrameworkContextItemMap, "tacContext", "");
+        Map<String,Object> tacContextMap = JSON.parseObject(JSON.toJSONString(tacContext), Map.class);
+        if(tacContextMap == null || tacContextMap.isEmpty()){
+            tppRequest.setParams(params);
+            tacLogger.info("tppRequest="+ JSON.toJSONString(tppRequest));
+            tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
+            return tppRequest;
+        }
+        String contextParams = MapUtil.getStringWithDefault(tacContextMap, "paramMap", "");
+        Map<String,Object> contextParamsMap = JSON.parseObject(JSON.toJSONString(contextParams), Map.class);
+        if(contextParamsMap == null || contextParamsMap.isEmpty()){
+            tppRequest.setParams(params);
+            tacLogger.info("tppRequest="+ JSON.toJSONString(tppRequest));
+            tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
+            return tppRequest;
+        }
+
+        String type = MapUtil.getStringWithDefault(contextParamsMap, "type", "");
+        String logicAreaId = MapUtil.getStringWithDefault(contextParamsMap, "logicAreaId", "");
+        String level1Id = MapUtil.getStringWithDefault(contextParamsMap, "level1Id", "");
+        String level2Id = MapUtil.getStringWithDefault(contextParamsMap, "level2Id", "");
+        String detailItemIdList = MapUtil.getStringWithDefault(contextParamsMap, "detailItemIdList", "");
+        String itemBusinessType = MapUtil.getStringWithDefault(contextParamsMap, "itemBusinessType", "");
+        String honehourStoreId = MapUtil.getStringWithDefault(contextParamsMap, "honehourStoreId", "");
+        String isFirstPage = MapUtil.getStringWithDefault(contextParamsMap, "isFirstPage", "true");
+        params.put("type", type);
+        params.put("logicAreaId", logicAreaId);
+        params.put("level1Id", level1Id);
+        params.put("level2Id", level2Id);
+        params.put("detailItemIdList", detailItemIdList);
+        params.put("itemBusinessType", itemBusinessType);
+        params.put("honehourStoreId", honehourStoreId);
+        params.put("isFirstPage", Integer.valueOf(index) > 0 ? "false" : "true");
+
+
+
+        tppRequest.setParams(params);
+        tacLogger.info("tppRequest="+ JSON.toJSONString(tppRequest));
+        tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
+        return tppRequest;
     }
 }
