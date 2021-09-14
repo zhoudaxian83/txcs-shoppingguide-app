@@ -91,7 +91,7 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
         params.put("index", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getIndex).map(Objects::toString).orElse("0"));
         params.put("type", "cartsRecommend");
         params.put("smAreaId", "440106");
-        params.put("logicAreaId", "109");
+        //params.put("logicAreaId", "109");
         params.put("rtHalfDayStoreId", "236839048");
         params.put("detailItemIdList", "528348289267,565270259153,565032189700,599138529883,610201548194,20739895092,606876101370,15024857415,559321202351,&580864498884,643424111236");
         params.put("itemBusinessType", "B2C,OneHour,HalfDay");
