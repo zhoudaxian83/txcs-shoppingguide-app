@@ -108,9 +108,11 @@ public class IconRecommendSceneContentFilterExtPt implements ContentFilterExtPt 
 
     private boolean canBuy(ItemEntityVO item, SgFrameworkContextContent sgFrameworkContextContent, Long contentId) {
 
-        if (itemInfoError(item, sgFrameworkContextContent, contentId)) {
+        if (itemInfoError(item)) {
             LogUtil.errorCode(sgFrameworkContextContent.getBizScenario().getUniqueIdentity(),
-                    "ITEM_INFO_ERROR" + "," + contentId + " " + item.getString("itemId"));
+                    "ITEM_INFO_ERROR" + "," + contentId + " " + item.getString("itemId") +
+                    " shortTitle: " + item.getString("shortTitle") + " itemImg: " + item.getString("itemImg") +
+                    " itemMPrice: " + item.getString("itemMPrice"));
             return false;
         }
 
@@ -120,7 +122,7 @@ public class IconRecommendSceneContentFilterExtPt implements ContentFilterExtPt 
         return (canBuy == null || canBuy) && (sellOut == null || !sellOut);
     }
 
-    private boolean itemInfoError(ItemEntityVO item, SgFrameworkContextContent sgFrameworkContextContent, Long contentId) {
+    private boolean itemInfoError(ItemEntityVO item) {
         return StringUtils.isEmpty(item.getString("shortTitle"))
                 || StringUtils.isEmpty(item.getString("itemImg"))
                 || StringUtils.isEmpty(item.getString("itemMPrice"));
