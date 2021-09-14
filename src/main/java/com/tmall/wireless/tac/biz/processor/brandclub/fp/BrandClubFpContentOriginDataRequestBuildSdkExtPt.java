@@ -11,11 +11,13 @@ import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.Enviroment;
+import org.apache.zookeeper.Op;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +47,17 @@ public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register i
                 .map(Object::toString).map(Long::valueOf).orElse(0L);
         Map<String, Map<String, Object>> groupAndBrandMapping =
                 brandContentSetIdService.getGroupAndBrandMapping(Lists.newArrayList(brandId));
+
+        String rankingContentSetId = Optional.of(groupAndBrandMapping).map(m -> m.get("tcls_ugc_scenegroup_mapping_v1_btao_20328")).map(m -> m.get("boardSceneGroupIds")).map(Object::toString).orElse("");
+        String b2cCommonContentSetId = Optional.of(groupAndBrandMapping).map(m -> m.get("tcls_ugc_scenegroup_mapping_v1_btao_20328")).map(m -> m.get("generalSceneGroupIds")).map(Object::toString).orElse("");
+
+        Map<String, Object> requestParams = Optional.of(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getRequestParams)
+                .orElse(null);
+        if (requestParams != null) {
+            requestParams.put(RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING, rankingContentSetId);
+            requestParams.put(RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, b2cCommonContentSetId);
+        }
 
         Map<String, Object> stringObjectMap = groupAndBrandMapping.values().stream().findFirst().orElse(Maps.newHashMap());
 
