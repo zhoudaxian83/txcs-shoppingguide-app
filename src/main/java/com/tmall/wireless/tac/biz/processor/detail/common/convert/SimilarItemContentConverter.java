@@ -2,7 +2,6 @@ package com.tmall.wireless.tac.biz.processor.detail.common.convert;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -14,7 +13,6 @@ import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultV
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendContentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
-import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import org.apache.commons.collections4.CollectionUtils;
 
 /**

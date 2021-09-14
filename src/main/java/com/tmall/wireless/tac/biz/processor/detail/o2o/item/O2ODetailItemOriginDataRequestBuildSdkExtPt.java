@@ -6,6 +6,7 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginData
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
 import com.tmall.wireless.tac.biz.processor.detail.common.extabstract.AbstractDetailOriginDataRequestBuildSdkExtPt;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,8 @@ public class O2ODetailItemOriginDataRequestBuildSdkExtPt extends AbstractDetailO
     implements ItemOriginDataRequestBuildSdkExtPt {
 
     @Override
-    public Long getAppId() {
-        return 21174L;
+    public Long getAppId(String recType) {
+        return DetailSwitch.appIdMap.get(recType);
     }
 
     @Override

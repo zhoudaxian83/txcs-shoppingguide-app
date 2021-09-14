@@ -34,21 +34,23 @@ public abstract class AbstractDetailOriginDataRequestBuildSdkExtPt extends Regis
     @Resource
     private LocationReadService locationReadService;
 
-    protected abstract Long getAppId();
+    protected abstract Long getAppId(String recType);
 
     public RecommendRequest process(SgFrameworkContext sgFrameworkContextContent) {
+
+        //构建tpp参数
+        DetailRecommendRequest detailRequest = DetailRecommendRequest.getDetailRequest(
+            sgFrameworkContextContent.getTacContext());
+
+
         RecommendRequest recommendRequest=new RecommendRequest();
-        recommendRequest.setAppId(getAppId());
+        recommendRequest.setAppId(getAppId(detailRequest.getRecType()));
         recommendRequest.setUserId(Optional.of(sgFrameworkContextContent).
             map(SgFrameworkContext::getCommonUserParams).
             map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L));
 
         Map<String, String> tppParams = new HashMap<>();
         recommendRequest.setParams(tppParams);
-
-        //构建tpp参数
-        DetailRecommendRequest detailRequest = DetailRecommendRequest.getDetailRequest(
-            sgFrameworkContextContent.getTacContext());
 
 
         //1.商品
@@ -62,14 +64,7 @@ public abstract class AbstractDetailOriginDataRequestBuildSdkExtPt extends Regis
         //3.店铺等信息
         buildTppRequest(tppParams,detailRequest.getLocType(),readTairAddressDTO(recommendRequest.getUserId()));
 
-        //4.扩展信息
-        buildExtraTppParams(tppParams,detailRequest);
-
         return recommendRequest;
-    }
-
-    public void buildExtraTppParams(Map<String, String> tppParams, DetailRecommendRequest detailRequest){
-
     }
 
     private void buildTppRequest(Map<String, String> tppParams, String locType,

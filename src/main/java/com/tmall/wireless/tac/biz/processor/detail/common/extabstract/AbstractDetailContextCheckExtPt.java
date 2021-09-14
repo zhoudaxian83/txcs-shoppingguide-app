@@ -34,10 +34,6 @@ public class AbstractDetailContextCheckExtPt extends Register {
             return contextCheckResult;
         }
 
-        //将转换后的模型写入
-        DetailRecommendRequest detailRecommendRequest=new DetailRecommendRequest(context.getParams());
-        context.getParams().put(DetailConstant.REQUEST,detailRecommendRequest);
-
         contextCheckResult.setSuccess(true);
         return contextCheckResult;
     }

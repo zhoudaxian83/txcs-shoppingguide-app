@@ -5,7 +5,6 @@ import java.util.Set;
 import com.alibaba.cola.extension.Extension;
 
 import com.google.common.collect.Sets;
-import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.contextcheck.ContextCheckResult;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.contextcheck.ItemContextCheckSdkExtPt;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;

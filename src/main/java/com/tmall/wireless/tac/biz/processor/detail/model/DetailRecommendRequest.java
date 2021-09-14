@@ -3,6 +3,8 @@ package com.tmall.wireless.tac.biz.processor.detail.model;
 import java.util.Map;
 import java.util.Objects;
 
+import com.alibaba.fastjson.util.TypeUtils;
+
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
 import com.tmall.wireless.tac.client.domain.Context;
 import lombok.Data;
@@ -19,7 +21,7 @@ public class DetailRecommendRequest {
     private Long detailItemId;
     private String locType;
     private Long contentId;
-    private String itemSetsId;
+    private String itemSetIds;
 
     /**
      * 推荐类型，如菜谱或者普通类型
@@ -34,15 +36,16 @@ public class DetailRecommendRequest {
 
     public DetailRecommendRequest(Map<String,Object> params){
         DetailRecommendRequest recommendRequest=new DetailRecommendRequest();
-        recommendRequest.setDetailItemId((Long)params.get("detailItemId"));
-        recommendRequest.setLocType((String) params.get("locType"));
-        recommendRequest.setIndex((Integer)params.get("index"));
-        recommendRequest.setPageSize((Integer)params.get("pageSize"));
-        recommendRequest.setRecType((String)params.get("recType"));
+        recommendRequest.setDetailItemId(TypeUtils.castToLong(params.get("detailItemId")));
+        recommendRequest.setLocType(TypeUtils.castToString(params.get("locType")));
+        recommendRequest.setIndex(TypeUtils.castToInt(params.get("index")));
+        recommendRequest.setPageSize(TypeUtils.castToInt(params.get("pageSize")));
+        recommendRequest.setRecType(TypeUtils.castToString(params.get("recType")));
+        recommendRequest.setContentId(TypeUtils.castToLong(params.get("contentId")));
+        recommendRequest.setItemSetIds(TypeUtils.castToString(params.get("itemSetIds")));
     }
 
     public static DetailRecommendRequest getDetailRequest(Context tacContext){
-        return (DetailRecommendRequest)tacContext.getParams()
-            .get(DetailConstant.REQUEST);
+        return new DetailRecommendRequest(tacContext.getParams());
     }
 }

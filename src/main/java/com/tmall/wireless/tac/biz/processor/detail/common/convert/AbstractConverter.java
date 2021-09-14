@@ -99,7 +99,15 @@ public abstract class AbstractConverter {
             List<DetailRecommendVO> detailRecommendVOS=new ArrayList<>();
             for(int index=0;index<((List<ItemEntityVO>)items).size();index++){
                 ItemEntityVO item= ((List<ItemEntityVO>)items).get(index);
-                detailRecommendVOS.add(convertToItem(scene,item,scmJoin,index));
+
+                //埋点拼接
+                String scm=item.getString("scm");
+                scmJoin.add(scm);
+
+                //数据封装
+                detailRecommendVOS.add(convertToItem(scene,item,index));
+
+
             }
 
             return detailRecommendVOS;
@@ -108,7 +116,7 @@ public abstract class AbstractConverter {
         return null;
     }
 
-    public DetailRecommendItemVO convertToItem(String scene,ItemEntityVO itemInfoBySourceCaptainDTO,List<String> scmJoin,int index) {
+    public DetailRecommendItemVO convertToItem(String scene,ItemEntityVO itemInfoBySourceCaptainDTO,int index) {
         DetailRecommendItemVO detailRecommendItemVO = new DetailRecommendItemVO();
 
         detailRecommendItemVO.setItemId(itemInfoBySourceCaptainDTO.getLong("itemId"));
@@ -134,8 +142,6 @@ public abstract class AbstractConverter {
         }
 
         //事件
-        String scm=itemInfoBySourceCaptainDTO.getString("scm");
-        scmJoin.add(scm);
         detailRecommendItemVO.setEvent(getItemEvents(scene,itemInfoBySourceCaptainDTO,index));
 
         return detailRecommendItemVO;
