@@ -26,5 +26,8 @@ public class TppParmasConstant {
 
     public static final String STRATEGY_2_IRECAL_KEY="strategy2iRecallKey";
 
+    public static final String CONTENT_SET_ID_LIST="contentSetIdList";
+    public static final String CONTENT_SET_SOURCE="contentSetSource";
+
     public static final String CATE_ID_NEED_ADD_WEIGHT = "cateIdNeedAddWeight";
 }
