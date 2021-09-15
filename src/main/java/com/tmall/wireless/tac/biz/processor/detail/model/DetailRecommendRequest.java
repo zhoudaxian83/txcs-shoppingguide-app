@@ -35,14 +35,13 @@ public class DetailRecommendRequest {
     public DetailRecommendRequest(){ }
 
     public DetailRecommendRequest(Map<String,Object> params){
-        DetailRecommendRequest recommendRequest=new DetailRecommendRequest();
-        recommendRequest.setDetailItemId(TypeUtils.castToLong(params.get("detailItemId")));
-        recommendRequest.setLocType(TypeUtils.castToString(params.get("locType")));
-        recommendRequest.setIndex(TypeUtils.castToInt(params.get("index")));
-        recommendRequest.setPageSize(TypeUtils.castToInt(params.get("pageSize")));
-        recommendRequest.setRecType(TypeUtils.castToString(params.get("recType")));
-        recommendRequest.setContentId(TypeUtils.castToLong(params.get("contentId")));
-        recommendRequest.setItemSetIds(TypeUtils.castToString(params.get("itemSetIds")));
+        this.setDetailItemId(TypeUtils.castToLong(params.get("detailItemId")));
+        this.setLocType(TypeUtils.castToString(params.get("locType")));
+        this.setIndex(TypeUtils.castToInt(params.get("index")));
+        this.setPageSize(TypeUtils.castToInt(params.get("pageSize")));
+        this.setRecType(TypeUtils.castToString(params.get("recType")));
+        this.setContentId(TypeUtils.castToLong(params.get("contentId")));
+        this.setItemSetIds(TypeUtils.castToString(params.get("itemSetIds")));
     }
 
     public static DetailRecommendRequest getDetailRequest(Context tacContext){
