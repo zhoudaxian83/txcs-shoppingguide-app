@@ -38,7 +38,7 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss SSS");
         tacLogger.info("=================tacLogger+ 已进入tpp参数组装==================");
         tacLogger.info(dateFormat.format(System.currentTimeMillis())+" sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
         RecommendRequest tppRequest = new RecommendRequest();
