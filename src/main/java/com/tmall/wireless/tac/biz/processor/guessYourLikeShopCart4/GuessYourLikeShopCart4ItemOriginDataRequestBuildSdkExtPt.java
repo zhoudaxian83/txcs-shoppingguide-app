@@ -47,11 +47,6 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
                 map(SgFrameworkContext::getCommonUserParams).
                 map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L));
         Map<String, String> params = Maps.newHashMap();
-        params.put("pageSize", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getPageSize).map(Objects::toString).orElse("20"));
-        String index = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getIndex).map(Objects::toString).orElse("0");
-        params.put("index", index);
         params.put("smAreaId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams)
                 .map(LocParams::getSmAreaId).orElse(0L).toString());
 
@@ -61,6 +56,8 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
 
         String type = MapUtil.getStringWithDefault(contextParamsMap, "type", "");
         String logicAreaId = MapUtil.getStringWithDefault(contextParamsMap, "logicAreaId", "0");
+        String index = MapUtil.getStringWithDefault(contextParamsMap, "index", "0");
+        String pageSize = MapUtil.getStringWithDefault(contextParamsMap, "pageSize", "20");
         String level1Id = MapUtil.getStringWithDefault(contextParamsMap, "level1Id", "0");
         String level2Id = MapUtil.getStringWithDefault(contextParamsMap, "level2Id", "0");
         String detailItemIdList = MapUtil.getStringWithDefault(contextParamsMap, "detailItemIdList", "");
@@ -69,6 +66,8 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
         String isFirstPage = MapUtil.getStringWithDefault(contextParamsMap, "isFirstPage", "true");
         params.put("type", type);
         params.put("logicAreaId", logicAreaId);
+        params.put("index", index);
+        params.put("pageSize", pageSize);
         params.put("level1Id", level1Id);
         params.put("level2Id", level2Id);
         params.put("detailItemIdList", detailItemIdList);
