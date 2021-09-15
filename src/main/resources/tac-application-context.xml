@@ -152,4 +152,13 @@
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionBuildItemVOExtPt"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.handler.IconRecommendHandler" />
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendClassifierWordOriginDataRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendSceneContentOriginDataRequestExtPt" />
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendClassifierContentInfoQueryExtPt" />
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendSceneContentInfoQueryExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendClassifierContentFilterExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendSceneContentFilterExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.service.IconRecommendService"/>
+
 </beans>
