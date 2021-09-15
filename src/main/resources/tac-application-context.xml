@@ -143,6 +143,8 @@
 
     <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.content.O2ODetailOriginDataRequestBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.content.O2ODetailRecContentContextCheckExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.content.O2ODetailRecContentMetaInfoBuildSdkExtPt"/>
+
     <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailItemOriginDataRequestBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailRecItemContextCheckExtPt"/>
 
