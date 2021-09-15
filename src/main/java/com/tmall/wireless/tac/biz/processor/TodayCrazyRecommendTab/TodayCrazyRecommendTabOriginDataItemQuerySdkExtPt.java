@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class TodayCrazyRecommendTabOriginDataItemQuerySdkExtPt extends Register implements OriginDataItemQuerySdkExtPt {
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem sgFrameworkContextItem) {
+        //test
         return null;
     }
 }
