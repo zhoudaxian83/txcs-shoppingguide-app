@@ -11,6 +11,7 @@ import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.aselfcommon.model.scene.enums.SceneType;
 import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
@@ -74,6 +75,9 @@ public class IconRecommendSceneContentInfoQueryExtPt implements ContentInfoQuery
 
             Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
             logger.info("[SceneContentInfoQueryExtPt] mgetResult:" + mgetResult.getValue());
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_ICON_RECOMMEND_SCENE)
+                    .kv("[IconRecommendHandler] ", "场景词推荐为空！")
+                    .info();
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail(""));
             }
@@ -98,8 +102,8 @@ public class IconRecommendSceneContentInfoQueryExtPt implements ContentInfoQuery
                 Map<String, Object> contentInfo = Maps.newHashMap();
                 contentInfo.put("contentId", tairSceneDTO.getId());
                 contentInfo.put("contentTitle", tairSceneDTO.getTitle());
-                Object iconShortTitle = tairSceneDTO.getProperty().get("iconShortTitle");
-                if (iconShortTitle == null) {
+                String iconShortTitle = (String)tairSceneDTO.getProperty().get("shortTitle");
+                if (StringUtils.isEmpty(iconShortTitle)) {
                     iconShortTitle = tairSceneDTO.getTitle();
                 }
                 contentInfo.put("contentSubtitle", iconShortTitle);
