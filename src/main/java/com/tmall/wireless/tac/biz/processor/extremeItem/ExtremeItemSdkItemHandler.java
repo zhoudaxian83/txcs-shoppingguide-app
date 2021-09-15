@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem;
 
+import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
@@ -9,9 +10,13 @@ import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
+import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
+import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 /**
@@ -20,26 +25,16 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class ExtremeItemSdkItemHandler extends RpmReactiveHandler<SgFrameworkResponse<ItemEntityVO>> {
+public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
     @Autowired
     TacLogger tacLogger;
 
+
     @Override
-    public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
-        tacLogger.info("context:" + JSON.toJSONString(context));
-        BizScenario b = BizScenario.valueOf(
-                "supermarket",
-                "b2c",
-                "extremeItem"
-        );
-
-         b.addProducePackage("ald上下文解析");
-
-        return shoppingguideSdkItemService.recommend(context, b)
-        .map(TacResult::newResult);
-
+    public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
+        tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
     }
 }
