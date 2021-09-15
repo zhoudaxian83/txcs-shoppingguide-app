@@ -45,6 +45,8 @@ public abstract class AbstractDetailOriginDataRequestBuildSdkExtPt extends Regis
         Map<String, String> tppParams = new HashMap<>();
         recommendRequest.setParams(tppParams);
 
+        tppParams.put("appid",String.valueOf(recommendRequest.getAppId()));
+        tppParams.put("userId",String.valueOf(recommendRequest.getUserId()));
 
         //1.商品
         tppParams.put(TppParmasConstant.ITEM_IDS, String.valueOf(detailRequest.getDetailItemId()));
