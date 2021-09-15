@@ -12,6 +12,8 @@ import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -36,8 +38,9 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         tacLogger.info("=================tacLogger+ 已进入tpp参数组装==================");
-        tacLogger.info(System.currentTimeMillis()+" sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
+        tacLogger.info(dateFormat.format(System.currentTimeMillis())+" sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID_B2C);
         tppRequest.setUserId(Optional.of(sgFrameworkContextItem).
@@ -76,7 +79,7 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
 
 
         tppRequest.setParams(params);
-        tacLogger.info(System.currentTimeMillis()+" tppRequest="+JSON.toJSONString(tppRequest));
+        tacLogger.info(dateFormat.format(System.currentTimeMillis())+" tppRequest="+JSON.toJSONString(tppRequest));
         tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
         return tppRequest;
 
