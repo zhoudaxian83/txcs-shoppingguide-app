@@ -114,6 +114,7 @@ public class TppConvertUtil {
 
             itemEntity.setTrack_point(jsonObject.getString("trackPoint"));
             itemEntity.setTrack_point(scm + "." + itemEntity.getTrack_point());
+            itemEntity.setCrowdId(jsonObject.getString("crowdId"));
             list.add(itemEntity);
         }
         return list;
