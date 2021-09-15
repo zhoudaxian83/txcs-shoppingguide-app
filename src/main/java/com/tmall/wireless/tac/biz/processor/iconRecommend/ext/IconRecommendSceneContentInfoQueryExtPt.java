@@ -102,8 +102,8 @@ public class IconRecommendSceneContentInfoQueryExtPt implements ContentInfoQuery
                 if (StringUtils.isEmpty(iconShortTitle)) {
                     iconShortTitle = tairSceneDTO.getTitle();
                 }
-                contentInfo.put("contentSubtitle", iconShortTitle);
                 contentInfo.put("contentTitle", iconShortTitle);
+                contentInfo.put("contentSubtitle", tairSceneDTO.getSubtitle());
                 Map<String, Object> tairPropertyMap = tairSceneDTO.getProperty();
                 //前后端映射  首页改版、逛超市映射字段相同
                 for(FrontBackMapEnum frontBackMapEnum : FrontBackMapEnum.values()){
