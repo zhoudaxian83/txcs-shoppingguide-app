@@ -8,6 +8,7 @@ import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * @author: guichen
@@ -15,8 +16,7 @@ import lombok.NoArgsConstructor;
  * @Description:
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@ToString(callSuper = true)
 public class DetailRecommendItemVO extends DetailRecommendVO {
 
     private Long itemId;

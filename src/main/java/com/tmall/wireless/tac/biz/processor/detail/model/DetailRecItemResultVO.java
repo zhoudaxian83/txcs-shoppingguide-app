@@ -1,8 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.detail.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * @author: guichen
@@ -10,8 +9,7 @@ import lombok.NoArgsConstructor;
  * @Description:
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@ToString(callSuper = true)
 public class DetailRecItemResultVO extends DetailRecContentResultVO {
 
     /**
