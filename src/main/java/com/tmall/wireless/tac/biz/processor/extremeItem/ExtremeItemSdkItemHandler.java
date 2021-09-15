@@ -1,11 +1,13 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem;
 
+import com.alibaba.fastjson.JSON;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.wireless.tac.client.common.TacResult;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,12 @@ public class ExtremeItemSdkItemHandler extends RpmReactiveHandler<SgFrameworkRes
 
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
+    @Autowired
+    TacLogger tacLogger;
+
     @Override
     public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
-
+        tacLogger.info("context:" + JSON.toJSONString(context));
         BizScenario b = BizScenario.valueOf(
                 "supermarket",
                 "b2c",

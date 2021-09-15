@@ -1,0 +1,62 @@
+package com.tmall.wireless.tac.biz.processor.extremeItem.domain;
+
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+@Data
+public class ItemConfigGroupList {
+    private List<ItemConfigGroup> itemConfigGroups = new ArrayList<>();
+
+    public boolean forceSort() {
+        return itemConfigGroups.get(0).isForceSort();
+    }
+
+    /**
+     * 根据运营配置强制排序，不走赛马
+     */
+    public void sortGroup() {
+        Collections.sort(itemConfigGroups, new ForceSortComparator());
+    }
+
+    public void sortGroup(ItemGmvGroupMap itemGmvGroupMap) {
+        Collections.sort(itemConfigGroups, new RaceSortComparator(itemGmvGroupMap));
+    }
+
+    private static class ForceSortComparator implements Comparator<ItemConfigGroup> {
+
+        @Override
+        public int compare(ItemConfigGroup o1, ItemConfigGroup o2) {
+            if(o1.getSequenceNo() < o2.getSequenceNo()) {
+                return -1;
+            } else if(o1.getSequenceNo() > o2.getSequenceNo()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    private static class RaceSortComparator implements Comparator<ItemConfigGroup> {
+        private ItemGmvGroupMap itemGmvGroupMap;
+        public RaceSortComparator(ItemGmvGroupMap itemGmvGroupMap) {
+            this.itemGmvGroupMap = itemGmvGroupMap;
+        }
+
+        @Override
+        public int compare(ItemConfigGroup o1, ItemConfigGroup o2) {
+            double group1RaceValue = itemGmvGroupMap.raceValueOf(o1.getGroupNo());
+            double group2RaceValue = itemGmvGroupMap.raceValueOf(o2.getGroupNo());
+            if(group1RaceValue < group2RaceValue) {
+                return -1;
+            } else if(group1RaceValue > group2RaceValue) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+}
