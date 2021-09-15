@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4;
 
-import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
@@ -27,7 +26,6 @@ import java.util.Optional;
         useCase = "b2c",
         scenario = "guessYourLikeShopCart4"
 )
-@Service
 public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
 
     public static final Long APPID_B2C = 21657L;
