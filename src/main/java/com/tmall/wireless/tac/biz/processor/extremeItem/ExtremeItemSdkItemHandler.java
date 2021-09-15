@@ -30,7 +30,16 @@ public class ExtremeItemSdkItemHandler extends RpmReactiveHandler<SgFrameworkRes
     @Override
     public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
         tacLogger.info("context:" + JSON.toJSONString(context));
-        return null;
+        BizScenario b = BizScenario.valueOf(
+                "supermarket",
+                "b2c",
+                "extremeItem"
+        );
+
+         b.addProducePackage("ald上下文解析");
+
+        return shoppingguideSdkItemService.recommend(context, b)
+        .map(TacResult::newResult);
 
     }
 }
