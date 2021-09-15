@@ -31,7 +31,7 @@ public class O2ODetailOriginDataRequestBuildSdkExtPt
 
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
-        RecommendRequest process = super.process(sgFrameworkContextContent);
+        RecommendRequest process = super.processRequest(sgFrameworkContextContent);
         process.getParams().put(TppParmasConstant.ITEM_COUNT_PER_CONTENT,"0");
         return process;
     }

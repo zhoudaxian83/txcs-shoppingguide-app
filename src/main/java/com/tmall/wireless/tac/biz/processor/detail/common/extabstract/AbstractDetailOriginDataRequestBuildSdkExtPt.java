@@ -29,7 +29,7 @@ public abstract class AbstractDetailOriginDataRequestBuildSdkExtPt extends Regis
 
     protected abstract Long getAppId(String recType,SgFrameworkContext sgFrameworkContextContent);
 
-    public RecommendRequest process(SgFrameworkContext sgFrameworkContextContent) {
+    public RecommendRequest processRequest(SgFrameworkContext sgFrameworkContextContent) {
 
         //构建tpp参数
         DetailRecommendRequest detailRequest = DetailRecommendRequest.getDetailRequest(

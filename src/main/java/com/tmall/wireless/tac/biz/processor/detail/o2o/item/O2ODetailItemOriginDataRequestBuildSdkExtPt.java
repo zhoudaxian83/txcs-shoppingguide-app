@@ -42,7 +42,7 @@ public class O2ODetailItemOriginDataRequestBuildSdkExtPt extends AbstractDetailO
 
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
-        RecommendRequest process = super.process(sgFrameworkContextItem);
+        RecommendRequest process = super.processRequest(sgFrameworkContextItem);
 
         DetailRecommendRequest detailRequest = DetailRecommendRequest.getDetailRequest(
             sgFrameworkContextItem.getTacContext());
