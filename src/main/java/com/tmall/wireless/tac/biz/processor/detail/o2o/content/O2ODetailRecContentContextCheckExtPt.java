@@ -5,6 +5,7 @@ import java.util.Set;
 import com.alibaba.cola.extension.Extension;
 
 import com.google.common.collect.Sets;
+import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.context.ContentContextCheckSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.contextcheck.ContextCheckResult;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
@@ -17,10 +18,9 @@ import org.springframework.stereotype.Service;
  * @Data: 2021/9/10
  * @Description:
  */
-@Extension(bizId = DetailConstant.BIZ_ID,
+@SdkExtension(bizId = DetailConstant.BIZ_ID,
     useCase = DetailConstant.USE_CASE_O2O,
     scenario = DetailConstant.CONTENT_SCENERIO)
-@Service
 public class O2ODetailRecContentContextCheckExtPt extends AbstractDetailContextCheckExtPt implements ContentContextCheckSdkExtPt {
     @Override
     public ContextCheckResult process(Context context) {
