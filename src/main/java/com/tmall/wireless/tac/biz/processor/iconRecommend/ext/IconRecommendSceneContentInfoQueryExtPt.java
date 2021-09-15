@@ -75,9 +75,6 @@ public class IconRecommendSceneContentInfoQueryExtPt implements ContentInfoQuery
 
             Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
             logger.info("[SceneContentInfoQueryExtPt] mgetResult:" + mgetResult.getValue());
-            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_ICON_RECOMMEND_SCENE)
-                    .kv("[IconRecommendHandler] ", "场景词推荐为空！")
-                    .info();
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail(""));
             }
