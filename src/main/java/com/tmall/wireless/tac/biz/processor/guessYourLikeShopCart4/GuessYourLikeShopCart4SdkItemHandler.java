@@ -9,13 +9,14 @@ import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 /**
  * Created from template by 程斐斐 on 2021-09-14 21:01:19.
  *
  */
-
+@Component
 public class GuessYourLikeShopCart4SdkItemHandler extends RpmReactiveHandler<SgFrameworkResponse<ItemEntityVO>> {
 
     @Autowired
