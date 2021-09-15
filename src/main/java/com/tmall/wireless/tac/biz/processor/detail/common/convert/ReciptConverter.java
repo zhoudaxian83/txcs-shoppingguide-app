@@ -66,7 +66,7 @@ public class ReciptConverter extends AbstractConverter {
         }
 
         itemAndContentList.removeAll(recipeContents);
-        if (CollectionUtils.isNotEmpty(itemAndContentList) && recipeContents.size() > 2) {
+        if (CollectionUtils.isNotEmpty(itemAndContentList) && itemAndContentList.size() > 2) {
             //标题名称
             detailRecContentResultVO.setTitle(
                 Lists.newArrayList(new DetailTextComponentVO("为你推荐", new Style("12", "#111111", "true"))));
