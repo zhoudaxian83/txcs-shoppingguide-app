@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,8 @@ import lombok.NoArgsConstructor;
  * @Description:
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class DetailRecommendItemVO extends DetailRecommendVO {
 
     private Long itemId;
