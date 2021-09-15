@@ -21,7 +21,12 @@
         <dependency>
             <groupId>com.tcls.shoppingguide</groupId>
             <artifactId>shoppingguide-biz</artifactId>
-            <version>1.0.3-SNAPSHOT</version>
+            <version>1.0.5-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tcls.shoppingguide</groupId>
+            <artifactId>shoppingguide-framework</artifactId>
+            <version>1.0.5-SNAPSHOT</version>
         </dependency>
 
         <dependency>
