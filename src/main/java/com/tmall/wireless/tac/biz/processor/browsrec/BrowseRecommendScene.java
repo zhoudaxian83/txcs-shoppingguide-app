@@ -62,7 +62,7 @@ public class BrowseRecommendScene {
         sgFrameworkContextItem.setUserDO(userDO);
 
         sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
-        sgFrameworkContextItem.setItemMetaInfo(this.getBrowseRecommendItemMetaInfo());
+        sgFrameworkContextItem.setItemMetaInfo(getBrowseRecommendItemMetaInfo());
 
 
         PageInfoDO pageInfoDO = new PageInfoDO();

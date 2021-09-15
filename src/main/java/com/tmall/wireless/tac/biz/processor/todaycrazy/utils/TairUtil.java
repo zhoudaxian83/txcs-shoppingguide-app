@@ -24,8 +24,8 @@ public class TairUtil {
 
     @Autowired
     TairFactorySpi tairFactorySpi;
-    /*@Autowired
-    CommonFactoryAbs commonFactoryAbs;*/
+    @Autowired
+    CommonFactoryAbs commonFactoryAbs;
 
     private static final int NAME_SPACE = 184;
 

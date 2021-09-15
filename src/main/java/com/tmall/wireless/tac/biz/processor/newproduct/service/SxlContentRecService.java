@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.newproduct.service;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -77,6 +78,10 @@ public class SxlContentRecService {
         pageInfoDO.setIndex(Integer.valueOf(index));
         pageInfoDO.setPageSize(Integer.valueOf(pageSize));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_CONTENT)
+            .kv("sgFrameworkContextContent",JSON.toJSONString(sgFrameworkContextContent))
+            .kv("context",JSON.toJSONString(context))
+            .info();
 
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
             .map(response->{
@@ -128,7 +133,7 @@ public class SxlContentRecService {
         //captain SceneCode场景code
         itemInfoSourceMetaInfoCaptain.setSceneCode("shoppingguide.newLauch.common");
 
-        String activeId = SxlSwitch.getValue("SXL_MAIN_ACTIVEX_ID");
+        String activeId = String.valueOf(SxlSwitch.SXL_MAIN_ACTIVEX_ID);
         itemInfoSourceMetaInfoCaptain.setDataTubeMateInfo(buildDataTubeMateInfo(StringUtils.isEmpty(activeId)?Constant.SXL_MAIN_ACTIVEX_ID:activeId));
 
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);

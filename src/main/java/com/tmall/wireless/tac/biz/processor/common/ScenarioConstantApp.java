@@ -26,6 +26,8 @@ public class ScenarioConstantApp extends ScenarioConstant {
     public static final String SCENARIO_SHANG_XIN_ITEM= "SHANG_XIN_ITEM";
 
     public static final String SCENARIO_SHANG_XIN_CONTENT= "SHANG_XIN_CONTENT";
+    public static final String SCENARIO_ALI_PAY_FIRST_PAGE = "ALI_PAY_FIRST_PAGE";
+    public static final String SCENARIO_ALI_PAY_MIDDLE_PAGE = "ALI_PAY_MIDDLE_PAGE";
 
     /**smartbuy**/
     public static final String SCENE_SMART_BUY_ITEM = "SCENE_SMART_BUY_ITEM";
@@ -56,5 +58,17 @@ public class ScenarioConstantApp extends ScenarioConstant {
      * icon加购后推荐 分类词
      */
     public static final String SCENARIO_ICON_RECOMMEND_CLASSIFIER = "ICON_RECOMMEND_CLASSIFIER";
+
+    /**
+     * 品牌馆首页
+     */
+    public static final String BRAND_CLUB_FP = "BRAND_CLUB_FP";
+
+
+    /**
+     * 品牌馆榜单
+     */
+    public static final String BRAND_CLUB_BANGDAN = "BRAND_CLUB_BANGDAN";
+
 
 }
