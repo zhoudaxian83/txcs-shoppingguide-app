@@ -72,7 +72,7 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
         params.put("detailItemIdList", detailItemIdList);
         params.put("itemBusinessType", itemBusinessType);
         params.put("honehourStoreId", honehourStoreId);
-        params.put("isFirstPage", "true");
+        params.put("isFirstPage", isFirstPage);
 
 
 
