@@ -37,7 +37,7 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
 
         tacLogger.info("=================tacLogger+ 已进入tpp参数组装==================");
-        tacLogger.info("sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
+        tacLogger.info(System.currentTimeMillis()+" sgFrameworkContextItem=" + JSON.toJSONString(sgFrameworkContextItem));
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID_B2C);
         tppRequest.setUserId(Optional.of(sgFrameworkContextItem).
@@ -76,7 +76,7 @@ public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Re
 
 
         tppRequest.setParams(params);
-        tacLogger.info("tppRequest="+ JSON.toJSONString(tppRequest));
+        tacLogger.info(System.currentTimeMillis()+" tppRequest="+JSON.toJSONString(tppRequest));
         tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
         return tppRequest;
 
