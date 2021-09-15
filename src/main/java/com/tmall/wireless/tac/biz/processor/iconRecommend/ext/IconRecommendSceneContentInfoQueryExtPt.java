@@ -98,12 +98,17 @@ public class IconRecommendSceneContentInfoQueryExtPt implements ContentInfoQuery
                 ContentInfoDTO contentDTO = new ContentInfoDTO();
                 Map<String, Object> contentInfo = Maps.newHashMap();
                 contentInfo.put("contentId", tairSceneDTO.getId());
-                String iconShortTitle = (String)tairSceneDTO.getProperty().get("shortTitle");
-                if (StringUtils.isEmpty(iconShortTitle)) {
+                contentInfo.put("contentSubtitle", tairSceneDTO.getSubtitle());
+                String iconShortTitle;
+                if (tairSceneDTO.getProperty() != null) {
+                    iconShortTitle = (String)tairSceneDTO.getProperty().get("shortTitle");
+                    if (StringUtils.isEmpty(iconShortTitle)) {
+                        iconShortTitle = tairSceneDTO.getTitle();
+                    }
+                } else {
                     iconShortTitle = tairSceneDTO.getTitle();
                 }
                 contentInfo.put("contentTitle", iconShortTitle);
-                contentInfo.put("contentSubtitle", tairSceneDTO.getSubtitle());
                 Map<String, Object> tairPropertyMap = tairSceneDTO.getProperty();
                 //前后端映射  首页改版、逛超市映射字段相同
                 for(FrontBackMapEnum frontBackMapEnum : FrontBackMapEnum.values()){
