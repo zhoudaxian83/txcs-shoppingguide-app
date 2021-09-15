@@ -71,4 +71,12 @@ public class ScenarioConstantApp extends ScenarioConstant {
     public static final String BRAND_CLUB_BANGDAN = "BRAND_CLUB_BANGDAN";
 
 
+    public static final String ICON_CONTENT_LEVEL2 = "ICON_CONTENT_LEVEL2";
+    public static final String ICON_CONTENT_LEVEL3 = "ICON_CONTENT_LEVEL3";
+    public static final String ICON_ITEM = "ICON_ITEM";
+
+
+
+
+
 }
