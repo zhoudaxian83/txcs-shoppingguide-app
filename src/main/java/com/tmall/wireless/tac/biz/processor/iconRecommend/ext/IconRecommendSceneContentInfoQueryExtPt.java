@@ -100,7 +100,7 @@ public class IconRecommendSceneContentInfoQueryExtPt implements ContentInfoQuery
                 contentInfo.put("contentId", tairSceneDTO.getId());
                 contentInfo.put("contentSubtitle", tairSceneDTO.getSubtitle());
                 String iconShortTitle;
-                if (tairSceneDTO.getProperty() != null) {
+                if (tairSceneDTO.getProperty() != null && tairSceneDTO.getProperty().get("shortTitle") != null) {
                     iconShortTitle = (String)tairSceneDTO.getProperty().get("shortTitle");
                     if (StringUtils.isEmpty(iconShortTitle)) {
                         iconShortTitle = tairSceneDTO.getTitle();
