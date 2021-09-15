@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  *
  */
 
-@Component
+//@Component
 public class GuessYourLikeShopCart4SdkItemHandler extends RpmReactiveHandler<SgFrameworkResponse<ItemEntityVO>> {
 
     @Autowired

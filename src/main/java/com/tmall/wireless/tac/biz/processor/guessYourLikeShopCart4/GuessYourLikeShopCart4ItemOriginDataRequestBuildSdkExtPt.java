@@ -27,7 +27,7 @@ import java.util.Optional;
         useCase = "b2c",
         scenario = "guessYourLikeShopCart4"
 )
-@Service
+//@Service
 public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
 
     public static final Long APPID_B2C = 21657L;
