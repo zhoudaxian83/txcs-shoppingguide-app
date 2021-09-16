@@ -18,6 +18,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant.STATIC_SCHEDULE_DATA;
 
 
 /**
@@ -37,6 +40,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
         tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
+        List<Map<String, Object>> aldDataList = (List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA);
+        tacLogger.info("aldDataList:" + aldDataList);
         return Flowable.just(TacResult.newResult(new ArrayList<>()));
     }
 }
