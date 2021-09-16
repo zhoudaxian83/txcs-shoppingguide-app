@@ -68,7 +68,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
             //查询captain
             List<Long> itemIds = itemConfigs.extractItemIds();
-            RenderRequest renderRequest = buildRenderRequest(itemIds, 0L, 330110L);
+            tacLogger.info("==========itemIds: " + JSON.toJSONString(itemIds));
+            RenderRequest renderRequest = buildRenderRequest(itemIds.subList(0, 20), 0L, 330110L);
             SPIResult<List<ItemDTO>> itemDTOs = renderSpi.query(renderRequest);
             tacLogger.info("==========itemDTOs: " + JSON.toJSONString(itemDTOs));
         } catch (Exception e) {
