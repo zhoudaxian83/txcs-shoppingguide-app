@@ -192,6 +192,13 @@
             <version>1.0.1-jinzhou-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.tmall.promotion</groupId>
+            <artifactId>promotiontag-client</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

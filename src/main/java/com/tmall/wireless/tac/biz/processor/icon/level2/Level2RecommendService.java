@@ -1,11 +1,15 @@
 package com.tmall.wireless.tac.biz.processor.icon.level2;
 
+import com.alibaba.common.lang.StringUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.aself.shoppingguide.client.cat.model.LabelDTO;
 import com.tmall.aselfcommon.model.column.ColumnStatus;
 import com.tmall.aselfcommon.model.column.MainColumnDTO;
 import com.tmall.aselfcommon.model.column.MaterialDTO;
+import com.tmall.promotiontag.client.service.unify.TmallCrowdUnifyReadSimplifyCacheClient;
+import com.tmall.promotiontag.common.result.ResultBase;
+import com.tmall.promotiontag.crowd.common.AppInfo;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkContentService;
@@ -29,7 +33,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class Level2RecommendService {
+    private static String newCustomerTag01 = "PTN_10295005";
 
+    private static final AppInfo defaultAppInfo = new AppInfo("supermarket");
+
+    @Autowired
+    private TmallCrowdUnifyReadSimplifyCacheClient tmallCrowdUnifyReadSimplifyCacheClient;
 
     public static final String labelTypeActivity = "activity";
     public static final String labelTypeNormal = "normal";
@@ -85,7 +94,7 @@ public class Level2RecommendService {
                 MainColumnDTO mainColumnDTO = (MainColumnDTO) mainColumnDtoObj;
 
 
-                if (!checkMainColumnValid(mainColumnDTO)) {
+                if (!checkMainColumnValid(mainColumnDTO, sgFrameworkContextContent)) {
                     LOGGER.error("mainColumnDTO is offerLine:{}", mainColumnDTO.getId());
                     return;
                 }
@@ -153,14 +162,30 @@ public class Level2RecommendService {
         return BusinessTypeUtil.processType(locParams, o2oBizType);
     }
 
-    private boolean checkMainColumnValid(MainColumnDTO mainColumnDTO) {
+    private boolean checkMainColumnValid(MainColumnDTO mainColumnDTO, SgFrameworkContextContent sgFrameworkContextContent) {
         // 测试用，上线之前要修复
 //        if (mainColumnDTO.getId().equals(2256L)) {
 //            return true;
 //        }
         return ColumnStatus.NORMAL.getStatus().equals(mainColumnDTO.getStatus())
                 && validate(mainColumnDTO.getStartDate(), mainColumnDTO.getEndDate())
-                && newCustomerTabCheck(mainColumnDTO);
+                && newCustomerTabCheck(mainColumnDTO, sgFrameworkContextContent);
+    }
+
+    public boolean hasTag(String tagId, long buyerId) {
+        if(StringUtil.isEmpty(tagId) || buyerId <= 0) {
+            return false;
+        }
+
+        try {
+            ResultBase<Boolean> result = tmallCrowdUnifyReadSimplifyCacheClient.isMatch(buyerId, tagId, defaultAppInfo);
+            if(result.isSuccess() && result.getValue()) {
+                return true;
+            }
+        } catch (Exception e) {
+            LOGGER.error("check tag error, userId:" + buyerId + ",tagId:" + tagId, e);
+        }
+        return false;
     }
 
     static public boolean validate(Date start, Date end) {
@@ -172,7 +197,7 @@ public class Level2RecommendService {
         }
         return true;
     }
-    private boolean newCustomerTabCheck(MainColumnDTO mainColumnDTO) {
+    private boolean newCustomerTabCheck(MainColumnDTO mainColumnDTO, SgFrameworkContextContent sgFrameworkContextContent) {
         boolean newCustomerTab = isNewCustomerTab(mainColumnDTO);
 
         // 不是新人优惠tab 直接返回成功
@@ -180,15 +205,20 @@ public class Level2RecommendService {
             return true;
         }
 
-        return true;
-
         // 新人开关关掉了 返回false
 //        if (!GrayChecker.checkGray(ICON_NEW_CUSTOMER_PRICE)) {
 //            return false;
 //        }
 
         // 检查用户是否属于新人人群
-//        return tmallCustomerChecker.isNewCustomer(MtopContext.getUserId());
+        Long userId = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
+
+        return isNewCustomer(userId);
+
+    }
+
+    private boolean isNewCustomer(Long userId) {
+        return hasTag(newCustomerTag01, userId);
     }
 
 
