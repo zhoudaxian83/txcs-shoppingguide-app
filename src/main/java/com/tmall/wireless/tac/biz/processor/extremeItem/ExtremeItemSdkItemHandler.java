@@ -1,8 +1,12 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem;
 
+import com.alibaba.aladdin.lamp.domain.request.RequestItem;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+import com.alibaba.aladdin.lamp.sdk.solution.context.SolutionContext;
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.taobao.eagleeye.EagleEye;
 import com.tmall.aselfcaptain.item.constant.Channel;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.aselfcaptain.item.model.ItemId;
@@ -23,14 +27,13 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant.STATIC_SCHEDULE_DATA;
@@ -69,9 +72,11 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             //查询captain
             List<Long> itemIds = itemConfigs.extractItemIds();
             tacLogger.info("==========itemIds: " + JSON.toJSONString(itemIds));
-            RenderRequest renderRequest = buildRenderRequest(itemIds.subList(0, 20), 0L, 330110L);
-            SPIResult<List<ItemDTO>> itemDTOs = renderSpi.query(renderRequest);
-            tacLogger.info("==========itemDTOs: " + JSON.toJSONString(itemDTOs));
+            Map<Long, ItemDTO> longItemDTOMap = batchQueryItem(itemIds);
+            tacLogger.info("==========itemDTOs: " + JSON.toJSONString(longItemDTOMap));
+
+            Map<Long, Boolean> inventoryMap = longItemDTOMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().isSoldout()));
+            tacLogger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
         } catch (Exception e) {
             tacLogger.error(e.getMessage(), e);
         }
@@ -111,5 +116,49 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         renderRequest.setQuery(query);
         renderRequest.setOption(option);
         return renderRequest;
+    }
+
+    Map<Long, ItemDTO> batchQueryItem(List<Long> itemIdList) {
+
+        tacLogger.info("batchQueryItem start");
+
+        Map<Long, ItemDTO> captainItemMap = Maps.newHashMap();
+
+        final Object rpcContext = EagleEye.currentRpcContext();
+        final long callerId = Thread.currentThread().getId();
+
+        if (CollectionUtils.isEmpty(itemIdList)) {
+            tacLogger.info("batchQueryItem start, itemIdList empty");
+            return captainItemMap;
+        }
+
+        Lists.partition(itemIdList, 20)
+                .parallelStream()
+                .map(list -> {
+                    try {
+                        EagleEye.setRpcContext(rpcContext);
+                        Map<Long, ItemDTO> longItemDTOMap = queryItem(list);
+                        if (MapUtils.isEmpty(longItemDTOMap)) {
+                            tacLogger.info("batch query capatin empty;" + JSON.toJSONString(list));
+                        }
+                        return longItemDTOMap;
+                    } catch (Exception e) {
+                        tacLogger.error("batchQueryItem_catchException", e);
+                        return new HashMap<Long, ItemDTO>();
+                    } finally {
+                        if (Thread.currentThread().getId() != callerId) {
+                            EagleEye.clearRpcContext();
+                        }
+                    }
+                })
+                .forEach(e -> captainItemMap.putAll(e));
+
+        return captainItemMap;
+    }
+
+    private Map<Long, ItemDTO> queryItem(List<Long> itemIds) {
+        RenderRequest renderRequest = buildRenderRequest(itemIds, 0L, 330110L);
+        SPIResult<List<ItemDTO>> itemDTOs = renderSpi.query(renderRequest);
+        return itemDTOs.getData().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     }
 }
