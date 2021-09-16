@@ -26,6 +26,7 @@ import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroup;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroups;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigs;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.service.ItemPickService;
+import com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleHandler;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -34,6 +35,8 @@ import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,6 +55,7 @@ import static com.tmall.wireless.tac.biz.processor.huichang.common.constant.Hall
 @Component
 public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
+    Logger logger = LoggerFactory.getLogger(ExtremeItemSdkItemHandler.class);
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
     @Autowired
@@ -63,10 +67,10 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Autowired
     com.taobao.igraph.client.core.IGraphClientWrap iGraphClientWrap;
 
-
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
         try {
+            logger.warn("context:" + JSON.toJSONString(requestContext4Ald));
             //tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
             List<Map<String, Object>> aldDataList = (List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA);
             //tacLogger.info("aldDataList:" + aldDataList);
