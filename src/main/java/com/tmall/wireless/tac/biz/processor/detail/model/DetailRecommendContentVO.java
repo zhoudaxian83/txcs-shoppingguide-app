@@ -14,12 +14,14 @@ import lombok.ToString;
  */
 @Data
 @ToString(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class DetailRecommendContentVO extends DetailRecommendVO{
 
     private Long contentId;
 
     private String itemSetIds;
 
-    List<DetailRecommendItemVO> recommendItemVOS;
+    private List<DetailRecommendItemVO> recommendItemVOS;
 
 }
