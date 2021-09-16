@@ -45,7 +45,7 @@ public class DetailRecContentResultVO {
     /**
      * 结果
      */
-    List<DetailRecommendVO> result;
+    List<DetailRecommendContentVO> result;
 
 
 }
