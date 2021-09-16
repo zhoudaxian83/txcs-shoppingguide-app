@@ -15,7 +15,7 @@ public class ItemConfigGroup {
     /**
      * 分组编号
      */
-    private Long groupNo;
+    private Integer groupNo;
 
     /**
      * 是否强制排序，如果强制排序，则不走赛马逻辑

@@ -19,7 +19,7 @@ public class ItemConfig {
     /**
      * 分组编号
      */
-    private Long groupNo;
+    private Integer groupNo;
 
     /**
      * 是否强制排序，如果强制排序，则不走赛马逻辑
@@ -65,7 +65,7 @@ public class ItemConfig {
         ItemConfig itemConfig = new ItemConfig();
         itemConfig.setItemId((Long)stringObjectMap.get("itemId"));
         itemConfig.setItemName((String)stringObjectMap.get("itemName"));
-        itemConfig.setGroupNo((Long.valueOf((String)stringObjectMap.get("groupNo"))));
+        itemConfig.setGroupNo((Integer)stringObjectMap.get("groupNo"));
         itemConfig.setForceSort((boolean)stringObjectMap.get("forceSort"));
         itemConfig.setSequenceNo((Integer) stringObjectMap.get("sequenceNo"));
         itemConfig.setExposurePercent((Integer) stringObjectMap.get("exposurePercent"));
