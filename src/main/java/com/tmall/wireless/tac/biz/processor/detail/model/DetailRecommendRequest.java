@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.detail.model;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ import lombok.Data;
  * @Description:
  */
 @Data
-public class DetailRecommendRequest {
+public class DetailRecommendRequest implements Serializable {
     private Integer index;
     private Integer pageSize;
     private Long detailItemId;

@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.detail.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
@@ -13,7 +14,7 @@ import lombok.Data;
  * @Description:
  */
 @Data
-public class DetailRecContentResultVO {
+public class DetailRecContentResultVO implements Serializable {
 
 
     /**

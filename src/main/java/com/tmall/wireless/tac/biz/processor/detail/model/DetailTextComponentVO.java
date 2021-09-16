@@ -10,7 +10,7 @@ import lombok.Data;
  * @Description:
  */
 @Data
-public class DetailTextComponentVO {
+public class DetailTextComponentVO implements Serializable {
 
     private String text;
     private Style style;

@@ -18,7 +18,6 @@ import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
-import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendContentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendItemVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendVO;

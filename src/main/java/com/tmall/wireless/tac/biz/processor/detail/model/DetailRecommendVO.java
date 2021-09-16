@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
  * @Description:
  */
 @Data
-public class DetailRecommendVO extends ContentVO {
+public class DetailRecommendVO implements Serializable {
 
     private List<DetailTextComponentVO> title;
     private List<DetailTextComponentVO> subTitle;

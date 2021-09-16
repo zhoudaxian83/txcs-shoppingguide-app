@@ -1,11 +1,11 @@
 package com.tmall.wireless.tac.biz.processor.detail.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 
 import lombok.Data;
-import lombok.ToString;
 
 /**
  * @author: guichen
@@ -13,7 +13,7 @@ import lombok.ToString;
  * @Description:
  */
 @Data
-public class DetailRecItemResultVO{
+public class DetailRecItemResultVO implements Serializable {
 
     /**
      * 类型
