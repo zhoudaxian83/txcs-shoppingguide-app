@@ -42,10 +42,10 @@ public abstract class AbstractConverter {
     public abstract DetailRecContentResultVO convert( SgFrameworkResponse sgFrameworkResponse);
 
 
-    public List<DetailRecommendVO> convertContentResult(String scene, List<ContentVO> itemAndContentList,
+    public List<DetailRecommendContentVO> convertContentResult(String scene, List<ContentVO> itemAndContentList,
         List<String> scmJoin) {
 
-        List<DetailRecommendVO> detailRecommendVOS = new ArrayList<>();
+        List<DetailRecommendContentVO> detailRecommendVOS = new ArrayList<>();
         for (int index = 0; index < itemAndContentList.size(); index++) {
             ContentVO contentVO = itemAndContentList.get(index);
 
@@ -91,11 +91,11 @@ public abstract class AbstractConverter {
         return recommendContentVO;
     }
 
-    public List<DetailRecommendVO> convertItems(String scene,Object items, List<String> scmJoin) {
+    public List<DetailRecommendItemVO> convertItems(String scene,Object items, List<String> scmJoin) {
 
         if (Objects.nonNull(items) && items instanceof List) {
 
-            List<DetailRecommendVO> detailRecommendVOS=new ArrayList<>();
+            List<DetailRecommendItemVO> detailRecommendVOS=new ArrayList<>();
             for(int index=0;index<((List<ItemEntityVO>)items).size();index++){
                 ItemEntityVO item= ((List<ItemEntityVO>)items).get(index);
 

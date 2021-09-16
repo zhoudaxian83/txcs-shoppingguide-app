@@ -20,6 +20,6 @@ public class DetailRecommendContentVO extends DetailRecommendVO{
 
     private String itemSetIds;
 
-    List<DetailRecommendVO> recommendItemVOS;
+    List<DetailRecommendItemVO> recommendItemVOS;
 
 }
