@@ -7,6 +7,8 @@ import com.taobao.csp.switchcenter.annotation.AppSwitch;
 import com.taobao.csp.switchcenter.annotation.NameSpace;
 import com.taobao.csp.switchcenter.bean.Switch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
+import com.tmall.wireless.tac.biz.processor.detail.model.config.SizeDTO;
+import com.tmall.wireless.tac.biz.processor.detail.model.config.TppRequestConfig;
 
 /**
  * @author: guichen
@@ -16,13 +18,25 @@ import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 @NameSpace(nameSpace = "supermarket.detail")
 public class DetailSwitch {
 
-    @AppSwitch(des = "人工选品推荐选品集id", level = Switch.Level.p3)
-    public static Map<String,Long> appIdMap =new HashMap<String, Long>() {
+    @AppSwitch(des = "详情推荐appId", level = Switch.Level.p3)
+    public static Map<String, TppRequestConfig> appIdMap = new HashMap<String, TppRequestConfig>() {
         {
-            put(RecTypeEnum.RECIPE.getType(),27924L);
-            put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(), 23198L);
-            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),25385L);
+            put(RecTypeEnum.RECIPE.getType(), new TppRequestConfig(27924L,"138002","7"));
+            put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(), new TppRequestConfig(27924L,"138002","7"));
+            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), new TppRequestConfig(25385L));
         }
     };
+
+    @AppSwitch(des = "详情推荐的限制推荐size", level = Switch.Level.p3)
+    public static Map<String, SizeDTO> contentSizeMap = new HashMap<String, SizeDTO>()
+
+    {
+        {
+            put(RecTypeEnum.RECIPE.getType(), new SizeDTO(2,6));
+            put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(), new SizeDTO(1,2));
+            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), new SizeDTO(6,6));
+        }
+    };
+
 
 }

@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
+import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendContentVO;
@@ -57,7 +58,9 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         if (CollectionUtils.isNotEmpty(itemAndContentList)) {
             //推荐内容
             detailRecContentResultVO.getResult().addAll(super
-                .convertContentResult(scene, itemAndContentList.subList(0, Math.min(2, itemAndContentList.size())),
+                .convertContentResult(scene, itemAndContentList.subList(0,
+                    Math.min(DetailSwitch.contentSizeMap.get(getRecTypeEnum().getType()).getMax()
+                    , itemAndContentList.size())),
                     scmJoin));
         }
 
