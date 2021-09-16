@@ -294,8 +294,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     public void doPGSearch(String tableName, String searchKey) {
         // 查询语句构造
         AtomicQuery atomicQuery = new AtomicQuery(tableName, new KeyList(searchKey));
-        atomicQuery.setReturnFields("value");
-        atomicQuery.setRange(0, 3);
+        atomicQuery.setReturnFields("gmv");
+        atomicQuery.setRange(0, 10);
 
         // 查询接口调用
         QueryResult queryResult;
@@ -315,7 +315,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         for (MatchRecord matchRecord : singleQueryResult.getMatchRecords()) {
             // 注意,fieldValue/fieldValue2可能为null，后续逻辑使用时务必进行null值判断
             String fieldValue = matchRecord.getFieldValue(0, MatchRecord.EncodeType.UTF8);
-            Long fieldValue2 = matchRecord.getLong("field2");
+            Long fieldValue2 = matchRecord.getLong("gmv");
             tacLogger.info("fieldValue" + fieldValue);
             tacLogger.info("fieldValue2" + fieldValue2);
         }
