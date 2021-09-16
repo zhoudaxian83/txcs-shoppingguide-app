@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.detail.o2o.content;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -58,7 +59,13 @@ public class O2ODetailRecContentOriginDataResponseConvertSdkExtPt extends Regist
                 contentEntity.setItemSets(strings);
             }
 
-            if (jsonObject.getJSONArray("items") == null || org.apache.commons.collections.CollectionUtils.isEmpty(jsonObject.getJSONArray("items"))) {
+            //商品数量要大于6
+            boolean present = Optional.ofNullable(jsonObject.getJSONArray("items"))
+                .map(v -> jsonObject.getJSONArray("items"))
+                .filter(CollectionUtils::isNotEmpty)
+                .filter(v -> v.size() >= 6)
+                .isPresent();
+            if (!present) {
                 LogUtil.errorCode("TPP_RECOMMEND_CONTENT_HAS_NO_ITEM", contentEntity.getContentId());
                 continue;
             }

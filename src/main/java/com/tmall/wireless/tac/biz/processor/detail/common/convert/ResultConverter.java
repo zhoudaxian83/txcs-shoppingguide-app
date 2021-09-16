@@ -10,14 +10,13 @@ import com.tmall.wireless.tac.client.domain.Context;
  * @Data: 2021/9/14
  * @Description:
  */
-public class ResultConverter {
+public class ResultConverter  {
 
-    public static TacResult<DetailRecContentResultVO> convertToTacResult(SgFrameworkResponse response, Context context){
+    public static TacResult convertToTacResult(SgFrameworkResponse response, Context context){
         if(response.isSuccess()){
             String recType = (String)context.getParams().get("recType");
-            DetailRecContentResultVO convert = DetailConverterFactory.instance.getConverter(recType).convert(
-                response);
-            return TacResult.newResult(convert);
+            return TacResult.newResult(DetailConverterFactory.instance.getConverter(recType).convert(
+                response));
         }
 
         return TacResult.errorResult(response.getErrorCode(),response.getErrorMsg());

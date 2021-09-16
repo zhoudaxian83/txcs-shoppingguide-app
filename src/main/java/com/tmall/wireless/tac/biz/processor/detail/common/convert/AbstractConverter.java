@@ -35,11 +35,11 @@ import org.apache.commons.lang.StringUtils;
  * @Data: 2021/9/13
  * @Description:
  */
-public abstract class AbstractConverter {
+public abstract class AbstractConverter<T> {
 
     public abstract RecTypeEnum getRecTypeEnum();
 
-    public abstract DetailRecContentResultVO convert( SgFrameworkResponse sgFrameworkResponse);
+    public abstract T convert( SgFrameworkResponse sgFrameworkResponse);
 
 
     public List<DetailRecommendContentVO> convertContentResult(String scene, List<ContentVO> itemAndContentList,

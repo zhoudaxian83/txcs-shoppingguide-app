@@ -20,7 +20,7 @@ import org.apache.commons.collections4.CollectionUtils;
  * @Data: 2021/9/14
  * @Description:
  */
-public class SimilarItemContentConverter extends AbstractConverter {
+public class SimilarItemContentConverter extends AbstractConverter<DetailRecContentResultVO> {
 
     @Override
     public RecTypeEnum getRecTypeEnum() {

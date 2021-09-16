@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * @Description:
  */
 @Component
-public class ReciptConverter extends AbstractConverter {
+public class ReciptConverter extends AbstractConverter<DetailRecContentResultVO> {
 
     @Override
     public RecTypeEnum getRecTypeEnum() {

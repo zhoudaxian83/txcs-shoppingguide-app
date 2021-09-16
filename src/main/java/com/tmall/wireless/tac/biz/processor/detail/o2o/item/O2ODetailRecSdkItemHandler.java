@@ -9,6 +9,7 @@ import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstan
 import com.tmall.wireless.tac.biz.processor.detail.common.convert.DetailConverterFactory;
 import com.tmall.wireless.tac.biz.processor.detail.common.convert.ResultConverter;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
+import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecItemResultVO;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
@@ -20,12 +21,12 @@ import org.springframework.stereotype.Service;
  * @Description:
  */
 @Service
-public class O2ODetailRecSdkItemHandler extends RpmReactiveHandler<DetailRecContentResultVO> {
+public class O2ODetailRecSdkItemHandler extends RpmReactiveHandler<DetailRecItemResultVO> {
 
     @Resource
     ShoppingguideSdkItemService shoppingguideSdkItemService;
     @Override
-    public Flowable<TacResult<DetailRecContentResultVO>> executeFlowable(Context context) throws Exception {
+    public Flowable<TacResult<DetailRecItemResultVO>> executeFlowable(Context context) throws Exception {
 
         BizScenario bizScenario = BizScenario.valueOf(
             DetailConstant.BIZ_ID,

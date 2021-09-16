@@ -15,14 +15,14 @@ import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecItemResultVO;
  * @Data: 2021/9/14
  * @Description:
  */
-public class SimilarItemItemConverter extends AbstractConverter {
+public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemResultVO> {
     @Override
     public RecTypeEnum getRecTypeEnum() {
         return RecTypeEnum.SIMILAR_ITEM_ITEM;
     }
 
     @Override
-    public DetailRecContentResultVO convert(SgFrameworkResponse sgFrameworkResponse) {
+    public DetailRecItemResultVO convert(SgFrameworkResponse sgFrameworkResponse) {
 
         DetailRecItemResultVO detailRecItemResultVO=new DetailRecItemResultVO();
 
