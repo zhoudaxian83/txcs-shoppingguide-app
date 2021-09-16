@@ -293,8 +293,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
     public void doPGSearch(String tableName, String searchKey) {
         // 查询语句构造
-        AtomicQuery atomicQuery = new AtomicQuery(tableName, new KeyList(searchKey));
-        atomicQuery.setReturnFields("gmv");
+        AtomicQuery atomicQuery = new AtomicQuery(tableName, Arrays.asList(new KeyList(searchKey), new KeyList("44107699067")));
+        atomicQuery.setReturnFields("gmv", "item_id", "window_start", "window_end");
         atomicQuery.setRange(0, 10);
 
         // 查询接口调用
@@ -305,6 +305,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             tacLogger.error("search failed", e);
             return;
         }
+        List<SingleQueryResult> allQueryResult = queryResult.getAllQueryResult();
+        tacLogger.info("=========allQueryResult:" + JSON.toJSONString(allQueryResult));
 
         // 查询结果读取
         SingleQueryResult singleQueryResult = queryResult.getSingleQueryResult();
