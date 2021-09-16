@@ -15,12 +15,14 @@ import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendContentV
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * @author: guichen
  * @Data: 2021/9/14
  * @Description:
  */
+@Component
 public class SimilarItemContentConverter extends AbstractConverter<DetailRecContentResultVO> {
 
     @Override

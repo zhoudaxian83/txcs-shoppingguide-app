@@ -9,12 +9,14 @@ import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecItemResultVO;
+import org.springframework.stereotype.Component;
 
 /**
  * @author: guichen
  * @Data: 2021/9/14
  * @Description:
  */
+@Component
 public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemResultVO> {
     @Override
     public RecTypeEnum getRecTypeEnum() {
