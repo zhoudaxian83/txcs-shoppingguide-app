@@ -2,6 +2,8 @@ package com.tmall.wireless.tac.biz.processor.extremeItem.domain;
 
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 public class ItemConfig {
     /**
@@ -58,4 +60,20 @@ public class ItemConfig {
      * 一排二布局主图
      */
     private String normalImg;
+
+    public static ItemConfig valueOf(Map<String, Object> stringObjectMap) {
+        ItemConfig itemConfig = new ItemConfig();
+        itemConfig.setItemId((Long)stringObjectMap.get("itemId"));
+        itemConfig.setItemName((String)stringObjectMap.get("itemName"));
+        itemConfig.setGroupNo((Long)stringObjectMap.get("groupNo"));
+        itemConfig.setForceSort((boolean)stringObjectMap.get("forceSort"));
+        itemConfig.setSequenceNo((Integer) stringObjectMap.get("sequenceNo"));
+        itemConfig.setExposurePercent((Integer) stringObjectMap.get("exposurePercent"));
+        itemConfig.setActivityId((String)stringObjectMap.get("activityId"));
+        itemConfig.setCouponValue((String)stringObjectMap.get("couponValue"));
+        itemConfig.setItemDesc((String)stringObjectMap.get("itemDesc"));
+        itemConfig.setWideImg((String)stringObjectMap.get("wideImg"));
+        itemConfig.setNormalImg((String)stringObjectMap.get("normalImg"));
+        return itemConfig;
+    }
 }

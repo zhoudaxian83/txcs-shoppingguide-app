@@ -2,14 +2,11 @@ package com.tmall.wireless.tac.biz.processor.extremeItem;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
-import com.tmall.tcls.gs.sdk.ext.BizScenario;
-import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
-import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
-import com.tmall.txcs.gs.base.RpmReactiveHandler;
+import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroupList;
+import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigs;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
@@ -42,6 +39,11 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
         List<Map<String, Object>> aldDataList = (List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA);
         tacLogger.info("aldDataList:" + aldDataList);
+        ItemConfigs itemConfigs = ItemConfigs.valueOf(aldDataList);
+        tacLogger.info("itemConfigs:" + JSON.toJSONString(itemConfigs));
+        itemConfigs.checkItemConfig();
+        ItemConfigGroupList itemConfigGroupList = itemConfigs.splitGroup();
+        tacLogger.info("itemConfigGroupList:" + JSON.toJSONString(itemConfigGroupList));
         return Flowable.just(TacResult.newResult(new ArrayList<>()));
     }
 }

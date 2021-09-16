@@ -3,12 +3,23 @@ package com.tmall.wireless.tac.biz.processor.extremeItem.domain;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Data
-public class ItemConfigList {
-    private List<ItemConfig> itemConfigList;
+public class ItemConfigs {
+    private List<ItemConfig> itemConfigList = new ArrayList<>();
+
+    public static ItemConfigs valueOf(List<Map<String, Object>> aldDataList) {
+        ItemConfigs itemConfigs = new ItemConfigs();
+        for (Map<String, Object> stringObjectMap : aldDataList) {
+            ItemConfig itemConfig = ItemConfig.valueOf(stringObjectMap);
+            itemConfigs.itemConfigList.add(itemConfig);
+        }
+        return itemConfigs;
+    }
 
     /**
      * 校验商品配置数据是否合法
@@ -18,7 +29,9 @@ public class ItemConfigList {
      * 3、曝光比率必须在【0，100】%，且各个品的曝光比率加起来必须等于100%
      */
     public void checkItemConfig() {
-
+        if(CollectionUtils.isEmpty(this.itemConfigList)) {
+            throw new RuntimeException("商品配置数据不允许为空");
+        }
     }
 
     /**
