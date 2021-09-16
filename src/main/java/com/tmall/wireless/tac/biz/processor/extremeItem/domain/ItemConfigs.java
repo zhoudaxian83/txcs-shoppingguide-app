@@ -64,4 +64,8 @@ public class ItemConfigs {
         itemConfigGroupList.getItemConfigGroups().addAll(itemConfigGroups);
         return itemConfigGroupList;
     }
+
+    public List<Long> extractItemIds() {
+        return this.itemConfigList.stream().map(ItemConfig::getItemId).collect(Collectors.toList());
+    }
 }
