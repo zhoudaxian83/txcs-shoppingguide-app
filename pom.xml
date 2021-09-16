@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.tcls.shoppingguide</groupId>
             <artifactId>shoppingguide-biz</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.0.5</version>
         </dependency>
 
 
@@ -43,12 +43,12 @@
         <dependency>
             <groupId>com.tmall.wireless.store</groupId>
             <artifactId>render-part-spi</artifactId>
-            <version>1.0.1-jinzhou-SNAPSHOT</version>
+            <version>1.0.10/version>
         </dependency>
         <dependency>
             <groupId>com.tmall.wireless.store</groupId>
             <artifactId>data-part-spi</artifactId>
-            <version>1.0.8-SNAPSHOT</version>
+            <version>1.0.10</version>
         </dependency>
 
         <dependency>
@@ -70,7 +70,7 @@
         <dependency>
             <groupId>com.tcls.shoppingguide</groupId>
             <artifactId>shoppingguide-biz</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.5</version>
         </dependency>
 
         <dependency>
@@ -183,14 +183,7 @@
         <dependency>
             <groupId>com.tmall.wireless.store</groupId>
             <artifactId>user-part</artifactId>
-            <version>1.0.4-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.tmall.wireless.store</groupId>
-            <artifactId>render-part-spi</artifactId>
-            <version>1.0.1-jinzhou-SNAPSHOT</version>
-            <scope>provided</scope>
+            <version>1.0.10</version>
         </dependency>
 
         <dependency>
