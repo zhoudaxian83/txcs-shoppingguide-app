@@ -70,7 +70,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
         try {
-            logger.warn("context:" + JSON.toJSONString(requestContext4Ald));
+            //logger.warn("context:" + JSON.toJSONString(requestContext4Ald));
             //tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
             List<Map<String, Object>> aldDataList = (List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA);
             //tacLogger.info("aldDataList:" + aldDataList);
@@ -103,7 +103,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             return Flowable.just(TacResult.newResult(generalItems));
 
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            //logger.error(e.getMessage(), e);
             tacLogger.error(e.getMessage(), e);
         }
         return Flowable.just(TacResult.newResult(new ArrayList<>()));
