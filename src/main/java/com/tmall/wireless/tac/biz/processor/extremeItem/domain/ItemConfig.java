@@ -65,7 +65,7 @@ public class ItemConfig {
         ItemConfig itemConfig = new ItemConfig();
         itemConfig.setItemId((Long)stringObjectMap.get("itemId"));
         itemConfig.setItemName((String)stringObjectMap.get("itemName"));
-        itemConfig.setGroupNo((Long)stringObjectMap.get("groupNo"));
+        itemConfig.setGroupNo((Long.valueOf((String)stringObjectMap.get("groupNo"))));
         itemConfig.setForceSort((boolean)stringObjectMap.get("forceSort"));
         itemConfig.setSequenceNo((Integer) stringObjectMap.get("sequenceNo"));
         itemConfig.setExposurePercent((Integer) stringObjectMap.get("exposurePercent"));
