@@ -181,6 +181,12 @@
             <version>1.0.1-jinzhou-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.etao.igraph</groupId>
+            <artifactId>igraph-client</artifactId>
+            <version>0.10.3</version>
+        </dependency>
     </dependencies>
 
     <build>

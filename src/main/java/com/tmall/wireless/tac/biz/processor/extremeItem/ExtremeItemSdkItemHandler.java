@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.eagleeye.EagleEye;
+import com.taobao.igraph.client.model.*;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.common.model.promotion.ItemPromotionCluster;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
@@ -58,6 +59,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     RenderSpi renderSpi;
     @Autowired
     ItemPickService itemPickService;
+    @Autowired
+    com.taobao.igraph.client.core.IGraphClientWrap iGraphClientWrap;
 
 
     @Override
@@ -87,6 +90,11 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             tacLogger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
 
             List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, longItemDTOMap, inventoryMap);
+
+            doPGSearch("TPP_tmall_sm_tmcs_item_gmv_history", "552982987824");
+
+            //
+
             return Flowable.just(TacResult.newResult(generalItems));
 
         } catch (Exception e) {
@@ -280,6 +288,36 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         item.put("itemPromotionResp", itemPromotionResp);
         if(itemDTO.getTargetSkuId()!=null){
             item.put("skuId",itemDTO.getTargetSkuId());
+        }
+    }
+
+    public void doPGSearch(String tableName, String searchKey) {
+        // 查询语句构造
+        AtomicQuery atomicQuery = new AtomicQuery(tableName, new KeyList(searchKey));
+        atomicQuery.setReturnFields("value");
+        atomicQuery.setRange(0, 3);
+
+        // 查询接口调用
+        QueryResult queryResult;
+        try {
+            queryResult = iGraphClientWrap.search(atomicQuery);
+        } catch (Exception e) {
+            tacLogger.error("search failed", e);
+            return;
+        }
+
+        // 查询结果读取
+        SingleQueryResult singleQueryResult = queryResult.getSingleQueryResult();
+        if (singleQueryResult.hasError()) {
+            tacLogger.warn("oops, got errorMsg:["+singleQueryResult.getErrorMsg()+"]");
+        }
+        tacLogger.info("got ["+singleQueryResult.size()+"] records");
+        for (MatchRecord matchRecord : singleQueryResult.getMatchRecords()) {
+            // 注意,fieldValue/fieldValue2可能为null，后续逻辑使用时务必进行null值判断
+            String fieldValue = matchRecord.getFieldValue(0, MatchRecord.EncodeType.UTF8);
+            Long fieldValue2 = matchRecord.getLong("field2");
+            tacLogger.info("fieldValue" + fieldValue);
+            tacLogger.info("fieldValue2" + fieldValue2);
         }
     }
 }
