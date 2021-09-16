@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Data
-public class ItemConfigGroupList {
+public class ItemConfigGroups {
     private List<ItemConfigGroup> itemConfigGroups = new ArrayList<>();
 
     public boolean forceSort() {

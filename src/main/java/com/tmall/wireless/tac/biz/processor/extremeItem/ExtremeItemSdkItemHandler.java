@@ -1,8 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem;
 
-import com.alibaba.aladdin.lamp.domain.request.RequestItem;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
-import com.alibaba.aladdin.lamp.sdk.solution.context.SolutionContext;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -12,16 +10,14 @@ import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.aselfcaptain.item.model.ItemId;
 import com.tmall.aselfcaptain.item.model.ItemQueryDO;
 import com.tmall.aselfcaptain.item.model.QueryOptionDO;
-import com.tmall.tcls.gs.sdk.framework.extensions.item.iteminfo.CaptainRequestBuildRequest;
-import com.tmall.tcls.gs.sdk.framework.model.context.*;
-import com.tmall.tcls.gs.sdk.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
-import com.tmall.tcls.gs.sdk.framework.suport.iteminfo.sm.ItemInfoRequestSm;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
-import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroupList;
+import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfig;
+import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroups;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigs;
+import com.tmall.wireless.tac.biz.processor.extremeItem.domain.service.ItemPickService;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -29,7 +25,6 @@ import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,6 +48,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     TacLogger tacLogger;
     @Autowired
     RenderSpi renderSpi;
+    @Autowired
+    ItemPickService itemPickService;
 
 
     @Override
@@ -64,19 +61,22 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             ItemConfigs itemConfigs = ItemConfigs.valueOf(aldDataList);
             //tacLogger.info("itemConfigs:" + JSON.toJSONString(itemConfigs));
             itemConfigs.checkItemConfig();
-            ItemConfigGroupList itemConfigGroupList = itemConfigs.splitGroup();
+            ItemConfigGroups itemConfigGroups = itemConfigs.splitGroup();
             //tacLogger.info("itemConfigGroupList:" + JSON.toJSONString(itemConfigGroupList));
-            itemConfigGroupList.sortGroup();
+            itemConfigGroups.sortGroup();
             //tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroupList));
 
             //查询captain
             List<Long> itemIds = itemConfigs.extractItemIds();
             tacLogger.info("==========itemIds: " + JSON.toJSONString(itemIds));
             Map<Long, ItemDTO> longItemDTOMap = batchQueryItem(itemIds);
-            tacLogger.info("==========itemDTOs: " + JSON.toJSONString(longItemDTOMap));
+            //tacLogger.info("==========itemDTOs: " + JSON.toJSONString(longItemDTOMap));
 
             Map<Long, Boolean> inventoryMap = longItemDTOMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().isSoldout()));
-            tacLogger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
+            //tacLogger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
+
+            Map<Integer, ItemConfig> afterPickGroupMap = itemPickService.pickItems(itemConfigGroups, inventoryMap);
+            tacLogger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
         } catch (Exception e) {
             tacLogger.error(e.getMessage(), e);
         }

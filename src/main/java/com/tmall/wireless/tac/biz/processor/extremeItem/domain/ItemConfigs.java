@@ -46,8 +46,8 @@ public class ItemConfigs {
      * 按照运营配置的组号将各个商品行的数据进行拆到各自的分组中
      * @return
      */
-    public ItemConfigGroupList splitGroup() {
-        ItemConfigGroupList itemConfigGroupList = new ItemConfigGroupList();
+    public ItemConfigGroups splitGroup() {
+        ItemConfigGroups itemConfigGroupList = new ItemConfigGroups();
         List<ItemConfigGroup> itemConfigGroups = itemConfigList.stream()
                 .collect(Collectors.groupingBy(ItemConfig::getGroupNo))
                 .values().stream()
