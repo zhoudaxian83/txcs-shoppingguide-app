@@ -103,6 +103,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             return Flowable.just(TacResult.newResult(generalItems));
 
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             tacLogger.error(e.getMessage(), e);
         }
         return Flowable.just(TacResult.newResult(new ArrayList<>()));
