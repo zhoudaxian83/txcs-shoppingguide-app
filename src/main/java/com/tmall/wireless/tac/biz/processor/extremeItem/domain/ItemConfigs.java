@@ -51,7 +51,7 @@ public class ItemConfigs {
         List<ItemConfigGroup> itemConfigGroups = itemConfigList.stream()
                 .collect(Collectors.groupingBy(ItemConfig::getGroupNo))
                 .values().stream()
-                .filter(CollectionUtils::isEmpty)
+                .filter(CollectionUtils::isNotEmpty)
                 .map(itemConfigs -> {
                     ItemConfig itemConfig = itemConfigs.get(0);
                     ItemConfigGroup itemConfigGroup = new ItemConfigGroup();
