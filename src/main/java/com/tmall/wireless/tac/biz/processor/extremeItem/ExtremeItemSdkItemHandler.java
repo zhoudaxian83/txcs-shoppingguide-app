@@ -41,10 +41,12 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             List<Map<String, Object>> aldDataList = (List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA);
             //tacLogger.info("aldDataList:" + aldDataList);
             ItemConfigs itemConfigs = ItemConfigs.valueOf(aldDataList);
-            tacLogger.info("itemConfigs:" + JSON.toJSONString(itemConfigs));
+            //tacLogger.info("itemConfigs:" + JSON.toJSONString(itemConfigs));
             itemConfigs.checkItemConfig();
             ItemConfigGroupList itemConfigGroupList = itemConfigs.splitGroup();
-            tacLogger.info("itemConfigGroupList:" + JSON.toJSONString(itemConfigGroupList));
+            //tacLogger.info("itemConfigGroupList:" + JSON.toJSONString(itemConfigGroupList));
+            itemConfigGroupList.sortGroup();
+            tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroupList));
         } catch (Exception e) {
             tacLogger.error(e.getMessage(), e);
         }
