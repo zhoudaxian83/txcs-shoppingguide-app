@@ -83,7 +83,6 @@ public abstract class AbstractConverter<T> {
 
         recommendContentVO.setImg(contentVO.getString(FrontBackMapEnum.contentPic.getFront()));
 
-        contentVO.get("items");
 
         //scm拼接
         scmJoin.add(contentVO.getString("scm"));
