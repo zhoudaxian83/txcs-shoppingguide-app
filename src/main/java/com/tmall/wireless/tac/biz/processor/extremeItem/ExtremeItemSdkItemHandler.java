@@ -315,7 +315,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         for (MatchRecord matchRecord : singleQueryResult.getMatchRecords()) {
             // 注意,fieldValue/fieldValue2可能为null，后续逻辑使用时务必进行null值判断
             String fieldValue = matchRecord.getFieldValue(0, MatchRecord.EncodeType.UTF8);
-            Long fieldValue2 = matchRecord.getLong("gmv");
+            Double fieldValue2 = matchRecord.getDouble("gmv");
             tacLogger.info("fieldValue" + fieldValue);
             tacLogger.info("fieldValue2" + fieldValue2);
         }
