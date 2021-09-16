@@ -48,7 +48,6 @@ public class O2ODetailRecContentOriginDataResponseConvertSdkExtPt extends Regist
 
             ContentEntity contentEntity = new ContentEntity();
 
-            contentEntity.setRn(jsonObject.getInteger("rn"));
             contentEntity.setTrack_point(responseEntity.getScm() + "." + jsonObject.getString("trackPoint"));
             contentEntity.setContentId(jsonObject.getLong("contentId"));
             contentEntity.setContentSetId(jsonObject.getString("sceneSetId"));
