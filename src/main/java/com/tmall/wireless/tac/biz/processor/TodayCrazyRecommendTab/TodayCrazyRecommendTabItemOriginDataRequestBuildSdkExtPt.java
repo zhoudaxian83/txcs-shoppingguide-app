@@ -33,6 +33,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
     }
 
     private RecommendRequest buildTppParam(SgFrameworkContextItem sgFrameworkContextItem) {
+        tacLogger.info("sgFrameworkContextItem_:" + JSON.toJSONString(sgFrameworkContextItem));
         RecommendRequest recommendRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
         params.put("pageSize", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getPageSize).map(Objects::toString).orElse("20"));
