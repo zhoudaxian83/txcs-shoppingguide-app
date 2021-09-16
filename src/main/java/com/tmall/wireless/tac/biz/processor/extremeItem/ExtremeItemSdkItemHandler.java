@@ -36,14 +36,18 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
-        tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
-        List<Map<String, Object>> aldDataList = (List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA);
-        tacLogger.info("aldDataList:" + aldDataList);
-        ItemConfigs itemConfigs = ItemConfigs.valueOf(aldDataList);
-        tacLogger.info("itemConfigs:" + JSON.toJSONString(itemConfigs));
-        itemConfigs.checkItemConfig();
-        ItemConfigGroupList itemConfigGroupList = itemConfigs.splitGroup();
-        tacLogger.info("itemConfigGroupList:" + JSON.toJSONString(itemConfigGroupList));
+        try {
+            tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
+            List<Map<String, Object>> aldDataList = (List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA);
+            tacLogger.info("aldDataList:" + aldDataList);
+            ItemConfigs itemConfigs = ItemConfigs.valueOf(aldDataList);
+            tacLogger.info("itemConfigs:" + JSON.toJSONString(itemConfigs));
+            itemConfigs.checkItemConfig();
+            ItemConfigGroupList itemConfigGroupList = itemConfigs.splitGroup();
+            tacLogger.info("itemConfigGroupList:" + JSON.toJSONString(itemConfigGroupList));
+        } catch (Exception e) {
+            tacLogger.error(e.getMessage(), e);
+        }
         return Flowable.just(TacResult.newResult(new ArrayList<>()));
     }
 }
