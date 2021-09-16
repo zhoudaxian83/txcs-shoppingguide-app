@@ -1,10 +1,15 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+import com.alibaba.aladdin.lamp.sdk.solution.context.SolutionContext;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.eagleeye.EagleEye;
+import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
+import com.tmall.aselfcaptain.common.model.promotion.ItemPromotionCluster;
+import com.tmall.aselfcaptain.item.constant.BizAttributes;
 import com.tmall.aselfcaptain.item.constant.Channel;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.aselfcaptain.item.model.ItemId;
@@ -15,6 +20,7 @@ import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfig;
+import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroup;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroups;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigs;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.service.ItemPickService;
@@ -25,9 +31,11 @@ import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -77,10 +85,25 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
             Map<Integer, ItemConfig> afterPickGroupMap = itemPickService.pickItems(itemConfigGroups, inventoryMap);
             tacLogger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
+
+            List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, longItemDTOMap, inventoryMap);
+            return Flowable.just(TacResult.newResult(generalItems));
+
         } catch (Exception e) {
             tacLogger.error(e.getMessage(), e);
         }
         return Flowable.just(TacResult.newResult(new ArrayList<>()));
+    }
+
+    private List<GeneralItem> buildResult(ItemConfigGroups itemConfigGroups, Map<Integer, ItemConfig> afterPickGroupMap, Map<Long, ItemDTO> longItemDTOMap, Map<Long, Boolean> inventoryMap) {
+        List<GeneralItem> result = new ArrayList<>();
+        for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroups()) {
+            GeneralItem generalItem = new GeneralItem();
+            generalItem.put("groupNo", itemConfigGroup.getGroupNo());
+            generalItem.put("item", buildItemMap(longItemDTOMap.get(afterPickGroupMap.get(itemConfigGroup.getGroupNo()).getItemId())));
+            result.add(generalItem);
+        }
+        return result;
     }
 
     public RenderRequest buildRenderRequest(List<Long> itemIds, Long buyerId, Long areaId) {
@@ -160,5 +183,103 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         RenderRequest renderRequest = buildRenderRequest(itemIds, 0L, 330110L);
         SPIResult<List<ItemDTO>> itemDTOs = renderSpi.query(renderRequest);
         return itemDTOs.getData().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+    }
+
+    public Map<String, Object> buildItemMap(ItemDTO itemDTO) {
+        Map<String, Object> itemMap = Maps.newHashMap();
+        if (true) {
+            buildItemDTO(itemMap, itemDTO);
+        } else {
+            itemMap.put("itemId", itemDTO.getId());
+            itemMap.put("itemImg", itemDTO.getWhitePic());
+            itemMap.put("itemMPrice", itemDTO.getDisplayPrice());
+            //itemMap.put("storeId", tmContext.getStoreId());
+            itemMap.put("shortTitle", itemDTO.getShortTitle());
+            itemMap.put("itemUrl", itemDTO.getDetailUrl());
+            itemMap.put("_areaSellable", !itemDTO.isSoldout() && itemDTO.isCanBuy());
+            itemMap.put("locType", "B2C");
+
+            itemMap.put("reservePrice", itemDTO.getReservePrice());
+
+            //买赠
+            ItemPromotionCluster itemPromotionCluster = itemDTO.getItemPromotionCluster();
+            if (StringUtils.isBlank((String) itemMap.get("itemDesc"))) {
+                //店铺优惠
+                if (itemPromotionCluster != null && itemPromotionCluster.getGiftPromotionDTO() != null) {
+                    itemMap.put("itemDesc", itemPromotionCluster.getGiftPromotionDTO().getCopywriting());
+                } else {
+                    //店铺优惠
+                    List<String> shopPromotionList = itemDTO.getShopPromotionList();
+                    if (CollectionUtils.isNotEmpty(shopPromotionList)) {
+                        String itemDesc = shopPromotionList.get(0);
+                        String[] st = itemDesc.split(";");
+                        if (!st[0].startsWith("【超值换购")) {
+                            itemMap.put("itemDesc", st[0]);
+                        }
+                    }
+                }
+            }
+
+            itemMap.put("chaoshiItemTitle", itemDTO.getShortTitle());
+        }
+
+        return itemMap;
+    }
+
+    public void buildItemDTO(Map<String, Object> item, ItemDTO itemDTO) {
+        //item.put("currentResourceId", tmcsContext.getCurrentResourceId());
+        item.put("id", itemDTO.getItemId().getId());
+        item.put("itemId", itemDTO.getItemId().getId());
+        //item.put("storeId", tmcsContext.getStoreId());
+        if (StringUtils.isBlank((String) item.get("selfSupportProperties"))) {
+            item.put("selfSupportProperties", itemDTO.getSelfSupportProperties());
+        }
+
+        if (StringUtils.isBlank((String) item.get("chaoshiItemTitle"))) {
+            //if ("O2O".equals(tmcsContext.getLocType())) {
+            //    item.put("chaoshiItemTitle", itemDTO.getTitle());
+            //} else {
+                item.put("chaoshiItemTitle", itemDTO.getShortTitle());
+            //}
+        }
+
+        if (StringUtils.isBlank((String) item.get("itemImg"))) {
+            item.put("itemImg", itemDTO.getWhitePic());
+        }
+
+        if (StringUtils.isBlank((String) item.get("shortTitle"))) {
+            item.put("shortTitle", itemDTO.getShortTitle());
+        }
+        if (StringUtils.isBlank((String) item.get("specDetail"))) {
+            item.put("specDetail", itemDTO.getSpecDetail());
+        }
+
+        /*if (CommonSwitch.monthSoldCount) {
+            String monthlySales = itemDTO.getAttributes().get(BizAttributes.ATTR_SALES_AMOUNT);
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(monthlySales) && Integer.valueOf(monthlySales) > 0) {
+                item.put("itemMonthSoldCount", toMonthlySalesView(monthlySales));
+                item.put("orignMonthSoldCount", monthlySales);
+            }
+        }*/
+        item.put("itemUrl", itemDTO.getDetailUrl());
+        //item.put("scm", getScm1(tmcsContext, String.valueOf(itemDTO.getItemId().getId())));
+        item.put("_areaSellable", !itemDTO.isSoldout());
+        item.put("locType", itemDTO.getLocType().name());
+        item.put("sellerId", itemDTO.getSellerId());
+
+
+        if (BizAttributes.TRUE.equals(MapUtils.getString(itemDTO.getAttributes(), BizAttributes.ATTR_IS_WEIGHT_ITEM))) {
+            String weightAttrJson = MapUtils.getString(itemDTO.getAttributes(), BizAttributes.ATTR_WEIGHT_ITEM);
+            if (org.apache.commons.lang.StringUtils.isNotBlank(weightAttrJson)) {
+                JSONObject ob = JSON.parseObject(weightAttrJson);
+                String saleUnit = ob.getString(BizAttributes.WeightAttr.SALE_UNIT);
+                item.put("priceUnit", saleUnit);
+            }
+        }
+        ItemPromotionResp itemPromotionResp = itemDTO.getItemPromotionResp();
+        item.put("itemPromotionResp", itemPromotionResp);
+        if(itemDTO.getTargetSkuId()!=null){
+            item.put("skuId",itemDTO.getTargetSkuId());
+        }
     }
 }
