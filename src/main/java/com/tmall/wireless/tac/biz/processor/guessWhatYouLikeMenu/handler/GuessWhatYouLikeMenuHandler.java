@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.handler;
 
+import com.alibaba.fastjson.JSON;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
@@ -33,6 +35,15 @@ public class GuessWhatYouLikeMenuHandler extends RpmReactiveHandler<SgFrameworkR
                 ScenarioConstantApp.CNXH_MENU_FEEDS);
         bizScenario.addProducePackage(PackageNameKey.OLD_RECOMMEND);
         bizScenario.addProducePackage(PackageNameKey.CONTENT_FEEDS);
-        return shoppingguideSdkContentService.recommend(context, bizScenario).map(TacResult::newResult);
+        return shoppingguideSdkContentService.recommend(context, bizScenario).map(TacResult::newResult).map(tacResult -> {
+            HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
+                    .kv("tacResult", JSON.toJSONString(tacResult))
+                    .info();
+            if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
+                tacResult = TacResult.errorResult("test");
+            }
+            tacResult.getBackupMetaData().setUseBackup(true);
+            return tacResult;
+        }).onErrorReturn(r -> TacResult.errorResult(""));
     }
 }

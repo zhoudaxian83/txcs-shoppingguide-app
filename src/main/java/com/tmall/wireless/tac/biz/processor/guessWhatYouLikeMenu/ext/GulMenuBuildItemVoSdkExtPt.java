@@ -36,7 +36,7 @@ public class GulMenuBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt imple
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Response<ItemEntityVO> result = super.process(buildItemVoRequest);
-        logger.info("GulMenuBuildItemVoSdkExtPt");
+//        logger.info("GulMenuBuildItemVoSdkExtPt");
         try {
             ItemEntityVO itemEntityVO = result.getValue();
             ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
