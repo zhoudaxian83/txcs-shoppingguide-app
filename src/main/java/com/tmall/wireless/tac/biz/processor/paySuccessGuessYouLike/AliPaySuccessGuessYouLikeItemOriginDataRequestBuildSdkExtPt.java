@@ -14,6 +14,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.tmall.wireless.tac.client.domain.Context;
 import java.util.Map;
@@ -47,7 +48,6 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
                 map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
         Map<String,Object> contextParamsMap = Optional.of(context).map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams).orElse(Maps.newHashMap());
-        String csa = MapUtil.getStringWithDefault(contextParamsMap, "csa", "");
 
 
         //pmt参数拼接
@@ -76,7 +76,9 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
                 contextParamsMap, "itemBusinessType", "B2C,OneHour,HalfDay,NextDay");
         String exposureDataUserId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse("");
-
+        if (StringUtils.isEmpty(exposureDataUserId)) {
+            exposureDataUserId = String.valueOf(userId);
+        }
         tppRequest.setUserId(userId);
         Map<String, String> params = Maps.newHashMap();
         params.put("appid", String.valueOf(APP_ID));
