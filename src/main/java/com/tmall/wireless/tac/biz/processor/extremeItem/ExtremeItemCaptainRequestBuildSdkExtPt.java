@@ -38,7 +38,7 @@ public class ExtremeItemCaptainRequestBuildSdkExtPt extends DefaultCaptainReques
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
-        tacLogger.debug("扩展点InventoryChannelItemPageCaptainRequestBuildSdkExtPt");
+        tacLogger.info("扩展点InventoryChannelItemPageCaptainRequestBuildSdkExtPt");
         RenderRequest renderRequest = super.process(captainRequestBuildRequest);
         QueryOptionDO option = renderRequest.getOption();
         option.setSceneCode(captainSceneCode);
