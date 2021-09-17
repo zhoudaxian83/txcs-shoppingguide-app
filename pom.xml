@@ -192,6 +192,18 @@
             <version>3.0.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.tmall.aself</groupId>
+            <artifactId>aselfcommon-util</artifactId>
+            <version>2.3.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>aliyun-sdk-oss</artifactId>
+                    <groupId>com.aliyun.oss</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
     </dependencies>
 
     <build>
