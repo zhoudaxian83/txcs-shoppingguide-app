@@ -27,7 +27,6 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
 
     @Override
     public List<T> search(String tableName, List<String> keyList, String[] fields, int perKeySize,  IGraphResponseHandler<T> handler) {
-        List<T> result = new ArrayList<>();
         // 查询语句构造
         if(CollectionUtils.isEmpty(keyList) || fields == null || fields.length == 0) {
             return new ArrayList<>();
@@ -43,7 +42,7 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
             queryResult = iGraphClientWrap.search(atomicQuery);
         } catch (Exception e) {
             logger.error("search failed", e);
-            return null;
+            return new ArrayList<>();
         }
         SingleQueryResult singleQueryResult = queryResult.getSingleQueryResult();
         logger.info("=========singleQueryResult:" + JSON.toJSONString(singleQueryResult));

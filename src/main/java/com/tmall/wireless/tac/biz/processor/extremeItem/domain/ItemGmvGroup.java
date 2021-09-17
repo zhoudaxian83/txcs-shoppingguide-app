@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class ItemGmvGroup {
-    private Long groupNo;
+    private Integer groupNo;
     private List<ItemGmv> itemGmvList;
 
     public double ranceValue() {

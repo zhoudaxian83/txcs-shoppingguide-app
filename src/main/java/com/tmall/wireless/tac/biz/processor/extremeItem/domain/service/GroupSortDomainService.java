@@ -34,7 +34,7 @@ public class GroupSortDomainService {
     }
 
     private void raceSort(ItemConfigGroups itemConfigGroups, List<Long> itemIds) {
-        ItemGmvGroupMap itemGmvGroupMap = itemGmvService.queryGmv(itemIds);
+        ItemGmvGroupMap itemGmvGroupMap = itemGmvService.queryGmv(itemConfigGroups, itemIds);
         itemConfigGroups.sortGroup(itemGmvGroupMap);
     }
 }
