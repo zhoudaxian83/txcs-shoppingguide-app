@@ -42,14 +42,11 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
         try {
             queryResult = iGraphClientWrap.search(atomicQuery);
         } catch (Exception e) {
-            tacLogger.error("search failed", e);
+            logger.error("search failed", e);
             return null;
         }
-        List<SingleQueryResult> allQueryResult = queryResult.getAllQueryResult();
-        tacLogger.info("=========allQueryResult:" + JSON.toJSONString(allQueryResult));
-        for (SingleQueryResult singleQueryResult : allQueryResult) {
-            result.add((T)handler.handleResponse(singleQueryResult));
-        }
-        return result;
+        SingleQueryResult singleQueryResult = queryResult.getSingleQueryResult();
+        logger.info("=========singleQueryResult:" + JSON.toJSONString(singleQueryResult));
+        return handler.handleResponse(singleQueryResult);
     }
 }

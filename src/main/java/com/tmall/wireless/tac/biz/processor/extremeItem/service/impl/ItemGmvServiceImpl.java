@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,18 +31,20 @@ public class ItemGmvServiceImpl implements ItemGmvService {
     public ItemGmvGroupMap queryGmv(List<Long> itemIdList) {
 
         IGraphResponseHandler<GmvEntity> handler = singleQueryResult -> {
+            List<GmvEntity> result = new ArrayList<>();
             if (singleQueryResult.hasError()) {
                 tacLogger.warn("oops, got errorMsg:[" + singleQueryResult.getErrorMsg() + "]");
             }
             tacLogger.info("got [" + singleQueryResult.size() + "] records");
-            GmvEntity gmvEntity = new GmvEntity();
             for (MatchRecord matchRecord : singleQueryResult.getMatchRecords()) {
+                GmvEntity gmvEntity = new GmvEntity();
                 gmvEntity.setGmv(matchRecord.getDouble("gmv"));
                 gmvEntity.setItemId(matchRecord.getLong("item_id"));
                 gmvEntity.setWindowStart(matchRecord.getString("window_start"));
                 gmvEntity.setWindowEnd(matchRecord.getString("window_end"));
+                result.add(gmvEntity);
             }
-            return gmvEntity;
+            return result;
         };
         List<String> keyList = itemIdList.stream().map(id -> String.valueOf(id)).collect(Collectors.toList());
         String[] fields = new String[]{"gmv", "item_id", "window_start", "window_end"};
