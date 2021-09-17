@@ -74,36 +74,43 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             //tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
             List<Map<String, Object>> aldDataList = (List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA);
             //tacLogger.info("aldDataList:" + aldDataList);
+            logger.warn("aldDataList:" + aldDataList);
             ItemConfigs itemConfigs = ItemConfigs.valueOf(aldDataList);
             //tacLogger.info("itemConfigs:" + JSON.toJSONString(itemConfigs));
+            logger.warn("itemConfigs:" + JSON.toJSONString(itemConfigs));
             itemConfigs.checkItemConfig();
             ItemConfigGroups itemConfigGroups = itemConfigs.splitGroup();
-            //tacLogger.info("itemConfigGroupList:" + JSON.toJSONString(itemConfigGroupList));
+            //tacLogger.info("itemConfigGroups:" + JSON.toJSONString(itemConfigGroups));
+            logger.warn("itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
             itemConfigGroups.sortGroup();
             //tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroupList));
+            logger.warn("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
 
             //查询captain
             List<Long> itemIds = itemConfigs.extractItemIds();
             tacLogger.info("==========itemIds: " + JSON.toJSONString(itemIds));
+            logger.warn("==========itemIds: " + JSON.toJSONString(itemIds));
             Map<Long, ItemDTO> longItemDTOMap = batchQueryItem(itemIds);
             //tacLogger.info("==========itemDTOs: " + JSON.toJSONString(longItemDTOMap));
+            logger.warn("==========itemDTOs: " + JSON.toJSONString(longItemDTOMap));
 
             Map<Long, Boolean> inventoryMap = longItemDTOMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().isSoldout()));
             //tacLogger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
+            logger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
 
             Map<Integer, ItemConfig> afterPickGroupMap = itemPickService.pickItems(itemConfigGroups, inventoryMap);
             tacLogger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
+            logger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
 
             List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, longItemDTOMap, inventoryMap);
 
             doPGSearch("TPP_tmall_sm_tmcs_item_gmv_history", "552982987824");
 
-            //
-
+            logger.warn("=========generalItems:" + JSON.toJSONString(generalItems));
             return Flowable.just(TacResult.newResult(generalItems));
 
         } catch (Exception e) {
-            //logger.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             tacLogger.error(e.getMessage(), e);
         }
         return Flowable.just(TacResult.newResult(new ArrayList<>()));
