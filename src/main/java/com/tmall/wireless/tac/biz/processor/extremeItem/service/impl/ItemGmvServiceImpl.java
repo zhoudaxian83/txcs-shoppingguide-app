@@ -49,7 +49,7 @@ public class ItemGmvServiceImpl implements ItemGmvService {
         };
         List<String> keyList = itemIdList.stream().map(id -> String.valueOf(id)).collect(Collectors.toList());
         String[] fields = new String[]{"gmv", "item_id", "window_start", "window_end"};
-        List<GmvEntity> last7DayGmvEntityList = supermarketHallIGraphSearchService.search("TPP_tmall_sm_tmcs_item_gmv_history", keyList, fields, 8, handler);
+        List<GmvEntity> last7DayGmvEntityList = supermarketHallIGraphSearchService.search("TPP_tmall_sm_tmcs_item_gmv_history", keyList, fields, 12, handler);
         logger.info("ItemGmvServiceImpl_queryGmv_last7DayGmvEntityList: " + JSON.toJSONString(last7DayGmvEntityList));
 
         List<GmvEntity> last1HourGmvEntityList = supermarketHallIGraphSearchService.search("TPP_tmall_smtmcs_item_gmv_current_time_1h", keyList, fields, 1, handler);
