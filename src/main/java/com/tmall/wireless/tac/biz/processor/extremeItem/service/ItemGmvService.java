@@ -2,6 +2,8 @@ package com.tmall.wireless.tac.biz.processor.extremeItem.service;
 
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemGmvGroupMap;
 
+import java.util.List;
+
 public interface ItemGmvService {
-    ItemGmvGroupMap queryGmv();
+    ItemGmvGroupMap queryGmv(List<Long> itemIdList);
 }
