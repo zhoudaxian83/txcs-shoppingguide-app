@@ -43,7 +43,7 @@
         <dependency>
             <groupId>com.tmall.wireless.store</groupId>
             <artifactId>render-part-spi</artifactId>
-            <version>1.0.10/version>
+            <version>1.0.10</version>
         </dependency>
         <dependency>
             <groupId>com.tmall.wireless.store</groupId>
