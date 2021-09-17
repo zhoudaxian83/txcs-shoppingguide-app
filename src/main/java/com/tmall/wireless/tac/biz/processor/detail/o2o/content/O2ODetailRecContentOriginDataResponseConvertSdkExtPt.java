@@ -51,12 +51,6 @@ public class O2ODetailRecContentOriginDataResponseConvertSdkExtPt extends Regist
             contentEntity.setTrack_point(responseEntity.getScm() + "." + jsonObject.getString("trackPoint"));
             contentEntity.setContentId(jsonObject.getLong("contentId"));
             contentEntity.setContentSetId(jsonObject.getString("sceneSetId"));
-            Object itemSets = jsonObject.get("itemSetId");
-            //if(itemSets != null){
-            //    List<String> strings = JSON.parseObject(JSON.toJSONString(itemSets),
-            //        new TypeReference<List<String>>() {});
-            //    contentEntity.setItemSets(strings);
-            //}
 
             //商品数量要大于6
             boolean present = Optional.ofNullable(jsonObject.getJSONArray("items"))
