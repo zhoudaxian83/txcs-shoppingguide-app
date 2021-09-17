@@ -27,6 +27,7 @@ import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroups;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigs;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.service.GroupSortDomainService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.service.ItemPickService;
+import com.tmall.wireless.tac.biz.processor.extremeItem.service.ItemGmvService;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -70,6 +71,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     SupermarketHallRenderService supermarketHallRenderService;
     @Autowired
     SupermarketHallIGraphSearchService supermarketHallIGraphSearchService;
+    @Autowired
+    ItemGmvService itemGmvService;
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
@@ -109,6 +112,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
             List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, inventoryMap);
 
+            itemGmvService.queryGmv(itemIds);
             //supermarketHallIGraphSearchService.search("TPP_tmall_sm_tmcs_item_gmv_history", "552982987824");
 
             logger.warn("=========generalItems:" + JSON.toJSONString(generalItems));

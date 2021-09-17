@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GroupSortDomainService {
     private static Logger logger = LoggerFactory.getLogger(GroupSortDomainService.class);
@@ -21,18 +23,18 @@ public class GroupSortDomainService {
      *
      * @param itemConfigGroups
      */
-    public void groupSort(ItemConfigGroups itemConfigGroups) {
+    public void groupSort(ItemConfigGroups itemConfigGroups, List<Long> itemIds) {
         if(itemConfigGroups.forceSort()) {
             itemConfigGroups.sortGroup();
             logger.info("GroupSortDomainService_groupSort_itemConfigGroups_forceSort: " + JSON.toJSONString(itemConfigGroups));
             return;
         }
-        raceSort(itemConfigGroups);
+        raceSort(itemConfigGroups, itemIds);
         logger.info("GroupSortDomainService_groupSort_itemConfigGroups_raceSort: " + JSON.toJSONString(itemConfigGroups));
     }
 
-    private void raceSort(ItemConfigGroups itemConfigGroups) {
-        ItemGmvGroupMap itemGmvGroupMap = itemGmvService.queryGmv();
+    private void raceSort(ItemConfigGroups itemConfigGroups, List<Long> itemIds) {
+        ItemGmvGroupMap itemGmvGroupMap = itemGmvService.queryGmv(itemIds);
         itemConfigGroups.sortGroup(itemGmvGroupMap);
     }
 }
