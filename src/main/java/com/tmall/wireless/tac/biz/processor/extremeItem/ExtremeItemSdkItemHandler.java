@@ -89,10 +89,6 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             ItemConfigGroups itemConfigGroups = itemConfigs.splitGroup();
             tacLogger.info("itemConfigGroups:" + JSON.toJSONString(itemConfigGroups));
 
-            //进行组间排序
-            groupSortDomainService.groupSort(itemConfigGroups);
-            tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
-
             //获取需要进行渲染的商品ID列表
             List<Long> itemIds = itemConfigs.extractItemIds();
             tacLogger.info("==========itemIds: " + JSON.toJSONString(itemIds));
@@ -106,14 +102,18 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             tacLogger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
             logger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
 
+            //进行组间排序
+            groupSortDomainService.groupSort(itemConfigGroups, itemIds);
+            tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
+            itemGmvService.queryGmv(itemIds);
+            //supermarketHallIGraphSearchService.search("TPP_tmall_sm_tmcs_item_gmv_history", "552982987824");
+
             Map<Integer, ItemConfig> afterPickGroupMap = itemPickService.pickItems(itemConfigGroups, inventoryMap);
             tacLogger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
             logger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
 
             List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, inventoryMap);
 
-            itemGmvService.queryGmv(itemIds);
-            //supermarketHallIGraphSearchService.search("TPP_tmall_sm_tmcs_item_gmv_history", "552982987824");
 
             logger.warn("=========generalItems:" + JSON.toJSONString(generalItems));
             return Flowable.just(TacResult.newResult(generalItems));
