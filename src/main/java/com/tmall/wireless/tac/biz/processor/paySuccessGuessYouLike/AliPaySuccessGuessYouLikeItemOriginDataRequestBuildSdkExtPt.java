@@ -15,7 +15,6 @@ import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.tmall.wireless.tac.client.domain.Context;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 @SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
@@ -38,11 +37,10 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
     @Override
     public RecommendRequest process(SgFrameworkContextItem context) {
         tacLogger.info("=================tacLogger+ 已进入tpp参数组装==================");
+        tacLogger.info("context：" + context.toString());
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APP_ID);
-        Long userId = Optional.of(context).
-                map(SgFrameworkContext::getCommonUserParams).
-                map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
+
         Map<String,Object> contextParamsMap = Optional.of(context).map(SgFrameworkContext::getTacContext).map(Context::getParams)
                 .orElse(Maps.newHashMap());
         String csa = MapUtil.getStringWithDefault(contextParamsMap, "csa", "");
@@ -62,7 +60,6 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         String isFirstPage = MapUtil.getStringWithDefault(contextParamsMap, "isFirstPage", "true");
         String exposureDataUserId = MapUtil.getStringWithDefault(contextParamsMap, "exposureDataUserId", "");
 
-        tppRequest.setUserId(userId);
         Map<String, String> params = Maps.newHashMap();
         params.put("appid", String.valueOf(APP_ID));
         params.put("pmtName", pmtName);
@@ -88,4 +85,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
         return tppRequest;
     }
+
+
+
 }
