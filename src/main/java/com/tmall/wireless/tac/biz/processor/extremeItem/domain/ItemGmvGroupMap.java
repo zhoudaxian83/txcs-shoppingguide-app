@@ -50,6 +50,7 @@ public class ItemGmvGroupMap {
             }
             itemGmvGroup.setItemGmvList(itemGmvList);
             logger.info("ItemGmvGroupMap_valueOf_itemGmvGroup: " + JSON.toJSONString(itemGmvGroup));
+            itemGmvGroupMap.innerItemGmvGroupMap.put(itemConfigGroup.getGroupNo(), itemGmvGroup);
         }
 
         return itemGmvGroupMap;

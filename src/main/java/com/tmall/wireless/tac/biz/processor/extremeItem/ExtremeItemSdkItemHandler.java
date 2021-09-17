@@ -105,8 +105,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             //进行组间排序
             groupSortDomainService.groupSort(itemConfigGroups, itemIds);
             tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
-            itemGmvService.queryGmv(itemConfigGroups, itemIds);
-            //supermarketHallIGraphSearchService.search("TPP_tmall_sm_tmcs_item_gmv_history", "552982987824");
+            //itemGmvService.queryGmv(itemConfigGroups, itemIds);
 
             Map<Integer, ItemConfig> afterPickGroupMap = itemPickService.pickItems(itemConfigGroups, inventoryMap);
             tacLogger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
