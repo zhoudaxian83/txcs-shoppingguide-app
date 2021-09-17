@@ -140,7 +140,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     private List<GeneralItem> buildResult(ItemConfigGroups itemConfigGroups, Map<Integer, ItemConfig> afterPickGroupMap, Map<Long, ItemDTO> longItemDTOMap, Map<Long, Boolean> inventoryMap) {
         List<GeneralItem> result = new ArrayList<>();
         for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroups()) {
-            result.add(buildItemMap(longItemDTOMap.get(afterPickGroupMap.get(itemConfigGroup.getGroupNo()).getItemId())));
+            result.add(buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap));
         }
         return result;
     }
@@ -229,7 +229,9 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         return itemDTOs.getData().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     }
 
-    public GeneralItem buildItemMap(ItemDTO itemDTO) {
+    public GeneralItem buildItemMap(ItemConfigGroup itemConfigGroup, Map<Long, ItemDTO> longItemDTOMap, Map<Integer, ItemConfig> afterPickGroupMap) {
+        ItemConfig itemConfig = afterPickGroupMap.get(itemConfigGroup.getGroupNo());
+        ItemDTO itemDTO = longItemDTOMap.get(itemConfig.getItemId());
         GeneralItem itemMap = new GeneralItem();
         itemMap.put("id", itemDTO.getItemId().getId());
         itemMap.put("itemId", itemDTO.getItemId().getId());
@@ -286,6 +288,21 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         if(itemDTO.getTargetSkuId()!=null){
             itemMap.put("skuId",itemDTO.getTargetSkuId());
         }
+
+        //运营配置的数据
+        if(StringUtils.isNotBlank(itemConfig.getActivityId()) && StringUtils.isNotBlank(itemConfig.getCouponValue())) {
+            itemMap.put("activityId", itemConfig.getActivityId());
+            itemMap.put("couponValue", itemConfig.getCouponValue());
+            itemMap.put("sellerId", "725677994");
+        }
+        if(StringUtils.isNotBlank(itemConfig.getItemDesc())) {
+            itemMap.put("itemDesc", itemConfig.getItemDesc());
+        }
+
+        if(StringUtils.isNotBlank(itemConfig.getItemImg())) {
+            itemMap.put("itemImg", itemConfig.getItemImg());
+        }
+
 
         return itemMap;
     }

@@ -52,14 +52,9 @@ public class ItemConfig {
     private String itemDesc;
 
     /**
-     * 一排一布局主图
+     * 商品图片
      */
-    private String wideImg;
-
-    /**
-     * 一排二布局主图
-     */
-    private String normalImg;
+    private String itemImg;
 
     public static ItemConfig valueOf(Map<String, Object> stringObjectMap) {
         ItemConfig itemConfig = new ItemConfig();
@@ -72,8 +67,7 @@ public class ItemConfig {
         itemConfig.setActivityId((String)stringObjectMap.get("activityId"));
         itemConfig.setCouponValue((String)stringObjectMap.get("couponValue"));
         itemConfig.setItemDesc((String)stringObjectMap.get("itemDesc"));
-        itemConfig.setWideImg((String)stringObjectMap.get("wideImg"));
-        itemConfig.setNormalImg((String)stringObjectMap.get("normalImg"));
+        itemConfig.setItemImg((String)stringObjectMap.get("itemImg"));
         return itemConfig;
     }
 }
