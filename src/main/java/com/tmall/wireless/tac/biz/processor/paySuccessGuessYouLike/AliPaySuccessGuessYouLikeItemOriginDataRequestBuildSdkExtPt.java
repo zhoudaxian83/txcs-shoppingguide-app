@@ -39,7 +39,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
     //参数文档：https://yuque.antfin.com/docs/share/4187d39f-b7d7-4650-8455-3df0426e3c30?#
     @Override
     public RecommendRequest process(SgFrameworkContextItem context) {
-        tacLogger.info("=================tacLogger+ 已进入tpp参数组装==================");
+        /*tacLogger.info("=================tacLogger+ 已进入tpp参数组装==================");
         tacLogger.info("context：" +  JSON.toJSONString(context));
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APP_ID);
@@ -98,6 +98,57 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         params.put("itemBusinessType", itemBusinessType);
         params.put("honehourStoreId", "0");
         params.put("isFirstPage", index > 0 ? "false" : "true");
+        params.put("exposureDataUserId", exposureDataUserId);
+
+        tacLogger.info("tpp请求参数：" + params.toString());
+        tppRequest.setParams(params);
+        tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
+        return tppRequest;*/
+
+        tacLogger.info("=================tacLogger+ 已进入tpp参数组装==================");
+        RecommendRequest tppRequest = new RecommendRequest();
+        tppRequest.setAppId(APP_ID);
+        Long userId = Optional.of(context).
+                map(SgFrameworkContext::getCommonUserParams).
+                map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
+        Map<String,Object> contextParamsMap = Optional.of(context).map(SgFrameworkContext::getTacContext).map(Context::getParams)
+                .orElse(Maps.newHashMap());
+        String csa = MapUtil.getStringWithDefault(contextParamsMap, "csa", "");
+
+        String pmtName = MapUtil.getStringWithDefault(contextParamsMap, "pmtName", "guessULike");
+        String pmtSource = MapUtil.getStringWithDefault(contextParamsMap, "pmtSource", "sm_manager");
+        Long smAreaId = MapUtil.getLongWithDefault(contextParamsMap, "smAreaId", 0L);
+        if (smAreaId == 0L && StringUtil.isNotEmpty(csa)) {
+            smAreaId = LogicalArea.parseByCode(AddressUtil.parseCSA(csa).getRegionCode()).getCoreCityCode();
+        }
+        String logicAreaId = AddressUtil.parseCSA(csa).getRegionCode();
+        String index = MapUtil.getStringWithDefault(contextParamsMap, "index", "0");
+        String pageSize = MapUtil.getStringWithDefault(contextParamsMap, "pageSize", "20");
+        String pageId = MapUtil.getStringWithDefault(contextParamsMap, "pageId", "cainixihuan1");
+        String level1Id = MapUtil.getStringWithDefault(contextParamsMap, "level1Id", "");
+        String itemBusinessType = MapUtil.getStringWithDefault(contextParamsMap, "itemBusinessType", "B2C,OneHour,HalfDay,NextDay");
+        String isFirstPage = MapUtil.getStringWithDefault(contextParamsMap, "isFirstPage", "true");
+        String exposureDataUserId = MapUtil.getStringWithDefault(contextParamsMap, "exposureDataUserId", "");
+
+        tppRequest.setUserId(userId);
+        Map<String, String> params = Maps.newHashMap();
+        params.put("appid", String.valueOf(APP_ID));
+        params.put("pmtName", pmtName);
+        params.put("pageSize", pageSize);
+        params.put("pmtSource", pmtSource);
+        params.put("type", "cainixihuan1");
+        params.put("smAreaId", String.valueOf(smAreaId));
+        params.put("logicAreaId", logicAreaId);
+        params.put("index", index);
+        params.put("pageId", pageId);
+        params.put("enlargeCainixihuanToHigher", "500");
+        params.put("regionCode", logicAreaId);
+        params.put("level1Id", level1Id);
+        params.put("moduleId", level1Id);
+        params.put("frontIndex", index);
+        params.put("itemBusinessType", itemBusinessType);
+        params.put("honehourStoreId", "0");
+        params.put("isFirstPage", isFirstPage);
         params.put("exposureDataUserId", exposureDataUserId);
 
         tacLogger.info("tpp请求参数：" + params.toString());
