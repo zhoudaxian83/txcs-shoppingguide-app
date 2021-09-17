@@ -160,5 +160,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendClassifierContentFilterExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendSceneContentFilterExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.service.IconRecommendService"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike.AliPaySuccessGuessYouLikeHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike.AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt"/>
 
 </beans>
