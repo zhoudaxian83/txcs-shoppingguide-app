@@ -94,25 +94,28 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             tacLogger.info("==========itemIds: " + JSON.toJSONString(itemIds));
             logger.warn("==========itemIds: " + JSON.toJSONString(itemIds));
 
+            //查询captain获取商品渲染信息
             Map<Long, ItemDTO> itemDTOMap = supermarketHallRenderService.batchQueryItem(itemIds);
             tacLogger.info("==========itemDTOs: " + JSON.toJSONString(itemDTOMap));
             logger.warn("==========itemDTOs: " + JSON.toJSONString(itemDTOMap));
-
-            Map<Long, Boolean> inventoryMap = itemDTOMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().isSoldout()));
-            tacLogger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
-            logger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
 
             //进行组间排序
             groupSortDomainService.groupSort(itemConfigGroups, itemIds);
             tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
             //itemGmvService.queryGmv(itemConfigGroups, itemIds);
 
+            //构建"商品->是否售光"Map，供组内选品时库存过滤使用
+            Map<Long, Boolean> inventoryMap = itemDTOMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().isSoldout()));
+            tacLogger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
+            logger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
+
+            //组内曝光比例选品
             Map<Integer, ItemConfig> afterPickGroupMap = itemPickService.pickItems(itemConfigGroups, inventoryMap);
             tacLogger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
             logger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
 
+            //构建响应对象
             List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, inventoryMap);
-
 
             logger.warn("=========generalItems:" + JSON.toJSONString(generalItems));
             return Flowable.just(TacResult.newResult(generalItems));
@@ -131,9 +134,6 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         }
         return result;
     }
-
-
-
 
     public GeneralItem buildItemMap(ItemConfigGroup itemConfigGroup, Map<Long, ItemDTO> longItemDTOMap, Map<Integer, ItemConfig> afterPickGroupMap) {
         ItemConfig itemConfig = afterPickGroupMap.get(itemConfigGroup.getGroupNo());
@@ -222,6 +222,5 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         DecimalFormat decimalFormat = new DecimalFormat(".0");//构造方法的字符格式这里如果小数不足2位,会以0补足.
         String monthlySalesView = decimalFormat.format(tenThousands);
         return monthlySalesView + "万";
-
     }
 }
