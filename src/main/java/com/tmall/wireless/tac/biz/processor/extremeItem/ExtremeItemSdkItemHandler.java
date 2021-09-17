@@ -75,36 +75,24 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     ItemPickService itemPickService;
     @Autowired
     com.taobao.igraph.client.core.IGraphClientWrap iGraphClientWrap;
-    @Autowired
-    HallCommonItemRequestProxy hallCommonItemRequestProxy;
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
         try {
-
-            BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
-                    HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
-                    "extreme_item");
-            bizScenario.addProducePackage(HallScenarioConstant.HALL_ITEM_SDK_PACKAGE);
-            Flowable<TacResult<List<GeneralItem>>> itemVOs = hallCommonItemRequestProxy.recommend(requestContext4Ald, bizScenario);
-
-            logger.warn("=====itemVOs:" + JSON.toJSONString(itemVOs));
-            tacLogger.warn("=====itemVOs:" + JSON.toJSONString(itemVOs));
-
             logger.warn("=====context:" + JSON.toJSONString(requestContext4Ald));
-            //tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
+            tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
             List<Map<String, Object>> aldDataList = (List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA);
-            //tacLogger.info("aldDataList:" + aldDataList);
+            tacLogger.info("aldDataList:" + aldDataList);
             logger.warn("aldDataList:" + aldDataList);
             ItemConfigs itemConfigs = ItemConfigs.valueOf(aldDataList);
-            //tacLogger.info("itemConfigs:" + JSON.toJSONString(itemConfigs));
+            tacLogger.info("itemConfigs:" + JSON.toJSONString(itemConfigs));
             logger.warn("itemConfigs:" + JSON.toJSONString(itemConfigs));
             itemConfigs.checkItemConfig();
             ItemConfigGroups itemConfigGroups = itemConfigs.splitGroup();
-            //tacLogger.info("itemConfigGroups:" + JSON.toJSONString(itemConfigGroups));
+            tacLogger.info("itemConfigGroups:" + JSON.toJSONString(itemConfigGroups));
             logger.warn("itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
             itemConfigGroups.sortGroup();
-            //tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroupList));
+            tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
             logger.warn("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
 
             //查询captain
@@ -112,11 +100,11 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             tacLogger.info("==========itemIds: " + JSON.toJSONString(itemIds));
             logger.warn("==========itemIds: " + JSON.toJSONString(itemIds));
             Map<Long, ItemDTO> longItemDTOMap = batchQueryItem(itemIds);
-            //tacLogger.info("==========itemDTOs: " + JSON.toJSONString(longItemDTOMap));
+            tacLogger.info("==========itemDTOs: " + JSON.toJSONString(longItemDTOMap));
             logger.warn("==========itemDTOs: " + JSON.toJSONString(longItemDTOMap));
 
             Map<Long, Boolean> inventoryMap = longItemDTOMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().isSoldout()));
-            //tacLogger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
+            tacLogger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
             logger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
 
             Map<Integer, ItemConfig> afterPickGroupMap = itemPickService.pickItems(itemConfigGroups, inventoryMap);
