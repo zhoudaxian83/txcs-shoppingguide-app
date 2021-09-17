@@ -1,38 +1,30 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
-import com.alibaba.aladdin.lamp.sdk.solution.context.SolutionContext;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.txcs.common.util.FlogUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.eagleeye.EagleEye;
 import com.taobao.igraph.client.model.*;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
-import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
-import com.tmall.aselfcaptain.common.model.promotion.ItemPromotionCluster;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
 import com.tmall.aselfcaptain.item.constant.Channel;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.aselfcaptain.item.model.ItemId;
 import com.tmall.aselfcaptain.item.model.ItemQueryDO;
 import com.tmall.aselfcaptain.item.model.QueryOptionDO;
-import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfig;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroup;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroups;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigs;
+import com.tmall.wireless.tac.biz.processor.extremeItem.domain.service.GroupSortDomainService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.service.ItemPickService;
-import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
-import com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleHandler;
-import com.tmall.wireless.tac.biz.processor.huichang.service.HallCommonContentRequestProxy;
-import com.tmall.wireless.tac.biz.processor.huichang.service.HallCommonItemRequestProxy;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -46,12 +38,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant.STATIC_SCHEDULE_DATA;
 
 
 /**
@@ -72,6 +61,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Autowired
     RenderSpi renderSpi;
     @Autowired
+    GroupSortDomainService groupSortDomainService;
+    @Autowired
     ItemPickService itemPickService;
     @Autowired
     com.taobao.igraph.client.core.IGraphClientWrap iGraphClientWrap;
@@ -79,21 +70,22 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
         try {
-            logger.warn("=====context:" + JSON.toJSONString(requestContext4Ald));
+            //初始化SupermarketHallContext
+            SupermarketHallContext supermarketHallContext = SupermarketHallContext.init(requestContext4Ald);
             tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
-            List<Map<String, Object>> aldDataList = (List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA);
-            tacLogger.info("aldDataList:" + aldDataList);
-            logger.warn("aldDataList:" + aldDataList);
-            ItemConfigs itemConfigs = ItemConfigs.valueOf(aldDataList);
+
+            //构造运营配置商品列表领域对象
+            ItemConfigs itemConfigs = ItemConfigs.valueOf(supermarketHallContext.getAldManualConfigDataList());
             tacLogger.info("itemConfigs:" + JSON.toJSONString(itemConfigs));
-            logger.warn("itemConfigs:" + JSON.toJSONString(itemConfigs));
-            itemConfigs.checkItemConfig();
+
+            //将运营配置的商品进行拆分组
             ItemConfigGroups itemConfigGroups = itemConfigs.splitGroup();
             tacLogger.info("itemConfigGroups:" + JSON.toJSONString(itemConfigGroups));
-            logger.warn("itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
-            itemConfigGroups.sortGroup();
+
+            //进行组间排序
+            groupSortDomainService.groupSort(itemConfigGroups);
             tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
-            logger.warn("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
+
 
             //查询captain
             List<Long> itemIds = itemConfigs.extractItemIds();
@@ -127,7 +119,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
     private List<GeneralItem> buildResult(ItemConfigGroups itemConfigGroups, Map<Integer, ItemConfig> afterPickGroupMap, Map<Long, ItemDTO> longItemDTOMap, Map<Long, Boolean> inventoryMap) {
         List<GeneralItem> result = new ArrayList<>();
-        for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroups()) {
+        for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroupList()) {
             result.add(buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap));
         }
         return result;

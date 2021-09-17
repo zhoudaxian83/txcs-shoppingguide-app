@@ -9,21 +9,24 @@ import java.util.List;
 
 @Data
 public class ItemConfigGroups {
-    private List<ItemConfigGroup> itemConfigGroups = new ArrayList<>();
+    private List<ItemConfigGroup> itemConfigGroupList = new ArrayList<>();
 
     public boolean forceSort() {
-        return itemConfigGroups.get(0).isForceSort();
+        return itemConfigGroupList.get(0).isForceSort();
     }
 
     /**
      * 根据运营配置强制排序，不走赛马
      */
     public void sortGroup() {
-        Collections.sort(itemConfigGroups, new ForceSortComparator());
+        Collections.sort(itemConfigGroupList, new ForceSortComparator());
     }
 
     public void sortGroup(ItemGmvGroupMap itemGmvGroupMap) {
-        Collections.sort(itemConfigGroups, new RaceSortComparator(itemGmvGroupMap));
+        if(itemGmvGroupMap == null) {
+            return;
+        }
+        Collections.sort(itemConfigGroupList, new RaceSortComparator(itemGmvGroupMap));
     }
 
     private static class ForceSortComparator implements Comparator<ItemConfigGroup> {

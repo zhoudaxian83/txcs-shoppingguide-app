@@ -12,7 +12,7 @@ import java.util.Map;
 public class ItemPickService {
     public Map<Integer, ItemConfig> pickItems(ItemConfigGroups itemConfigGroups, Map<Long, Boolean> itemSoldOutMap) {
         Map<Integer, ItemConfig> result = new HashMap<>();
-        for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroups()) {
+        for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroupList()) {
             //库存过滤
             itemConfigGroup.inventoryFilter(itemSoldOutMap);
             //曝光为0过滤

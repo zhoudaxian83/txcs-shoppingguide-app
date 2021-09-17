@@ -1,7 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem.domain;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +13,24 @@ import java.util.stream.Collectors;
 
 @Data
 public class ItemConfigs {
+    private static Logger logger = LoggerFactory.getLogger(ItemConfigs.class);
+
     private List<ItemConfig> itemConfigList = new ArrayList<>();
 
+    /**
+     * 从运营手工配置的数据中构造领域对象ItemConfigs
+     *
+     * @param aldDataList 运营在鸿雁手工配置的数据
+     * @return 商品配置列表领域对象
+     */
     public static ItemConfigs valueOf(List<Map<String, Object>> aldDataList) {
         ItemConfigs itemConfigs = new ItemConfigs();
         for (Map<String, Object> stringObjectMap : aldDataList) {
             ItemConfig itemConfig = ItemConfig.valueOf(stringObjectMap);
             itemConfigs.itemConfigList.add(itemConfig);
         }
+        logger.info("ItemConfigs_valueOf_itemConfigs: " + JSON.toJSONString(itemConfigs));
+        itemConfigs.checkItemConfig();
         return itemConfigs;
     }
 
@@ -47,8 +60,8 @@ public class ItemConfigs {
      * @return
      */
     public ItemConfigGroups splitGroup() {
-        ItemConfigGroups itemConfigGroupList = new ItemConfigGroups();
-        List<ItemConfigGroup> itemConfigGroups = itemConfigList.stream()
+        ItemConfigGroups itemConfigGroups = new ItemConfigGroups();
+        List<ItemConfigGroup> itemConfigGroupList = itemConfigList.stream()
                 .collect(Collectors.groupingBy(ItemConfig::getGroupNo))
                 .values().stream()
                 .filter(CollectionUtils::isNotEmpty)
@@ -61,8 +74,9 @@ public class ItemConfigs {
                     itemConfigGroup.getItemConfigList().addAll(itemConfigs);
                     return itemConfigGroup;
                 }).collect(Collectors.toList());
-        itemConfigGroupList.getItemConfigGroups().addAll(itemConfigGroups);
-        return itemConfigGroupList;
+        itemConfigGroups.getItemConfigGroupList().addAll(itemConfigGroupList);
+        logger.info("ItemConfigs_splitGroup_itemConfigGroups: " + JSON.toJSONString(itemConfigGroups));
+        return itemConfigGroups;
     }
 
     public List<Long> extractItemIds() {
