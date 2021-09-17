@@ -61,7 +61,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
                 .map(CommonUserParams::getPmtParams).map(PmtParams::getPageId).orElse("cainixihuan1");
 
         String moduleId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getPmtParams).map(PmtParams::getModuleId).orElse("");
+                .map(CommonUserParams::getPmtParams).map(PmtParams::getModuleId).orElse("153");
 
 
         Long smAreaId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
