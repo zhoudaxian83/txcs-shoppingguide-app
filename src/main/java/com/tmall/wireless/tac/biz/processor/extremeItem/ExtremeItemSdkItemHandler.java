@@ -5,11 +5,13 @@ import com.alibaba.aladdin.lamp.sdk.solution.context.SolutionContext;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.txcs.common.util.FlogUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.eagleeye.EagleEye;
 import com.taobao.igraph.client.model.*;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
+import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.aselfcaptain.common.model.promotion.ItemPromotionCluster;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
 import com.tmall.aselfcaptain.item.constant.Channel;
@@ -45,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,6 +63,8 @@ import static com.tmall.wireless.tac.biz.processor.huichang.common.constant.Hall
 public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
     Logger logger = LoggerFactory.getLogger(ExtremeItemSdkItemHandler.class);
+
+    private static final Integer tenThousand = 10000;
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
     @Autowired
@@ -143,36 +148,41 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         return result;
     }
 
-    public RenderRequest buildRenderRequest(List<Long> itemIds, Long buyerId, Long areaId) {
+
+
+    RenderRequest buildRenderRequest(List<Long> itemIds, String smAreaId, String queryTime, Long userId) {
         RenderRequest renderRequest = new RenderRequest();
         ItemQueryDO query = new ItemQueryDO();
+
+        if (StringUtils.isNotBlank(smAreaId) && !"0".equals(smAreaId)) {
+            query.setAreaId(Long.valueOf(smAreaId));
+        } else {
+            tacLogger.debug("smAreaId is null" + smAreaId);
+            return null;
+        }
         List<ItemId> itemIdList = itemIds.stream()
                 .map(itemId -> ItemId.valueOf(itemId, ItemId.ItemType.B2C))
                 .collect(Collectors.toList());
         query.setItemIds(itemIdList);
-        query.setBuyerId(buyerId);
-        query.setSource("txcs-shoppingguide");
-        query.setChannel(Channel.WAP);
-        //query.setLocationId(storeId);
-        query.setAreaId(areaId);
-        QueryOptionDO option = new QueryOptionDO();
-        /*if (StringUtils.isNotEmpty(itemInfoSourceMetaInfo.getUmpChannelKey())) {
-            Map<String, String> extraParams = Maps.newHashMap();
-            extraParams.put("umpChannel", itemInfoSourceMetaInfo.getUmpChannelKey());
-            query.setExtraParams(extraParams);
-        }*/
 
+        query.setChannel(Channel.WAP);
+        if(StringUtils.isNotEmpty(queryTime)){
+            query.setQueryTime(queryTime);
+        }
+
+        if (userId != null && userId != 0) {
+            query.setBuyerId(userId);
+        }
+
+        query.setSource("txcs-shoppingguide", "hall");
+
+        QueryOptionDO option = new QueryOptionDO();
+        option.setOpenMkt(true);
+        option.setSceneCode("conference.promotion");
         option.setIncludeQuantity(true);
         option.setIncludeSales(true);
-        option.setIncludeItemTags(true);
-        option.setIncludeItemFeature(true);
         option.setIncludeMaiFanCard(true);
-        option.setIncludeTiming(true);
-        /*if (StringUtils.isNotEmpty(itemInfoSourceMetaInfo.getMktSceneCode())) {
-            option.setSceneCode(itemInfoSourceMetaInfo.getMktSceneCode());
-            option.setOpenMkt(true);
-        }*/
-
+        option.setUserPromotion(false);
         renderRequest.setQuery(query);
         renderRequest.setOption(option);
         return renderRequest;
@@ -217,107 +227,70 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     }
 
     private Map<Long, ItemDTO> queryItem(List<Long> itemIds) {
-        RenderRequest renderRequest = buildRenderRequest(itemIds, 0L, 330110L);
+        RenderRequest renderRequest = buildRenderRequest(itemIds, "330110",null, 1034513083L);
         SPIResult<List<ItemDTO>> itemDTOs = renderSpi.query(renderRequest);
         return itemDTOs.getData().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     }
 
     public Map<String, Object> buildItemMap(ItemDTO itemDTO) {
         Map<String, Object> itemMap = Maps.newHashMap();
-        if (true) {
-            buildItemDTO(itemMap, itemDTO);
-        } else {
-            itemMap.put("itemId", itemDTO.getId());
-            itemMap.put("itemImg", itemDTO.getWhitePic());
-            itemMap.put("itemMPrice", itemDTO.getDisplayPrice());
-            //itemMap.put("storeId", tmContext.getStoreId());
-            itemMap.put("shortTitle", itemDTO.getShortTitle());
-            itemMap.put("itemUrl", itemDTO.getDetailUrl());
-            itemMap.put("_areaSellable", !itemDTO.isSoldout() && itemDTO.isCanBuy());
-            itemMap.put("locType", "B2C");
-
-            itemMap.put("reservePrice", itemDTO.getReservePrice());
-
-            //买赠
-            ItemPromotionCluster itemPromotionCluster = itemDTO.getItemPromotionCluster();
-            if (StringUtils.isBlank((String) itemMap.get("itemDesc"))) {
-                //店铺优惠
-                if (itemPromotionCluster != null && itemPromotionCluster.getGiftPromotionDTO() != null) {
-                    itemMap.put("itemDesc", itemPromotionCluster.getGiftPromotionDTO().getCopywriting());
-                } else {
-                    //店铺优惠
-                    List<String> shopPromotionList = itemDTO.getShopPromotionList();
-                    if (CollectionUtils.isNotEmpty(shopPromotionList)) {
-                        String itemDesc = shopPromotionList.get(0);
-                        String[] st = itemDesc.split(";");
-                        if (!st[0].startsWith("【超值换购")) {
-                            itemMap.put("itemDesc", st[0]);
-                        }
-                    }
-                }
-            }
-
-            itemMap.put("chaoshiItemTitle", itemDTO.getShortTitle());
+        itemMap.put("id", itemDTO.getItemId().getId());
+        itemMap.put("itemId", itemDTO.getItemId().getId());
+        //itemMap.put("storeId", tmcsContext.getStoreId());
+        if (StringUtils.isBlank((String) itemMap.get("selfSupportProperties"))) {
+            itemMap.put("selfSupportProperties", itemDTO.getSelfSupportProperties());
         }
 
-        return itemMap;
-    }
-
-    public void buildItemDTO(Map<String, Object> item, ItemDTO itemDTO) {
-        //item.put("currentResourceId", tmcsContext.getCurrentResourceId());
-        item.put("id", itemDTO.getItemId().getId());
-        item.put("itemId", itemDTO.getItemId().getId());
-        //item.put("storeId", tmcsContext.getStoreId());
-        if (StringUtils.isBlank((String) item.get("selfSupportProperties"))) {
-            item.put("selfSupportProperties", itemDTO.getSelfSupportProperties());
-        }
-
-        if (StringUtils.isBlank((String) item.get("chaoshiItemTitle"))) {
-            //if ("O2O".equals(tmcsContext.getLocType())) {
-            //    item.put("chaoshiItemTitle", itemDTO.getTitle());
-            //} else {
-                item.put("chaoshiItemTitle", itemDTO.getShortTitle());
-            //}
-        }
-
-        if (StringUtils.isBlank((String) item.get("itemImg"))) {
-            item.put("itemImg", itemDTO.getWhitePic());
-        }
-
-        if (StringUtils.isBlank((String) item.get("shortTitle"))) {
-            item.put("shortTitle", itemDTO.getShortTitle());
-        }
-        if (StringUtils.isBlank((String) item.get("specDetail"))) {
-            item.put("specDetail", itemDTO.getSpecDetail());
-        }
-
-        /*if (CommonSwitch.monthSoldCount) {
-            String monthlySales = itemDTO.getAttributes().get(BizAttributes.ATTR_SALES_AMOUNT);
-            if (org.apache.commons.lang3.StringUtils.isNotBlank(monthlySales) && Integer.valueOf(monthlySales) > 0) {
-                item.put("itemMonthSoldCount", toMonthlySalesView(monthlySales));
-                item.put("orignMonthSoldCount", monthlySales);
+        /*if (StringUtils.isBlank((String) itemMap.get("chaoshiItemTitle"))) {
+            if ("O2O".equals(tmcsContext.getLocType())) {
+                itemMap.put("chaoshiItemTitle", itemDTO.getTitle());
+            } else {
+                itemMap.put("chaoshiItemTitle", itemDTO.getShortTitle());
             }
         }*/
-        item.put("itemUrl", itemDTO.getDetailUrl());
-        //item.put("scm", getScm1(tmcsContext, String.valueOf(itemDTO.getItemId().getId())));
-        item.put("_areaSellable", !itemDTO.isSoldout());
-        item.put("locType", itemDTO.getLocType().name());
-        item.put("sellerId", itemDTO.getSellerId());
 
+        itemMap.put("chaoshiItemTitle", itemDTO.getShortTitle());
+
+        if (StringUtils.isBlank((String) itemMap.get("itemImg"))) {
+            itemMap.put("itemImg", itemDTO.getWhitePic());
+        }
+
+        if (StringUtils.isBlank((String) itemMap.get("shortTitle"))) {
+            itemMap.put("shortTitle", itemDTO.getShortTitle());
+        }
+        if (StringUtils.isBlank((String) itemMap.get("specDetail"))) {
+            itemMap.put("specDetail", itemDTO.getSpecDetail());
+        }
+
+        String monthlySales = itemDTO.getAttributes().get(BizAttributes.ATTR_SALES_AMOUNT);
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(monthlySales) && Integer.valueOf(monthlySales) > 0) {
+            itemMap.put("itemMonthSoldCount", toMonthlySalesView(monthlySales));
+            itemMap.put("orignMonthSoldCount", monthlySales);
+        }
+        itemMap.put("itemUrl", itemDTO.getDetailUrl());
+        //itemMap.put("scm", getScm1(tmcsContext, String.valueOf(itemDTO.getItemId().getId())));
+        itemMap.put("_areaSellable", !itemDTO.isSoldout());
+        itemMap.put("locType", itemDTO.getLocType().name());
+        itemMap.put("sellerId", itemDTO.getSellerId());
+
+        //itemMap.put("storeId", tmcsContext.getStoreId());
+        //视频url地址补充
 
         if (BizAttributes.TRUE.equals(MapUtils.getString(itemDTO.getAttributes(), BizAttributes.ATTR_IS_WEIGHT_ITEM))) {
             String weightAttrJson = MapUtils.getString(itemDTO.getAttributes(), BizAttributes.ATTR_WEIGHT_ITEM);
             if (org.apache.commons.lang.StringUtils.isNotBlank(weightAttrJson)) {
                 JSONObject ob = JSON.parseObject(weightAttrJson);
                 String saleUnit = ob.getString(BizAttributes.WeightAttr.SALE_UNIT);
-                item.put("priceUnit", saleUnit);
+                itemMap.put("priceUnit", saleUnit);
             }
         }
         ItemPromotionResp itemPromotionResp = itemDTO.getItemPromotionResp();
-        item.put("itemPromotionResp", itemPromotionResp);
+        itemMap.put("itemPromotionResp", itemPromotionResp);
         if(itemDTO.getTargetSkuId()!=null){
-            item.put("skuId",itemDTO.getTargetSkuId());
+            itemMap.put("skuId",itemDTO.getTargetSkuId());
         }
+
+        return itemMap;
     }
 
     public void doPGSearch(String tableName, String searchKey) {
@@ -350,5 +323,17 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             tacLogger.info("fieldValue" + fieldValue);
             tacLogger.info("fieldValue2" + fieldValue2);
         }
+    }
+
+    public String toMonthlySalesView(String monthSalesAmount) {
+        if (Integer.valueOf(monthSalesAmount) < tenThousand) {
+            return monthSalesAmount;
+        }
+
+        float tenThousands = Float.valueOf(monthSalesAmount) / Float.valueOf(tenThousand);
+        DecimalFormat decimalFormat = new DecimalFormat(".0");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+        String monthlySalesView = decimalFormat.format(tenThousands);
+        return monthlySalesView + "万";
+
     }
 }
