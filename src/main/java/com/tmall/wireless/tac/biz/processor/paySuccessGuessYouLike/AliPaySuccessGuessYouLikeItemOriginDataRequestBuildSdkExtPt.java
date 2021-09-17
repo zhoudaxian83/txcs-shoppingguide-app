@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike;
 
 import com.alibaba.common.lang.StringUtil;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.aselfcommon.model.oc.domain.LogicalArea;
@@ -37,7 +38,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
     @Override
     public RecommendRequest process(SgFrameworkContextItem context) {
         tacLogger.info("=================tacLogger+ 已进入tpp参数组装==================");
-        tacLogger.info("context：" + context.toString());
+        tacLogger.info("context：" +  JSON.toJSONString(context));
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APP_ID);
 
