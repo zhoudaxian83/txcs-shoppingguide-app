@@ -63,12 +63,12 @@ public class ItemConfig {
 
     public static ItemConfig valueOf(Map<String, Object> stringObjectMap) {
         ItemConfig itemConfig = new ItemConfig();
-        itemConfig.setItemId((Long)stringObjectMap.get("contentId"));
+        itemConfig.setItemId(Long.valueOf((String)stringObjectMap.get("contentId")));
         itemConfig.setItemName((String)stringObjectMap.get("shortTitle"));
-        itemConfig.setGroupNo((Integer)stringObjectMap.get("groupNo"));
-        itemConfig.setForceSort((Integer)stringObjectMap.get("forceSort") == 1);
-        itemConfig.setSequenceNo((Integer) stringObjectMap.get("sequenceNo"));
-        itemConfig.setExposurePercent((Integer) stringObjectMap.get("exposurePercent"));
+        itemConfig.setGroupNo(Integer.valueOf((String)stringObjectMap.get("groupNo")));
+        itemConfig.setForceSort(Integer.parseInt((String)stringObjectMap.get("forceSort")) == 1);
+        itemConfig.setSequenceNo(Integer.parseInt((String) stringObjectMap.get("sequenceNo")));
+        itemConfig.setExposurePercent(Integer.parseInt((String)stringObjectMap.get("exposurePercent")));
         itemConfig.setActivityId((String)stringObjectMap.get("activityId"));
         itemConfig.setCouponValue((String)stringObjectMap.get("couponValue"));
         itemConfig.setItemDesc((String)stringObjectMap.get("itemDesc"));
