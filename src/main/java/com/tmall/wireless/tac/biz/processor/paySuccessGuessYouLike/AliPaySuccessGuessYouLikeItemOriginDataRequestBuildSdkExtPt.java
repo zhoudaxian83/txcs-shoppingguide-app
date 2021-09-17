@@ -12,6 +12,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
+import com.tmall.wireless.tac.client.domain.UserInfo;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -41,26 +42,42 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         tacLogger.info("context：" +  JSON.toJSONString(context));
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APP_ID);
-
-        Map<String,Object> contextParamsMap = Optional.of(context).map(SgFrameworkContext::getTacContext).map(Context::getParams)
-                .orElse(Maps.newHashMap());
+        Long userId = Optional.of(context).
+                map(SgFrameworkContext::getCommonUserParams).
+                map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
+        Map<String,Object> contextParamsMap = Optional.of(context).map(SgFrameworkContext::getTacContext)
+                .map(Context::getParams).orElse(Maps.newHashMap());
         String csa = MapUtil.getStringWithDefault(contextParamsMap, "csa", "");
 
-        String pmtName = MapUtil.getStringWithDefault(contextParamsMap, "pmtName", "guessULike");
-        String pmtSource = MapUtil.getStringWithDefault(contextParamsMap, "pmtSource", "sm_manager");
-        Long smAreaId = MapUtil.getLongWithDefault(contextParamsMap, "smAreaId", 0L);
-        if (smAreaId == 0L && StringUtil.isNotEmpty(csa)) {
-            smAreaId = LogicalArea.parseByCode(AddressUtil.parseCSA(csa).getRegionCode()).getCoreCityCode();
-        }
-        String logicAreaId = AddressUtil.parseCSA(csa).getRegionCode();
-        String index = MapUtil.getStringWithDefault(contextParamsMap, "index", "0");
-        String pageSize = MapUtil.getStringWithDefault(contextParamsMap, "pageSize", "20");
-        String pageId = MapUtil.getStringWithDefault(contextParamsMap, "pageId", "cainixihuan1");
-        String level1Id = MapUtil.getStringWithDefault(contextParamsMap, "level1Id", "");
-        String itemBusinessType = MapUtil.getStringWithDefault(contextParamsMap, "itemBusinessType", "B2C,OneHour,HalfDay,NextDay");
-        String isFirstPage = MapUtil.getStringWithDefault(contextParamsMap, "isFirstPage", "true");
-        String exposureDataUserId = MapUtil.getStringWithDefault(contextParamsMap, "exposureDataUserId", "");
 
+        //pmt参数拼接
+        String pmtName = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getPmtParams).map(PmtParams::getPmtName).orElse("guessULike");
+
+        String pmtSource = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getPmtParams).map(PmtParams::getPmtSource).orElse("sm_manager");
+
+        String pageId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getPmtParams).map(PmtParams::getPageId).orElse("cainixihuan1");
+
+        String moduleId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getPmtParams).map(PmtParams::getModuleId).orElse("");
+
+
+        Long smAreaId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).orElse(0L);
+
+        Long regionCode = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getLocParams).map(LocParams::getRegionCode).orElse(0L);
+
+        int index = MapUtil.getIntWithDefault(contextParamsMap, "index", 0);
+        String pageSize = MapUtil.getStringWithDefault(contextParamsMap, "pageSize", "20");
+        String itemBusinessType = MapUtil.getStringWithDefault(
+                contextParamsMap, "itemBusinessType", "B2C,OneHour,HalfDay,NextDay");
+        String exposureDataUserId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse("");
+
+        tppRequest.setUserId(userId);
         Map<String, String> params = Maps.newHashMap();
         params.put("appid", String.valueOf(APP_ID));
         params.put("pmtName", pmtName);
@@ -68,17 +85,17 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         params.put("pmtSource", pmtSource);
         params.put("type", "cainixihuan1");
         params.put("smAreaId", String.valueOf(smAreaId));
-        params.put("logicAreaId", logicAreaId);
-        params.put("index", index);
+        params.put("logicAreaId", String.valueOf(regionCode));
+        params.put("index", String.valueOf(index));
         params.put("pageId", pageId);
         params.put("enlargeCainixihuanToHigher", "500");
-        params.put("regionCode", logicAreaId);
-        params.put("level1Id", level1Id);
-        params.put("moduleId", level1Id);
-        params.put("frontIndex", index);
+        params.put("regionCode", String.valueOf(regionCode));
+        params.put("level1Id", moduleId);
+        params.put("moduleId", moduleId);
+        params.put("frontIndex", String.valueOf(index));
         params.put("itemBusinessType", itemBusinessType);
         params.put("honehourStoreId", "0");
-        params.put("isFirstPage", isFirstPage);
+        params.put("isFirstPage", index > 0 ? "false" : "true");
         params.put("exposureDataUserId", exposureDataUserId);
 
         tacLogger.info("tpp请求参数：" + params.toString());
