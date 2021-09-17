@@ -17,6 +17,7 @@ import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.aselfcaptain.item.model.ItemId;
 import com.tmall.aselfcaptain.item.model.ItemQueryDO;
 import com.tmall.aselfcaptain.item.model.QueryOptionDO;
+import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.render.RenderSpi;
@@ -26,7 +27,10 @@ import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroup;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroups;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigs;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.service.ItemPickService;
+import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleHandler;
+import com.tmall.wireless.tac.biz.processor.huichang.service.HallCommonContentRequestProxy;
+import com.tmall.wireless.tac.biz.processor.huichang.service.HallCommonItemRequestProxy;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -66,10 +70,22 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     ItemPickService itemPickService;
     @Autowired
     com.taobao.igraph.client.core.IGraphClientWrap iGraphClientWrap;
+    @Autowired
+    HallCommonItemRequestProxy hallCommonItemRequestProxy;
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
         try {
+
+            BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
+                    HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
+                    "extreme_item");
+            bizScenario.addProducePackage(HallScenarioConstant.HALL_ITEM_SDK_PACKAGE);
+            Flowable<TacResult<List<GeneralItem>>> itemVOs = hallCommonItemRequestProxy.recommend(requestContext4Ald, bizScenario);
+
+            logger.warn("=====itemVOs:" + JSON.toJSONString(itemVOs));
+            tacLogger.warn("=====itemVOs:" + JSON.toJSONString(itemVOs));
+
             logger.warn("=====context:" + JSON.toJSONString(requestContext4Ald));
             //tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
             List<Map<String, Object>> aldDataList = (List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA);
