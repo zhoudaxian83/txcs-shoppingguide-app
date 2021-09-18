@@ -59,20 +59,23 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
 
         detailRecContentResultVO.setResult(new ArrayList<>(3));
 
-        //默认写入第一个tab是相似商品，默认contentId=-1
-        DetailRecommendContentVO contentVO = new DetailRecommendContentVO();
-        contentVO.setContentId(-1L);
-        contentVO.setTitle(Lists.newArrayList(new DetailTextComponentVO("相似商品", new Style("12", "#111111", "true"))));
-        detailRecContentResultVO.getResult().add(contentVO);
-
-        if (CollectionUtils.isNotEmpty(itemAndContentList)) {
-            //推荐内容
-            detailRecContentResultVO.getResult().addAll(super
-                .convertContentResult(recommendRequest, itemAndContentList.subList(0,
-                    Math.min(DetailSwitch.contentSizeMap.get(getRecTypeEnum().getType()).getMax()
-                    , itemAndContentList.size())),
-                    scmJoin));
+        if (CollectionUtils.isEmpty(itemAndContentList)) {
+            itemAndContentList = new ArrayList<>();
         }
+
+        //默认写入第一个tab是相似商品，默认contentId=-1
+        ContentVO contentVO = new ContentVO();
+        contentVO.put("contentId", -1L);
+        contentVO.put("contentTitle", "相似商品");
+        itemAndContentList.add(0, contentVO);
+
+        //推荐内容
+        detailRecContentResultVO.getResult().addAll(super
+            .convertContentResult(recommendRequest, itemAndContentList.subList(0,
+                Math.min(DetailSwitch.contentSizeMap.get(getRecTypeEnum().getType()).getMax()
+                    , itemAndContentList.size())),
+                scmJoin));
+
 
         exposureExtraParam.put("scmJoin",String.join(",",scmJoin));
         return detailRecContentResultVO;
