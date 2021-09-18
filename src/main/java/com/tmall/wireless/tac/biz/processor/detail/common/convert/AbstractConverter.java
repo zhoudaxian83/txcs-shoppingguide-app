@@ -214,6 +214,9 @@ public abstract class AbstractConverter<T> {
         return eventView2;
     }
     private List<DetailTextComponentVO> buildPrice(String shortText, String price) {
+
+        List<DetailTextComponentVO> priceComponentVOS=new ArrayList<>(3);
+        //价格符号
         if (StringUtils.isNotEmpty(shortText)) {
             shortText = shortText + "￥";
         } else {
@@ -222,10 +225,25 @@ public abstract class AbstractConverter<T> {
         DetailTextComponentVO prefix = new DetailTextComponentVO(shortText,
             new Style("12", "#FF4027", "false", "false", "#ffffff", "false"));
 
+        priceComponentVOS.add(prefix);
+
+
+        //价格的样式
         Style priceStyle = new Style("14", "#FF4027", "true", "false", "#ffffff", "false");
         priceStyle.setBold("true");
-        DetailTextComponentVO text = new DetailTextComponentVO(price, priceStyle);
 
-        return Lists.newArrayList(prefix, text);
+
+        //价格切分为元和小数点后
+        String[] split = price.split(".");
+
+        //元
+        priceComponentVOS.add(new DetailTextComponentVO(split[0], priceStyle));
+
+        //小数
+        if (split.length > 1) {
+            priceComponentVOS.add(new DetailTextComponentVO(split[1], priceStyle));
+        }
+
+        return priceComponentVOS;
     }
 }
