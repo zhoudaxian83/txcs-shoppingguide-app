@@ -64,9 +64,9 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
                 // 主料筛查 --> 菜谱过滤
                 List<ItemEntityVO> mainMaterials = Lists.newArrayList();
                 for (ItemEntityVO itemCanBuy : canBuyItemList) {
-                    logger.info("****ItemEntityVO:****" + JSON.toJSONString(itemCanBuy));
+//                    logger.info("****ItemEntityVO:****" + JSON.toJSONString(itemCanBuy));
                     String crowdIds = itemCanBuy.getString("crowdId");
-                    logger.info("========crowIds:=======" + crowdIds);
+//                    logger.info("========crowIds:=======" + crowdIds);
                     // 主料数>=2 跳出
                     if (mainMaterials.size() >= ConstantValue.MAIN_MATERIAL_NUMBER) {
                         break;
