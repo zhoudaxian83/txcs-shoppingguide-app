@@ -3,7 +3,7 @@ import lombok.Getter;
 
 public enum TabTypeEnum {
     OTHER("other","其他Tab"),
-    TODAY_CRAZY("todayCrazy","今日超省Tab"),
+    TODAY_CRAZY("todaySuperEconomize","今日超省Tab"),
     ;
 
     TabTypeEnum(String type, String description) {
