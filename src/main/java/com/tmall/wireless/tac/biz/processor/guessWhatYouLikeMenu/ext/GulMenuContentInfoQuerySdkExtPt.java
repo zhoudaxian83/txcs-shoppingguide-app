@@ -24,6 +24,7 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderErrorEnu
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.model.content.SubContentModel;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderCheckUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
+import com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.constant.ConstantValue;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.apache.commons.collections4.CollectionUtils;
@@ -112,11 +113,12 @@ public class GulMenuContentInfoQuerySdkExtPt extends Register implements Content
                 /**
                  * detail信息补全
                  */
-                List<SceneDetailValue> details = tairSceneDTO.getDetails();
-                logger.info(details.toString());
-                for (SceneDetailValue detail : details) {
-                    Long crowdId = detail.getItemsetId();
-                }
+//                logger.info(tairSceneDTO.getDetails().toString());
+//                for (int i = 0; i < contentEntity.getItems().size(); i++) {
+//                    ItemEntity  itemEntity = contentEntity.getItems().get(i);
+//                    String crowdId = "crm_" + tairSceneDTO.getDetails().get(i).getItemsetId();
+//                    itemEntity.setCrowdId(crowdId);
+//                }
 
                 Map<String, Object> tairPropertyMap = tairSceneDTO.getProperty();
                 //前后端映射  首页改版、逛超市映射字段相同
@@ -188,15 +190,14 @@ public class GulMenuContentInfoQuerySdkExtPt extends Register implements Content
 
         List<SceneDetailValue> sceneDetailValues = Optional.ofNullable(labelSceneContentInfo)
                 .map(TairSceneDTO::getDetails)
-                .orElse(com.google.common.collect.Lists.newArrayList());
+                .orElse(Lists.newArrayList());
 
-        if (org.apache.commons.collections.CollectionUtils.isEmpty(sceneDetailValues)) {
+        if (CollectionUtils.isEmpty(sceneDetailValues)) {
             return "";
         }
 
         List<Long> itemSetIds = sceneDetailValues.stream().map(SceneDetailValue::getItemsetId).collect(Collectors.toList());
         return Joiner.on(",").join(itemSetIds);
-
     }
 
     private static List<SubContentModel> buildSubContentBaseInfoV2(Map<String, Object> contentInfo, TairSceneDTO labelSceneContentInfo) {

@@ -66,18 +66,18 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
                 for (ItemEntityVO itemCanBuy : canBuyItemList) {
                     logger.info("****ItemEntityVO:****" + JSON.toJSONString(itemCanBuy));
                     String crowdIds = itemCanBuy.getString("crowdId");
-                    // 没有所属圈品集 直接加入主料 无法做筛选
-                    if (StringUtils.isEmpty(crowdIds)) {
-                        mainMaterials.add(itemCanBuy);
-                        continue;
-                    }
                     logger.info("========crowIds:=======" + crowdIds);
                     // 主料数>=2 跳出
                     if (mainMaterials.size() >= ConstantValue.MAIN_MATERIAL_NUMBER) {
                         break;
                     }
+                    // 没有所属圈品集 直接加入主料 无法做筛选
+                    if (StringUtils.isEmpty(crowdIds)) {
+                        mainMaterials.add(itemCanBuy);
+                        continue;
+                    }
                     // 商品属于不同主料
-                    if (!CollectionUtils.isEmpty(mainMaterials) && !crowdIds.equals(mainMaterials.get(0).getString("crowdId"))) {
+                    if (!CollectionUtils.isEmpty(mainMaterials) && StringUtils.isNotEmpty(crowdIds) && !crowdIds.equals(mainMaterials.get(0).getString("crowdId"))) {
                         mainMaterials.add(itemCanBuy);
                     }
                     // 无主料
