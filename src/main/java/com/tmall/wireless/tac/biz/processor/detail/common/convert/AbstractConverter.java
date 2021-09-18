@@ -73,14 +73,16 @@ public abstract class AbstractConverter<T> {
 
         String shortTile = contentVO.getString(FrontBackMapEnum.contentShortTitle.getFront());
         String title = StringUtils.isNotBlank(shortTile) ? shortTile : contentVO.getString("contentTitle");
-        String subTitle = contentVO.getString("contentSubtitle");
         //标题
         recommendContentVO.setTitle(
             Lists.newArrayList(new DetailTextComponentVO(title, new Style("12", "#111111", "true"))));
-        //副标题
-        recommendContentVO.setSubTitle(
-            Lists.newArrayList(new DetailTextComponentVO(subTitle, new Style("12", "#111111", "true"))));
 
+        //副标题
+        String subTitle = contentVO.getString("contentSubtitle");
+        if(StringUtils.isNotEmpty(subTitle)) {
+            recommendContentVO.setSubTitle(
+                Lists.newArrayList(new DetailTextComponentVO(subTitle, new Style("12", "#111111", "true"))));
+        }
         recommendContentVO.setImg(contentVO.getString(FrontBackMapEnum.contentPic.getFront()));
 
 
