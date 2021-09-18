@@ -46,7 +46,7 @@ public class GulMenuContentOriginDataFailProcessorSdkExtPt extends Register impl
     TairFactorySpi tairFactorySpi;
 
     @Resource
-    TacLogger tacLogger;
+    TacLogger logger;
 
     /**
      * 场景内容兜底缓存前缀
@@ -58,151 +58,151 @@ public class GulMenuContentOriginDataFailProcessorSdkExtPt extends Register impl
     @Override
     public OriginDataDTO<ContentEntity> process(ContentOriginDataProcessRequest contentOriginDataProcessRequest) {
 
-        return contentOriginDataProcessRequest.getContentEntityOriginDataDTO();
-    }
-}
-//        Map<String, Object> requestParams = Optional.ofNullable(contentOriginDataProcessRequest)
-//                .map(ContentOriginDataProcessRequest::getSgFrameworkContextContent)
-//                .map(SgFrameworkContextContent::getTacContext)
-//                .map(Context::getParams)
-//                .orElse(Maps.newHashMap());
-//
-//        OriginDataDTO<ContentEntity> contentEntityOriginDataDTO = Optional.ofNullable(contentOriginDataProcessRequest)
-//                .map(ContentOriginDataProcessRequest::getContentEntityOriginDataDTO)
-//                .orElse(new OriginDataDTO<>());
-//
-//        Integer needSize = Optional.ofNullable(contentOriginDataProcessRequest)
-//                .map(ContentOriginDataProcessRequest::getSgFrameworkContextContent)
-//                .map(SgFrameworkContext::getCommonUserParams)
-//                .map(CommonUserParams::getUserPageInfo)
-//                .map(PageInfoDO::getPageSize)
-//                .orElse(ConstantValue.NEED_SIZE);
-//
-//        boolean isSuccess = checkSuccess(contentEntityOriginDataDTO);
-//
-//        HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
-//                .kv("SceneFeedsContentOriginDataFailProcessorSDKExtPt", "process")
-//                .kv("isSuccess", String.valueOf(isSuccess))
-//                .info();
-//        if (isSuccess) {
-//            return contentEntityOriginDataDTO;
-//        }
-//
-//        List<String> sKeyList = getContentSetIdList(requestParams);
-//        HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
-//                .kv("SceneFeedsContentOriginDataFailProcessorSDKExtPt", "process")
-//                .kv("labelSceneNamespace", String.valueOf(labelSceneNameSpace))
-//                .kv("pKey", pKey)
-//                .kv("sKeyList", JSON.toJSONString(sKeyList))
-//                .info();
-//        MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
-//        Result<Map<Object, Result<DataEntry>>> labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNameSpace, pKey, sKeyList);
-//        if (labelSceneResult != null && labelSceneResult.getValue() != null) {
-//            Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
-//            if (MapUtils.isEmpty(resultMap)) {
-//                return contentEntityOriginDataDTO;
-//            }
-//            OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap, needSize, contentOriginDataProcessRequest);
-//            return baseOriginDataDTO;
-//        }
-//        return contentEntityOriginDataDTO;
-//    }
-//
-//    public OriginDataDTO<ContentEntity> buildOriginDataDTO(Map<Object, Result<DataEntry>> resultMap, int needSize, ContentOriginDataProcessRequest contentOriginDataProcessRequest) {
-//
-//        Map<String, Object> requestParams = Optional.ofNullable(contentOriginDataProcessRequest)
-//                .map(ContentOriginDataProcessRequest::getSgFrameworkContextContent)
-//                .map(SgFrameworkContextContent::getTacContext)
-//                .map(Context::getParams)
-//                .orElse(Maps.newHashMap());
-//        Long oneHourStoreId = Optional.ofNullable(contentOriginDataProcessRequest)
-//                .map(ContentOriginDataProcessRequest::getSgFrameworkContextContent)
-//                .map(SgFrameworkContext::getCommonUserParams)
-//                .map(CommonUserParams::getLocParams)
-//                .map(LocParams::getRt1HourStoreId)
-//                .orElse(0L);
-//        Long halfDayStoreId = Optional.ofNullable(contentOriginDataProcessRequest)
-//                .map(ContentOriginDataProcessRequest::getSgFrameworkContextContent)
-//                .map(SgFrameworkContext::getCommonUserParams)
-//                .map(CommonUserParams::getLocParams)
-//                .map(LocParams::getRtHalfDayStoreId)
-//                .orElse(0L);
-//        String source = MapUtils.getString(requestParams, "source", ConstantValue.SOURCE_CHANNEL_GUL_RECIPE);
-//
-//        OriginDataDTO<ContentEntity> originDataDTO = new OriginDataDTO<>();
-//        List<ContentEntity> contentEntities = Lists.newArrayList();
-//        //内容集list-内容id-商品
-//        for (Object sKey : resultMap.keySet()) {
-//            Result<DataEntry> result = resultMap.get(sKey);
-//            if (!result.isSuccess()) {
-//                LOGGER.error("GulMenuContentOriginDataFailProcessorSdkExtPt sKey:" + sKey + ",result:" + JSON.toJSONString(result));
-//                continue;
-//            }
-//            DataEntry dataEntry = result.getValue();
-//            if (dataEntry == null || dataEntry.getValue() == null) {
-//                LOGGER.error("GulMenuContentOriginDataFailProcessorSdkExtPt dataEntry:" + JSON.toJSONString(dataEntry));
-//                continue;
-//            }
-//            List<GcsTairContentDTO> gcsTairContentDTOList = (List<GcsTairContentDTO>) dataEntry.getValue();
-//            if (CollectionUtils.isEmpty(gcsTairContentDTOList)) {
-//                LOGGER.error("GulMenuContentOriginDataFailProcessorSdkExtPt gcsTairContentDTOList:" + JSON.toJSONString(gcsTairContentDTOList));
-//                continue;
-//            }
-//            List<GcsTairContentDTO> finalList = Lists.newArrayList();
-//            if (gcsTairContentDTOList.size() > needSize) {
-//                finalList.addAll(gcsTairContentDTOList.subList(0, needSize));
-//            } else {
-//                finalList.addAll(gcsTairContentDTOList);
-//            }
-//            finalList.forEach(gcsTairContentDTO -> {
-//                ContentEntity contentEntity = new ContentEntity();
-//                contentEntity.setContentId(Long.valueOf(gcsTairContentDTO.getSceneId()));
-//                List<Long> items = gcsTairContentDTO.getItems();
-//                List<ItemEntity> itemEntities = Lists.newArrayList();
-//                items.forEach(item -> {
-//                    ItemEntity itemEntity = new ItemEntity();
-//                    itemEntity.setItemId(item);
-//                    itemEntity.setBizType("sm");
-//                    if (source.equals(ConstantValue.SOURCE_CHANNEL_GUL_RECIPE)) {
-//                        if (oneHourStoreId > 0L) {
-//                            itemEntity.setO2oType("O2OOneHour");
-//                        } else if (halfDayStoreId > 0L) {
-//                            itemEntity.setO2oType("O2OHalfDay");
-//                        }
-//                    } else if (source.equals(ConstantValue.SOURCE_CHANNEL_MMC_HALF_DAY)) {
-//                        itemEntity.setO2oType("O2OHalfDay");
-//                    }
-//                    itemEntities.add(itemEntity);
-//                });
-//                if (itemEntities.size() > ConstantValue.NEED_SIZE_ITEMS) {
-//                    contentEntity.setItems(itemEntities.subList(0, ConstantValue.NEED_SIZE_ITEMS));
-//                } else {
-//                    contentEntity.setItems(itemEntities);
-//                }
-//                HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
-//                        .kv("GulMenuContentOriginDataFailProcessorSdkExtPt", "buildOriginDataDTO")
-//                        .kv("sKey", String.valueOf(sKey))
-//                        .kv("contentId", gcsTairContentDTO.getSceneId())
-//                        .kv("contentEntity.getItems().size()", String.valueOf(contentEntity.getItems().size()))
-//                        .info();
-//                contentEntities.add(contentEntity);
-//            });
-//        }
-//        originDataDTO.setResult(contentEntities);
-//        return originDataDTO;
-//    }
-//
-//    private List<String> getContentSetIdList(Map<String, Object> requestParams) {
-//
-//        List<String> result = Lists.newArrayList();
-//        String contentSetIdRecipe = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RECIPE, "");
-//        if (StringUtils.isNotEmpty(contentSetIdRecipe)) {
-//            result.add(contentSetIdRecipe);
-//        }
-//        return result.stream().filter(contentSetId -> !("".equals(contentSetId) || "0".equals(contentSetId))).collect(Collectors.toList());
-//    }
-//
-//    protected <T extends EntityDTO> boolean checkSuccess(OriginDataDTO<T> originDataDTO) {
-//        return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult());
+//        return contentOriginDataProcessRequest.getContentEntityOriginDataDTO();
 //    }
 //}
+        Map<String, Object> requestParams = Optional.ofNullable(contentOriginDataProcessRequest)
+                .map(ContentOriginDataProcessRequest::getSgFrameworkContextContent)
+                .map(SgFrameworkContextContent::getTacContext)
+                .map(Context::getParams)
+                .orElse(Maps.newHashMap());
+
+        OriginDataDTO<ContentEntity> contentEntityOriginDataDTO = Optional.ofNullable(contentOriginDataProcessRequest)
+                .map(ContentOriginDataProcessRequest::getContentEntityOriginDataDTO)
+                .orElse(new OriginDataDTO<>());
+
+        Integer needSize = Optional.ofNullable(contentOriginDataProcessRequest)
+                .map(ContentOriginDataProcessRequest::getSgFrameworkContextContent)
+                .map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getUserPageInfo)
+                .map(PageInfoDO::getPageSize)
+                .orElse(ConstantValue.NEED_SIZE);
+
+        boolean isSuccess = checkSuccess(contentEntityOriginDataDTO);
+
+        HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
+                .kv("SceneFeedsContentOriginDataFailProcessorSDKExtPt", "process")
+                .kv("isSuccess", String.valueOf(isSuccess))
+                .info();
+        if (isSuccess) {
+            return contentEntityOriginDataDTO;
+        }
+
+        List<String> sKeyList = getContentSetIdList(requestParams);
+        HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
+                .kv("SceneFeedsContentOriginDataFailProcessorSDKExtPt", "process")
+                .kv("labelSceneNamespace", String.valueOf(labelSceneNameSpace))
+                .kv("pKey", pKey)
+                .kv("sKeyList", JSON.toJSONString(sKeyList))
+                .info();
+        MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager();
+        Result<Map<Object, Result<DataEntry>>> labelSceneResult = multiClusterTairManager.prefixGets(labelSceneNameSpace, pKey, sKeyList);
+        if (labelSceneResult != null && labelSceneResult.getValue() != null) {
+            Map<Object, Result<DataEntry>> resultMap = labelSceneResult.getValue();
+            if (MapUtils.isEmpty(resultMap)) {
+                return contentEntityOriginDataDTO;
+            }
+            OriginDataDTO<ContentEntity> baseOriginDataDTO = buildOriginDataDTO(resultMap, needSize, contentOriginDataProcessRequest);
+            return baseOriginDataDTO;
+        }
+        return contentEntityOriginDataDTO;
+    }
+
+    public OriginDataDTO<ContentEntity> buildOriginDataDTO(Map<Object, Result<DataEntry>> resultMap, int needSize, ContentOriginDataProcessRequest contentOriginDataProcessRequest) {
+
+        Map<String, Object> requestParams = Optional.ofNullable(contentOriginDataProcessRequest)
+                .map(ContentOriginDataProcessRequest::getSgFrameworkContextContent)
+                .map(SgFrameworkContextContent::getTacContext)
+                .map(Context::getParams)
+                .orElse(Maps.newHashMap());
+        Long oneHourStoreId = Optional.ofNullable(contentOriginDataProcessRequest)
+                .map(ContentOriginDataProcessRequest::getSgFrameworkContextContent)
+                .map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getLocParams)
+                .map(LocParams::getRt1HourStoreId)
+                .orElse(0L);
+        Long halfDayStoreId = Optional.ofNullable(contentOriginDataProcessRequest)
+                .map(ContentOriginDataProcessRequest::getSgFrameworkContextContent)
+                .map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getLocParams)
+                .map(LocParams::getRtHalfDayStoreId)
+                .orElse(0L);
+        String source = MapUtils.getString(requestParams, "source", ConstantValue.SOURCE_CHANNEL_GUL_RECIPE);
+
+        OriginDataDTO<ContentEntity> originDataDTO = new OriginDataDTO<>();
+        List<ContentEntity> contentEntities = Lists.newArrayList();
+        //内容集list-内容id-商品
+        for (Object sKey : resultMap.keySet()) {
+            Result<DataEntry> result = resultMap.get(sKey);
+            if (!result.isSuccess()) {
+                LOGGER.error("GulMenuContentOriginDataFailProcessorSdkExtPt sKey:" + sKey + ",result:" + JSON.toJSONString(result));
+                continue;
+            }
+            DataEntry dataEntry = result.getValue();
+            if (dataEntry == null || dataEntry.getValue() == null) {
+                LOGGER.error("GulMenuContentOriginDataFailProcessorSdkExtPt dataEntry:" + JSON.toJSONString(dataEntry));
+                continue;
+            }
+            List<GcsTairContentDTO> gcsTairContentDTOList = (List<GcsTairContentDTO>) dataEntry.getValue();
+            if (CollectionUtils.isEmpty(gcsTairContentDTOList)) {
+                LOGGER.error("GulMenuContentOriginDataFailProcessorSdkExtPt gcsTairContentDTOList:" + JSON.toJSONString(gcsTairContentDTOList));
+                continue;
+            }
+            List<GcsTairContentDTO> finalList = Lists.newArrayList();
+            if (gcsTairContentDTOList.size() > needSize) {
+                finalList.addAll(gcsTairContentDTOList.subList(0, needSize));
+            } else {
+                finalList.addAll(gcsTairContentDTOList);
+            }
+            finalList.forEach(gcsTairContentDTO -> {
+                ContentEntity contentEntity = new ContentEntity();
+                contentEntity.setContentId(Long.valueOf(gcsTairContentDTO.getSceneId()));
+                List<Long> items = gcsTairContentDTO.getItems();
+                List<ItemEntity> itemEntities = Lists.newArrayList();
+                items.forEach(item -> {
+                    ItemEntity itemEntity = new ItemEntity();
+                    itemEntity.setItemId(item);
+                    itemEntity.setBizType("sm");
+                    if (source.equals(ConstantValue.SOURCE_CHANNEL_GUL_RECIPE)) {
+                        if (oneHourStoreId > 0L) {
+                            itemEntity.setO2oType("O2OOneHour");
+                        } else if (halfDayStoreId > 0L) {
+                            itemEntity.setO2oType("O2OHalfDay");
+                        }
+                    } else if (source.equals(ConstantValue.SOURCE_CHANNEL_MMC_HALF_DAY)) {
+                        itemEntity.setO2oType("O2OHalfDay");
+                    }
+                    itemEntities.add(itemEntity);
+                });
+                if (itemEntities.size() > ConstantValue.NEED_SIZE_ITEMS) {
+                    contentEntity.setItems(itemEntities.subList(0, ConstantValue.NEED_SIZE_ITEMS));
+                } else {
+                    contentEntity.setItems(itemEntities);
+                }
+                HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
+                        .kv("GulMenuContentOriginDataFailProcessorSdkExtPt", "buildOriginDataDTO")
+                        .kv("sKey", String.valueOf(sKey))
+                        .kv("contentId", gcsTairContentDTO.getSceneId())
+                        .kv("contentEntity.getItems().size()", String.valueOf(contentEntity.getItems().size()))
+                        .info();
+                contentEntities.add(contentEntity);
+            });
+        }
+        originDataDTO.setResult(contentEntities);
+        return originDataDTO;
+    }
+
+    private List<String> getContentSetIdList(Map<String, Object> requestParams) {
+
+        List<String> result = Lists.newArrayList();
+        String contentSetIdRecipe = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RECIPE, "");
+        if (StringUtils.isNotEmpty(contentSetIdRecipe)) {
+            result.add(contentSetIdRecipe);
+        }
+        return result.stream().filter(contentSetId -> !("".equals(contentSetId) || "0".equals(contentSetId))).collect(Collectors.toList());
+    }
+
+    protected <T extends EntityDTO> boolean checkSuccess(OriginDataDTO<T> originDataDTO) {
+        return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult());
+    }
+}
