@@ -9,6 +9,7 @@ import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecItemResultVO;
+import com.tmall.wireless.tac.client.domain.Context;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,7 +25,7 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
     }
 
     @Override
-    public DetailRecItemResultVO convert(SgFrameworkResponse sgFrameworkResponse) {
+    public DetailRecItemResultVO convert(Context context,SgFrameworkResponse sgFrameworkResponse) {
 
         DetailRecItemResultVO detailRecItemResultVO=new DetailRecItemResultVO();
 
@@ -34,7 +35,6 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
         //曝光埋点
         JSONObject exposureExtraParam=new JSONObject();
         List<String> scmJoin=new ArrayList<>();
-        exposureExtraParam.put("scmJoin",String.join(",",scmJoin));
         detailRecItemResultVO.setExposureExtraParam(exposureExtraParam);
 
         //标题名称,无标题名称
@@ -43,6 +43,8 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
         //推荐内容
         detailRecItemResultVO.setResult(super.convertItems(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),
             sgFrameworkResponse.getItemAndContentList(), scmJoin));
+
+        exposureExtraParam.put("scmJoin",String.join(",",scmJoin));
 
         return detailRecItemResultVO;
     }

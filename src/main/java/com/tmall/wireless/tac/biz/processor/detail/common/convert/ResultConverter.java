@@ -16,7 +16,7 @@ public class ResultConverter  {
         if(response.isSuccess()){
             String recType = (String)context.getParams().get("recType");
             return TacResult.newResult(DetailConverterFactory.instance.getConverter(recType).convert(
-                response));
+                context,response));
         }
 
         return TacResult.errorResult(response.getErrorCode(),response.getErrorMsg());

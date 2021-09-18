@@ -1,19 +1,27 @@
 package com.tmall.wireless.tac.biz.processor.detail.common.convert;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendContentVO;
+import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
+import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendVO.DetailEvent;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
+import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
@@ -31,12 +39,13 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
     }
 
     @Override
-    public DetailRecContentResultVO convert(SgFrameworkResponse sgFrameworkResponse) {
-
-        return similarItemConvert(sgFrameworkResponse.getItemAndContentList());
+    public DetailRecContentResultVO convert(Context context,SgFrameworkResponse sgFrameworkResponse) {
+        DetailRecommendRequest recommendRequest=DetailRecommendRequest.getDetailRequest(context);
+        return similarItemConvert(recommendRequest,sgFrameworkResponse.getItemAndContentList());
     }
 
-    private DetailRecContentResultVO similarItemConvert(List<ContentVO> itemAndContentList) {
+    private DetailRecContentResultVO similarItemConvert(DetailRecommendRequest recommendRequest,
+        List<ContentVO> itemAndContentList) {
         String scene=getRecTypeEnum().getType();
 
         DetailRecContentResultVO detailRecContentResultVO=new DetailRecContentResultVO();
@@ -46,7 +55,6 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         //曝光埋点
         JSONObject exposureExtraParam=new JSONObject();
         List<String> scmJoin=new ArrayList<>();
-        exposureExtraParam.put("scmJoin",String.join(",",scmJoin));
         detailRecContentResultVO.setExposureExtraParam(exposureExtraParam);
 
         detailRecContentResultVO.setResult(new ArrayList<>(3));
@@ -60,12 +68,52 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         if (CollectionUtils.isNotEmpty(itemAndContentList)) {
             //推荐内容
             detailRecContentResultVO.getResult().addAll(super
-                .convertContentResult(scene, itemAndContentList.subList(0,
+                .convertContentResult(recommendRequest, itemAndContentList.subList(0,
                     Math.min(DetailSwitch.contentSizeMap.get(getRecTypeEnum().getType()).getMax()
                     , itemAndContentList.size())),
                     scmJoin));
         }
 
+        exposureExtraParam.put("scmJoin",String.join(",",scmJoin));
         return detailRecContentResultVO;
     }
+
+
+    @Override
+    public List<DetailEvent> getContentEvents(DetailRecommendRequest recommendRequest, ContentVO contentVO, int index) {
+
+
+        DetailEvent userTrackEvent = getUserTrackEvent(recommendRequest.getRecType(),
+            contentVO.getLong("contentId"), index, contentVO.getString("scm"));
+
+        DetailEvent clickEvent = getClickEvent(recommendRequest, contentVO);
+
+        return Lists.newArrayList(userTrackEvent,clickEvent);
+
+    }
+
+    private DetailEvent getClickEvent(DetailRecommendRequest recommendRequest,ContentVO contentVO){
+        DetailEvent eventView1 = new DetailEvent("similarContentAction");
+
+        Map<String, Object> paramsMap = Maps.newHashMap();
+        eventView1.addFieldsParam("params", paramsMap);
+
+        paramsMap.put("contentId",contentVO.getLong("contentId"));
+        paramsMap.put("itemSetIds",contentVO.getString("itemSetIds"));
+
+        Arrays.stream(DetailRecommendRequest.class.getFields())
+            .forEach(field -> {
+                try {
+                    paramsMap.put(field.getName(), field.get(recommendRequest));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            });
+
+        paramsMap.put("pageSize",6);
+        paramsMap.put("recType",RecTypeEnum.SIMILAR_ITEM_ITEM.getType());
+
+        return eventView1;
+    }
+
 }

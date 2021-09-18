@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
-import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -65,7 +64,7 @@ public class DetailRecommendVO implements Serializable {
          * @param key
          * @param params
          */
-        public void addFiledsParam(String key, Object params) {
+        public void addFieldsParam(String key, Object params) {
             if (null == fields) {
                 fields = Maps.newLinkedHashMap();
             }
@@ -74,7 +73,7 @@ public class DetailRecommendVO implements Serializable {
 
         public DetailEvent addArgs(String key, Object value) {
             if ( null == fields) {
-                addFiledsParam("args", new HashMap<>());
+                addFieldsParam("args", new HashMap<>());
             }
             Map<String, Object> argsMap = (Map<String, Object>) fields.get("args");
             if (null == argsMap) {

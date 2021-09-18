@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.detail.common.convert;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,12 +19,14 @@ import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendContentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendItemVO;
+import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendVO.DetailEvent;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendVO.DetailLabelVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
+import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -38,10 +39,10 @@ public abstract class AbstractConverter<T> {
 
     public abstract RecTypeEnum getRecTypeEnum();
 
-    public abstract T convert( SgFrameworkResponse sgFrameworkResponse);
+    public abstract T convert(Context context, SgFrameworkResponse sgFrameworkResponse);
 
 
-    public List<DetailRecommendContentVO> convertContentResult(String scene, List<ContentVO> itemAndContentList,
+    public List<DetailRecommendContentVO> convertContentResult(DetailRecommendRequest recommendRequest, List<ContentVO> itemAndContentList,
         List<String> scmJoin) {
 
         List<DetailRecommendContentVO> detailRecommendVOS = new ArrayList<>();
@@ -52,10 +53,10 @@ public abstract class AbstractConverter<T> {
             DetailRecommendContentVO recommendContentVO = convertContent(contentVO, scmJoin);
 
             //事件
-            recommendContentVO.setEvent(getContentEvents(scene, contentVO, index));
+            recommendContentVO.setEvent(getContentEvents(recommendRequest, contentVO, index));
 
             //场景商品信息
-            recommendContentVO.setRecommendItemVOS(convertItems(scene, contentVO.get("items"),scmJoin));
+            recommendContentVO.setRecommendItemVOS(convertItems(recommendRequest.getRecType(), contentVO.get("items"),scmJoin));
 
             detailRecommendVOS.add(recommendContentVO);
 
@@ -176,23 +177,30 @@ public abstract class AbstractConverter<T> {
         return detailItemLabelVOS;
     }
 
-    private List<DetailEvent> getContentEvents(String scene, ContentVO contentVO, int index) {
-        return getEvents(scene, contentVO.getLong("contentId"),
+    public List<DetailEvent> getContentEvents(DetailRecommendRequest recommendRequest, ContentVO contentVO, int index) {
+        return getEvents(recommendRequest.getRecType(), contentVO.getLong("contentId"),
             contentVO.getString(FrontBackMapEnum.contentCustomLink.getFront()), index + 1,
             contentVO.getString("scm"));
     }
 
-    private static List<DetailEvent> getEvents(String scene, Long id, String jumpUrl, Integer index, String scm) {
+    private List<DetailEvent> getEvents(String scene, Long id, String jumpUrl, Integer index, String scm) {
 
         DetailEvent eventView1 = new DetailEvent("openUrl");
 
-        eventView1.addFiledsParam("url", jumpUrl + "&scm=" + scm);
+        eventView1.addFieldsParam("url", jumpUrl + "&scm=" + scm);
+
+        DetailEvent userTrackEvent = getUserTrackEvent(scene, id, index, scm);
+
+        return Lists.newArrayList(eventView1, userTrackEvent);
+    }
+
+    public DetailEvent getUserTrackEvent(String scene, Long id, Integer index, String scm){
 
         DetailEvent eventView2 = new DetailEvent("userTrack");
 
-        eventView2.addFiledsParam("page", "Page_Detail");
-        eventView2.addFiledsParam("eventId", "2101");
-        eventView2.addFiledsParam("arg1", "Page_Detail_Button-" + scene);
+        eventView2.addFieldsParam("page", "Page_Detail");
+        eventView2.addFieldsParam("eventId", "2101");
+        eventView2.addFieldsParam("arg1", "Page_Detail_Button-" + scene);
 
         Map<String, String> argsMap = new HashMap(4);
         argsMap.put("spm", "a2141.7631564." + scene + "." + index);
@@ -201,12 +209,11 @@ public abstract class AbstractConverter<T> {
         argsMap.put("type", scene);
         argsMap.put("scm", scm);
 
-        eventView2.addFiledsParam("args", argsMap);
+        eventView2.addFieldsParam("args", argsMap);
 
-        return Lists.newArrayList(eventView1, eventView2);
+        return eventView2;
     }
-
-    private static List<DetailTextComponentVO> buildPrice(String shortText, String price) {
+    private List<DetailTextComponentVO> buildPrice(String shortText, String price) {
         if (StringUtils.isNotEmpty(shortText)) {
             shortText = shortText + "￥";
         } else {

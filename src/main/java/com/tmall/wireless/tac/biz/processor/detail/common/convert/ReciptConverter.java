@@ -11,9 +11,11 @@ import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
+import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
+import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
@@ -31,12 +33,13 @@ public class ReciptConverter extends AbstractConverter<DetailRecContentResultVO>
     }
 
     @Override
-    public DetailRecContentResultVO convert(SgFrameworkResponse sgFrameworkResponse) {
-        return recipeConvert(sgFrameworkResponse.getItemAndContentList());
+    public DetailRecContentResultVO convert(Context context,SgFrameworkResponse sgFrameworkResponse) {
+        DetailRecommendRequest recommendRequest=DetailRecommendRequest.getDetailRequest(context);
+        return recipeConvert(recommendRequest,sgFrameworkResponse.getItemAndContentList());
     }
 
-    private DetailRecContentResultVO recipeConvert(List<ContentVO> itemAndContentList) {
-        String scene=getRecTypeEnum().getType();
+    private DetailRecContentResultVO recipeConvert(DetailRecommendRequest recommendRequest,
+        List<ContentVO> itemAndContentList) {
 
         DetailRecContentResultVO detailRecContentResultVO=new DetailRecContentResultVO();
         detailRecContentResultVO.setEnableScroll(true);
@@ -60,8 +63,9 @@ public class ReciptConverter extends AbstractConverter<DetailRecContentResultVO>
                 Lists.newArrayList(new DetailTextComponentVO("菜谱推荐", new Style("12", "#111111", "true"))));
             //推荐内容
             detailRecContentResultVO.setResult(
-                super.convertContentResult(scene, recipeContents.subList(0, Math.min(6, recipeContents.size())),
+                super.convertContentResult(recommendRequest, recipeContents.subList(0, Math.min(6, recipeContents.size())),
                     scmJoin));
+            exposureExtraParam.put("scmJoin",String.join(",",scmJoin));
             return detailRecContentResultVO;
         }
 
@@ -72,8 +76,9 @@ public class ReciptConverter extends AbstractConverter<DetailRecContentResultVO>
                 Lists.newArrayList(new DetailTextComponentVO("为你推荐", new Style("12", "#111111", "true"))));
             //推荐内容
             detailRecContentResultVO.setResult(super
-                .convertContentResult(scene, itemAndContentList.subList(0, Math.min(6, itemAndContentList.size())),
+                .convertContentResult(recommendRequest, itemAndContentList.subList(0, Math.min(6, itemAndContentList.size())),
                     scmJoin));
+            exposureExtraParam.put("scmJoin",String.join(",",scmJoin));
             return detailRecContentResultVO;
         }
 
