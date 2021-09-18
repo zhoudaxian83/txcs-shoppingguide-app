@@ -65,10 +65,10 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
 
 
         Long smAreaId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).orElse(0L);
+                .map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).orElse(411002L);
 
         Long regionCode = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getLocParams).map(LocParams::getRegionCode).orElse(0L);
+                .map(CommonUserParams::getLocParams).map(LocParams::getRegionCode).orElse(111L);
 
         int index = MapUtil.getIntWithDefault(contextParamsMap, "index", 0);
         String pageSize = MapUtil.getStringWithDefault(contextParamsMap, "pageSize", "20");
