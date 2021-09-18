@@ -53,7 +53,6 @@ public class O2ODetailItemOriginDataResponseConvertSdkExtPt extends Register
         JSONObject resObj = JSON.parseObject(res);
         OriginDataDTO<ItemEntity> responseEntity = ConvertUtil.processResponse(resObj);
 
-        String scm = responseEntity.getScm();
         List<ItemEntity> itemEntityList = processItemEntityJson(resObj.getJSONArray("result"));
         if (CollectionUtils.isEmpty(itemEntityList)) {
             responseEntity.setErrorCode("TPP_ITEM_LIST_IS_EMPTY");
