@@ -14,6 +14,7 @@ import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataResponseConvertSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ResponseConvertRequest;
+import com.tmall.tcls.gs.sdk.framework.model.context.BizType;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.O2oType;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
@@ -79,6 +80,9 @@ public class O2ODetailItemOriginDataResponseConvertSdkExtPt extends Register
             ItemEntity itemEntity = new ItemEntity();
 
             itemEntity.setItemId(jsonObject.getLong("itemId"));
+
+            String bussinessUnit = jsonObject.getString("bussinessUnit");
+            itemEntity.setBizType(BizType.ofTppCode(bussinessUnit).getCode());
 
             String tppLocType = jsonObject.getString("locType");
             String o2oType = StringUtils.isEmpty(tppLocType) ? O2oType.B2C.name() :
