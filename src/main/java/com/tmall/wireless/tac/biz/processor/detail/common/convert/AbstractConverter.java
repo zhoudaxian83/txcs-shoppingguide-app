@@ -187,7 +187,7 @@ public abstract class AbstractConverter<T> {
 
         DetailEvent eventView1 = new DetailEvent("openUrl");
 
-        eventView1.addFieldsParam("url", jumpUrl + "&scm=" + scm);
+        eventView1.addFieldsParam("url", jumpUrl);
 
         DetailEvent userTrackEvent = getUserTrackEvent(scene, id, index, scm);
 
