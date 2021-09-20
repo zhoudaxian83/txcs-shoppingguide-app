@@ -49,8 +49,8 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         String scene=getRecTypeEnum().getType();
 
         DetailRecContentResultVO detailRecContentResultVO=new DetailRecContentResultVO();
-        detailRecContentResultVO.setEnableScroll(true);
-        detailRecContentResultVO.setShowArrow(true);
+        detailRecContentResultVO.setEnableScroll(false);
+        detailRecContentResultVO.setShowArrow(false);
 
         //曝光埋点
         JSONObject exposureExtraParam=new JSONObject();

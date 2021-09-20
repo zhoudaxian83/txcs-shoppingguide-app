@@ -10,6 +10,7 @@ import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecItemResultVO;
 import com.tmall.wireless.tac.client.domain.Context;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,9 +41,15 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
         //标题名称,无标题名称
         detailRecItemResultVO.setTitle(null);
 
+        //如果没有推荐结果就空返回
+        if(CollectionUtils.isEmpty(sgFrameworkResponse.getItemAndContentList())){
+            return detailRecItemResultVO;
+        }
+
         //推荐内容
-        detailRecItemResultVO.setResult(super.convertItems(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),
-            sgFrameworkResponse.getItemAndContentList(), scmJoin));
+        List itemAndContentList = sgFrameworkResponse.getItemAndContentList();
+        List list = itemAndContentList.subList(0, Math.min(6, itemAndContentList.size());
+        detailRecItemResultVO.setResult(super.convertItems(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),list, scmJoin));
 
         exposureExtraParam.put("scmJoin",String.join(",",scmJoin));
 
