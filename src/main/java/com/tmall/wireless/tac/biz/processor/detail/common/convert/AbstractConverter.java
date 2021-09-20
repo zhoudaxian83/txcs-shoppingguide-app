@@ -16,6 +16,7 @@ import com.tcls.mkt.atmosphere.model.response.UnifyPriceDTO;
 import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
+import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendContentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendItemVO;
@@ -158,18 +159,20 @@ public abstract class AbstractConverter<T> {
         List<DetailLabelVO> detailItemLabelVOS = new ArrayList<>(2);
 
         if (CollectionUtils.isNotEmpty(atmosphereList)) {
-            atmosphereList.forEach(atmosphereDTO -> {
-                DetailLabelVO detailItemLabelVO = detailRecommendVO.new DetailLabelVO();
-                detailItemLabelVO.setTextColor("#A44A02");
-                detailItemLabelVO.setText(atmosphereDTO.getText().getContent());
-                detailItemLabelVO.setBgColor("#FFDDAC");
-                detailItemLabelVO.setCornerRadius("2");
-                if (atmosphereDTO.getPromotionType().contains("Coupon")) {
-                    detailItemLabelVO.setTitle("券");
-                }
+            atmosphereList.stream()
+                .filter(v -> !DetailSwitch.ignorePromotionList.contains(v.getPromotionType()))
+                .forEach(atmosphereDTO -> {
+                    DetailLabelVO detailItemLabelVO = detailRecommendVO.new DetailLabelVO();
+                    detailItemLabelVO.setTextColor("#A44A02");
+                    detailItemLabelVO.setText(atmosphereDTO.getText().getContent());
+                    detailItemLabelVO.setBgColor("#FFDDAC");
+                    detailItemLabelVO.setCornerRadius("2");
+                    if (atmosphereDTO.getPromotionType().contains("Coupon")) {
+                        detailItemLabelVO.setTitle("券");
+                    }
 
-                detailItemLabelVOS.add(detailItemLabelVO);
-            });
+                    detailItemLabelVOS.add(detailItemLabelVO);
+                });
         }
 
         return detailItemLabelVOS;

@@ -2,7 +2,9 @@ package com.tmall.wireless.tac.biz.processor.detail.common.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import com.google.common.collect.Sets;
 import com.taobao.csp.switchcenter.annotation.AppSwitch;
 import com.taobao.csp.switchcenter.annotation.NameSpace;
 import com.taobao.csp.switchcenter.bean.Switch;
@@ -37,6 +39,10 @@ public class DetailSwitch {
             put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), new SizeDTO(6,6));
         }
     };
+
+
+    @AppSwitch(des = "忽略的营销类型", level = Switch.Level.p3)
+    public static Set<String> ignorePromotionList= Sets.newHashSet("O2O_StraightDown");
 
 
 }
