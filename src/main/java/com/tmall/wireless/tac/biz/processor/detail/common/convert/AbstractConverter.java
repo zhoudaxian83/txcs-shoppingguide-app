@@ -239,7 +239,7 @@ public abstract class AbstractConverter<T> {
             priceComponentVOS.add(new DetailTextComponentVO(price, priceStyle));
         } else {
 
-            String[] split = price.split(".");
+            String[] split = StringUtils.split(price,".");
             //元
             priceComponentVOS.add(new DetailTextComponentVO(split[0], priceStyle));
             //小数
