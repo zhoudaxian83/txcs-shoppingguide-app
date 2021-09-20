@@ -50,7 +50,7 @@ public abstract class AbstractConverter<T> {
             ContentVO contentVO = itemAndContentList.get(index);
 
             //scm拼接
-            Optional.of(contentVO.getString("scm")).ifPresent(scmJoin::add);
+            Optional.ofNullable(contentVO.getString("scm")).ifPresent(scmJoin::add);
 
             //基本场景信息
             DetailRecommendContentVO recommendContentVO = convertContent(contentVO);
@@ -78,7 +78,7 @@ public abstract class AbstractConverter<T> {
             Lists.newArrayList(new DetailTextComponentVO(title, new Style("12", "#111111", "true"))));
 
         //副标题
-        Optional.of(contentVO.getString("contentSubtitle"))
+        Optional.ofNullable(contentVO.getString("contentSubtitle"))
         .ifPresent(subTitle->{
             recommendContentVO.setSubTitle(
                 Lists.newArrayList(new DetailTextComponentVO(subTitle, new Style("12", "#111111", "true"))));
@@ -99,7 +99,7 @@ public abstract class AbstractConverter<T> {
                 ItemEntityVO item= ((List<ItemEntityVO>)items).get(index);
 
                 //埋点拼接
-                Optional.of(item.getString("scm")).ifPresent(scmJoin::add);
+                Optional.ofNullable(item.getString("scm")).ifPresent(scmJoin::add);
 
                 //数据封装
                 detailRecommendVOS.add(convertToItem(scene,item,index));
