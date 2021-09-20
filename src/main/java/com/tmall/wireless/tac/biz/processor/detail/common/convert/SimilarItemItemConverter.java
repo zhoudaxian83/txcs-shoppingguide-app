@@ -5,10 +5,15 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 
+import com.google.common.collect.Lists;
+import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecItemResultVO;
+import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendItemVO;
+import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
+import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
 import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
@@ -54,5 +59,22 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
         exposureExtraParam.put("scmJoin",String.join(",",scmJoin));
 
         return detailRecItemResultVO;
+    }
+
+    @Override
+    public DetailRecommendItemVO convertToItem(String scene, ItemEntityVO itemInfoBySourceCaptainDTO, int index) {
+        DetailRecommendItemVO detailRecommendItemVO = super.convertToItem(scene, itemInfoBySourceCaptainDTO, index);
+        if (CollectionUtils.isEmpty(detailRecommendItemVO.getPromotionAtmosphereList())) {
+            String sellPointMock = "销量排名第一";
+            detailRecommendItemVO.setSubTitle(
+                Lists.newArrayList(new DetailTextComponentVO(sellPointMock, new Style("12", "#111111", "true"))));
+        }else{
+           if(detailRecommendItemVO.getPromotionAtmosphereList().size()>1){
+               detailRecommendItemVO.getPromotionAtmosphereList().get(0)
+                   .setTitle("券");
+           }
+        }
+
+        return detailRecommendItemVO;
     }
 }
