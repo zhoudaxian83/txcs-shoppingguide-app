@@ -99,6 +99,8 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         DetailEvent eventView1 = new DetailEvent("similarContentAction");
 
         Map<String, Object> paramsMap = Maps.newHashMap();
+        eventView1.addFieldsParam("msCode","2021090909");
+        eventView1.addFieldsParam("appName","taodetail");
         eventView1.addFieldsParam("params", paramsMap);
 
         Arrays.stream(DetailRecommendRequest.class.getDeclaredFields())
