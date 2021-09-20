@@ -104,9 +104,10 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         paramsMap.put("contentId",contentVO.getLong("contentId"));
         paramsMap.put("itemSetIds",contentVO.getString("itemSetIds"));
 
-        Arrays.stream(DetailRecommendRequest.class.getFields())
+        Arrays.stream(DetailRecommendRequest.class.getDeclaredFields())
             .forEach(field -> {
                 try {
+                    field.setAccessible(true);
                     paramsMap.put(field.getName(), field.get(recommendRequest));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
