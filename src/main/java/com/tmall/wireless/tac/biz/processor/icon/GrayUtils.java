@@ -1,8 +1,11 @@
 package com.tmall.wireless.tac.biz.processor.icon;
 
 import com.taobao.mtop.api.agent.MtopContext;
-import com.tmall.aself.shoppingguide.client.functionalgrayscale.FunGrayRequest;
-import com.tmall.aself.shoppingguide.client.functionalgrayscale.FunGrayResponse;
+
+
+import com.tmall.aselfcommon.util.gray.util.FunGrayRequest;
+import com.tmall.aselfcommon.util.gray.util.FunGrayResponse;
+import com.tmall.aselfcommon.util.gray.util.GrayUtil;
 import org.apache.commons.lang3.StringUtils;
 
 public class GrayUtils {
