@@ -101,9 +101,6 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         Map<String, Object> paramsMap = Maps.newHashMap();
         eventView1.addFieldsParam("params", paramsMap);
 
-        paramsMap.put("contentId",contentVO.getLong("contentId"));
-        paramsMap.put("itemSetIds",contentVO.getString("itemSetIds"));
-
         Arrays.stream(DetailRecommendRequest.class.getDeclaredFields())
             .forEach(field -> {
                 try {
@@ -114,8 +111,10 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
                 }
             });
 
-        paramsMap.put("pageSize",6);
         paramsMap.put("recType",RecTypeEnum.SIMILAR_ITEM_ITEM.getType());
+        paramsMap.put("contentId",contentVO.getLong("contentId"));
+        paramsMap.put("itemSetIds",contentVO.getString("itemSetIds"));
+        paramsMap.put("pageSize",6);
 
         return eventView1;
     }
