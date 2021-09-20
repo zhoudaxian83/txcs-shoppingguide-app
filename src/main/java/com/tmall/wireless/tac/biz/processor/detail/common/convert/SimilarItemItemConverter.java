@@ -64,13 +64,16 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
     @Override
     public DetailRecommendItemVO convertToItem(String scene, ItemEntityVO itemInfoBySourceCaptainDTO, int index) {
         DetailRecommendItemVO detailRecommendItemVO = super.convertToItem(scene, itemInfoBySourceCaptainDTO, index);
-        if (CollectionUtils.isEmpty(detailRecommendItemVO.getPromotionAtmosphereList())) {
+
+        if (CollectionUtils.isNotEmpty(detailRecommendItemVO.getPromotionAtmosphereList())&&
+            (detailRecommendItemVO.getPromotionAtmosphereList().size()==1)) {
             String sellPointMock = "销量排名第一";
             detailRecommendItemVO.setSubTitle(
                 Lists.newArrayList(new DetailTextComponentVO(sellPointMock, new Style("12", "#111111", "true"))));
         }else{
-           if(detailRecommendItemVO.getPromotionAtmosphereList().size()>1){
-               detailRecommendItemVO.getPromotionAtmosphereList().get(0)
+           if(detailRecommendItemVO.getPromotionAtmosphereList().size()>1&&
+           detailRecommendItemVO.getPromotionAtmosphereList().get(1).getText().contains("满")){
+               detailRecommendItemVO.getPromotionAtmosphereList().get(1)
                    .setTitle("券");
            }
         }
