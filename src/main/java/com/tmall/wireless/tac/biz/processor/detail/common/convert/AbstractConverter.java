@@ -234,15 +234,15 @@ public abstract class AbstractConverter<T> {
         Style priceStyle = new Style("14", "#FF4027", "true", "false", "#ffffff", "false");
         priceStyle.setBold("true");
 
-
         //价格切分为元和小数点后
-        String[] split = price.split(".");
+        if (!price.contains(".")) {
+            priceComponentVOS.add(new DetailTextComponentVO(price, priceStyle));
+        } else {
 
-        //元
-        priceComponentVOS.add(new DetailTextComponentVO(split[0], priceStyle));
-
-        //小数
-        if (split.length > 1) {
+            String[] split = price.split(".");
+            //元
+            priceComponentVOS.add(new DetailTextComponentVO(split[0], priceStyle));
+            //小数
             priceComponentVOS.add(new DetailTextComponentVO(split[1], priceStyle));
         }
 
