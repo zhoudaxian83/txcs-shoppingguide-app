@@ -48,7 +48,7 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
 
         //推荐内容
         List itemAndContentList = sgFrameworkResponse.getItemAndContentList();
-        List list = itemAndContentList.subList(0, Math.min(6, itemAndContentList.size());
+        List list = itemAndContentList.subList(0, Math.min(6, itemAndContentList.size()));
         detailRecItemResultVO.setResult(super.convertItems(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),list, scmJoin));
 
         exposureExtraParam.put("scmJoin",String.join(",",scmJoin));
