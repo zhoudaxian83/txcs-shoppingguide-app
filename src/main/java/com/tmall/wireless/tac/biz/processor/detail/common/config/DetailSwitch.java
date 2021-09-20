@@ -25,7 +25,7 @@ public class DetailSwitch {
         {
             put(RecTypeEnum.RECIPE.getType(), new TppRequestConfig(27924L,"138002","7"));
             put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(), new TppRequestConfig(27924L,"138002","7"));
-            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), new TppRequestConfig(25385L));
+            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), new TppRequestConfig(21174L));
         }
     };
 
