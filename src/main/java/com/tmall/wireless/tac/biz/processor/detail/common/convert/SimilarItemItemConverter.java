@@ -72,8 +72,8 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
                 Lists.newArrayList(new DetailTextComponentVO(sellPointMock, new Style("12", "#111111", "true"))));
         } else {
             if (CollectionUtils.isNotEmpty(detailRecommendItemVO.getPromotionAtmosphereList()) &&detailRecommendItemVO.getPromotionAtmosphereList().size() == 1 &&
-                detailRecommendItemVO.getPromotionAtmosphereList().get(1).getText().contains("满")) {
-                detailRecommendItemVO.getPromotionAtmosphereList().get(1)
+                detailRecommendItemVO.getPromotionAtmosphereList().get(0).getText().contains("满")) {
+                detailRecommendItemVO.getPromotionAtmosphereList().get(0)
                     .setTitle("券");
             }
         }
