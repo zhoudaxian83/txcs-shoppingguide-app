@@ -33,6 +33,10 @@ public class DetailRecommendRequest implements Serializable {
      */
     private Long cateId;
 
+    private Long smAreaId;
+
+    private String csa;
+
     public DetailRecommendRequest(){ }
 
     public DetailRecommendRequest(Map<String,Object> params){
@@ -43,6 +47,8 @@ public class DetailRecommendRequest implements Serializable {
         this.setRecType(TypeUtils.castToString(params.get("recType")));
         this.setContentId(TypeUtils.castToLong(params.get("contentId")));
         this.setItemSetIds(TypeUtils.castToString(params.get("itemSetIds")));
+        this.setSmAreaId(TypeUtils.castToLong(params.get("smAreaId")));
+        this.setCsa(TypeUtils.castToString(params.get("csa")));
     }
 
     public static DetailRecommendRequest getDetailRequest(Context tacContext){
