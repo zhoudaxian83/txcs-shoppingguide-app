@@ -49,8 +49,11 @@ public abstract class AbstractConverter<T> {
         for (int index = 0; index < itemAndContentList.size(); index++) {
             ContentVO contentVO = itemAndContentList.get(index);
 
+            //scm拼接
+            Optional.of(contentVO.getString("scm")).ifPresent(scmJoin::add);
+
             //基本场景信息
-            DetailRecommendContentVO recommendContentVO = convertContent(contentVO, scmJoin);
+            DetailRecommendContentVO recommendContentVO = convertContent(contentVO);
 
             //事件
             recommendContentVO.setEvent(getContentEvents(recommendRequest, contentVO, index));
@@ -59,14 +62,11 @@ public abstract class AbstractConverter<T> {
             recommendContentVO.setRecommendItemVOS(convertItems(recommendRequest.getRecType(), contentVO.get("items"),scmJoin));
 
             detailRecommendVOS.add(recommendContentVO);
-
-            //scm拼接
-            scmJoin.add(contentVO.getString("scm"));
         }
         return detailRecommendVOS;
     }
 
-    private DetailRecommendContentVO convertContent(ContentVO contentVO, List<String> scmJoin) {
+    private DetailRecommendContentVO convertContent(ContentVO contentVO) {
         DetailRecommendContentVO recommendContentVO = new DetailRecommendContentVO();
         recommendContentVO.setContentId(contentVO.getLong("contentId"));
         recommendContentVO.setItemSetIds(contentVO.getString("itemSetIds"));
@@ -78,16 +78,14 @@ public abstract class AbstractConverter<T> {
             Lists.newArrayList(new DetailTextComponentVO(title, new Style("12", "#111111", "true"))));
 
         //副标题
-        String subTitle = contentVO.getString("contentSubtitle");
-        if(StringUtils.isNotEmpty(subTitle)) {
+        Optional.of(contentVO.getString("contentSubtitle"))
+        .ifPresent(subTitle->{
             recommendContentVO.setSubTitle(
                 Lists.newArrayList(new DetailTextComponentVO(subTitle, new Style("12", "#111111", "true"))));
-        }
+
+        });
+
         recommendContentVO.setImg(contentVO.getString(FrontBackMapEnum.contentPic.getFront()));
-
-
-        //scm拼接
-        scmJoin.add(contentVO.getString("scm"));
 
         return recommendContentVO;
     }
@@ -101,12 +99,10 @@ public abstract class AbstractConverter<T> {
                 ItemEntityVO item= ((List<ItemEntityVO>)items).get(index);
 
                 //埋点拼接
-                String scm=item.getString("scm");
-                scmJoin.add(scm);
+                Optional.of(item.getString("scm")).ifPresent(scmJoin::add);
 
                 //数据封装
                 detailRecommendVOS.add(convertToItem(scene,item,index));
-
 
             }
 
