@@ -24,7 +24,7 @@ public class DetailSwitch {
         {
             put(RecTypeEnum.RECIPE.getType(), 28151L);
             put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(),28151L);
-            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),21174L);
+            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),27506L);
         }
     };
 

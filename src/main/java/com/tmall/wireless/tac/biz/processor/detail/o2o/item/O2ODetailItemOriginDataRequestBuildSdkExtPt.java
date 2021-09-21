@@ -54,10 +54,7 @@ public class O2ODetailItemOriginDataRequestBuildSdkExtPt extends AbstractDetailO
 
         if (CommonUtil.validId(detailRequest.getContentId())) {
             if (StringUtils.isNotBlank(detailRequest.getItemSetIds())) {
-                List<String> collect = Arrays.stream(detailRequest.getItemSetIds().split(","))
-                    .map(v -> "crm_" + v)
-                    .collect(Collectors.toList());
-                process.getParams().put("itemSets", String.join(",", collect));
+                process.getParams().put("itemSetIdList", detailRequest.getItemSetIds());
             }
         }
 
