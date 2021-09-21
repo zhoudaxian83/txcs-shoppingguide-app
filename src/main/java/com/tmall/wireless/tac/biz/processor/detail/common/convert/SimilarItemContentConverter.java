@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.collect.Lists;
@@ -104,7 +105,6 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         Map<String, Object> paramsMap = Maps.newHashMap();
         eventView1.addFieldsParam("msCode","2021091404");
         eventView1.addFieldsParam("appName","taodetail");
-        eventView1.addFieldsParam("params", paramsMap);
 
         Arrays.stream(DetailRecommendRequest.class.getDeclaredFields())
             .forEach(field -> {
@@ -120,6 +120,9 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         paramsMap.put("contentId",contentVO.getLong("contentId"));
         paramsMap.put("itemSetIds",contentVO.getString("itemSetIds"));
         paramsMap.put("pageSize",6);
+
+
+        eventView1.addFieldsParam("params", JSON.toJSONString(paramsMap));
 
         return eventView1;
     }
