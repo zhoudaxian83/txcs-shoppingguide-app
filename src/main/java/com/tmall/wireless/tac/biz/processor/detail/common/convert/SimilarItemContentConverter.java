@@ -20,6 +20,7 @@ import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendVO.DetailEvent;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
+import com.tmall.wireless.tac.biz.processor.detail.util.CommonUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
 import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections4.CollectionUtils;
@@ -85,14 +86,16 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
     @Override
     public List<DetailEvent> getContentEvents(DetailRecommendRequest recommendRequest, ContentVO contentVO, int index) {
 
-
         DetailEvent userTrackEvent = getUserTrackEvent(recommendRequest.getRecType(),
             contentVO.getLong("contentId"), index, contentVO.getString("scm"));
 
-        DetailEvent clickEvent = getClickEvent(recommendRequest, contentVO);
+        if (CommonUtil.validId(contentVO.getLong("contentId"))) {
+            DetailEvent clickEvent = getClickEvent(recommendRequest, contentVO);
 
-        return Lists.newArrayList(userTrackEvent,clickEvent);
+            return Lists.newArrayList(userTrackEvent, clickEvent);
+        }
 
+        return Lists.newArrayList(userTrackEvent);
     }
 
     private DetailEvent getClickEvent(DetailRecommendRequest recommendRequest,ContentVO contentVO){
