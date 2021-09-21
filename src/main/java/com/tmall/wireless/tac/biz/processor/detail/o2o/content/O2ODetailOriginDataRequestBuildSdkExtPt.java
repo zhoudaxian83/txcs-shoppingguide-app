@@ -9,11 +9,8 @@ import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
-import com.tmall.wireless.tac.biz.processor.detail.common.constant.TppParmasConstant;
 import com.tmall.wireless.tac.biz.processor.detail.common.extabstract.AbstractDetailOriginDataRequestBuildSdkExtPt;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
-import com.tmall.wireless.tac.biz.processor.detail.model.config.TppRequestConfig;
-import org.springframework.stereotype.Service;
 
 /**
  * @author: guichen
@@ -28,7 +25,7 @@ public class O2ODetailOriginDataRequestBuildSdkExtPt
 
     @Override
     public Long getAppId(String recType, SgFrameworkContext sgFrameworkContextContent){
-        return DetailSwitch.appIdMap.get(recType).getTppId();
+        return DetailSwitch.appIdMap.get(recType);
     }
 
     @Override
@@ -37,13 +34,8 @@ public class O2ODetailOriginDataRequestBuildSdkExtPt
 
         DetailRecommendRequest detailRequest = DetailRecommendRequest.getDetailRequest(
             sgFrameworkContextContent.getTacContext());
+        process.getParams().put("triggerItemIds",String.valueOf(detailRequest.getDetailItemId()));
 
-        TppRequestConfig tppRequestConfig = DetailSwitch.appIdMap.get(detailRequest.getRecType());
-
-        process.getParams().put(TppParmasConstant.ITEM_COUNT_PER_CONTENT,"6");
-        process.getParams().put(TppParmasConstant.CONTENT_SET_SOURCE,"intelligentCombinationItems");
-        process.getParams().put(TppParmasConstant.CONTENT_SET_ID_LIST,tppRequestConfig.getContentSetIdList());
-        process.getParams().put(TppParmasConstant.CONTENT_TYPE,tppRequestConfig.getContentType());
         return process;
     }
 

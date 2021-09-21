@@ -10,7 +10,6 @@ import com.taobao.csp.switchcenter.annotation.NameSpace;
 import com.taobao.csp.switchcenter.bean.Switch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.config.SizeDTO;
-import com.tmall.wireless.tac.biz.processor.detail.model.config.TppRequestConfig;
 
 /**
  * @author: guichen
@@ -21,11 +20,11 @@ import com.tmall.wireless.tac.biz.processor.detail.model.config.TppRequestConfig
 public class DetailSwitch {
 
     @AppSwitch(des = "详情推荐appId", level = Switch.Level.p3)
-    public static Map<String, TppRequestConfig> appIdMap = new HashMap<String, TppRequestConfig>() {
+    public static Map<String, Long> appIdMap = new HashMap<String, Long>() {
         {
-            put(RecTypeEnum.RECIPE.getType(), new TppRequestConfig(27924L,"138002","7"));
-            put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(), new TppRequestConfig(27924L,"138002","7"));
-            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), new TppRequestConfig(21174L));
+            put(RecTypeEnum.RECIPE.getType(), 28151L);
+            put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(),28151L);
+            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),21174L);
         }
     };
 

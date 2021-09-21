@@ -15,8 +15,6 @@ public class TppRequestConfig {
 
     private Long tppId;
 
-    private String contentSetIdList;
-
     private String contentType;
 
     public TppRequestConfig(Long tppId){
