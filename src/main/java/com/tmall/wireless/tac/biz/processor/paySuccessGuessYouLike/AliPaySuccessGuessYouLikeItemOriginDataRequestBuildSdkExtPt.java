@@ -1,10 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike;
 
-import com.alibaba.common.lang.StringUtil;
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
-import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
-import com.tmall.aselfcommon.model.oc.domain.LogicalArea;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
@@ -12,7 +8,6 @@ import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
-import com.tmall.wireless.tac.client.domain.UserInfo;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
