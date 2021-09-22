@@ -78,6 +78,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         if (StringUtils.isEmpty(exposureDataUserId)) {
             exposureDataUserId = String.valueOf(userId);
         }
+        tacLogger.info("userId:" + userId);
         tppRequest.setUserId(userId);
         Map<String, String> params = Maps.newHashMap();
         params.put("appid", String.valueOf(APP_ID));
@@ -85,14 +86,14 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         params.put("pageSize", String.valueOf(index * pageSize));
         params.put("pmtSource", pmtSource);
         params.put("type", "cainixihuan1");
-        params.put("smAreaId", String.valueOf(smAreaId));
-        params.put("logicAreaId", String.valueOf(regionCode));
+        params.put("smAreaId", "411002");
+        params.put("logicAreaId", "111");
         params.put("index", String.valueOf(index = (index -1) * pageSize));
         params.put("pageId", pageId);
         params.put("enlargeCainixihuanToHigher", "500");
-        params.put("regionCode", String.valueOf(regionCode));
-        params.put("moduleId", moduleId);
-        params.put("level1Id", moduleId);
+        params.put("regionCode", "111");
+        params.put("moduleId", "153");
+        params.put("level1Id", "153");
         params.put("frontIndex", String.valueOf(index * pageSize));
         params.put("itemBusinessType", itemBusinessType);
         params.put("honehourStoreId", "0");
