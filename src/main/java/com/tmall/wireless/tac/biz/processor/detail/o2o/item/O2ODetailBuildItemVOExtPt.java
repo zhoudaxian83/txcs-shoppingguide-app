@@ -50,8 +50,7 @@ public class O2ODetailBuildItemVOExtPt extends DefaultBuildItemVOExtPt {
             MapUtils.isNotEmpty(params)) {
 
             DetailSwitch.detailThoughParams.stream().filter(params::containsKey)
-                .map(params::get)
-                .filter(Objects::nonNull)
+                .filter(v->Objects.nonNull(params.get(v)))
                 .forEach(v -> url.append("&").append(v).append("=").append((String)params.get(v)));
         }
 
