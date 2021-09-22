@@ -76,7 +76,7 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             }
             List<Map<String, Object>> aldStaticDataList = (List<Map<String, Object>>)aldStaticData;
             Map<Long, Map<String, Object>> aldStaticDataMap = aldStaticDataList.stream().collect(
-                Collectors.toMap(e -> Long.valueOf(String.valueOf(e.get("contentId22"))), Function.identity(), (key1, key2) -> key2));
+                Collectors.toMap(e -> Long.valueOf(String.valueOf(e.get("contentId"))), Function.identity(), (key1, key2) -> key2));
             customParams.put("aldStaticDataMap", aldStaticDataMap);
 
             String itemAndIndustryData = convertStaticData(aldStaticDataList);
