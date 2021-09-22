@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -64,6 +66,11 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         Long regionCode = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams).map(LocParams::getRegionCode).orElse(111L);
 
+
+         String logicAreaId = Joiner.on(",").join(Optional.ofNullable(context).map(SgFrameworkContext::getCommonUserParams)
+                 .map(CommonUserParams::getLocParams).map(LocParams::getLogicIdByPriority)
+                 .orElse(Lists.newArrayList()));
+
         int index = MapUtil.getIntWithDefault(contextParamsMap, "index", 1);
         int pageSize = MapUtil.getIntWithDefault(contextParamsMap, "pageSize", 20);
         String itemBusinessType = MapUtil.getStringWithDefault(
@@ -81,7 +88,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         params.put("pmtSource", pmtSource);
         params.put("type", "cainixihuan1");
         params.put("smAreaId", String.valueOf(smAreaId));
-        params.put("logicAreaId", String.valueOf(regionCode));
+        params.put("logicAreaId", logicAreaId);
         params.put("index", String.valueOf(index = (index -1) * pageSize));
         params.put("pageId", pageId);
         params.put("enlargeCainixihuanToHigher", "500");
