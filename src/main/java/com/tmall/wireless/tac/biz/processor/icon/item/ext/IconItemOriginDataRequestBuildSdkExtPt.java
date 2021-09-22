@@ -50,12 +50,12 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
         Long userId = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
 
 
-        Long appId = 0L;
-        if(GrayUtils.checkGray(userId, fullDomainGray)){
-            appId = CATEGORY_RECOMMEND_ITEM_RECOMMEND_PLATEFORM;
-        }else{
-            appId = RECOMMEND_PLATFORM_ICON_FULL_DOMAIN_APP_ID;
-        }
+        Long appId = CATEGORY_RECOMMEND_ITEM_RECOMMEND_PLATEFORM;
+//        if(GrayUtils.checkGray(userId, fullDomainGray)){
+//            appId = CATEGORY_RECOMMEND_ITEM_RECOMMEND_PLATEFORM;
+//        }else{
+//            appId = RECOMMEND_PLATFORM_ICON_FULL_DOMAIN_APP_ID;
+//        }
 
         recommendRequest.setAppId(appId);
         Map<String, String> params = Maps.newHashMap();
