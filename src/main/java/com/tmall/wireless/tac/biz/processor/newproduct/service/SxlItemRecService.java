@@ -166,6 +166,25 @@ public class SxlItemRecService {
                 return response;
             })
             .map(TacResult::newResult)
+            .map(tacResult -> {
+                if(tacResult == null){
+                    HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                        .kv("SxlItemRecService","recommend")
+                        .kv("tacResult","tacResult is null!")
+                        .info();
+                    tacResult.getBackupMetaData().setUseBackup(true);
+                    return tacResult;
+                }
+                if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
+                    tacResult = TacResult.errorResult("tac Backup!");
+                    HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+                        .kv("SxlItemRecService","recommend")
+                        .kv("tacResult",JSON.toJSONString(tacResult))
+                        .info();
+                }
+                tacResult.getBackupMetaData().setUseBackup(true);
+                return tacResult;
+            })
             .onErrorReturn(r -> TacResult.errorResult(""));
 
     }
@@ -218,11 +237,15 @@ public class SxlItemRecService {
             }
             Object sellingPointDesc = itemChannelData.get("sellingPointDesc");
             Object recommendWords = itemChannelData.get("recommendWords");
+            Object type = itemChannelData.get("type");
             if(sellingPointDesc != null && StringUtils.isNotBlank(sellingPointDesc.toString())){
                 entityVO.put("sellingPointDesc",sellingPointDesc);
             }
             if(recommendWords != null && StringUtils.isNotBlank(recommendWords.toString())){
                 entityVO.put("recommendWords",recommendWords);
+            }
+            if(type != null && StringUtils.isNotBlank(type.toString())){
+                entityVO.put("type",type);
             }
         });
         return response;
