@@ -19,6 +19,6 @@ import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 public class TodayCrazyTabContentOriginDataPostProcessorSdkExtPt extends Register implements ContentOriginDataPostProcessorSdkExtPt {
     @Override
     public OriginDataDTO<ContentEntity> process(ContentOriginDataProcessRequest contentOriginDataProcessRequest) {
-        return null;
+        return contentOriginDataProcessRequest.getContentEntityOriginDataDTO();
     }
 }
