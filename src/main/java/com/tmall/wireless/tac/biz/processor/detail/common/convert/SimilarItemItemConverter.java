@@ -2,12 +2,20 @@ package com.tmall.wireless.tac.biz.processor.detail.common.convert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.collect.Lists;
+import com.taobao.igraph.client.model.AtomicQuery;
+import com.taobao.igraph.client.model.KeyList;
+import com.taobao.igraph.client.model.MatchRecord;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
+import com.tmall.tmallwireless.tac.spi.context.SPIResult;
+import com.tmall.wireless.store.spi.tair.IGraphSpi;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecItemResultVO;
@@ -25,6 +33,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemResultVO> {
+
+    @Resource
+    private IGraphSpi iGraphSpi;
+
     @Override
     public RecTypeEnum getRecTypeEnum() {
         return RecTypeEnum.SIMILAR_ITEM_ITEM;
@@ -56,25 +68,52 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
         List list = itemAndContentList.subList(0, Math.min(6, itemAndContentList.size()));
         detailRecItemResultVO.setResult(super.convertItems(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),list, scmJoin));
 
+        //卖点的拼装
+        processSellingPoint(detailRecItemResultVO.getResult());
+
         exposureExtraParam.put("scmJoin",String.join(",",scmJoin));
 
         return detailRecItemResultVO;
+    }
+
+    private void processSellingPoint(List<DetailRecommendItemVO> recommendItemVOS){
+
+        List<KeyList> collect = recommendItemVOS.stream().filter(
+            v -> CollectionUtils.isEmpty(v.getPromotionAtmosphereList()))
+            .map(v -> {
+                return new KeyList(String.valueOf(v.getItemId()));
+            })
+            .collect(Collectors.toList());
+
+        AtomicQuery atomicQuery = new AtomicQuery( "aws_ascp_apl_tmcs_item_stat_element1",collect);
+
+        SPIResult<List<MatchRecord>> search = iGraphSpi.search(atomicQuery);
+        if(!search.isSuccess()||CollectionUtils.isEmpty(search.getData())){
+            return;
+        }
+
+        search.getData().forEach(v -> {
+            recommendItemVOS.stream().filter(item -> item.getItemId().equals(v.getLong("itemId")))
+                .findFirst()
+                .ifPresent(itemVO -> itemVO
+                    .setSubTitle(
+                        Lists.newArrayList(
+                            new DetailTextComponentVO(v.getString("element_content"),
+                                new Style("12", "#111111", "true")))));
+        });
     }
 
     @Override
     public DetailRecommendItemVO convertToItem(String scene, ItemEntityVO itemInfoBySourceCaptainDTO, int index) {
         DetailRecommendItemVO detailRecommendItemVO = super.convertToItem(scene, itemInfoBySourceCaptainDTO, index);
 
-        if (CollectionUtils.isEmpty(detailRecommendItemVO.getPromotionAtmosphereList())) {
-            String sellPointMock = "销量排名第一";
-            detailRecommendItemVO.setSubTitle(
-                Lists.newArrayList(new DetailTextComponentVO(sellPointMock, new Style("12", "#111111", "true"))));
-        } else {
-            if (detailRecommendItemVO.getPromotionAtmosphereList().get(0).getText().contains("满")) {
-                detailRecommendItemVO.getPromotionAtmosphereList().get(0)
-                    .setTitle("券");
+        if (!CollectionUtils.isEmpty(detailRecommendItemVO.getPromotionAtmosphereList())) {
+
+                if (detailRecommendItemVO.getPromotionAtmosphereList().get(0).getText().contains("满")) {
+                    detailRecommendItemVO.getPromotionAtmosphereList().get(0)
+                        .setTitle("券");
+                }
             }
-        }
 
         return detailRecommendItemVO;
     }
