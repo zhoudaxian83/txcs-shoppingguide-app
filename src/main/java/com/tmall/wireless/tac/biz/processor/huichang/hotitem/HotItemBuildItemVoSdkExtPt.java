@@ -55,6 +55,10 @@ public class HotItemBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt imple
                 if(itemDesc != null){
                     itemEntityVO.put("itemDesc", String.valueOf(itemDesc));
                 }
+                Object industryId = itemDataMap.get("industryId");
+                if(industryId != null){
+                    itemEntityVO.put("industryId", String.valueOf(industryId));
+                }
             }
         }
         return process;
