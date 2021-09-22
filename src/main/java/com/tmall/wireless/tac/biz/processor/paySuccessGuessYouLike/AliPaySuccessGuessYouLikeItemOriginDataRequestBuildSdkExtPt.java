@@ -70,8 +70,8 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         Long regionCode = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams).map(LocParams::getRegionCode).orElse(111L);
 
-        int index = MapUtil.getIntWithDefault(contextParamsMap, "index", 0);
-        String pageSize = MapUtil.getStringWithDefault(contextParamsMap, "pageSize", "20");
+        int index = MapUtil.getIntWithDefault(contextParamsMap, "index", 1);
+        int pageSize = MapUtil.getIntWithDefault(contextParamsMap, "pageSize", 20);
         String itemBusinessType = MapUtil.getStringWithDefault(
                 contextParamsMap, "itemBusinessType", "B2C,OneHour,HalfDay,NextDay");
         String exposureDataUserId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
@@ -83,21 +83,21 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         Map<String, String> params = Maps.newHashMap();
         params.put("appid", String.valueOf(APP_ID));
         params.put("pmtName", pmtName);
-        params.put("pageSize", pageSize);
+        params.put("pageSize", String.valueOf(index * pageSize));
         params.put("pmtSource", pmtSource);
         params.put("type", "cainixihuan1");
         params.put("smAreaId", String.valueOf(smAreaId));
         params.put("logicAreaId", String.valueOf(regionCode));
-        params.put("index", String.valueOf(index));
+        params.put("index", String.valueOf((index -1) * pageSize));
         params.put("pageId", pageId);
         params.put("enlargeCainixihuanToHigher", "500");
         params.put("regionCode", String.valueOf(regionCode));
-        params.put("level1Id", moduleId);
         params.put("moduleId", moduleId);
+        params.put("level1Id", moduleId);
         params.put("frontIndex", String.valueOf(index));
         params.put("itemBusinessType", itemBusinessType);
         params.put("honehourStoreId", "0");
-        params.put("isFirstPage", index > 0 ? "false" : "true");
+        params.put("isFirstPage", index == 1 ? "true" : "false");
         params.put("exposureDataUserId", exposureDataUserId);
 
         tacLogger.info("tpp请求参数：" + params.toString());
