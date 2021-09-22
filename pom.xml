@@ -50,6 +50,11 @@
             <artifactId>data-part-spi</artifactId>
             <version>1.0.11-DETAIL-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>third-part-spi</artifactId>
+            <version>1.0.11-DETAIL-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>com.tmall.aselfcaptain</groupId>
