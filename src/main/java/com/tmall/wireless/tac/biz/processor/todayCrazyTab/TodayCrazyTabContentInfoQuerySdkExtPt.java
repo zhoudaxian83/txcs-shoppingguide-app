@@ -13,6 +13,7 @@ import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonA
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import io.reactivex.Flowable;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -45,10 +46,12 @@ public class TodayCrazyTabContentInfoQuerySdkExtPt extends Register implements C
         List<Map<String, Object>> staticScheduleDataList = (List<Map<String, Object>>)staticScheduleData;
 
         for (Map<String, Object> stringObjectMap : staticScheduleDataList) {
-            Long itemSetId = (Long) stringObjectMap.get("itemSetId");
-            ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
-            contentInfoDTO.setContentInfo(stringObjectMap);
-            result.put(itemSetId, contentInfoDTO);
+            String itemSetId = String.valueOf(stringObjectMap.get("itemSetId"));
+            if (StringUtils.isNumeric(itemSetId)) {
+                ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
+                contentInfoDTO.setContentInfo(stringObjectMap);
+                result.put(Long.valueOf(itemSetId), contentInfoDTO);
+            }
         }
 
         return result;

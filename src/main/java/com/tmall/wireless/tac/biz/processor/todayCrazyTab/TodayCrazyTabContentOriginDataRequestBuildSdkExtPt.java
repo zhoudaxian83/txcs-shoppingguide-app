@@ -11,6 +11,7 @@ import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -68,8 +69,10 @@ public class TodayCrazyTabContentOriginDataRequestBuildSdkExtPt extends Register
         List<Map<String, Object>> staticScheduleDataList = (List<Map<String, Object>>)staticScheduleData;
         List<Long> longList = Lists.newArrayList();
         for (Map<String, Object> stringObjectMap : staticScheduleDataList) {
-            Long itemSetId = (Long) stringObjectMap.get("itemSetId");
-            longList.add(itemSetId);
+            String itemSetId = String.valueOf(stringObjectMap.get("itemSetId"));
+            if (StringUtils.isNumeric(itemSetId)) {
+                longList.add(Long.valueOf(itemSetId));
+            }
         }
 
         return Joiner.on(",").join(longList);
