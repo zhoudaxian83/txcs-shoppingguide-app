@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4;
 
+import com.alibaba.fastjson.JSON;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
@@ -31,8 +33,22 @@ public class GuessYourLikeShopCart4SdkItemHandler extends RpmReactiveHandler<SgF
         );
 
          
+//        return shoppingguideSdkItemService.recommend(context, b)
+//        .map(TacResult::newResult);
         return shoppingguideSdkItemService.recommend(context, b)
-        .map(TacResult::newResult);
-
+                .map(TacResult::newResult)
+                .map(tacResult -> {
+                    if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null
+                            || tacResult.getData().getItemAndContentList().isEmpty()){
+                        tacResult = TacResult.errorResult("test");
+                        HadesLogUtil.stream("guessYourLikeShopCart4")
+                                .kv("shoppingguideSdkItemService","recommend")
+                                .kv("tacResult", JSON.toJSONString(tacResult))
+                                .info();
+                    }
+                    tacResult.getBackupMetaData().setUseBackup(true);
+                    return tacResult;
+                })
+                .onErrorReturn(r -> TacResult.errorResult(""));
     }
 }
