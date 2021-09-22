@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike;
 
 import com.alibaba.fastjson.JSON;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
+import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemProcessBeforeReturnSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
         useCase = ScenarioConstantApp.LOC_TYPE_B2C
         , scenario = ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE
 )
-public class AlipaySuccessYouLikeItemProcessBeforeReturnSdkExtPt implements ItemProcessBeforeReturnSdkExtPt {
+public class AlipaySuccessYouLikeItemProcessBeforeReturnSdkExtPt extends Register implements ItemProcessBeforeReturnSdkExtPt {
 
 
     @Autowired

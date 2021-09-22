@@ -8,7 +8,6 @@ import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
-import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,9 +21,6 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
 
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
-
-    @Autowired
-    TacLoggerImpl tacLogger;
 
     @Override
     public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
