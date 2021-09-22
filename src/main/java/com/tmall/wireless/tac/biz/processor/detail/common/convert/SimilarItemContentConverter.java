@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -12,17 +12,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
+import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
-import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendContentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendVO.DetailEvent;
-import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
-import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
 import com.tmall.wireless.tac.biz.processor.detail.util.CommonUtil;
-import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
 import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
@@ -48,7 +45,6 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
 
     private DetailRecContentResultVO similarItemConvert(DetailRecommendRequest recommendRequest,
         List<ContentVO> itemAndContentList) {
-        String scene=getRecTypeEnum().getType();
 
         DetailRecContentResultVO detailRecContentResultVO=new DetailRecContentResultVO();
         detailRecContentResultVO.setEnableScroll(false);
@@ -64,6 +60,13 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         if (CollectionUtils.isEmpty(itemAndContentList)) {
             itemAndContentList = new ArrayList<>();
         }
+
+        //校验必须有6个以上才展示
+        itemAndContentList = itemAndContentList.stream()
+            .filter(v -> v.containsKey("items"))
+            .filter(v -> CollectionUtils.isNotEmpty(((List<ItemEntityVO>)v.get("items")))
+                && ((List<ItemEntityVO>)v.get("items")).size() >= 6)
+            .collect(Collectors.toList());
 
         //默认写入第一个tab是相似商品，默认contentId=-1
         ContentVO contentVO = new ContentVO();

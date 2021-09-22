@@ -58,13 +58,14 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
         detailRecItemResultVO.setTitle(null);
 
         //如果没有推荐结果就空返回
-        if(CollectionUtils.isEmpty(sgFrameworkResponse.getItemAndContentList())){
+        if (CollectionUtils.isEmpty(sgFrameworkResponse.getItemAndContentList()) ||
+            sgFrameworkResponse.getItemAndContentList().size() < 6) {
             return detailRecItemResultVO;
         }
 
         //推荐内容
         List itemAndContentList = sgFrameworkResponse.getItemAndContentList();
-        List list = itemAndContentList.subList(0, Math.min(6, itemAndContentList.size()));
+        List list = itemAndContentList.subList(0, 6);
         detailRecItemResultVO.setResult(super.convertItems(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),list, scmJoin));
 
         //卖点的拼装
