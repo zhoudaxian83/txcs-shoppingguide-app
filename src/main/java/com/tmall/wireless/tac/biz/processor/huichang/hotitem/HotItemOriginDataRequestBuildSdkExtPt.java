@@ -1,8 +1,12 @@
 package com.tmall.wireless.tac.biz.processor.huichang.hotitem;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -64,12 +68,17 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)context;
             Map<String, Object> aldParams = requestContext4Ald.getAldParam();
             Map<String, Object> aldContext = requestContext4Ald.getAldContext();
+            Map<String, Object> customParams = requestContext4Ald.getParams();
             Map<String, String> params = Maps.newHashMap();
             Object aldStaticData = aldContext.get(HallCommonAldConstant.STATIC_SCHEDULE_DATA);
             if(aldStaticData == null){
                 throw new Exception("获取阿拉丁静态数据为空");
             }
             List<Map<String, Object>> aldStaticDataList = (List<Map<String, Object>>)aldStaticData;
+            Map<Long, Map<String, Object>> aldStaticDataMap = aldStaticDataList.stream().collect(
+                Collectors.toMap(e -> Long.valueOf(String.valueOf(e.get("contentId22"))), Function.identity(), (key1, key2) -> key2));
+            customParams.put("aldStaticDataMap", aldStaticDataMap);
+
             String itemAndIndustryData = convertStaticData(aldStaticDataList);
             params.put("itemAndIndustry", itemAndIndustryData);
             Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, DEFAULT_SMAREAID);
@@ -134,4 +143,5 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
         }
         return sb.toString();
     }
+
 }
