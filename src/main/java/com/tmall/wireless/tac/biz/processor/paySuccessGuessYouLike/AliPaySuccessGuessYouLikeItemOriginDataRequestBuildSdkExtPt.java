@@ -78,7 +78,6 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         if (StringUtils.isEmpty(exposureDataUserId)) {
             exposureDataUserId = String.valueOf(userId);
         }
-        tacLogger.info("userId:" + userId);
         tppRequest.setUserId(userId);
         Map<String, String> params = Maps.newHashMap();
         params.put("appid", String.valueOf(APP_ID));
@@ -92,8 +91,8 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         params.put("pageId", pageId);
         params.put("enlargeCainixihuanToHigher", "500");
         params.put("regionCode", "111");
-        params.put("moduleId", "153");
-        params.put("level1Id", "153");
+        params.put("moduleId", moduleId);
+        params.put("level1Id", moduleId);
         params.put("frontIndex", String.valueOf(index * pageSize));
         params.put("itemBusinessType", itemBusinessType);
         params.put("honehourStoreId", "0");
