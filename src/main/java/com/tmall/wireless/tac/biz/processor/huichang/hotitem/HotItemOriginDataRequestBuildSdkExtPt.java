@@ -20,6 +20,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
+import com.tmall.wireless.tac.biz.processor.huichang.common.itemextpt.HallCommonItemUserCommonParamsBuildSdkExtPt;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -27,6 +28,8 @@ import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -36,6 +39,8 @@ import org.springframework.beans.factory.annotation.Autowired;
     useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
     scenario = HallScenarioConstant.HALL_SCENARIO_HOT_ITEM)
 public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
+
+    Logger logger = LoggerFactory.getLogger(HotItemOriginDataRequestBuildSdkExtPt.class);
     private static final String ITEM_SET_PREFIX = "crm_";
     public static final Long DEFAULT_LOGAREAID = 107L;
     public static final Long SCENE_ITEM_RECOMMEND_APPID = 27753L;
@@ -51,6 +56,7 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
     // &itemAndIndustry=649361494634:1100:1;651103243384:1200:1
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
+        logger.error("-----HotItemOriginDataRequestBuildSdkExtPt.start----");
         tacLogger.debug("HotItemOriginDataRequestBuildSdkExtPt");
         RecommendRequest recommendRequest = new RecommendRequest();
         try {
@@ -108,7 +114,8 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             return recommendRequest;
         } catch (Exception e) {
             tacLogger.debug(
-                "扩展点InventoryChannelItemPageOriginDataRequestBuildSdkExtPt 失败" + StackTraceUtil.stackTrace(e));
+                "HotItemOriginDataRequestBuildSdkExtPt 失败" + StackTraceUtil.stackTrace(e));
+            logger.error("HotItemOriginDataRequestBuildSdkExtPt 失败.", e);
             return recommendRequest;
         }
     }
