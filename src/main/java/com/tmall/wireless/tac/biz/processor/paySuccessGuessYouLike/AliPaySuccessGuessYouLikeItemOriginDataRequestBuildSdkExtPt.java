@@ -72,6 +72,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
 
         int index = MapUtil.getIntWithDefault(contextParamsMap, "index", 1);
         int pageSize = MapUtil.getIntWithDefault(contextParamsMap, "pageSize", 20);
+        index = (index -1) * pageSize;
         String itemBusinessType = MapUtil.getStringWithDefault(
                 contextParamsMap, "itemBusinessType", "B2C,OneHour,HalfDay,NextDay");
         String exposureDataUserId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
@@ -88,7 +89,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         params.put("type", "cainixihuan1");
         params.put("smAreaId", String.valueOf(smAreaId));
         params.put("logicAreaId", String.valueOf(regionCode));
-        params.put("index", String.valueOf((index -1) * pageSize));
+        params.put("index", String.valueOf(index));
         params.put("pageId", pageId);
         params.put("enlargeCainixihuanToHigher", "500");
         params.put("regionCode", String.valueOf(regionCode));
@@ -97,7 +98,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         params.put("frontIndex", String.valueOf(index));
         params.put("itemBusinessType", itemBusinessType);
         params.put("honehourStoreId", "0");
-        params.put("isFirstPage", index == 1 ? "true" : "false");
+        params.put("isFirstPage", index == 0 ? "true" : "false");
         params.put("exposureDataUserId", exposureDataUserId);
 
         tacLogger.info("tpp请求参数：" + params.toString());
