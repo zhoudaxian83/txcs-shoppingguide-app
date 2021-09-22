@@ -60,7 +60,7 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
         //如果没有推荐结果就空返回
         if (CollectionUtils.isEmpty(sgFrameworkResponse.getItemAndContentList()) ||
             sgFrameworkResponse.getItemAndContentList().size() < 6) {
-            return detailRecItemResultVO;
+            return null;
         }
 
         //推荐内容
