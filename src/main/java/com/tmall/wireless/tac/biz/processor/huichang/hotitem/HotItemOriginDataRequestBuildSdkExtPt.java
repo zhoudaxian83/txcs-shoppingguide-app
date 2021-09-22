@@ -89,16 +89,18 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             params.put("regionCode", Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode())
                 .map(String::valueOf).orElse(String.valueOf(DEFAULT_LOGAREAID)));
 
-            String itemSetId = "";
-            String tacParams = MapUtil.getStringWithDefault(aldParams, "tacParams", "");
-            if (StringUtils.isNotBlank(tacParams)) {
-                JSONObject tacParamsMap = JSON.parseObject(tacParams);
-                itemSetId = Optional.ofNullable(tacParamsMap.getString(HallCommonAldConstant.ITEM_SET_ID)).orElse("");
-            }
-            if (StringUtils.isEmpty(itemSetId)) {
-                throw new Exception("itemSetId is empty");
-            }
+            //String itemSetId = "";
+            //String tacParams = MapUtil.getStringWithDefault(aldParams, "tacParams", "");
+            //if (StringUtils.isNotBlank(tacParams)) {
+            //    JSONObject tacParamsMap = JSON.parseObject(tacParams);
+            //    itemSetId = Optional.ofNullable(tacParamsMap.getString(HallCommonAldConstant.ITEM_SET_ID)).orElse("");
+            //}
+            //if (StringUtils.isEmpty(itemSetId)) {
+            //    throw new Exception("itemSetId is empty");
+            //}
 
+            String itemSetId = MapUtil.getStringWithDefault(aldParams, HallCommonAldConstant.ITEM_SET_ID, "");
+            logger.error("-----HotItemOriginDataRequestBuildSdkExtPt.itemSetId:{}", itemSetId);
             params.put("commerce", "B2C");
             params.put("index", "0"); // 不要求分页
             params.put("pageSize", String.valueOf(PAGE_SIZE));
