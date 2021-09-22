@@ -92,7 +92,7 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
         }
 
         search.getData().forEach(v -> {
-            recommendItemVOS.stream().filter(item -> item.getItemId().equals(v.getLong("itemId")))
+            recommendItemVOS.stream().filter(item -> item.getItemId().equals(v.getLong("item_id")))
                 .findFirst()
                 .ifPresent(itemVO -> itemVO
                     .setSubTitle(
