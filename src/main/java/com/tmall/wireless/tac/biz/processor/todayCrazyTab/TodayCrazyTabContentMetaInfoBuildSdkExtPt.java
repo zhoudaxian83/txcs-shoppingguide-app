@@ -20,7 +20,7 @@ public class TodayCrazyTabContentMetaInfoBuildSdkExtPt extends Register implemen
     @Override
     public ContentMetaInfo process(Context context) {
         ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
-        contentMetaInfo.setQueryItemList(false);
+        contentMetaInfo.setQueryItemList(true);
         return contentMetaInfo;
     }
 }
