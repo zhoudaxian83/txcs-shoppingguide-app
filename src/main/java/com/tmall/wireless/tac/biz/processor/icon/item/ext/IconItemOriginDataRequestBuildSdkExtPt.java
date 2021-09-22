@@ -4,7 +4,6 @@ package com.tmall.wireless.tac.biz.processor.icon.item.ext;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.tmall.aselfcommon.util.gray.util.GrayUtil;
 import com.tmall.crowd.guava.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -12,7 +11,6 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginData
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.icon.GrayUtils;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRequest;
 import com.tmall.wireless.tac.biz.processor.icon.level2.BusinessTypeUtil;
