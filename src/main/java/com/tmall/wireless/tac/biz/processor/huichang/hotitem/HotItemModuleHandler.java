@@ -6,7 +6,11 @@ import java.util.Map;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 
+import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
+import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
+import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
+import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.service.HallCommonItemRequestProxy;
@@ -32,7 +36,7 @@ public class HotItemModuleHandler extends TacReactiveHandler4Ald {
     TacLogger tacLogger;
 
     @Autowired
-    HallCommonItemRequestProxy hallCommonItemRequestProxy;
+    ShoppingguideSdkItemService shoppingguideSdkItemService;
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
@@ -41,8 +45,17 @@ public class HotItemModuleHandler extends TacReactiveHandler4Ald {
             HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
             HallScenarioConstant.HALL_SCENARIO_HOT_ITEM);
         bizScenario.addProducePackage(HallScenarioConstant.HALL_ITEM_SDK_PACKAGE);
-        Flowable<TacResult<List<GeneralItem>>> itemVOs = hallCommonItemRequestProxy.recommend(requestContext4Ald, bizScenario);
-        return itemVOs;
+
+        Flowable<TacResult<List<GeneralItem>>> tacResultFlowable = shoppingguideSdkItemService.recommend(
+            requestContext4Ald, bizScenario)
+            .map(response -> {
+                List<GeneralItem> re = Lists.newArrayList();
+                re.add(convertAldItem(response));
+                return re;
+            })
+            .map(TacResult::newResult)
+            .onErrorReturn(r -> TacResult.errorResult(""));
+        return tacResultFlowable;
 
 
         //Map<String, Object> aldContext = requestContext4Ald.getAldContext();
@@ -63,25 +76,10 @@ public class HotItemModuleHandler extends TacReactiveHandler4Ald {
         //return null;
     }
 
-    /**
-     * 校验数据准确性
-     */
-    private void staticDataCheck(List<Map<String, Object>> aldStaticDataList){
-
-    }
-
-    //https://tui.taobao.com/recommend?appid=27753&pageSize=2&index=0&itemSets
-    // =crm_378428&commerce=B2C&smAreaId=330200&_devEnv_=0&regionCode=107
-    // &exposureDataUserId=FYRsGO9rTyUCAXWISzVJIRez
-    // &itemAndIndustry=649361494634:1100:1;651103243384:1200:1
-    private Map<String, String> buildTppParams(Map<String, Object> aldContext, Map<String, Object> aldParam){
-        Map<String, String> params = new HashMap<>();
-        Object aldStaticData  = aldContext.get(HallCommonAldConstant.STATIC_SCHEDULE_DATA);
-        List<Map<String, Object>> aldStaticDataList = (List<Map<String, Object>>)aldStaticData;
-        params.put("index", "0");
-        params.put("pageSize", "200");
-        params.put("pageSize", "200");
-        return null;
+    public GeneralItem convertAldItem(SgFrameworkResponse<ItemEntityVO> response) {
+        GeneralItem generalItem = new GeneralItem();
+        generalItem.put("data", response.getItemAndContentList());
+        return generalItem;
     }
 
 }
