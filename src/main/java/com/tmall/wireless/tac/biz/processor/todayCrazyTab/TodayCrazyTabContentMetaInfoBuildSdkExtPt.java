@@ -18,6 +18,8 @@ import com.tmall.wireless.tac.client.domain.Context;
 public class TodayCrazyTabContentMetaInfoBuildSdkExtPt extends Register implements ContentMetaInfoBuildSdkExtPt {
     @Override
     public ContentMetaInfo process(Context context) {
-        return null;
+        ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
+        contentMetaInfo.setQueryItemList(false);
+        return contentMetaInfo;
     }
 }

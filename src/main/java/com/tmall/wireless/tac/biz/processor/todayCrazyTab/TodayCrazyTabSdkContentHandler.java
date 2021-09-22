@@ -5,6 +5,7 @@ import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkContentService;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
+import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -32,6 +33,7 @@ public class TodayCrazyTabSdkContentHandler extends RpmReactiveHandler<SgFramewo
         );
 
         b.addProducePackage(HallScenarioConstant.HALL_CONTENT_SDK_PACKAGE);
+        b.addProducePackage(PackageNameKey.OLD_RECOMMEND);
 
         return shoppingguideSdkContentService.recommend0(context, b).map(TacResult::newResult);
     }
