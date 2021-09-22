@@ -1,19 +1,15 @@
 package com.tmall.wireless.tac.biz.processor.huichang.hotitem;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
-import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -24,14 +20,10 @@ import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
-import com.tmall.wireless.tac.biz.processor.huichang.common.itemextpt.HallCommonItemUserCommonParamsBuildSdkExtPt;
-import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +100,8 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             //    throw new Exception("itemSetId is empty");
             //}
 
-            String itemSetId = MapUtil.getStringWithDefault(aldParams, HallCommonAldConstant.ITEM_SET_ID, "");
+            //String itemSetId = MapUtil.getStringWithDefault(aldParams, HallCommonAldConstant.ITEM_SET_ID, "");
+            String itemSetId = "398287";
             logger.error("-----HotItemOriginDataRequestBuildSdkExtPt.itemSetId:{}", itemSetId);
             params.put("commerce", "B2C");
             params.put("index", "0"); // 不要求分页
