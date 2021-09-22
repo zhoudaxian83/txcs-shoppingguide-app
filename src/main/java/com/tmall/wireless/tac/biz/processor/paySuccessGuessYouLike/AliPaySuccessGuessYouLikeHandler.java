@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike;
 
+import com.alibaba.fastjson.JSON;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
@@ -29,6 +31,20 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                 ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE);
-        return shoppingguideSdkItemService.recommend(context, bizScenario).map(TacResult::newResult);
+        return shoppingguideSdkItemService.recommend(context, bizScenario)
+                .map(TacResult::newResult)
+                .map(tacResult -> {
+                    if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null
+                            || tacResult.getData().getItemAndContentList().isEmpty()){
+                        tacResult = TacResult.errorResult("test");
+                        HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
+                                .kv("shoppingguideSdkItemService","recommend")
+                                .kv("tacResult", JSON.toJSONString(tacResult))
+                                .info();
+                    }
+                    tacResult.getBackupMetaData().setUseBackup(true);
+                    return tacResult;
+                })
+                .onErrorReturn(r -> TacResult.errorResult(""));
     }
 }
