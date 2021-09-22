@@ -52,9 +52,9 @@ public class IconItemOriginDataFailProcessorSdkExtPt extends Register implements
             Preconditions.checkArgument(itemRequest != null);
 
             tairKey = buildTairKey(itemRequest);
-            SPIResult<Result<DataEntry>> dataEntryResult = tairSpi.get(SHOPPING_GUIDE_TAIR_USER_NAME, SHOPPING_GUIDE_NAME_SPACE, tairKey);
+            SPIResult<Result<DataEntry>> resultSPIResult = tairSpi.get(SHOPPING_GUIDE_TAIR_USER_NAME, SHOPPING_GUIDE_NAME_SPACE, tairKey);
 
-            Object o = Optional.ofNullable(dataEntryResult).map(SPIResult::getData).map(Result::getValue).map(DataEntry::getValue).orElse(null);
+            Object o = Optional.ofNullable(resultSPIResult).map(SPIResult::getData).map(Result::getValue).map(DataEntry::getValue).orElse(null);
             if (o == null) {
                 return originDataProcessRequest.getItemEntityOriginDataDTO();
             }

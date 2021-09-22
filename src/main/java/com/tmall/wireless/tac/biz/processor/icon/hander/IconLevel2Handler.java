@@ -42,6 +42,7 @@ public class IconLevel2Handler extends RpmReactiveHandler<IconResponse> {
         Level3Request level3Request = new Level3Request();
         level3Request.setLevel1Id(Optional.ofNullable(context.get("iconType")).map(Object::toString).orElse(""));
         level3Request.setLevel2Id(Optional.ofNullable(context.get("level2Id")).map(Object::toString).orElse(""));
+        level3Request.setLevel2Business(Optional.ofNullable(context.get("business")).map(Object::toString).orElse(""));
 
 //        Map<String, Object> result = Maps.newHashMap();
 
@@ -54,12 +55,12 @@ public class IconLevel2Handler extends RpmReactiveHandler<IconResponse> {
         }).flatMap(re -> {
                     ItemRequest itemRequest = new ItemRequest();
                     itemRequest.setLevel1Id(level3Request.getLevel1Id());
-
-                    List<LabelDTO> labelDTOS = Optional.of(re).map(IconResponse::getSecondList).orElse(Lists.newArrayList());
                     List<LabelDTO> labelDTOSLevel3 = Optional.of(re).map(IconResponse::getThrirdList).orElse(Lists.newArrayList());
 
-                    itemRequest.setLevel2Id(labelDTOS.stream().findFirst().map(LabelDTO::getId).map(Object::toString).orElse("0"));
+                    itemRequest.setLevel2Id(level3Request.getLevel2Id());
                     itemRequest.setLevel3Id(labelDTOSLevel3.stream().findFirst().map(LabelDTO::getId).map(Object::toString).orElse("0"));
+                    itemRequest.setLevel3Business(labelDTOSLevel3.stream().findFirst().map(LabelDTO::getBusiness).map(Object::toString).orElse("0"));
+
                     return itemRecommendService.recommend(itemRequest, context)
                     .map(response -> {
                         iconResponse.setItemList(response);
