@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.detail.common.convert;
 
+import com.tmall.tcls.gs.sdk.framework.model.ErrorCode;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -21,5 +22,9 @@ public class ResultConverter  {
 
         return TacResult.errorResult(response.getErrorCode(),response.getErrorMsg());
 
+    }
+
+    public static TacResult convertErrorTacResult(Throwable t){
+        return TacResult.errorResult(ErrorCode.SYS_ERROR,t.getMessage());
     }
 }
