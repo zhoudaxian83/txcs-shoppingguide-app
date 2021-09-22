@@ -86,11 +86,11 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         params.put("pmtSource", pmtSource);
         params.put("type", "cainixihuan1");
         params.put("smAreaId", "411002");
-        params.put("logicAreaId", "111");
+        params.put("logicAreaId", String.valueOf(regionCode));
         params.put("index", String.valueOf(index = (index -1) * pageSize));
         params.put("pageId", pageId);
         params.put("enlargeCainixihuanToHigher", "500");
-        params.put("regionCode", "111");
+        params.put("regionCode", String.valueOf(regionCode));
         params.put("moduleId", moduleId);
         params.put("level1Id", moduleId);
         params.put("frontIndex", String.valueOf(index * pageSize));
