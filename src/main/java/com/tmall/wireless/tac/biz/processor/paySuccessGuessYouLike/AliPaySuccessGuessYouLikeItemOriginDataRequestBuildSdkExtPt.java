@@ -41,16 +41,11 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
     @Override
     public RecommendRequest process(SgFrameworkContextItem context) {
         tacLogger.info("=================tacLogger+ 已进入tpp参数组装==================");
-        tacLogger.info("sgFrameworkContextItem信息" + context);
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APP_ID);
         Long userId = Optional.of(context).
                 map(SgFrameworkContext::getCommonUserParams).
                 map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
-        tacLogger.info("userId：" + userId);
-        tacLogger.info("context内容:" + context.toString());
-        tacLogger.info("context中requestParam内容" + context.getRequestParams());
-        tacLogger.info("tacContext内容：" + context.getTacContext());
         tppRequest.setUserId(userId);
         Map<String, String> params = Maps.newHashMap();
         params.put("pageSize", Optional.of(context).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getPageSize).map(Objects::toString).orElse("20"));
@@ -67,6 +62,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         params.put("isFirstPage", "true");
         params.put("appid", APP_ID.toString());
         tppRequest.setParams(params);
+        tacLogger.info("tpp请求参数：" + params.toString());
         tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
         return tppRequest;
     }
