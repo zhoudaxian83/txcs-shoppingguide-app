@@ -43,5 +43,7 @@ public class DetailSwitch {
     @AppSwitch(des = "忽略的营销类型", level = Switch.Level.p3)
     public static Set<String> ignorePromotionList= Sets.newHashSet("O2O_StraightDown");
 
+    @AppSwitch(des="详情透传参数",level= Switch.Level.p3)
+    public static Set<String> detailThoughParams = Sets.newHashSet("sourceChannel");
 
 }
