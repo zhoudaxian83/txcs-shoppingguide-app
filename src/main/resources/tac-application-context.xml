@@ -103,6 +103,7 @@
 
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemModuleHandler"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemBuildItemVoSdkExtPt"/>
 
 
 
