@@ -30,7 +30,8 @@ public class TodayCrazyTabSdkContentHandler extends RpmReactiveHandler<SgFramewo
                  "b2c",
                  "todayCrazyTab"
         );
-         b.addProducePackage(HallScenarioConstant.HALL_CONTENT_SDK_PACKAGE);
+
+        b.addProducePackage(HallScenarioConstant.HALL_CONTENT_SDK_PACKAGE);
 
         return shoppingguideSdkContentService.recommend0(context, b).map(TacResult::newResult);
     }
