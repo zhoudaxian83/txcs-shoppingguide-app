@@ -4,6 +4,7 @@ package com.tmall.wireless.tac.biz.processor.icon.item.ext;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.tmall.aselfcommon.util.gray.util.GrayUtil;
 import com.tmall.crowd.guava.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -11,6 +12,7 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginData
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.icon.GrayUtils;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRequest;
 import com.tmall.wireless.tac.biz.processor.icon.level2.BusinessTypeUtil;
@@ -28,6 +30,15 @@ import java.util.Optional;
 )
 public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
 
+    private static final String fullDomainGray = "fullDomainGray";
+
+
+    public static final Long CATEGORY_RECOMMEND_ITEM_RECOMMEND_PLATEFORM = 18611L;
+
+    // icon全域实验appid
+    public static final Long RECOMMEND_PLATFORM_ICON_FULL_DOMAIN_APP_ID = 25682L;
+
+
 
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
@@ -36,9 +47,17 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
         Preconditions.checkArgument(itemRequest != null);
 
         RecommendRequest recommendRequest = new RecommendRequest();
+        Long userId = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
 
-        // todo fixme
-        recommendRequest.setAppId(18611L);
+
+        Long appId = 0L;
+        if(GrayUtils.checkGray(userId, fullDomainGray)){
+            appId = CATEGORY_RECOMMEND_ITEM_RECOMMEND_PLATEFORM;
+        }else{
+            appId = RECOMMEND_PLATFORM_ICON_FULL_DOMAIN_APP_ID;
+        }
+
+        recommendRequest.setAppId(appId);
         Map<String, String> params = Maps.newHashMap();
         recommendRequest.setParams(params);
 
@@ -58,7 +77,7 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
             businessList.add(BusinessTypeUtil.B2C);
         }
 
-        recommendRequest.setUserId(Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L));
+        recommendRequest.setUserId(userId);
         params.put("pmtSource", "sm_manager");
         params.put("pmtName", "icon");
         params.put("pageId", itemRequest.getLevel1Id());

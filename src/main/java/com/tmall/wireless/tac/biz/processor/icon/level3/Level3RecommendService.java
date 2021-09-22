@@ -2,8 +2,10 @@ package com.tmall.wireless.tac.biz.processor.icon.level3;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.tmall.aself.shoppingguide.client.cat.model.LabelDTO;
+import com.tmall.aself.shoppingguide.client.cat.model.LabelRankDTO;
 import com.tmall.aselfcommon.model.column.ColumnStatus;
 import com.tmall.aselfcommon.model.column.MainColumnDTO;
 import com.tmall.aselfcommon.model.column.MaterialDTO;
@@ -20,6 +22,8 @@ import com.tmall.wireless.tac.biz.processor.icon.level3.ext.IconLevel3ContentInf
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,21 +100,27 @@ public class Level3RecommendService {
 
         Map<Long, ContentDTO> contentDTOMap = contentDTOList.stream().collect(Collectors.toMap(ContentDTO::getContentId, c -> c));
 
+        Map<Long, SubColumnDTO> subColumnDTOMap = Maps.newHashMap();
         Set<String> businessTypeSet = Sets.newHashSet();
         List<LabelDTO> result = Lists.newArrayList();
-        contentEntityList.forEach(contentEntity -> {
+        int i = 1;
+
+        for (ContentEntity contentEntity : contentEntityList) {
+
 
             ContentDTO contentDTO = contentDTOMap.get(contentEntity.getContentId());
             Object subColumnObj = Optional.ofNullable(contentDTO).map(ContentDTO::getContentInfo).map(m -> m.get(IconLevel3ContentInfoQuerySdkExtPt.SUB_COLUMN_DTO_KEY)).orElse(null);
 
             if (!(subColumnObj instanceof SubColumnDTO)) {
-                return;
+                continue;
             }
 
-
             SubColumnDTO subColumn = (SubColumnDTO) subColumnObj;
+
+            subColumnDTOMap.put(subColumn.getId(), subColumn);
             if (checkValid(subColumn)) {
                 LabelDTO labelDTO = new LabelDTO();
+                labelDTO.setRank(i ++);
                 labelDTO.setText(subColumn.getName());
                 labelDTO.setId(subColumn.getId());
                 String businessType = BusinessTypeUtil.processType(locParams, subColumn.getO2oBizType());
@@ -119,7 +129,9 @@ public class Level3RecommendService {
                 result.add(labelDTO);
             }
 
-        });
+        }
+
+        sortByBackstageConfigAndRn(result, subColumnDTOMap);
 
         if (CollectionUtils.isEmpty(result)) {
             return Lists.newArrayList(DEFAULT_RECOMMEND_TAB);
@@ -141,6 +153,31 @@ public class Level3RecommendService {
         return subColumn.getStatus().equals(ColumnStatus.NORMAL.getStatus())
                 && CollectionUtils.isNotEmpty(subColumn.getSubColumnItemSetVOS())
                 && Level2RecommendService.validate(subColumn.getStarTime(), subColumn.getEndTime());
+    }
+
+
+    private List<LabelDTO> sortByBackstageConfigAndRn(List<LabelDTO> labelRankDTOS, Map<Long, SubColumnDTO> subColumnDTOMap) {
+
+        labelRankDTOS.sort((o1, o2) -> {
+            Integer rn1 = getRank(subColumnDTOMap.get(o1.getId()));
+            Integer rn2 = getRank(subColumnDTOMap.get(o2.getId()));
+            return rn1 - rn2 == 0 ? o1.getRank() - o2.getRank() : rn1 - rn2;
+        });
+        return labelRankDTOS;
+    }
+    protected int getRank(SubColumnDTO subColumnDTO) {
+        try {
+            if (subColumnDTO == null ||
+                    MapUtils.isEmpty(subColumnDTO.getMaterialDTOMap()) ||
+                    subColumnDTO.getMaterialDTOMap().get("rank") == null ||
+                    !StringUtils.isNumeric(subColumnDTO.getMaterialDTOMap().get("rank").getExtValue())) {
+                return Integer.MAX_VALUE;
+            }
+            return Integer.valueOf(subColumnDTO.getMaterialDTOMap().get("rank").getExtValue());
+        } catch (Exception e) {
+            LOGGER.error("getRank error", e);
+        }
+        return Integer.MAX_VALUE;
     }
 
 
