@@ -1,4 +1,5 @@
-package com.tmall.tcls.gs.sdk.framework.extensions.content.atemp;
+package com.tmall.wireless.tac.biz.processor.todayCrazyTab;
+
 
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;

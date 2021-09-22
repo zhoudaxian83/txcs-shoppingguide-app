@@ -1,4 +1,4 @@
-package com.tmall.tcls.gs.sdk.framework.extensions.content.atemp;
+package com.tmall.wireless.tac.biz.processor.todayCrazyTab;
 
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -17,6 +17,10 @@ import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
         scenario = "todayCrazyTab"
 )
 public class TodayCrazyTabContentOriginDataPostProcessorSdkExtPt extends Register implements ContentOriginDataPostProcessorSdkExtPt {
+
+
+
+
     @Override
     public OriginDataDTO<ContentEntity> process(ContentOriginDataProcessRequest contentOriginDataProcessRequest) {
         return contentOriginDataProcessRequest.getContentEntityOriginDataDTO();
