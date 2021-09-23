@@ -38,9 +38,15 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     }
 
     public OriginDataDTO<ItemEntity> addIsTopList(OriginDataDTO<ItemEntity> originDataDTO, SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info("sgFrameworkContextItem_"+ JSON.toJSONString(sgFrameworkContextItem));
-        Map<String, Object> objectMap = sgFrameworkContextItem.getRequestParams();
-        tacLogger.info("objectMap_"+ JSON.toJSONString(objectMap));
+        tacLogger.info("sgFrameworkContextItem_" + JSON.toJSONString(sgFrameworkContextItem));
+        boolean isFirstPage = (boolean) sgFrameworkContextItem.getUserParams().get("isFirstPage");
+
+        //如果是第一页则追加入参置顶
+        if (isFirstPage) {
+
+        }
+        Map<String, Object> objectMap = sgFrameworkContextItem.getUserParams();
+        tacLogger.info("objectMap_" + JSON.toJSONString(objectMap));
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
 //        //去除重复
