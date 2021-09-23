@@ -43,6 +43,7 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                     if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null
                             || tacResult.getData().getItemAndContentList().isEmpty()){
                         tacLogger.info("进入tac打底");
+                        tacLogger.info("tacresult信息：" + JSON.toJSONString(tacResult));
                         tacResult = TacResult.errorResult("test");
                         HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
                                 .kv("shoppingguideSdkItemService","recommend")
