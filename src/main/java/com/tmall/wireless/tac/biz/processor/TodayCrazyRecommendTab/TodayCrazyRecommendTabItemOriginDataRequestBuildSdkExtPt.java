@@ -15,23 +15,25 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
 /**
  * Created from template by 罗俊冲 on 2021-09-15 17:54:58.
+ * 构建TPP参数
  */
 
 @SdkExtension(
-        bizId = "supermarket",
-        useCase = "b2c",
-        scenario = "TodayCrazyRecommendTab"
+        bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+        scenario = ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
 )
 public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
     @Autowired
-    TacLogger tacLogger;
+    TacLoggerImpl tacLogger;
 
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
@@ -65,6 +67,9 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
         tacLogger.info("recommendRequest_:" + JSON.toJSONString(recommendRequest));
+        // todo MOCK
+
+
         return recommendRequest;
     }
 
