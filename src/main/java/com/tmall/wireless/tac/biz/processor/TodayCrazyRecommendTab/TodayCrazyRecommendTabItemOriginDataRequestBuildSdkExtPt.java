@@ -68,9 +68,37 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         recommendRequest.setLogResult(true);
         tacLogger.info("recommendRequest_:" + JSON.toJSONString(recommendRequest));
         // todo MOCK
-
-
+        recommendRequest = this.mock();
         return recommendRequest;
+    }
+
+    private RecommendRequest mock() {
+        RecommendRequest mockData = JSON.parseObject("{\n" +
+                "\t\"appId\": 27989,\n" +
+                "\t\"logResult\": true,\n" +
+                "\t\"params\": {\n" +
+                "\t\t\"pmtName\": \"guessULike\",\n" +
+                "\t\t\"logicAreaId\": \"107\",\n" +
+                "\t\t\"pageSize\": \"20\",\n" +
+                "\t\t\"index\": \"0\",\n" +
+                "\t\t\"pmtSource\": \"sm_manager\",\n" +
+                "\t\t\"type\": \"cainixihuan1\",\n" +
+                "\t\t\"pageId\": \"cainixihuan1\",\n" +
+                "\t\t\"enlargeCainixihuanToHigher\": \"500\",\n" +
+                "\t\t\"smAreaId\": \"330100\",\n" +
+                "\t\t\"itemBusinessType\": \"B2C,OneHour,HalfDay,NextDay\",\n" +
+                "\t\t\"regionCode\": \"107\",\n" +
+                "\t\t\"exposureDataUserId\": \"2443459148\",\n" +
+                "\t\t\"appid\": \"27989\",\n" +
+                "\t\t\"level1Id\": \"153\",\n" +
+                "\t\t\"moduleId\": \"153\",\n" +
+                "\t\t\"honehourStoreId\": \"0\",\n" +
+                "\t\t\"isFirstPage\": \"false\",\n" +
+                "\t\t\"frontIndex\": \"0\"\n" +
+                "\t},\n" +
+                "\t\"userId\": 2443459148\n" +
+                "}", RecommendRequest.class);
+        return mockData;
     }
 
     /**
