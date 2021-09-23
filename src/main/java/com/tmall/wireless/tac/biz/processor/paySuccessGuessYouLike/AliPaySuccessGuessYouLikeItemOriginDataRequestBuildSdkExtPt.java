@@ -38,10 +38,12 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
     public RecommendRequest process(SgFrameworkContextItem context) {
         tacLogger.info("=================tacLogger+ 已进入tpp参数组装==================");
         RecommendRequest tppRequest = new RecommendRequest();
+        tppRequest.setLogResult(true);
         tppRequest.setAppId(APP_ID);
-        Long userId = Optional.of(context).
-                map(SgFrameworkContext::getCommonUserParams).
-                map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
+        Long userId = Optional.ofNullable(context)
+                .map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getUserDO).map(UserDO::getUserId)
+                .orElse(0L);
         Map<String,Object> contextParamsMap = Optional.of(context).map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams).orElse(Maps.newHashMap());
 

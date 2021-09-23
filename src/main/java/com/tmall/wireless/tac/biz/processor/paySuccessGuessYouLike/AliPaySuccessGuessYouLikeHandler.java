@@ -7,6 +7,7 @@ import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
+import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -31,11 +32,13 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
     public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
 
         tacLogger.info("进入handler");
-
         BizScenario bizScenario = BizScenario.valueOf(
                 ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE);
+
+        bizScenario.addProducePackage(PackageNameKey.OLD_RECOMMEND);
+        bizScenario.addProducePackage(PackageNameKey.CONTENT_FEEDS);
         return shoppingguideSdkItemService.recommend(context, bizScenario)
                 .map(TacResult::newResult)
                 .map(tacResult -> {
