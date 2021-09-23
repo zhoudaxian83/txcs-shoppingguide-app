@@ -79,4 +79,8 @@ public class ScenarioConstantApp extends ScenarioConstant {
 
 
 
+    /**
+     * 猜你喜欢副TAB菜谱流推荐
+     */
+    public static final String CNXH_MENU_FEEDS = "CNXH_MENU_FEEDS";
 }
