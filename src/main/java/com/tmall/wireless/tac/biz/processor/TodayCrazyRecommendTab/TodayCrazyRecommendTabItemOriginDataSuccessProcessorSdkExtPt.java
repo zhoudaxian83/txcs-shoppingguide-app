@@ -363,7 +363,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             itemEntity2.setO2oType("B2C");
             itemEntity2.setBizType("sm");
             if (itemEntity.getItemId() == 12428472473L||itemEntity.getItemId() == 36298327743L) {
-                itemEntity.setTop(true);
+                itemEntity2.setTop(true);
             }
             resultList.add(itemEntity2);
         });
