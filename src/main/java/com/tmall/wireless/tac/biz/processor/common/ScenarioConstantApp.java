@@ -50,6 +50,16 @@ public class ScenarioConstantApp extends ScenarioConstant {
     public static final String GUL_PROMOTION = "GulPromotion";
 
     /**
+     * icon加购后推荐 场景
+     */
+    public static final String SCENARIO_ICON_RECOMMEND_SCENE = "ICON_RECOMMEND_SCENE";
+
+    /**
+     * icon加购后推荐 分类词
+     */
+    public static final String SCENARIO_ICON_RECOMMEND_CLASSIFIER = "ICON_RECOMMEND_CLASSIFIER";
+
+    /**
      * 品牌馆首页
      */
     public static final String BRAND_CLUB_FP = "BRAND_CLUB_FP";
@@ -69,4 +79,8 @@ public class ScenarioConstantApp extends ScenarioConstant {
 
 
 
+    /**
+     * 猜你喜欢副TAB菜谱流推荐
+     */
+    public static final String CNXH_MENU_FEEDS = "CNXH_MENU_FEEDS";
 }
