@@ -361,7 +361,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             ItemEntity itemEntity2 = new ItemEntity();
             itemEntity2.setItemId(itemEntity.getItemId());
             itemEntity2.setO2oType("B2C");
-            //itemEntity2.setBizType(itemEntity.getBizType());
+            itemEntity2.setBizType("sm");
             if (itemEntity.getItemId() == 12428472473L||itemEntity.getItemId() == 36298327743L) {
                 itemEntity.setTop(true);
             }
