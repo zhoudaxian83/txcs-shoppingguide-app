@@ -9,10 +9,7 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemFilterSdkExtPt
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ResponseConvertRequest;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
-import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
-import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
-import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
@@ -48,7 +45,7 @@ public class AliPaySuccessGuessYouLikeItemFilterSdkExtPt extends DefaultItemFilt
             tacLogger.info("index不一致修改index为：" + requestIndex);
         }
         SgFrameworkResponse<ItemEntityVO> process = super.process(itemFilterRequest);
-
+        tacLogger.info("商品过滤后信息：" + JSON.toJSONString(process));
         return process;
     }
 }
