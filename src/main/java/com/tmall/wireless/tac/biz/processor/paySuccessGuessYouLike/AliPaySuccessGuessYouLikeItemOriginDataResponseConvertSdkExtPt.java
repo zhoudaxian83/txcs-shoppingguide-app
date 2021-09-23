@@ -42,6 +42,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataResponseConvertSdkExtPt exte
                 jsonObject.put(INDEX_KEY, requestIndex);
             }
             responseConvertRequest.setResponse(JSON.toJSONString(jsonObject));
+            tacLogger.info("tpp返回解析修改后索引:" + requestIndex);
         }
         OriginDataDTO<ItemEntity> itemEntityOriginDataDTO = TppConvertUtil.processItemEntity(responseConvertRequest.getResponse());
         return itemEntityOriginDataDTO;
