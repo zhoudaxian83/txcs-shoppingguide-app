@@ -63,17 +63,21 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         String moduleId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getPmtParams).map(PmtParams::getModuleId).orElse("153");
 
-
+        tacLogger.info("开始获取csa参数");
         Long smAreaId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).get();
 
+        tacLogger.info("smAreaId:" + smAreaId);
         Long regionCode = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams).map(LocParams::getRegionCode).get();
 
+        tacLogger.info("regionCode:" + regionCode);
 
          String logicAreaId = Joiner.on(",").join(Optional.ofNullable(context).map(SgFrameworkContext::getCommonUserParams)
                  .map(CommonUserParams::getLocParams).map(LocParams::getLogicIdByPriority)
                  .orElse(Lists.newArrayList()));
+
+        tacLogger.info("logicAreaId:" + logicAreaId);
 
         int index = MapUtil.getIntWithDefault(contextParamsMap, "index", 1);
         int pageSize = MapUtil.getIntWithDefault(contextParamsMap, "pageSize", 20);
