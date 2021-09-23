@@ -9,11 +9,15 @@ import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
+import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRequest;
 import com.tmall.wireless.tac.biz.processor.icon.level2.BusinessTypeUtil;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -86,6 +90,12 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
         params.put("rt1HourStoreId",  Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).map(Object::toString).orElse("0"));
         params.put("smAreaId",  Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).map(Object::toString).orElse("0"));
         params.put("itemBusinessType", Joiner.on(",").join(businessList));
+        Map<String,Object> requestParams = sgFrameworkContextItem.getRequestParams();
+        Integer index = 0;
+        if(MapUtils.isNotEmpty(requestParams)){
+            index = MapUtil.getIntWithDefault(requestParams,"index",0);
+        }
+        params.put("isFirstPage", index > 0 ? "false" : "true");
 
         params.put("logicAreaId", Joiner.on(",").join(Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams).map(LocParams::getLogicIdByPriority).orElse(
