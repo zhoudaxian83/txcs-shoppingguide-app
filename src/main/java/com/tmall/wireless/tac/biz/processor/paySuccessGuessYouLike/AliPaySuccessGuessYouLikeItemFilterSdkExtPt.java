@@ -37,7 +37,6 @@ public class AliPaySuccessGuessYouLikeItemFilterSdkExtPt extends DefaultItemFilt
         Map<String,Object> requestParamsMap = Optional.of(itemFilterRequest).map(ItemFilterRequest::getSgFrameworkContextItem)
                 .map(SgFrameworkContext::getRequestParams).orElse(Maps.newHashMap());
         int requestIndex = MapUtil.getIntWithDefault(requestParamsMap, INDEX_KEY, 1);
-        tacLogger.info("商品扩展点扩展点处理内容前：" + JSON.toJSONString(itemFilterRequest));
         int responseIndex = Optional.of(itemFilterRequest)
                 .map(ItemFilterRequest::getEntityVOSgFrameworkResponse)
                 .map(SgFrameworkResponse::getIndex)
@@ -46,12 +45,9 @@ public class AliPaySuccessGuessYouLikeItemFilterSdkExtPt extends DefaultItemFilt
         tacLogger.info("requestIndex：" + requestIndex + "responseIndex:" + responseIndex);
         if (requestIndex != responseIndex) {
             itemFilterRequest.getEntityVOSgFrameworkResponse().setIndex(requestIndex);
-
             tacLogger.info("index不一致修改index为：" + requestIndex);
         }
         SgFrameworkResponse<ItemEntityVO> process = super.process(itemFilterRequest);
-
-        tacLogger.info("商品扩展点扩展点处理内容后：" + JSON.toJSONString(process));
 
         return process;
     }
