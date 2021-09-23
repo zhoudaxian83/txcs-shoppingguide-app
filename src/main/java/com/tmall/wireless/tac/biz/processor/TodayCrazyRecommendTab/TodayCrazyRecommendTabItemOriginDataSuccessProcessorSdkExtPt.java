@@ -60,7 +60,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (isFirstPage) {
             topList.forEach(itemId -> {
                 ItemEntity itemEntity = new ItemEntity();
-                itemEntity.isTop();
+                itemEntity.setTop(true);
                 topItemEntityList.add(itemEntity);
             });
         }
@@ -360,10 +360,10 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         userList.forEach(itemEntity -> {
             ItemEntity itemEntity2 = new ItemEntity();
             itemEntity2.setItemId(itemEntity.getItemId());
-            itemEntity2.setO2oType(itemEntity.getO2oType());
-            itemEntity2.setBizType(itemEntity.getBizType());
-            if (itemEntity.getItemId() == 12428472473L) {
-                itemEntity2.isTop();
+            itemEntity2.setO2oType("B2C");
+            //itemEntity2.setBizType(itemEntity.getBizType());
+            if (itemEntity.getItemId() == 12428472473L||itemEntity.getItemId() == 36298327743L) {
+                itemEntity.setTop(true);
             }
             resultList.add(itemEntity2);
         });
