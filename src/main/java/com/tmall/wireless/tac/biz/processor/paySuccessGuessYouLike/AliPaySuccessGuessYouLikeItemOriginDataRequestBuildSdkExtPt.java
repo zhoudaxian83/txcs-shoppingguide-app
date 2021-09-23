@@ -99,7 +99,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         params.put("regionCode", String.valueOf(regionCode));
         params.put("moduleId", moduleId);
         params.put("level1Id", moduleId);
-        params.put("frontIndex", String.valueOf(index * pageSize));
+        params.put("frontIndex", String.valueOf(index = (index -1) * pageSize));
         params.put("itemBusinessType", itemBusinessType);
         params.put("honehourStoreId", "0");
         params.put("isFirstPage", index == 0 ? "true" : "false");
