@@ -111,8 +111,11 @@ public class TppConvertUtil {
                     (StringUtils.isEmpty(tppO2oTypeConvertMap.get(o2oTypeFromTpp)) ?
                             O2oType.B2C.name() : tppO2oTypeConvertMap.get(o2oTypeFromTpp));
             itemEntity.setO2oType(o2oType);
-
-            itemEntity.setTrack_point(jsonObject.getString("trackPoint"));
+            if(StringUtils.isNotEmpty(jsonObject.getString("trackPoint"))){
+                itemEntity.setTrack_point(jsonObject.getString("trackPoint"));
+            }else{
+                itemEntity.setTrack_point(jsonObject.getString("track_point"));
+            }
             itemEntity.setTrack_point(scm + "." + itemEntity.getTrack_point());
             itemEntity.setCrowdId(jsonObject.getString("crowdId"));
             list.add(itemEntity);
