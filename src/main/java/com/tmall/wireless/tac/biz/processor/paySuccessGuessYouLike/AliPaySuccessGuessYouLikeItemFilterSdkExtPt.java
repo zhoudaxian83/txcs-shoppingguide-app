@@ -42,6 +42,8 @@ public class AliPaySuccessGuessYouLikeItemFilterSdkExtPt extends DefaultItemFilt
                 .map(ItemFilterRequest::getEntityVOSgFrameworkResponse)
                 .map(SgFrameworkResponse::getIndex)
                 .orElse(1);
+
+        tacLogger.info("requestIndex：" + requestIndex + "responseIndex:" + responseIndex);
         if (requestIndex != responseIndex) {
             itemFilterRequest.getEntityVOSgFrameworkResponse().setIndex(requestIndex);
 
