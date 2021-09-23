@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.collect.Maps;
@@ -24,6 +25,7 @@ import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,19 +92,17 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             params.put("regionCode", Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode())
                 .map(String::valueOf).orElse(String.valueOf(DEFAULT_LOGAREAID)));
 
-            //String itemSetId = "";
-            //String tacParams = MapUtil.getStringWithDefault(aldParams, "tacParams", "");
-            //if (StringUtils.isNotBlank(tacParams)) {
-            //    JSONObject tacParamsMap = JSON.parseObject(tacParams);
-            //    itemSetId = Optional.ofNullable(tacParamsMap.getString(HallCommonAldConstant.ITEM_SET_ID)).orElse("");
-            //}
-            //if (StringUtils.isEmpty(itemSetId)) {
-            //    throw new Exception("itemSetId is empty");
-            //}
+            String itemSetId = "";
+            String tacParams = MapUtil.getStringWithDefault(aldParams, "tacParams", "");
+            if (StringUtils.isNotBlank(tacParams)) {
+                JSONObject tacParamsMap = JSON.parseObject(tacParams);
+                itemSetId = Optional.ofNullable(tacParamsMap.getString(HallCommonAldConstant.ITEM_SET_ID)).orElse("");
+            }
+            if (StringUtils.isEmpty(itemSetId)) {
+                logger.error("-----HotItemOriginDataRequestBuildSdkExtPt.itemSetId is empty-------");
+                throw new Exception("itemSetId is empty");
+            }
 
-            //String itemSetId = MapUtil.getStringWithDefault(aldParams, HallCommonAldConstant.ITEM_SET_ID, "");
-            String itemSetId = "398287";
-            logger.error("-----HotItemOriginDataRequestBuildSdkExtPt.itemSetId:{}", itemSetId);
             params.put("commerce", "B2C");
             params.put("index", "0"); // 不要求分页
             params.put("pageSize", String.valueOf(PAGE_SIZE));
