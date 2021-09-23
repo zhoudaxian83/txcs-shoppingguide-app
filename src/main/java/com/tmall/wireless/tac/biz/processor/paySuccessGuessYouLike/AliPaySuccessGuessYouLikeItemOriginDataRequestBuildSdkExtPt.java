@@ -70,7 +70,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         Long smAreaId = Optional.of(locParams).map(LocParams::getSmAreaId).get();
 
         tacLogger.info("smAreaId:" + smAreaId);
-        Long regionCode = locParams.getRegionCode() != null ? locParams.getRegionCode() : null;
+        String regionCode = locParams.getRegionCode() != null ? locParams.getRegionCode().toString() : "";
 
         tacLogger.info("regionCode:" + regionCode);
 
@@ -126,7 +126,6 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
                 .info();
         return tppRequest;
     }
-
 
 
 }
