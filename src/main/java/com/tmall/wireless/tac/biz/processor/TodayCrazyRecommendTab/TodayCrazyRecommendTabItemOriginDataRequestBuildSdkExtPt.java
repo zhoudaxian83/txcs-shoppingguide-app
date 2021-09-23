@@ -45,13 +45,13 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         long userId = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
         int index = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getIndex).orElse(0);
         boolean isFirstPage = index == 0;
+        sgFrameworkContextItem.getUserParams().put("isFirstPage", isFirstPage);
         AddressDTO addressDTO = AddressUtil.parseCSA(csa);
         String regionCode = addressDTO.getRegionCode();
         tacLogger.info("addressDTO_:" + JSON.toJSONString(addressDTO));
         tacLogger.info("sgFrameworkContextItem_:" + JSON.toJSONString(sgFrameworkContextItem));
         String categoryIdsString = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "categoryIds", "");
         String tabType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "tabType", "");
-        String topListStr = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "topList", "");
         List<String> categoryIds = new ArrayList<>(Arrays.asList(categoryIdsString.split(",")));
         List<String> cacheKeyList = this.buildCacheKeyList(categoryIds, tabType, addressDTO);
         tacLogger.info("cacheKeyList_:" + JSON.toJSONString(cacheKeyList));
@@ -69,11 +69,6 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         recommendRequest.setUserId(userId);
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
-
-        List<String> topList = Arrays.asList(topListStr.split(","));
-        sgFrameworkContextItem.getUserParams().put("isFirstPage", isFirstPage);
-        sgFrameworkContextItem.getUserParams().put("topList", topList);
-
         tacLogger.info("recommendRequest_:" + JSON.toJSONString(recommendRequest));
         // todo MOCK
         recommendRequest = this.mock();

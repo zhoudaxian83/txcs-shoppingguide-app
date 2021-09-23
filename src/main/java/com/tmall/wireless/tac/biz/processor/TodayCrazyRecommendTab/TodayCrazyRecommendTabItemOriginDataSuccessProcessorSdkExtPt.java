@@ -1,6 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
+import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataSuccessProcessorSdkExtPt;
@@ -8,10 +10,12 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProc
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,24 +41,29 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         return originDataDTO;
     }
 
-    public OriginDataDTO<ItemEntity> addIsTopList(OriginDataDTO<ItemEntity> originDataDTO, SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info("sgFrameworkContextItem_" + JSON.toJSONString(sgFrameworkContextItem));
+    public void addIsTopList(OriginDataDTO<ItemEntity> originDataDTO, SgFrameworkContextItem sgFrameworkContextItem) {
+        String topListStr = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "topList", "");
+        List<String> topList = Arrays.asList(topListStr.split(","));
         boolean isFirstPage = (boolean) sgFrameworkContextItem.getUserParams().get("isFirstPage");
-
-        //如果是第一页则追加入参置顶
-        if (isFirstPage) {
-
-        }
+        tacLogger.info("sgFrameworkContextItem_" + JSON.toJSONString(sgFrameworkContextItem));
         Map<String, Object> objectMap = sgFrameworkContextItem.getUserParams();
         tacLogger.info("objectMap_" + JSON.toJSONString(objectMap));
+        if (CollectionUtils.isEmpty(topList)) {
+            return;
+        }
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
-//        //去除重复
-//        itemEntities.removeIf()
-//        //遍历构建
-//        ItemEntity itemEntity = new ItemEntity();
-//        itemEntities.add(itemEntity);
+        itemEntities.removeIf(itemEntity -> topList.contains(String.valueOf(itemEntity.getItemId())));
+        tacLogger.info("itemEntities_" + JSON.toJSONString(itemEntities));
+        //如果是第一页则追加入参置顶
+        List<ItemEntity> topItemEntityList = Lists.newArrayList();
+        if (isFirstPage) {
+            topList.forEach(itemId -> {
+                ItemEntity itemEntity = new ItemEntity();
+                itemEntity.isTop();
+                topItemEntityList.add(itemEntity);
+            });
+        }
         originDataDTO.setResult(itemEntities);
-        return originDataDTO;
     }
 }
