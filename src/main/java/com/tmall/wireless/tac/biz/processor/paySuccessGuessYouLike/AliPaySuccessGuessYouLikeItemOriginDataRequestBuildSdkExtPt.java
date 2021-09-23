@@ -1,8 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
@@ -106,6 +108,16 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         tacLogger.info("tpp请求参数：" + params.toString());
         tppRequest.setParams(params);
         tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
+
+        tppRequest.setParams(params);
+        tacLogger.info("AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt: tppRequest: " + JSON.toJSONString(tppRequest));
+        String requestLog = "https://tui.taobao.com/recommend?appid=" + tppRequest.getAppId() + "&" +
+                Joiner.on("&").withKeyValueSeparator("=").join(tppRequest.getParams());
+        tacLogger.info("TPP_REQUEST: " + requestLog);
+        HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
+                .kv("AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt","tppRequest")
+                .kv("tppRequest", JSON.toJSONString(tppRequest))
+                .info();
         return tppRequest;
     }
 
