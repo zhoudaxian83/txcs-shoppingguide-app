@@ -21,12 +21,12 @@
         <dependency>
             <groupId>com.tcls.shoppingguide</groupId>
             <artifactId>shoppingguide-biz</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.7</version>
         </dependency>
         <dependency>
             <groupId>com.tcls.shoppingguide</groupId>
             <artifactId>shoppingguide-framework</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.7</version>
         </dependency>
 
 
