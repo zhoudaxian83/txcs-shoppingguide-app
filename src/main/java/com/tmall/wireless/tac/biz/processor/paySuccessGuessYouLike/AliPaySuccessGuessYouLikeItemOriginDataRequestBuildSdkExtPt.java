@@ -93,13 +93,14 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         params.put("type", "cainixihuan1");
         params.put("smAreaId", String.valueOf(smAreaId));
         params.put("logicAreaId", logicAreaId);
-        params.put("index", String.valueOf(index = (index -1) * pageSize));
+        params.put("index", String.valueOf((index -1) * pageSize));
         params.put("pageId", pageId);
         params.put("enlargeCainixihuanToHigher", "500");
         params.put("regionCode", String.valueOf(regionCode));
         params.put("moduleId", moduleId);
         params.put("level1Id", moduleId);
-        params.put("frontIndex", String.valueOf(index = (index -1) * pageSize));
+        tacLogger.info("index值：" + index + "pageSize值" + pageSize);
+        params.put("frontIndex", String.valueOf((index -1) * pageSize));
         params.put("itemBusinessType", itemBusinessType);
         params.put("honehourStoreId", "0");
         params.put("isFirstPage", index == 0 ? "true" : "false");
