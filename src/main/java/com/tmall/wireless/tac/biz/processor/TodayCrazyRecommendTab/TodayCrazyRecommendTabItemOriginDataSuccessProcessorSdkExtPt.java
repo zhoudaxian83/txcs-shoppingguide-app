@@ -53,22 +53,26 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         }
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
-        itemEntities.removeIf(itemEntity -> topList.contains(String.valueOf(itemEntity.getItemId())));
         tacLogger.info("itemEntities_" + JSON.toJSONString(itemEntities));
-        //如果是第一页则追加入参置顶
-        List<ItemEntity> topItemEntityList = Lists.newArrayList();
+        //todo mock
+        itemEntities = this.mock();
+        itemEntities.removeIf(itemEntity -> topList.contains(String.valueOf(itemEntity.getItemId())));
         if (isFirstPage) {
+            List<ItemEntity> topResultsItemEntityList = Lists.newArrayList();
             topList.forEach(itemId -> {
                 ItemEntity itemEntity = new ItemEntity();
+                itemEntity.setO2oType("B2C");
+                itemEntity.setBizType("sm");
+                itemEntity.setItemId(Long.valueOf(itemId));
                 itemEntity.setTop(true);
-                topItemEntityList.add(itemEntity);
+                topResultsItemEntityList.add(itemEntity);
             });
+            topResultsItemEntityList.addAll(itemEntities);
+            originDataDTO.setResult(topResultsItemEntityList);
+        } else {
+            originDataDTO.setResult(itemEntities);
         }
-        originDataDTO.setResult(itemEntities);
-
-        List<ItemEntity> mock = this.mock();
-        originDataDTO.setResult(mock);
-        tacLogger.info("itemEntities_mock" + JSON.toJSONString(mock));
+        tacLogger.info("itemEntities_mock" + JSON.toJSONString(originDataDTO.getResult()));
     }
 
     private List<ItemEntity> mock() {
@@ -212,146 +216,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 "\t\t\"rn\": 0,\n" +
                 "\t\t\"top\": false,\n" +
                 "\t\t\"track_point\": \"1007.37154.239449.0.null\"\n" +
-                "\t},\n" +
-                "\t{\n" +
-                "\t\t\"bizType\": \"sm\",\n" +
-                "\t\t\"brandId\": \"3786707\",\n" +
-                "\t\t\"cateId\": \"3786707\",\n" +
-                "\t\t\"itemId\": 527294823040,\n" +
-                "\t\t\"itemUniqueId\": {\n" +
-                "\t\t\t\"id\": 527294823040,\n" +
-                "\t\t\t\"type\": \"B2C\"\n" +
-                "\t\t},\n" +
-                "\t\t\"o2oType\": \"B2C\",\n" +
-                "\t\t\"rn\": 0,\n" +
-                "\t\t\"top\": false,\n" +
-                "\t\t\"track_point\": \"1007.37154.239449.0.null\"\n" +
-                "\t},\n" +
-                "\t{\n" +
-                "\t\t\"bizType\": \"sm\",\n" +
-                "\t\t\"brandId\": \"3547926\",\n" +
-                "\t\t\"cateId\": \"3547926\",\n" +
-                "\t\t\"itemId\": 12309130885,\n" +
-                "\t\t\"itemUniqueId\": {\n" +
-                "\t\t\t\"id\": 12309130885,\n" +
-                "\t\t\t\"type\": \"B2C\"\n" +
-                "\t\t},\n" +
-                "\t\t\"o2oType\": \"B2C\",\n" +
-                "\t\t\"rn\": 0,\n" +
-                "\t\t\"top\": false,\n" +
-                "\t\t\"track_point\": \"1007.37154.239449.0.null\"\n" +
-                "\t},\n" +
-                "\t{\n" +
-                "\t\t\"bizType\": \"sm\",\n" +
-                "\t\t\"brandId\": \"137887\",\n" +
-                "\t\t\"cateId\": \"137887\",\n" +
-                "\t\t\"itemId\": 598908268265,\n" +
-                "\t\t\"itemUniqueId\": {\n" +
-                "\t\t\t\"id\": 598908268265,\n" +
-                "\t\t\t\"type\": \"B2C\"\n" +
-                "\t\t},\n" +
-                "\t\t\"o2oType\": \"B2C\",\n" +
-                "\t\t\"rn\": 0,\n" +
-                "\t\t\"top\": false,\n" +
-                "\t\t\"track_point\": \"1007.37154.239449.0.null\"\n" +
-                "\t},\n" +
-                "\t{\n" +
-                "\t\t\"bizType\": \"sm\",\n" +
-                "\t\t\"brandId\": \"3320144\",\n" +
-                "\t\t\"cateId\": \"3320144\",\n" +
-                "\t\t\"itemId\": 12544368553,\n" +
-                "\t\t\"itemUniqueId\": {\n" +
-                "\t\t\t\"id\": 12544368553,\n" +
-                "\t\t\t\"type\": \"B2C\"\n" +
-                "\t\t},\n" +
-                "\t\t\"o2oType\": \"B2C\",\n" +
-                "\t\t\"rn\": 0,\n" +
-                "\t\t\"top\": false,\n" +
-                "\t\t\"track_point\": \"1007.37154.239449.0.null\"\n" +
-                "\t},\n" +
-                "\t{\n" +
-                "\t\t\"bizType\": \"sm\",\n" +
-                "\t\t\"brandId\": \"8044942\",\n" +
-                "\t\t\"cateId\": \"8044942\",\n" +
-                "\t\t\"itemId\": 525934738845,\n" +
-                "\t\t\"itemUniqueId\": {\n" +
-                "\t\t\t\"id\": 525934738845,\n" +
-                "\t\t\t\"type\": \"B2C\"\n" +
-                "\t\t},\n" +
-                "\t\t\"o2oType\": \"B2C\",\n" +
-                "\t\t\"rn\": 0,\n" +
-                "\t\t\"top\": false,\n" +
-                "\t\t\"track_point\": \"1007.37154.239449.0.null\"\n" +
-                "\t},\n" +
-                "\t{\n" +
-                "\t\t\"bizType\": \"sm\",\n" +
-                "\t\t\"brandId\": \"3547926\",\n" +
-                "\t\t\"cateId\": \"3547926\",\n" +
-                "\t\t\"itemId\": 12428472473,\n" +
-                "\t\t\"itemUniqueId\": {\n" +
-                "\t\t\t\"id\": 12428472473,\n" +
-                "\t\t\t\"type\": \"B2C\"\n" +
-                "\t\t},\n" +
-                "\t\t\"o2oType\": \"B2C\",\n" +
-                "\t\t\"rn\": 0,\n" +
-                "\t\t\"top\": false,\n" +
-                "\t\t\"track_point\": \"1007.37154.239449.0.null\"\n" +
-                "\t},\n" +
-                "\t{\n" +
-                "\t\t\"bizType\": \"sm\",\n" +
-                "\t\t\"brandId\": \"3801324\",\n" +
-                "\t\t\"cateId\": \"3801324\",\n" +
-                "\t\t\"itemId\": 579975467115,\n" +
-                "\t\t\"itemUniqueId\": {\n" +
-                "\t\t\t\"id\": 579975467115,\n" +
-                "\t\t\t\"type\": \"B2C\"\n" +
-                "\t\t},\n" +
-                "\t\t\"o2oType\": \"B2C\",\n" +
-                "\t\t\"rn\": 0,\n" +
-                "\t\t\"top\": false,\n" +
-                "\t\t\"track_point\": \"1007.37154.239449.0.null\"\n" +
-                "\t},\n" +
-                "\t{\n" +
-                "\t\t\"bizType\": \"sm\",\n" +
-                "\t\t\"brandId\": \"38819\",\n" +
-                "\t\t\"cateId\": \"38819\",\n" +
-                "\t\t\"itemId\": 36298327743,\n" +
-                "\t\t\"itemUniqueId\": {\n" +
-                "\t\t\t\"id\": 36298327743,\n" +
-                "\t\t\t\"type\": \"B2C\"\n" +
-                "\t\t},\n" +
-                "\t\t\"o2oType\": \"B2C\",\n" +
-                "\t\t\"rn\": 0,\n" +
-                "\t\t\"top\": false,\n" +
-                "\t\t\"track_point\": \"1007.37154.239449.0.null\"\n" +
-                "\t},\n" +
-                "\t{\n" +
-                "\t\t\"bizType\": \"sm\",\n" +
-                "\t\t\"brandId\": \"20328\",\n" +
-                "\t\t\"cateId\": \"20328\",\n" +
-                "\t\t\"itemId\": 600772546054,\n" +
-                "\t\t\"itemUniqueId\": {\n" +
-                "\t\t\t\"id\": 600772546054,\n" +
-                "\t\t\t\"type\": \"B2C\"\n" +
-                "\t\t},\n" +
-                "\t\t\"o2oType\": \"B2C\",\n" +
-                "\t\t\"rn\": 0,\n" +
-                "\t\t\"top\": false,\n" +
-                "\t\t\"track_point\": \"1007.37154.239449.0.null\"\n" +
-                "\t},\n" +
-                "\t{\n" +
-                "\t\t\"bizType\": \"sm\",\n" +
-                "\t\t\"brandId\": \"3801324\",\n" +
-                "\t\t\"cateId\": \"3801324\",\n" +
-                "\t\t\"itemId\": 537824984434,\n" +
-                "\t\t\"itemUniqueId\": {\n" +
-                "\t\t\t\"id\": 537824984434,\n" +
-                "\t\t\t\"type\": \"B2C\"\n" +
-                "\t\t},\n" +
-                "\t\t\"o2oType\": \"B2C\",\n" +
-                "\t\t\"rn\": 0,\n" +
-                "\t\t\"top\": false,\n" +
-                "\t\t\"track_point\": \"1007.37154.239449.0.null\"\n" +
                 "\t}\n" +
                 "]";
         List<ItemEntity> userList = JSON.parseArray(str, ItemEntity.class);
@@ -362,7 +226,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             itemEntity2.setItemId(itemEntity.getItemId());
             itemEntity2.setO2oType("B2C");
             itemEntity2.setBizType("sm");
-            if (itemEntity.getItemId() == 12428472473L||itemEntity.getItemId() == 36298327743L) {
+            if (itemEntity.getItemId() == 12428472473L || itemEntity.getItemId() == 36298327743L) {
                 itemEntity2.setTop(true);
             }
             resultList.add(itemEntity2);
