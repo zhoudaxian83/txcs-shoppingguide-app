@@ -62,13 +62,18 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         params.put("itemTairKeys", String.join(",", cacheKeyList));
         params.put("regionCode", regionCode);
         params.put("exposureDataUserId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
+
+        params.put("index", String.valueOf(index));
+        params.put("appid", String.valueOf(CommonConstant.APP_ID));
+
+
         recommendRequest.setAppId(CommonConstant.APP_ID);
         recommendRequest.setUserId(userId);
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
         tacLogger.info("recommendRequest_:" + JSON.toJSONString(recommendRequest));
         // todo MOCK
-        recommendRequest = this.mock();
+        //recommendRequest = this.mock();
         return recommendRequest;
     }
 
