@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike;
 
+import com.alibaba.fastjson.JSON;
 import com.tmall.tcls.gs.sdk.biz.extensions.item.filter.DefaultItemProcessBeforeReturnSdkExtPt;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemProcessBeforeReturnSdkExtPt;
@@ -21,9 +22,9 @@ public class AliPaySuccessGuessYouLikeItemProcessBeforeReturnSdkExtPt extends De
     @Override
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
 
-        tacLogger.info("返回前扩展点处理内容前：" + sgFrameworkContextItem);
+        tacLogger.info("返回前扩展点处理内容前：" + JSON.toJSONString(sgFrameworkContextItem));
         SgFrameworkContextItem process = super.process(sgFrameworkContextItem);
-        tacLogger.info("返回前扩展点处理内容后：" + process);
+        tacLogger.info("返回前扩展点处理内容后：" + JSON.toJSONString(process));
         return process;
     }
 }
