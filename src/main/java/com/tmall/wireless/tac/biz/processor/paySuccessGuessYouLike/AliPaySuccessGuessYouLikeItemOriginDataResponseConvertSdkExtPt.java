@@ -31,7 +31,6 @@ public class AliPaySuccessGuessYouLikeItemOriginDataResponseConvertSdkExtPt exte
 
     @Override
     public OriginDataDTO<ItemEntity> process(ResponseConvertRequest responseConvertRequest) {
-        tacLogger.info("responseConvertRequest信息：" + JSON.toJSONString(responseConvertRequest));
         Map<String,Object> requestParamsMap = Optional.of(responseConvertRequest).map(ResponseConvertRequest::getSgFrameworkContextItem)
                 .map(SgFrameworkContext::getRequestParams).orElse(Maps.newHashMap());
         JSONObject jsonObject = JSON.parseObject(responseConvertRequest.getResponse());
