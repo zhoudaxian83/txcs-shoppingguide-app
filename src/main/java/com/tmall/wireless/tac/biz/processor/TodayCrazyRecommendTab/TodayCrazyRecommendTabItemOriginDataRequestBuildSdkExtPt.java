@@ -63,7 +63,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         params.put("regionCode", regionCode);
         params.put("exposureDataUserId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
 
-        params.put("index", String.valueOf(index));
+        //params.put("index", String.valueOf(index));
         params.put("appid", String.valueOf(CommonConstant.APP_ID));
 
 
