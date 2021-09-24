@@ -27,7 +27,7 @@ import org.apache.commons.collections.CollectionUtils;
 public class HotItemProcessBeforeReturnSdkExtPt extends Register implements ItemProcessBeforeReturnSdkExtPt {
     @Override
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
-
+        log.error("HotItemProcessBeforeReturnSdkExtPt.start");
         SgFrameworkResponse<ItemEntityVO> entityVOSgFrameworkResponse = sgFrameworkContextItem
             .getEntityVOSgFrameworkResponse();
 
