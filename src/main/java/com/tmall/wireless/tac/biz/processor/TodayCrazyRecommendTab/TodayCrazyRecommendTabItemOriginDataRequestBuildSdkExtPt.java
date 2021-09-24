@@ -43,7 +43,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
     private RecommendRequest buildTppParam(SgFrameworkContextItem sgFrameworkContextItem) {
         String csa = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "csa", "");
         long userId = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
-        int index = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getIndex).orElse(0);
+        long index = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "index", 0L);
         boolean isFirstPage = index == 0;
         sgFrameworkContextItem.getUserParams().put("isFirstPage", isFirstPage);
         AddressDTO addressDTO = AddressUtil.parseCSA(csa);
