@@ -13,6 +13,7 @@ import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -56,6 +57,10 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                     tacResult.getBackupMetaData().setUseBackup(true);
                     tacResult.setHasMore(false);
                     tacResult.getData().setHasMore(false);
+                    SgFrameworkResponseChild  child = new SgFrameworkResponseChild();
+                    BeanUtils.copyProperties(tacResult, child);
+                    child.setMinimumGuarantee(true);
+                    tacResult.setData(child);
                     return tacResult;
                 })
                 .onErrorReturn(r -> TacResult.errorResult(""));
