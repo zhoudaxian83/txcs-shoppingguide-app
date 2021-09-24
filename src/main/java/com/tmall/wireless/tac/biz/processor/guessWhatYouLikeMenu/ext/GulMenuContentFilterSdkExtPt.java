@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
@@ -64,9 +65,7 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
                 // 主料筛查 --> 菜谱过滤
                 List<ItemEntityVO> mainMaterials = Lists.newArrayList();
                 for (ItemEntityVO itemCanBuy : canBuyItemList) {
-//                    logger.info("****ItemEntityVO:****" + JSON.toJSONString(itemCanBuy));
                     String crowdIds = itemCanBuy.getString("crowdId");
-//                    logger.info("========crowIds:=======" + crowdIds);
                     // 主料数>=2 跳出
                     if (mainMaterials.size() >= ConstantValue.MAIN_MATERIAL_NUMBER) {
                         break;
@@ -77,7 +76,8 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
                         continue;
                     }
                     // 商品属于不同主料
-                    if (!CollectionUtils.isEmpty(mainMaterials) && StringUtils.isNotEmpty(crowdIds) && !crowdIds.equals(mainMaterials.get(0).getString("crowdId"))) {
+                    if (!CollectionUtils.isEmpty(mainMaterials) && !isSameMaterial(crowdIds, mainMaterials.get(0).getString("crowdId"))) {
+//                            StringUtils.isNotEmpty(crowdIds) && !crowdIds.equals(mainMaterials.get(0).getString("crowdId"))
                         mainMaterials.add(itemCanBuy);
                     }
                     // 无主料
@@ -120,5 +120,19 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
     private boolean itemInfoError(ItemEntityVO item) {
         return StringUtils.isEmpty(item.getString("shortTitle"))
                 || StringUtils.isEmpty(item.getString("itemImg"));
+    }
+
+    private boolean isSameMaterial(String materialsPre, String materialsCur) {
+        if (StringUtils.isEmpty(materialsPre) || StringUtils.isEmpty(materialsCur)) {
+            return false;
+        }
+        List<String> materialPreList = Splitter.on(",").trimResults().omitEmptyStrings().splitToList(materialsPre);
+        List<String> materialCurList = Splitter.on(",").trimResults().omitEmptyStrings().splitToList(materialsCur);
+        for (String materialPre : materialPreList) {
+            if (materialCurList.contains(materialPre)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
