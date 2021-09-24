@@ -120,7 +120,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         List<GeneralItem> result = new ArrayList<>();
         List<ItemConfigGroup> bottomItems = new ArrayList<>();
         for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroupList()) {
-            if(afterPickGroupMap.get(itemConfigGroup) != null &&inventoryMap.get(afterPickGroupMap.get(itemConfigGroup).getItemId())) {
+            if(afterPickGroupMap.get(itemConfigGroup.getGroupNo()) != null && inventoryMap.get(afterPickGroupMap.get(itemConfigGroup.getGroupNo()).getItemId())) {
                 bottomItems.add(itemConfigGroup);
             } else {
                 result.add(buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap));
