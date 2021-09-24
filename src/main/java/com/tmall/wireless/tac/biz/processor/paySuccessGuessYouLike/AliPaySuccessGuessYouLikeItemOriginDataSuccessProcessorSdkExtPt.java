@@ -22,9 +22,11 @@ public class AliPaySuccessGuessYouLikeItemOriginDataSuccessProcessorSdkExtPt
     TacLoggerImpl tacLogger;
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
-        OriginDataDTO<ItemEntity> process = super.process(originDataProcessRequest);
 
         tacLogger.info("进入元数据成功处理扩展点");
+        OriginDataDTO<ItemEntity> process = super.process(originDataProcessRequest);
+
+        tacLogger.info("出元数据成功处理扩展点");
         return process;
     }
 }
