@@ -40,10 +40,10 @@ public class AliPaySuccessGuessYouLikeItemFilterSdkExtPt extends DefaultItemFilt
                 .orElse(1);
 
         tacLogger.info("requestIndex：" + requestIndex + "responseIndex:" + responseIndex);
-        if (requestIndex != responseIndex) {
-            itemFilterRequest.getEntityVOSgFrameworkResponse().setIndex(requestIndex);
-            tacLogger.info("index不一致修改index为：" + requestIndex);
-        }
+//        if (requestIndex != responseIndex) {
+//            itemFilterRequest.getEntityVOSgFrameworkResponse().setIndex(requestIndex);
+//            tacLogger.info("index不一致修改index为：" + requestIndex);
+//        }
         SgFrameworkResponse<ItemEntityVO> process = super.process(itemFilterRequest);
         tacLogger.info("商品过滤后信息：" + JSON.toJSONString(process));
         return process;
