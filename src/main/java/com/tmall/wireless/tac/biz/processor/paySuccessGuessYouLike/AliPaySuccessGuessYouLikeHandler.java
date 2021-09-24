@@ -13,7 +13,6 @@ import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,22 +52,10 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                                 .kv("shoppingguideSdkItemService","recommend")
                                 .kv("tacResult", JSON.toJSONString(tacResult))
                                 .info();
-
-                        tacLogger.info("tacresult打底结束");
                     }
-
-                    tacLogger.info("tacresult开始判断=====================：1");
                     tacResult.getBackupMetaData().setUseBackup(true);
-                    tacLogger.info("tacresult开始判断=====================：2");
                     tacResult.setHasMore(false);
                     tacResult.getData().setHasMore(false);
-                    tacLogger.info("tacresult开始判断=====================：3");
-                    SgFrameworkResponseChild  child = new SgFrameworkResponseChild();
-                    BeanUtils.copyProperties(tacResult, child);
-                    child.setMinimumGuarantee(true);
-                    tacLogger.info("tacresult开始判断=====================：4");
-                    tacResult.setData(child);
-                    tacLogger.info("tacresult信息：" + JSON.toJSONString(tacResult));
                     return tacResult;
                 })
                 .onErrorReturn(r -> TacResult.errorResult(""));
