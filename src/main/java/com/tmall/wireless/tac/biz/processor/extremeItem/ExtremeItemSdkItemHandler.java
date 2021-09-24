@@ -118,7 +118,15 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
     private List<GeneralItem> buildResult(ItemConfigGroups itemConfigGroups, Map<Integer, ItemConfig> afterPickGroupMap, Map<Long, ItemDTO> longItemDTOMap, Map<Long, Boolean> inventoryMap) {
         List<GeneralItem> result = new ArrayList<>();
+        List<ItemConfigGroup> bottomItems = new ArrayList<>();
         for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroupList()) {
+            if(afterPickGroupMap.get(itemConfigGroup) != null &&inventoryMap.get(afterPickGroupMap.get(itemConfigGroup).getItemId())) {
+                bottomItems.add(itemConfigGroup);
+            } else {
+                result.add(buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap));
+            }
+        }
+        for (ItemConfigGroup itemConfigGroup : bottomItems) {
             result.add(buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap));
         }
         return result;
@@ -198,6 +206,9 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             itemMap.put("itemImg", itemConfig.getItemImg());
         }
 
+        if(StringUtils.isNotBlank(itemConfig.getItemName())) {
+            itemMap.put("shortTitle", itemConfig.getItemName());
+        }
 
         return itemMap;
     }
