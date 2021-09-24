@@ -52,7 +52,6 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                                 .kv("shoppingguideSdkItemService","recommend")
                                 .kv("tacResult", JSON.toJSONString(tacResult))
                                 .info();
-                        tacResult.getData().getExtInfos().put("daDi", "true");
                     }
                     tacResult.getBackupMetaData().setUseBackup(true);
                     return tacResult;
