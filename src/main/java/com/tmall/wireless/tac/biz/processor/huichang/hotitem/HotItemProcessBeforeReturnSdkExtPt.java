@@ -15,6 +15,8 @@ import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 爆款专区不需要库存过滤，但是需要把没有库存的沉淀
@@ -23,11 +25,13 @@ import org.apache.commons.collections.CollectionUtils;
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
     useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
     scenario = HallScenarioConstant.HALL_SCENARIO_HOT_ITEM)
-@Slf4j
 public class HotItemProcessBeforeReturnSdkExtPt extends Register implements ItemProcessBeforeReturnSdkExtPt {
+
+    Logger logger = LoggerFactory.getLogger(HotItemProcessBeforeReturnSdkExtPt.class);
+
     @Override
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
-        log.error("HotItemProcessBeforeReturnSdkExtPt.start");
+        logger.error("--> HotItemProcessBeforeReturnSdkExtPt.start");
         SgFrameworkResponse<ItemEntityVO> entityVOSgFrameworkResponse = sgFrameworkContextItem
             .getEntityVOSgFrameworkResponse();
 
@@ -53,7 +57,7 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
         int sellOutSize = sellOutItemAndContentList.size();
         List<Long> sellOutItemIds = sellOutItemAndContentList.stream().map(ItemEntityVO::getItemId).collect(
             Collectors.toList());
-        log.error("爆款专区库存沉底结果.totalSize:{}, canBuySize:{}, sellOutSize:{}, sellOutItemIds:{}",
+        logger.error("爆款专区库存沉底结果.totalSize:{}, canBuySize:{}, sellOutSize:{}, sellOutItemIds:{}",
             totalSize, canBuySize, sellOutSize, JSON.toJSONString(sellOutItemIds));
         finalItemAndContentList.addAll(sellOutItemAndContentList);
         entityVOSgFrameworkResponse.setItemAndContentList(finalItemAndContentList);
