@@ -37,8 +37,6 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE);
 
-        bizScenario.addProducePackage(PackageNameKey.OLD_RECOMMEND);
-        bizScenario.addProducePackage(PackageNameKey.CONTENT_FEEDS);
         return shoppingguideSdkItemService.recommend(context, bizScenario)
                 .map(TacResult::newResult)
                 .map(tacResult -> {
