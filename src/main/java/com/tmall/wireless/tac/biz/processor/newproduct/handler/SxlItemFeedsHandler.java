@@ -13,6 +13,7 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.txcs.gs.framework.model.*;
 import com.tmall.txcs.gs.spi.recommend.AldSpi;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.newproduct.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.newproduct.service.SxlItemRecService;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -52,8 +53,6 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
     @Override
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
 
-        LOGGER.error("SxlItemFeedsHandler ITEM_REQUEST:{}", JSON.toJSONString(context));
-
         HadesLogUtil.debug("SxlItemFeedsHandler ITEM_REQUEST:{}" + JSON.toJSONString(context));
 
         Flowable<TacResult<SgFrameworkResponse<EntityVO>>> tacResultFlowable = sxlItemRecService.recommend(context);
@@ -63,13 +62,36 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
          */
         List<Map<String, Object>> aldResList = getAldInfo(context);
 
-        tacLogger.info("aldResList:"+JSON.toJSONString(aldResList));
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
+            .kv("SxlItemFeedsHandler","executeFlowable")
+            .kv("aldResList",JSON.toJSONString(aldResList))
+            .info();
         if(CollectionUtils.isEmpty(aldResList)){
             return tacResultFlowable;
         }else{
             /**
              * 白底图 ：itemImg2
              * 标签：auctionTag
+             */
+            /**
+             *  "sellPoint": "地道柳州螺蛳粉，高汤汤汁浓郁",
+             *           "itemTitle": "李子柒柳州螺蛳粉加量不加价",
+             *           "contentId": "643698486561",
+             *           "itemImg2": "//img.alicdn.com/imgextra/i2/725677994/O1CN01DFtpf028vIpUZs7kQ_!!2-item_pic.png",
+             *           "auctionTag": "时令上新",
+             *           "itemId": "643698486561",
+             *           "itemImg": "//img.alicdn
+             *           .com/imgextra/i3/O1CN01iSgt3q1ZBx4aqFT8i_!!6000000003157-2-tps-531-621.png",
+             *           "distinctId": "643698486561",
+             *           "trackParams": {
+             *             "trackInfo": "/ald.marketing
+             *             .common-----st=6&ct=2&stid=21464597&_p_item=643698486561&dsid=19070235&whpid=-----GET"
+             *           },
+             *           "dataSetId": "19070235",
+             *           "logo": "//img.alicdn
+             *           .com/imgextra/i4/O1CN01Cg3vPA1dP0pAv3Sgw_!!6000000003727-2-tps-330-150.png",
+             *           "__pos__": 2,
+             *           "__track__": "17390113.17390113.21464597.2.2"
              */
             return tacResultFlowable.map(response->{
                 List<EntityVO> list = response.getData().getItemAndContentList();
@@ -84,7 +106,7 @@ public class SxlItemFeedsHandler extends RpmReactiveHandler<SgFrameworkResponse<
                 entityVO1.put("itemId",aldResList.get(1).get("itemId"));
                 entityVO1.put("itemImg",aldResList.get(1).get("itemImg2"));
                 entityVO1.put("sellingPointDesc",aldResList.get(1).get("sellPoint"));
-                entityVO1.put("type",aldResList.get(0).get("auctionTag"));
+                entityVO1.put("type",aldResList.get(1).get("auctionTag"));
                 list.add(entityVO1);
                 return response;
             }).onErrorReturn((r -> TacResult.errorResult("")));

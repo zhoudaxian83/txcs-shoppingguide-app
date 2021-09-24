@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
@@ -59,7 +60,10 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
 
         getAldInfo(sgFrameworkContextContent);
-        tacLogger.info("SxlContentOriginDataRequestExtPt aldResponse:{}"+JSON.toJSONString(sgFrameworkContextContent.getUserParams()));
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_CONTENT)
+            .kv("SxlContentOriginDataRequestExtPt","process")
+            .kv("aldResponse",JSON.toJSONString(sgFrameworkContextContent.getUserParams()))
+            .info();
 
         /**
          * https://tui.taobao.com/recommend?appid=25831&itemSets=crm_5233&commerce=B2C&regionCode=108&smAreaId=330110&itemSetFilterTriggers=crm_5233&OPEN_MAINTENANCE=1
@@ -77,7 +81,6 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         if(MapUtils.isEmpty(itemSetMap)){
             return tppRequest;
         }
-        tppRequest.setAppId(APPID);
         params.put("itemSets",  String.join(",", itemSetMap.keySet()));
         params.put("commerce", "B2C");
         params.put("regionCode", String.valueOf(sgFrameworkContextContent.getLocParams().getRegionCode()));
@@ -85,6 +88,7 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
         tppRequest.setParams(params);
+        tppRequest.setLogResult(true);
 
         tacLogger.info("SxlContentOriginDataRequestExtPt tppRequest:"+ JSON.toJSONString(tppRequest));
 
@@ -96,7 +100,13 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
 
         int index = sgFrameworkContextContent.getUserPageInfo().getIndex();
         int pageSize = sgFrameworkContextContent.getUserPageInfo().getPageSize();
+
         Map<String, ResResponse> mapResponse = aldSpi.queryAldInfoSync(buildAldRequest(sgFrameworkContextContent));
+
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_CONTENT)
+            .kv("SxlContentOriginDataRequestExtPt","getAldInfo")
+            .kv("mapResponse",JSON.toJSONString(mapResponse))
+            .info();
         Map<String,Object> itemSetMap = Maps.newHashMap();
         sgFrameworkContextContent.getUserParams().put(Constant.SXL_ITEMSET_PRE_KEY,itemSetMap);
         if(MapUtils.isNotEmpty(mapResponse)){
@@ -112,6 +122,10 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
             });
 
         }
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_CONTENT)
+            .kv("SxlContentOriginDataRequestExtPt","getAldInfo")
+            .kv("itemSetMap",JSON.toJSONString(itemSetMap))
+            .info();
 
     }
 
@@ -133,7 +147,14 @@ public class SxlContentOriginDataRequestExtPt implements ContentOriginDataReques
         locationInfo.setCityLevel4(String.valueOf(sgFrameworkContextContent.getLocParams().getSmAreaId()));
         List<String> wdkCodes = Lists.newArrayList();
         locationInfo.setWdkCodes(wdkCodes);
+
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_CONTENT)
+            .kv("SxlContentOriginDataRequestExtPt","buildAldRequest")
+            .kv("request",JSON.toJSONString(request))
+            .info();
+
         return request;
+
 
     }
 

@@ -2,12 +2,18 @@ package com.tmall.wireless.tac.biz.processor.common.util;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
+import com.taobao.tair.json.Json;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * Created by yangqing.byq on 2021/7/1.
@@ -33,12 +39,25 @@ public class AldUrlParamUtil {
         }
 
         String s = split[1];
-
-        Map<String, String> urlKv = Splitter.on("&").withKeyValueSeparator("=").split(s);
+        Map<String, String> urlKv = Maps.newHashMap();
+        /*Map<String, String> urlKv = Splitter.on("&").withKeyValueSeparator("=").split(s);*/
+        if(StringUtils.isNotEmpty(s) && s.contains("&")){
+            String[] tmpArry1 = s.split("&");
+            for(String m : tmpArry1){
+                if(StringUtils.isNotEmpty(m) && m.contains("=")){
+                    String[] tmpArry2 = m.split("=");
+                    MapUtils.putAll(urlKv, tmpArry2);
+                }
+            }
+        }
         Map<String, Object> result = Maps.newHashMap();
         urlKv.keySet().forEach(k -> {
             result.put(k, urlKv.get(k));
         });
+        HadesLogUtil.stream("AldUrlParamUtil")
+            .kv("url",url)
+            .kv("result", JSON.toJSONString(result))
+            .info();
         return result;
     }
 

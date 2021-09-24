@@ -31,7 +31,7 @@ import java.util.Optional;
 @Service
 public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginDataRequestExtPt {
 
-    private static final Long APPID = 23198L;
+    private static final Long APPID = 26548L;
 
 
     @Autowired
@@ -58,6 +58,7 @@ public class O2oBangdanContentOriginDataRequestExPt implements ContentOriginData
 
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setAppId(APPID);
+        tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
         Map<String, String> params = Maps.newHashMap();

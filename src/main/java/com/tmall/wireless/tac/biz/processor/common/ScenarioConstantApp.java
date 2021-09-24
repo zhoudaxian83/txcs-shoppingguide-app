@@ -26,13 +26,15 @@ public class ScenarioConstantApp extends ScenarioConstant {
     public static final String SCENARIO_SHANG_XIN_ITEM= "SHANG_XIN_ITEM";
 
     public static final String SCENARIO_SHANG_XIN_CONTENT= "SHANG_XIN_CONTENT";
+    public static final String SCENARIO_ALI_PAY_FIRST_PAGE = "ALI_PAY_FIRST_PAGE";
+    public static final String SCENARIO_ALI_PAY_MIDDLE_PAGE = "ALI_PAY_MIDDLE_PAGE";
 
     /**smartbuy**/
     public static final String SCENE_SMART_BUY_ITEM = "SCENE_SMART_BUY_ITEM";
 
     public static final String O2O_BANG_DAN = "O2O_BANG_DAN";
 
-    /**
+     /**
      * o2o猜你喜欢
      */
     public static final String O2O_CNXH = "o2o_cnxh";
@@ -44,5 +46,41 @@ public class ScenarioConstantApp extends ScenarioConstant {
      * 五折天
      */
     public static final String WU_ZHE_TIAN = "WU_ZHE_TIAN";
+    /**会场猜你喜欢**/
+    public static final String GUL_PROMOTION = "GulPromotion";
 
+    /**
+     * icon加购后推荐 场景
+     */
+    public static final String SCENARIO_ICON_RECOMMEND_SCENE = "ICON_RECOMMEND_SCENE";
+
+    /**
+     * icon加购后推荐 分类词
+     */
+    public static final String SCENARIO_ICON_RECOMMEND_CLASSIFIER = "ICON_RECOMMEND_CLASSIFIER";
+
+    /**
+     * 品牌馆首页
+     */
+    public static final String BRAND_CLUB_FP = "BRAND_CLUB_FP";
+
+
+    /**
+     * 品牌馆榜单
+     */
+    public static final String BRAND_CLUB_BANGDAN = "BRAND_CLUB_BANGDAN";
+
+
+    public static final String ICON_CONTENT_LEVEL2 = "ICON_CONTENT_LEVEL2";
+    public static final String ICON_CONTENT_LEVEL3 = "ICON_CONTENT_LEVEL3";
+    public static final String ICON_ITEM = "ICON_ITEM";
+
+
+
+
+
+    /**
+     * 猜你喜欢副TAB菜谱流推荐
+     */
+    public static final String CNXH_MENU_FEEDS = "CNXH_MENU_FEEDS";
 }
