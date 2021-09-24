@@ -170,6 +170,7 @@ public class CnPageBannerItemInfoScene {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName(ItemInfoSourceKey.CAPTAIN);
         //itemInfoSourceMetaInfoCaptain.setSceneCode("index.guessULike");
+        itemInfoSourceMetaInfoCaptain.setFilterSoldOut(true);
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
