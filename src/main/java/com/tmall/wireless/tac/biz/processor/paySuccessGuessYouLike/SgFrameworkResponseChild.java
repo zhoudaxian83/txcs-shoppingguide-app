@@ -9,11 +9,12 @@ public class SgFrameworkResponseChild<T extends EntityVO> extends SgFrameworkRes
 
     public boolean minimumGuarantee;
 
-    public boolean isMinimumGuarantee() {
-        return minimumGuarantee;
-    }
 
     public void setMinimumGuarantee(boolean minimumGuarantee) {
         this.minimumGuarantee = minimumGuarantee;
+    }
+
+    public boolean getMinimumGuarantee() {
+        return minimumGuarantee;
     }
 }
