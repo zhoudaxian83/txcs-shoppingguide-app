@@ -29,9 +29,7 @@ public class HotItemBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt imple
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
-        logger.error("-----------HotItemBuildItemVoSdkExtPt.start.------------");
         Response<ItemEntityVO> process = super.process(buildItemVoRequest);
-        logger.error("-----------HotItemBuildItemVoSdkExtPt.super.process.result:{}", JSON.toJSONString(process));
         ItemEntityVO itemEntityVO = process.getValue();
         SgFrameworkContextItem sgFrameworkContextItem = buildItemVoRequest.getContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
