@@ -48,14 +48,15 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         tacLogger.info("sgFrameworkContextItem_" + JSON.toJSONString(sgFrameworkContextItem));
         Map<String, Object> objectMap = sgFrameworkContextItem.getUserParams();
         tacLogger.info("objectMap_" + JSON.toJSONString(objectMap));
-        if (CollectionUtils.isEmpty(topList)) {
-            return;
-        }
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         tacLogger.info("itemEntities_" + JSON.toJSONString(itemEntities));
         //todo mock
         itemEntities = this.mock();
+        if (CollectionUtils.isEmpty(topList)) {
+            originDataDTO.setResult(itemEntities);
+            return;
+        }
         itemEntities.removeIf(itemEntity -> topList.contains(String.valueOf(itemEntity.getItemId())));
         if (isFirstPage) {
             List<ItemEntity> topResultsItemEntityList = Lists.newArrayList();
