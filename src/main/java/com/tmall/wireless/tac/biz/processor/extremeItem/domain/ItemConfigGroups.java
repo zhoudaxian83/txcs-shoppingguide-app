@@ -12,7 +12,7 @@ public class ItemConfigGroups {
     private List<ItemConfigGroup> itemConfigGroupList = new ArrayList<>();
 
     public boolean forceSort() {
-        return itemConfigGroupList.get(0).isForceSort();
+        return itemConfigGroupList.stream().allMatch(ItemConfigGroup::isForceSort);
     }
 
     /**

@@ -52,7 +52,7 @@ public class ItemConfigs {
      * @return
      */
     public boolean isForceSort() {
-        return itemConfigList.get(0).isForceSort();
+        return itemConfigList.stream().allMatch(ItemConfig::isForceSort);
     }
 
     /**
@@ -66,10 +66,10 @@ public class ItemConfigs {
                 .values().stream()
                 .filter(CollectionUtils::isNotEmpty)
                 .map(itemConfigs -> {
-                    ItemConfig itemConfig = itemConfigs.get(0);
+                    ItemConfig itemConfig = itemConfigs.get(itemConfigs.size() - 1);
                     ItemConfigGroup itemConfigGroup = new ItemConfigGroup();
                     itemConfigGroup.setGroupNo(itemConfig.getGroupNo());
-                    itemConfigGroup.setForceSort(itemConfig.isForceSort());
+                    itemConfigGroup.setForceSort(itemConfigs.stream().allMatch(ItemConfig::isForceSort));
                     itemConfigGroup.setSequenceNo(itemConfig.getSequenceNo());
                     itemConfigGroup.getItemConfigList().addAll(itemConfigs);
                     return itemConfigGroup;
