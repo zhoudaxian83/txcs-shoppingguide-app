@@ -25,7 +25,6 @@ public class AliPaySuccessGuessYouLikeItemOriginDataResponseConvertSdkExtPt
 
         tacLogger.info("进入tpp返回值解析扩展点");
         OriginDataDTO<ItemEntity> process = super.process(responseConvertRequest);
-
         tacLogger.info("出tpp返回值解析扩展点");
         return process;
     }
