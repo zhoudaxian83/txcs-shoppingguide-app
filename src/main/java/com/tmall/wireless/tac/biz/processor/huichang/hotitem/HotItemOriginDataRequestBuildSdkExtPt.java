@@ -109,7 +109,6 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             params.put("itemSets", ITEM_SET_PREFIX + itemSetId);
 
             recommendRequest.setAppId(SCENE_ITEM_RECOMMEND_APPID);
-            //TODO 需要处理设备id
             recommendRequest.setUserId(
                 MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, DefaultUserId));
             recommendRequest.setParams(params);
