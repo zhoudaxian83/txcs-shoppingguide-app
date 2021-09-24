@@ -58,6 +58,8 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             return;
         }
         itemEntities.removeIf(itemEntity -> topList.contains(String.valueOf(itemEntity.getItemId())));
+        tacLogger.info("isFirstPage=" + isFirstPage);
+        tacLogger.info("topList_" + JSON.toJSONString(topList));
         if (isFirstPage) {
             List<ItemEntity> topResultsItemEntityList = Lists.newArrayList();
             topList.forEach(itemId -> {
