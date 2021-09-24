@@ -60,8 +60,8 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                     tacLogger.info("tacresult开始判断=====================：1");
                     tacResult.getBackupMetaData().setUseBackup(true);
                     tacLogger.info("tacresult开始判断=====================：2");
-//                    tacResult.setHasMore(false);
-//                    tacResult.getData().setHasMore(false);
+                    tacResult.setHasMore(false);
+                    tacResult.getData().setHasMore(false);
                     tacLogger.info("tacresult开始判断=====================：3");
                     SgFrameworkResponseChild  child = new SgFrameworkResponseChild();
                     BeanUtils.copyProperties(tacResult, child);
