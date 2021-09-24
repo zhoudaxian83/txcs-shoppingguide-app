@@ -5,11 +5,43 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
     <context:annotation-config/>
-    <context:component-scan base-package="com.tmall.wireless.tac.biz.processor"/>
+    <context:component-scan base-package="com.tmall.wireless.tac.biz"/>
     <context:component-scan base-package="com.tmall.txcs.gs.framework"/>
     <context:component-scan base-package="com.tmall.txcs.biz.supermarket"/>
-
     <context:component-scan base-package="com.alibaba.cola"/>
+
+
+    <!-- shoppingguide sdk begin -->
+    <context:component-scan base-package="com.tmall.tcls.gs.sdk.framework"/>
+    <context:component-scan base-package="com.tmall.tcls.gs.sdk.ext"/>
+    <context:component-scan base-package="com.tmall.tcls.gs.sdk.biz"/>
+    <context:component-scan base-package="com.tmall.tcls.gs.sdk.sm"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.icon.level2.ext.IconLevel2ContentMetaInfoBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.icon.level3.ext.IconLevel3ContentMetaInfoBuildSdkExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.productpackage.recommendold.OldRecommendContentOriginDataResponseConvertSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.productpackage.recommendold.OldRecommendItemOriginDataResponseConvertSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentInfoQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentOriginDataRequestBuildSdkExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.middlepage.AliPayMiddleItemOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.middlepage.AlipayMiddleItemOriginDataPostProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AliPayFirstPageBuildItemVoSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AliPayItemUserCommonParamsBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AlipayItemContextCheckSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.firstPage.AlipayDefaultOriginDataItemQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.middlepage.AliPayMiddlePageItemUserCommonParamsBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.middlepage.AlipayMiddlePageItemContextCheckSdkExtPt"/>
+    <!-- shoppingguide sdk end -->
+
+    <bean class="com.tmall.wireless.tac.biz.processor.icon.item.ext.IconItemOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.icon.level2.ext.IconLevel2ContentOriginDataFailProcessorExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.icon.item.ext.IconItemItemMetaInfoBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.icon.item.ext.IconItemOriginDataFailProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.icon.item.ext.IconItemOriginDataSuccessProcessorSdkExtPt"/>
+
+    <bean class="com.tmall.aselfcommon.model.column.KeyUtil"/>
 
 
     <bean id="springSwitchBean" class="com.tmall.wireless.tac.biz.processor.config.SwitchConfigBean" init-method="init"/>
@@ -55,6 +87,41 @@
     <bean class="com.tmall.wireless.tac.biz.processor.firstScreenMind.FirstScreenItemBuildItemVOExtPt"/>
 
 
+    <!--会场相关开始-->
+        <!--会场通用开始-->
+         <bean class="com.tmall.wireless.tac.biz.productpackage.hall.HallCommonContentUserCommonParamsBuildSdkExtPt"/>
+         <bean class="com.tmall.wireless.tac.biz.processor.huichang.common.itemextpt.HallCommonItemUserCommonParamsBuildSdkExtPt"/>
+        <!--会场通用结束-->
+
+
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleContentInfoQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleContentBuildItemVoSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleContentFilterSdkExtPt"/>
+
+
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageBuildItemVoSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageContentInfoQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageContentOriginDataPostProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageContentOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelPage.InventoryChannelPageContentFilterSdkExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageOriginDataPostProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.inventory.inventoryChannelItemPage.InventoryChannelItemPageCaptainRequestBuildSdkExtPt"/>
+
+
+    <!--内容渲染场景-->
+    <bean id="entityRenderService" class="com.taobao.hsf.app.spring.util.HSFSpringConsumerBean"
+          init-method="init">
+        <property name="interfaceName" value="com.tmall.aselfcaptain.cloudrec.api.EntityRenderService"/>
+        <property name="version" value="1.0.0"/>
+    </bean>
+    <!---会场相关结束-->
+
     <bean class="com.tmall.wireless.tac.biz.processor.o2obd.ext.O2oBangdanContentOriginDataRequestExPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.o2obd.ext.O2oBangdanContentInfoQueryExtPt"/>
 
@@ -85,5 +152,21 @@
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionItemOriginDataRequestExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gul.promotion.GulPromotionBuildItemVOExtPt"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentFilterSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuBuildItemVoSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentOriginDataFailProcessorSdkExtPt"/>
+<!--    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentOriginDataPostProcessorSdkExtPt"/>-->
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentInfoQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentItemMetaInfoBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentOriginDataRequestBuildSdkExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.handler.IconRecommendHandler" />
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendClassifierWordOriginDataRequestExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendSceneContentOriginDataRequestExtPt" />
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendClassifierContentInfoQueryExtPt" />
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendSceneContentInfoQueryExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendClassifierContentFilterExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.ext.IconRecommendSceneContentFilterExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.iconRecommend.service.IconRecommendService"/>
 
 </beans>

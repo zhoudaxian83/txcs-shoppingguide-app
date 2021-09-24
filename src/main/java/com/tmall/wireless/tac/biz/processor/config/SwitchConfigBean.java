@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.config;
 
-import com.taobao.csp.switchcenter.core.SwitchManager;
-
+import com.tmall.wireless.tac.config.TacConfigManager;
 
 /**
  * @author haixiao.zhang
@@ -14,9 +13,11 @@ public class SwitchConfigBean {
     public void init() {
         try {
 
-            SwitchManager.init(APP_NAME, SxlSwitch.class);
+            /*SwitchManager.init(APP_NAME, SxlSwitch.class);*/
+            TacConfigManager.switchRegister(SxlSwitch.class);
 
         } catch (Throwable e) {
+            throw new RuntimeException(e);
         }
     }
 }
