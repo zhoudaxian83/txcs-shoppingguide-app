@@ -13,6 +13,7 @@ import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
+import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,25 +38,33 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE);
 
-        return shoppingguideSdkItemService.recommend(context, bizScenario)
+        Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> tacResultFlowable = shoppingguideSdkItemService.recommend(context, bizScenario)
                 .map(TacResult::newResult)
                 .map(tacResult -> {
 
-                    if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null
-                            || tacResult.getData().getItemAndContentList().isEmpty()){
+                    if (tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null
+                            || tacResult.getData().getItemAndContentList().isEmpty()) {
 
                         tacLogger.info("有更新");
                         tacLogger.info("进入tac打底");
                         tacLogger.info("tacresult信息：" + JSON.toJSONString(tacResult));
                         tacResult = TacResult.errorResult("test");
                         HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
-                                .kv("shoppingguideSdkItemService","recommend")
+                                .kv("shoppingguideSdkItemService", "recommend")
                                 .kv("tacResult", JSON.toJSONString(tacResult))
                                 .info();
                     }
                     tacResult.getBackupMetaData().setUseBackup(true);
                     return tacResult;
                 })
-                .onErrorReturn(r -> TacResult.errorResult(""));
+                .onErrorReturn(r -> {
+                    tacLogger.info("打底错误信息：" + r.getMessage());
+                   return TacResult.errorResult("");
+                });
+
+
+
+
+        return tacResultFlowable;
     }
 }
