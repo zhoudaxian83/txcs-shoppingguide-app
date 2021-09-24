@@ -24,4 +24,12 @@ public class ItemGmv {
         double last7DaysGmvSum = Arrays.stream(last7DaysGmv).mapToDouble(d -> d).sum();
         return last7DaysGmvSum + 0.5 * todayGmv + 0.5 * last1HourGmv;
     }
+
+    public double lastNDaysGmvSum() {
+        return Arrays.stream(last7DaysGmv).mapToDouble(d -> d).sum();
+    }
+
+    public double last1HourGmv() {
+        return this.last1HourGmv;
+    }
 }

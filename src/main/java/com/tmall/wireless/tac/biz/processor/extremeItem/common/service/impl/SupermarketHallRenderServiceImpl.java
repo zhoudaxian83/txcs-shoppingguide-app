@@ -12,6 +12,7 @@ import com.tmall.aselfcaptain.item.model.QueryOptionDO;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallRenderService;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
@@ -37,7 +38,7 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
     RenderSpi renderSpi;
 
     @Override
-    public Map<Long, ItemDTO> batchQueryItem(List<Long> itemIdList) {
+    public Map<Long, ItemDTO> batchQueryItem(List<Long> itemIdList, SupermarketHallContext supermarketHallContext) {
         tacLogger.info("batchQueryItem start");
 
         Map<Long, ItemDTO> captainItemMap = Maps.newHashMap();
@@ -55,7 +56,7 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
                 .map(list -> {
                     try {
                         EagleEye.setRpcContext(rpcContext);
-                        Map<Long, ItemDTO> longItemDTOMap = queryItem(list);
+                        Map<Long, ItemDTO> longItemDTOMap = queryItem(list, supermarketHallContext);
                         if (MapUtils.isEmpty(longItemDTOMap)) {
                             tacLogger.info("batch query capatin empty;" + JSON.toJSONString(list));
                         }
@@ -74,8 +75,8 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
         return captainItemMap;
     }
 
-    private Map<Long, ItemDTO> queryItem(List<Long> itemIds) {
-        RenderRequest renderRequest = buildRenderRequest(itemIds, "330110",null, 1034513083L);
+    private Map<Long, ItemDTO> queryItem(List<Long> itemIds, SupermarketHallContext supermarketHallContext) {
+        RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext.getSmAreaId(),null, supermarketHallContext.getUserId());
         SPIResult<List<ItemDTO>> itemDTOs = renderSpi.query(renderRequest);
         return itemDTOs.getData().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     }

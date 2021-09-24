@@ -16,4 +16,18 @@ public class ItemGmvGroup {
         }
         return itemGmvList.stream().mapToDouble(ItemGmv::raceValue).sum();
     }
+
+    public double lastNDaysGmvSum() {
+        if(CollectionUtils.isEmpty(itemGmvList)) {
+            return 0;
+        }
+        return itemGmvList.stream().mapToDouble(ItemGmv::lastNDaysGmvSum).sum();
+    }
+
+    public double last1HourGmvSum() {
+        if(CollectionUtils.isEmpty(itemGmvList)) {
+            return 0;
+        }
+        return itemGmvList.stream().mapToDouble(ItemGmv::last1HourGmv).sum();
+    }
 }

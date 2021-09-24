@@ -54,11 +54,19 @@ public class ItemConfigGroups {
             double group1RaceValue = itemGmvGroupMap.raceValueOf(o1.getGroupNo());
             double group2RaceValue = itemGmvGroupMap.raceValueOf(o2.getGroupNo());
             if(group1RaceValue < group2RaceValue) {
-                return -1;
-            } else if(group1RaceValue > group2RaceValue) {
                 return 1;
+            } else if(group1RaceValue > group2RaceValue) {
+                return -1;
             } else {
-                return 0;
+                double group1RaceValueForLast1HourRank = itemGmvGroupMap.raceValueOfLast1HourGmvRank(o1.getGroupNo());
+                double group2RaceValueForLast1HourRank = itemGmvGroupMap.raceValueOfLast1HourGmvRank(o2.getGroupNo());
+                if(group1RaceValueForLast1HourRank < group2RaceValueForLast1HourRank) {
+                    return 1;
+                } else if(group1RaceValueForLast1HourRank > group2RaceValueForLast1HourRank) {
+                    return -1;
+                } else {
+                    return 0;
+                }
             }
         }
     }

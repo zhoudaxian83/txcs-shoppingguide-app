@@ -49,7 +49,7 @@ public class ItemConfig {
     /**
      * 利益点
      */
-    private String itemDesc;
+    private String itemDescCustom;
 
     /**
      * 商品图片
@@ -66,7 +66,7 @@ public class ItemConfig {
         itemConfig.setExposurePercent(Integer.parseInt((String)stringObjectMap.get("exposurePercent")));
         itemConfig.setActivityId((String)stringObjectMap.get("activityId"));
         itemConfig.setCouponValue((String)stringObjectMap.get("couponValue"));
-        itemConfig.setItemDesc((String)stringObjectMap.get("itemDesc"));
+        itemConfig.setItemDescCustom((String)stringObjectMap.get("itemDescCustom"));
         itemConfig.setItemImg((String)stringObjectMap.get("itemImg"));
         return itemConfig;
     }

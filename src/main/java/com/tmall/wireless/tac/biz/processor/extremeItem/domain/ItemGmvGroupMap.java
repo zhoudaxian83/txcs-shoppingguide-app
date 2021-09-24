@@ -17,6 +17,9 @@ public class ItemGmvGroupMap {
 
     private Map<Integer, ItemGmvGroup> innerItemGmvGroupMap;
 
+    private Map<Integer, Integer> lastNDaysGmvRankMap;
+    private Map<Integer, Integer> last1HourGmvRankMap;
+
     public static ItemGmvGroupMap valueOf(ItemConfigGroups itemConfigGroups, List<GmvEntity> last7DayGmvEntityList, List<GmvEntity> last1HourGmvEntityList, List<GmvEntity> todayGmvEntityList) {
         String todayDateStr = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         ItemGmvGroupMap itemGmvGroupMap = new ItemGmvGroupMap();
@@ -53,12 +56,34 @@ public class ItemGmvGroupMap {
             itemGmvGroupMap.innerItemGmvGroupMap.put(itemConfigGroup.getGroupNo(), itemGmvGroup);
         }
 
+        itemGmvGroupMap.lastNDaysGmvRankMap = new HashMap<>();
+        itemGmvGroupMap.last1HourGmvRankMap = new HashMap<>();
+
+        List<ItemGmvGroup> lastNDaysGmvRankList = itemGmvGroupMap.innerItemGmvGroupMap.values().stream()
+                .sorted(Comparator.comparing(ItemGmvGroup::lastNDaysGmvSum).reversed()).collect(Collectors.toList());
+
+        List<ItemGmvGroup> last1HourGmvRankList = itemGmvGroupMap.innerItemGmvGroupMap.values().stream()
+                .sorted(Comparator.comparing(ItemGmvGroup::last1HourGmvSum).reversed()).collect(Collectors.toList());
+
+        int i = 1;
+        for (ItemGmvGroup itemGmvGroup : lastNDaysGmvRankList) {
+            itemGmvGroupMap.lastNDaysGmvRankMap.put(itemGmvGroup.getGroupNo(), i++);
+        }
+        i = 1;
+        for (ItemGmvGroup itemGmvGroup : last1HourGmvRankList) {
+            itemGmvGroupMap.last1HourGmvRankMap.put(itemGmvGroup.getGroupNo(), i++);
+        }
+        logger.info("ItemGmvGroupMap_valueOf_itemGmvGroupMap: " + JSON.toJSONString(itemGmvGroupMap));
         return itemGmvGroupMap;
 
     }
 
     public double raceValueOf(Integer groupNo) {
-        return innerItemGmvGroupMap.get(groupNo).ranceValue();
+        return this.lastNDaysGmvRankMap.get(groupNo) * 0.5 + this.last1HourGmvRankMap.get(groupNo) * 0.5;
+    }
+
+    public double raceValueOfLast1HourGmvRank(Integer groupNo) {
+        return this.last1HourGmvRankMap.get(groupNo);
     }
 
 }

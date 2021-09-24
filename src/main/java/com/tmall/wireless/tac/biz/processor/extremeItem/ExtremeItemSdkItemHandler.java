@@ -3,21 +3,11 @@ package com.tmall.wireless.tac.biz.processor.extremeItem;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.taobao.eagleeye.EagleEye;
-import com.taobao.igraph.client.model.*;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
-import com.tmall.aselfcaptain.item.constant.Channel;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
-import com.tmall.aselfcaptain.item.model.ItemId;
-import com.tmall.aselfcaptain.item.model.ItemQueryDO;
-import com.tmall.aselfcaptain.item.model.QueryOptionDO;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
-import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.render.RenderSpi;
-import com.tmall.wireless.store.spi.render.model.RenderRequest;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallIGraphSearchService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallRenderService;
@@ -33,7 +23,6 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -95,7 +84,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             logger.warn("==========itemIds: " + JSON.toJSONString(itemIds));
 
             //查询captain获取商品渲染信息
-            Map<Long, ItemDTO> itemDTOMap = supermarketHallRenderService.batchQueryItem(itemIds);
+            Map<Long, ItemDTO> itemDTOMap = supermarketHallRenderService.batchQueryItem(itemIds, supermarketHallContext);
             tacLogger.info("==========itemDTOs: " + JSON.toJSONString(itemDTOMap));
             logger.warn("==========itemDTOs: " + JSON.toJSONString(itemDTOMap));
 
@@ -201,8 +190,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             itemMap.put("couponValue", itemConfig.getCouponValue());
             itemMap.put("sellerId", "725677994");
         }
-        if(StringUtils.isNotBlank(itemConfig.getItemDesc())) {
-            itemMap.put("itemDesc", itemConfig.getItemDesc());
+        if(StringUtils.isNotBlank(itemConfig.getItemDescCustom())) {
+            itemMap.put("itemDescCustom", itemConfig.getItemDescCustom());
         }
 
         if(StringUtils.isNotBlank(itemConfig.getItemImg())) {
