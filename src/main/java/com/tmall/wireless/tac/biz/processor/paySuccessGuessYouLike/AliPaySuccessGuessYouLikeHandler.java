@@ -53,6 +53,8 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                                 .kv("shoppingguideSdkItemService", "recommend")
                                 .kv("tacResult", JSON.toJSONString(tacResult))
                                 .info();
+                    } else {
+                        tacResult.getData().getExtInfos().put("min", "true");
                     }
                     tacResult.getBackupMetaData().setUseBackup(true);
                     tacLogger.info("tacresult信息：" + JSON.toJSONString(tacResult));
@@ -64,7 +66,6 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                    return TacResult.errorResult("");
                 });
 
-        tacLogger.info("返回结果信息：" + JSON.toJSONString(tacResultFlowable));
 
         return tacResultFlowable;
     }
