@@ -13,7 +13,6 @@ import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
