@@ -141,5 +141,5 @@
 
     <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4SdkItemHandler"/>
     <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt"/>
-
+    <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4BuildItemVoSdkExtPt"/>
 </beans>
