@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike;
 
+import com.alibaba.fastjson.JSON;
 import com.tmall.tcls.gs.sdk.biz.extensions.item.origindata.DefaultItemOriginDataResponseConvertSdkExtPt;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataResponseConvertSdkExtPt;
@@ -24,7 +25,10 @@ public class AliPaySuccessGuessYouLikeItemOriginDataResponseConvertSdkExtPt
     public OriginDataDTO<ItemEntity> process(ResponseConvertRequest responseConvertRequest) {
 
         tacLogger.info("进入tpp返回值解析扩展点");
+
+        tacLogger.info("tpp返回值解析扩展点解析后内容：" + JSON.toJSONString(responseConvertRequest));
         OriginDataDTO<ItemEntity> process = super.process(responseConvertRequest);
+        tacLogger.info("tpp返回值解析扩展点解析后内容：" + JSON.toJSONString(process));
         tacLogger.info("出tpp返回值解析扩展点");
         return process;
     }
