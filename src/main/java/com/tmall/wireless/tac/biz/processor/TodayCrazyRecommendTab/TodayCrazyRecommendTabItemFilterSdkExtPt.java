@@ -11,6 +11,7 @@ import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -37,9 +38,9 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
     public static final List<String> CHECK_FIELD = Lists.newArrayList(
             "itemImg"
     );
+
     @Override
     public SgFrameworkResponse<ItemEntityVO> process(ItemFilterRequest itemFilterRequest) {
-
 
 
         SgFrameworkResponse<ItemEntityVO> entityVOSgFrameworkResponse = itemFilterRequest.getEntityVOSgFrameworkResponse();
@@ -53,7 +54,7 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
 
         for (ItemEntityVO entityVO : itemAndContentList) {
             if (entityVO != null) {
-                if (!canBuy(entityVO)) {
+                if (!this.canBuy(entityVO)||!this.noLimitBuy(entityVO)) {
                     LOGGER.error("itemFilter,{}, itemId:{}", ErrorCode.ITEM_FILTER_BY_CAN_BUY, entityVO.getString("itemId"));
                 } else {
                     if (checkField(entityVO)) {
@@ -88,10 +89,35 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
 
 
     private boolean canBuy(ItemEntityVO item) {
-        tacLogger.info("canBuy_ItemEntityVO"+ JSON.toJSONString(item));
         Boolean canBuy = item.getBoolean("canBuy");
         Boolean sellOut = item.getBoolean("sellOut");
-
         return (canBuy == null || canBuy) && (sellOut == null || !sellOut);
     }
+
+    private boolean noLimitBuy(ItemEntityVO itemEntityVO) {
+        tacLogger.info("noLimitBuy_1" + JSON.toJSONString(itemEntityVO));
+        ItemLimitDTO itemLimitDTO = (ItemLimitDTO) itemEntityVO.get("itemLimit");
+        tacLogger.info("itemLimitDTO_" + JSON.toJSONString(itemLimitDTO));
+        if (itemLimitDTO == null || itemLimitDTO.getSkuId() == null) {
+            return true;
+        }
+        //兼容只有总限购或个人限购的情况
+        boolean totalLimit = itemLimitDTO.getUsedCount() != null && itemLimitDTO.getTotalLimit() != null;
+        boolean userLimit = itemLimitDTO.getUserUsedCount() != null && itemLimitDTO.getUserLimit() != null;
+        if (!totalLimit && !userLimit) {
+            return true;
+        }
+        if (totalLimit && userLimit) {
+            //当已售数量大于等于总限制数，个人限制数量大于等于个人限购数沉底处理
+            return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
+                    && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
+        }
+        if (totalLimit) {
+            return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit();
+        } else {
+            return itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
+        }
+    }
+
+
 }
