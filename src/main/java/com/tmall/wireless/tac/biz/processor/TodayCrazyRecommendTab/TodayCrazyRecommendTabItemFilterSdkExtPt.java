@@ -43,7 +43,7 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
     @Override
     public SgFrameworkResponse<ItemEntityVO> process(ItemFilterRequest itemFilterRequest) {
 
-
+        tacLogger.info("过滤节点开始");
         SgFrameworkResponse<ItemEntityVO> entityVOSgFrameworkResponse = itemFilterRequest.getEntityVOSgFrameworkResponse();
 
         List<ItemEntityVO> itemAndContentList = entityVOSgFrameworkResponse.getItemAndContentList();
@@ -55,9 +55,11 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
 
         for (ItemEntityVO entityVO : itemAndContentList) {
             if (entityVO != null) {
-                if (!this.canBuy(entityVO)||!this.noLimitBuy(entityVO)) {
+                if (!this.canBuy(entityVO) || !this.noLimitBuy(entityVO)) {
+                    tacLogger.info("过滤——1" + entityVO.getString("itemId"));
                     LOGGER.error("itemFilter,{}, itemId:{}", ErrorCode.ITEM_FILTER_BY_CAN_BUY, entityVO.getString("itemId"));
                 } else {
+                    tacLogger.info("过滤——2" + entityVO.getString("itemId"));
                     if (checkField(entityVO)) {
                         itemAndContentListAfterFilter.add(entityVO);
                     }
@@ -96,7 +98,7 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
     }
 
     private boolean noLimitBuy(ItemEntityVO itemEntityVO) {
-        if(CommonConstant.LIMIT_BUY_SWITCH){
+        if (CommonConstant.LIMIT_BUY_SWITCH) {
             return true;
         }
         tacLogger.info("noLimitBuy_1" + JSON.toJSONString(itemEntityVO));
