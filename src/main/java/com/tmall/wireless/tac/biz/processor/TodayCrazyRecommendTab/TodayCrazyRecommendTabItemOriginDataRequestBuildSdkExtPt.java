@@ -75,7 +75,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         recommendRequest.setLogResult(true);
         tacLogger.info("recommendRequest_:" + JSON.toJSONString(recommendRequest));
         // todo MOCK
-        //recommendRequest = this.mock();
+        recommendRequest = this.mock();
         return recommendRequest;
     }
 
