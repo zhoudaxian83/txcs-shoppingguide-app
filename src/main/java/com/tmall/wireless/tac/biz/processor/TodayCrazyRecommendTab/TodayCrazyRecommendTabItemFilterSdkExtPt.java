@@ -56,10 +56,8 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
         for (ItemEntityVO entityVO : itemAndContentList) {
             if (entityVO != null) {
                 if (!this.canBuy(entityVO) || !this.noLimitBuy(entityVO)) {
-                    tacLogger.info("过滤——1" + entityVO.getString("itemId"));
                     LOGGER.error("itemFilter,{}, itemId:{}", ErrorCode.ITEM_FILTER_BY_CAN_BUY, entityVO.getString("itemId"));
                 } else {
-                    tacLogger.info("过滤——2" + entityVO.getString("itemId"));
                     if (checkField(entityVO)) {
                         itemAndContentListAfterFilter.add(entityVO);
                     }
@@ -118,10 +116,6 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
         }
         if (userLimit) {
             return itemLimitDTO.getTotalLimit() > itemLimitDTO.getUsedCount();
-        }
-
-        if (571438384496l == itemLimitDTO.getItemId()) {
-            itemLimitDTO.setUsedCount(10001);
         }
         return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
                 && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
