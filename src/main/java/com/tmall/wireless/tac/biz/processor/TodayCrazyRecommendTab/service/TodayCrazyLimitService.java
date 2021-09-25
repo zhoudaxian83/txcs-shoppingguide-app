@@ -45,6 +45,7 @@ public class TodayCrazyLimitService {
         Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
                 .getItemInfoGroupResponseMap();
         ItemGroup itemGroup = new ItemGroup("sm", "B2C");
+        tacLogger.info("limit-1");
         //captain获取skuId
         List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
                 itemGroup).getValue()
@@ -56,6 +57,7 @@ public class TodayCrazyLimitService {
             skuMap.put("itemId", itemDTO.getItemId() == null ? 0L : itemDTO.getItemId());
             return skuMap;
         }).collect(Collectors.toList());
+        tacLogger.info("limit-2");
         Map<String, Object> paramsValue = new HashMap<>(16);
         Map<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("userId", userId);
@@ -70,6 +72,7 @@ public class TodayCrazyLimitService {
             o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramsValue);
             JSONObject jsonObject = (JSONObject) JSON.toJSON(o);
             Boolean success = jsonObject.getBoolean(Constant.SUCCESS);
+            tacLogger.info("limit-3");
             //适配异常情况
             if (success == null) {
                 tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue + "|jsonObject：" + JSON
@@ -97,6 +100,7 @@ public class TodayCrazyLimitService {
     public Map<Long, List<ItemLimitDTO>> getItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<Long, List<ItemLimitDTO>> limitResult;
         Map<String, Object> param = this.buildGetItemLimitParam(sgFrameworkContextItem);
+        tacLogger.info("limit查询参数构建完成");
         limitResult = this.getItemLimitResult(param);
         return limitResult;
     }
