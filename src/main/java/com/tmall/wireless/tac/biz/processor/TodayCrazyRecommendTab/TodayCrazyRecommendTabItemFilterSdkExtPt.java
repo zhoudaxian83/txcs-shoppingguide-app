@@ -98,7 +98,7 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
     }
 
     private boolean noLimitBuy(ItemEntityVO itemEntityVO) {
-        if (CommonConstant.LIMIT_BUY_SWITCH) {
+        if (!CommonConstant.LIMIT_BUY_SWITCH) {
             return true;
         }
         tacLogger.info("noLimitBuy_1" + JSON.toJSONString(itemEntityVO));
