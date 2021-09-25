@@ -166,6 +166,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabBuildItemVoSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemInfoPostProcessSdkExtPt"/>
-
+    <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemFilterSdkExtPt"/>
 
 </beans>
