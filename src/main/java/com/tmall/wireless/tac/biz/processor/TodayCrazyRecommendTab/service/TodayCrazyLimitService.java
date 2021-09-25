@@ -5,14 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.framework.model.ItemGroup;
+import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoDTO;
+import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.tcls.gs.sdk.framework.model.iteminfo.ItemInfoGroupResponse;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
-import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
-import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemDTO;
-import com.tmall.wireless.tac.biz.processor.wzt.model.convert.ItemInfoDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,19 +53,22 @@ public class TodayCrazyLimitService {
                 itemGroup).getValue()
                 .values()), ItemInfoDTO.class);
         tacLogger.info("limit-1-1");
+
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
-            ItemDTO itemDTO = itemInfoDTO.getItemInfos().get("captain").getItemDTO();
+            tacLogger.info("itemInfoDTO_" + JSON.toJSONString(itemInfoDTO));
+            tacLogger.info("captain_" + JSON.toJSONString(itemInfoDTO.getItemInfos().get("captain")));
+//            ItemDTO itemDTO = itemInfoDTO.getItemInfos().get("captain");
             Map<String, Object> skuMap = Maps.newHashMap();
-            skuMap.put("skuId", itemDTO.getSkuId() == null ? 0L : itemDTO.getSkuId());
-            skuMap.put("itemId", itemDTO.getItemId() == null ? 0L : itemDTO.getItemId());
+//            skuMap.put("skuId", itemDTO.getSkuId() == null ? 0L : itemDTO.getSkuId());
+//            skuMap.put("itemId", itemDTO.getItemId() == null ? 0L : itemDTO.getItemId());
             return skuMap;
         }).collect(Collectors.toList());
         tacLogger.info("limit-2");
         Map<String, Object> paramsValue = new HashMap<>(16);
-        Map<String, Object> paramMap = Maps.newHashMap();
-        paramMap.put("userId", userId);
-        paramMap.put("itemIdList", skuList);
-        paramsValue.put("itemLimitInfoQuery", paramMap);
+//        Map<String, Object> paramMap = Maps.newHashMap();
+//        paramMap.put("userId", userId);
+//        paramMap.put("itemIdList", skuList);
+//        paramsValue.put("itemLimitInfoQuery", paramMap);
         return paramsValue;
     }
 
