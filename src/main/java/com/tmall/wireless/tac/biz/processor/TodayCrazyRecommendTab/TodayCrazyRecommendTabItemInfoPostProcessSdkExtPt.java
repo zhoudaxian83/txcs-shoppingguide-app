@@ -5,10 +5,10 @@ import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.iteminfo.ItemInfoPostProcessSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.ItemLimitDTO;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TodayCrazyLimitService;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
-import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -11,8 +11,8 @@ import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.ItemLimitDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -97,32 +97,19 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
         return (canBuy == null || canBuy) && (sellOut == null || !sellOut);
     }
 
-    private boolean noLimitBuy(ItemEntityVO itemEntityVO) {
+    public boolean noLimitBuy(ItemEntityVO itemEntityVO) {
         if (!CommonConstant.LIMIT_BUY_SWITCH) {
             return true;
         }
-        tacLogger.info("noLimitBuy_1" + JSON.toJSONString(itemEntityVO));
         ItemLimitDTO itemLimitDTO = (ItemLimitDTO) itemEntityVO.get("itemLimit");
-        tacLogger.info("itemLimitDTO_" + JSON.toJSONString(itemLimitDTO));
-        if (itemLimitDTO == null || itemLimitDTO.getSkuId() == null) {
+        if (itemLimitDTO == null) {
             return true;
         }
-        //兼容只有总限购或个人限购的情况
-        boolean totalLimit = itemLimitDTO.getUsedCount() != null && itemLimitDTO.getTotalLimit() != null;
-        boolean userLimit = itemLimitDTO.getUserUsedCount() != null && itemLimitDTO.getUserLimit() != null;
-        if (!totalLimit && !userLimit) {
-            return true;
+        if (571438384496L == itemLimitDTO.getSkuId()) {
+            itemLimitDTO.setUsedCount(10001);
         }
-        if (totalLimit && userLimit) {
-            //当已售数量大于等于总限制数，个人限制数量大于等于个人限购数沉底处理
-            return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
-                    && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
-        }
-        if (totalLimit) {
-            return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit();
-        } else {
-            return itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
-        }
+        return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
+                && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
     }
 
 
