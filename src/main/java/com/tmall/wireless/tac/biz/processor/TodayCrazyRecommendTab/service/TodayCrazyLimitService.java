@@ -48,11 +48,6 @@ public class TodayCrazyLimitService {
         List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
                 itemGroup).getValue()
                 .values()), ItemInfoDTO.class);
-        tacLogger.info("限购转换");
-        List<ItemInfoDTO> itemInfoDTOS2 = (List<ItemInfoDTO>) itemGroupItemInfoGroupResponseMap.get(
-                itemGroup).getValue()
-                .values();
-        tacLogger.info("限购转换完成：" + JSON.toJSONString(itemInfoDTOS2));
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
             Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
             Map<String, Object> skuMap = Maps.newHashMap();
