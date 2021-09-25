@@ -120,7 +120,7 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
             return itemLimitDTO.getTotalLimit() > itemLimitDTO.getUsedCount();
         }
 
-        if (2571438384496L == itemLimitDTO.getSkuId()) {
+        if (571438384496l == itemLimitDTO.getItemId()) {
             itemLimitDTO.setUsedCount(10001);
         }
         return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
