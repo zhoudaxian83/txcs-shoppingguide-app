@@ -6,7 +6,7 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginData
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProcessRequest;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
-import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.LimitService;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TodayCrazyLimitService;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
@@ -23,14 +23,14 @@ import java.util.Map;
 )
 public class TodayCrazyRecommendTabItemOriginDataPostProcessorSdkExtPt extends Register implements ItemOriginDataPostProcessorSdkExtPt {
     @Autowired
-    LimitService limitService;
+    TodayCrazyLimitService todayCrazyLimitService;
 
     @Autowired
     TacLoggerImpl tacLogger;
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
-        Map<Long, List<ItemLimitDTO>> itemLimitResult = limitService.getItemLimitResult(originDataProcessRequest.getSgFrameworkContextItem());
+        Map<Long, List<ItemLimitDTO>> itemLimitResult = todayCrazyLimitService.getItemLimitResult(originDataProcessRequest.getSgFrameworkContextItem());
         if (itemLimitResult != null) {
             originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(Constant.ITEM_LIMIT_RESULT, itemLimitResult);
         } else {

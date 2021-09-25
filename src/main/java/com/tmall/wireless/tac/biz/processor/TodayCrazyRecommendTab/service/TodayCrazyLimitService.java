@@ -30,9 +30,9 @@ import java.util.stream.Collectors;
  * 限购信息获取
  */
 @Component
-public class LimitService {
-    Logger LOGGER = LoggerFactory.getLogger(LimitService.class);
-    private static final String LOG_PREFIX = "LimitService-";
+public class TodayCrazyLimitService {
+    Logger LOGGER = LoggerFactory.getLogger(TodayCrazyLimitService.class);
+    private static final String LOG_PREFIX = "TodayCrazyLimitService-";
 
     @Autowired
     RpcSpi rpcSpi;
