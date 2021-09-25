@@ -105,6 +105,21 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
         if (itemLimitDTO == null) {
             return true;
         }
+        //为true不校验总限购
+        boolean totalLimit = itemLimitDTO.getTotalLimit() == itemLimitDTO.getUsedCount() && 0L == itemLimitDTO.getUsedCount();
+        //为true不校验用户限购
+        boolean userLimit = itemLimitDTO.getUserLimit() == itemLimitDTO.getUserUsedCount() && 0L == itemLimitDTO.getUserUsedCount();
+        //如果只有总限购则只校验用户限购
+        if (totalLimit && userLimit) {
+            return true;
+        }
+        if (totalLimit) {
+            return itemLimitDTO.getUserLimit() > itemLimitDTO.getUserUsedCount();
+        }
+        if (userLimit) {
+            return itemLimitDTO.getTotalLimit() > itemLimitDTO.getUsedCount();
+        }
+
         if (571438384496L == itemLimitDTO.getSkuId()) {
             itemLimitDTO.setUsedCount(10001);
         }
