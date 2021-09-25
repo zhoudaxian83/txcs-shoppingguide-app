@@ -53,22 +53,21 @@ public class TodayCrazyLimitService {
                 itemGroup).getValue()
                 .values()), ItemInfoDTO.class);
         tacLogger.info("limit-1-1");
-
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
             tacLogger.info("itemInfoDTO_" + JSON.toJSONString(itemInfoDTO));
             tacLogger.info("captain_" + JSON.toJSONString(itemInfoDTO.getItemInfos().get("captain")));
-//            ItemDTO itemDTO = itemInfoDTO.getItemInfos().get("captain");
+            Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
             Map<String, Object> skuMap = Maps.newHashMap();
-//            skuMap.put("skuId", itemDTO.getSkuId() == null ? 0L : itemDTO.getSkuId());
-//            skuMap.put("itemId", itemDTO.getItemId() == null ? 0L : itemDTO.getItemId());
+            skuMap.put("skuId", itemInfoVO.get("skuId") == null ? 0L : itemInfoVO.get("skuId"));
+            skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
             return skuMap;
         }).collect(Collectors.toList());
         tacLogger.info("limit-2");
         Map<String, Object> paramsValue = new HashMap<>(16);
-//        Map<String, Object> paramMap = Maps.newHashMap();
-//        paramMap.put("userId", userId);
-//        paramMap.put("itemIdList", skuList);
-//        paramsValue.put("itemLimitInfoQuery", paramMap);
+        Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put("userId", userId);
+        paramMap.put("itemIdList", skuList);
+        paramsValue.put("itemLimitInfoQuery", paramMap);
         return paramsValue;
     }
 
@@ -106,7 +105,7 @@ public class TodayCrazyLimitService {
     public Map<Long, List<ItemLimitDTO>> getItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<Long, List<ItemLimitDTO>> limitResult;
         Map<String, Object> param = this.buildGetItemLimitParam(sgFrameworkContextItem);
-        tacLogger.info("limit查询参数构建完成");
+        tacLogger.info("limit查询参数构建完成:" + JSON.toJSONString(param));
         limitResult = this.getItemLimitResult(param);
         return limitResult;
     }
