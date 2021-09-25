@@ -41,12 +41,13 @@ public class TodayCrazyLimitService {
     TacLogger tacLogger;
 
     private Map<String, Object> buildGetItemLimitParam(SgFrameworkContextItem sgFrameworkContextItem) {
+        tacLogger.info("sgFrameworkContextItem_" + JSON.toJSONString(sgFrameworkContextItem));
         Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
         Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
                 .getItemInfoGroupResponseMap();
         ItemGroup itemGroup = new ItemGroup("sm", "B2C");
         tacLogger.info("limit-1");
-        tacLogger.info("itemGroupItemInfoGroupResponseMap_"+JSON.toJSONString(itemGroupItemInfoGroupResponseMap));
+        tacLogger.info("itemGroupItemInfoGroupResponseMap_" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap));
         //captain获取skuId
         List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
                 itemGroup).getValue()
