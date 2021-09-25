@@ -10,6 +10,7 @@ import com.tmall.tcls.gs.sdk.framework.model.ErrorCode;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
@@ -95,6 +96,9 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
     }
 
     private boolean noLimitBuy(ItemEntityVO itemEntityVO) {
+        if(CommonConstant.LIMIT_BUY_SWITCH){
+            return true;
+        }
         tacLogger.info("noLimitBuy_1" + JSON.toJSONString(itemEntityVO));
         ItemLimitDTO itemLimitDTO = (ItemLimitDTO) itemEntityVO.get("itemLimit");
         tacLogger.info("itemLimitDTO_" + JSON.toJSONString(itemLimitDTO));

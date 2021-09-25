@@ -16,6 +16,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.O2oType;
 import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.captain.ItemInfoBySourceCaptainDTO;
 import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.tpp.ItemInfoBySourceTppDTO;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ItemLimitDTO;
@@ -128,6 +129,9 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
     }
 
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
+        if(!CommonConstant.LIMIT_BUY_SWITCH){
+            return;
+        }
         List<ItemLimitDTO> itemLimitDTOS;
         Long itemId = (Long)itemEntityVO.get("itemId");
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);

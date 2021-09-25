@@ -44,25 +44,22 @@ public class TodayCrazyLimitService {
         Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
                 .getItemInfoGroupResponseMap();
         ItemGroup itemGroup = new ItemGroup("sm", "B2C");
-        tacLogger.info("limit-1");
-        tacLogger.info("itemGroupItemInfoGroupResponseMap_" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap));
-        tacLogger.info("itemGroupItemInfoGroupResponseMap_1" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(itemGroup)));
-        tacLogger.info("itemGroupItemInfoGroupResponseMap_2" + JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(itemGroup).getValue().values()));
         //captain获取skuId
         List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
                 itemGroup).getValue()
                 .values()), ItemInfoDTO.class);
-        tacLogger.info("limit-1-1");
+        tacLogger.info("限购转换");
+        List<ItemInfoDTO> itemInfoDTOS2 = (List<ItemInfoDTO>) itemGroupItemInfoGroupResponseMap.get(
+                itemGroup).getValue()
+                .values();
+        tacLogger.info("限购转换完成：" + JSON.toJSONString(itemInfoDTOS2));
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
-            tacLogger.info("itemInfoDTO_" + JSON.toJSONString(itemInfoDTO));
-            tacLogger.info("captain_" + JSON.toJSONString(itemInfoDTO.getItemInfos().get("captain")));
             Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
             Map<String, Object> skuMap = Maps.newHashMap();
             skuMap.put("skuId", itemInfoVO.get("skuId") == null ? 0L : itemInfoVO.get("skuId"));
             skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
             return skuMap;
         }).collect(Collectors.toList());
-        tacLogger.info("limit-2");
         Map<String, Object> paramsValue = new HashMap<>(16);
         Map<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("userId", userId);
@@ -77,7 +74,6 @@ public class TodayCrazyLimitService {
             o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramsValue);
             JSONObject jsonObject = (JSONObject) JSON.toJSON(o);
             Boolean success = jsonObject.getBoolean(Constant.SUCCESS);
-            tacLogger.info("limit-3");
             //适配异常情况
             if (success == null) {
                 tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue + "|jsonObject：" + JSON
@@ -92,6 +88,7 @@ public class TodayCrazyLimitService {
                         });
             } else {
                 tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
+                LOGGER.warn(LOG_PREFIX + "限购信息查询结果为空");
                 return null;
             }
         } catch (Exception e) {
@@ -105,7 +102,6 @@ public class TodayCrazyLimitService {
     public Map<Long, List<ItemLimitDTO>> getItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<Long, List<ItemLimitDTO>> limitResult;
         Map<String, Object> param = this.buildGetItemLimitParam(sgFrameworkContextItem);
-        tacLogger.info("limit查询参数构建完成:" + JSON.toJSONString(param));
         limitResult = this.getItemLimitResult(param);
         return limitResult;
     }
