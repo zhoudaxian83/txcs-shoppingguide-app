@@ -62,7 +62,11 @@ public class IconItemFilterSdkExtPt implements ItemFilterSdkExtPt {
             }
         }
 
-        entityVOSgFrameworkResponse.setItemAndContentList(itemAndContentListAfterFilter);
+        if (CollectionUtils.isNotEmpty(itemAndContentListAfterFilter)) {
+            entityVOSgFrameworkResponse.setItemAndContentList(itemAndContentListAfterFilter);
+        } else {
+            entityVOSgFrameworkResponse.setItemAndContentList(itemAndContentListCheckFieldSuccess);
+        }
 
         return entityVOSgFrameworkResponse;
     }
