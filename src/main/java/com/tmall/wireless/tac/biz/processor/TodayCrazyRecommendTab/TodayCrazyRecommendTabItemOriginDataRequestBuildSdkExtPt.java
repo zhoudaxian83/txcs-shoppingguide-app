@@ -12,7 +12,8 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginData
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
-import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.AppIdEnum;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.AppTypeEnum;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
@@ -41,6 +42,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
 
     private RecommendRequest buildTppParam(SgFrameworkContextItem sgFrameworkContextItem) {
         String csa = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "csa", "");
+        String appType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "appType", AppTypeEnum.INDEX_PAGE.getType());
         long userId = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
         long index = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "index", 0L);
         boolean isFirstPage = index == 0;
@@ -63,8 +65,13 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         params.put("itemTairKeys", String.join(",", cacheKeyList));
         params.put("regionCode", regionCode);
         params.put("exposureDataUserId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
-        params.put("appid", String.valueOf(CommonConstant.APP_ID));
-        recommendRequest.setAppId(CommonConstant.APP_ID);
+        if (AppTypeEnum.TAB_PAGE.getType().equals(appType)) {
+            params.put("appid", String.valueOf(AppIdEnum.TAB_APP_ID.getCode()));
+            recommendRequest.setAppId(AppIdEnum.TAB_APP_ID.getCode());
+        } else {
+            params.put("appid", String.valueOf(AppIdEnum.INDEX_APP_ID.getCode()));
+            recommendRequest.setAppId(AppIdEnum.INDEX_APP_ID.getCode());
+        }
         recommendRequest.setUserId(userId);
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
