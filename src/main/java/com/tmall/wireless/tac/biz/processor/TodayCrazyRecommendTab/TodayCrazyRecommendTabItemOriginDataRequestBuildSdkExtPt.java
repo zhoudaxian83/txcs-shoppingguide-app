@@ -109,7 +109,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         } else {
             categoryIds.forEach(categoryId -> {
                 cacheKeyList.add("today_" + categoryId);
-                //cacheKeyList.add("today_algorithm_" + categoryId);
+                cacheKeyList.add("today_algorithm_" + categoryId);
             });
         }
         return cacheKeyList;

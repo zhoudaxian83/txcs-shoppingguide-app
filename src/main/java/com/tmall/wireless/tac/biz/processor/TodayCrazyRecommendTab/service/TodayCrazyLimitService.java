@@ -40,37 +40,25 @@ public class TodayCrazyLimitService {
     TacLogger tacLogger;
 
     private Map<String, Object> buildGetItemLimitParam(SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info("buildGetItemLimitParam-1");
         Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
         Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
                 .getItemInfoGroupResponseMap();
         ItemGroup itemGroup = new ItemGroup("sm", "B2C");
-        tacLogger.info("buildGetItemLimitParam-2");
         //captain获取skuId
         List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
                 itemGroup).getValue()
                 .values()), ItemInfoDTO.class);
-        tacLogger.info("buildGetItemLimitParam-3");
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
             Map<String, Object> skuMap = Maps.newHashMap();
             try {
-                tacLogger.info("buildGetItemLimitParam-4");
-                tacLogger.info("getItemInfos__" + JSON.toJSONString(itemInfoDTO.getItemInfos()));
-                if (itemInfoDTO.getItemInfos().get("captain") == null) {
-                    tacLogger.info("captain获取为空item=" + itemInfoDTO.getItemEntity().getItemId());
-                }
                 Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
-                tacLogger.info("buildGetItemLimitParam-5");
                 skuMap.put("skuId", itemInfoVO.get("skuId") == null ? 0L : itemInfoVO.get("skuId"));
-                tacLogger.info("buildGetItemLimitParam-6");
                 skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
-                tacLogger.info("buildGetItemLimitParam-7");
             } catch (Exception e) {
-                tacLogger.info("异常_" + JSON.toJSONString(e));
+                tacLogger.info("buildGetItemLimitParam参数构建异常,itemId=" + itemInfoDTO.getItemEntity().getItemId() + JSON.toJSONString(e));
             }
             return skuMap;
         }).collect(Collectors.toList());
-        tacLogger.info("buildGetItemLimitParam-8");
         Map<String, Object> paramsValue = new HashMap<>(16);
         Map<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("userId", userId);
