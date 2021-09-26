@@ -26,7 +26,7 @@ public class AliPaySuccessGuessYouLikeContentVoBuildSdkExtPt extends DefaultCont
 
         tacLogger.info("vo解析前信息：" + JSON.toJSONString(sgFrameworkContextContent));
         SgFrameworkResponse<ContentVO> process = super.process(sgFrameworkContextContent);
-        tacLogger.info("vo解析后信息：" + JSON.toJSONString(sgFrameworkContextContent));
+        tacLogger.info("vo解析后信息：" + JSON.toJSONString(process));
         return process;
     }
 }
