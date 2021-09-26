@@ -49,7 +49,8 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         Map<String,Object> contextParamsMap = Optional.of(context).map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams).orElse(Maps.newHashMap());
 
-
+        tacLogger.info("pmt参数：" + JSON.toJSONString(Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getPmtParams)));
         //pmt参数拼接
         String pmtName = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getPmtParams).map(PmtParams::getPmtName).orElse("guessULike");
