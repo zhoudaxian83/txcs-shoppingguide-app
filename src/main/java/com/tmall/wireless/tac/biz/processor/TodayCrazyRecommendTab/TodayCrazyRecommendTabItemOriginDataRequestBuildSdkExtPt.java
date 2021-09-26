@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
-import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -62,10 +61,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         params.put("isFirstPage", String.valueOf(isFirstPage));
         params.put("smAreaId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).map(Objects::toString).orElse("330100"));
 
-        //params.put("itemTairKeys", String.join(",", cacheKeyList));
-        // todo mock
-        params.put("itemTairKeys", String.join(",", cacheKeyList)+",today_24_HD");
-
+        params.put("itemTairKeys", String.join(",", cacheKeyList));
         params.put("regionCode", regionCode);
         params.put("exposureDataUserId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
         params.put("appid", String.valueOf(CommonConstant.APP_ID));
@@ -75,7 +71,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         recommendRequest.setLogResult(true);
         tacLogger.info("recommendRequest_:" + JSON.toJSONString(recommendRequest));
         // todo MOCK
-        recommendRequest = this.mock();
+        //recommendRequest = this.mock();
         return recommendRequest;
     }
 
@@ -110,16 +106,14 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         String shorthand = LogicalArea.parseByCode(addressDTO.getRegionCode()).getShorthand();
         List<String> noFeaturedList = Lists.newArrayList();
         List<String> cacheKeyList = Lists.newArrayList();
-        categoryIds.forEach(categoryId -> {
-            String categoryIdAndShorthand = categoryId + "_" + shorthand;
-            cacheKeyList.add("today_featured_" + categoryIdAndShorthand);
-            cacheKeyList.add("today_algorithm_" + categoryIdAndShorthand);
-            if (TabTypeEnum.OTHER.getType().equals(tabType)) {
-                noFeaturedList.add("today_no_featured_" + categoryIdAndShorthand);
-            }
-        });
-        if (CollectionUtils.isNotEmpty(noFeaturedList)) {
-            cacheKeyList.addAll(noFeaturedList);
+        if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
+            cacheKeyList.addAll(Arrays.asList("today_featured", "today_algorithm"));
+        } else {
+            categoryIds.forEach(categoryId -> {
+                //String categoryIdAndShorthand = categoryId + "_" + shorthand;
+                cacheKeyList.add("today_featured_" + categoryId);
+                noFeaturedList.add("today_algorithm_" + categoryId);
+            });
         }
         return cacheKeyList;
     }
