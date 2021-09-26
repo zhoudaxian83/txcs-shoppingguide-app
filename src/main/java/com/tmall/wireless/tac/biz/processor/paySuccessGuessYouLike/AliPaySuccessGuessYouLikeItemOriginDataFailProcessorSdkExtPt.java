@@ -13,6 +13,7 @@ import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataFailProcessorSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProcessRequest;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
+import com.tmall.txcs.biz.supermarket.extpt.failprocessor.DefaultOriginDataFailProcessorExtPt;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -61,7 +62,11 @@ public class AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt extend
         String sKey = MapUtil.getStringWithDefault(requestParams,"moduleId","");
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair()
                 .getMultiClusterTairManager();
+        tacLogger.info("modelId:" + sKey);
+
         Result<DataEntry> labelSceneResult = multiClusterTairManager.prefixGet(nameSpace,pKey,sKey);
+
+        tacLogger.info("labelSceneResult:" + JSON.toJSONString(labelSceneResult));
         if (labelSceneResult == null){
             HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
                     .kv("AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt","process")
