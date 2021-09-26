@@ -41,7 +41,6 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
         Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> tacResultFlowable = shoppingguideSdkItemService.recommend(context, bizScenario)
                 .map(TacResult::newResult)
                 .map(tacResult -> {
-
                     if (tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null
                             || tacResult.getData().getItemAndContentList().isEmpty()) {
 
@@ -54,7 +53,7 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                                 .kv("tacResult", JSON.toJSONString(tacResult))
                                 .info();
                     } else {
-                        tacResult.getData().getExtInfos().put("ensureData", "false");
+                        tacLogger.info("没进打底");
                     }
                     tacResult.getBackupMetaData().setUseBackup(true);
                     tacLogger.info("tacresult信息：" + JSON.toJSONString(tacResult));
