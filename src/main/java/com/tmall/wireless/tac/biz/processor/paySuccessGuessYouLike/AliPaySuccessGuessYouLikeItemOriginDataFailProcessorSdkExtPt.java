@@ -23,10 +23,10 @@ public class AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt extend
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
 
-        tacLogger.info("进入元数据失败处理扩展点");
+        tacLogger.info("进入元数据失败处理扩展点,处理内容：" + originDataProcessRequest);
         OriginDataDTO<ItemEntity> process = super.process(originDataProcessRequest);
         process.setHasMore(false);
-        tacLogger.info("进入元数据失败处理扩展点");
+        tacLogger.info("进入元数据失败处理扩展点处理结果:" + process);
         return process;
     }
 }
