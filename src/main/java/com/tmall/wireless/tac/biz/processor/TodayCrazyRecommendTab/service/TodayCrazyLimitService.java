@@ -55,6 +55,10 @@ public class TodayCrazyLimitService {
             Map<String, Object> skuMap = Maps.newHashMap();
             try {
                 tacLogger.info("buildGetItemLimitParam-4");
+                tacLogger.info("getItemInfos__" + JSON.toJSONString(itemInfoDTO.getItemInfos()));
+                if (itemInfoDTO.getItemInfos().get("captain") == null) {
+                    tacLogger.info("captain获取为空item=" + itemInfoDTO.getItemEntity().getItemId());
+                }
                 Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
                 tacLogger.info("buildGetItemLimitParam-5");
                 skuMap.put("skuId", itemInfoVO.get("skuId") == null ? 0L : itemInfoVO.get("skuId"));
