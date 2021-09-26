@@ -52,13 +52,21 @@ public class TodayCrazyLimitService {
                 .values()), ItemInfoDTO.class);
         tacLogger.info("buildGetItemLimitParam-3");
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
-            Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
             Map<String, Object> skuMap = Maps.newHashMap();
-            skuMap.put("skuId", itemInfoVO.get("skuId") == null ? 0L : itemInfoVO.get("skuId"));
-            skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
+            try {
+                tacLogger.info("buildGetItemLimitParam-4");
+                Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
+                tacLogger.info("buildGetItemLimitParam-5");
+                skuMap.put("skuId", itemInfoVO.get("skuId") == null ? 0L : itemInfoVO.get("skuId"));
+                tacLogger.info("buildGetItemLimitParam-6");
+                skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
+                tacLogger.info("buildGetItemLimitParam-7");
+            } catch (Exception e) {
+                tacLogger.info("异常_" + JSON.toJSONString(e));
+            }
             return skuMap;
         }).collect(Collectors.toList());
-        tacLogger.info("buildGetItemLimitParam-4");
+        tacLogger.info("buildGetItemLimitParam-8");
         Map<String, Object> paramsValue = new HashMap<>(16);
         Map<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("userId", userId);
@@ -68,7 +76,6 @@ public class TodayCrazyLimitService {
     }
 
     private Map<Long, List<ItemLimitDTO>> getItemLimitResult(Map<String, Object> paramsValue) {
-        tacLogger.info("buildGetItemLimitParam-5");
         Object o;
         try {
             o = rpcSpi.invokeHsf(Constant.TODAY_CRAZY_LIMIT, paramsValue);
