@@ -102,19 +102,4 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
                                 new Style("12", "#111111", "true")))));
         });
     }
-
-    @Override
-    public DetailRecommendItemVO convertToItem(String scene, ItemEntityVO itemInfoBySourceCaptainDTO, int index) {
-        DetailRecommendItemVO detailRecommendItemVO = super.convertToItem(scene, itemInfoBySourceCaptainDTO, index);
-
-        if (!CollectionUtils.isEmpty(detailRecommendItemVO.getPromotionAtmosphereList())) {
-
-                if (detailRecommendItemVO.getPromotionAtmosphereList().get(0).getText().contains("满")) {
-                    detailRecommendItemVO.getPromotionAtmosphereList().get(0)
-                        .setTitle("券");
-                }
-            }
-
-        return detailRecommendItemVO;
-    }
 }
