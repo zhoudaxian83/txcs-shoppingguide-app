@@ -104,15 +104,14 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
      */
     private List<String> buildCacheKeyList(List<String> categoryIds, String tabType, AddressDTO addressDTO) {
         String shorthand = LogicalArea.parseByCode(addressDTO.getRegionCode()).getShorthand();
-        List<String> noFeaturedList = Lists.newArrayList();
         List<String> cacheKeyList = Lists.newArrayList();
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             cacheKeyList.addAll(Arrays.asList("today_featured", "today_algorithm"));
         } else {
             categoryIds.forEach(categoryId -> {
                 //String categoryIdAndShorthand = categoryId + "_" + shorthand;
-                cacheKeyList.add("today_featured_" + categoryId);
-                noFeaturedList.add("today_algorithm_" + categoryId);
+                cacheKeyList.add("today_" + categoryId);
+                cacheKeyList.add("today_algorithm_" + categoryId);
             });
         }
         return cacheKeyList;
