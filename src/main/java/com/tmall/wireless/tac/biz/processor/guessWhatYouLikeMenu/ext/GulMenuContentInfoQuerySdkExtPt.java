@@ -116,10 +116,7 @@ public class GulMenuContentInfoQuerySdkExtPt extends Register implements Content
                 for (FrontBackMapEnum frontBackMapEnum : FrontBackMapEnum.values()) {
                     contentInfo.put(frontBackMapEnum.getFront(), tairPropertyMap.get(frontBackMapEnum.getBack()));
                 }
-                /**
-                 * 视频链接点击增加埋点
-                 */
-                contentInfo.put("contentVideoUrl", tairPropertyMap.get("mediaUrl") + "&scm=" + contentInfo.get("scm"));
+
                 /**内容类型*/
                 String type = SceneType.of(tairSceneDTO.getType()).name();
                 String marketChannel = GcsMarketChannel.of(tairSceneDTO.getMarketChannel()).name();
