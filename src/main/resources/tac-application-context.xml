@@ -166,5 +166,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike.AliPaySuccessGuessYouLikeItemOriginDataSuccessProcessorSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike.AliPaySuccessGuessYouLikeItemOriginDataResponseConvertSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike.AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike.AliPaySuccessGuessYouLikeContentVoBuildSdkExtPt"/>
 
 </beans>
