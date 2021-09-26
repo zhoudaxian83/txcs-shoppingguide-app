@@ -55,9 +55,6 @@ public class ItemGmvServiceImpl implements ItemGmvService {
         List<GmvEntity> last1HourGmvEntityList = supermarketHallIGraphSearchService.search("TPP_tmall_smtmcs_item_gmv_current_time_1h", keyList, fields, 1, handler);
         logger.info("ItemGmvServiceImpl_queryGmv_last1HourGmvEntityList: " + JSON.toJSONString(last1HourGmvEntityList));
 
-        List<GmvEntity> todayGmvEntityList = supermarketHallIGraphSearchService.search("TPP_tmall_sm_tmcs_item_gmv_current_time_accum", keyList, fields, 1, handler);
-        logger.info("ItemGmvServiceImpl_queryGmv_todayGmvEntityList: " + JSON.toJSONString(todayGmvEntityList));
-
-        return ItemGmvGroupMap.valueOf(itemConfigGroups, last7DayGmvEntityList, last1HourGmvEntityList, todayGmvEntityList, days);
+        return ItemGmvGroupMap.valueOf(itemConfigGroups, last7DayGmvEntityList, last1HourGmvEntityList, days);
     }
 }

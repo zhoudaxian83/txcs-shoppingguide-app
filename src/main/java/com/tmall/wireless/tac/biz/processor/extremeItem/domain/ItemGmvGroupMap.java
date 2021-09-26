@@ -25,12 +25,12 @@ public class ItemGmvGroupMap {
 
     private static Set<String> lastNDaysDateSet = new CopyOnWriteArraySet<>();
 
-    public static ItemGmvGroupMap valueOf(ItemConfigGroups itemConfigGroups, List<GmvEntity> last7DayGmvEntityList, List<GmvEntity> last1HourGmvEntityList, List<GmvEntity> todayGmvEntityList, int days) {
+    public static ItemGmvGroupMap valueOf(ItemConfigGroups itemConfigGroups, List<GmvEntity> lastNDayGmvEntityList, List<GmvEntity> last1HourGmvEntityList, int days) {
         Set<String> lastNDaysDateSet = loadLastNDaysDateSet(days);
         ItemGmvGroupMap itemGmvGroupMap = new ItemGmvGroupMap();
         itemGmvGroupMap.innerItemGmvGroupMap = new HashMap<>();
 
-        Map<Long, Double[]> lastNDayGmvEntityMap = last7DayGmvEntityList.stream()
+        Map<Long, Double[]> lastNDayGmvEntityMap = lastNDayGmvEntityList.stream()
                 .collect(Collectors.groupingBy(e -> e.getItemId()))
                 .entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().stream()
@@ -40,8 +40,6 @@ public class ItemGmvGroupMap {
         logger.info("ItemGmvGroupMap_valueOf_lastNDayGmvEntityMap: " + JSON.toJSONString(lastNDayGmvEntityMap));
         Map<Long, Double> last1HourGmvEntityMap = last1HourGmvEntityList.stream().collect(Collectors.toMap(e -> e.getItemId(), e -> e.getGmv()));
         logger.info("ItemGmvGroupMap_valueOf_last1HourGmvEntityMap: " + JSON.toJSONString(last1HourGmvEntityMap));
-        Map<Long, Double> todayGmvEntityMap = todayGmvEntityList.stream().collect(Collectors.toMap(e -> e.getItemId(), e -> e.getGmv()));
-        logger.info("ItemGmvGroupMap_valueOf_todayGmvEntityMap: " + JSON.toJSONString(todayGmvEntityMap));
 
         for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroupList()) {
             ItemGmvGroup itemGmvGroup = new ItemGmvGroup();
