@@ -56,10 +56,6 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
                     return;
                 }
 
-                /**
-                 * 视频链接点击增加埋点
-                 */
-                contentVO.put("contentVideoUrl", contentVO.getString("contentVideoUrl") + "&scm=" + contentVO.getString("scm"));
                 // 库存过滤
                 for (ItemEntityVO item : items) {
                     if (canBuy(item, sgFrameworkContextContent, contentId)) {
