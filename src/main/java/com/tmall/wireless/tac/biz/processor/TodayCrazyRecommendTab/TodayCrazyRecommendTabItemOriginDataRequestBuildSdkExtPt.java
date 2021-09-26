@@ -57,7 +57,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         //根据类别id构建参数
         RecommendRequest recommendRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
-        params.put("pageSize", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getPageSize).map(Objects::toString).orElse("20"));
+        params.put("pageSize", MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "pageSize", "20"));
         params.put("isFirstPage", String.valueOf(isFirstPage));
         params.put("smAreaId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).map(Objects::toString).orElse("330100"));
         params.put("itemTairKeys", String.join(",", cacheKeyList));
@@ -108,7 +108,6 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
             cacheKeyList.addAll(Arrays.asList("today_featured", "today_algorithm"));
         } else {
             categoryIds.forEach(categoryId -> {
-                //String categoryIdAndShorthand = categoryId + "_" + shorthand;
                 cacheKeyList.add("today_" + categoryId);
                 //cacheKeyList.add("today_algorithm_" + categoryId);
             });
