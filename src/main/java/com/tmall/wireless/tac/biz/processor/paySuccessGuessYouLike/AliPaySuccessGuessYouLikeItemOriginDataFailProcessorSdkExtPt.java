@@ -34,64 +34,66 @@ import java.util.stream.Collectors;
 public class AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt extends
         DefaultItemOriginDataFailProcessorSdkExtPt implements ItemOriginDataFailProcessorSdkExtPt {
 
-    Logger LOGGER = LoggerFactory.getLogger(AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt.class);
-
     @Autowired
     TairFactorySpi tairFactorySpi;
 
     private static final int nameSpace = 184;
-    /**场景商品兜底缓存前缀**/
-    private static final String pKey = "txcs_scene_item_collection_v1";
-    /**打底商品最大数量**/
+    /**
+     * 打底商品最大数量
+     **/
     private static final int needSize = 50;
     @Autowired
     TacLoggerImpl tacLogger;
+
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
+
+        tacLogger.info("元数据处理失败扩展点OriginDataProcessRequest:" + JSON.toJSONString(originDataProcessRequest));
         Map<String, Object> requestParams = originDataProcessRequest.getSgFrameworkContextItem().getRequestParams();
         OriginDataDTO<ItemEntity> originDataDTO = originDataProcessRequest.getItemEntityOriginDataDTO();
         boolean isSuccess = checkSuccess(originDataDTO);
         HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
-                .kv("AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt","process")
-                .kv("isSuccess",String.valueOf(isSuccess))
+                .kv("AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt", "process")
+                .kv("isSuccess", String.valueOf(isSuccess))
                 .info();
-        if(isSuccess){
+        if (isSuccess) {
             tacLogger.info("元数据处理失败扩展点返回成功");
             return originDataDTO;
         }
-        String sKey = MapUtil.getStringWithDefault(requestParams,"moduleId","");
+        String sKey = MapUtil.getStringWithDefault(requestParams, "moduleId", "153");
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair()
                 .getMultiClusterTairManager();
         tacLogger.info("modelId:" + sKey);
 
-        Result<DataEntry> labelSceneResult = multiClusterTairManager.prefixGet(nameSpace,pKey,sKey);
+        Result<DataEntry> labelSceneResult = multiClusterTairManager.prefixGet(nameSpace,
+                ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE, sKey);
 
         tacLogger.info("labelSceneResult:" + JSON.toJSONString(labelSceneResult));
-        if (labelSceneResult == null){
+        if (labelSceneResult == null) {
             HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
-                    .kv("AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt","process")
+                    .kv("AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt", "process")
                     .kv("labelSceneResult", "tair打底数据获取失败")
                     .info();
             tacLogger.info("元数据处理失败扩展点tair打底数据获取失败");
             return originDataDTO;
         }
-        if(!labelSceneResult.isSuccess() || labelSceneResult.getValue() == null || labelSceneResult.getValue()
-                .getValue() == null){
+        if (!labelSceneResult.isSuccess() || labelSceneResult.getValue() == null || labelSceneResult.getValue()
+                .getValue() == null) {
             HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
-                    .kv("AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt","process")
+                    .kv("AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt", "process")
                     .kv("labelSceneResult", JSON.toJSONString(labelSceneResult))
                     .info();
             tacLogger.info("元数据处理失败扩展点tair打底数据获取成功");
             return originDataDTO;
         }
-        List<Long> itemIdList  = (List<Long>)(labelSceneResult.getValue().getValue());
-        if(CollectionUtils.isEmpty(itemIdList)){
+        List<Long> itemIdList = (List<Long>) (labelSceneResult.getValue().getValue());
+        if (CollectionUtils.isEmpty(itemIdList)) {
             return originDataDTO;
         }
-        OriginDataDTO<ItemEntity> baseOriginDataDTO = buildOriginDataDTO(itemIdList,originDataProcessRequest
+        OriginDataDTO<ItemEntity> baseOriginDataDTO = buildOriginDataDTO(itemIdList, originDataProcessRequest
                 .getSgFrameworkContextItem());
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
-                .kv("AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt","process")
+                .kv("AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt", "process")
                 .kv("baseOriginDataDTO.getResult().size()", String.valueOf(baseOriginDataDTO.getResult().size()))
                 .info();
         tacLogger.info("元数据处理失败扩展点tair打底数据获取最终");
@@ -104,7 +106,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt extend
 //        return process;
     }
 
-    public OriginDataDTO<ItemEntity> buildOriginDataDTO(List<Long> itemIdList,SgFrameworkContextItem contextItem){
+    public OriginDataDTO<ItemEntity> buildOriginDataDTO(List<Long> itemIdList, SgFrameworkContextItem contextItem) {
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         boolean isO2oScene = isO2oScene(contextItem);
 
@@ -133,9 +135,9 @@ public class AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt extend
             itemEntity.setO2oType(o2oType);
             return itemEntity;
         }).collect(Collectors.toList());
-        if(itemEntitys.size() > needSize){
-            originDataDTO.setResult(itemEntitys.subList(0,needSize));
-        }else{
+        if (itemEntitys.size() > needSize) {
+            originDataDTO.setResult(itemEntitys.subList(0, needSize));
+        } else {
             originDataDTO.setResult(itemEntitys);
         }
         originDataDTO.setIndex(0);
@@ -144,10 +146,12 @@ public class AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt extend
         originDataDTO.setScm("1007.0.0.0");
         return originDataDTO;
     }
-    public boolean checkSuccess(OriginDataDTO<ItemEntity> originDataDTO){
+
+    public boolean checkSuccess(OriginDataDTO<ItemEntity> originDataDTO) {
 
         return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult());
     }
+
     private boolean isOneHour(SgFrameworkContextItem contextItem) {
         Long oneHourStore = Optional.of(contextItem).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
