@@ -60,7 +60,6 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         params.put("pageSize", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getPageSize).map(Objects::toString).orElse("20"));
         params.put("isFirstPage", String.valueOf(isFirstPage));
         params.put("smAreaId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).map(Objects::toString).orElse("330100"));
-
         params.put("itemTairKeys", String.join(",", cacheKeyList));
         params.put("regionCode", regionCode);
         params.put("exposureDataUserId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
@@ -111,7 +110,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
             categoryIds.forEach(categoryId -> {
                 //String categoryIdAndShorthand = categoryId + "_" + shorthand;
                 cacheKeyList.add("today_" + categoryId);
-                cacheKeyList.add("today_algorithm_" + categoryId);
+                //cacheKeyList.add("today_algorithm_" + categoryId);
             });
         }
         return cacheKeyList;
