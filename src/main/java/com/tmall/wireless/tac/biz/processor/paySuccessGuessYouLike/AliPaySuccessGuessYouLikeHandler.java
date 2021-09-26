@@ -55,7 +55,7 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                         tacResult.setHasMore(false);
                     } else {
                         tacLogger.info("没进打底");
-                        tacResult.setHasMore(false);
+                        tacResult.setHasMore(true);
                     }
                     tacResult.getBackupMetaData().setUseBackup(true);
                     tacLogger.info("tacresult信息：" + JSON.toJSONString(tacResult));
