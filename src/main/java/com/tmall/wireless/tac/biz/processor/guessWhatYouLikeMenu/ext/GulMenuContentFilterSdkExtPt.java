@@ -48,7 +48,11 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
                 Long contentId = contentVO.getLong("contentId");
                 List<ItemEntityVO> canBuyItemList = Lists.newArrayList();
                 List<ItemEntityVO> items = (List<ItemEntityVO>)contentVO.get("items");
-                if (CollectionUtils.isEmpty(items)) {
+                if (CollectionUtils.isEmpty(items) || StringUtils.isEmpty(contentVO.getString("contentVideoUrl"))) {
+                    HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
+                            .kv("GulMenuContentFilterSdkExtPt","executeFlowable")
+                            .kv("NOT_VIDEO_MENU", "contentId: " + contentId)
+                            .error();
                     return;
                 }
                 // 库存过滤
