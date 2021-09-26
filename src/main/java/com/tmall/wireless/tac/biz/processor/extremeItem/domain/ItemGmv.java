@@ -8,25 +8,16 @@ import java.util.Arrays;
 public class ItemGmv {
     private Long itemId;
     /**
-     * 前7天GMV
+     * 前N天GMV,包含当天到当前时间
      */
-    private Double[] last7DaysGmv;
-    /**
-     * 当天0点到当前时刻GMV
-     */
-    private Double todayGmv;
+    private Double[] lastNDaysGmv;
     /**
      * 前1个小时的GMV
      */
     private Double last1HourGmv;
 
-    public double raceValue() {
-        double last7DaysGmvSum = Arrays.stream(last7DaysGmv).mapToDouble(d -> d).sum();
-        return last7DaysGmvSum + 0.5 * todayGmv + 0.5 * last1HourGmv;
-    }
-
     public double lastNDaysGmvSum() {
-        return Arrays.stream(last7DaysGmv).mapToDouble(d -> d).sum();
+        return Arrays.stream(lastNDaysGmv).mapToDouble(d -> d).sum();
     }
 
     public double last1HourGmv() {

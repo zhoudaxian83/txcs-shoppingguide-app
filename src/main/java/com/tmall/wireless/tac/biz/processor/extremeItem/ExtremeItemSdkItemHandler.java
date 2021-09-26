@@ -89,7 +89,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             logger.warn("==========itemDTOs: " + JSON.toJSONString(itemDTOMap));
 
             //进行组间排序
-            groupSortDomainService.groupSort(itemConfigGroups, itemIds);
+            groupSortDomainService.groupSort(itemConfigGroups, itemIds, supermarketHallContext);
             tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
             //itemGmvService.queryGmv(itemConfigGroups, itemIds);
 

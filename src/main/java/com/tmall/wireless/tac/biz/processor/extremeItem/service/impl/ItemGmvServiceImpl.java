@@ -29,7 +29,7 @@ public class ItemGmvServiceImpl implements ItemGmvService {
     TacLogger tacLogger;
 
     @Override
-    public ItemGmvGroupMap queryGmv(ItemConfigGroups itemConfigGroups, List<Long> itemIdList) {
+    public ItemGmvGroupMap queryGmv(ItemConfigGroups itemConfigGroups, List<Long> itemIdList, int days) {
 
         IGraphResponseHandler<GmvEntity> handler = singleQueryResult -> {
             List<GmvEntity> result = new ArrayList<>();
@@ -58,6 +58,6 @@ public class ItemGmvServiceImpl implements ItemGmvService {
         List<GmvEntity> todayGmvEntityList = supermarketHallIGraphSearchService.search("TPP_tmall_sm_tmcs_item_gmv_current_time_accum", keyList, fields, 1, handler);
         logger.info("ItemGmvServiceImpl_queryGmv_todayGmvEntityList: " + JSON.toJSONString(todayGmvEntityList));
 
-        return ItemGmvGroupMap.valueOf(itemConfigGroups, last7DayGmvEntityList, last1HourGmvEntityList, todayGmvEntityList);
+        return ItemGmvGroupMap.valueOf(itemConfigGroups, last7DayGmvEntityList, last1HourGmvEntityList, todayGmvEntityList, days);
     }
 }

@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem.domain.service;
 
 import com.alibaba.fastjson.JSON;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroups;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemGmvGroupMap;
 import com.tmall.wireless.tac.biz.processor.extremeItem.service.ItemGmvService;
@@ -23,18 +24,19 @@ public class GroupSortDomainService {
      *
      * @param itemConfigGroups
      */
-    public void groupSort(ItemConfigGroups itemConfigGroups, List<Long> itemIds) {
+    public void groupSort(ItemConfigGroups itemConfigGroups, List<Long> itemIds, SupermarketHallContext supermarketHallContext) {
         if(itemConfigGroups.forceSort()) {
             itemConfigGroups.sortGroup();
             logger.info("GroupSortDomainService_groupSort_itemConfigGroups_forceSort: " + JSON.toJSONString(itemConfigGroups));
             return;
         }
-        raceSort(itemConfigGroups, itemIds);
+        int days = supermarketHallContext.getTacParamsMap().getIntValue("gmvDays");
+        raceSort(itemConfigGroups, itemIds, days);
         logger.info("GroupSortDomainService_groupSort_itemConfigGroups_raceSort: " + JSON.toJSONString(itemConfigGroups));
     }
 
-    private void raceSort(ItemConfigGroups itemConfigGroups, List<Long> itemIds) {
-        ItemGmvGroupMap itemGmvGroupMap = itemGmvService.queryGmv(itemConfigGroups, itemIds);
+    private void raceSort(ItemConfigGroups itemConfigGroups, List<Long> itemIds, int days) {
+        ItemGmvGroupMap itemGmvGroupMap = itemGmvService.queryGmv(itemConfigGroups, itemIds, days);
         itemConfigGroups.sortGroup(itemGmvGroupMap);
     }
 }

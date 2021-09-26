@@ -10,13 +10,6 @@ public class ItemGmvGroup {
     private Integer groupNo;
     private List<ItemGmv> itemGmvList;
 
-    public double ranceValue() {
-        if(CollectionUtils.isEmpty(itemGmvList)) {
-            return 0;
-        }
-        return itemGmvList.stream().mapToDouble(ItemGmv::raceValue).sum();
-    }
-
     public double lastNDaysGmvSum() {
         if(CollectionUtils.isEmpty(itemGmvList)) {
             return 0;
