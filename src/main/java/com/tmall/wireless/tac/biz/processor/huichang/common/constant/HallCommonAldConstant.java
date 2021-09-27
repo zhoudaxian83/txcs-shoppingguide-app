@@ -41,6 +41,7 @@ public class HallCommonAldConstant {
     public static final String LOC_TYPE = "locType";
     public static final String PAGE_SIZE = "pageSize";
     public static final String PAGE_INDEX = "pageIndex";
+    public static final String ITEM_SET_ID = "itemSetId";
 
     //-----------------aldParams end--------------------
 
