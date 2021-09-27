@@ -2,7 +2,6 @@ package com.tmall.wireless.tac.biz.processor.extremeItem.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.taobao.igraph.client.model.MatchRecord;
-import com.taobao.igraph.client.model.SingleQueryResult;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.IGraphResponseHandler;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallIGraphSearchService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroups;
@@ -49,12 +48,16 @@ public class ItemGmvServiceImpl implements ItemGmvService {
         };
         List<String> keyList = itemIdList.stream().map(id -> String.valueOf(id)).collect(Collectors.toList());
         String[] fields = new String[]{"gmv", "item_id", "window_start", "window_end"};
-        List<GmvEntity> last7DayGmvEntityList = supermarketHallIGraphSearchService.search("TPP_tmall_sm_tmcs_item_gmv_history", keyList, fields, 12, handler);
-        logger.info("ItemGmvServiceImpl_queryGmv_last7DayGmvEntityList: " + JSON.toJSONString(last7DayGmvEntityList));
+        List<GmvEntity> lastNDayGmvEntityList = getNDaysGmv(handler, keyList, fields, "TPP_tmall_sm_tmcs_item_gmv_history", 12);
+        logger.info("ItemGmvServiceImpl_queryGmv_lastNDayGmvEntityList: " + JSON.toJSONString(lastNDayGmvEntityList));
 
         List<GmvEntity> last1HourGmvEntityList = supermarketHallIGraphSearchService.search("TPP_tmall_smtmcs_item_gmv_current_time_1h", keyList, fields, 1, handler);
         logger.info("ItemGmvServiceImpl_queryGmv_last1HourGmvEntityList: " + JSON.toJSONString(last1HourGmvEntityList));
 
-        return ItemGmvGroupMap.valueOf(itemConfigGroups, last7DayGmvEntityList, last1HourGmvEntityList, days);
+        return ItemGmvGroupMap.valueOf(itemConfigGroups, lastNDayGmvEntityList, last1HourGmvEntityList, days);
+    }
+
+    private List<GmvEntity> getNDaysGmv(IGraphResponseHandler<GmvEntity> handler, List<String> keyList, String[] fields, String iGraphTable, int perKeySize) {
+        return supermarketHallIGraphSearchService.search(iGraphTable, keyList, fields, perKeySize, handler);
     }
 }

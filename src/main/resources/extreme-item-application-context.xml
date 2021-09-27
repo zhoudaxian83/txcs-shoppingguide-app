@@ -15,10 +15,17 @@
     <bean id="builder" class="com.taobao.igraph.client.core.IGraphClientBuilder">
         <property name="maxConnTotal" value="2000"></property>
         <property name="maxConnPerRoute" value="8"></property>
-        <property name="socketTimeout" value="100"></property>
-        <property name="connectTimeout" value="100"></property>
-        <property name="connectionRequestTimeout" value="100"></property>
+        <property name="socketTimeout" value="1000"></property>
+        <property name="connectTimeout" value="1000"></property>
+        <property name="connectionRequestTimeout" value="1000"></property>
         <property name="searchCluster" value="DEFAULT"></property>
         <property name="updateCluster" value="DEFAULT"></property>
+    </bean>
+
+    <!-- 打底数据tair -->
+    <bean id="bottomTairLdbManager2" class="com.taobao.tair.impl.mc.MultiClusterTairManager" init-method="init">
+        <property name='userName'>
+            <value>d25d96066001464b</value>
+        </property>
     </bean>
 </beans>

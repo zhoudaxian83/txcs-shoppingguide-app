@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.extremeItem;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
@@ -23,6 +24,7 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -30,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,6 +48,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
     Logger logger = LoggerFactory.getLogger(ExtremeItemSdkItemHandler.class);
 
+    public static final int ASG_NAMESPACE = 625;
     private static final Integer tenThousand = 10000;
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
@@ -62,6 +66,9 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     SupermarketHallIGraphSearchService supermarketHallIGraphSearchService;
     @Autowired
     ItemGmvService itemGmvService;
+
+    @Resource(name = "bottomTairLdbManager2")
+    private MultiClusterTairManager bottomTairLdbManager2;
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
@@ -94,17 +101,19 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             //itemGmvService.queryGmv(itemConfigGroups, itemIds);
 
             //构建"商品->是否售光"Map，供组内选品时库存过滤使用
-            Map<Long, Boolean> inventoryMap = itemDTOMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().isSoldout()));
-            tacLogger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
-            logger.info("==========inventoryMap: " + JSON.toJSONString(inventoryMap));
+            Map<Long, Boolean> itemSoldOutMap = itemDTOMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().isSoldout()));
+            tacLogger.info("==========itemSoldOutMap: " + JSON.toJSONString(itemSoldOutMap));
+            logger.info("==========itemSoldOutMap: " + JSON.toJSONString(itemSoldOutMap));
 
             //组内曝光比例选品
-            Map<Integer, ItemConfig> afterPickGroupMap = itemPickService.pickItems(itemConfigGroups, inventoryMap);
+            Map<Integer, ItemConfig> afterPickGroupMap = itemPickService.pickItems(itemConfigGroups, itemSoldOutMap);
             tacLogger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
             logger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
 
             //构建响应对象
-            List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, inventoryMap);
+            List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
+
+            bottomTairLdbManager2.put(ASG_NAMESPACE, "extrem_item_" + supermarketHallContext.getCurrentResourceId(), JSON.toJSONString(generalItems), 0,30 * 60);
 
             logger.warn("=========generalItems:" + JSON.toJSONString(generalItems));
             return Flowable.just(TacResult.newResult(generalItems));
@@ -116,11 +125,11 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         return Flowable.just(TacResult.newResult(new ArrayList<>()));
     }
 
-    private List<GeneralItem> buildResult(ItemConfigGroups itemConfigGroups, Map<Integer, ItemConfig> afterPickGroupMap, Map<Long, ItemDTO> longItemDTOMap, Map<Long, Boolean> inventoryMap) {
+    private List<GeneralItem> buildResult(ItemConfigGroups itemConfigGroups, Map<Integer, ItemConfig> afterPickGroupMap, Map<Long, ItemDTO> longItemDTOMap, Map<Long, Boolean> itemSoldOutMap) {
         List<GeneralItem> result = new ArrayList<>();
         List<ItemConfigGroup> bottomItems = new ArrayList<>();
         for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroupList()) {
-            if(afterPickGroupMap.get(itemConfigGroup.getGroupNo()) != null && inventoryMap.get(afterPickGroupMap.get(itemConfigGroup.getGroupNo()).getItemId())) {
+            if(afterPickGroupMap.get(itemConfigGroup.getGroupNo()) != null && itemSoldOutMap.get(afterPickGroupMap.get(itemConfigGroup.getGroupNo()).getItemId())) {
                 bottomItems.add(itemConfigGroup);
             } else {
                 result.add(buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap));

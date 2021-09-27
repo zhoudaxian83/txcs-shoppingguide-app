@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -38,7 +39,8 @@ public class ItemGmvGroupMap {
                         .map(item -> item.getGmv()).toArray(Double[]::new)));
 
         logger.info("ItemGmvGroupMap_valueOf_lastNDayGmvEntityMap: " + JSON.toJSONString(lastNDayGmvEntityMap));
-        Map<Long, Double> last1HourGmvEntityMap = last1HourGmvEntityList.stream().collect(Collectors.toMap(e -> e.getItemId(), e -> e.getGmv()));
+        String currentYMDH = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH"));
+        Map<Long, Double> last1HourGmvEntityMap = last1HourGmvEntityList.stream().filter(e->e.getWindowEnd().startsWith(currentYMDH)).collect(Collectors.toMap(e -> e.getItemId(), e -> e.getGmv()));
         logger.info("ItemGmvGroupMap_valueOf_last1HourGmvEntityMap: " + JSON.toJSONString(last1HourGmvEntityMap));
 
         for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroupList()) {
@@ -127,6 +129,12 @@ public class ItemGmvGroupMap {
         System.out.println("args = " + loadLastNDaysDateSet(6));
         System.out.println("args = " + loadLastNDaysDateSet(7));
         System.out.println("args = " + loadLastNDaysDateSet(8));
+        System.out.println("getYMDH() = " + getYMDH());
+    }
+
+    public static String getYMDH() {
+        String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH"));
+        return format;
     }
 
 }

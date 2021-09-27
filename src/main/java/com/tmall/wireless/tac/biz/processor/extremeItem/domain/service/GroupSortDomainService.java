@@ -35,6 +35,13 @@ public class GroupSortDomainService {
         logger.info("GroupSortDomainService_groupSort_itemConfigGroups_raceSort: " + JSON.toJSONString(itemConfigGroups));
     }
 
+    /**
+     * 赛马排序
+     *
+     * @param itemConfigGroups
+     * @param itemIds
+     * @param days
+     */
     private void raceSort(ItemConfigGroups itemConfigGroups, List<Long> itemIds, int days) {
         ItemGmvGroupMap itemGmvGroupMap = itemGmvService.queryGmv(itemConfigGroups, itemIds, days);
         itemConfigGroups.sortGroup(itemGmvGroupMap);

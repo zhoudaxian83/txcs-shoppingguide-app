@@ -12,8 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-import static com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant.SM_AREAID;
-import static com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant.STATIC_SCHEDULE_DATA;
+import static com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant.*;
 
 @Data
 public class SupermarketHallContext {
@@ -22,6 +21,7 @@ public class SupermarketHallContext {
     private Long userId;
     private String userNick;
     private String smAreaId;
+    private String currentResourceId;
     /**
      * 运营手工配置的数据
      */
@@ -48,6 +48,9 @@ public class SupermarketHallContext {
             String smAreaId = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "330100");
             supermarketHallContext.setSmAreaId(smAreaId);
         }
+
+        //初始化当前资源位ID
+        supermarketHallContext.setCurrentResourceId((String)requestContext4Ald.getAldContext().get(ALD_CURRENT_RES_ID));
 
         //初始化tac参数
         String tacParams = MapUtil.getStringWithDefault(requestContext4Ald.getAldParam(), "tacParams", "");

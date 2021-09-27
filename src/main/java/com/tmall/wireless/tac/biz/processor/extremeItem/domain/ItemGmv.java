@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.extremeItem.domain;
 import lombok.Data;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 @Data
 public class ItemGmv {
@@ -17,10 +18,13 @@ public class ItemGmv {
     private Double last1HourGmv;
 
     public double lastNDaysGmvSum() {
-        return Arrays.stream(lastNDaysGmv).mapToDouble(d -> d).sum();
+        return Arrays.stream(lastNDaysGmv).filter(Objects::nonNull).mapToDouble(d -> d).sum();
     }
 
     public double last1HourGmv() {
+        if(this.last1HourGmv == null) {
+            return 0;
+        }
         return this.last1HourGmv;
     }
 }
