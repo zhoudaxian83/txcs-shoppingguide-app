@@ -8,6 +8,7 @@ import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
+import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallIGraphSearchService;
@@ -67,6 +68,9 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Autowired
     ItemGmvService itemGmvService;
 
+    @Autowired
+    TairFactorySpi tairFactorySpi;
+
     /*@Autowired
     private MultiClusterTairManager bottomTairLdbManager2;*/
 
@@ -114,7 +118,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
 
             //bottomTairLdbManager2.put(ASG_NAMESPACE, "extrem_item_" + supermarketHallContext.getCurrentResourceId(), JSON.toJSONString(generalItems), 0,30 * 60);
-
+            tairFactorySpi.getDefaultTair().getMultiClusterTairManager().put(ASG_NAMESPACE, "extrem_item_" + supermarketHallContext.getCurrentResourceId(), JSON.toJSONString(generalItems), 0,30 * 60);
             logger.warn("=========generalItems:" + JSON.toJSONString(generalItems));
             return Flowable.just(TacResult.newResult(generalItems));
 
