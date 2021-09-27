@@ -31,7 +31,6 @@ public class TodayCrazyRecommendTabSdkItemHandler extends RpmReactiveHandler<SgF
 
     @Override
     public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
-
         BizScenario b = BizScenario.valueOf(
                 ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
@@ -49,6 +48,8 @@ public class TodayCrazyRecommendTabSdkItemHandler extends RpmReactiveHandler<SgF
                                 .kv("shoppingguideSdkItemService", "recommend")
                                 .kv("tacResult", JSON.toJSONString(tacResult))
                                 .info();
+                    } else {
+                        tacResult.setHasMore(tacResult.getData().isHasMore());
                     }
                     tacResult.getBackupMetaData().setUseBackup(true);
                     return tacResult;
