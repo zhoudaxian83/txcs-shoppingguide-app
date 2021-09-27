@@ -56,6 +56,7 @@ public class TodayCrazyLimitService {
                 skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
             } catch (Exception e) {
                 tacLogger.info("buildGetItemLimitParam参数构建异常,itemId=" + itemInfoDTO.getItemEntity().getItemId() + JSON.toJSONString(e));
+                LOGGER.info("buildGetItemLimitParam参数构建异常,itemId=" + itemInfoDTO.getItemEntity().getItemId() + JSON.toJSONString(e));
             }
             return skuMap;
         }).collect(Collectors.toList());
@@ -77,7 +78,8 @@ public class TodayCrazyLimitService {
             if (success == null) {
                 tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue + "|jsonObject：" + JSON
                         .toJSONString(jsonObject));
-                LOGGER.error("限购接口RPC调用返回异常");
+                LOGGER.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue + "|jsonObject：" + JSON
+                        .toJSONString(jsonObject));
                 return null;
             }
             if (success) {

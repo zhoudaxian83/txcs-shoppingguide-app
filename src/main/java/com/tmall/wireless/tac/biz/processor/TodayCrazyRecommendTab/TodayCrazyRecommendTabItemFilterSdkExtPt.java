@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -9,7 +8,6 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemFilterSdkExtPt
 import com.tmall.tcls.gs.sdk.framework.model.ErrorCode;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
-import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.ItemLimitDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -35,7 +33,7 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
     @Autowired
     TacLoggerImpl tacLogger;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingguideSdkItemService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TodayCrazyRecommendTabItemFilterSdkExtPt.class);
     public static final List<String> CHECK_FIELD = Lists.newArrayList(
             "itemImg"
     );
@@ -56,6 +54,7 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
         for (ItemEntityVO entityVO : itemAndContentList) {
             if (entityVO != null) {
                 if (!this.canBuy(entityVO) || !this.noLimitBuy(entityVO)) {
+                    tacLogger.info("被过滤数据："+entityVO.getString("itemId"));
                     LOGGER.error("itemFilter,{}, itemId:{}", ErrorCode.ITEM_FILTER_BY_CAN_BUY, entityVO.getString("itemId"));
                 } else {
                     if (checkField(entityVO)) {

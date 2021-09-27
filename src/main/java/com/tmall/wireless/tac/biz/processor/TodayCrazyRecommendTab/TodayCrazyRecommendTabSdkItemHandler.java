@@ -37,14 +37,13 @@ public class TodayCrazyRecommendTabSdkItemHandler extends RpmReactiveHandler<SgF
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
         );
-        //tac打底操作
+        //tac打底
         return shoppingguideSdkItemService.recommend(context, b)
                 .map(TacResult::newResult)
                 .map(tacResult -> {
                     if (tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null
                             || tacResult.getData().getItemAndContentList().isEmpty()) {
-                        tacLogger.info("进入tac打底");
-                        tacLogger.info("tacresult信息：" + JSON.toJSONString(tacResult));
+                        tacLogger.info("tac打底,tacresult信息：" + JSON.toJSONString(tacResult));
                         tacResult = TacResult.errorResult("test");
                         HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                                 .kv("shoppingguideSdkItemService", "recommend")

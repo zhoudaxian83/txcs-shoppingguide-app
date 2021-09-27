@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
-import com.alibaba.fastjson.JSON;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.iteminfo.ItemInfoPostProcessSdkExtPt;
@@ -10,6 +9,8 @@ import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.Today
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -26,17 +27,17 @@ public class TodayCrazyRecommendTabItemInfoPostProcessSdkExtPt extends Register 
 
     @Autowired
     TacLoggerImpl tacLogger;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TodayCrazyRecommendTabItemInfoPostProcessSdkExtPt.class);
 
     @Override
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info("开始查询limit信息");
         Map<Long, List<ItemLimitDTO>> itemLimitResult = todayCrazyLimitService.getItemLimitResult(sgFrameworkContextItem);
         if (itemLimitResult != null) {
             sgFrameworkContextItem.getUserParams().put(Constant.ITEM_LIMIT_RESULT, itemLimitResult);
         } else {
             tacLogger.warn("TodayCrazyRecommendTabItemOriginDataPostProcessorSdkExtPt_" + "获取限购数据为空");
+            LOGGER.warn("TodayCrazyRecommendTabItemOriginDataPostProcessorSdkExtPt_" + "获取限购数据为空");
         }
-        tacLogger.info("limit查询结果_" + JSON.toJSONString(itemLimitResult));
         return sgFrameworkContextItem;
     }
 }

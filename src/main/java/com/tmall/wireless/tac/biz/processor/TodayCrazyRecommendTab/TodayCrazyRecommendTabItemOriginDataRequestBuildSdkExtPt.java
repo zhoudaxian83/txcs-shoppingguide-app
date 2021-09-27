@@ -54,7 +54,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         String categoryIdsString = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "categoryIds", "");
         String tabType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "tabType", "");
         List<String> categoryIds = new ArrayList<>(Arrays.asList(categoryIdsString.split(",")));
-        List<String> cacheKeyList = this.buildCacheKeyList(categoryIds, tabType, addressDTO);
+        List<String> cacheKeyList = this.buildCacheKeyList(categoryIds, tabType);
         tacLogger.info("cacheKeyList_:" + JSON.toJSONString(cacheKeyList));
         //根据类别id构建参数
         RecommendRequest recommendRequest = new RecommendRequest();
@@ -102,14 +102,12 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
 
     /**
      * 构建类目id作为tair的key
-     *
      * @param categoryIds
      * @param tabType
-     * @param addressDTO
      * @return
      */
-    private List<String> buildCacheKeyList(List<String> categoryIds, String tabType, AddressDTO addressDTO) {
-        String shorthand = LogicalArea.parseByCode(addressDTO.getRegionCode()).getShorthand();
+    private List<String> buildCacheKeyList(List<String> categoryIds, String tabType) {
+        //String shorthand = LogicalArea.parseByCode(addressDTO.getRegionCode()).getShorthand();
         List<String> cacheKeyList = Lists.newArrayList();
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             cacheKeyList.addAll(Arrays.asList("today_featured", "today_algorithm"));

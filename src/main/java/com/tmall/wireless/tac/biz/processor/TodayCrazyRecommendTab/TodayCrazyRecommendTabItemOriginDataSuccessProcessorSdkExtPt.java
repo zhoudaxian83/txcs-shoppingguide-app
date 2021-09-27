@@ -45,12 +45,10 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         String topListStr = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "topList", "");
         List<String> topList = topListStr.equals("") ? Lists.newArrayList() : Arrays.asList(topListStr.split(","));
         boolean isFirstPage = (boolean) sgFrameworkContextItem.getUserParams().get("isFirstPage");
-        tacLogger.info("sgFrameworkContextItem_" + JSON.toJSONString(sgFrameworkContextItem));
         Map<String, Object> objectMap = sgFrameworkContextItem.getUserParams();
-        tacLogger.info("objectMap_" + JSON.toJSONString(objectMap));
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
-        tacLogger.info("itemEntities_" + JSON.toJSONString(itemEntities));
+        tacLogger.info("TPP返回数据条数："+itemEntities.size());
         //todo mock
         //itemEntities = this.mock();
         if (CollectionUtils.isEmpty(topList)) {
@@ -58,8 +56,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             return;
         }
         itemEntities.removeIf(itemEntity -> topList.contains(String.valueOf(itemEntity.getItemId())));
-        tacLogger.info("isFirstPage=" + isFirstPage);
-        tacLogger.info("topList_" + JSON.toJSONString(topList));
         if (isFirstPage) {
             List<ItemEntity> topResultsItemEntityList = Lists.newArrayList();
             topList.forEach(itemId -> {
@@ -75,7 +71,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         } else {
             originDataDTO.setResult(itemEntities);
         }
-        tacLogger.info("itemEntities_mock" + JSON.toJSONString(originDataDTO.getResult()));
     }
 
     private List<ItemEntity> mock() {
@@ -221,19 +216,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 "\t\t\"track_point\": \"1007.37154.239449.0.null\"\n" +
                 "\t}\n" +
                 "]";
-        List<ItemEntity> userList = JSON.parseArray(str, ItemEntity.class);
-        List<ItemEntity> resultList = Lists.newArrayList();
-
-        userList.forEach(itemEntity -> {
-            ItemEntity itemEntity2 = new ItemEntity();
-            itemEntity2.setItemId(itemEntity.getItemId());
-            itemEntity2.setO2oType("B2C");
-            itemEntity2.setBizType("sm");
-            if (itemEntity.getItemId() == 12428472473L || itemEntity.getItemId() == 36298327743L) {
-                itemEntity2.setTop(true);
-            }
-            resultList.add(itemEntity2);
-        });
-        return resultList;
+        return JSON.parseArray(str, ItemEntity.class);
     }
 }
