@@ -23,9 +23,9 @@
     </bean>
 
     <!-- 打底数据tair -->
-    <bean id="bottomTairLdbManager2" class="com.taobao.tair.impl.mc.MultiClusterTairManager" init-method="init">
+    <!--<bean id="bottomTairLdbManager2" class="com.taobao.tair.impl.mc.MultiClusterTairManager" init-method="init">
         <property name='userName'>
             <value>d25d96066001464b</value>
         </property>
-    </bean>
+    </bean>-->
 </beans>

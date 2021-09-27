@@ -67,8 +67,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Autowired
     ItemGmvService itemGmvService;
 
-    @Autowired
-    private MultiClusterTairManager bottomTairLdbManager2;
+    /*@Autowired
+    private MultiClusterTairManager bottomTairLdbManager2;*/
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
