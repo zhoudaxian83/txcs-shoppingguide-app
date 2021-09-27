@@ -67,7 +67,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Autowired
     ItemGmvService itemGmvService;
 
-    @Resource(name = "bottomTairLdbManager2")
+    @Autowired
     private MultiClusterTairManager bottomTairLdbManager2;
 
     @Override
