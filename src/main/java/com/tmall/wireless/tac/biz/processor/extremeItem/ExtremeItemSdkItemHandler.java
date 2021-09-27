@@ -113,7 +113,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             //构建响应对象
             List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
 
-            bottomTairLdbManager2.put(ASG_NAMESPACE, "extrem_item_" + supermarketHallContext.getCurrentResourceId(), JSON.toJSONString(generalItems), 0,30 * 60);
+            //bottomTairLdbManager2.put(ASG_NAMESPACE, "extrem_item_" + supermarketHallContext.getCurrentResourceId(), JSON.toJSONString(generalItems), 0,30 * 60);
 
             logger.warn("=========generalItems:" + JSON.toJSONString(generalItems));
             return Flowable.just(TacResult.newResult(generalItems));
