@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.icon.item.ext;
 
 import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
+import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemFilterRequest;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemFilterSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.ErrorCode;
@@ -21,7 +22,7 @@ import java.util.Objects;
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
         scenario = ScenarioConstantApp.ICON_ITEM
 )
-public class IconItemFilterSdkExtPt implements ItemFilterSdkExtPt {
+public class IconItemFilterSdkExtPt extends Register implements ItemFilterSdkExtPt {
     private static final Logger LOGGER = LoggerFactory.getLogger(IconItemFilterSdkExtPt.class);
 
     public static final List<String> CHECK_FIELD = Lists.newArrayList(
