@@ -88,7 +88,7 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends Register implemen
         if (!canBuy) {
             if(itemEntityVO.get("itemId") != null){
                 HadesLogUtil.stream("guessYourLikeShopCart4")
-                        .kv("GulPromotionBuildItemVOExtPt","process")
+                        .kv("GuessYourLikeShopCart4BuildItemVoSdkExtPt","process")
                         .kv("canBuy filter ItemId",itemEntityVO.get("itemId").toString())
                         .kv("Response","ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F")
                         .info();
