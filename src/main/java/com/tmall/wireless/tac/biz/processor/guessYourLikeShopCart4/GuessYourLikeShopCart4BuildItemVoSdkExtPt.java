@@ -45,7 +45,7 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
 
         try {
-            tacLogger.info("VO重写:buildItemVoRequest="+JSON.toJSONString(buildItemVoRequest));
+            tacLogger.info("VO重写开始");
             ItemEntityVO itemEntityVO = new ItemEntityVO();
             boolean hasMainSource = false;
             boolean canBuy = true;
@@ -103,14 +103,14 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
                             .kv("Response","ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F")
                             .info();
                 }
-                tacLogger.info("VO重写-1");
+//                tacLogger.info("VO重写-1");
                 return Response.fail("ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F");
             }
 
-            if (!hasMainSource) {
-                tacLogger.info("VO重写-2");
-                return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
-            }
+//            if (!hasMainSource) {
+//                tacLogger.info("VO重写-2");
+//                return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
+//            }
 
             if (itemEntityVO.get("smartUi") == null) {
                 itemEntityVO.put("contentType", 0);
