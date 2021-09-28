@@ -118,7 +118,7 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends Register implemen
         Map<String,Object> args = Maps.newHashMap();
         args.put("ext",0);
         args.put("spm",0);
-        args.put("itemid",0);
+        args.put("itemid",itemEntityVO.get("itemId"));
         clickParam.put("args",args);
         clickParam.put("eventId",0);
         clickParam.put("arg1",0);
@@ -176,12 +176,15 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends Register implemen
         Map<String,Object> args1 = Maps.newHashMap();
         args1.put("ext",0);
         args1.put("spm",0);
-        args1.put("itemId",0);
+        args1.put("itemId",itemEntityVO.get("itemId"));
         exposureParam.put("args",args1);
         exposureParam.put("eventId",0);
         exposureParam.put("arg1",0);
         exposureParam.put("page",0);
         itemEntityVO.put("exposureParam", exposureParam);
+
+        /**暂时删除的数据**/
+        itemEntityVO.remove("itemPromotionResp");
 
         return Response.success(itemEntityVO);
     }
