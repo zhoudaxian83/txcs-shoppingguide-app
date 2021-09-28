@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.huichang.hotitem;
 
 import java.util.Map;
+import java.util.Optional;
 
 import com.alibaba.fastjson.JSON;
 
@@ -10,8 +11,11 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoRequest;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.Response;
+import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoBySourceDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoDTO;
+import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
+import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
@@ -32,9 +36,9 @@ public class HotItemBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt imple
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Response<ItemEntityVO> process = super.process(buildItemVoRequest);
-        ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
-        Map<String, ItemInfoBySourceDTO> itemInfos = itemInfoDTO.getItemInfos();
-        logger.error("HotItemBuildItemVoSdkExtPt.itemInfos:{}", JSON.toJSONString(itemInfos));
+        ItemInfoBySourceDTO itemInfoBySourceDTO = Optional.ofNullable(buildItemVoRequest).map(BuildItemVoRequest::getItemInfoDTO)
+            .map(ItemInfoDTO::getItemInfos).map(e -> e.get("captain")).orElse(null);
+        logger.error("HotItemBuildItemVoSdkExtPt.itemInfoBySourceDTO:{}", JSON.toJSONString(itemInfoBySourceDTO));
         ItemEntityVO itemEntityVO = process.getValue();
         SgFrameworkContextItem sgFrameworkContextItem = buildItemVoRequest.getContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
