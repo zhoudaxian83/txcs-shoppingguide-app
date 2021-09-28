@@ -171,5 +171,6 @@
     <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailItemOriginDataRequestBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailRecItemContextCheckExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailItemOriginDataResponseConvertSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailItemBackUpSdkExtPt"/>
     <!--详情推荐接口结束-->
 </beans>
