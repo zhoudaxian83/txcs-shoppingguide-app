@@ -10,6 +10,7 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoRequest;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.Response;
+import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
@@ -30,9 +31,12 @@ public class HotItemBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt imple
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Response<ItemEntityVO> process = super.process(buildItemVoRequest);
+        ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
+        logger.error("HotItemBuildItemVoSdkExtPt.itemInfoDTO:{}", JSON.toJSONString(itemInfoDTO));
         ItemEntityVO itemEntityVO = process.getValue();
         SgFrameworkContextItem sgFrameworkContextItem = buildItemVoRequest.getContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
+
         Map<String, Object> aldContext = requestContext4Ald.getAldContext();
         Object aldStaticData = aldContext.get(HallCommonAldConstant.STATIC_SCHEDULE_DATA);
         if(null != aldStaticData){
