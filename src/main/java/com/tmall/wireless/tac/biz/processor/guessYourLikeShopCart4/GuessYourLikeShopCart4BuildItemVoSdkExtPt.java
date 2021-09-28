@@ -111,6 +111,78 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends Register implemen
                 itemEntityVO.put("contentType", 0);
             }
         }
+
+        //cff
+        /**点击埋点**/
+        Map<String,Object> clickParam = Maps.newHashMap();
+        Map<String,Object> args = Maps.newHashMap();
+        args.put("ext",0);
+        args.put("spm",0);
+        args.put("itemid",0);
+        clickParam.put("args",args);
+        clickParam.put("eventId",0);
+        clickParam.put("arg1",0);
+        clickParam.put("page",0);
+        itemEntityVO.put("clickParam", clickParam);
+
+        /**价格区域**/
+        Map<String,Object> priceArea = Maps.newHashMap();
+        priceArea.put("price",0);
+        priceArea.put("originPrice",0);
+        priceArea.put("pricePrefix",0);
+        itemEntityVO.put("priceArea", priceArea);
+
+        /****benefitInfo****/
+        Map<String,Object> benefitInfo = Maps.newHashMap();
+        benefitInfo.put("benefitGap",0);
+        benefitInfo.put("benefitMaxWidth",0);
+        /***文字标***/
+        Map<String,Object> textBenefitInfo = Maps.newHashMap();
+        textBenefitInfo.put("benefitTextColor",0);
+        textBenefitInfo.put("split",0);
+        textBenefitInfo.put("benefitBorderColor",0);
+        textBenefitInfo.put("benefitType","text");
+        textBenefitInfo.put("benefitContent",0);
+        textBenefitInfo.put("benefitTextSize",0);
+        textBenefitInfo.put("benefitBorderWidth",0);
+        textBenefitInfo.put("benefitBorderRadius",0);
+        benefitInfo.put("textBenefitInfo",textBenefitInfo);
+        /***图片标***/
+        Map<String,Object> pictureBenefitInfo = Maps.newHashMap();
+        pictureBenefitInfo.put("split",0);
+        pictureBenefitInfo.put("benefitType","image");
+        pictureBenefitInfo.put("benefitContent",0);
+        benefitInfo.put("pictureBenefitInfo",pictureBenefitInfo);
+
+        itemEntityVO.put("benefitInfo", benefitInfo);
+        /**标题区域**/
+        Map<String,Object> titleInfo = Maps.newHashMap();
+        titleInfo.put("textSize",0);
+        titleInfo.put("textContent",0);
+        titleInfo.put("textColor",0);
+        titleInfo.put("textMaxLines",0);
+        titleInfo.put("labelImgUrl",0);
+        titleInfo.put("labelImgHeight",0);
+        titleInfo.put("labelImgWidth",0);
+        itemEntityVO.put("titleInfo", titleInfo);
+        /**点击事件，跳转到该商品详情**/
+        itemEntityVO.put("action", 0);
+        /********/
+        itemEntityVO.put("type", 0);
+        /********/
+        itemEntityVO.put("pageParam", 0);
+        /**曝光埋点**/
+        Map<String,Object> exposureParam = Maps.newHashMap();
+        Map<String,Object> args1 = Maps.newHashMap();
+        args1.put("ext",0);
+        args1.put("spm",0);
+        args1.put("itemId",0);
+        exposureParam.put("args",args1);
+        exposureParam.put("eventId",0);
+        exposureParam.put("arg1",0);
+        exposureParam.put("page",0);
+        itemEntityVO.put("exposureParam", exposureParam);
+
         return Response.success(itemEntityVO);
     }
 
