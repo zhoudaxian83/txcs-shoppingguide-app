@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
+import com.tmall.tcls.gs.sdk.biz.extensions.item.vo.DefaultBuildItemVoSdkExtPt;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoRequest;
@@ -36,7 +37,7 @@ import java.util.Optional;
         useCase = "b2c",
         scenario = "guessYourLikeShopCart4"
 )
-public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends Register implements BuildItemVoSdkExtPt {
+public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt implements BuildItemVoSdkExtPt {
 
     @Autowired
     TacLoggerImpl tacLogger;
