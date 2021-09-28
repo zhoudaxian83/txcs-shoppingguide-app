@@ -5,6 +5,8 @@ import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataCheckSuccessSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProcessRequest;
+import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,9 +20,12 @@ import org.springframework.stereotype.Service;
 )
 public class GuessYourLikeShopCart4ItemOriginDataCheckSuccessSdkExtPt extends DefaultItemOriginDataCheckSuccessSdkExtPt implements ItemOriginDataCheckSuccessSdkExtPt {
 
+    @Autowired
+    TacLoggerImpl tacLogger;
     @Override
     public Boolean process(OriginDataProcessRequest originDataProcessRequest) {
         Boolean process = super.process(originDataProcessRequest);
+        tacLogger.info("CheckSuccess");
         return process;
     }
 }
