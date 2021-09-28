@@ -18,8 +18,11 @@ import com.tmall.txcs.gs.model.spi.model.ItemDataDTO;
 
 import com.google.common.collect.Maps;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,6 +37,9 @@ import java.util.Optional;
         scenario = "guessYourLikeShopCart4"
 )
 public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends Register implements BuildItemVoSdkExtPt {
+
+    @Autowired
+    TacLoggerImpl tacLogger;
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         ItemEntityVO itemEntityVO = new ItemEntityVO();
@@ -185,7 +191,7 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends Register implemen
 
         /**暂时删除的数据**/
         itemEntityVO.remove("itemPromotionResp");
-
+        tacLogger.info("VO重写");
         return Response.success(itemEntityVO);
     }
 
