@@ -10,6 +10,7 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoRequest;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.Response;
+import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoBySourceDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
@@ -32,7 +33,8 @@ public class HotItemBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt imple
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Response<ItemEntityVO> process = super.process(buildItemVoRequest);
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
-        logger.error("HotItemBuildItemVoSdkExtPt.itemInfoDTO:{}", JSON.toJSONString(itemInfoDTO));
+        Map<String, ItemInfoBySourceDTO> itemInfos = itemInfoDTO.getItemInfos();
+        logger.error("HotItemBuildItemVoSdkExtPt.itemInfos:{}", JSON.toJSONString(itemInfos));
         ItemEntityVO itemEntityVO = process.getValue();
         SgFrameworkContextItem sgFrameworkContextItem = buildItemVoRequest.getContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
