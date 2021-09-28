@@ -9,6 +9,7 @@ import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
+import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,8 @@ public class GuessYourLikeShopCart4SdkItemHandler extends RpmReactiveHandler<SgF
 
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
+    @Autowired
+    TacLoggerImpl tacLogger;
     @Override
     public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
 
@@ -47,6 +50,7 @@ public class GuessYourLikeShopCart4SdkItemHandler extends RpmReactiveHandler<SgF
                                 .info();
                     }
                     tacResult.getBackupMetaData().setUseBackup(true);
+                    tacLogger.info("tacResult = "+JSON.toJSONString(tacResult));
                     return tacResult;
                 })
                 .onErrorReturn(r -> TacResult.errorResult(""));
