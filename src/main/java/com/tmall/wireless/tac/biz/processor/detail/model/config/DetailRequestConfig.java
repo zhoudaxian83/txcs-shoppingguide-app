@@ -11,13 +11,18 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @AllArgsConstructor
-public class TppRequestConfig {
+public class DetailRequestConfig {
 
     private Long tppId;
 
-    private String contentType;
+    private SizeDTO sizeDTO;
 
-    public TppRequestConfig(Long tppId){
+    private boolean openBackUp=false;
+
+    private int backUpWriteRate = 0;
+
+    public DetailRequestConfig(Long tppId,SizeDTO sizeDTO){
         this.tppId=tppId;
+        this.sizeDTO=sizeDTO;
     }
 }

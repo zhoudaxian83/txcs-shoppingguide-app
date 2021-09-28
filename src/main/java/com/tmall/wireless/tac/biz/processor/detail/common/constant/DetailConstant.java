@@ -18,4 +18,5 @@ public class DetailConstant {
 
     public static final String REQUEST="detailRecommendRequest";
 
+    public static final String CACH_KEY="cacheKey";
 }

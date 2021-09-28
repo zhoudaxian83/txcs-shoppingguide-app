@@ -13,6 +13,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
 import com.tmall.tcls.gs.sdk.framework.model.context.UserDO;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.TppItemBusinessType;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.TppParmasConstant;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
@@ -56,16 +57,20 @@ public abstract class AbstractDetailOriginDataRequestBuildSdkExtPt extends Regis
             .orElse(20)));
         tppParams.put(TppParmasConstant.IS_FIRST_PAGE,String.valueOf(1 <=detailRequest.getIndex()));
 
+        //写入上下文，用于兜底
+        sgFrameworkContextContent.getTacContext().getParams().put(TppParmasConstant.IS_FIRST_PAGE,
+            tppParams.get(TppParmasConstant.IS_FIRST_PAGE));
+
         //3.店铺等信息
-        buildTppRequest(tppParams,detailRequest.getLocType(),sgFrameworkContextContent.getCommonUserParams());
+        buildTppRequest(tppParams,detailRequest.getLocType(),sgFrameworkContextContent);
 
         return recommendRequest;
     }
 
     private void buildTppRequest(Map<String, String> tppParams, String locType,
-        CommonUserParams commonUserParams) {
+        SgFrameworkContext sgFrameworkContext) {
 
-        LocParams address = commonUserParams.getLocParams();
+        LocParams address = sgFrameworkContext.getCommonUserParams().getLocParams();
         if (Objects.isNull(address)) {
             //默认107大区打底
             tppParams.put(TppParmasConstant.LOGIC_AREA_ID, "107");
@@ -79,26 +84,28 @@ public abstract class AbstractDetailOriginDataRequestBuildSdkExtPt extends Regis
         }
 
         List<String> itemBusinessType = new ArrayList<>();
+        Map<String, Object> params = sgFrameworkContext.getTacContext().getParams();
 
         if (StringUtils.equals(locType, LocTypeEnum.O2OOneHour.getType()) && CommonUtil.validId(address.getRt1HourStoreId())) {
             tppParams.put(TppParmasConstant.RT_ONE_HOUR_STORE_ID, String.valueOf(address.getRt1HourStoreId()));
             itemBusinessType.add(TppItemBusinessType.OneHour.name());
-
+            params.put(DetailConstant.CACH_KEY,LocTypeEnum.O2OOneHour.name() + "_" + address.getRt1HourStoreId());
         } else if (StringUtils.equals(locType, LocTypeEnum.O2OHalfDay.getType()) && CommonUtil.validId(
             address.getRtHalfDayStoreId())) {
             tppParams.put(TppParmasConstant.RT_HALF_DAY_STORE_ID,
                 String.valueOf(address.getRtHalfDayStoreId()));
             itemBusinessType.add(TppItemBusinessType.HalfDay.name());
-
+            params.put(DetailConstant.CACH_KEY,LocTypeEnum.O2OHalfDay.name() + "_" + address.getRtHalfDayStoreId());
         } else if ((StringUtils.equals(locType, LocTypeEnum.O2ONextDay.getType())) && CommonUtil.validId(
             address.getRtNextDayStoreId())) {
             tppParams.put(TppParmasConstant.RT_NEXT_DAY_STORE_ID,
                 String.valueOf(address.getRtNextDayStoreId()));
             itemBusinessType.add(TppItemBusinessType.NextDay.name());
-
+            params.put(DetailConstant.CACH_KEY,LocTypeEnum.O2ONextDay.name() + "_" + address.getRtNextDayStoreId());
         } else {
             itemBusinessType.add(TppItemBusinessType.B2C.name());
             locType = LocTypeEnum.B2C.getType();
+            params.put(DetailConstant.CACH_KEY,LocTypeEnum.B2C.name() + "_" + address.getRegionCode());
         }
 
         tppParams.put(TppParmasConstant.STRATEGY_2_IRECAL_KEY, locType);
