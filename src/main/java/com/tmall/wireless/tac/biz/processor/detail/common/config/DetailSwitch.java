@@ -20,35 +20,14 @@ import com.tmall.wireless.tac.biz.processor.detail.model.config.SizeDTO;
 @NameSpace(nameSpace = "supermarket.detail")
 public class DetailSwitch {
 
-    @AppSwitch(des = "详情推荐appId", level = Switch.Level.p3)
-    public static Map<String, Long> appIdMap = new HashMap<String, Long>() {
-        {
-            put(RecTypeEnum.RECIPE.getType(), 28151L);
-            put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(),28155L);
-            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),27506L);
-        }
-    };
-
-    @AppSwitch(des = "详情推荐的限制推荐size", level = Switch.Level.p3)
-    public static Map<String, SizeDTO> contentSizeMap = new HashMap<String, SizeDTO>()
-
-    {
-        {
-            put(RecTypeEnum.RECIPE.getType(), new SizeDTO(2,6));
-            put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(), new SizeDTO(1,2));
-            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), new SizeDTO(6,6));
-        }
-    };
-
     @AppSwitch(des = "详情推荐的限制推荐size", level = Switch.Level.p3)
     public static Map<String, DetailRequestConfig> requestConfigMap=new HashMap<String,DetailRequestConfig>(){
         {
-            put(RecTypeEnum.RECIPE.getType(), new DetailRequestConfig(28151L,new SizeDTO(2,6)));
+            put(RecTypeEnum.RECIPE.getType(), new DetailRequestConfig(28151L,new SizeDTO(3,6)));
             put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(),new DetailRequestConfig(28155L, new SizeDTO(1,2)));
             put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), new DetailRequestConfig(27506L,new SizeDTO(6,6),true,1));
         }
     };
-
 
     @AppSwitch(des = "忽略的营销类型", level = Switch.Level.p3)
     public static Set<String> ignorePromotionList= Sets.newHashSet("O2O_StraightDown");

@@ -42,7 +42,7 @@ public class O2ODetailItemOriginDataRequestBuildSdkExtPt extends AbstractDetailO
             detailRequest.getContentId())) {
             return 21174L;
         }
-        return DetailSwitch.appIdMap.get(recType);
+        return DetailSwitch.requestConfigMap.get(recType).getTppId();
     }
 
     @Override

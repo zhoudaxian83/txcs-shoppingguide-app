@@ -16,11 +16,13 @@ import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.third.IGraphSpi;
+import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecItemResultVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendItemVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
+import com.tmall.wireless.tac.biz.processor.detail.model.config.SizeDTO;
 import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
@@ -44,6 +46,10 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
     @Override
     public DetailRecItemResultVO convert(Context context,SgFrameworkResponse sgFrameworkResponse) {
 
+        //取大小限制
+        SizeDTO sizeDTO = DetailSwitch.requestConfigMap.get(getRecTypeEnum().getType()).getSizeDTO();
+
+        //开始构建
         DetailRecItemResultVO detailRecItemResultVO=new DetailRecItemResultVO();
 
         detailRecItemResultVO.setEnableScroll(false);
@@ -59,13 +65,13 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
 
         //如果没有推荐结果就空返回
         if (CollectionUtils.isEmpty(sgFrameworkResponse.getItemAndContentList()) ||
-            sgFrameworkResponse.getItemAndContentList().size() < 6) {
+            sgFrameworkResponse.getItemAndContentList().size() < sizeDTO.getMin()) {
             return null;
         }
 
         //推荐内容
         List itemAndContentList = sgFrameworkResponse.getItemAndContentList();
-        List list = itemAndContentList.subList(0, 6);
+        List list = itemAndContentList.subList(0, sizeDTO.getMax());
         detailRecItemResultVO.setResult(super.convertItems(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),list, scmJoin));
 
         //卖点的拼装

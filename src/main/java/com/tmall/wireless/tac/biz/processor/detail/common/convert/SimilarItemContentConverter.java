@@ -77,7 +77,7 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         //推荐内容
         detailRecContentResultVO.getResult().addAll(super
             .convertContentResult(recommendRequest, itemAndContentList.subList(0,
-                Math.min(DetailSwitch.contentSizeMap.get(getRecTypeEnum().getType()).getMax()
+                Math.min(DetailSwitch.requestConfigMap.get(getRecTypeEnum().getType()).getSizeDTO().getMax()
                     , itemAndContentList.size())),
                 scmJoin));
 

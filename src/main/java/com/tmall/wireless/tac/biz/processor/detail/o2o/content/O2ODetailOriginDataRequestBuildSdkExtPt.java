@@ -25,7 +25,7 @@ public class O2ODetailOriginDataRequestBuildSdkExtPt
 
     @Override
     public Long getAppId(String recType, SgFrameworkContext sgFrameworkContextContent){
-        return DetailSwitch.appIdMap.get(recType);
+        return  DetailSwitch.requestConfigMap.get(recType).getTppId();
     }
 
     @Override
