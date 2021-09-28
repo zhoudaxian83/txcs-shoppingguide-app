@@ -196,9 +196,10 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             /**暂时删除的数据**/
             itemEntityVO.remove("itemPromotionResp");
 
+            tacLogger.info("VO重写完成");
             return Response.success(itemEntityVO);
         } catch (Exception e) {
-            tacLogger.error("ERROR",e);
+            tacLogger.info("ERROR" + JSON.toJSONString(e));
             return Response.fail("ERROR_TEXT="+JSON.toJSONString(e));
         }
     }
