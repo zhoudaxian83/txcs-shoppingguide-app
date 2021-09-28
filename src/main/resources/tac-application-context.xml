@@ -23,6 +23,8 @@
     <bean class="com.tmall.wireless.tac.biz.productpackage.recommendold.OldRecommendContentOriginDataResponseConvertSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.productpackage.recommendold.OldRecommendItemOriginDataResponseConvertSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentInfoQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentOriginDataFailProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentFilterSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentOriginDataRequestBuildSdkExtPt"/>
 
     <bean class="com.tmall.wireless.tac.biz.processor.alipay.service.ext.middlepage.AliPayMiddleItemOriginDataRequestBuildSdkExtPt"/>
