@@ -45,7 +45,7 @@ public class GuessYourLikeShopCart4SdkItemHandler extends RpmReactiveHandler<SgF
                     if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null
                             || tacResult.getData().getItemAndContentList().isEmpty()){
 
-                        tacLogger.info("tacResult123 = "+JSON.toJSONString(tacResult));
+                        tacLogger.info("tacResult = "+JSON.toJSONString(tacResult));
                         tacResult = TacResult.errorResult("test");
                         HadesLogUtil.stream("guessYourLikeShopCart4")
                                 .kv("shoppingguideSdkItemService","recommend")
