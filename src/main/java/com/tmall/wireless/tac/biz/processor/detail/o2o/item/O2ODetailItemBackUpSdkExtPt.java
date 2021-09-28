@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.detail.o2o.item;
 
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
+import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemProcessBeforeReturnSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
 import com.tmall.wireless.tac.biz.processor.detail.common.extabstract.AbstractDetailItemBackUpSdkExtPt;
@@ -13,7 +14,8 @@ import com.tmall.wireless.tac.biz.processor.detail.common.extabstract.AbstractDe
 @SdkExtension(bizId = DetailConstant.BIZ_ID,
     useCase = DetailConstant.USE_CASE_O2O,
     scenario = DetailConstant.ITEM_SCENERIO)
-public class O2ODetailItemBackUpSdkExtPt extends AbstractDetailItemBackUpSdkExtPt {
+public class O2ODetailItemBackUpSdkExtPt extends AbstractDetailItemBackUpSdkExtPt implements
+    ItemProcessBeforeReturnSdkExtPt {
     @Override
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
         return super.process(sgFrameworkContextItem);

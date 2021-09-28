@@ -33,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @Data: 2021/9/28
  * @Description:
  */
-public class AbstractDetailItemBackUpSdkExtPt extends Register implements ItemProcessBeforeReturnSdkExtPt {
+public class AbstractDetailItemBackUpSdkExtPt extends Register{
     public static final String DETAIL_TAIR_USER_NAME = "b2141a8eda7e4181";
     public static final int DETAIL_NAME_SPACE = 10200;
 
@@ -42,7 +42,6 @@ public class AbstractDetailItemBackUpSdkExtPt extends Register implements ItemPr
     @Autowired
     TairSpi tairSpi;
 
-    @Override
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
 
         DetailRecommendRequest detailRequest = DetailRecommendRequest.getDetailRequest(
