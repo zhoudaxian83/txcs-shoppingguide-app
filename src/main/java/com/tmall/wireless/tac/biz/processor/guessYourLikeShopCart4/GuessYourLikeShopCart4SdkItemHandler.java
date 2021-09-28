@@ -41,8 +41,11 @@ public class GuessYourLikeShopCart4SdkItemHandler extends RpmReactiveHandler<SgF
         return shoppingguideSdkItemService.recommend(context, b)
                 .map(TacResult::newResult)
                 .map(tacResult -> {
+
                     if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null
                             || tacResult.getData().getItemAndContentList().isEmpty()){
+
+                        tacLogger.info("tacResult = "+JSON.toJSONString(tacResult));
                         tacResult = TacResult.errorResult("test");
                         HadesLogUtil.stream("guessYourLikeShopCart4")
                                 .kv("shoppingguideSdkItemService","recommend")
@@ -50,7 +53,6 @@ public class GuessYourLikeShopCart4SdkItemHandler extends RpmReactiveHandler<SgF
                                 .info();
                     }
                     tacResult.getBackupMetaData().setUseBackup(true);
-                    tacLogger.info("tacResult = "+JSON.toJSONString(tacResult));
                     return tacResult;
                 })
                 .onErrorReturn(r -> TacResult.errorResult(""));
