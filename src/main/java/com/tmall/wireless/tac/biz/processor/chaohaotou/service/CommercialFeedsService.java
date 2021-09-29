@@ -41,8 +41,10 @@ public class CommercialFeedsService {
 
     public Pair<Boolean, List<TmcsZntItemDTO>> getCommercialFeeds(SgFrameworkContextItem sgFrameworkContextItem) {
         Pair<Boolean, List<TmcsZntItemDTO>> booleanListPair = null;
+        HadesLogUtil.debug("sgFrameworkContextItem_debug:{}" + JSON.toJSONString(sgFrameworkContextItem));
         Map<String, Object> paramMap = this.buildParam(sgFrameworkContextItem);
         tacLogger.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
+        HadesLogUtil.debug("getCommercialFeeds_debug_paramMap:{}" + JSON.toJSONString(paramMap));
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                 .kv("getCommercialFeeds_入参", JSON.toJSONString(paramMap))
                 .kv("sgFrameworkContextItem_", JSON.toJSONString(sgFrameworkContextItem))
