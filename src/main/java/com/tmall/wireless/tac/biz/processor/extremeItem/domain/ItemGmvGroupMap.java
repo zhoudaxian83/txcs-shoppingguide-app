@@ -118,20 +118,6 @@ public class ItemGmvGroupMap {
         return lastNDaysDateSet;
     }
 
-    public static void main(String[] args) {
-        System.out.println("args = " + loadLastNDaysDateSet(-1));
-        System.out.println("args = " + loadLastNDaysDateSet(0));
-        System.out.println("args = " + loadLastNDaysDateSet(1));
-        System.out.println("args = " + loadLastNDaysDateSet(2));
-        System.out.println("args = " + loadLastNDaysDateSet(3));
-        System.out.println("args = " + loadLastNDaysDateSet(4));
-        System.out.println("args = " + loadLastNDaysDateSet(5));
-        System.out.println("args = " + loadLastNDaysDateSet(6));
-        System.out.println("args = " + loadLastNDaysDateSet(7));
-        System.out.println("args = " + loadLastNDaysDateSet(8));
-        System.out.println("getYMDH() = " + getYMDH());
-    }
-
     public static String getYMDH() {
         String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH"));
         return format;

@@ -62,22 +62,34 @@ public class ItemConfig {
         if(stringObjectMap.get("shortTitle") != null) {
             itemConfig.setItemName(String.valueOf(stringObjectMap.get("shortTitle")));
         }
-        itemConfig.setGroupNo(Integer.valueOf(String.valueOf(stringObjectMap.get("groupNo"))));
-        itemConfig.setForceSort(Integer.parseInt(String.valueOf(stringObjectMap.get("forceSort"))) == 1);
+        if(stringObjectMap.get("groupNo") != null) {
+            itemConfig.setGroupNo(Integer.valueOf(String.valueOf(stringObjectMap.get("groupNo"))));
+        }
+        itemConfig.setForceSort("1".equals(String.valueOf(stringObjectMap.get("forceSort"))));
         if(stringObjectMap.get("sequenceNo") != null) {
             itemConfig.setSequenceNo(Integer.parseInt(String.valueOf(stringObjectMap.get("sequenceNo"))));
         } else {
             itemConfig.setSequenceNo(100);
         }
-        itemConfig.setExposurePercent(Integer.parseInt(String.valueOf(stringObjectMap.get("exposurePercent"))));
+        if(stringObjectMap.get("exposurePercent") != null) {
+            try {
+                itemConfig.setExposurePercent(Integer.parseInt(String.valueOf(stringObjectMap.get("exposurePercent"))));
+            } catch (Exception e) {
+                itemConfig.setExposurePercent(0);
+            }
+        }
         if(stringObjectMap.get("activityId") != null) {
             itemConfig.setActivityId(String.valueOf(stringObjectMap.get("activityId")));
         }
         if(stringObjectMap.get("couponValue") != null) {
             itemConfig.setCouponValue(String.valueOf(stringObjectMap.get("couponValue")));
         }
-        itemConfig.setItemDescCustom(String.valueOf(stringObjectMap.get("itemDescCustom")));
-        itemConfig.setItemImg(String.valueOf(stringObjectMap.get("itemImg")));
+        if(stringObjectMap.get("itemDescCustom") != null) {
+            itemConfig.setItemDescCustom(String.valueOf(stringObjectMap.get("itemDescCustom")));
+        }
+        if(stringObjectMap.get("itemImg") != null) {
+            itemConfig.setItemImg(String.valueOf(stringObjectMap.get("itemImg")));
+        }
         return itemConfig;
     }
 }
