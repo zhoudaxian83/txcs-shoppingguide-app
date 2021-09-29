@@ -46,7 +46,7 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
 
         try {
             tacLogger.info("VO重写开始");
-            ItemEntityVO itemEntityVO = new ItemEntityVO();
+            ItemEntityVO entityVO = new ItemEntityVO();
             boolean hasMainSource = false;
             boolean canBuy = true;
             if (buildItemVoRequest == null || buildItemVoRequest.getItemInfoDTO() == null) {
@@ -86,20 +86,16 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
                     trackPoint.putAll(scmKeyValue);
                 }
 
-                itemEntityVO.putAll(itemInfoBySourceDTO.getItemInfoVO());
+                entityVO.putAll(itemInfoBySourceDTO.getItemInfoVO());
             }
 
-            String scm = processScm(originScm, trackPoint);
-            itemUrl = itemUrl + "&scm=" + scm;
 
-            itemEntityVO.put("scm", scm);
-            itemEntityVO.put("itemUrl", itemUrl);
 
             if (!canBuy) {
-                if(itemEntityVO.get("itemId") != null){
+                if(entityVO.get("itemId") != null){
                     HadesLogUtil.stream("guessYourLikeShopCart4")
                             .kv("GuessYourLikeShopCart4BuildItemVoSdkExtPt","process")
-                            .kv("canBuy filter ItemId",itemEntityVO.get("itemId").toString())
+                            .kv("canBuy filter ItemId",entityVO.get("itemId").toString())
                             .kv("Response","ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F")
                             .info();
                 }
@@ -107,30 +103,17 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
                 return Response.fail("ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F");
             }
 
-//            if (!hasMainSource) {
-//                tacLogger.info("VO重写-2");
-//                return Response.fail(ErrorCode.ITEM_VO_BUILD_ERROR_HAS_NO_MAIN_SOURCE);
-//            }
-
-            if (itemEntityVO.get("smartUi") == null) {
-                itemEntityVO.put("contentType", 0);
-
-            }else if(itemEntityVO.get("smartUi") instanceof Map){
-                Map<String,Object> smartUiMap = (Map<String, Object>)itemEntityVO.get("smartUi");
-                if((smartUiMap.get("whitePict") == null ||  "".equals(smartUiMap.get("whitePict")))
-                        && (smartUiMap.get("scenePic") == null || "".equals(smartUiMap.get("whitePict")))
-                        && (smartUiMap.get("videoUrl") == null || "".equals(smartUiMap.get("whitePict")))){
-                    itemEntityVO.put("contentType", 0);
-                }
-            }
-
             //cff
+            ItemEntityVO itemEntityVO = new ItemEntityVO();
+            String scm = processScm(originScm, trackPoint);
+            itemUrl = itemUrl + "&scm=" + scm;
+            itemEntityVO.put("scm", scm);
             /**点击埋点**/
             Map<String,Object> clickParam = Maps.newHashMap();
             Map<String,Object> args = Maps.newHashMap();
             args.put("ext",0);
             args.put("spm",0);
-            args.put("itemid",itemEntityVO.get("itemId"));
+            args.put("itemid",entityVO.get("itemId"));
             clickParam.put("args",args);
             clickParam.put("eventId",0);
             clickParam.put("arg1",0);
@@ -139,16 +122,16 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
 
             /**价格区域**/
             Map<String,Object> priceArea = Maps.newHashMap();
-            priceArea.put("price",0);
+            priceArea.put("price",entityVO.get("showPrice"));
             priceArea.put("originPrice",0);
             priceArea.put("pricePrefix",0);
             itemEntityVO.put("priceArea", priceArea);
 
-            /****benefitInfo****/
+            /****benefitInfo****//*
             Map<String,Object> benefitInfo = Maps.newHashMap();
             benefitInfo.put("benefitGap",0);
             benefitInfo.put("benefitMaxWidth",0);
-            /***文字标***/
+            *//***文字标***//*
             Map<String,Object> textBenefitInfo = Maps.newHashMap();
             textBenefitInfo.put("benefitTextColor",0);
             textBenefitInfo.put("split",0);
@@ -159,18 +142,18 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             textBenefitInfo.put("benefitBorderWidth",0);
             textBenefitInfo.put("benefitBorderRadius",0);
             benefitInfo.put("textBenefitInfo",textBenefitInfo);
-            /***图片标***/
+            *//***图片标***//*
             Map<String,Object> pictureBenefitInfo = Maps.newHashMap();
             pictureBenefitInfo.put("split",0);
             pictureBenefitInfo.put("benefitType","image");
             pictureBenefitInfo.put("benefitContent",0);
             benefitInfo.put("pictureBenefitInfo",pictureBenefitInfo);
 
-            itemEntityVO.put("benefitInfo", benefitInfo);
+            itemEntityVO.put("benefitInfo", benefitInfo);*/
             /**标题区域**/
             Map<String,Object> titleInfo = Maps.newHashMap();
             titleInfo.put("textSize",0);
-            titleInfo.put("textContent",0);
+            titleInfo.put("textContent",entityVO.get("title"));
             titleInfo.put("textColor",0);
             titleInfo.put("textMaxLines",0);
             titleInfo.put("labelImgUrl",0);
@@ -178,7 +161,7 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             titleInfo.put("labelImgWidth",0);
             itemEntityVO.put("titleInfo", titleInfo);
             /**点击事件，跳转到该商品详情**/
-            itemEntityVO.put("action", 0);
+            itemEntityVO.put("action", itemUrl);
             /********/
             itemEntityVO.put("type", 0);
             /********/
@@ -188,13 +171,15 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             Map<String,Object> args1 = Maps.newHashMap();
             args1.put("ext",0);
             args1.put("spm",0);
-            args1.put("itemId",itemEntityVO.get("itemId"));
+            args1.put("itemId",entityVO.get("itemId"));
             exposureParam.put("args",args1);
             exposureParam.put("eventId",0);
             exposureParam.put("arg1",0);
             exposureParam.put("page",0);
             itemEntityVO.put("exposureParam", exposureParam);
 
+            //itemEntityVO.put("imgUrl", itemEntityVO.get("itemImg"));
+            itemEntityVO.put("imgUrl", entityVO.get("itemImg"));
             /**暂时删除的数据**/
             itemEntityVO.remove("itemPromotionResp");
 
