@@ -70,11 +70,21 @@ public class ItemGmvGroupMap {
                 .sorted(Comparator.comparing(ItemGmvGroup::last1HourGmvSum).reversed()).collect(Collectors.toList());
 
         int i = 1;
-        for (ItemGmvGroup itemGmvGroup : lastNDaysGmvRankList) {
+        int nDaysSize = lastNDaysGmvRankList.size();
+        for(int index = 0; index < nDaysSize; index++) {
+            ItemGmvGroup itemGmvGroup = lastNDaysGmvRankList.get(index);
+            if(index > 0 && Math.abs(lastNDaysGmvRankList.get(index).lastNDaysGmvSum() - lastNDaysGmvRankList.get(index-1).lastNDaysGmvSum()) < 0.01) {
+                i--;
+            }
             itemGmvGroupMap.lastNDaysGmvRankMap.put(itemGmvGroup.getGroupNo(), i++);
         }
         i = 1;
-        for (ItemGmvGroup itemGmvGroup : last1HourGmvRankList) {
+        int oneHoursSize = last1HourGmvRankList.size();
+        for(int index = 0; index < oneHoursSize; index++) {
+            ItemGmvGroup itemGmvGroup = last1HourGmvRankList.get(index);
+            if(index > 0 && Math.abs(last1HourGmvRankList.get(index).last1HourGmvSum() - last1HourGmvRankList.get(index-1).last1HourGmvSum()) < 0.01) {
+                i--;
+            }
             itemGmvGroupMap.last1HourGmvRankMap.put(itemGmvGroup.getGroupNo(), i++);
         }
         logger.info("ItemGmvGroupMap_valueOf_itemGmvGroupMap: " + JSON.toJSONString(itemGmvGroupMap));
