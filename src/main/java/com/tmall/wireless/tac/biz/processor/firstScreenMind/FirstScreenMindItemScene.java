@@ -182,7 +182,7 @@ public class FirstScreenMindItemScene {
         if(locParams!=null &&
             locParams.getRt1HourStoreId() == 0
             && locParams.getRtHalfDayStoreId() == 0){
-            itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
+            //itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         }
 
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
