@@ -28,6 +28,7 @@ public class GuessYourLikeShopCart4ItemFilterSdkExtPt extends DefaultItemFilterS
     @Override
     public SgFrameworkResponse<ItemEntityVO> process(ItemFilterRequest itemFilterRequest) {
 
+        tacLogger.info("商品过滤处理：itemFilterRequest="+ JSON.toJSONString(itemFilterRequest));
         SgFrameworkResponse<ItemEntityVO> process = super.process(itemFilterRequest);
         tacLogger.info("商品过滤处理：ItemEntityVOResponse="+ JSON.toJSONString(process));
         return process;
