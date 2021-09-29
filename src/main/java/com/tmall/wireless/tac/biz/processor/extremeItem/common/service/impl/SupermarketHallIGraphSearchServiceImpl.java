@@ -22,8 +22,8 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
 
     @Autowired
     TacLogger tacLogger;
-    @Autowired
-    //com.taobao.igraph.client.core.IGraphClientWrap iGraphClientWrap;
+    /*@Autowired
+    com.taobao.igraph.client.core.IGraphClientWrap iGraphClientWrap;*/
 
     @Override
     public List<T> search(String tableName, List<String> keyList, String[] fields, int perKeySize,  IGraphResponseHandler<T> handler) {
