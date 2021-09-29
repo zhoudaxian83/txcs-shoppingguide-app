@@ -18,6 +18,7 @@ import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.node.ItemInfoNode;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
+import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
@@ -114,6 +115,13 @@ public class FirstScreenMindItemScene {
                 })
                 .map(TacResult::newResult)
                 .map(tacResult -> {
+                    if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
+                        tacResult = TacResult.errorResult("test");
+                        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+                            .kv("FirstScreenMindItemScene","recommend")
+                            .kv("tacResult",JSON.toJSONString(tacResult))
+                            .info();
+                    }
                     tacResult.getBackupMetaData().setUseBackup(true);
                     return tacResult;
                 })
@@ -164,6 +172,59 @@ public class FirstScreenMindItemScene {
         }
     }
 
+    public ItemMetaInfo getRecommendItemMetaInfo(LocParams locParams) {
+        ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
+        List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
+        List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
+        itemInfoSourceMetaInfoCaptain.setSourceName("captain");
+        if(locParams!=null &&
+            locParams.getRt1HourStoreId() == 0
+            && locParams.getRtHalfDayStoreId() == 0){
+            itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
+        }
+
+        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
+        itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
+        ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
+        itemInfoSourceMetaInfoTpp.setSourceName("tpp");
+        itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoTpp);
+
+
+
+        List<ItemInfoNode> itemInfoNodes = Lists.newArrayList();
+        ItemInfoNode itemInfoNodeFirst = new ItemInfoNode();
+        itemInfoNodes.add(itemInfoNodeFirst);
+        itemInfoNodeFirst.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+
+
+        ItemInfoNode itemInfoNodeSceond = new ItemInfoNode();
+        itemInfoNodes.add(itemInfoNodeSceond);
+        itemInfoNodeSceond.setItemInfoSourceMetaInfos(Lists.newArrayList(getItemInfoBySourceTimeLabel()));
+
+        ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
+        itemGroupMetaInfoList.add(itemGroupMetaInfo);
+        itemGroupMetaInfo.setGroupName("sm_B2C");
+        itemGroupMetaInfo.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        ItemGroupMetaInfo itemGroupMetaInfo1 = new ItemGroupMetaInfo();
+        itemGroupMetaInfoList.add(itemGroupMetaInfo1);
+        itemGroupMetaInfo1.setGroupName("sm_O2OOneHour");
+//        itemGroupMetaInfo1.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        itemGroupMetaInfo1.setItemInfoNodes(itemInfoNodes);
+        ItemGroupMetaInfo itemGroupMetaInfo2 = new ItemGroupMetaInfo();
+        itemGroupMetaInfoList.add(itemGroupMetaInfo2);
+        itemGroupMetaInfo2.setGroupName("sm_O2OHalfDay");
+//        itemGroupMetaInfo2.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        itemGroupMetaInfo2.setItemInfoNodes(itemInfoNodes);
+        ItemGroupMetaInfo itemGroupMetaInfo3 = new ItemGroupMetaInfo();
+        itemGroupMetaInfoList.add(itemGroupMetaInfo3);
+        itemGroupMetaInfo3.setGroupName("sm_O2ONextDay");
+        itemGroupMetaInfo3.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+
+        itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
+        return itemMetaInfo;
+    }
+
     public ItemMetaInfo getRecommendItemMetaInfo() {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
@@ -196,12 +257,12 @@ public class FirstScreenMindItemScene {
         ItemGroupMetaInfo itemGroupMetaInfo1 = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo1);
         itemGroupMetaInfo1.setGroupName("sm_O2OOneHour");
-//        itemGroupMetaInfo1.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        //        itemGroupMetaInfo1.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
         itemGroupMetaInfo1.setItemInfoNodes(itemInfoNodes);
         ItemGroupMetaInfo itemGroupMetaInfo2 = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo2);
         itemGroupMetaInfo2.setGroupName("sm_O2OHalfDay");
-//        itemGroupMetaInfo2.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
+        //        itemGroupMetaInfo2.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
         itemGroupMetaInfo2.setItemInfoNodes(itemInfoNodes);
         ItemGroupMetaInfo itemGroupMetaInfo3 = new ItemGroupMetaInfo();
         itemGroupMetaInfoList.add(itemGroupMetaInfo3);

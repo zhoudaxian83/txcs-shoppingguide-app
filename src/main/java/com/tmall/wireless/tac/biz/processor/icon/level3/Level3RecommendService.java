@@ -142,7 +142,13 @@ public class Level3RecommendService {
             labelDTO.setText("推荐");
             labelDTO.setId(0L);
             labelDTO.setBusiness(Joiner.on(",").join(businessTypeSet));
-            result.add(0, labelDTO);
+            if (result.size() == 1) {
+                // 如果只有一个3级则只展示推荐
+                result.clear();
+                result.add(labelDTO);
+            } else {
+                result.add(0, labelDTO);
+            }
         }
 
         return result;
