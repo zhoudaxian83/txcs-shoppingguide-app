@@ -38,7 +38,6 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
     //参数文档：https://yuque.antfin.com/docs/share/4187d39f-b7d7-4650-8455-3df0426e3c30?#
     @Override
     public RecommendRequest process(SgFrameworkContextItem context) {
-        tacLogger.info("=================tacLogger+ 已进入tpp参数组装==================");
         RecommendRequest tppRequest = new RecommendRequest();
         tppRequest.setLogResult(true);
         tppRequest.setAppId(APP_ID);
@@ -49,8 +48,6 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         Map<String,Object> contextParamsMap = Optional.of(context).map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams).orElse(Maps.newHashMap());
 
-        tacLogger.info("pmt参数：" + JSON.toJSONString(Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getPmtParams)));
         //pmt参数拼接
         String pmtName = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getPmtParams).map(PmtParams::getPmtName).orElse("guessULike");
@@ -64,22 +61,17 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         String moduleId = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getPmtParams).map(PmtParams::getModuleId).orElse("153");
 
-        tacLogger.info("开始获取csa参数");
         LocParams locParams = Optional.of(context).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams).orElse(new LocParams());
 
         Long smAreaId = Optional.of(locParams).map(LocParams::getSmAreaId).get();
 
-        tacLogger.info("smAreaId:" + smAreaId);
         String regionCode = locParams.getRegionCode() != null ? locParams.getRegionCode().toString() : "";
-
-        tacLogger.info("regionCode:" + regionCode);
 
          String logicAreaId = Joiner.on(",").join(Optional.ofNullable(locParams)
                  .map(LocParams::getLogicIdByPriority)
                  .orElse(Lists.newArrayList()));
 
-        tacLogger.info("logicAreaId:" + logicAreaId);
 
         String index = "0";
         String pageSize = MapUtil.getStringWithDefault(contextParamsMap, "pageSize", "20");
@@ -116,12 +108,9 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
         params.put("isFirstPage", isFirstPage);
         params.put("exposureDataUserId", exposureDataUserId);
 
-        tacLogger.info("tpp请求参数：" + params.toString());
         tppRequest.setParams(params);
-        tacLogger.info("=================tacLogger+ 已完成tpp参数组装==================");
 
         tppRequest.setParams(params);
-        tacLogger.info("AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt: tppRequest: " + JSON.toJSONString(tppRequest));
         String requestLog = "https://tui.taobao.com/recommend?appid=" + tppRequest.getAppId() + "&" +
                 Joiner.on("&").withKeyValueSeparator("=").join(tppRequest.getParams());
         tacLogger.info("TPP_REQUEST: " + requestLog);
@@ -131,6 +120,4 @@ public class AliPaySuccessGuessYouLikeItemOriginDataRequestBuildSdkExtPt extends
                 .info();
         return tppRequest;
     }
-
-
 }

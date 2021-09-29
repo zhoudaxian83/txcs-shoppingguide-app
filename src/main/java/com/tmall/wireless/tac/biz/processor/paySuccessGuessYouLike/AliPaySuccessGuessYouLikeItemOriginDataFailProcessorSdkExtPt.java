@@ -13,7 +13,6 @@ import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataFailProcessorSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProcessRequest;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
-import com.tmall.txcs.biz.supermarket.extpt.failprocessor.DefaultOriginDataFailProcessorExtPt;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -31,8 +30,8 @@ import java.util.stream.Collectors;
         useCase = ScenarioConstantApp.LOC_TYPE_B2C
         , scenario = ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE
 )
-public class AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt extends
-        DefaultItemOriginDataFailProcessorSdkExtPt implements ItemOriginDataFailProcessorSdkExtPt {
+public class AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt extends DefaultItemOriginDataFailProcessorSdkExtPt implements ItemOriginDataFailProcessorSdkExtPt {
+
 
     @Autowired
     TairFactorySpi tairFactorySpi;
@@ -47,9 +46,7 @@ public class AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt extend
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
-
-        tacLogger.info("元数据处理失败扩展点OriginDataProcessRequest:" + JSON.toJSONString(originDataProcessRequest));
-        Map<String, Object> requestParams = originDataProcessRequest.getSgFrameworkContextItem().getRequestParams();
+        tacLogger.info("元数据处理失败扩展点将处理信息");
         OriginDataDTO<ItemEntity> originDataDTO = originDataProcessRequest.getItemEntityOriginDataDTO();
         boolean isSuccess = checkSuccess(originDataDTO);
         HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
@@ -60,15 +57,16 @@ public class AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt extend
             tacLogger.info("元数据处理失败扩展点返回成功");
             return originDataDTO;
         }
-        String sKey = MapUtil.getStringWithDefault(requestParams, "moduleId", "153");
+
+        String sKey =Optional.of(originDataProcessRequest).map(OriginDataProcessRequest::getSgFrameworkContextItem)
+                .map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getPmtParams).map(PmtParams::getModuleId).orElse("153");
         MultiClusterTairManager multiClusterTairManager = tairFactorySpi.getOriginDataFailProcessTair()
                 .getMultiClusterTairManager();
-        tacLogger.info("modelId:" + sKey);
 
         Result<DataEntry> labelSceneResult = multiClusterTairManager.prefixGet(nameSpace,
                 ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE, sKey);
 
-        tacLogger.info("labelSceneResult:" + JSON.toJSONString(labelSceneResult));
         if (labelSceneResult == null) {
             HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
                     .kv("AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt", "process")
@@ -83,10 +81,12 @@ public class AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt extend
                     .kv("AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt", "process")
                     .kv("labelSceneResult", JSON.toJSONString(labelSceneResult))
                     .info();
-            tacLogger.info("元数据处理失败扩展点tair打底数据获取成功");
+            tacLogger.info("元数据处理失败扩展点tair打底数据获取内容为空");
+            originDataDTO.setHasMore(false);
             return originDataDTO;
         }
-        List<Long> itemIdList = (List<Long>) (labelSceneResult.getValue().getValue());
+
+        List<Long> itemIdList = JSON.parseArray(String.valueOf(labelSceneResult.getValue().getValue()) ,Long.class);
         if (CollectionUtils.isEmpty(itemIdList)) {
             return originDataDTO;
         }
@@ -96,14 +96,9 @@ public class AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt extend
                 .kv("AliPaySuccessGuessYouLikeItemOriginDataFailProcessorSdkExtPt", "process")
                 .kv("baseOriginDataDTO.getResult().size()", String.valueOf(baseOriginDataDTO.getResult().size()))
                 .info();
-        tacLogger.info("元数据处理失败扩展点tair打底数据获取最终");
+        tacLogger.info("元数据处理失败扩展点tair打底数据获取成功");
         return baseOriginDataDTO;
 
-//        tacLogger.info("进入元数据失败处理扩展点,处理内容：" + originDataProcessRequest);
-//        OriginDataDTO<ItemEntity> process = super.process(originDataProcessRequest);
-//        process.setHasMore(false);
-//        tacLogger.info("进入元数据失败处理扩展点处理结果:" + process);
-//        return process;
     }
 
     public OriginDataDTO<ItemEntity> buildOriginDataDTO(List<Long> itemIdList, SgFrameworkContextItem contextItem) {
