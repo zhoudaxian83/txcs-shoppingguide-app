@@ -25,7 +25,7 @@ public class ChaoHaoTouHandler extends RpmReactiveHandler<SgFrameworkResponse<En
 
     @Override
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
-        LOGGER.info("ChaoHaoTouHandler_params"+ JSON.toJSONString(context));
+        LOGGER.error("ChaoHaoTouHandler_params"+ JSON.toJSONString(context));
         return chaoHaoTouPageBannerItemInfoScene.recommend(context);
     }
 }

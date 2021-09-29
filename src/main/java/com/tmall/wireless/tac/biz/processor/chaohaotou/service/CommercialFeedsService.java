@@ -41,7 +41,7 @@ public class CommercialFeedsService {
         Pair<Boolean, List<TmcsZntItemDTO>> booleanListPair = null;
         Map<String, Object> paramMap = this.buildParam(sgFrameworkContextItem);
         tacLogger.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
-        LOGGER.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
+        LOGGER.error("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
         try {
             Object o = rpcSpi.invokeHsf(Constant.TMCS_ZNT_ENGINE, paramMap);
             if (o == null) {
