@@ -14,6 +14,8 @@ import com.tmall.wireless.tac.biz.processor.chaohaotou.model.TmcsZntItemDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,10 +35,13 @@ public class CommercialFeedsService {
     @Autowired
     TacLogger tacLogger;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommercialFeedsService.class);
+
     public Pair<Boolean, List<TmcsZntItemDTO>> getCommercialFeeds(SgFrameworkContextItem sgFrameworkContextItem) {
         Pair<Boolean, List<TmcsZntItemDTO>> booleanListPair = null;
         Map<String, Object> paramMap = this.buildParam(sgFrameworkContextItem);
         tacLogger.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
+        LOGGER.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
         try {
             Object o = rpcSpi.invokeHsf(Constant.TMCS_ZNT_ENGINE, paramMap);
             if (o == null) {
