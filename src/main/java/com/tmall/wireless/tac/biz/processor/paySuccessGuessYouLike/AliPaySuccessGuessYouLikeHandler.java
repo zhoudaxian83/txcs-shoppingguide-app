@@ -31,7 +31,6 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
     @Override
     public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
 
-        tacLogger.info("进入handler");
         BizScenario bizScenario = BizScenario.valueOf(
                 ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                 ScenarioConstantApp.LOC_TYPE_B2C,
@@ -43,9 +42,7 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                     if (tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null
                             || tacResult.getData().getItemAndContentList().isEmpty()) {
 
-                        tacLogger.info("有更新");
                         tacLogger.info("进入tac打底");
-                        tacLogger.info("tacresult信息：" + JSON.toJSONString(tacResult));
                         tacResult = TacResult.errorResult("test");
                         HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
                                 .kv("shoppingguideSdkItemService", "recommend")
@@ -57,14 +54,9 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
                         tacResult.setHasMore(true);
                     }
                     tacResult.getBackupMetaData().setUseBackup(true);
-                    tacLogger.info("tacresult信息：" + JSON.toJSONString(tacResult));
                     return tacResult;
                 })
-                .onErrorReturn(r -> {
-                    tacLogger.info("打底错误信息：" + JSON.toJSONString(r));
-                    tacLogger.info("打底错误信息：" + r.getMessage());
-                   return TacResult.errorResult("");
-                });
+                .onErrorReturn(r -> TacResult.errorResult(""));
 
 
         return tacResultFlowable;
