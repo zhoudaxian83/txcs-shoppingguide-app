@@ -38,29 +38,34 @@ public class GuessYourLikeShopCart4ItemFilterSdkExtPt extends DefaultItemFilterS
         //SgFrameworkResponse<ItemEntityVO> process = super.process(itemFilterRequest);
         //tacLogger.info("商品过滤处理：ItemEntityVOResponse="+ JSON.toJSONString(process));
         //return process;
-        SgFrameworkResponse<ItemEntityVO> entityVOSgFrameworkResponse = itemFilterRequest.getEntityVOSgFrameworkResponse();
-        List<ItemEntityVO> itemAndContentList = entityVOSgFrameworkResponse.getItemAndContentList();
-        if (CollectionUtils.isEmpty(itemAndContentList)) {
-            LOGGER.info("itemAndContentList is null");
-            return entityVOSgFrameworkResponse;
-        } else {
-            List<ItemEntityVO> itemAndContentListAfterFilter = Lists.newArrayList();
-            Iterator var5 = itemAndContentList.iterator();
+        try {
+            SgFrameworkResponse<ItemEntityVO> entityVOSgFrameworkResponse = itemFilterRequest.getEntityVOSgFrameworkResponse();
+            List<ItemEntityVO> itemAndContentList = entityVOSgFrameworkResponse.getItemAndContentList();
+            if (CollectionUtils.isEmpty(itemAndContentList)) {
+                tacLogger.info("itemAndContentList is null");
+                return entityVOSgFrameworkResponse;
+            } else {
+                List<ItemEntityVO> itemAndContentListAfterFilter = Lists.newArrayList();
+                Iterator var5 = itemAndContentList.iterator();
 
-            while(var5.hasNext()) {
-                ItemEntityVO entityVO = (ItemEntityVO)var5.next();
-                if (entityVO != null) {
-                    if (!this.canBuy(entityVO)) {
-                        LOGGER.error("itemFilter,{}, itemId:{}", "ITEM_FILTER_BY_CAN_BUY", entityVO.getString("itemId"));
-                    } else if (this.checkField(entityVO)) {
-                        itemAndContentListAfterFilter.add(entityVO);
+                while(var5.hasNext()) {
+                    ItemEntityVO entityVO = (ItemEntityVO)var5.next();
+                    if (entityVO != null) {
+                        if (!this.canBuy(entityVO)) {
+                            tacLogger.info("ITEM_FILTER_BY_CAN_BUY");
+                        } else if (this.checkField(entityVO)) {
+                            itemAndContentListAfterFilter.add(entityVO);
+                        }
                     }
                 }
-            }
 
-            entityVOSgFrameworkResponse.setItemAndContentList(itemAndContentListAfterFilter);
-            LOGGER.info("过滤完成");
-            return entityVOSgFrameworkResponse;
+                entityVOSgFrameworkResponse.setItemAndContentList(itemAndContentListAfterFilter);
+                tacLogger.info("过滤完成");
+                return entityVOSgFrameworkResponse;
+            }
+        } catch (Exception e) {
+            tacLogger.info("过滤出现异常");
+            return null;
         }
     }
     protected boolean checkField(ItemEntityVO entityVO) {
