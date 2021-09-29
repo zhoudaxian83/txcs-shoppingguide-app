@@ -130,7 +130,7 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
 
             tacLogger.info("VO重写完成,VO结果集为："+JSON.toJSONString(itemEntityVO));
             //return Response.success(itemEntityVO);
-            return Response.success(null);
+            return Response.success(itemEntityVO);
         } catch (Exception e) {
             tacLogger.info("ERROR" + JSON.toJSONString(e));
             return Response.fail("ERROR_TEXT="+JSON.toJSONString(e));
