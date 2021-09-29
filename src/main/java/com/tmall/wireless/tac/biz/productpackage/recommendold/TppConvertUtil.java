@@ -100,14 +100,8 @@ public class TppConvertUtil {
 
             itemEntity.setItemId(jsonObject.getLong("itemId"));
             itemEntity.setBrandId(jsonObject.getString("brandId"));
-            itemEntity.setCateId(jsonObject.getString("brandId"));
-
-
+            itemEntity.setCateId(jsonObject.getString("cateId"));
             itemEntity.setBizType(BizType.SM.getCode());
-
-            String commerceModel = jsonObject.getString("commerceModel");
-            itemEntity.setBusinessType(commerceModel);
-
             String businessType = jsonObject.getString("businessType");
             itemEntity.setBusinessType(businessType);
             String o2oTypeFromTpp = jsonObject.getString("o2oType");
@@ -122,6 +116,7 @@ public class TppConvertUtil {
                 itemEntity.setTrack_point(jsonObject.getString("track_point"));
             }
             itemEntity.setTrack_point(scm + "." + itemEntity.getTrack_point());
+            itemEntity.setCrowdId(jsonObject.getString("crowdId"));
             list.add(itemEntity);
         }
         return list;
