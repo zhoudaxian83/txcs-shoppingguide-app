@@ -104,17 +104,27 @@ public class TppConvertUtil {
 
 
             itemEntity.setBizType(BizType.SM.getCode());
+<<<<<<< HEAD
 
             String commerceModel = jsonObject.getString("commerceModel");
             itemEntity.setBusinessType(commerceModel);
 
             String o2oTypeFromTpp = jsonObject.getString("o2oType");
+=======
+            String businessType = jsonObject.getString("businessType");
+            itemEntity.setBusinessType(businessType);
+            String o2oTypeFromTpp = jsonObject.getString("o2oType");
+//            String o2oTypeFromTpp = jsonObject.getString("locType");
+>>>>>>> 64b43fbe9bb16401a906ebd78e2d4910d3116976
             String o2oType = StringUtils.isEmpty(o2oTypeFromTpp) ? com.tmall.tcls.gs.sdk.framework.model.context.O2oType.B2C.name() :
                     (StringUtils.isEmpty(tppO2oTypeConvertMap.get(o2oTypeFromTpp)) ?
                             O2oType.B2C.name() : tppO2oTypeConvertMap.get(o2oTypeFromTpp));
             itemEntity.setO2oType(o2oType);
-
-            itemEntity.setTrack_point(jsonObject.getString("trackPoint"));
+            if(StringUtils.isNotEmpty(jsonObject.getString("trackPoint"))){
+                itemEntity.setTrack_point(jsonObject.getString("trackPoint"));
+            }else{
+                itemEntity.setTrack_point(jsonObject.getString("track_point"));
+            }
             itemEntity.setTrack_point(scm + "." + itemEntity.getTrack_point());
             list.add(itemEntity);
         }
