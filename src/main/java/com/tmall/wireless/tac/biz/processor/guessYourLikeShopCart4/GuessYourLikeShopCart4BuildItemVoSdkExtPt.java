@@ -46,68 +46,16 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
 
         try {
             tacLogger.info("VO重写开始");
-            ItemEntityVO entityVO = new ItemEntityVO();
-            boolean hasMainSource = false;
-            boolean canBuy = true;
-            if (buildItemVoRequest == null || buildItemVoRequest.getItemInfoDTO() == null) {
-                return Response.fail(ErrorCode.PARAMS_ERROR);
+            Response<ItemEntityVO> entityVOResponse = super.process(buildItemVoRequest);
+
+            if(!entityVOResponse.isSuccess()){
+                return entityVOResponse;
             }
-
-            ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
-
-            String originScm = "";
-            String itemUrl = "";
-            Map<String, String> trackPoint = Maps.newHashMap();
-
-            for (String s : itemInfoDTO.getItemInfos().keySet()) {
-
-                com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoBySourceDTO contextItemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
-                //类型转换
-                ItemInfoBySourceDTO itemInfoBySourceDTO=JSON.parseObject(JSON.toJSONString(contextItemInfoBySourceDTO),ItemInfoBySourceDTO.class);
-                if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOMain) {
-                    ItemInfoBySourceDTOMain itemInfoBySourceDTOMain = (ItemInfoBySourceDTOMain) itemInfoBySourceDTO;
-                    itemUrl = Optional.of(itemInfoBySourceDTOMain)
-                            .map(ItemInfoBySourceDTOMain::getItemDTO)
-                            .map(ItemDataDTO::getDetailUrl)
-                            .orElse("");
-                    canBuy = canBuy(itemInfoBySourceDTOMain);
-                    hasMainSource = true;
-                }
-                if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOOrigin) {
-                    ItemInfoBySourceDTOOrigin itemInfoBySourceDTOOrigin = (ItemInfoBySourceDTOOrigin) itemInfoBySourceDTO;
-                    originScm = itemInfoBySourceDTOOrigin.getScm();
-
-                }
-                //            if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOInv) {
-                //                canBuy = ((ItemInfoBySourceDTOInv) itemInfoBySourceDTO).isCanBuy();
-                //            }
-                Map<String, String> scmKeyValue = itemInfoBySourceDTO.getScmKeyValue();
-                if (MapUtils.isNotEmpty(scmKeyValue)) {
-                    trackPoint.putAll(scmKeyValue);
-                }
-
-                entityVO.putAll(itemInfoBySourceDTO.getItemInfoVO());
-            }
-
-
-
-            if (!canBuy) {
-                if(entityVO.get("itemId") != null){
-                    HadesLogUtil.stream("guessYourLikeShopCart4")
-                            .kv("GuessYourLikeShopCart4BuildItemVoSdkExtPt","process")
-                            .kv("canBuy filter ItemId",entityVO.get("itemId").toString())
-                            .kv("Response","ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F")
-                            .info();
-                }
-//                tacLogger.info("VO重写-1");
-                return Response.fail("ITEM_VO_BUILD_ERROR_CAN_BUY_FALSE_F");
-            }
+            ItemEntityVO entityVO = entityVOResponse.getValue();
 
             //cff
             ItemEntityVO itemEntityVO = new ItemEntityVO();
-            String scm = processScm(originScm, trackPoint);
-            itemUrl = itemUrl + "&scm=" + scm;
-            itemEntityVO.put("scm", scm);
+            itemEntityVO.put("scm", entityVO.get("scm"));
             /**点击埋点**/
             Map<String,Object> clickParam = Maps.newHashMap();
             Map<String,Object> args = Maps.newHashMap();
@@ -161,7 +109,7 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             titleInfo.put("labelImgWidth",0);
             itemEntityVO.put("titleInfo", titleInfo);
             /**点击事件，跳转到该商品详情**/
-            itemEntityVO.put("action", itemUrl);
+            itemEntityVO.put("action", entityVO.get("itemUrl"));
             /********/
             itemEntityVO.put("type", 0);
             /********/
