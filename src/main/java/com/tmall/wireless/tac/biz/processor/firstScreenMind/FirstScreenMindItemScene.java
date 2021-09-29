@@ -178,10 +178,13 @@ public class FirstScreenMindItemScene {
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-
-        if(locParams.getRt1HourStoreId() == 0 && locParams.getRtHalfDayStoreId() == 0){
+        tacLogger.info("locParams:"+JSON.toJSONString(locParams));
+        if(locParams!=null &&
+            locParams.getRt1HourStoreId() == 0
+            && locParams.getRtHalfDayStoreId() == 0){
             itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         }
+
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
@@ -229,8 +232,7 @@ public class FirstScreenMindItemScene {
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-
-        //itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
+        itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
