@@ -6,11 +6,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.model.TmcsZntItemDTO;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -41,7 +43,8 @@ public class CommercialFeedsService {
         Pair<Boolean, List<TmcsZntItemDTO>> booleanListPair = null;
         Map<String, Object> paramMap = this.buildParam(sgFrameworkContextItem);
         tacLogger.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
-        LOGGER.error("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("getCommercialFeeds_入参", JSON.toJSONString(paramMap)).info();
         try {
             Object o = rpcSpi.invokeHsf(Constant.TMCS_ZNT_ENGINE, paramMap);
             if (o == null) {
