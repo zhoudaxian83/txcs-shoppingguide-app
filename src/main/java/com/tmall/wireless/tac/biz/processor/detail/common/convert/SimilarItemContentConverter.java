@@ -61,13 +61,6 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
             itemAndContentList = new ArrayList<>();
         }
 
-        //校验必须有6个以上才展示
-        itemAndContentList = itemAndContentList.stream()
-            .filter(v -> v.containsKey("items"))
-            .filter(v -> CollectionUtils.isNotEmpty(((List<ItemEntityVO>)v.get("items")))
-                && ((List<ItemEntityVO>)v.get("items")).size() >= 10)
-            .collect(Collectors.toList());
-
         //默认写入第一个tab是相似商品，默认contentId=-1
         ContentVO contentVO = new ContentVO();
         contentVO.put("contentId", -1L);

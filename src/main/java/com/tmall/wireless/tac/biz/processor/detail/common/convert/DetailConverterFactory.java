@@ -22,8 +22,6 @@ public class DetailConverterFactory implements InitializingBean {
     @Resource
     List<AbstractConverter> converterList;
 
-    private static Map<String, AbstractConverter> converters;
-
     public AbstractConverter getConverter(String type) {
         return converterList.stream()
             .filter(v -> v.isAccess(type))
