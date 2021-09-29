@@ -33,8 +33,8 @@ import org.springframework.stereotype.Component;
 public class SimilarItemContentConverter extends AbstractConverter<DetailRecContentResultVO> {
 
     @Override
-    public boolean isAccess(RecTypeEnum recTypeEnum) {
-        return RecTypeEnum.SIMILAR_ITEM_CONTENT.equals(recTypeEnum);
+    public boolean isAccess(String recType) {
+        return RecTypeEnum.SIMILAR_ITEM_CONTENT.getType().equals(recType);
     }
 
     @Override

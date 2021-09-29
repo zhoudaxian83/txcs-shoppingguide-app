@@ -39,9 +39,9 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
     private IGraphSpi iGraphSpi;
 
     @Override
-    public boolean isAccess(RecTypeEnum recTypeEnum) {
-        return RecTypeEnum.SIMILAR_ITEM_ITEM.equals(recTypeEnum) ||
-            RecTypeEnum.SIMILAR_ITEM_CONTENT_ITEM.equals(recTypeEnum);
+    public boolean isAccess(String recType) {
+        return RecTypeEnum.SIMILAR_ITEM_ITEM.getType().equals(recType) ||
+            RecTypeEnum.SIMILAR_ITEM_CONTENT_ITEM.getType().equals(recType);
     }
 
     @Override

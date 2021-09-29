@@ -38,7 +38,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class AbstractConverter<T> {
 
-    public abstract boolean isAccess(RecTypeEnum recTypeEnum);
+    public abstract boolean isAccess(String recType);
 
     public abstract T convert(Context context, SgFrameworkResponse sgFrameworkResponse);
 

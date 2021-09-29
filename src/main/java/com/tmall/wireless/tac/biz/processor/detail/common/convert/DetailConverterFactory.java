@@ -24,16 +24,15 @@ public class DetailConverterFactory implements InitializingBean {
 
     private static Map<String, AbstractConverter> converters;
 
-    public AbstractConverter getConverter(String type){
-        return converters.get(type);
+    public AbstractConverter getConverter(String type) {
+        return converterList.stream()
+            .filter(v -> v.isAccess(type))
+            .findFirst()
+            .orElse(null);
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         instance = this;
-        converters=new HashMap<>(converterList.size());
-        converterList.forEach(abstractConverter -> {
-            converters.put(abstractConverter.getRecTypeEnum().getType(),abstractConverter);
-        });
     }
 }

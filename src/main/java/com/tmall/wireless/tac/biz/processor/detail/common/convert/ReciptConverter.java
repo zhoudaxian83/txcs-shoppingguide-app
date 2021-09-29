@@ -30,8 +30,8 @@ import org.springframework.stereotype.Component;
 public class ReciptConverter extends AbstractConverter<DetailRecContentResultVO> {
 
     @Override
-    public boolean isAccess(RecTypeEnum recTypeEnum) {
-        return RecTypeEnum.RECIPE.equals(recTypeEnum);
+    public boolean isAccess(String recType) {
+        return RecTypeEnum.RECIPE.getType().equals(recType);
     }
 
 
