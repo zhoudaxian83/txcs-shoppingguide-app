@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
+import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.tcls.gs.sdk.biz.extensions.item.vo.DefaultBuildItemVoSdkExtPt;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -10,8 +11,12 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoRequest;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.Response;
-import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
+import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
+import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoBySourceDTO;
+import com.tmall.tcls.gs.sdk.framework.model.context.O2oType;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoDTO;
+import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.captain.ItemInfoBySourceCaptainDTO;
+import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.tpp.ItemInfoBySourceTppDTO;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.origindate.ItemInfoBySourceDTOOrigin;
 import com.tmall.txcs.gs.framework.model.ErrorCode;
@@ -24,6 +29,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,7 +43,7 @@ import java.util.Optional;
         useCase = "b2c",
         scenario = "guessYourLikeShopCart4"
 )
-public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt implements BuildItemVoSdkExtPt {
+public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends Register implements BuildItemVoSdkExtPt {
 
     @Autowired
     TacLoggerImpl tacLogger;
@@ -45,13 +51,49 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
 
         try {
+            ItemEntityVO entityVO = new ItemEntityVO();
+            if (buildItemVoRequest != null && buildItemVoRequest.getItemInfoDTO() != null) {
+                ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
+                entityVO.setItemId((Long)Optional.of(itemInfoDTO).map(ItemInfoDTO::getItemEntity).map(ItemEntity::getItemId).orElse(0L));
+                entityVO.setO2oType((String)Optional.of(itemInfoDTO).map(ItemInfoDTO::getItemEntity).map(ItemEntity::getO2oType).orElse(O2oType.B2C.name()));
+                String originScm = "";
+                String itemUrl = "";
+                Map<String, String> trackPoint = Maps.newHashMap();
+
+                com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoBySourceDTO itemInfoBySourceDTO;
+                for(Iterator var7 = itemInfoDTO.getItemInfos().keySet().iterator(); var7.hasNext(); entityVO.putAll(this.getItemVoMap(itemInfoBySourceDTO))) {
+                    String s = (String)var7.next();
+                    itemInfoBySourceDTO = (ItemInfoBySourceDTO)itemInfoDTO.getItemInfos().get(s);
+                    if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainDTO) {
+                        ItemInfoBySourceCaptainDTO itemInfoBySourceCaptainDTO = (ItemInfoBySourceCaptainDTO)itemInfoBySourceDTO;
+                        itemUrl = (String)Optional.of(itemInfoBySourceCaptainDTO).map(ItemInfoBySourceCaptainDTO::getItemDTO).map(ItemDTO::getDetailUrl).orElse("");
+                    }
+
+                    if (itemInfoBySourceDTO instanceof ItemInfoBySourceTppDTO) {
+                        ItemInfoBySourceTppDTO itemInfoBySourceDTOOrigin = (ItemInfoBySourceTppDTO)itemInfoBySourceDTO;
+                        originScm = itemInfoBySourceDTOOrigin.getScm();
+                    }
+
+                    Map<String, String> scmKeyValue = itemInfoBySourceDTO.getScmKeyValue();
+                    if (MapUtils.isNotEmpty(scmKeyValue)) {
+                        trackPoint.putAll(scmKeyValue);
+                    }
+                }
+
+                String scm = this.processScm(originScm, trackPoint);
+                itemUrl = itemUrl + "&scm=" + scm;
+                entityVO.put("scm", scm);
+                entityVO.put("itemUrl", itemUrl);
+            } else {
+                return Response.fail("PARAMS_ERROR");
+            }
             tacLogger.info("VO重写开始");
-            Response<ItemEntityVO> entityVOResponse = super.process(buildItemVoRequest);
+            /*Response<ItemEntityVO> entityVOResponse = super.process(buildItemVoRequest);
 
             if(!entityVOResponse.isSuccess()){
                 return entityVOResponse;
             }
-            ItemEntityVO entityVO = entityVOResponse.getValue();
+            ItemEntityVO entityVO = entityVOResponse.getValue();*/
 
             //cff
             ItemEntityVO itemEntityVO = new ItemEntityVO();
@@ -134,6 +176,35 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
         } catch (Exception e) {
             tacLogger.info("ERROR" + JSON.toJSONString(e));
             return Response.fail("ERROR_TEXT="+JSON.toJSONString(e));
+        }
+    }
+
+    protected Map<String, Object> getItemVoMap(ItemInfoBySourceDTO itemInfoBySourceDTO) {
+        return itemInfoBySourceDTO.getItemInfoVO();
+    }
+
+    private String processScm(String originScm, Map<String, String> scmKeyValue) {
+        if (MapUtils.isEmpty(scmKeyValue)) {
+            return originScm;
+        } else {
+            String addScm = Joiner.on("_").withKeyValueSeparator("-").join(scmKeyValue);
+            return this.scmConvert(originScm, addScm);
+        }
+    }
+
+    public String scmConvert(String scm, String add) {
+        try {
+            if (StringUtils.isBlank(scm)) {
+                return scm;
+            } else {
+                int index = scm.lastIndexOf("-");
+                String prefixScm = scm.substring(0, index);
+                String suffixScm = scm.substring(index);
+                return prefixScm + "_" + add + suffixScm;
+            }
+        } catch (Exception var6) {
+            LOGGER.error("scmConvertError", var6);
+            return scm;
         }
     }
 }
