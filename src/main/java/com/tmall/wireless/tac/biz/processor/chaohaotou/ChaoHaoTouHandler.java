@@ -33,7 +33,7 @@ public class ChaoHaoTouHandler extends RpmReactiveHandler<SgFrameworkResponse<En
     @Override
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> executeFlowable(Context context) throws Exception {
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
-                .kv("ChaoHaoTouHandler_params", JSON.toJSONString(context)).info();
+                .kv("ChaoHaoTouHandler_params_", JSON.toJSONString(context)).info();
         return chaoHaoTouPageBannerItemInfoScene.recommend(context);
     }
 }
