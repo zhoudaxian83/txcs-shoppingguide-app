@@ -138,42 +138,4 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             return Response.fail("ERROR_TEXT="+JSON.toJSONString(e));
         }
     }
-
-    private boolean canBuy(ItemInfoBySourceDTOMain itemInfoBySourceDTO) {
-        Boolean canBuy = Optional.of(itemInfoBySourceDTO).map(ItemInfoBySourceDTOMain::getItemDTO).map(ItemDataDTO::isCanBuy).orElse(true);
-        Boolean sellOut = Optional.of(itemInfoBySourceDTO).map(ItemInfoBySourceDTOMain::getItemDTO).map(ItemDataDTO::isSellOut).orElse(false);
-        return canBuy && !sellOut;
-
-    }
-    private String processScm(String originScm, Map<String, String> scmKeyValue) {
-
-        if (MapUtils.isEmpty(scmKeyValue)) {
-            return originScm;
-        }
-        String addScm = Joiner.on("_").withKeyValueSeparator("-").join(scmKeyValue);
-
-        return scmConvert(originScm, addScm);
-
-
-    }
-
-    public String scmConvert(String scm, String add) {
-        try {
-
-            if (StringUtils.isBlank(scm)) {
-                return scm;
-            }
-
-            int index = scm.lastIndexOf("-");
-            String prefixScm = scm.substring(0, index);
-            String suffixScm = scm.substring(index);
-
-
-            return prefixScm + "_" + add + suffixScm;
-        } catch (Exception e) {
-            //如果异常了就返回原来的
-            LOGGER.error("scmConvertError", e);
-            return scm;
-        }
-    }
 }
