@@ -84,7 +84,7 @@ public class GuessYourLikeShopCart4ItemFilterSdkExtPt extends DefaultItemFilterS
                 field = (String)var3.next();
             } while(!Objects.isNull(entityVO.get(field)));
 
-            LOGGER.error("itemFilter,{}, itemId:{},field:{}", new Object[]{"ITEM_FILTER_BY_FIELD_ERROR", entityVO.getString("itemId"), field});
+            tacLogger.info("ITEM_FILTER_BY_FIELD_ERROR");
             return false;
         }
     }
