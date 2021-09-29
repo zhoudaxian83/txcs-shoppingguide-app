@@ -17,6 +17,7 @@ import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
+import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
@@ -89,12 +90,11 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
         sgFrameworkContextItem.setUserDO(getUserDO(requestContext4Ald.getUserInfo()));
         String csa = MapUtils.getString(requestContext4Ald.getAldParam(), UserParamsKeyConstant.USER_PARAMS_KEY_CSA);
         sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(csa, smAreaId));
-        sgFrameworkContextItem.setItemMetaInfo(this.getRecommendItemMetaInfo());
+        sgFrameworkContextItem.setItemMetaInfo(getRecommendItemMetaInfo(sgFrameworkContextItem.getLocParams()));
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
             .kv("step", "requestLog")
             .kv("sgFrameworkContextItem3", JSON.toJSONString(sgFrameworkContextItem))
             .info();
-
 
         PageInfoDO pageInfoDO = new PageInfoDO();
         pageInfoDO.setIndex(0);
