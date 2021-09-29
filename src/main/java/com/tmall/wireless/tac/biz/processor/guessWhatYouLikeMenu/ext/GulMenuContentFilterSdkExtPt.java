@@ -71,7 +71,7 @@ public class GulMenuContentFilterSdkExtPt extends Register implements ContentFil
                 List<ItemEntityVO> mainMaterials = Lists.newArrayList();
                 for (ItemEntityVO itemCanBuy : canBuyItemList) {
                     String crowdIds = itemCanBuy.getString("crowdId");
-                    logger.info("sss" + crowdIds);
+                    logger.info(crowdIds);
                     // 主料数>=2 跳出
                     if (mainMaterials.size() >= ConstantValue.MAIN_MATERIAL_NUMBER) {
                         break;

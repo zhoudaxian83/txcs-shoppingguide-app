@@ -43,6 +43,7 @@ public class GulMenuBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt imple
             if (itemInfoDTO != null && itemInfoDTO.getItemEntity() != null) {
                 ItemEntity itemEntity = itemInfoDTO.getItemEntity();
                 logger.info("nnn" + itemEntity.getCrowdId());
+                logger.info("itemEntity" + itemEntity);
                 itemEntityVO.put("crowdId", itemEntity.getCrowdId());
             }
             result.setValue(itemEntityVO);
