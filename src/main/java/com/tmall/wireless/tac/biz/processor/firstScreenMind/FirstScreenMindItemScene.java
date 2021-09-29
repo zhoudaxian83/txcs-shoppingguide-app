@@ -179,7 +179,7 @@ public class FirstScreenMindItemScene {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
 
-        if(locParams.getRt1HourStoreId() == 0 || locParams.getRtHalfDayStoreId() == 0){
+        if(locParams.getRt1HourStoreId() == 0 && locParams.getRtHalfDayStoreId() == 0){
             itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         }
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
