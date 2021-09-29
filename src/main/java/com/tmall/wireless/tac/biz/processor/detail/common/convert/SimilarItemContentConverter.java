@@ -33,8 +33,8 @@ import org.springframework.stereotype.Component;
 public class SimilarItemContentConverter extends AbstractConverter<DetailRecContentResultVO> {
 
     @Override
-    public RecTypeEnum getRecTypeEnum() {
-        return RecTypeEnum.SIMILAR_ITEM_CONTENT;
+    public boolean isAccess(RecTypeEnum recTypeEnum) {
+        return RecTypeEnum.SIMILAR_ITEM_CONTENT.equals(recTypeEnum);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         //推荐内容
         detailRecContentResultVO.getResult().addAll(super
             .convertContentResult(recommendRequest, itemAndContentList.subList(0,
-                Math.min(DetailSwitch.requestConfigMap.get(getRecTypeEnum().getType()).getSizeDTO().getMax()
+                Math.min(DetailSwitch.requestConfigMap.get(recommendRequest.getRecType()).getSizeDTO().getMax()
                     , itemAndContentList.size())),
                 scmJoin));
 
@@ -119,7 +119,7 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
                 }
             });
 
-        paramsMap.put("recType",RecTypeEnum.SIMILAR_ITEM_ITEM.getType());
+        paramsMap.put("recType",RecTypeEnum.SIMILAR_ITEM_CONTENT_ITEM.getType());
         paramsMap.put("contentId",contentVO.getLong("contentId"));
         paramsMap.put("itemSetIds",contentVO.getString("itemSetIds"));
         paramsMap.put("pageSize",6);

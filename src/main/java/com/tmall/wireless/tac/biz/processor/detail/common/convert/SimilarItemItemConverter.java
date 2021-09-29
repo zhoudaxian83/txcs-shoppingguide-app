@@ -39,15 +39,16 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
     private IGraphSpi iGraphSpi;
 
     @Override
-    public RecTypeEnum getRecTypeEnum() {
-        return RecTypeEnum.SIMILAR_ITEM_ITEM;
+    public boolean isAccess(RecTypeEnum recTypeEnum) {
+        return RecTypeEnum.SIMILAR_ITEM_ITEM.equals(recTypeEnum) ||
+            RecTypeEnum.SIMILAR_ITEM_CONTENT_ITEM.equals(recTypeEnum);
     }
 
     @Override
     public DetailRecItemResultVO convert(Context context,SgFrameworkResponse sgFrameworkResponse) {
 
         //取大小限制
-        SizeDTO sizeDTO = DetailSwitch.requestConfigMap.get(getRecTypeEnum().getType()).getSizeDTO();
+        SizeDTO sizeDTO = DetailSwitch.requestConfigMap.get(super.getRecType(context)).getSizeDTO();
 
         //开始构建
         DetailRecItemResultVO detailRecItemResultVO=new DetailRecItemResultVO();

@@ -13,6 +13,7 @@ public enum RecTypeEnum {
 
     SIMILAR_ITEM_CONTENT("similarItemContent","相似商品场景推荐"),
     SIMILAR_ITEM_ITEM("similarItemItem","相似商品商品推荐"),
+    SIMILAR_ITEM_CONTENT_ITEM("similarItemContentItem","相似商品场景的商品推荐"),
     ;
     @Getter
     private final String type;

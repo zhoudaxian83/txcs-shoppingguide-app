@@ -38,10 +38,14 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class AbstractConverter<T> {
 
-    public abstract RecTypeEnum getRecTypeEnum();
+    public abstract boolean isAccess(RecTypeEnum recTypeEnum);
 
     public abstract T convert(Context context, SgFrameworkResponse sgFrameworkResponse);
 
+    public String getRecType(Context context){
+        DetailRecommendRequest recommendRequest=DetailRecommendRequest.getDetailRequest(context);
+        return recommendRequest.getRecType();
+    }
 
     public List<DetailRecommendContentVO> convertContentResult(DetailRecommendRequest recommendRequest, List<ContentVO> itemAndContentList,
         List<String> scmJoin) {

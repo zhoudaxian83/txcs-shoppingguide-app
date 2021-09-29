@@ -30,9 +30,10 @@ import org.springframework.stereotype.Component;
 public class ReciptConverter extends AbstractConverter<DetailRecContentResultVO> {
 
     @Override
-    public RecTypeEnum getRecTypeEnum() {
-            return RecTypeEnum.RECIPE;
+    public boolean isAccess(RecTypeEnum recTypeEnum) {
+        return RecTypeEnum.RECIPE.equals(recTypeEnum);
     }
+
 
     @Override
     public DetailRecContentResultVO convert(Context context,SgFrameworkResponse sgFrameworkResponse) {
@@ -44,7 +45,7 @@ public class ReciptConverter extends AbstractConverter<DetailRecContentResultVO>
         List<ContentVO> itemAndContentList) {
 
         //取大小限制
-        SizeDTO sizeDTO = DetailSwitch.requestConfigMap.get(getRecTypeEnum().getType()).getSizeDTO();
+        SizeDTO sizeDTO = DetailSwitch.requestConfigMap.get(recommendRequest.getRecType()).getSizeDTO();
 
         DetailRecContentResultVO detailRecContentResultVO=new DetailRecContentResultVO();
         detailRecContentResultVO.setEnableScroll(true);

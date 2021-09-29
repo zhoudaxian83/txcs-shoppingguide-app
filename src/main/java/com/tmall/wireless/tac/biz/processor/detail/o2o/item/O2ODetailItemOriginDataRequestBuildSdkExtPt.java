@@ -35,13 +35,6 @@ public class O2ODetailItemOriginDataRequestBuildSdkExtPt extends AbstractDetailO
 
     @Override
     public Long getAppId(String recType, SgFrameworkContext sgFrameworkContextContent) {
-        DetailRecommendRequest detailRequest = DetailRecommendRequest.getDetailRequest(
-            sgFrameworkContextContent.getTacContext());
-        //相似商品推荐的contentId
-        if (RecTypeEnum.SIMILAR_ITEM_ITEM.getType().equals(recType) && !CommonUtil.validId(
-            detailRequest.getContentId())) {
-            return 21174L;
-        }
         return DetailSwitch.requestConfigMap.get(recType).getTppId();
     }
 
