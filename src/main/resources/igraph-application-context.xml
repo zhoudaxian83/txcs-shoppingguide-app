@@ -2,7 +2,7 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
-    <bean id="iGraphClientWrap" class="com.taobao.igraph.client.core.IGraphClientWrap"
+    <!--<bean id="iGraphClientWrap" class="com.taobao.igraph.client.core.IGraphClientWrap"
           init-method="init" destroy-method="close">
         <property name="src" value="tac-extreme-item"></property>
         <property name="searchDomain" value="com.taobao.search.igraph.common"></property>
@@ -20,12 +20,6 @@
         <property name="connectionRequestTimeout" value="1000"></property>
         <property name="searchCluster" value="DEFAULT"></property>
         <property name="updateCluster" value="DEFAULT"></property>
-    </bean>
-
-    <!-- 打底数据tair -->
-    <!--<bean id="bottomTairLdbManager2" class="com.taobao.tair.impl.mc.MultiClusterTairManager" init-method="init">
-        <property name='userName'>
-            <value>d25d96066001464b</value>
-        </property>
     </bean>-->
+
 </beans>
