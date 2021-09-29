@@ -2,8 +2,11 @@ package com.tmall.wireless.tac.biz.processor.icon.hander;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.taobao.util.CollectionUtil;
 import com.tmall.aself.shoppingguide.client.cat.model.LabelDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRequest;
 import com.tmall.wireless.tac.biz.processor.icon.level2.Level2RecommendService;
@@ -50,6 +53,18 @@ public class IconItemHandler extends RpmReactiveHandler<IconResponse> {
                     iconResponse.setItemList(response);
                     return iconResponse;
                 }).map(TacResult::newResult)
+                .map(tacResult -> {
+                    if(tacResult.getData() == null || tacResult.getData().getItemList() == null
+                        || tacResult.getData().getItemList().getItemAndContentList() == null || CollectionUtil.isEmpty(tacResult.getData().getItemList().getItemAndContentList())){
+                        tacResult = TacResult.errorResult("test");
+                        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+                            .kv("FirstScreenMindItemScene","recommend")
+                            .kv("tacResult",JSON.toJSONString(tacResult))
+                            .info();
+                    }
+                    tacResult.getBackupMetaData().setUseBackup(true);
+                    return tacResult;
+                })
                 .onErrorReturn(throwable -> {
                     LOGGER.error("IconLevel1Handler error:{}", JSON.toJSONString(itemRequest), throwable);
                     return TacResult.newResult(iconResponse);
