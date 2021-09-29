@@ -127,8 +127,6 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             itemEntityVO.put("exposureParam", exposureParam);
 
             itemEntityVO.put("imgUrl", entityVO.get("itemImg"));
-            /**暂时删除的数据**/
-            itemEntityVO.remove("itemPromotionResp");
 
             tacLogger.info("VO重写完成");
             //return Response.success(itemEntityVO);
