@@ -106,7 +106,43 @@ public class MmcO2OPromiseHandler extends RpmReactiveHandler<Map<String,Object>>
         String todayDate = format.format(new Date());
         String firstTimeDate = storeTimeSliceDTO.getFirstTimeDateOrigin();
         String displayDay = firstTimeDate.equals(todayDate) ? "今天": "明天";
-        return StringUtils.join(new String[]{"预计",displayDay, storeTimeSliceDTO.getTimeSlot(), "送货上门"});
+
+        return StringUtils.join(new String[]{"预计",displayDay, parseTimeSlot(storeTimeSliceDTO.getTimeSlot()), "送货上门"});
+    }
+
+    private static String parseTimeSlot(String timeSlot){
+
+        StringBuilder sb = new StringBuilder();
+
+        if(StringUtils.isNotBlank(timeSlot) && timeSlot.split(":").length>1){
+            String st[] = timeSlot.split("-");
+            if(st.length>1){
+                sb.append(st[0], 0, 2);
+                sb.append("-");
+                sb.append(st[1],0,2);
+            }else {
+                sb.append(timeSlot, 0, 2);
+            }
+            sb.append("点");
+        }else {
+            return timeSlot;
+        }
+
+        return sb.toString();
+    }
+
+    public static  void main(String args[]){
+
+
+        System.out.println(parseTimeSlot("13:00-17:00"));
+
+        System.out.println(parseTimeSlot("13:00"));
+
+        System.out.println(parseTimeSlot("13"));
+
+
+
+
     }
 
 }

@@ -21,12 +21,7 @@
         <dependency>
             <groupId>com.tcls.shoppingguide</groupId>
             <artifactId>shoppingguide-biz</artifactId>
-            <version>1.0.7</version>
-        </dependency>
-        <dependency>
-            <groupId>com.tcls.shoppingguide</groupId>
-            <artifactId>shoppingguide-framework</artifactId>
-            <version>1.0.7</version>
+            <version>1.0.10</version>
         </dependency>
 
 
@@ -71,7 +66,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- spi store-->
+
         <dependency>
             <groupId>com.tmall.txcs</groupId>
             <artifactId>txcs-sg-base</artifactId>
@@ -203,6 +198,12 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba.etao.igraph</groupId>
+            <artifactId>igraph-client</artifactId>
+            <version>0.10.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -218,3 +219,4 @@
         </plugins>
     </build>
 </project>
+

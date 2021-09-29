@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.brandclub.fp;
 
+import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -11,10 +12,14 @@ import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
+import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.Enviroment;
+import org.apache.zookeeper.Op;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,9 +35,38 @@ import java.util.stream.Collectors;
 @Service
 public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
 
+    @Autowired
+    BrandContentSetIdService brandContentSetIdService;
 
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
+
+        Long brandId = Optional.of(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getTacContext)
+                .map(Context::getParams)
+                .map(m -> m.get("brandId"))
+                .map(Object::toString).map(Long::valueOf).orElse(0L);
+        Map<String, Map<String, Object>> groupAndBrandMapping =
+                brandContentSetIdService.getGroupAndBrandMapping(Lists.newArrayList(brandId));
+
+        JSONArray rankingContentSetIdList = (JSONArray) Optional.of(groupAndBrandMapping).map(m -> m.get("tcls_ugc_scenegroup_mapping_v1_btao_" + brandId)).map(m -> m.get("boardSceneGroupIds")).orElse(new JSONArray());
+        JSONArray b2cCommonContentSetIdList = (JSONArray) Optional.of(groupAndBrandMapping).map(m -> m.get("tcls_ugc_scenegroup_mapping_v1_btao_" + brandId)).map(m -> m.get("generalSceneGroupIds")).orElse(new JSONArray());
+
+        Map<String, Object> requestParams = Optional.of(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getRequestParams)
+                .orElse(null);
+        if (requestParams != null) {
+            requestParams.put(RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_RANKING, rankingContentSetIdList.stream().findFirst().map(Object::toString).orElse(""));
+            requestParams.put(RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, b2cCommonContentSetIdList.stream().findFirst().map(Object::toString).orElse(""));
+        }
+
+        Map<String, Object> stringObjectMap = groupAndBrandMapping.values().stream().findFirst().orElse(Maps.newHashMap());
+
+        List<Integer> contentSetIdList = Lists.newArrayList();
+        stringObjectMap.values().stream().forEach(setIdList -> {
+            List<Integer> setIds = (List<Integer>) setIdList;
+            contentSetIdList.addAll(setIds);
+        });
         RecommendRequest tppRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
         tppRequest.setParams(params);
@@ -40,10 +74,9 @@ public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register i
         tppRequest.setUserId(Optional.of(sgFrameworkContextContent).
                 map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO)
                 .map(UserDO::getUserId).orElse(0L));
-        tppRequest.setAppId(25379L);
+        tppRequest.setAppId(27402L);
 
 
-        List<Long> contentSetIdList = Lists.newArrayList(182011L);
         List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id)
                 .collect(
                         Collectors.toList());

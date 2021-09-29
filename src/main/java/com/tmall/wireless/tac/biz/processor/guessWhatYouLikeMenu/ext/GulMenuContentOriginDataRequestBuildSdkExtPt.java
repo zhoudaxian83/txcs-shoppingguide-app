@@ -33,11 +33,11 @@ import java.util.stream.Collectors;
 /**
  * @author Yushan
  * @date 2021/8/31 4:22 下午
-*/
+ */
 @SdkExtension(
-        bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
+    bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+    scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
 )
 public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
     @Resource
@@ -49,53 +49,53 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         tppRequest.setLogResult(true);
         tppRequest.setAppId(ConstantValue.APPID);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getUserDO)
-                .map(UserDO::getUserId)
-                .orElse(0L));
+            .map(SgFrameworkContext::getCommonUserParams)
+            .map(CommonUserParams::getUserDO)
+            .map(UserDO::getUserId)
+            .orElse(0L));
 
         Map<String, String> params = Maps.newHashMap();
         String regionCode = Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getLocParams)
-                .map(LocParams::getLogicIdByPriority)
-                .orElse(Lists.newArrayList()));
+            .map(SgFrameworkContext::getCommonUserParams)
+            .map(CommonUserParams::getLocParams)
+            .map(LocParams::getLogicIdByPriority)
+            .orElse(Lists.newArrayList()));
         if (StringUtils.isEmpty(regionCode)) {
             regionCode = "107";
         }
         params.put("regionCode", regionCode);
         params.put("smAreaId", Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getLocParams)
-                .map(LocParams::getSmAreaId)
-                .orElse(0L)
-                .toString());
+            .map(SgFrameworkContext::getCommonUserParams)
+            .map(CommonUserParams::getLocParams)
+            .map(LocParams::getSmAreaId)
+            .orElse(0L)
+            .toString());
         Long oneHourStoreId = Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getLocParams)
-                .map(LocParams::getRt1HourStoreId)
-                .orElse(0L);
+            .map(SgFrameworkContext::getCommonUserParams)
+            .map(CommonUserParams::getLocParams)
+            .map(LocParams::getRt1HourStoreId)
+            .orElse(0L);
         Long halfDayStoreId = Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getLocParams)
-                .map(LocParams::getRtHalfDayStoreId)
-                .orElse(0L);
+            .map(SgFrameworkContext::getCommonUserParams)
+            .map(CommonUserParams::getLocParams)
+            .map(LocParams::getRtHalfDayStoreId)
+            .orElse(0L);
         params.put("majorCityCode", Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getLocParams)
-                .map(LocParams::getMajorCityCode)
-                .orElse(0L)
-                .toString());
+            .map(SgFrameworkContext::getCommonUserParams)
+            .map(CommonUserParams::getLocParams)
+            .map(LocParams::getMajorCityCode)
+            .orElse(0L)
+            .toString());
         params.put("logicAreaId", Joiner.on(",").join(Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getLocParams)
-                .map(LocParams::getLogicIdByPriority)
-                .orElse(Lists.newArrayList())));
+            .map(SgFrameworkContext::getCommonUserParams)
+            .map(CommonUserParams::getLocParams)
+            .map(LocParams::getLogicIdByPriority)
+            .orElse(Lists.newArrayList())));
         params.put("contentType", "7");
         Map<String, Object> requestMap = Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getTacContext)
-                .map(Context::getParams)
-                .orElse(Maps.newHashMap());
+            .map(SgFrameworkContext::getTacContext)
+            .map(Context::getParams)
+            .orElse(Maps.newHashMap());
         String source = MapUtils.getString(requestMap, "source", "gul-recipe");
         List<String> itemBusinessTypeList = Lists.newArrayList();
         if (source.equals(ConstantValue.SOURCE_CHANNEL_GUL_RECIPE)) {
@@ -118,20 +118,20 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         Boolean isFirstPage = MapUtils.getBoolean(requestMap, "isFirstPage", true);
         params.put("isFirstPage", String.valueOf(isFirstPage));
         List<Long> contentSetIds = getLongWithDefault(requestMap, "recipeContentSetIds")
-                .stream()
-                .filter(contentSetId -> contentSetId > 0)
-                .collect(Collectors.toList());
+            .stream()
+            .filter(contentSetId -> contentSetId > 0)
+            .collect(Collectors.toList());
         params.put("contentSetIdList", Joiner.on(",").join(contentSetIds));
         params.put("contentSetSource", "intelligentCombinationItems");
         params.put("exposureDataUserId", Optional.ofNullable(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getUserDO)
-                .map(UserDO::getCna)
-                .orElse(""));
+            .map(SgFrameworkContext::getCommonUserParams)
+            .map(CommonUserParams::getUserDO)
+            .map(UserDO::getCna)
+            .orElse(""));
         List<Long> topContentIdList = getLongWithDefault(requestMap, "recipeContentTopIdList")
-                .stream()
-                .filter(topContentId -> topContentId > 0)
-                .collect(Collectors.toList());
+            .stream()
+            .filter(topContentId -> topContentId > 0)
+            .collect(Collectors.toList());
         // 首页才有置顶坑位
         if (isFirstPage) {
             params.put("topContentIds", Joiner.on(",").join(topContentIdList));
@@ -140,13 +140,13 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         tppRequest.setParams(params);
         logger.info("GulMenuContentOriginDataRequestBuildSdkExtPt: tppRequest: " + JSON.toJSONString(tppRequest));
         String requestLog = "https://tui.taobao.com/recommend?appid=" + tppRequest.getAppId() + "&" +
-                Joiner.on("&").withKeyValueSeparator("=").join(tppRequest.getParams());
+            Joiner.on("&").withKeyValueSeparator("=").join(tppRequest.getParams());
         logger.info("TPP_REQUEST: " + requestLog);
         HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
-                .kv("GulMenuContentOriginDataRequestBuildSdkExtPt","tppRequest")
-                .kv("source", source)
-                .kv("tppRequest", JSON.toJSONString(tppRequest))
-                .info();
+            .kv("GulMenuContentOriginDataRequestBuildSdkExtPt","tppRequest")
+            .kv("source", source)
+            .kv("tppRequest", JSON.toJSONString(tppRequest))
+            .info();
         return tppRequest;
     }
 
