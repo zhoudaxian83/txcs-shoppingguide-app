@@ -44,7 +44,9 @@ public class CommercialFeedsService {
         Map<String, Object> paramMap = this.buildParam(sgFrameworkContextItem);
         tacLogger.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
-                .kv("getCommercialFeeds_入参", JSON.toJSONString(paramMap)).info();
+                .kv("getCommercialFeeds_入参", JSON.toJSONString(paramMap))
+                .kv("sgFrameworkContextItem_", JSON.toJSONString(sgFrameworkContextItem))
+                .info();
         try {
             Object o = rpcSpi.invokeHsf(Constant.TMCS_ZNT_ENGINE, paramMap);
             if (o == null) {
