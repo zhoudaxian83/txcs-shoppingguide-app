@@ -80,6 +80,7 @@ public class TppConvertUtil {
             contentEntity.setItems(processItemEntityJson(jsonObject.getJSONArray("items"), responseEntity.getScm()));
             list.add(contentEntity);
         }
+        responseEntity.setSuccess(true);
         return responseEntity;
     }
 
