@@ -32,13 +32,13 @@ public class BrandClubFirstPageContentFilterSdkExtPt extends Register implements
 
     @Override
     public SgFrameworkResponse<ContentVO> process(SgFrameworkContextContent sgFrameworkContextContent) {
-        logger.info("SceneFeedsContentFilterSdkExtPt.start");
+        logger.info("BrandClubFirstPageContentFilterSdkExtPt.start");
         SgFrameworkResponse<ContentVO> entityVOSgFrameworkResponse = sgFrameworkContextContent.getContentVOSgFrameworkResponse();
 
         List<ContentVO> itemAndContentList = entityVOSgFrameworkResponse.getItemAndContentList();
 
         if (CollectionUtils.isEmpty(itemAndContentList)) {
-            logger.info("SceneFeedsContentFilterSdkExtPt.itemAndContentList is empty");
+            logger.info("BrandClubFirstPageContentFilterSdkExtPt.itemAndContentList is empty");
             return entityVOSgFrameworkResponse;
         }
         List<ContentVO> itemAndContentListAfterFilter = Lists.newArrayList();
@@ -50,7 +50,7 @@ public class BrandClubFirstPageContentFilterSdkExtPt extends Register implements
                 contentVO.put("items", itemEntityVOListFilter);
                 itemAndContentListAfterFilter.add(contentVO);
             } else {
-                logger.error("SceneFeedsContentFilterSdkExtPt,contentFilterByItemCount,contentId:{}", contentId);
+                logger.error("BrandClubFirstPageContentFilterSdkExtPt,contentFilterByItemCount,contentId:{}", contentId);
             }
         }
         entityVOSgFrameworkResponse.setItemAndContentList(itemAndContentListAfterFilter);
@@ -82,11 +82,11 @@ public class BrandClubFirstPageContentFilterSdkExtPt extends Register implements
         List<ItemEntityVO> itemEntityVOListFilter = Lists.newArrayList();
         for(ItemEntityVO itemEntityVO: itemEntityVOList) {
             if (itemEntityVO == null) {
-                logger.error("SceneFeedsContentFilterSdkExtPt,itemFilterIsNull,contentId:{}", contentId);
+                logger.error("BrandClubFirstPageContentFilterSdkExtPt,itemFilterIsNull,contentId:{}", contentId);
             }else if (!canBuy(itemEntityVO)) {
-                logger.error("SceneFeedsContentFilterSdkExtPt,itemFilterCanBuy,contentId:{},itemId:{}", contentId, itemEntityVO.getString("itemId"));
+                logger.error("BrandClubFirstPageContentFilterSdkExtPt,itemFilterCanBuy,contentId:{},itemId:{}", contentId, itemEntityVO.getString("itemId"));
             } else if (itemInfoError(itemEntityVO)) {
-                logger.error("SceneFeedsContentFilterSdkExtPt,itemFilterItemInfoError,contentId:{},itemId:{}", contentId, itemEntityVO.getString("itemId"));
+                logger.error("BrandClubFirstPageContentFilterSdkExtPt,itemFilterItemInfoError,contentId:{},itemId:{}", contentId, itemEntityVO.getString("itemId"));
             } else {
                 itemEntityVOListFilter.add(itemEntityVO);
             }
