@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+
 @SdkExtension(
         bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,

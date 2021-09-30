@@ -10,7 +10,7 @@ import com.tmall.wireless.tac.biz.processor.brandclub.fp.BrandClubFirstPageConte
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import org.springframework.stereotype.Service;
 
-@Service
+
 @SdkExtension(
         bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
