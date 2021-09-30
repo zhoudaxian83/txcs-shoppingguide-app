@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
-import com.tmall.aselfcommon.model.oc.domain.LogicalArea;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
@@ -75,7 +74,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         recommendRequest.setUserId(userId);
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
-        tacLogger.info("recommendRequest_:" + JSON.toJSONString(recommendRequest));
+        tacLogger.info("tpp入参_recommendRequest_:" + JSON.toJSONString(recommendRequest));
         // todo MOCK
         //recommendRequest = this.mock();
         return recommendRequest;
