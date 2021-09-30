@@ -15,7 +15,6 @@ import com.taobao.igraph.client.model.KeyList;
 import com.taobao.igraph.client.model.MatchRecord;
 import com.taobao.igraph.client.model.QueryResult;
 import com.taobao.igraph.client.model.SingleQueryResult;
-import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.third.IGraphSpi;
@@ -97,7 +96,7 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
 
         AtomicQuery atomicQuery = new AtomicQuery("aws_ascp_apl_tmcs_item_stat_element1", collect);
 
-        List<MatchRecord> igraphResult = getIgraphResult(atomicQuery);
+        List<MatchRecord> igraphResult = getIGraphResult(atomicQuery);
 
         if (CollectionUtils.isEmpty(igraphResult)) {
             return;
@@ -114,7 +113,7 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
         });
     }
 
-    private List<MatchRecord> getIgraphResult(AtomicQuery atomicQuery) {
+    private List<MatchRecord> getIGraphResult(AtomicQuery atomicQuery) {
         SPIResult<QueryResult> search = iGraphSpi.search(atomicQuery);
         if (search.isSuccess()) {
             return Optional.ofNullable(search.getData())
