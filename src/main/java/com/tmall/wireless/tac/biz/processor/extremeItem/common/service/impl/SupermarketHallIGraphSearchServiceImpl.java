@@ -22,13 +22,14 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
 
     @Autowired
     TacLogger tacLogger;
-    @Autowired
-    com.taobao.igraph.client.core.IGraphClientWrap iGraphClientWrap;
+    /*@Autowired
+    com.taobao.igraph.client.core.IGraphClientWrap iGraphClientWrap;*/
 
     @Override
     public List<T> search(String tableName, List<String> keyList, String[] fields, int perKeySize,  IGraphResponseHandler<T> handler) {
+        return new ArrayList<>();
         // 查询语句构造
-        if(CollectionUtils.isEmpty(keyList) || fields == null || fields.length == 0) {
+        /*if(CollectionUtils.isEmpty(keyList) || fields == null || fields.length == 0) {
             return new ArrayList<>();
         }
         List<KeyList> keyLists = keyList.stream().map(searchKey -> new KeyList(searchKey)).collect(Collectors.toList());
@@ -46,6 +47,6 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
         }
         SingleQueryResult singleQueryResult = queryResult.getSingleQueryResult();
         logger.info("=========singleQueryResult:" + JSON.toJSONString(singleQueryResult));
-        return handler.handleResponse(singleQueryResult);
+        return handler.handleResponse(singleQueryResult);*/
     }
 }
