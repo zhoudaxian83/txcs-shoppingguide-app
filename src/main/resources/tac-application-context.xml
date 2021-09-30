@@ -20,6 +20,9 @@
     <bean class="com.tmall.wireless.tac.biz.processor.icon.level2.ext.IconLevel2ContentMetaInfoBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.icon.level3.ext.IconLevel3ContentMetaInfoBuildSdkExtPt"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.brandclub.bangdan.BrandClubBangdanContentFilterSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.brandclub.fp.BrandClubFirstPageContentFilterSdkExtPt"/>
+
     <bean class="com.tmall.wireless.tac.biz.productpackage.recommendold.OldRecommendContentOriginDataResponseConvertSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.productpackage.recommendold.OldRecommendItemOriginDataResponseConvertSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.productpackage.scenefeeds.SceneFeedsContentInfoQuerySdkExtPt"/>
