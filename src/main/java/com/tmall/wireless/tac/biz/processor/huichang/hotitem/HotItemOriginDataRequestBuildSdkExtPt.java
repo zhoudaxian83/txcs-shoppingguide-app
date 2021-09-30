@@ -130,6 +130,9 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
         for(Map<String, Object> map : aldStaticDataList){
             Object industryId = map.get("industryId");
             Object showNum = map.get("showNum");
+            if(industryId == null || showNum == null){
+                continue;
+            }
             Object itemId = map.get("contentId");
             sb.append(itemId).append(":").append(industryId).append(":").append(showNum).append(";");
         }
