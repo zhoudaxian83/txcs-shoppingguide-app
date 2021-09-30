@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.todayCrazyTab;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.ContentVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created from template by 进舟 on 2021-09-22 11:17:10.
@@ -29,6 +31,8 @@ public class TodayCrazyTabSdkContentHandler extends TacReactiveHandler4Ald {
 
     @Autowired
     HallCommonContentRequestProxy hallCommonContentRequestProxy;
+    @Autowired
+    ShoppingguideSdkContentService shoppingguideSdkContentService;
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald context) throws Exception {
@@ -41,6 +45,23 @@ public class TodayCrazyTabSdkContentHandler extends TacReactiveHandler4Ald {
         b.addProducePackage(HallScenarioConstant.HALL_CONTENT_SDK_PACKAGE);
         b.addProducePackage(PackageNameKey.OLD_RECOMMEND);
 
-        return hallCommonContentRequestProxy.recommend(context, b);
+        return shoppingguideSdkContentService.recommend(context, b)
+                .map(response -> {
+                    List<GeneralItem> re = Lists.newArrayList();
+                    re.addAll(convertAldItem(response));
+                    return re;
+                })
+                .map(TacResult::newResult)
+                .onErrorReturn(r -> TacResult.errorResult(""));
+    }
+
+    public List<GeneralItem> convertAldItem(SgFrameworkResponse<ContentVO> response) {
+        return response.getItemAndContentList().stream().map(contentVO -> {
+            GeneralItem generalItem = new GeneralItem();
+            contentVO.keySet().forEach(key -> {
+                generalItem.putIfAbsent(key, contentVO.get(key));
+            });
+            return generalItem;
+        }).collect(Collectors.toList());
     }
 }
