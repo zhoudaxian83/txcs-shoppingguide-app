@@ -48,7 +48,9 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         Map<String, Object> objectMap = sgFrameworkContextItem.getUserParams();
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
+        tacLogger.info("topList："+JSON.toJSONString(topList));
         tacLogger.info("TPP返回数据条数："+itemEntities.size());
+        tacLogger.info("TPP返回数据结果："+JSON.toJSONString(itemEntities));
         //todo mock
         //itemEntities = this.mock();
         tacLogger.info("topList："+JSON.toJSONString(topList));
@@ -68,7 +70,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 itemEntity.setTop(true);
                 topResultsItemEntityList.add(itemEntity);
             });
-            tacLogger.info("置顶数据条数："+itemEntities.size());
+            tacLogger.info("过滤后条数："+itemEntities.size());
             topResultsItemEntityList.addAll(itemEntities);
             originDataDTO.setResult(topResultsItemEntityList);
         } else {
