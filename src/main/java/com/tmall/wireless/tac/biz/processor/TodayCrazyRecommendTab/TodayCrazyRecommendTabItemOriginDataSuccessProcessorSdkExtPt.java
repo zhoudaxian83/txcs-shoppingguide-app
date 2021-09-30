@@ -51,11 +51,13 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         tacLogger.info("TPP返回数据条数："+itemEntities.size());
         //todo mock
         //itemEntities = this.mock();
+        tacLogger.info("topList："+JSON.toJSONString(topList));
         if (CollectionUtils.isEmpty(topList)) {
             originDataDTO.setResult(itemEntities);
             return;
         }
         itemEntities.removeIf(itemEntity -> topList.contains(String.valueOf(itemEntity.getItemId())));
+        tacLogger.info("isFirstPage："+isFirstPage);
         if (isFirstPage) {
             List<ItemEntity> topResultsItemEntityList = Lists.newArrayList();
             topList.forEach(itemId -> {
@@ -66,6 +68,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 itemEntity.setTop(true);
                 topResultsItemEntityList.add(itemEntity);
             });
+            tacLogger.info("置顶数据条数："+itemEntities.size());
             topResultsItemEntityList.addAll(itemEntities);
             originDataDTO.setResult(topResultsItemEntityList);
         } else {
