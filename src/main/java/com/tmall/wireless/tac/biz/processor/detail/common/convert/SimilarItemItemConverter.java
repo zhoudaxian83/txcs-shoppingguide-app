@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.detail.common.convert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -12,6 +13,8 @@ import com.google.common.collect.Lists;
 import com.taobao.igraph.client.model.AtomicQuery;
 import com.taobao.igraph.client.model.KeyList;
 import com.taobao.igraph.client.model.MatchRecord;
+import com.taobao.igraph.client.model.QueryResult;
+import com.taobao.igraph.client.model.SingleQueryResult;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
@@ -45,20 +48,20 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
     }
 
     @Override
-    public DetailRecItemResultVO convert(Context context,SgFrameworkResponse sgFrameworkResponse) {
+    public DetailRecItemResultVO convert(Context context, SgFrameworkResponse sgFrameworkResponse) {
 
         //取大小限制
         SizeDTO sizeDTO = DetailSwitch.requestConfigMap.get(super.getRecType(context)).getSizeDTO();
 
         //开始构建
-        DetailRecItemResultVO detailRecItemResultVO=new DetailRecItemResultVO();
+        DetailRecItemResultVO detailRecItemResultVO = new DetailRecItemResultVO();
 
         detailRecItemResultVO.setEnableScroll(false);
         detailRecItemResultVO.setShowArrow(false);
 
         //曝光埋点
-        JSONObject exposureExtraParam=new JSONObject();
-        List<String> scmJoin=new ArrayList<>();
+        JSONObject exposureExtraParam = new JSONObject();
+        List<String> scmJoin = new ArrayList<>();
         detailRecItemResultVO.setExposureExtraParam(exposureExtraParam);
 
         //标题名称,无标题名称
@@ -73,17 +76,17 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
         //推荐内容
         List itemAndContentList = sgFrameworkResponse.getItemAndContentList();
         List list = itemAndContentList.subList(0, sizeDTO.getMax());
-        detailRecItemResultVO.setResult(super.convertItems(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(),list, scmJoin));
+        detailRecItemResultVO.setResult(super.convertItems(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), list, scmJoin));
 
         //卖点的拼装
         processSellingPoint(detailRecItemResultVO.getResult());
 
-        exposureExtraParam.put("scmJoin",String.join(",",scmJoin));
+        exposureExtraParam.put("scmJoin", String.join(",", scmJoin));
 
         return detailRecItemResultVO;
     }
 
-    private void processSellingPoint(List<DetailRecommendItemVO> recommendItemVOS){
+    private void processSellingPoint(List<DetailRecommendItemVO> recommendItemVOS) {
 
         List<KeyList> collect = recommendItemVOS.stream().filter(
             v -> CollectionUtils.isEmpty(v.getPromotionAtmosphereList()))
@@ -92,14 +95,15 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
             })
             .collect(Collectors.toList());
 
-        AtomicQuery atomicQuery = new AtomicQuery( "aws_ascp_apl_tmcs_item_stat_element1",collect);
+        AtomicQuery atomicQuery = new AtomicQuery("aws_ascp_apl_tmcs_item_stat_element1", collect);
 
-        SPIResult<List<MatchRecord>> search = iGraphSpi.search(atomicQuery);
-        if(!search.isSuccess()||CollectionUtils.isEmpty(search.getData())){
+        List<MatchRecord> igraphResult = getIgraphResult(atomicQuery);
+
+        if (CollectionUtils.isEmpty(igraphResult)) {
             return;
         }
 
-        search.getData().forEach(v -> {
+        igraphResult.forEach(v -> {
             recommendItemVOS.stream().filter(item -> item.getItemId().equals(v.getLong("item_id")))
                 .findFirst()
                 .ifPresent(itemVO -> itemVO
@@ -108,5 +112,16 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
                             new DetailTextComponentVO(v.getString("element_content"),
                                 new Style("12", "#111111", "true")))));
         });
+    }
+
+    private List<MatchRecord> getIgraphResult(AtomicQuery atomicQuery) {
+        SPIResult<QueryResult> search = iGraphSpi.search(atomicQuery);
+        if (search.isSuccess()) {
+            return Optional.ofNullable(search.getData())
+                .map(QueryResult::getSingleQueryResult)
+                .map(SingleQueryResult::getMatchRecords)
+                .orElse(null);
+        }
+        return null;
     }
 }
