@@ -30,6 +30,8 @@ public class HallScenarioConstant {
     //会场清单会场-商品承接页
     public static final String HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE = "inventory_channel_item_page";
 
+    public static final String HALL_SCENARIO_HOT_ITEM = "hot_item";
+
 
 
 }

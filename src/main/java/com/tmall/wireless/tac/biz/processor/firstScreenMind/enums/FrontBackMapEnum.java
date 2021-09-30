@@ -20,6 +20,7 @@ public enum FrontBackMapEnum {
     contentAuthor("contentAuthor","author","作者菜谱场景作者"),
     contentSeeCount("contentSeeCount","seeCount","查看人数菜谱场景查看人数"),
     contentCustomLink("contentCustomLink","linkUrl","场景自定义承接页链接"),
+    rankType("rankType","rankType","榜单类型，用于品牌馆的榜单场景,COMMENT=好评榜 SALE=销量榜 REPURCHASE=回购榜 NEWEST=新品榜"),
 //    contentTitle("contentTitle","title","场景主标题tair提供"),
 //    contentSubtitle("contentSubtitle","subtitle","场景副标题tair提供")
     ;
