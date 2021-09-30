@@ -14,6 +14,8 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRequest;
 import com.tmall.wireless.tac.biz.processor.icon.level2.BusinessTypeUtil;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,6 +30,15 @@ import java.util.Optional;
 )
 public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
 
+    private static final String fullDomainGray = "fullDomainGray";
+
+
+    public static final Long CATEGORY_RECOMMEND_ITEM_RECOMMEND_PLATEFORM = 18611L;
+
+    // icon全域实验appid
+    public static final Long RECOMMEND_PLATFORM_ICON_FULL_DOMAIN_APP_ID = 25682L;
+
+
 
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
@@ -36,9 +47,17 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
         Preconditions.checkArgument(itemRequest != null);
 
         RecommendRequest recommendRequest = new RecommendRequest();
+        Long userId = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
 
-        // todo fixme
-        recommendRequest.setAppId(18611L);
+
+        Long appId = CATEGORY_RECOMMEND_ITEM_RECOMMEND_PLATEFORM;
+//        if(GrayUtils.checkGray(userId, fullDomainGray)){
+//            appId = CATEGORY_RECOMMEND_ITEM_RECOMMEND_PLATEFORM;
+//        }else{
+//            appId = RECOMMEND_PLATFORM_ICON_FULL_DOMAIN_APP_ID;
+//        }
+
+        recommendRequest.setAppId(appId);
         Map<String, String> params = Maps.newHashMap();
         recommendRequest.setParams(params);
 
@@ -58,7 +77,7 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
             businessList.add(BusinessTypeUtil.B2C);
         }
 
-        recommendRequest.setUserId(Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L));
+        recommendRequest.setUserId(userId);
         params.put("pmtSource", "sm_manager");
         params.put("pmtName", "icon");
         params.put("pageId", itemRequest.getLevel1Id());
@@ -69,6 +88,12 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
         params.put("rt1HourStoreId",  Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).map(Object::toString).orElse("0"));
         params.put("smAreaId",  Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).map(Object::toString).orElse("0"));
         params.put("itemBusinessType", Joiner.on(",").join(businessList));
+        Map<String,Object> requestParams = sgFrameworkContextItem.getRequestParams();
+        Integer index = 0;
+        if(MapUtils.isNotEmpty(requestParams)){
+            index = MapUtil.getIntWithDefault(requestParams,"index",0);
+        }
+        params.put("isFirstPage", index > 0 ? "false" : "true");
 
         params.put("logicAreaId", Joiner.on(",").join(Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getLocParams).map(LocParams::getLogicIdByPriority).orElse(

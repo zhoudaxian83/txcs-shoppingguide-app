@@ -80,6 +80,7 @@ public class TppConvertUtil {
             contentEntity.setItems(processItemEntityJson(jsonObject.getJSONArray("items"), responseEntity.getScm()));
             list.add(contentEntity);
         }
+        responseEntity.setSuccess(true);
         return responseEntity;
     }
 
@@ -100,22 +101,23 @@ public class TppConvertUtil {
 
             itemEntity.setItemId(jsonObject.getLong("itemId"));
             itemEntity.setBrandId(jsonObject.getString("brandId"));
-            itemEntity.setCateId(jsonObject.getString("brandId"));
-
-
+            itemEntity.setCateId(jsonObject.getString("cateId"));
             itemEntity.setBizType(BizType.SM.getCode());
-
-            String commerceModel = jsonObject.getString("commerceModel");
-            itemEntity.setBusinessType(commerceModel);
-
+            String businessType = jsonObject.getString("businessType");
+            itemEntity.setBusinessType(businessType);
             String o2oTypeFromTpp = jsonObject.getString("o2oType");
+//            String o2oTypeFromTpp = jsonObject.getString("locType");
             String o2oType = StringUtils.isEmpty(o2oTypeFromTpp) ? com.tmall.tcls.gs.sdk.framework.model.context.O2oType.B2C.name() :
                     (StringUtils.isEmpty(tppO2oTypeConvertMap.get(o2oTypeFromTpp)) ?
                             O2oType.B2C.name() : tppO2oTypeConvertMap.get(o2oTypeFromTpp));
             itemEntity.setO2oType(o2oType);
-
-            itemEntity.setTrack_point(jsonObject.getString("trackPoint"));
+            if(StringUtils.isNotEmpty(jsonObject.getString("trackPoint"))){
+                itemEntity.setTrack_point(jsonObject.getString("trackPoint"));
+            }else{
+                itemEntity.setTrack_point(jsonObject.getString("track_point"));
+            }
             itemEntity.setTrack_point(scm + "." + itemEntity.getTrack_point());
+            itemEntity.setCrowdId(jsonObject.getString("crowdId"));
             list.add(itemEntity);
         }
         return list;
