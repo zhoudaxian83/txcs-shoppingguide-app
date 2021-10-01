@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.tcls.shoppingguide</groupId>
             <artifactId>shoppingguide-biz</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.10</version>
         </dependency>
 
 
@@ -65,12 +65,6 @@
                     <groupId>com.taobao.hsf</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <!-- spi store-->
-        <dependency>
-            <groupId>com.tcls.shoppingguide</groupId>
-            <artifactId>shoppingguide-biz</artifactId>
-            <version>1.0.5</version>
         </dependency>
 
         <dependency>

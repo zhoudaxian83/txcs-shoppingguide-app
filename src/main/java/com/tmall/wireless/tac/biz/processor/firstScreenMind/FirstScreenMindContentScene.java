@@ -122,7 +122,11 @@ public class FirstScreenMindContentScene {
                         .kv("tacResult.getData()1",JSON.toJSONString(tacResult))
                         .info();*/
                     if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
-                        tacResult.setSuccess(false);
+                        /*tacResult.setSuccess(false);*/
+                        tacResult = TacResult.errorResult("test");
+                        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                            .kv("tacResult",JSON.toJSONString(tacResult))
+                            .info();
                     }
                     tacResult.getBackupMetaData().setUseBackup(true);
                     return tacResult;
