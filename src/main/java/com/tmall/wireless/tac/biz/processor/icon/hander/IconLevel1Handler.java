@@ -3,7 +3,11 @@ package com.tmall.wireless.tac.biz.processor.icon.hander;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.tmall.aself.shoppingguide.client.cat.model.LabelDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.common.util.TacResultBackupUtil;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRequest;
 import com.tmall.wireless.tac.biz.processor.icon.level2.Level2RecommendService;
@@ -14,6 +18,7 @@ import com.tmall.wireless.tac.biz.processor.icon.model.IconResponse;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +87,30 @@ public class IconLevel1Handler extends RpmReactiveHandler<IconResponse> {
                         return iconResponse;
                     });
                 }).map(TacResult::newResult)
-                .onErrorReturn(throwable -> {
+                .map(tacResut -> {
+                    BizScenario b = BizScenario.valueOf(
+                        ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+                        ScenarioConstantApp.LOC_TYPE_B2C,
+                        ScenarioConstantApp.ICON_CONTENT_LEVEL2
+                    );
+                    if (tacResut.getData() == null || tacResut.getData() == null || tacResut.getData().getItemList() == null
+                        || CollectionUtils.isEmpty(tacResut.getData().getItemList().getItemAndContentList())
+                        || CollectionUtils.isEmpty(tacResut.getData().getSecondList())
+                        || CollectionUtils.isEmpty(tacResut.getData().getThrirdList())) {
+
+                        tacResut = TacResult.errorResult("TacResultBackup");
+                        tacResut.getBackupMetaData().setUseBackup(true);
+
+                        HadesLogUtil.stream(b.getUniqueIdentity())
+                            .kv("tacResultBackup", "true")
+                            .info();
+                    } else {
+                        HadesLogUtil.stream(b.getUniqueIdentity())
+                            .kv("tacResultBackup", "false")
+                            .info();
+                    }
+                    return tacResut;
+                    }).onErrorReturn(throwable -> {
                     LOGGER.error("IconLevel1Handler error:{}", JSON.toJSONString(level2Request), throwable);
 
                     return TacResult.newResult(iconResponse);

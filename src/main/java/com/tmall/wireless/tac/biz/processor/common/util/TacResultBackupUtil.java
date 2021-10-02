@@ -18,7 +18,7 @@ public class TacResultBackupUtil {
      * @param bizScenario  业务身份必须传，否则不走打底
      * @return
      */
-    public TacResult tacResultBackup(TacResult<SgFrameworkResponse> tacResult, BizScenario bizScenario){
+    public static TacResult tacResultBackup(TacResult<SgFrameworkResponse> tacResult, BizScenario bizScenario){
         if(bizScenario != null && StringUtils.isNotEmpty(bizScenario.getUniqueIdentity())){
             return tacResult;
         }
