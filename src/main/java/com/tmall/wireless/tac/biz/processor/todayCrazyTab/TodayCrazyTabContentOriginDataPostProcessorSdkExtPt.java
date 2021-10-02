@@ -64,8 +64,8 @@ public class TodayCrazyTabContentOriginDataPostProcessorSdkExtPt extends Registe
         List<ContentEntity> contentEntityListFixed = Lists.newArrayList();
         List<ContentEntity> contentEntityListNotFixed = Lists.newArrayList();
         for (Map<String, Object> stringObjectMap : staticScheduleDataList) {
-            Long id = Long.valueOf(String.valueOf(stringObjectMap.get("id")));
-            String itemSetId = String.valueOf(stringObjectMap.get("itemSetId"));
+            Long id = Long.valueOf(String.valueOf(stringObjectMap.get("default_contentId")));
+            String itemSetId = String.valueOf(stringObjectMap.get("default_datasetId"));
             ContentEntity contentEntity = null;
             if (!StringUtils.isNumeric(itemSetId) || itemSetIdToContent.get(Long.valueOf(itemSetId)) == null) {
                 contentEntity = new ContentEntity();
