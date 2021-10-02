@@ -14,7 +14,6 @@ import com.tmall.tcls.gs.sdk.framework.model.meta.node.ItemInfoNode;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.constant.ConstantValue;
 import com.tmall.wireless.tac.client.domain.Context;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -23,9 +22,9 @@ import java.util.List;
  * @date 2021/9/8 8:25 下午
  */
 @SdkExtension(
-        bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
+    bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+    scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
 )
 public class GulMenuContentItemMetaInfoBuildSdkExtPt extends Register implements ContentItemMetaInfoBuildSdkExtPt {
     @Override
@@ -46,10 +45,10 @@ public class GulMenuContentItemMetaInfoBuildSdkExtPt extends Register implements
         itemGroupMetaInfoSmNextDay.setItemInfoNodes(buildDefaultItemInfoNodes());
 
         itemMetaInfo.setItemGroupRenderInfoList(Lists.newArrayList(
-                itemGroupMetaInfoSmB2c
-                ,itemGroupMetaInfoSmOneHour
-                ,itemGroupMetaInfoSmHalfDay
-                ,itemGroupMetaInfoSmNextDay
+            itemGroupMetaInfoSmB2c
+            ,itemGroupMetaInfoSmOneHour
+            ,itemGroupMetaInfoSmHalfDay
+            ,itemGroupMetaInfoSmNextDay
         ));
         return itemMetaInfo;
     }

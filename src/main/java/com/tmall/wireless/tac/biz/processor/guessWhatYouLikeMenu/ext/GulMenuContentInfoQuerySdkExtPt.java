@@ -110,21 +110,17 @@ public class GulMenuContentInfoQuerySdkExtPt extends Register implements Content
                 contentInfo.put("contentSubtitle", tairSceneDTO.getSubtitle());
                 contentInfo.put("itemSetIds", getItemSetIds(tairSceneDTO));
                 contentInfo.put("scm", contentEntity.getTrack_point());
-                /**
-                 * detail信息补全
-                 */
-//                logger.info(tairSceneDTO.getDetails().toString());
-//                for (int i = 0; i < contentEntity.getItems().size(); i++) {
-//                    ItemEntity  itemEntity = contentEntity.getItems().get(i);
-//                    String crowdId = "crm_" + tairSceneDTO.getDetails().get(i).getItemsetId();
-//                    itemEntity.setCrowdId(crowdId);
-//                }
 
                 Map<String, Object> tairPropertyMap = tairSceneDTO.getProperty();
                 //前后端映射  首页改版、逛超市映射字段相同
                 for (FrontBackMapEnum frontBackMapEnum : FrontBackMapEnum.values()) {
                     contentInfo.put(frontBackMapEnum.getFront(), tairPropertyMap.get(frontBackMapEnum.getBack()));
                 }
+
+                /**
+                 * 视频链接点击增加埋点
+                 */
+                contentInfo.put("contentCustomLink", contentInfo.get("contentCustomLink") + "&scm=" + contentInfo.get("scm"));
                 /**内容类型*/
                 String type = SceneType.of(tairSceneDTO.getType()).name();
                 String marketChannel = GcsMarketChannel.of(tairSceneDTO.getMarketChannel()).name();

@@ -24,9 +24,9 @@ import javax.annotation.Resource;
  * VO加个字段：crowdId
  */
 @SdkExtension(
-        bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_B2C,
-        scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
+    bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+    useCase = ScenarioConstantApp.LOC_TYPE_B2C,
+    scenario = ScenarioConstantApp.CNXH_MENU_FEEDS
 )
 public class GulMenuBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt implements BuildItemVoSdkExtPt {
 
@@ -36,21 +36,23 @@ public class GulMenuBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt imple
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Response<ItemEntityVO> result = super.process(buildItemVoRequest);
-//        logger.info("GulMenuBuildItemVoSdkExtPt");
+        //        logger.info("GulMenuBuildItemVoSdkExtPt");
         try {
             ItemEntityVO itemEntityVO = result.getValue();
             ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
             if (itemInfoDTO != null && itemInfoDTO.getItemEntity() != null) {
                 ItemEntity itemEntity = itemInfoDTO.getItemEntity();
+                logger.info("nnn" + itemEntity.getCrowdId());
+                logger.info("itemEntity" + itemEntity);
                 itemEntityVO.put("crowdId", itemEntity.getCrowdId());
             }
             result.setValue(itemEntityVO);
         } catch (Exception e) {
             logger.error("Fail to add crowdId to items.", e);
             HadesLogUtil.stream(ScenarioConstantApp.CNXH_MENU_FEEDS)
-                    .kv("GulMenuBuildItemVoSdkExtPt", "error")
-                    .kv("Fail to add crowdId to items", StackTraceUtil.stackTrace(e))
-                    .error();
+                .kv("GulMenuBuildItemVoSdkExtPt", "error")
+                .kv("Fail to add crowdId to items", StackTraceUtil.stackTrace(e))
+                .error();
         }
         return result;
     }

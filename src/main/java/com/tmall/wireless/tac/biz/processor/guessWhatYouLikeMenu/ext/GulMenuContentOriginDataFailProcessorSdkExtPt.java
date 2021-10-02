@@ -59,6 +59,7 @@ public class GulMenuContentOriginDataFailProcessorSdkExtPt extends Register impl
     public OriginDataDTO<ContentEntity> process(ContentOriginDataProcessRequest contentOriginDataProcessRequest) {
 
         return contentOriginDataProcessRequest.getContentEntityOriginDataDTO();
+
     }
 }
 //        Map<String, Object> requestParams = Optional.ofNullable(contentOriginDataProcessRequest)

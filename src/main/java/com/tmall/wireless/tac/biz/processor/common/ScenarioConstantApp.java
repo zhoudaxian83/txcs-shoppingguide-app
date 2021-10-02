@@ -75,12 +75,21 @@ public class ScenarioConstantApp extends ScenarioConstant {
     public static final String ICON_CONTENT_LEVEL3 = "ICON_CONTENT_LEVEL3";
     public static final String ICON_ITEM = "ICON_ITEM";
 
+    /**
+     * 猫超支付成功猜你喜欢商品列表
+     */
+    public static final String PAY_FOR_SUCCESS_GUESS_YOU_LIKE = "PAY_FOR_SUCCESS_GUESS_YOU_LIKE";
+
+
+    public static final String CNXH_MENU_FEEDS = "CNXH_MENU_FEEDS";
 
 
 
 
     /**
-     * 猜你喜欢副TAB菜谱流推荐
+     * 今日疯抢tab页
      */
-    public static final String CNXH_MENU_FEEDS = "CNXH_MENU_FEEDS";
+    public static final String TODAY_CRAZY_RECOMMEND_TAB = "TODAY_CRAZY_RECOMMEND_TAB";
+
+
 }
