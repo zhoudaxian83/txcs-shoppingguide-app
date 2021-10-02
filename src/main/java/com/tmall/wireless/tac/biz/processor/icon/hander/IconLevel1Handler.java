@@ -116,10 +116,12 @@ public class IconLevel1Handler extends RpmReactiveHandler<IconResponse> {
 
             tacResult = TacResult.errorResult("TacResultBackup");
             HadesLogUtil.stream(b.getUniqueIdentity())
+                .kv("key","tacResultBackup")
                 .kv("tacResultBackup", "true")
                 .info();
         } else {
             HadesLogUtil.stream(b.getUniqueIdentity())
+                .kv("key","tacResultBackup")
                 .kv("tacResultBackup", "false")
                 .info();
         }
