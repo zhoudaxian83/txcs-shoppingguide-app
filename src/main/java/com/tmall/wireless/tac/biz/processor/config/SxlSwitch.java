@@ -12,10 +12,16 @@ import com.taobao.csp.switchcenter.core.SwitchManager;
 @NameSpace(nameSpace = "sxl")
 public class SxlSwitch {
 
-    private static final String APP_NAME = "txcs-shoppingguide";
 
-    @AppSwitch(des = "商品推荐选品集id", level = Switch.Level.p4)
-    public static Long SXL_ITEMSET_ID = 322385L;
+    @AppSwitch(des = "人工选品推荐选品集id", level = Switch.Level.p4)
+    public static Long SXL_ITEMSET_ID = 378428L;
+
+    //@AppSwitch(des = "商品推荐选品集id", level = Switch.Level.p4)
+    //public static Long SXL_ITEMSET_ID = 322385L;
+
+    @AppSwitch(des = "算法选品推荐选品集id", level = Switch.Level.p4)
+    public static Long SXL_ALG_ITEMSET_ID = 387450L;
+
 
     @AppSwitch(des = "商品推荐tppId", level = Switch.Level.p4)
     public static Long SXL_TPP_APP_ID = 25385L;
@@ -24,16 +30,21 @@ public class SxlSwitch {
     public static Long SXL_MAIN_ACTIVEX_ID = 885L;
 
     @AppSwitch(des = "o2o榜单跳转链接", level = Switch.Level.p4)
-    public static String O2O_BD_JUMP_UTL = "https://pre-wormhole.wapa.tmall.com/wow/an/cs/act/wupr?wh_biz=tm&wh_pid=go-shopping/1773d7acee3&disableNav=YES&contentId=%s&contentType=%s&itemSetIds=%s&entryItemIds=%s";
+    public static String O2O_BD_JUMP_UTL = "https://pages.tmall.com/wow/an/cs/act/wupr?wh_biz=tm&wh_pid=scenes/17a79a93163&disableNav=YES&contentId=%s&contentType=%s&itemSetIds=%s&entryItemIds=%s";
+    /**预发**/
+    //public static String O2O_BD_JUMP_UTL = "https://pre-wormhole.wapa.tmall.com/wow/an/cs/act/wupr?wh_biz=tm&wh_pid=go-shopping/1773d7acee3&disableNav=YES&contentId=%s&contentType=%s&itemSetIds=%s&entryItemIds=%s";
 
     @AppSwitch(des = "买买菜跳转链接", level = Switch.Level.p4)
     public static String MMC_JUMP_UTL = "https://pre-wormhole.tmall.com/wow/an/cs/act/wupr?disableNav=YES&wh_biz=tm&wh_pid=o2o-mmc/dev&sourceChannel=mmc-halfday&channel=halfday&pha=true";
 
-    public static String getValue(String key){
+    @AppSwitch(des = "清单会场入口请求tpp个数上线", level = Switch.Level.p4)
+    public static Integer inventoryEntranceModuleQueryTppSizeLimit = 6;
 
-        return SwitchManager.getStrValue(APP_NAME,"sxl."+key);
+    @AppSwitch(des = "上新了超市格物abTest业务域code", level = Switch.Level.p4)
+    public static String SM_NEW_ARRIVAL = "SM_NEW_ARRIVAL";
 
-    }
+    @AppSwitch(des = "上新了超市算法选品ab实验id", level = Switch.Level.p4)
+    public static String SXL_ALG_ITEMSET_ID_AB = "129";
 
 
 }

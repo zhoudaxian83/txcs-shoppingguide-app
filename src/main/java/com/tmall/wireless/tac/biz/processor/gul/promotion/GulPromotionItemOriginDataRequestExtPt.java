@@ -3,9 +3,12 @@ package com.tmall.wireless.tac.biz.processor.gul.promotion;
 import java.util.Map;
 import java.util.Optional;
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ItemOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -31,7 +34,8 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
 
     public static final Long APPID = 17433L;
     public static final String FRESH_LEVEL1_ID = "1217";
-    public static final Long APPID_B2C = 23376L;
+    public static final Long APPID_B2C = 27413L;
+    /**会场猜你喜欢目前没有O2O的商品**/
     public static final Long APPID_O2O = 23375L;
 
     @Override
@@ -62,7 +66,6 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
             PageInfoDO::getIndex).orElse(0);
         /*params.put("index", String.valueOf(index));*/
         params.put("isFirstPage", index > 0 ? "false" : "true");
-        tppRequest.setAppId(APPID);
 
         String moduleId = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getPmtParams).map(
             PmtParams::getModuleId).orElse("1217");
@@ -73,7 +76,8 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
         params.put("pageId", Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContextItem::getPmtParams).map(PmtParams::getPageId).orElse(""));
         params.put("moduleId", moduleId);
         params.put("tagId",tagId);
-        if (StringUtils.equals(FRESH_LEVEL1_ID, moduleId)) {
+        /**会场猜你喜欢目前没有O2O的商品**/
+        /*if (StringUtils.equals(FRESH_LEVEL1_ID, moduleId)) {
             // 是生鲜tab
             tppRequest.setAppId(APPID_O2O);
             Long oneHour = Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
@@ -89,14 +93,13 @@ public class GulPromotionItemOriginDataRequestExtPt implements ItemOriginDataReq
             // 是B2C的tab
             tppRequest.setAppId(APPID_B2C);
             params.put("itemBusinessType","B2C");
-        }
+        }*/
 
-
-
+        tppRequest.setAppId(APPID_B2C);
+        params.put("itemBusinessType","B2C");
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L));
-
         return tppRequest;
     }
 }
