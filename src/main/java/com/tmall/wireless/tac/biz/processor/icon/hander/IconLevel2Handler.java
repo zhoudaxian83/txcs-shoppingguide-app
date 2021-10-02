@@ -71,35 +71,45 @@ public class IconLevel2Handler extends RpmReactiveHandler<IconResponse> {
                         return iconResponse;
                     });
                 }).map(TacResult::newResult)
-                .map(tacResut -> {
+                .map(tacResult -> {
                     BizScenario b = BizScenario.valueOf(
                         ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
                         ScenarioConstantApp.LOC_TYPE_B2C,
                         ScenarioConstantApp.ICON_CONTENT_LEVEL3
                     );
-                    if (tacResut.getData() == null || tacResut.getData() == null || tacResut.getData().getItemList() == null
-                        || CollectionUtils.isEmpty(tacResut.getData().getItemList().getItemAndContentList())
-                        || CollectionUtils.isEmpty(tacResut.getData().getThrirdList())) {
-
-                        tacResut = TacResult.errorResult("TacResultBackup");
-                        tacResut.getBackupMetaData().setUseBackup(true);
-
-                        HadesLogUtil.stream(b.getUniqueIdentity())
-                            .kv("tacResultBackup", "true")
-                            .info();
-                    } else {
-                        HadesLogUtil.stream(b.getUniqueIdentity())
-                            .kv("tacResultBackup", "false")
-                            .info();
-                    }
-                    return tacResut;
+                    return tacResultBackup(tacResult,b);
                 }).onErrorReturn(throwable -> {
                     LOGGER.error("IconLevel1Handler error:{}", JSON.toJSONString(level3Request), throwable);
 
                     return TacResult.newResult(iconResponse);
-                }).defaultIfEmpty(TacResult.newResult(iconResponse));
+                }).defaultIfEmpty(TacResult.newResult(iconResponse))
+                .map(tacResult -> {
+                    BizScenario b = BizScenario.valueOf(
+                        ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+                        ScenarioConstantApp.LOC_TYPE_B2C,
+                        ScenarioConstantApp.ICON_CONTENT_LEVEL3
+                    );
+                    return tacResultBackup(tacResult,b);
+                });
 
     }
+    private TacResult<IconResponse> tacResultBackup(TacResult<IconResponse> tacResult, BizScenario b){
 
+        if (tacResult.getData() == null || tacResult.getData() == null || tacResult.getData().getItemList() == null
+            || CollectionUtils.isEmpty(tacResult.getData().getItemList().getItemAndContentList())
+            || CollectionUtils.isEmpty(tacResult.getData().getThrirdList())) {
+            tacResult = TacResult.errorResult("TacResultBackup");
+
+            HadesLogUtil.stream(b.getUniqueIdentity())
+                .kv("tacResultBackup", "true")
+                .info();
+        } else {
+            HadesLogUtil.stream(b.getUniqueIdentity())
+                .kv("tacResultBackup", "false")
+                .info();
+        }
+        tacResult.getBackupMetaData().setUseBackup(true);
+        return tacResult;
+    }
 
 }

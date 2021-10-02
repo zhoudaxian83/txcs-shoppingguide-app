@@ -15,16 +15,16 @@ public class TacResultBackupUtil {
     /**
      *
      * @param tacResult
-     * @param bizScenario  业务身份必须传，否则不走打底
+     * @param bizScenario  业务身份必须传，否则无法根据业务身份监控
      * @return
      */
     public static TacResult tacResultBackup(TacResult<SgFrameworkResponse> tacResult, BizScenario bizScenario){
         if(bizScenario != null && StringUtils.isNotEmpty(bizScenario.getUniqueIdentity())){
+            tacResult.getBackupMetaData().setUseBackup(true);
             return tacResult;
         }
         if(tacResult.getData() == null || tacResult.getData()== null || CollectionUtils.isEmpty(tacResult.getData().getItemAndContentList())){
             tacResult = TacResult.errorResult("TacResultBackup");
-            tacResult.getBackupMetaData().setUseBackup(true);
 
             HadesLogUtil.stream(bizScenario.getUniqueIdentity())
                 .kv("tacResultBackup","true")
@@ -34,6 +34,7 @@ public class TacResultBackupUtil {
                 .kv("tacResultBackup","false")
                 .info();
         }
+        tacResult.getBackupMetaData().setUseBackup(true);
         return tacResult;
     }
 
