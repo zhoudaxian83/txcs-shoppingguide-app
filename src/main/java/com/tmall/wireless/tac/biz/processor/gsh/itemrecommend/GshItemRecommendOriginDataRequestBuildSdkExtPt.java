@@ -81,7 +81,7 @@ public class GshItemRecommendOriginDataRequestBuildSdkExtPt extends Register imp
             List<Map<String, Object>> staticScheduleDataList = (List<Map<String, Object>>)staticScheduleData;
             List<String> itemIdList= new ArrayList<>();
             for(Map<String, Object> data : staticScheduleDataList){
-                String contentSetId = MapUtil.getStringWithDefault(data, "contentSetId", "");
+                String contentSetId = MapUtil.getStringWithDefault(data, "contentId", "");
                 if(StringUtils.isNotEmpty(contentSetId)){
                     itemIdList.add(contentSetId);
                 }
