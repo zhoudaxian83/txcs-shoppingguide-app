@@ -1,15 +1,14 @@
 package com.tmall.wireless.tac.biz.processor.gsh.itemrecommend;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
-import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -33,16 +32,15 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 请求Tpp参数
  */
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
-    useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_ER_DIAN,
-    scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_ER_DIAN_ITEM_SET_RECOMMEND)
+    useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_GSH,
+    scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_GSH_ITEM_RECOMMEND)
 public class GshItemRecommendOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
 
     Logger logger = LoggerFactory.getLogger(GshItemRecommendOriginDataRequestBuildSdkExtPt.class);
-    private static final String ITEM_SET_PREFIX = "rb_";
     public static final Long DEFAULT_LOGAREAID = 107L;
-    public static final Long SCENE_ITEM_RECOMMEND_APPID = 27753L;
+    public static final Long ITEM_RECOMMEND_APPID = 28097L;
     public static final Long DEFAULT_SMAREAID = 330100L;
-    public static final int PAGE_SIZE = 20;
+    public static final int PAGE_SIZE = 200;
     private static final Long DefaultUserId = 0L;
 
     @Autowired
@@ -78,29 +76,31 @@ public class GshItemRecommendOriginDataRequestBuildSdkExtPt extends Register imp
 
             Object staticScheduleData = aldContext.get(HallCommonAldConstant.STATIC_SCHEDULE_DATA);
             if(staticScheduleData == null){
-                throw new Exception("数据为填写");
+                throw new Exception("数据未填写");
             }
             List<Map<String, Object>> staticScheduleDataList = (List<Map<String, Object>>)staticScheduleData;
+            List<String> itemIdList= new ArrayList<>();
             for(Map<String, Object> data : staticScheduleDataList){
-                Map<String, String> dataMap = new HashMap<>();
                 String contentSetId = MapUtil.getStringWithDefault(data, "contentSetId", "");
+                if(StringUtils.isNotEmpty(contentSetId)){
+                    itemIdList.add(contentSetId);
+                }
             }
+            String itemIds = Joiner.on(",").join(itemIdList);
+            params.put("itemIds", itemIds);
 
             params.put("commerce", "B2C");
             params.put("index", "0"); // 不要求分页
             params.put("pageSize", String.valueOf(PAGE_SIZE));
-            //params.put("itemSets", ITEM_SET_PREFIX + itemSetId);
 
-            recommendRequest.setAppId(SCENE_ITEM_RECOMMEND_APPID);
+            recommendRequest.setAppId(ITEM_RECOMMEND_APPID);
             recommendRequest.setUserId(
                 MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, DefaultUserId));
             recommendRequest.setParams(params);
             tacLogger.debug("Tpp参数：" + JSONObject.toJSONString(recommendRequest));
             return recommendRequest;
         } catch (Exception e) {
-            tacLogger.debug(
-                "EdItemSetOriginDataRequestBuildSdkExtPt 失败" + StackTraceUtil.stackTrace(e));
-            logger.error("EdItemSetOriginDataRequestBuildSdkExtPt 失败.", e);
+            logger.error("GshItemRecommendOriginDataRequestBuildSdkExtPt 失败.", e);
             return recommendRequest;
         }
     }

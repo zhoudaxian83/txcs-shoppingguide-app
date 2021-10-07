@@ -19,7 +19,7 @@ public class HallScenarioConstant {
     public static final String HALL_SCENARIO_USE_CASE_B2C = "B2C";
     public static final String HALL_SCENARIO_USE_CASE_O2O = "O2O";
 
-    public static final String HALL_SCENARIO_USE_CASE_ER_DIAN = "er_dian";
+    public static final String HALL_SCENARIO_USE_CASE_GSH = "GSH";
 
 
     public static final String HALL_SCENARIO_SCENARIO = "defaultScenario";
@@ -34,7 +34,10 @@ public class HallScenarioConstant {
     public static final String HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE = "inventory_channel_item_page";
 
     //二店-圈品集个性化推荐
-    public static final String HALL_SCENARIO_SCENARIO_ER_DIAN_ITEM_SET_RECOMMEND = "er_dian_item_set_recommend";
+    public static final String HALL_SCENARIO_SCENARIO_GSH_ITEM_SET_RECOMMEND = "gsh_item_set_recommend";
+
+    //二店-商品个性化推荐
+    public static final String HALL_SCENARIO_SCENARIO_GSH_ITEM_RECOMMEND = "gsh_dian_item_recommend";
 
 
     public static final String HALL_SCENARIO_HOT_ITEM = "hot_item";

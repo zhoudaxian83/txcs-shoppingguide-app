@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.gsh.itemsetrecommend;
+package com.tmall.wireless.tac.biz.processor.gsh.itemrecommend;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GshItemSetRecommendHandler extends TacReactiveHandler4Ald {
+public class GshItemRecommendHandler extends TacReactiveHandler4Ald {
 
-    Logger logger = LoggerFactory.getLogger(GshItemSetRecommendHandler.class);
+    Logger logger = LoggerFactory.getLogger(GshItemRecommendHandler.class);
 
     @Autowired
     TacLogger tacLogger;
@@ -35,7 +35,7 @@ public class GshItemSetRecommendHandler extends TacReactiveHandler4Ald {
         throws Exception {
         BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
             HallScenarioConstant.HALL_SCENARIO_USE_CASE_GSH,
-            HallScenarioConstant.HALL_SCENARIO_SCENARIO_GSH_ITEM_SET_RECOMMEND);
+            HallScenarioConstant.HALL_SCENARIO_SCENARIO_GSH_ITEM_RECOMMEND);
         bizScenario.addProducePackage(HallScenarioConstant.HALL_ITEM_SDK_PACKAGE);
 
         return shoppingguideSdkItemService.recommend(requestContext4Ald, bizScenario)

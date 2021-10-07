@@ -31,8 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 请求Tpp参数
  */
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
-    useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_ER_DIAN,
-    scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_ER_DIAN_ITEM_SET_RECOMMEND)
+    useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_GSH,
+    scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_GSH_ITEM_SET_RECOMMEND)
 public class GshItemSetOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
 
     Logger logger = LoggerFactory.getLogger(GshItemSetOriginDataRequestBuildSdkExtPt.class);
