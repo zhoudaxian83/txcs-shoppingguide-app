@@ -128,6 +128,17 @@
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemProcessBeforeReturnSdkExtPt"/>
 
 
+    <!--够实惠圈品集推荐-->
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemsetrecommend.GshItemSetRecommendHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemsetrecommend.GshItemSetOriginDataRequestBuildSdkExtPt"/>
+
+
+    <!--够实惠商品个性化推荐-->
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemrecommend.GshItemRecommendHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemrecommend.GshItemRecommendOriginDataRequestBuildSdkExtPt"/>
+
+    <!--够实惠商品库存过滤-->
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemselloutfilter.GshItemSelloutFilterHandler"/>
 
     <!--内容渲染场景-->
     <bean id="entityRenderService" class="com.taobao.hsf.app.spring.util.HSFSpringConsumerBean"
