@@ -19,6 +19,9 @@ public class HallScenarioConstant {
     public static final String HALL_SCENARIO_USE_CASE_B2C = "B2C";
     public static final String HALL_SCENARIO_USE_CASE_O2O = "O2O";
 
+    public static final String HALL_SCENARIO_USE_CASE_ER_DIAN = "er_dian";
+
+
     public static final String HALL_SCENARIO_SCENARIO = "defaultScenario";
 
     //会场清单会场-入口模块
@@ -29,6 +32,10 @@ public class HallScenarioConstant {
 
     //会场清单会场-商品承接页
     public static final String HALL_SCENARIO_SCENARIO_INVENTORY_CHANNEL_ITEM_PAGE = "inventory_channel_item_page";
+
+    //二店-圈品集个性化推荐
+    public static final String HALL_SCENARIO_SCENARIO_ER_DIAN_ITEM_SET_RECOMMEND = "er_dian_item_set_recommend";
+
 
     public static final String HALL_SCENARIO_HOT_ITEM = "hot_item";
 
