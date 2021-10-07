@@ -85,9 +85,10 @@ public class GshItemSetOriginDataRequestBuildSdkExtPt extends Register implement
                 logger.error("-----EdItemSetOriginDataRequestBuildSdkExtPt.itemSetId is empty-------");
                 throw new Exception("itemSetId is empty");
             }
-
+            int pageIndex = MapUtil.getIntWithDefault(aldParams, "pageIndex", 0);
             params.put("commerce", "B2C");
-            params.put("index", "0"); // 不要求分页
+            int index = pageIndex * PAGE_SIZE;
+            params.put("index", String.valueOf(index));
             params.put("pageSize", String.valueOf(PAGE_SIZE));
             params.put("itemSets", ITEM_SET_PREFIX + itemSetId);
 
@@ -104,6 +105,5 @@ public class GshItemSetOriginDataRequestBuildSdkExtPt extends Register implement
             return recommendRequest;
         }
     }
-
 
 }
