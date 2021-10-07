@@ -38,7 +38,7 @@ public class GshItemSetOriginDataRequestBuildSdkExtPt extends Register implement
     Logger logger = LoggerFactory.getLogger(GshItemSetOriginDataRequestBuildSdkExtPt.class);
     private static final String ITEM_SET_PREFIX = "rb_";
     public static final Long DEFAULT_LOGAREAID = 107L;
-    public static final Long SCENE_ITEM_RECOMMEND_APPID = 27753L;
+    public static final Long SCENE_ITEM_RECOMMEND_APPID = 25384L;
     public static final Long DEFAULT_SMAREAID = 330100L;
     public static final int PAGE_SIZE = 20;
     private static final Long DefaultUserId = 0L;
