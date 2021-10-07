@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.huichang.hotitem;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,7 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemProcessBeforeR
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
+import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -47,49 +47,10 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
             return sgFrameworkContextItem;
         }
 
-        //特殊处理逻辑。放大倍数的去哪了tpp的结果，需要这一步，按照库存过滤，来选出符合每个行业固定数量的商品
-        RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
-        Map<String, Object> aldContext = requestContext4Ald.getAldContext();
-        Object aldStaticData = aldContext.get(HallCommonAldConstant.STATIC_SCHEDULE_DATA);
-        if(aldStaticData != null){
-            Object aldStaticDataMap = requestContext4Ald.getParams().get("aldStaticDataMap");
-            Map<Long, Map<String, Object>> staticDataMap = (Map<Long, Map<String, Object>>)aldStaticDataMap;
-            //行业id：每个行业下面的商品list
-            Map<String, List<Long>> industryItemIdMap = new HashMap<>();
-            //行业id：行业下面要求的商品数量
-            Map<String, Integer> industryItemShowNumMap = new HashMap<>();
-            //商品id：商品id所属的行业id
-            Map<Long, String> itemOfIndustryMap = new HashMap<>();
-            //转化
-            convert(staticDataMap, industryItemIdMap, industryItemShowNumMap, itemOfIndustryMap);
-
-            //给tpp返回的商品分组；
-            Map<String, List<ItemEntityVO>> industryItemEntityVOMap = new HashMap<>();
-            for (ItemEntityVO entityVO : itemAndContentList) {
-                Long itemId = entityVO.getItemId();
-                String industryId = itemOfIndustryMap.get(itemId);
-                if(StringUtils.isEmpty(industryId)) {
-                    continue;
-                }
-                List<ItemEntityVO> itemEntityVOS = industryItemEntityVOMap.get(industryId);
-                if(CollectionUtils.isEmpty(itemEntityVOS)){
-                    industryItemEntityVOMap.put(industryId, Arrays.asList(entityVO));
-                }else {
-                    itemEntityVOS.add(entityVO);
-                    industryItemEntityVOMap.put(industryId, itemEntityVOS);
-                }
-            }
-            List<ItemEntityVO> dealItemEntityVOList = new ArrayList<>();
-            for (Map.Entry<String, List<ItemEntityVO>> entry : industryItemEntityVOMap.entrySet()) {
-                String industryId = entry.getKey();
-                List<ItemEntityVO> itemEntityVOList = entry.getValue();
-
-            }
-
+        if(SxlSwitch.openHotItemDouble){
+            List<ItemEntityVO> itemEntityVOList = dealDouble(sgFrameworkContextItem, itemAndContentList);
+            itemAndContentList= itemEntityVOList;
         }
-
-
-
 
         List<ItemEntityVO> finalItemAndContentList = Lists.newArrayList();
         //售罄的商品列表
@@ -116,11 +77,84 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
 
     }
 
+    //特殊处理逻辑。放大倍数的去拿了tpp的结果，需要这一步，按照库存过滤，来选出符合每个行业固定数量的商品
+    public List<ItemEntityVO> dealDouble(SgFrameworkContextItem sgFrameworkContextItem, List<ItemEntityVO> itemAndContentList){
+        List<ItemEntityVO> dealItemEntityVOList = new ArrayList<>();
+        RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
+        Map<String, Object> aldContext = requestContext4Ald.getAldContext();
+        Object aldStaticData = aldContext.get(HallCommonAldConstant.STATIC_SCHEDULE_DATA);
+
+        if(aldStaticData != null){
+            Object aldStaticDataMap = requestContext4Ald.getParams().get("aldStaticDataMap");
+            Map<Long, Map<String, Object>> staticDataMap = (Map<Long, Map<String, Object>>)aldStaticDataMap;
+            fillItem(staticDataMap, itemAndContentList, dealItemEntityVOList);
+        }
+        return dealItemEntityVOList;
+    }
+
+
+    private static void fillItem(Map<Long, Map<String, Object>> staticDataMap, List<ItemEntityVO> itemAndContentList, List<ItemEntityVO> dealItemEntityVOList){
+        //行业id：每个行业下面的商品list
+        Map<String, List<Long>> industryItemIdMap = new HashMap<>();
+        //行业id：行业下面要求的商品数量
+        Map<String, Integer> industryItemShowNumMap = new HashMap<>();
+        //商品id：商品id所属的行业id
+        Map<Long, String> itemOfIndustryMap = new HashMap<>();
+        //转化
+        convert(staticDataMap, industryItemIdMap, industryItemShowNumMap, itemOfIndustryMap);
+
+        //给tpp返回的商品分组；
+        Map<String, List<ItemEntityVO>> industryItemEntityVOMap = new HashMap<>();
+        for (ItemEntityVO entityVO : itemAndContentList) {
+            Long itemId = entityVO.getItemId();
+            String industryId = itemOfIndustryMap.get(itemId);
+            if(StringUtils.isEmpty(industryId)) {
+                continue;
+            }
+            List<ItemEntityVO> itemEntityVOS = industryItemEntityVOMap.get(industryId);
+            if(CollectionUtils.isEmpty(itemEntityVOS)){
+                List<ItemEntityVO> list = new ArrayList<>();
+                list.add(entityVO);
+                industryItemEntityVOMap.put(industryId, list);
+            }else {
+                itemEntityVOS.add(entityVO);
+                industryItemEntityVOMap.put(industryId, itemEntityVOS);
+            }
+        }
+
+        for (Map.Entry<String, List<ItemEntityVO>> entry : industryItemEntityVOMap.entrySet()) {
+            String industryId = entry.getKey();
+            Integer showNum = industryItemShowNumMap.get(industryId);
+            if(showNum == null){
+                continue;
+            }
+            List<ItemEntityVO> canBuyItemEntityVO = new ArrayList<>();
+            List<ItemEntityVO> selloutItemEntityVO = new ArrayList<>();
+            List<ItemEntityVO> itemEntityVOList = entry.getValue();
+            for(ItemEntityVO itemEntityVO : itemEntityVOList){
+                if(canBuyItemEntityVO.size() == showNum){
+                    continue;
+                }
+                if(canBuy(itemEntityVO)){
+                    canBuyItemEntityVO.add(itemEntityVO);
+                }else {
+                    selloutItemEntityVO.add(itemEntityVO);
+                }
+            }
+            //如果处理完，不满足要求的数量，需要随便拿相应的数量商品补上
+            if(canBuyItemEntityVO.size() != showNum ){
+                Integer needFillSize  = showNum - canBuyItemEntityVO.size();
+                List<ItemEntityVO> itemEntityVOList1 = selloutItemEntityVO.subList(0, needFillSize);
+                canBuyItemEntityVO.addAll(itemEntityVOList1);
+            }
+            dealItemEntityVOList.addAll(canBuyItemEntityVO);
+        }
+    }
 
     //Object industryId = map.get("industryId");
     //            Object showNum = map.get("showNum");
     //            Object itemId = map.get("contentId");
-    private void convert(Map<Long, Map<String, Object>> staticDataMap,
+    private static void convert(Map<Long, Map<String, Object>> staticDataMap,
         Map<String, List<Long>> industryItemIdMap,
         Map<String, Integer> industryItemShowNum,
         Map<Long, String> itemOfIndustryMap){
@@ -138,8 +172,9 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
 
             List<Long> itemIdList = industryItemIdMap.get(industryIdStr);
             if(CollectionUtils.isEmpty(itemIdList)){
-                List<Long> longs = Arrays.asList(itemId);
-                industryItemIdMap.put(industryIdStr, longs);
+                List<Long> list = new ArrayList<>();
+                list.add(itemId);
+                industryItemIdMap.put(industryIdStr, list);
             }else {
                 itemIdList.add(itemId);
                 industryItemIdMap.put(industryIdStr, itemIdList);
@@ -148,12 +183,125 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
     }
 
 
-    private boolean canBuy(ItemEntityVO item) {
+    private static boolean canBuy(ItemEntityVO item) {
 
         Boolean canBuy = item.getBoolean("canBuy");
         Boolean sellOut = item.getBoolean("sellOut");
 
         return (canBuy == null || canBuy) && (sellOut == null || !sellOut);
+    }
+
+    //Object industryId = map.get("industryId");
+    //            Object showNum = map.get("showNum");
+    //            Object itemId = map.get("contentId");
+    public static void main(String[] args) {
+        //Map<Long, Map<String, Object>> staticDataMap,
+        // List<ItemEntityVO> itemAndContentList,
+        // List<ItemEntityVO> dealItemEntityVOList
+        Map<Long, Map<String, Object>> staticDataMap = new HashMap<>();
+
+        List<ItemEntityVO> itemAndContentList = new ArrayList<>();
+        List<ItemEntityVO> dealItemEntityVOList= new ArrayList<>();
+
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("industryId", "A");
+        map1.put("showNum", "2");
+        map1.put("contentId", "1");
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("industryId", "A");
+        map2.put("showNum", "2");
+        map2.put("contentId", "2");
+
+        Map<String, Object> map3 = new HashMap<>();
+        map3.put("industryId", "A");
+        map3.put("showNum", "2");
+        map3.put("contentId", "3");
+
+        Map<String, Object> map4 = new HashMap<>();
+        map4.put("industryId", "B");
+        map4.put("showNum", "1");
+        map4.put("contentId", "4");
+
+        Map<String, Object> map5 = new HashMap<>();
+        map5.put("industryId", "B");
+        map5.put("showNum", "1");
+        map5.put("contentId", "5");
+
+        Map<String, Object> map6 = new HashMap<>();
+        map6.put("industryId", "C");
+        map6.put("showNum", "1");
+        map6.put("contentId", "6");
+
+        Map<String, Object> map7 = new HashMap<>();
+        map7.put("industryId", "C");
+        map7.put("showNum", "1");
+        map7.put("contentId", "7");
+
+        staticDataMap.put(1L, map1);
+        staticDataMap.put(2L, map2);
+        staticDataMap.put(3L, map3);
+        staticDataMap.put(4L, map4);
+        staticDataMap.put(5L, map5);
+        staticDataMap.put(6L, map6);
+        staticDataMap.put(7L, map7);
+
+
+        ItemEntityVO entityVO1 = new ItemEntityVO();
+        entityVO1.setItemId(1L);
+        entityVO1.put("canBuy", true);
+        entityVO1.put("sellOut", false);
+        entityVO1.put("industryId", "A");
+
+        ItemEntityVO entityVO2 = new ItemEntityVO();
+        entityVO2.setItemId(2L);
+        entityVO2.put("canBuy", false);
+        entityVO2.put("sellOut", false);
+        entityVO2.put("industryId", "A");
+
+        ItemEntityVO entityVO3 = new ItemEntityVO();
+        entityVO3.setItemId(3L);
+        entityVO3.put("canBuy", false);
+        entityVO3.put("sellOut", false);
+        entityVO3.put("industryId", "A");
+
+        ItemEntityVO entityVO4 = new ItemEntityVO();
+        entityVO4.setItemId(4L);
+        entityVO4.put("canBuy", true);
+        entityVO4.put("sellOut", false);
+        entityVO4.put("industryId", "B");
+
+        ItemEntityVO entityVO5 = new ItemEntityVO();
+        entityVO5.setItemId(5L);
+        entityVO5.put("canBuy", true);
+        entityVO5.put("sellOut", false);
+        entityVO5.put("industryId", "B");
+
+
+        ItemEntityVO entityVO6 = new ItemEntityVO();
+        entityVO6.setItemId(6L);
+        entityVO6.put("canBuy", false);
+        entityVO6.put("sellOut", false);
+        entityVO6.put("industryId", "C");
+
+
+        ItemEntityVO entityVO7 = new ItemEntityVO();
+        entityVO7.setItemId(7L);
+        entityVO7.put("canBuy", false);
+        entityVO7.put("sellOut", false);
+        entityVO7.put("industryId", "C");
+
+        itemAndContentList.add(entityVO1);
+        itemAndContentList.add(entityVO2);
+        itemAndContentList.add(entityVO3);
+        itemAndContentList.add(entityVO4);
+        itemAndContentList.add(entityVO5);
+        itemAndContentList.add(entityVO6);
+        itemAndContentList.add(entityVO7);
+
+
+
+        fillItem(staticDataMap, itemAndContentList, dealItemEntityVOList);
+        System.out.println(JSON.toJSONString(dealItemEntityVOList));
     }
 
 }

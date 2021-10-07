@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.huichang.hotitem;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
@@ -133,6 +135,12 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             if(industryId == null || showNum == null){
                 continue;
             }
+            if(SxlSwitch.openHotItemDouble){
+                BigDecimal num1 = new BigDecimal(String.valueOf(showNum));
+                BigDecimal num2 = new BigDecimal("2");
+                num1.multiply(num2).toString();
+            }
+
             Object itemId = map.get("contentId");
             sb.append(itemId).append(":").append(industryId).append(":").append(showNum).append(";");
         }
