@@ -7,8 +7,8 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.iteminfo.CaptainRequestBu
 import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.captain.DefaultCaptainRequestBuildSdkExtPt;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 修改captain的sceneCode，获得卖点数据
@@ -17,13 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
     useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_GSH,
     scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_GSH_ITEM_SET_RECOMMEND)
 public class GshItemsetRecommendCaptainRequestBuildSdkExtPt extends DefaultCaptainRequestBuildSdkExtPt implements CaptainRequestBuildSdkExtPt {
-    @Autowired
-    TacLogger tacLogger;
+    Logger logger = LoggerFactory.getLogger(GshItemsetRecommendCaptainRequestBuildSdkExtPt.class);
     private final String captainSceneCode = "supermarket.hall.inventory";
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
-        tacLogger.debug("扩展点GshItemsetRecommendCaptainRequestBuildSdkExtPt");
+        logger.info("------GshItemsetRecommendCaptainRequestBuildSdkExtPt----.start");
         RenderRequest renderRequest = super.process(captainRequestBuildRequest);
         QueryOptionDO option = renderRequest.getOption();
         option.setSceneCode(captainSceneCode);
