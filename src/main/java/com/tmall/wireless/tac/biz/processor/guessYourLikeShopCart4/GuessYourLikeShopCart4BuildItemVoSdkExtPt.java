@@ -46,6 +46,7 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
 
         try {
             tacLogger.info("VO重写开始");
+            tacLogger.info("buildItemVoRequest="+JSON.toJSONString(buildItemVoRequest));
             Response<ItemEntityVO> entityVOResponse = super.process(buildItemVoRequest);
 
             if(!entityVOResponse.isSuccess()){
