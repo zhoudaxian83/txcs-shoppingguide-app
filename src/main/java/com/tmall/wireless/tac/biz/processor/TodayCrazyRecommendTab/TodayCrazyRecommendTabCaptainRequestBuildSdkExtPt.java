@@ -13,6 +13,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.tcls.gs.sdk.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.tcls.gs.sdk.framework.suport.iteminfo.sm.ItemInfoRequestSm;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 )
 public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register implements CaptainRequestBuildSdkExtPt {
     public static final String UMP_CHANNEL = "umpChannel";
+
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
         RenderRequest renderRequest = new RenderRequest();
@@ -41,8 +43,6 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         SgFrameworkContextItem contextItem = captainRequestBuildRequest.getContextItem();
         ItemInfoRequestSm itemInfoRequest = captainRequestBuildRequest.getItemInfoRequest();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfo = captainRequestBuildRequest.getItemInfoSourceMetaInfo();
-
-
 
 
         Long storeId = itemInfoRequest.getStoreId();
@@ -57,9 +57,9 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
 
 
         QueryOptionDO option = new QueryOptionDO();
-        if(StringUtils.isNotEmpty(itemInfoSourceMetaInfo.getUmpChannelKey())){
+        if (StringUtils.isNotEmpty(itemInfoSourceMetaInfo.getUmpChannelKey())) {
             Map<String, String> extraParams = Maps.newHashMap();
-            extraParams.put(UMP_CHANNEL,itemInfoSourceMetaInfo.getUmpChannelKey());
+            extraParams.put(UMP_CHANNEL, itemInfoSourceMetaInfo.getUmpChannelKey());
             query.setExtraParams(extraParams);
         }
 
@@ -69,8 +69,7 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         option.setIncludeItemFeature(true);
         option.setIncludeMaiFanCard(true);
         option.setIncludeTiming(true);
-        //TODO 具体取值方式待确认
-        //option.setSceneCode();
+        option.setSceneCode(CommonConstant.SUPER_MARKET_TODAY_CRAZY);
         if (StringUtils.isNotEmpty(itemInfoSourceMetaInfo.getMktSceneCode())) {
             option.setSceneCode(itemInfoSourceMetaInfo.getMktSceneCode());
             option.setOpenMkt(true);

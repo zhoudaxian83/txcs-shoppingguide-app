@@ -76,27 +76,11 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
             interval = SAMPLING_INTERVAL;
         }
         tacLogger.info("tpp失败打底逻辑-1");
-//        String tairKey = buildTairKey(itemFailProcessorRequest);
-//        long currentCount = counter.addAndGet(1);
-//        boolean success = itemFailProcessorRequest.getItemEntityOriginDataDTO() != null
-//                && CollectionUtils.isNotEmpty(itemFailProcessorRequest.getItemEntityOriginDataDTO().getResult());
-//        TairManager merchantsTair = tairFactorySpi.getOriginDataFailProcessTair();
-
-        String tairKey = null;
-        long currentCount = 0;
-        boolean success = false;
-        TairManager merchantsTair = null;
-        try {
-            tairKey = buildTairKey(itemFailProcessorRequest);
-            currentCount = counter.addAndGet(1);
-            tacLogger.info("tpp失败打底逻辑-1-1");
-            success = itemFailProcessorRequest.getItemEntityOriginDataDTO() != null
-                    && CollectionUtils.isNotEmpty(itemFailProcessorRequest.getItemEntityOriginDataDTO().getResult());
-            merchantsTair = tairFactorySpi.getOriginDataFailProcessTair();
-        } catch (Exception e) {
-            tacLogger.info("tpp打底异常：" + JSON.toJSONString(e));
-        }
-
+        String tairKey = buildTairKey(itemFailProcessorRequest);
+        long currentCount = counter.addAndGet(1);
+        boolean success = itemFailProcessorRequest.getItemEntityOriginDataDTO() != null
+                && CollectionUtils.isNotEmpty(itemFailProcessorRequest.getItemEntityOriginDataDTO().getResult());
+        TairManager merchantsTair = tairFactorySpi.getOriginDataFailProcessTair();
         tacLogger.info("tpp失败打底逻辑-1-2");
         if (merchantsTair == null || merchantsTair.getMultiClusterTairManager() == null || merchantsTair.getNameSpace() <= 0) {
             HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
@@ -136,12 +120,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
                     .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_ORIGIN_DATA_FAIL)
                     .error();
 
-            List<ItemEntity> itemEntityList = null;
-            try {
-                itemEntityList = readFromTair(tairKey, merchantsTair);
-            } catch (Exception e) {
-                tacLogger.info("缓存请求获取异常：" + JSON.toJSONString(e));
-            }
+            List<ItemEntity> itemEntityList = readFromTair(tairKey, merchantsTair);
             tacLogger.info("tpp失败打底逻辑-itemEntityList：" + JSON.toJSONString(itemEntityList));
             if (CollectionUtils.isEmpty(itemEntityList)) {
                 HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
