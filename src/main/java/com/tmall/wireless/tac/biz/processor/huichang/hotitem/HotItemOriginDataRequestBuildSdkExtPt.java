@@ -135,16 +135,22 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             if(industryId == null || showNum == null){
                 continue;
             }
+            String newShowNum = String.valueOf(showNum);
             if(SxlSwitch.openHotItemDouble){
                 BigDecimal num1 = new BigDecimal(String.valueOf(showNum));
                 BigDecimal num2 = new BigDecimal("2");
-                num1.multiply(num2).toString();
+                newShowNum = num1.multiply(num2).toString();
             }
-
             Object itemId = map.get("contentId");
-            sb.append(itemId).append(":").append(industryId).append(":").append(showNum).append(";");
+            sb.append(itemId).append(":").append(industryId).append(":").append(newShowNum).append(";");
         }
         return sb.toString();
     }
 
+    public static void main(String[] args) {
+        BigDecimal num1 = new BigDecimal(String.valueOf(2));
+        BigDecimal num2 = new BigDecimal("2");
+        String s = num1.multiply(num2).toString();
+        System.out.println(s);
+    }
 }
