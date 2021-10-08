@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.extremeItem.common.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.taobao.igraph.client.model.*;
+import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.IGraphResponseHandler;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallIGraphSearchService;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -21,7 +22,7 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
     private static Logger logger = LoggerFactory.getLogger(SupermarketHallIGraphSearchServiceImpl.class);
 
     @Autowired
-    com.taobao.igraph.client.core.IGraphClientWrap iGraphClientWrap;
+    com.tmall.wireless.store.spi.third.IGraphSpi iGraphSpi;
 
     @Override
     public List<T> search(String tableName, List<String> keyList, String[] fields, int perKeySize,  IGraphResponseHandler<T> handler) {
@@ -37,11 +38,17 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
         // 查询接口调用
         QueryResult queryResult;
         try {
-            queryResult = iGraphClientWrap.search(atomicQuery);
+            SPIResult<QueryResult> queryResultSPIResult = iGraphSpi.search(atomicQuery);
+            if(queryResultSPIResult.isSuccess()) {
+                queryResult = queryResultSPIResult.getData();
+            } else {
+                return new ArrayList<>();
+            }
         } catch (Exception e) {
             logger.error("search failed", e);
             return new ArrayList<>();
         }
+
         SingleQueryResult singleQueryResult = queryResult.getSingleQueryResult();
         logger.info("=========singleQueryResult:" + JSON.toJSONString(singleQueryResult));
         return handler.handleResponse(singleQueryResult);
