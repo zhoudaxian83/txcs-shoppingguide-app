@@ -30,6 +30,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -65,7 +66,7 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             //获取tpp返回数据
             SgFrameworkContextItem context = buildItemVoRequest.getContext();
             List<ItemEntity> itemEntities = Optional.of(context).map(SgFrameworkContextItem::getItemEntityOriginDataDTO)
-                    .map(OriginDataDTO<ItemEntity>::getResult).orElse(Lists.newArrayList());
+                    .map(OriginDataDTO<ItemEntity>::getResult).orElse(new ArrayList<>());
             if(CollectionUtils.isEmpty(itemEntities)){
                 return Response.fail("tpp返回数据为空。");
             }
