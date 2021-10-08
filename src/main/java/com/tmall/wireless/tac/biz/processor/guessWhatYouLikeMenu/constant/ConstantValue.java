@@ -27,9 +27,14 @@ public class ConstantValue {
     public static final String SOURCE_CHANNEL_MMC_HALF_DAY = "mmc-halfday";
 
     /**
-     * 手猜3tab 菜谱调用
+     * 手猜3tab 首页菜谱调用
      */
     public static final String SOURCE_CHANNEL_GUL_RECIPE = "gul-recipe";
+
+    /**
+     * 手猜3tab 菜谱详情页调用
+     */
+    public static final String SOURCE_CHANNEL_RECIPE_DETAILS_PAGE = "recipe-detail";
 
     /**
      * 主料
