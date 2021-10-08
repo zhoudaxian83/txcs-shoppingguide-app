@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
+import com.alibaba.cola.extension.BizScenario;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
@@ -58,11 +59,13 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
-        tacLogger.info("bizScenario:"+JSON.toJSONString(originDataProcessRequest.getSgFrameworkContextItem().getBizScenario()));
+        tacLogger.info("bizScenario:" + JSON.toJSONString(originDataProcessRequest.getSgFrameworkContextItem().getBizScenario()));
         tacLogger.info("tpp失败打底逻辑");
         tacLogger.info("tpp入参：" + JSON.toJSONString(originDataProcessRequest));
         tacLogger.info("tpp转换结果：" + JSON.toJSONString(JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class)));
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
+        BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET, ScenarioConstantApp.LOC_TYPE_B2C, ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB);
+        itemFailProcessorRequest.getSgFrameworkContextItem().setBizScenario(bizScenario);
         SgFrameworkContextItem sgFrameworkContextItem = itemFailProcessorRequest.getSgFrameworkContextItem();
         int interval = Optional.of(itemFailProcessorRequest)
                 .map(ItemFailProcessorRequest::getSgFrameworkContextItem)
@@ -139,7 +142,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
             } catch (Exception e) {
                 tacLogger.info("缓存请求获取异常：" + JSON.toJSONString(e));
             }
-            tacLogger.info("tpp失败打底逻辑-itemEntityList："+JSON.toJSONString(itemEntityList));
+            tacLogger.info("tpp失败打底逻辑-itemEntityList：" + JSON.toJSONString(itemEntityList));
             if (CollectionUtils.isEmpty(itemEntityList)) {
                 HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                         .kv("step", logKey)
