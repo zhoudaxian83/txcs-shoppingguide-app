@@ -138,7 +138,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
             } catch (Exception e) {
                 tacLogger.info("缓存请求获取异常：" + JSON.toJSONString(e));
             }
-            tacLogger.info("tpp失败打底逻辑-itemEntityList：");
+            tacLogger.info("tpp失败打底逻辑-itemEntityList："+JSON.toJSONString(itemEntityList));
             if (CollectionUtils.isEmpty(itemEntityList)) {
                 HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                         .kv("step", logKey)
