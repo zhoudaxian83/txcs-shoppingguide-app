@@ -40,6 +40,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
     }
 
     private RecommendRequest buildTppParam(SgFrameworkContextItem sgFrameworkContextItem) {
+        tacLogger.info("tpp参数构建originDataProcessRequest:"+JSON.toJSONString(sgFrameworkContextItem));
         String csa = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "csa", "");
         String appType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "appType", AppTypeEnum.INDEX_PAGE.getType());
         long userId = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);

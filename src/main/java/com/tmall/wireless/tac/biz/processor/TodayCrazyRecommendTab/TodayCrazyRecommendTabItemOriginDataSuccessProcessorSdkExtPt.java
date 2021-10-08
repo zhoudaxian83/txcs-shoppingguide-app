@@ -35,6 +35,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
+        tacLogger.info("tpp成功originDataProcessRequest:"+JSON.toJSONString(originDataProcessRequest));
         // 1,融合置顶商品；2，商品去重处理  直接把入参中的置顶商品置顶，每次查询进行去重处理
         OriginDataDTO<ItemEntity> originDataDTO = originDataProcessRequest.getItemEntityOriginDataDTO();
         this.addIsTopList(originDataDTO, originDataProcessRequest.getSgFrameworkContextItem());
