@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.gsh.itemrecommend;
 
+import com.alibaba.fastjson.JSON;
+
 import com.tmall.aselfcaptain.item.model.QueryOptionDO;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.iteminfo.CaptainRequestBuildRequest;
@@ -29,6 +31,7 @@ public class GshItemRecommendCaptainRequestBuildSdkExtPt extends DefaultCaptainR
         QueryOptionDO option = renderRequest.getOption();
         option.setSceneCode(captainSceneCode);
         renderRequest.setOption(option);
+        logger.info("------GshItemRecommendCaptainRequestBuildSdkExtPt---request:{}", JSON.toJSONString(renderRequest));
         return renderRequest;
     }
 }
