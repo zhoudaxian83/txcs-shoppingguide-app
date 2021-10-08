@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4;
 
 
+import com.alibaba.china.ump.rich.client.util.Lists;
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.tmall.tcls.gs.sdk.biz.extensions.item.vo.DefaultBuildItemVoSdkExtPt;
@@ -10,6 +11,9 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoRequest;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.Response;
+import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
+import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
+import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoDTO;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
@@ -20,10 +24,13 @@ import com.tmall.txcs.gs.model.spi.model.ItemDataDTO;
 import com.google.common.collect.Maps;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,25 +54,46 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
         try {
             tacLogger.info("VO重写开始");
             tacLogger.info("buildItemVoRequest="+JSON.toJSONString(buildItemVoRequest));
-            Response<ItemEntityVO> entityVOResponse = super.process(buildItemVoRequest);
 
+            //获取默认VO扩展点组装的数据
+            Response<ItemEntityVO> entityVOResponse = super.process(buildItemVoRequest);
             if(!entityVOResponse.isSuccess()){
                 return entityVOResponse;
             }
             ItemEntityVO entityVO = entityVOResponse.getValue();
 
-            //cff
+            //获取tpp返回数据
+            SgFrameworkContextItem context = buildItemVoRequest.getContext();
+            List<ItemEntity> itemEntities = Optional.of(context).map(SgFrameworkContextItem::getItemEntityOriginDataDTO)
+                    .map(OriginDataDTO<ItemEntity>::getResult).orElse(Lists.newArrayList());
+            if(CollectionUtils.isEmpty(itemEntities)){
+                return Response.fail("tpp返回数据为空。");
+            }
+
+            int index = 0;
+            for (int i = 0;i<itemEntities.size();i++){
+                String itemId = (String) entityVO.get("itemId");
+                if (itemEntities.get(i) != null) {
+                    String itemId1 = String.valueOf(itemEntities.get(i).getItemId());
+                    if(itemId.equals(itemId1)){
+                        index = i + 1;
+                        break;
+                    }
+                }
+            }
+
+            //商品组装
             ItemEntityVO itemEntityVO = new ItemEntityVO();
             itemEntityVO.put("scm", entityVO.get("scm"));
             /**点击埋点**/
             Map<String,Object> clickParam = Maps.newHashMap();
             Map<String,Object> args = Maps.newHashMap();
-            args.put("ext","{\"index\":\"1\"}");
-            args.put("spm","a1z60.7768435.recommend.1");
+            args.put("ext","{\"index\":\""+index+"\"}");
+            args.put("spm","a1z60.7768435.recommend."+index);
             args.put("itemid",entityVO.get("itemId"));
             clickParam.put("args",args);
             clickParam.put("eventId","2101");
-            clickParam.put("arg1","Page_ShoppingCart_Button-a1z60.7768435.recommend.1");
+            clickParam.put("arg1","Page_ShoppingCart_Button-a1z60.7768435.recommend."+index);
             clickParam.put("page","Page_ShoppingCart");
             itemEntityVO.put("clickParam", clickParam);
 
@@ -118,12 +146,12 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             /**曝光埋点**/
             Map<String,Object> exposureParam = Maps.newHashMap();
             Map<String,Object> args1 = Maps.newHashMap();
-            args1.put("ext","{\"index\":\"1\"}");
-            args1.put("spm","a1z60.7768435.recommend.1");
+            args1.put("ext","{\"index\":\""+index+"\"}");
+            args1.put("spm","a1z60.7768435.recommend."+index);
             args1.put("itemId",entityVO.get("itemId"));
             exposureParam.put("args",args1);
             exposureParam.put("eventId","2201");
-            exposureParam.put("arg1","a1z60.7768435.recommend.1");
+            exposureParam.put("arg1","a1z60.7768435.recommend."+index);
             exposureParam.put("page","Page_ShoppingCart");
             itemEntityVO.put("exposureParam", exposureParam);
 
