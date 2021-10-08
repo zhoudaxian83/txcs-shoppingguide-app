@@ -30,7 +30,7 @@ import java.util.Optional;
 )
 public class GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt extends Register implements ItemOriginDataRequestBuildSdkExtPt {
 
-    public static final Long APPID_B2C = 21657L;
+    public static final Long APPID_B2C = 28371L;
 
     @Autowired
     TacLoggerImpl tacLogger;
