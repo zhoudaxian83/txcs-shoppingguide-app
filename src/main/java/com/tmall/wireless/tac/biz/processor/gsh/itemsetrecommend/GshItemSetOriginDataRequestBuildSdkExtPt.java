@@ -40,7 +40,7 @@ public class GshItemSetOriginDataRequestBuildSdkExtPt extends Register implement
     public static final Long DEFAULT_LOGAREAID = 107L;
     public static final Long ITEM_SET_RECOMMEND_APPID = 28364L;
     public static final Long DEFAULT_SMAREAID = 330100L;
-    public static final int PAGE_SIZE = 20;
+    public static final int PAGE_SIZE = 6;
     private static final Long DefaultUserId = 0L;
 
     @Autowired
