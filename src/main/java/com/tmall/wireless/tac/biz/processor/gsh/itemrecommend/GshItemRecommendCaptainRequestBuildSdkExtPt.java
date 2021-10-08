@@ -9,8 +9,10 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.iteminfo.CaptainRequestBu
 import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.captain.DefaultCaptainRequestBuildSdkExtPt;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 修改captain的sceneCode，获得卖点数据
@@ -22,15 +24,19 @@ public class GshItemRecommendCaptainRequestBuildSdkExtPt extends DefaultCaptainR
 
     Logger logger = LoggerFactory.getLogger(GshItemRecommendCaptainRequestBuildSdkExtPt.class);
 
+    @Autowired
+    TacLogger tacLogger;
     private final String captainSceneCode = "supermarket.hall.inventory";
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
+        tacLogger.debug("-----GshItemRecommendCaptainRequestBuildSdkExtPt----start");
         logger.error("-----GshItemRecommendCaptainRequestBuildSdkExtPt----start");
         RenderRequest renderRequest = super.process(captainRequestBuildRequest);
         QueryOptionDO option = renderRequest.getOption();
         option.setSceneCode(captainSceneCode);
         renderRequest.setOption(option);
+        tacLogger.debug("-----GshItemRecommendCaptainRequestBuildSdkExtPt----request:" + JSON.toJSONString(renderRequest));
         logger.error("------GshItemRecommendCaptainRequestBuildSdkExtPt---request:{}", JSON.toJSONString(renderRequest));
         return renderRequest;
     }
