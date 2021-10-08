@@ -38,7 +38,7 @@ public class GshItemSetOriginDataRequestBuildSdkExtPt extends Register implement
     Logger logger = LoggerFactory.getLogger(GshItemSetOriginDataRequestBuildSdkExtPt.class);
     private static final String ITEM_SET_PREFIX = "rb_";
     public static final Long DEFAULT_LOGAREAID = 107L;
-    public static final Long SCENE_ITEM_RECOMMEND_APPID = 25384L;
+    public static final Long ITEM_SET_RECOMMEND_APPID = 28364L;
     public static final Long DEFAULT_SMAREAID = 330100L;
     public static final int PAGE_SIZE = 20;
     private static final Long DefaultUserId = 0L;
@@ -92,7 +92,7 @@ public class GshItemSetOriginDataRequestBuildSdkExtPt extends Register implement
             params.put("pageSize", String.valueOf(PAGE_SIZE));
             params.put("itemSets", ITEM_SET_PREFIX + itemSetId);
 
-            recommendRequest.setAppId(SCENE_ITEM_RECOMMEND_APPID);
+            recommendRequest.setAppId(ITEM_SET_RECOMMEND_APPID);
             recommendRequest.setUserId(
                 MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, DefaultUserId));
             recommendRequest.setParams(params);
