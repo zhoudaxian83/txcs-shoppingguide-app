@@ -171,6 +171,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
 
 
     private String buildTairKey(ItemFailProcessorRequest itemFailProcessorRequest) {
+        tacLogger.info("buildTairKey_" + JSON.toJSONString(itemFailProcessorRequest.getSgFrameworkContextItem().getBizScenario()));
         return sgExtensionExecutor.execute(ItemOriginDataFailKeyBuilderExtPt.class,
                 itemFailProcessorRequest.getSgFrameworkContextItem().getBizScenario(),
                 pt -> pt.process0(itemFailProcessorRequest));
