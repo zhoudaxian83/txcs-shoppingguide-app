@@ -52,6 +52,7 @@ public class GshItemSetOriginDataRequestBuildSdkExtPt extends Register implement
         tacLogger.debug("EdItemSetOriginDataRequestBuildSdkExtPt");
         RecommendRequest recommendRequest = new RecommendRequest();
         try {
+            recommendRequest.setLogResult(true);
             Context context = sgFrameworkContextItem.getTacContext();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)context;
             Map<String, Object> aldParams = requestContext4Ald.getAldParam();
