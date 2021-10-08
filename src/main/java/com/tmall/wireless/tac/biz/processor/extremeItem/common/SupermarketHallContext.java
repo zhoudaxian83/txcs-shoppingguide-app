@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,8 @@ public class SupermarketHallContext {
     private String userNick;
     private String smAreaId;
     private String currentResourceId;
+    private String sceneCode;//场景吗
+
     /**
      * 运营手工配置的数据
      */

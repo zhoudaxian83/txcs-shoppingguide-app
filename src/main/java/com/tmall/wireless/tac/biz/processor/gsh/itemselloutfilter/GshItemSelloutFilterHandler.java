@@ -29,6 +29,8 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
 
     private static final Integer tenThousand = 10000;
 
+    private final String captainSceneCode = "supermarket.hall.inventory";
+
     @Autowired
     SupermarketHallRenderService supermarketHallRenderService;
 
@@ -37,6 +39,7 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
         throws Exception {
         SupermarketHallContext supermarketHallContext = SupermarketHallContext.init(requestContext4Ald);
         List<Map<String, Object>> aldManualConfigDataList = supermarketHallContext.getAldManualConfigDataList();
+        supermarketHallContext.setSceneCode(captainSceneCode);
         if(aldManualConfigDataList == null){
             throw new Exception("数据未填写");
         }

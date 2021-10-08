@@ -76,12 +76,12 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
     }
 
     private Map<Long, ItemDTO> queryItem(List<Long> itemIds, SupermarketHallContext supermarketHallContext) {
-        RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext.getSmAreaId(),null, supermarketHallContext.getUserId());
+        RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext.getSmAreaId(),null, supermarketHallContext.getUserId(), supermarketHallContext);
         SPIResult<List<ItemDTO>> itemDTOs = renderSpi.query(renderRequest);
         return itemDTOs.getData().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     }
 
-    RenderRequest buildRenderRequest(List<Long> itemIds, String smAreaId, String queryTime, Long userId) {
+    RenderRequest buildRenderRequest(List<Long> itemIds, String smAreaId, String queryTime, Long userId, SupermarketHallContext supermarketHallContext) {
         RenderRequest renderRequest = new RenderRequest();
         ItemQueryDO query = new ItemQueryDO();
 
@@ -109,7 +109,12 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
 
         QueryOptionDO option = new QueryOptionDO();
         option.setOpenMkt(true);
-        option.setSceneCode("conference.promotion");
+        if(StringUtils.isNotEmpty(supermarketHallContext.getSceneCode())){
+            option.setSceneCode(supermarketHallContext.getSceneCode());
+        }else {
+            //会场默认
+            option.setSceneCode("conference.promotion");
+        }
         option.setIncludeQuantity(true);
         option.setIncludeSales(true);
         option.setIncludeMaiFanCard(true);
