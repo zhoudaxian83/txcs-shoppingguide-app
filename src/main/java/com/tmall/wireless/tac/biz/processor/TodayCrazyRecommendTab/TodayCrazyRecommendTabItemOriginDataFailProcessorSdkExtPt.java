@@ -176,7 +176,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
     private List<ItemEntity> readFromTair(String tairKey, TairManager tairManager) {
 
         List<ItemEntity> list = Lists.newArrayList();
-        tacLogger.info("_tairKey：" + tairKey + "tairManager:" + JSON.toJSONString(tairManager));
+        tacLogger.info("_tairKey：" + tairKey + "nameSpace:" + tairManager.getNameSpace());
         Result<DataEntry> dataEntryResult = tairManager.getMultiClusterTairManager().get(tairManager.getNameSpace(), tairKey);
         tacLogger.info("dataEntryResult:" + JSON.toJSONString(dataEntryResult));
         String value = Optional.ofNullable(dataEntryResult).map(Result::getValue).map(DataEntry::getValue).map(Object::toString).orElse("");
