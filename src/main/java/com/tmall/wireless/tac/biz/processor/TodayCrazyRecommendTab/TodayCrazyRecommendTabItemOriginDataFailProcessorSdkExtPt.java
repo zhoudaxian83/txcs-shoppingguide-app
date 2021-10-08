@@ -146,7 +146,6 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
 //                    .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_SUCCESS)
 //                    .error();
             tacLogger.info("tpp失败打底逻辑-5");
-            JSON.toJSONString(tairCacheUtil.process(itemFailProcessorRequest).getResult());
             List<ItemEntity> itemEntityList = JSON.parseArray(JSON.toJSONString(tairCacheUtil.process(itemFailProcessorRequest).getResult()), ItemEntity.class);
             OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
             originDataDTO.setResult(itemEntityList);
