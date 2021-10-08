@@ -31,14 +31,15 @@ public class GshItemSetRecommendBuildItemVoSdkExtPt extends DefaultBuildItemVoSd
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
-        Map<ItemGroup, ItemInfoGroupResponse> itemInfoGroupResponseMap = buildItemVoRequest.getContext()
-            .getItemInfoGroupResponseMap();
-        logger.error("GshItemSetRecommendBuildItemVoSdkExtPt.itemInfoGroupResponseMap:{}", JSON.toJSONString(itemInfoGroupResponseMap));
         Response<ItemEntityVO> process = super.process(buildItemVoRequest);
-
+        SgFrameworkContextItem sgFrameworkContextItem = buildItemVoRequest.getContext();
+        RequestContext4Ald requestContext4Ald = (RequestContext4Ald)(sgFrameworkContextItem.getTacContext());
+        Map<String, Object> aldContext = requestContext4Ald.getAldContext();
+        Object aldCurrentResId = aldContext.get(HallCommonAldConstant.ALD_CURRENT_RES_ID);
         ItemEntityVO itemEntityVO = process.getValue();
        if(itemEntityVO != null){
            itemEntityVO.put("solutionName", "gshItemSetRecommend");
+           itemEntityVO.put("currentResourceId", String.valueOf(aldCurrentResId));
        }
         return process;
     }
