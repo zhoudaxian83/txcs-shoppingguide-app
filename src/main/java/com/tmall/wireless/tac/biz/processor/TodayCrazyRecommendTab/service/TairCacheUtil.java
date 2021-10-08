@@ -6,6 +6,7 @@ import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.model.ErrorCode;
@@ -38,9 +39,6 @@ public class TairCacheUtil {
     @Autowired
     TacLoggerImpl tacLogger;
 
-//    @Autowired
-//    private SgExtensionExecutor sgExtensionExecutor;
-
     String logKey = "originDataFailProcessor";
     String originDataSuccessKey = "originDataSuccess";
 
@@ -53,8 +51,6 @@ public class TairCacheUtil {
                 .map(SgFrameworkContextItem::getItemMetaInfo)
                 .map(ItemMetaInfo::getSamplingInterval)
                 .orElse(SAMPLING_INTERVAL);
-
-
         if (interval <= 0) {
             interval = SAMPLING_INTERVAL;
         }
@@ -92,6 +88,7 @@ public class TairCacheUtil {
                     HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                             .kv("step", logKey)
                             .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_TAIR_PUT_ERROR)
+                            .kv("tairKey", tairKey)
                             .error();
                 }
 
@@ -131,10 +128,10 @@ public class TairCacheUtil {
     }
 
     private String buildTairKey(ItemFailProcessorRequest itemFailProcessorRequest) {
-//        return sgExtensionExecutor.execute(ItemOriginDataFailKeyBuilderExtPt.class,
-//                itemFailProcessorRequest.getSgFrameworkContextItem().getBizScenario(),
-//                pt -> pt.process0(itemFailProcessorRequest));
-        return "TPP_supermarket.b2c.TODAY_CRAZY_RECOMMEND_TAB";
+        String tabType = MapUtil.getStringWithDefault(itemFailProcessorRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", "");
+        String key = "TPP_supermarket.b2c.TODAY_CRAZY_RECOMMEND_TAB" + tabType;
+        tacLogger.info("buildTairKey_itemFailProcessorRequest:" + key);
+        return key;
 
     }
 
