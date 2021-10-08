@@ -25,7 +25,7 @@ public class GuessYourLikeShopCart4ItemOriginDataCheckSuccessSdkExtPt extends De
     @Override
     public Boolean process(OriginDataProcessRequest originDataProcessRequest) {
         Boolean process = super.process(originDataProcessRequest);
-        tacLogger.info("校验元数据是否获取成功");
+        tacLogger.info("校验元数据是否获取成功："+process);
         return process;
     }
 }
