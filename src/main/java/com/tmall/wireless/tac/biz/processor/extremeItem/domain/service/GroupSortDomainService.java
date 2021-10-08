@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.extremeItem.domain.service;
 import com.alibaba.fastjson.JSON;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroups;
+import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemGmvGroup;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemGmvGroupMap;
 import com.tmall.wireless.tac.biz.processor.extremeItem.service.ItemGmvService;
 import org.slf4j.Logger;
@@ -44,6 +45,11 @@ public class GroupSortDomainService {
      */
     private void raceSort(ItemConfigGroups itemConfigGroups, List<Long> itemIds, int days) {
         ItemGmvGroupMap itemGmvGroupMap = itemGmvService.queryGmv(itemConfigGroups, itemIds, days);
-        itemConfigGroups.sortGroup(itemGmvGroupMap);
+        boolean lostLastNDaysGmv = itemGmvGroupMap.getInnerItemGmvGroupMap().values().stream().map(ItemGmvGroup::lastNDaysGmvSum).anyMatch(gmv -> gmv == 0);
+        if(lostLastNDaysGmv) {
+            itemConfigGroups.sortGroup();
+        } else {
+            itemConfigGroups.sortGroup(itemGmvGroupMap);
+        }
     }
 }

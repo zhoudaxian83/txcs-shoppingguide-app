@@ -100,10 +100,9 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             //进行组间排序
             groupSortDomainService.groupSort(itemConfigGroups, itemIds, supermarketHallContext);
             tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
-            //itemGmvService.queryGmv(itemConfigGroups, itemIds);
 
             //构建"商品->是否售光"Map，供组内选品时库存过滤使用
-            Map<Long, Boolean> itemSoldOutMap = itemDTOMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().isSoldout()));
+            Map<Long, Boolean> itemSoldOutMap = itemDTOMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> (e.getValue().isSoldout() || !e.getValue().isCanBuy())));
             tacLogger.info("==========itemSoldOutMap: " + JSON.toJSONString(itemSoldOutMap));
             logger.info("==========itemSoldOutMap: " + JSON.toJSONString(itemSoldOutMap));
 
@@ -181,7 +180,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         }
         itemMap.put("itemUrl", itemDTO.getDetailUrl());
         //itemMap.put("scm", getScm1(tmcsContext, String.valueOf(itemDTO.getItemId().getId())));
-        itemMap.put("_areaSellable", !itemDTO.isSoldout());
+        itemMap.put("_areaSellable", !itemDTO.isSoldout() && itemDTO.isCanBuy());
         itemMap.put("locType", itemDTO.getLocType().name());
         itemMap.put("sellerId", itemDTO.getSellerId());
 

@@ -24,8 +24,6 @@ public class ItemGmvServiceImpl implements ItemGmvService {
     private static Logger logger = LoggerFactory.getLogger(ItemGmvServiceImpl.class);
     @Autowired
     SupermarketHallIGraphSearchService<GmvEntity> supermarketHallIGraphSearchService;
-    @Autowired
-    TacLogger tacLogger;
 
     @Override
     public ItemGmvGroupMap queryGmv(ItemConfigGroups itemConfigGroups, List<Long> itemIdList, int days) {
@@ -33,9 +31,9 @@ public class ItemGmvServiceImpl implements ItemGmvService {
         IGraphResponseHandler<GmvEntity> handler = singleQueryResult -> {
             List<GmvEntity> result = new ArrayList<>();
             if (singleQueryResult.hasError()) {
-                tacLogger.warn("oops, got errorMsg:[" + singleQueryResult.getErrorMsg() + "]");
+                logger.warn("oops, got errorMsg:[" + singleQueryResult.getErrorMsg() + "]");
             }
-            tacLogger.info("got [" + singleQueryResult.size() + "] records");
+            logger.info("got [" + singleQueryResult.size() + "] records");
             for (MatchRecord matchRecord : singleQueryResult.getMatchRecords()) {
                 GmvEntity gmvEntity = new GmvEntity();
                 gmvEntity.setGmv(matchRecord.getDouble("gmv"));
@@ -46,7 +44,7 @@ public class ItemGmvServiceImpl implements ItemGmvService {
             }
             return result;
         };
-        List<String> keyList = itemIdList.stream().map(id -> String.valueOf(id)).collect(Collectors.toList());
+        List<String> keyList = itemIdList.stream().map(String::valueOf).collect(Collectors.toList());
         String[] fields = new String[]{"gmv", "item_id", "window_start", "window_end"};
         long startTime = System.currentTimeMillis();
         List<GmvEntity> lastNDayGmvEntityList = getNDaysGmv(handler, keyList, fields, "TPP_tmall_sm_tmcs_item_gmv_history", 12);

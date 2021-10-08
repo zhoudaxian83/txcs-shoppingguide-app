@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.extremeItem.domain;
 import com.alibaba.fastjson.JSON;
 import com.tmall.wireless.tac.biz.processor.extremeItem.service.entity.GmvEntity;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +36,18 @@ public class ItemGmvGroupMap {
                 .collect(Collectors.groupingBy(e -> e.getItemId()))
                 .entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().stream()
+                        .filter(Objects::nonNull)
+                        .filter(gmvEntity -> StringUtils.isNotBlank(gmvEntity.getWindowEnd()))
                         .filter(gmvEntity -> lastNDaysDateSet.contains(gmvEntity.getWindowEnd().split(" ")[0]))
                         .map(item -> item.getGmv()).toArray(Double[]::new)));
 
         logger.info("ItemGmvGroupMap_valueOf_lastNDayGmvEntityMap: " + JSON.toJSONString(lastNDayGmvEntityMap));
         String currentYMDH = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH"));
-        Map<Long, Double> last1HourGmvEntityMap = last1HourGmvEntityList.stream().filter(e->e.getWindowEnd().startsWith(currentYMDH)).collect(Collectors.toMap(e -> e.getItemId(), e -> e.getGmv()));
+        Map<Long, Double> last1HourGmvEntityMap = last1HourGmvEntityList.stream()
+                .filter(Objects::nonNull)
+                .filter(e -> e.getWindowEnd() != null)
+                .filter(e->e.getWindowEnd().startsWith(currentYMDH))
+                .collect(Collectors.toMap(e -> e.getItemId(), e -> e.getGmv()));
         logger.info("ItemGmvGroupMap_valueOf_last1HourGmvEntityMap: " + JSON.toJSONString(last1HourGmvEntityMap));
 
         for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroupList()) {
@@ -78,16 +85,27 @@ public class ItemGmvGroupMap {
             }
             itemGmvGroupMap.lastNDaysGmvRankMap.put(itemGmvGroup.getGroupNo(), i++);
         }
-        i = 1;
-        int oneHoursSize = last1HourGmvRankList.size();
-        for(int index = 0; index < oneHoursSize; index++) {
-            ItemGmvGroup itemGmvGroup = last1HourGmvRankList.get(index);
-            if(index > 0 && Math.abs(last1HourGmvRankList.get(index).last1HourGmvSum() - last1HourGmvRankList.get(index-1).last1HourGmvSum()) < 0.01) {
-                i--;
+
+        boolean lost1HourGmvData = last1HourGmvRankList.stream().anyMatch(itemGmvGroup -> itemGmvGroup.last1HourGmvSum() == 0);
+        if(!lost1HourGmvData) {
+            i = 1;
+            int oneHoursSize = last1HourGmvRankList.size();
+            for (int index = 0; index < oneHoursSize; index++) {
+                ItemGmvGroup itemGmvGroup = last1HourGmvRankList.get(index);
+                if (index > 0 && Math.abs(last1HourGmvRankList.get(index).last1HourGmvSum() - last1HourGmvRankList.get(index - 1).last1HourGmvSum()) < 0.01) {
+                    i--;
+                }
+                itemGmvGroupMap.last1HourGmvRankMap.put(itemGmvGroup.getGroupNo(), i++);
             }
-            itemGmvGroupMap.last1HourGmvRankMap.put(itemGmvGroup.getGroupNo(), i++);
+            logger.info("ItemGmvGroupMap_valueOf_itemGmvGroupMap: " + JSON.toJSONString(itemGmvGroupMap));
+        } else {
+            int oneHoursSize = last1HourGmvRankList.size();
+            for (int index = 0; index < oneHoursSize; index++) {
+                ItemGmvGroup itemGmvGroup = last1HourGmvRankList.get(index);
+                itemGmvGroupMap.last1HourGmvRankMap.put(itemGmvGroup.getGroupNo(), 1);
+            }
+            logger.info("ItemGmvGroupMap_valueOf_itemGmvGroupMap(lost1HourGmvData): " + JSON.toJSONString(itemGmvGroupMap));
         }
-        logger.info("ItemGmvGroupMap_valueOf_itemGmvGroupMap: " + JSON.toJSONString(itemGmvGroupMap));
         return itemGmvGroupMap;
 
     }
@@ -127,10 +145,4 @@ public class ItemGmvGroupMap {
         lastNDaysDateSet.addAll(result);
         return lastNDaysDateSet;
     }
-
-    public static String getYMDH() {
-        String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH"));
-        return format;
-    }
-
 }

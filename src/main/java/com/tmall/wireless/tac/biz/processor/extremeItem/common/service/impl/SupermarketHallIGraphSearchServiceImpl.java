@@ -21,8 +21,6 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
     private static Logger logger = LoggerFactory.getLogger(SupermarketHallIGraphSearchServiceImpl.class);
 
     @Autowired
-    TacLogger tacLogger;
-    @Autowired
     com.taobao.igraph.client.core.IGraphClientWrap iGraphClientWrap;
 
     @Override
