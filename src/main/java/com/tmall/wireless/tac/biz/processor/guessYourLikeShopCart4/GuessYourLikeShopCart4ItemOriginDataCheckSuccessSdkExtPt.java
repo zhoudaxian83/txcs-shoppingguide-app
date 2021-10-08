@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4;
 
-import com.alibaba.fastjson.JSON;
 import com.tmall.tcls.gs.sdk.biz.extensions.item.origindata.DefaultItemOriginDataCheckSuccessSdkExtPt;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -26,7 +25,7 @@ public class GuessYourLikeShopCart4ItemOriginDataCheckSuccessSdkExtPt extends De
     @Override
     public Boolean process(OriginDataProcessRequest originDataProcessRequest) {
         Boolean process = super.process(originDataProcessRequest);
-        tacLogger.info("校验元数据是否获取成功，ProcessRequest="+ JSON.toJSONString(originDataProcessRequest));
+        tacLogger.info("校验元数据是否获取成功");
         return process;
     }
 }
