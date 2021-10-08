@@ -70,6 +70,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         if (interval <= 0) {
             interval = SAMPLING_INTERVAL;
         }
+        tacLogger.info("tpp失败打底逻辑-1");
         String tairKey = buildTairKey(itemFailProcessorRequest);
         long currentCount = counter.addAndGet(1);
         boolean success = itemFailProcessorRequest.getItemEntityOriginDataDTO() != null
@@ -83,7 +84,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
                     .error();
             return originDataProcessRequest.getItemEntityOriginDataDTO();
         }
-
+        tacLogger.info("tpp失败打底逻辑-2");
         if (success) {
             HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                     .kv("step", logKey)
@@ -104,10 +105,11 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
                 }
 
             }
+            tacLogger.info("tpp失败打底逻辑-3");
             return originDataProcessRequest.getItemEntityOriginDataDTO();
 
         } else {
-
+            tacLogger.info("tpp失败打底逻辑-4");
             HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                     .kv("step", logKey)
                     .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_ORIGIN_DATA_FAIL)
@@ -122,7 +124,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
 
                 return originDataProcessRequest.getItemEntityOriginDataDTO();
             }
-
+            tacLogger.info("tpp失败打底逻辑-5");
             HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                     .kv("step", logKey)
                     .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_SUCCESS)
