@@ -26,6 +26,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -58,9 +59,9 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         tacLogger.info("tpp失败打底逻辑");
-        ItemFailProcessorRequest itemFailProcessorRequest = new ItemFailProcessorRequest();
-        itemFailProcessorRequest.setItemEntityOriginDataDTO(itemFailProcessorRequest.getItemEntityOriginDataDTO());
-        itemFailProcessorRequest.setSgFrameworkContextItem(itemFailProcessorRequest.getSgFrameworkContextItem());
+        tacLogger.info("tpp入参：" + JSON.toJSONString(originDataProcessRequest));
+        tacLogger.info("tpp转换结果：" + JSON.toJSONString(JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class)));
+        ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
         SgFrameworkContextItem sgFrameworkContextItem = itemFailProcessorRequest.getSgFrameworkContextItem();
         int interval = Optional.of(itemFailProcessorRequest)
                 .map(ItemFailProcessorRequest::getSgFrameworkContextItem)
