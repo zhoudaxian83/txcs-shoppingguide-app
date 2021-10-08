@@ -76,8 +76,9 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         boolean success = itemFailProcessorRequest.getItemEntityOriginDataDTO() != null
                 && CollectionUtils.isNotEmpty(itemFailProcessorRequest.getItemEntityOriginDataDTO().getResult());
         TairManager merchantsTair = tairFactorySpi.getOriginDataFailProcessTair();
+        tacLogger.info("tpp失败打底逻辑-1-1");
         if (merchantsTair == null || merchantsTair.getMultiClusterTairManager() == null || merchantsTair.getNameSpace() <= 0) {
-
+            tacLogger.info("tpp失败打底逻辑-1-2");
             HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                     .kv("step", logKey)
                     .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_TAIR_MANAGER_NULL)
