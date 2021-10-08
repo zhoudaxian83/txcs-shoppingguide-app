@@ -24,12 +24,12 @@ public class GshItemsetRecommendCaptainRequestBuildSdkExtPt extends DefaultCapta
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
-        logger.info("------GshItemsetRecommendCaptainRequestBuildSdkExtPt----.start");
+        logger.error("------GshItemsetRecommendCaptainRequestBuildSdkExtPt----.start");
         RenderRequest renderRequest = super.process(captainRequestBuildRequest);
         QueryOptionDO option = renderRequest.getOption();
         option.setSceneCode(captainSceneCode);
         renderRequest.setOption(option);
-        logger.info("------GshItemsetRecommendCaptainRequestBuildSdkExtPt---request:{}", JSON.toJSONString(renderRequest));
+        logger.error("------GshItemsetRecommendCaptainRequestBuildSdkExtPt---request:{}", JSON.toJSONString(renderRequest));
         return renderRequest;
     }
 }
