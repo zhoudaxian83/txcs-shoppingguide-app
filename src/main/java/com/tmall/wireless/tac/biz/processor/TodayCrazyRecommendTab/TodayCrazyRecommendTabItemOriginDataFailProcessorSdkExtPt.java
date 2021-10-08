@@ -22,14 +22,13 @@ import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
 import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
-import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TairUtil;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TairCacheUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -57,7 +56,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
     private SgExtensionExecutor sgExtensionExecutor;
 
     @Autowired
-    TairUtil tairUtil;
+    TairCacheUtil tairCacheUtil;
 
     String logKey = "originDataFailProcessor";
     String originDataSuccessKey = "originDataSuccess";
@@ -147,8 +146,8 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
 //                    .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_SUCCESS)
 //                    .error();
             tacLogger.info("tpp失败打底逻辑-5");
-            JSON.toJSONString(tairUtil.process(itemFailProcessorRequest).getResult());
-            List<ItemEntity> itemEntityList = JSON.parseArray(JSON.toJSONString(tairUtil.process(itemFailProcessorRequest).getResult()), ItemEntity.class);
+            JSON.toJSONString(tairCacheUtil.process(itemFailProcessorRequest).getResult());
+            List<ItemEntity> itemEntityList = JSON.parseArray(JSON.toJSONString(tairCacheUtil.process(itemFailProcessorRequest).getResult()), ItemEntity.class);
             OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
             originDataDTO.setResult(itemEntityList);
             originDataDTO.setIndex(0);

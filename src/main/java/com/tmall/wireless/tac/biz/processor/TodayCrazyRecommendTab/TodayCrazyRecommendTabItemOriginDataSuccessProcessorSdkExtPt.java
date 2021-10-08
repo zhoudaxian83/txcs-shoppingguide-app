@@ -11,8 +11,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
-import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TairUtil;
-import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TodayCrazyLimitService;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TairCacheUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections.CollectionUtils;
@@ -37,7 +36,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     TacLoggerImpl tacLogger;
 
     @Autowired
-    TairUtil tairUtil;
+    TairCacheUtil tairCacheUtil;
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
@@ -84,7 +83,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             originDataDTO.setResult(itemEntities);
         }
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
-        tairUtil.process(itemFailProcessorRequest);
+        tairCacheUtil.process(itemFailProcessorRequest);
         //todo 缓存写入
     }
 

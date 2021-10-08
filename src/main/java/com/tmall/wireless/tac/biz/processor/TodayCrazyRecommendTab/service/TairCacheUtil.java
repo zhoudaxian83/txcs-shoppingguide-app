@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Component
-public class TairUtil {
+public class TairCacheUtil {
 
     public static final int SAMPLING_INTERVAL = 10;
 
