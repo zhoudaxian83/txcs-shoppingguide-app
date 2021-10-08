@@ -98,6 +98,8 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
         if(itemDTO.getTargetSkuId()!=null){
             itemMap.put("skuId",itemDTO.getTargetSkuId());
         }
+        itemMap.put("attachments", itemDTO.getAttachments());
+
     }
 
     public String toMonthlySalesView(String monthSalesAmount) {
