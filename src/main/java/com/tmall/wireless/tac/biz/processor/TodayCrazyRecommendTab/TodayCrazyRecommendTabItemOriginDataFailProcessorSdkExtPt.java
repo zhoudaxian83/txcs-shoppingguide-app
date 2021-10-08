@@ -22,6 +22,7 @@ import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
 import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TairUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections4.CollectionUtils;
@@ -55,6 +56,9 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
     @Autowired
     private SgExtensionExecutor sgExtensionExecutor;
 
+    @Autowired
+    TairUtil tairUtil;
+
     String logKey = "originDataFailProcessor";
     String originDataSuccessKey = "originDataSuccess";
 
@@ -66,7 +70,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         tacLogger.info("tpp转换结果：" + JSON.toJSONString(JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class)));
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
         BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET, ScenarioConstantApp.LOC_TYPE_B2C, ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB);
-        com.tmall.tcls.gs.sdk.framework.model.context.LocParams locParams1= originDataProcessRequest.getSgFrameworkContextItem().getCommonUserParams().getLocParams();
+        com.tmall.tcls.gs.sdk.framework.model.context.LocParams locParams1 = originDataProcessRequest.getSgFrameworkContextItem().getCommonUserParams().getLocParams();
         LocParams locParams = new LocParams();
         locParams.setRt1HourStoreId(locParams1.getRt1HourStoreId());
         locParams.setRtHalfDayStoreId(locParams1.getRtHalfDayStoreId());
@@ -122,27 +126,29 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
 
         } else {
             tacLogger.info("tpp失败打底逻辑-4");
-            HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
-                    .kv("step", logKey)
-                    .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_ORIGIN_DATA_FAIL)
-                    .error();
-
-            List<ItemEntity> itemEntityList = readFromTair(tairKey, merchantsTair);
-            tacLogger.info("tpp失败打底逻辑-itemEntityList：" + JSON.toJSONString(itemEntityList));
-            if (CollectionUtils.isEmpty(itemEntityList)) {
-                HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
-                        .kv("step", logKey)
-                        .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_FAIL)
-                        .error();
-
-                return originDataProcessRequest.getItemEntityOriginDataDTO();
-            }
+//            HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
+//                    .kv("step", logKey)
+//                    .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_ORIGIN_DATA_FAIL)
+//                    .error();
+//
+//            List<ItemEntity> itemEntityList = readFromTair(tairKey, merchantsTair);
+//            tacLogger.info("tpp失败打底逻辑-itemEntityList：" + JSON.toJSONString(itemEntityList));
+//            if (CollectionUtils.isEmpty(itemEntityList)) {
+//                HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
+//                        .kv("step", logKey)
+//                        .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_FAIL)
+//                        .error();
+//
+//                return originDataProcessRequest.getItemEntityOriginDataDTO();
+//            }
+//            tacLogger.info("tpp失败打底逻辑-5");
+//            HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
+//                    .kv("step", logKey)
+//                    .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_SUCCESS)
+//                    .error();
             tacLogger.info("tpp失败打底逻辑-5");
-            HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
-                    .kv("step", logKey)
-                    .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_SUCCESS)
-                    .error();
-
+            JSON.toJSONString(tairUtil.process(itemFailProcessorRequest).getResult());
+            List<ItemEntity> itemEntityList = JSON.parseArray(JSON.toJSONString(tairUtil.process(itemFailProcessorRequest).getResult()), ItemEntity.class);
             OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
             originDataDTO.setResult(itemEntityList);
             originDataDTO.setIndex(0);

@@ -40,6 +40,14 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
     }
 
     private RecommendRequest buildTppParam(SgFrameworkContextItem sgFrameworkContextItem) {
+//        com.tmall.txcs.gs.model.biz.context.PmtParams pmtParams = new com.tmall.txcs.gs.model.biz.context.PmtParams();
+//        pmtParams.setPmtSource("sm_manager");
+//        pmtParams.setPmtName("guessULike");
+//        pmtParams.setPageId("cainixihuan1");
+//        pmtParams.setModuleId(level1Id.toString());
+//        sgFrameworkContextItem.setPmtParams(pmtParams);
+
+
         tacLogger.info("tpp参数构建originDataProcessRequest:"+JSON.toJSONString(sgFrameworkContextItem));
         String csa = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "csa", "");
         String appType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "appType", AppTypeEnum.INDEX_PAGE.getType());
