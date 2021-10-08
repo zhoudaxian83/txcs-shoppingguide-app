@@ -132,11 +132,11 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
                     .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_ORIGIN_DATA_FAIL)
                     .error();
 
-            List<ItemEntity> itemEntityList = readFromTair(tairKey, merchantsTair);
+            List<ItemEntity> itemEntityList = null;
             try {
                 itemEntityList = readFromTair(tairKey, merchantsTair);
-            }catch (Exception e){
-                tacLogger.info("缓存请求获取异常："+JSON.toJSONString(e));
+            } catch (Exception e) {
+                tacLogger.info("缓存请求获取异常：" + JSON.toJSONString(e));
             }
             tacLogger.info("tpp失败打底逻辑-itemEntityList：");
             if (CollectionUtils.isEmpty(itemEntityList)) {
