@@ -58,6 +58,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
+        tacLogger.info("bizScenario:"+JSON.toJSONString(originDataProcessRequest.getSgFrameworkContextItem().getBizScenario()));
         tacLogger.info("tpp失败打底逻辑");
         tacLogger.info("tpp入参：" + JSON.toJSONString(originDataProcessRequest));
         tacLogger.info("tpp转换结果：" + JSON.toJSONString(JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class)));
@@ -176,7 +177,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
     private List<ItemEntity> readFromTair(String tairKey, TairManager tairManager) {
 
         List<ItemEntity> list = Lists.newArrayList();
-        tacLogger.info("_tairKey：" + tairKey + "nameSpace:" + tairManager.getNameSpace());
+        tacLogger.info("_tairKey：" + tairKey + ";nameSpace:" + tairManager.getNameSpace());
         Result<DataEntry> dataEntryResult = tairManager.getMultiClusterTairManager().get(tairManager.getNameSpace(), tairKey);
         tacLogger.info("dataEntryResult:" + JSON.toJSONString(dataEntryResult));
         String value = Optional.ofNullable(dataEntryResult).map(Result::getValue).map(DataEntry::getValue).map(Object::toString).orElse("");
