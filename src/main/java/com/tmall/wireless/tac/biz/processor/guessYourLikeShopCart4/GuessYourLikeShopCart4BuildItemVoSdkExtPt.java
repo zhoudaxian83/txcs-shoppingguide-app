@@ -59,13 +59,13 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             /**点击埋点**/
             Map<String,Object> clickParam = Maps.newHashMap();
             Map<String,Object> args = Maps.newHashMap();
-            args.put("ext",0);
-            args.put("spm",0);
+            args.put("ext","{\"index\":\"1\"}");
+            args.put("spm","a1z60.7768435.recommend.1");
             args.put("itemid",entityVO.get("itemId"));
             clickParam.put("args",args);
-            clickParam.put("eventId",0);
-            clickParam.put("arg1",0);
-            clickParam.put("page",0);
+            clickParam.put("eventId","2101");
+            clickParam.put("arg1","Page_ShoppingCart_Button-a1z60.7768435.recommend.1");
+            clickParam.put("page","Page_ShoppingCart");
             itemEntityVO.put("clickParam", clickParam);
 
             /**价格区域**/
@@ -111,19 +111,19 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             /**点击事件，跳转到该商品详情**/
             itemEntityVO.put("action", entityVO.get("itemUrl"));
             /********/
-            itemEntityVO.put("type", 0);
+            itemEntityVO.put("type", "tmall_common_recommend_item");
             /********/
             itemEntityVO.put("pageParam", 0);
             /**曝光埋点**/
             Map<String,Object> exposureParam = Maps.newHashMap();
             Map<String,Object> args1 = Maps.newHashMap();
-            args1.put("ext",0);
-            args1.put("spm",0);
+            args1.put("ext","{\"index\":\"1\"}");
+            args1.put("spm","a1z60.7768435.recommend.1");
             args1.put("itemId",entityVO.get("itemId"));
             exposureParam.put("args",args1);
-            exposureParam.put("eventId",0);
-            exposureParam.put("arg1",0);
-            exposureParam.put("page",0);
+            exposureParam.put("eventId","2201");
+            exposureParam.put("arg1","a1z60.7768435.recommend.1");
+            exposureParam.put("page","Page_ShoppingCart");
             itemEntityVO.put("exposureParam", exposureParam);
 
             itemEntityVO.put("imgUrl", entityVO.get("itemImg"));
