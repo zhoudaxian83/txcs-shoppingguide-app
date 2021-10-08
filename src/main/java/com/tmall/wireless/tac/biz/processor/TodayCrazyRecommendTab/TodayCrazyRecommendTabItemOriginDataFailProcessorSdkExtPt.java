@@ -19,6 +19,7 @@ import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemOriginDataFailKe
 import com.tmall.txcs.gs.framework.model.ErrorCode;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
+import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -65,6 +66,12 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         tacLogger.info("tpp转换结果：" + JSON.toJSONString(JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class)));
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
         BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET, ScenarioConstantApp.LOC_TYPE_B2C, ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB);
+        com.tmall.tcls.gs.sdk.framework.model.context.LocParams locParams1= originDataProcessRequest.getSgFrameworkContextItem().getCommonUserParams().getLocParams();
+        LocParams locParams = new LocParams();
+        locParams.setRt1HourStoreId(locParams1.getRt1HourStoreId());
+        locParams.setRtHalfDayStoreId(locParams1.getRtHalfDayStoreId());
+        locParams.setRtNextDayStoreId(locParams1.getRtNextDayStoreId());
+        itemFailProcessorRequest.getSgFrameworkContextItem().setLocParams(locParams);
         itemFailProcessorRequest.getSgFrameworkContextItem().setBizScenario(bizScenario);
         SgFrameworkContextItem sgFrameworkContextItem = itemFailProcessorRequest.getSgFrameworkContextItem();
         int interval = Optional.of(itemFailProcessorRequest)
