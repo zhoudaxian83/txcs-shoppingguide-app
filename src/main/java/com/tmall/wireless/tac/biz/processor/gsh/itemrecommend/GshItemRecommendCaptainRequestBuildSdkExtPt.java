@@ -23,7 +23,7 @@ public class GshItemRecommendCaptainRequestBuildSdkExtPt extends DefaultCaptainR
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
-        tacLogger.debug("扩展点InventoryChannelItemPageCaptainRequestBuildSdkExtPt");
+        tacLogger.debug("扩展点GshItemRecommendCaptainRequestBuildSdkExtPt");
         RenderRequest renderRequest = super.process(captainRequestBuildRequest);
         QueryOptionDO option = renderRequest.getOption();
         option.setSceneCode(captainSceneCode);
