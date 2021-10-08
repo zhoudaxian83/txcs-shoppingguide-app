@@ -133,6 +133,11 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
                     .error();
 
             List<ItemEntity> itemEntityList = readFromTair(tairKey, merchantsTair);
+            try {
+                itemEntityList = readFromTair(tairKey, merchantsTair);
+            }catch (Exception e){
+                tacLogger.info("缓存请求获取异常："+JSON.toJSONString(e));
+            }
             tacLogger.info("tpp失败打底逻辑-itemEntityList：");
             if (CollectionUtils.isEmpty(itemEntityList)) {
                 HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
