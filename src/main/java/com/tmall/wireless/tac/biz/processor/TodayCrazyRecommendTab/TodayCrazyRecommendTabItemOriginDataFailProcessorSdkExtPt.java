@@ -133,6 +133,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
                     .error();
 
             List<ItemEntity> itemEntityList = readFromTair(tairKey, merchantsTair);
+            tacLogger.info("tpp失败打底逻辑-itemEntityList：");
             if (CollectionUtils.isEmpty(itemEntityList)) {
                 HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                         .kv("step", logKey)
@@ -170,10 +171,9 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
     private List<ItemEntity> readFromTair(String tairKey, TairManager tairManager) {
 
         List<ItemEntity> list = Lists.newArrayList();
-
+        tacLogger.info("_tairKey：" + tairKey + "tairManager:" + JSON.toJSONString(tairManager));
         Result<DataEntry> dataEntryResult = tairManager.getMultiClusterTairManager().get(tairManager.getNameSpace(), tairKey);
-        tacLogger.info("_tairKey："+tairKey+"tairManager:"+JSON.toJSONString(tairManager));
-        tacLogger.info("dataEntryResult:"+JSON.toJSONString(dataEntryResult));
+        tacLogger.info("dataEntryResult:" + JSON.toJSONString(dataEntryResult));
         String value = Optional.ofNullable(dataEntryResult).map(Result::getValue).map(DataEntry::getValue).map(Object::toString).orElse("");
 
         if (StringUtils.isEmpty(value)) {

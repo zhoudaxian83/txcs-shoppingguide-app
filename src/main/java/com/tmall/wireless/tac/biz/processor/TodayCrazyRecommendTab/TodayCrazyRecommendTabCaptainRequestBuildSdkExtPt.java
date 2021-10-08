@@ -69,8 +69,8 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         option.setIncludeItemFeature(true);
         option.setIncludeMaiFanCard(true);
         option.setIncludeTiming(true);
-
-
+        //TODO 具体取值方式待确认
+        //option.setSceneCode();
         if (StringUtils.isNotEmpty(itemInfoSourceMetaInfo.getMktSceneCode())) {
             option.setSceneCode(itemInfoSourceMetaInfo.getMktSceneCode());
             option.setOpenMkt(true);
