@@ -36,7 +36,6 @@ public class TodayCrazyRecommendTabItemInfoPostProcessSdkExtPt extends Register 
             sgFrameworkContextItem.getUserParams().put(Constant.ITEM_LIMIT_RESULT, itemLimitResult);
         } else {
             tacLogger.warn("TodayCrazyRecommendTabItemOriginDataPostProcessorSdkExtPt_" + "获取限购数据为空");
-            LOGGER.warn("TodayCrazyRecommendTabItemOriginDataPostProcessorSdkExtPt_" + "获取限购数据为空");
         }
         return sgFrameworkContextItem;
     }

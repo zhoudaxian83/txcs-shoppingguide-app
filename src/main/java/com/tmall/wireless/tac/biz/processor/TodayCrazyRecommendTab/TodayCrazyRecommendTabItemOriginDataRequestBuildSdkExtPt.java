@@ -40,15 +40,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
     }
 
     private RecommendRequest buildTppParam(SgFrameworkContextItem sgFrameworkContextItem) {
-//        com.tmall.txcs.gs.model.biz.context.PmtParams pmtParams = new com.tmall.txcs.gs.model.biz.context.PmtParams();
-//        pmtParams.setPmtSource("sm_manager");
-//        pmtParams.setPmtName("guessULike");
-//        pmtParams.setPageId("cainixihuan1");
-//        pmtParams.setModuleId(level1Id.toString());
-//        sgFrameworkContextItem.setPmtParams(pmtParams);
-
-
-        tacLogger.info("tpp参数构建originDataProcessRequest:"+JSON.toJSONString(sgFrameworkContextItem));
+        tacLogger.info("tpp参数构建originDataProcessRequest:" + JSON.toJSONString(sgFrameworkContextItem));
         String csa = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "csa", "");
         String appType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "appType", AppTypeEnum.INDEX_PAGE.getType());
         long userId = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
@@ -57,13 +49,10 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         sgFrameworkContextItem.getUserParams().put("isFirstPage", isFirstPage);
         AddressDTO addressDTO = AddressUtil.parseCSA(csa);
         String regionCode = addressDTO.getRegionCode();
-        tacLogger.info("addressDTO_:" + JSON.toJSONString(addressDTO));
-        tacLogger.info("sgFrameworkContextItem_:" + JSON.toJSONString(sgFrameworkContextItem));
         String categoryIdsString = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "categoryIds", "");
         String tabType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "tabType", "");
         List<String> categoryIds = new ArrayList<>(Arrays.asList(categoryIdsString.split(",")));
         List<String> cacheKeyList = this.buildCacheKeyList(categoryIds, tabType);
-        tacLogger.info("cacheKeyList_:" + JSON.toJSONString(cacheKeyList));
         //根据类别id构建参数
         RecommendRequest recommendRequest = new RecommendRequest();
         Map<String, String> params = Maps.newHashMap();
@@ -73,6 +62,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         params.put("itemTairKeys", String.join(",", cacheKeyList));
         params.put("regionCode", regionCode);
         params.put("exposureDataUserId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
+        //算法需要根据appId区分埋点，故同一接口不同场景做区分
         if (AppTypeEnum.TAB_PAGE.getType().equals(appType)) {
             params.put("appid", String.valueOf(AppIdEnum.TAB_APP_ID.getCode()));
             recommendRequest.setAppId(AppIdEnum.TAB_APP_ID.getCode());
@@ -110,12 +100,12 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
 
     /**
      * 构建类目id作为tair的key
+     *
      * @param categoryIds
      * @param tabType
      * @return
      */
     private List<String> buildCacheKeyList(List<String> categoryIds, String tabType) {
-        //String shorthand = LogicalArea.parseByCode(addressDTO.getRegionCode()).getShorthand();
         List<String> cacheKeyList = Lists.newArrayList();
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             cacheKeyList.addAll(Arrays.asList("today_featured", "today_algorithm"));

@@ -16,6 +16,7 @@ import com.tmall.txcs.gs.model.model.dto.EntityDTO;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -128,10 +129,8 @@ public class TairCacheUtil {
     }
 
     private String buildTairKey(ItemFailProcessorRequest itemFailProcessorRequest) {
-        String tabType = MapUtil.getStringWithDefault(itemFailProcessorRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", "");
-        String key = "TPP_supermarket.b2c.TODAY_CRAZY_RECOMMEND_TAB" + tabType;
-        tacLogger.info("buildTairKey_itemFailProcessorRequest:" + key);
-        return key;
+        String tabType = MapUtil.getStringWithDefault(itemFailProcessorRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", TabTypeEnum.TODAY_CHAO_SHENG.getType());
+        return "TPP_supermarket.b2c.TODAY_CRAZY_RECOMMEND_TAB_" + tabType;
 
     }
 

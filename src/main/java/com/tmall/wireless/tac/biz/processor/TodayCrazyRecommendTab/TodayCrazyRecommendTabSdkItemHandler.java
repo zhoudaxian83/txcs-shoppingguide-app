@@ -51,6 +51,8 @@ public class TodayCrazyRecommendTabSdkItemHandler extends RpmReactiveHandler<SgF
                     } else {
                         tacResult.setHasMore(tacResult.getData().isHasMore());
                     }
+                    tacLogger.info("tacResult原始结果" + JSON.toJSONString(tacResult));
+                    tacLogger.info("tacResult打底结果" + JSON.toJSONString(TacResult.errorResult("test")));
                     tacResult.getBackupMetaData().setUseBackup(true);
                     return tacResult;
                 })

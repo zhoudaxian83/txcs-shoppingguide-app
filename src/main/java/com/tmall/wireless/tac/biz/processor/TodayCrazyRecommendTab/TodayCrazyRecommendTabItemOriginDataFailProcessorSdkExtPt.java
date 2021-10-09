@@ -35,6 +35,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
+        tacLogger.info("tpp失败打底执行了");
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
         BizScenario bizScenario = BizScenario.valueOf(ScenarioConstantApp.BIZ_TYPE_SUPERMARKET, ScenarioConstantApp.LOC_TYPE_B2C, ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB);
         com.tmall.tcls.gs.sdk.framework.model.context.LocParams locParams1 = originDataProcessRequest.getSgFrameworkContextItem().getCommonUserParams().getLocParams();

@@ -55,7 +55,6 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
             if (entityVO != null) {
                 if (!this.canBuy(entityVO) || !this.noLimitBuy(entityVO)) {
                     tacLogger.info("被过滤数据："+entityVO.getString("itemId"));
-                    LOGGER.error("itemFilter,{}, itemId:{}", ErrorCode.ITEM_FILTER_BY_CAN_BUY, entityVO.getString("itemId"));
                 } else {
                     if (checkField(entityVO)) {
                         itemAndContentListAfterFilter.add(entityVO);

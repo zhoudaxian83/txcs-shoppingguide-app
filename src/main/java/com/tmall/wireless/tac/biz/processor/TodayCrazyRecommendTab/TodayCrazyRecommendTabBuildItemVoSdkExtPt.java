@@ -62,7 +62,6 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
-            tacLogger.info("itemInfoBySourceDTO_:" + JSON.toJSONString(itemInfoBySourceDTO));
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainDTO) {
 
                 ItemInfoBySourceCaptainDTO itemInfoBySourceCaptainDTO = (ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO;
@@ -84,8 +83,6 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
             itemEntityVO.putAll(getItemVoMap(itemInfoBySourceDTO));
 
         }
-
-        tacLogger.info("originScm" + originScm + ";trackPoint:" + JSON.toJSONString(trackPoint));
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
 
