@@ -7,6 +7,8 @@ import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
+import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.store.spi.render.RenderSpi;
@@ -75,6 +77,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
         try {
+            Long totalStart = System.currentTimeMillis();
             //初始化SupermarketHallContext
             SupermarketHallContext supermarketHallContext = SupermarketHallContext.init(requestContext4Ald);
 
@@ -105,13 +108,24 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
             //构建响应对象
             List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
-
             logger.info("=========generalItems:" + JSON.toJSONString(generalItems));
+
+            Long totalEnd = System.currentTimeMillis();
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler.mainProcess|totalCost|" + (totalEnd - totalStart))
+                    .kv("totalCost", String.valueOf(totalEnd - totalStart))
+                    .error();
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler.mainProcess|success")
+                    .kv("totalCost", String.valueOf(totalEnd - totalStart))
+                    .error();
+
             return Flowable.just(TacResult.newResult(generalItems));
 
         } catch (Exception e) {
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler.mainProcess|error")
+                    .kv("context", JSON.toJSONString(requestContext4Ald))
+                    .kv("errorMsg", StackTraceUtil.stackTrace(e))
+                    .error();
             logger.error(e.getMessage(), e);
-            tacLogger.error(e.getMessage(), e);
         }
         return Flowable.just(TacResult.newResult(new ArrayList<>()));
     }
