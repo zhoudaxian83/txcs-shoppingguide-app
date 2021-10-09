@@ -115,7 +115,7 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         paramsMap.put("recType",RecTypeEnum.SIMILAR_ITEM_CONTENT_ITEM.getType());
         paramsMap.put("contentId",contentVO.getLong("contentId"));
         paramsMap.put("itemSetIds",contentVO.getString("itemSetIds"));
-        paramsMap.put("pageSize",6);
+        paramsMap.put("pageSize",20);
 
 
         eventView1.addFieldsParam("params", JSON.toJSONString(paramsMap));
