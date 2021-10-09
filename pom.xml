@@ -13,6 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <common.rpm.version>1.0.20-SNAPSHOT</common.rpm.version>
+        <spi.store.version>1.0.12</spi.store.version>
     </properties>
 
 
@@ -43,12 +44,17 @@
         <dependency>
             <groupId>com.tmall.wireless.store</groupId>
             <artifactId>render-part-spi</artifactId>
-            <version>1.0.10</version>
+            <version>${spi.store.version}</version>
         </dependency>
         <dependency>
             <groupId>com.tmall.wireless.store</groupId>
             <artifactId>data-part-spi</artifactId>
-            <version>1.0.10</version>
+            <version>${spi.store.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>third-part-spi</artifactId>
+            <version>${spi.store.version}</version>
         </dependency>
 
         <dependency>
@@ -177,7 +183,7 @@
         <dependency>
             <groupId>com.tmall.wireless.store</groupId>
             <artifactId>user-part</artifactId>
-            <version>1.0.10</version>
+            <version>${spi.store.version}</version>
         </dependency>
 
         <dependency>
