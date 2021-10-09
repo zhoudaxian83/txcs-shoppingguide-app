@@ -5,9 +5,9 @@ import com.taobao.igraph.client.model.*;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.IGraphResponseHandler;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallIGraphSearchService;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHallIGraphSearchService<T> {
-    private static Logger logger = LoggerFactory.getLogger(SupermarketHallIGraphSearchServiceImpl.class);
+    private static Logger logger = LoggerProxy.getLogger(SupermarketHallIGraphSearchServiceImpl.class);
 
     @Autowired
     com.tmall.wireless.store.spi.third.IGraphSpi iGraphSpi;
