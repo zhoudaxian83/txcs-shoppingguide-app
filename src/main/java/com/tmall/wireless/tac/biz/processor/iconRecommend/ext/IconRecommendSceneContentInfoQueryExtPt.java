@@ -11,6 +11,7 @@ import com.tmall.aselfcommon.model.gcs.enums.GcsMarketChannel;
 import com.tmall.aselfcommon.model.scene.domain.TairSceneDTO;
 import com.tmall.aselfcommon.model.scene.enums.SceneType;
 import com.tmall.aselfcommon.model.scene.valueobject.SceneDetailValue;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.content.ContentInfoQueryExtPt;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
@@ -97,12 +98,17 @@ public class IconRecommendSceneContentInfoQueryExtPt implements ContentInfoQuery
                 ContentInfoDTO contentDTO = new ContentInfoDTO();
                 Map<String, Object> contentInfo = Maps.newHashMap();
                 contentInfo.put("contentId", tairSceneDTO.getId());
-                contentInfo.put("contentTitle", tairSceneDTO.getTitle());
-                Object iconShortTitle = tairSceneDTO.getProperty().get("iconShortTitle");
-                if (iconShortTitle == null) {
+                contentInfo.put("contentSubtitle", tairSceneDTO.getSubtitle());
+                String iconShortTitle;
+                if (tairSceneDTO.getProperty() != null && tairSceneDTO.getProperty().get("shortTitle") != null) {
+                    iconShortTitle = (String)tairSceneDTO.getProperty().get("shortTitle");
+                    if (StringUtils.isEmpty(iconShortTitle)) {
+                        iconShortTitle = tairSceneDTO.getTitle();
+                    }
+                } else {
                     iconShortTitle = tairSceneDTO.getTitle();
                 }
-                contentInfo.put("contentSubtitle", iconShortTitle);
+                contentInfo.put("contentTitle", iconShortTitle);
                 Map<String, Object> tairPropertyMap = tairSceneDTO.getProperty();
                 //前后端映射  首页改版、逛超市映射字段相同
                 for(FrontBackMapEnum frontBackMapEnum : FrontBackMapEnum.values()){

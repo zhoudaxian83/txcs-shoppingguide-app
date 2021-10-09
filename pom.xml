@@ -13,6 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <common.rpm.version>1.0.20-SNAPSHOT</common.rpm.version>
+        <spi.store.version>1.0.12</spi.store.version>
     </properties>
 
 
@@ -21,7 +22,7 @@
         <dependency>
             <groupId>com.tcls.shoppingguide</groupId>
             <artifactId>shoppingguide-biz</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.10</version>
         </dependency>
 
 
@@ -43,12 +44,17 @@
         <dependency>
             <groupId>com.tmall.wireless.store</groupId>
             <artifactId>render-part-spi</artifactId>
-            <version>1.0.10</version>
+            <version>${spi.store.version}</version>
         </dependency>
         <dependency>
             <groupId>com.tmall.wireless.store</groupId>
             <artifactId>data-part-spi</artifactId>
-            <version>1.0.10</version>
+            <version>${spi.store.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>third-part-spi</artifactId>
+            <version>${spi.store.version}</version>
         </dependency>
 
         <dependency>
@@ -65,12 +71,6 @@
                     <groupId>com.taobao.hsf</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <!-- spi store-->
-        <dependency>
-            <groupId>com.tcls.shoppingguide</groupId>
-            <artifactId>shoppingguide-biz</artifactId>
-            <version>1.0.5</version>
         </dependency>
 
         <dependency>
@@ -183,8 +183,33 @@
         <dependency>
             <groupId>com.tmall.wireless.store</groupId>
             <artifactId>user-part</artifactId>
-            <version>1.0.10</version>
+            <version>${spi.store.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.tmall.promotion</groupId>
+            <artifactId>promotiontag-client</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.tmall.aself</groupId>
+            <artifactId>aselfcommon-util</artifactId>
+            <version>2.3.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>aliyun-sdk-oss</artifactId>
+                    <groupId>com.aliyun.oss</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>third-part-spi</artifactId>
+            <version>1.0.12</version>
+        </dependency>
+
     </dependencies>
 
     <build>
