@@ -4,13 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.taobao.igraph.client.model.MatchRecord;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.IGraphResponseHandler;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallIGraphSearchService;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroups;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemGmvGroupMap;
 import com.tmall.wireless.tac.biz.processor.extremeItem.service.ItemGmvService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.service.entity.GmvEntity;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class ItemGmvServiceImpl implements ItemGmvService {
 
-    private static Logger logger = LoggerFactory.getLogger(ItemGmvServiceImpl.class);
+    private static Logger logger = LoggerProxy.getLogger(ItemGmvServiceImpl.class);
     @Autowired
     SupermarketHallIGraphSearchService<GmvEntity> supermarketHallIGraphSearchService;
 
@@ -33,7 +32,6 @@ public class ItemGmvServiceImpl implements ItemGmvService {
             if (singleQueryResult.hasError()) {
                 logger.warn("oops, got errorMsg:[" + singleQueryResult.getErrorMsg() + "]");
             }
-            logger.info("got [" + singleQueryResult.size() + "] records");
             for (MatchRecord matchRecord : singleQueryResult.getMatchRecords()) {
                 GmvEntity gmvEntity = new GmvEntity();
                 gmvEntity.setGmv(matchRecord.getDouble("gmv"));

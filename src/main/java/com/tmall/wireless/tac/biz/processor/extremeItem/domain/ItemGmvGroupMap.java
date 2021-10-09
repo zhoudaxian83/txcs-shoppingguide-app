@@ -1,11 +1,11 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem.domain;
 
 import com.alibaba.fastjson.JSON;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.extremeItem.service.entity.GmvEntity;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Data
 public class ItemGmvGroupMap {
-    private static Logger logger = LoggerFactory.getLogger(ItemGmvGroupMap.class);
+    private static Logger logger = LoggerProxy.getLogger(ItemGmvGroupMap.class);
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -63,7 +63,6 @@ public class ItemGmvGroupMap {
                 itemGmvList.add(itemGmv);
             }
             itemGmvGroup.setItemGmvList(itemGmvList);
-            logger.info("ItemGmvGroupMap_valueOf_itemGmvGroup: " + JSON.toJSONString(itemGmvGroup));
             itemGmvGroupMap.innerItemGmvGroupMap.put(itemConfigGroup.getGroupNo(), itemGmvGroup);
         }
 

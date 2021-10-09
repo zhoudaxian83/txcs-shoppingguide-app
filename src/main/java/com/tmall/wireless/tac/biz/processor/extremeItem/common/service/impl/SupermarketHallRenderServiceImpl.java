@@ -14,12 +14,12 @@ import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallRenderService;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,16 +30,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderService {
-    private static Logger logger = LoggerFactory.getLogger(SupermarketHallRenderServiceImpl.class);
+    private static Logger logger = LoggerProxy.getLogger(SupermarketHallRenderServiceImpl.class);
 
-    @Autowired
-    TacLogger tacLogger;
     @Autowired
     RenderSpi renderSpi;
 
     @Override
     public Map<Long, ItemDTO> batchQueryItem(List<Long> itemIdList, SupermarketHallContext supermarketHallContext) {
-        tacLogger.info("batchQueryItem start");
 
         Map<Long, ItemDTO> captainItemMap = Maps.newHashMap();
 
@@ -47,7 +44,7 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
         final long callerId = Thread.currentThread().getId();
 
         if (CollectionUtils.isEmpty(itemIdList)) {
-            tacLogger.info("batchQueryItem start, itemIdList empty");
+            logger.warn("batchQueryItem start, itemIdList empty");
             return captainItemMap;
         }
 
@@ -58,11 +55,11 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
                         EagleEye.setRpcContext(rpcContext);
                         Map<Long, ItemDTO> longItemDTOMap = queryItem(list, supermarketHallContext);
                         if (MapUtils.isEmpty(longItemDTOMap)) {
-                            tacLogger.info("batch query capatin empty;" + JSON.toJSONString(list));
+                            logger.info("batch query capatin empty;" + JSON.toJSONString(list));
                         }
                         return longItemDTOMap;
                     } catch (Exception e) {
-                        tacLogger.error("batchQueryItem_catchException", e);
+                        logger.error("batchQueryItem_catchException", e);
                         return new HashMap<Long, ItemDTO>();
                     } finally {
                         if (Thread.currentThread().getId() != callerId) {
@@ -93,7 +90,7 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
         if (StringUtils.isNotBlank(smAreaId) && !"0".equals(smAreaId)) {
             query.setAreaId(Long.valueOf(smAreaId));
         } else {
-            tacLogger.debug("smAreaId is null" + smAreaId);
+            logger.warn("smAreaId is null" + smAreaId);
             return null;
         }
         List<ItemId> itemIdList = itemIds.stream()
