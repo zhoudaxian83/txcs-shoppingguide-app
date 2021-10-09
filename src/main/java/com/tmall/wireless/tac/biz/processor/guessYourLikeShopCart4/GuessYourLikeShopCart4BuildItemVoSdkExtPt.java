@@ -62,17 +62,17 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
                 return Response.fail("tpp返回数据为空。");
             }
 
-            int index = 0;
-            for (int i = 0;i<itemEntities.size();i++){
-                String itemId = (String) entityVO.get("itemId");
-                if (itemEntities.get(i) != null) {
-                    String itemId1 = String.valueOf(itemEntities.get(i).getItemId());
-                    if(itemId.equals(itemId1)){
-                        index = i + 1;
-                        break;
-                    }
-                }
-            }
+            int index = 1;
+//            for (int i = 0;i<itemEntities.size();i++){
+//                String itemId = (String) entityVO.get("itemId");
+//                if (itemEntities.get(i) != null) {
+//                    String itemId1 = String.valueOf(itemEntities.get(i).getItemId());
+//                    if(itemId.equals(itemId1)){
+//                        index = i + 1;
+//                        break;
+//                    }
+//                }
+//            }
 
             //商品组装
             ItemEntityVO itemEntityVO = new ItemEntityVO();
