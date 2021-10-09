@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
 import com.alibaba.cola.extension.BizScenario;
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataFailProcessorSdkExtPt;
@@ -47,7 +48,9 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         itemFailProcessorRequest.getSgFrameworkContextItem().setBizScenario(bizScenario);
         List<ItemEntity> itemEntityList = JSON.parseArray(JSON.toJSONString(tairCacheUtil.process(itemFailProcessorRequest).getResult()), ItemEntity.class);
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-        originDataDTO.setResult(itemEntityList);
+        //todo
+        //originDataDTO.setResult(itemEntityList);
+        originDataDTO.setResult(Lists.newArrayList());
         originDataDTO.setIndex(0);
         originDataDTO.setHasMore(false);
         originDataDTO.setPvid("");
