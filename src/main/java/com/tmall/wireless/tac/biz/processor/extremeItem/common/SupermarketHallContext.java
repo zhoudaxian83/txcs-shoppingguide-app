@@ -3,11 +3,11 @@ package com.tmall.wireless.tac.biz.processor.extremeItem.common;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ import static com.tmall.wireless.tac.biz.processor.huichang.common.constant.Hall
 
 @Data
 public class SupermarketHallContext {
-    private static Logger logger = LoggerFactory.getLogger(SupermarketHallContext.class);
+    private static Logger logger = LoggerProxy.getLogger(SupermarketHallContext.class);
 
     private Long userId;
     private String userNick;
@@ -34,7 +34,6 @@ public class SupermarketHallContext {
 
 
     public static SupermarketHallContext init(RequestContext4Ald requestContext4Ald) {
-        logger.info("SupermarketHallContext_requestContext4Ald" + JSON.toJSONString(requestContext4Ald));
 
         SupermarketHallContext supermarketHallContext = new SupermarketHallContext();
 

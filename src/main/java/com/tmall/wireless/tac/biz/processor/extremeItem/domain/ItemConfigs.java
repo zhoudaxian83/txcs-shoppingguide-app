@@ -1,10 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem.domain;
 
 import com.alibaba.fastjson.JSON;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Data
 public class ItemConfigs {
-    private static Logger logger = LoggerFactory.getLogger(ItemConfigs.class);
+    private static Logger logger = LoggerProxy.getLogger(ItemConfigs.class);
 
     private List<ItemConfig> itemConfigList = new ArrayList<>();
 
