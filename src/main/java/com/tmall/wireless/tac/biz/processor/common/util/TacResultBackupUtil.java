@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.common.util;
 
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
+import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.client.common.TacResult;
 import org.apache.commons.collections.CollectionUtils;
@@ -18,7 +19,7 @@ public class TacResultBackupUtil {
      * @param bizScenario  业务身份必须传，否则无法根据业务身份监控
      * @return
      */
-    public static TacResult tacResultBackup(TacResult<SgFrameworkResponse> tacResult, BizScenario bizScenario){
+    public static TacResult tacResultBackup(TacResult<SgFrameworkResponse<ItemEntityVO>> tacResult, BizScenario bizScenario){
         if(bizScenario == null || StringUtils.isEmpty(bizScenario.getUniqueIdentity())){
             tacResult.getBackupMetaData().setUseBackup(true);
             return tacResult;
