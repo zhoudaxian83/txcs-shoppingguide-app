@@ -19,7 +19,7 @@ public class TacResultBackupUtil {
      * @return
      */
     public static TacResult tacResultBackup(TacResult<SgFrameworkResponse> tacResult, BizScenario bizScenario){
-        if(bizScenario != null && StringUtils.isNotEmpty(bizScenario.getUniqueIdentity())){
+        if(bizScenario == null || StringUtils.isEmpty(bizScenario.getUniqueIdentity())){
             tacResult.getBackupMetaData().setUseBackup(true);
             return tacResult;
         }
