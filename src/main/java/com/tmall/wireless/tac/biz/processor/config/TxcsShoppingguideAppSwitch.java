@@ -12,7 +12,7 @@ import com.taobao.csp.switchcenter.bean.Switch;
 public class TxcsShoppingguideAppSwitch {
 
 
-    @AppSwitch(des = "人工选品推荐选品集id", level = Switch.Level.p4)
+    @AppSwitch(des = "icon分类开支智能UI", level = Switch.Level.p4)
     public static Boolean openSmartUiInIconCategory = true;
 
 
