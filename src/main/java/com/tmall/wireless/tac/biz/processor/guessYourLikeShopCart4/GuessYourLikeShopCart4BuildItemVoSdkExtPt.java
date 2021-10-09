@@ -64,10 +64,10 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
 
             int index = 0;
             for (int i = 0;i<itemEntities.size();i++){
-                String itemId = (String) entityVO.get("itemId");
+                Long itemId = (Long) entityVO.get("itemId");
                 if (itemEntities.get(i) != null) {
-                    String itemId1 = String.valueOf(itemEntities.get(i).getItemId());
-                    if(itemId.equals(itemId1)){
+                    Long itemId1 = itemEntities.get(i).getItemId();
+                    if(itemId==itemId1){
                         tacLogger.info("itemId="+itemId1+"index="+i);
                         index = i + 1;
                         break;
