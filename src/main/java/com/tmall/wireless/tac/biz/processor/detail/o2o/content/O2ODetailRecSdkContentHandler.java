@@ -35,7 +35,7 @@ public class O2ODetailRecSdkContentHandler extends RpmReactiveHandler<DetailRecC
         );
         b.addProducePackage(PackageNameKey.CONTENT_FEEDS);
 
-        return shoppingguideSdkContentService.recommend0(context, b)
+        return shoppingguideSdkContentService.recommend(context, b)
             .map(response -> ResultConverter.convertToTacResult(response,context));
 
     }
