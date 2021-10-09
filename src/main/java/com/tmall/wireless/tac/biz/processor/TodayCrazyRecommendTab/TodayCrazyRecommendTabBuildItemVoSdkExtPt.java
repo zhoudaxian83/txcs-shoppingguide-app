@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
@@ -20,9 +21,11 @@ import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.Comm
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.ItemLimitDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
+import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,9 @@ import java.util.Optional;
         scenario = ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
 )
 public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implements BuildItemVoSdkExtPt {
+    @Autowired
+    TacLoggerImpl tacLogger;
+
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Map<String, Object> userParams = buildItemVoRequest.getContext().getUserParams();
@@ -56,7 +62,6 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
-
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainDTO) {
 
                 ItemInfoBySourceCaptainDTO itemInfoBySourceCaptainDTO = (ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO;
@@ -78,9 +83,6 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
             itemEntityVO.putAll(getItemVoMap(itemInfoBySourceDTO));
 
         }
-
-
-
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
 
@@ -129,11 +131,11 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
     }
 
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
-        if(!CommonConstant.LIMIT_BUY_SWITCH){
+        if (!CommonConstant.LIMIT_BUY_SWITCH) {
             return;
         }
         List<ItemLimitDTO> itemLimitDTOS;
-        Long itemId = (Long)itemEntityVO.get("itemId");
+        Long itemId = (Long) itemEntityVO.get("itemId");
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
         if (limitResult == null || CollectionUtils.isEmpty(limitResult.get(itemId))) {
             itemEntityVO.put("itemLimit", new ItemLimitDTO());
@@ -147,7 +149,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
     }
 
     private Map<Long, List<ItemLimitDTO>> getLimitResult(Map<String, Object> userParams) {
-        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>)userParams.get(
+        Map<Long, List<ItemLimitDTO>> limitResult = (Map<Long, List<ItemLimitDTO>>) userParams.get(
                 Constant.ITEM_LIMIT_RESULT);
         if (limitResult != null) {
             return limitResult;

@@ -202,6 +202,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemInfoPostProcessSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemFilterSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemProcessBeforeReturnSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt"/>
 
     <!--详情推荐接口-->
 
