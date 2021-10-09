@@ -1,10 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike;
 
 import com.alibaba.fastjson.JSON;
-import com.taobao.tair.DataEntry;
-import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.biz.extensions.item.origindata.DefaultItemOriginDataSuccessProcessorSdkExtPt;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataSuccessProcessorSdkExtPt;
@@ -12,7 +11,6 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProc
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -31,8 +29,6 @@ public class AliPaySuccessGuessYouLikeItemOriginDataSuccessProcessorSdkExtPt
     TairFactorySpi tairFactorySpi;
 
     private static final int nameSpace = 184;
-    @Autowired
-    TacLoggerImpl tacLogger;
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
@@ -56,11 +52,11 @@ public class AliPaySuccessGuessYouLikeItemOriginDataSuccessProcessorSdkExtPt
                     ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE, sKey,
                     JSON.toJSONString(collect), 0, 0);
 
-            if (labelSceneResult.isSuccess()) {
-                tacLogger.info("插入tair数据成功");
-            } else {
-                tacLogger.info("插入tair数据失败");
-            }
+            HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
+                    .kv("AliPaySuccessGuessYouLikeItemOriginDataSuccessProcessorSdkExtPt", "process")
+                    .kv("isSuccess", "true")
+                    .kv("addTairSuccess", String.valueOf(labelSceneResult.isSuccess()))
+                    .info();
         }
 
         return itemEntityOriginDataDTO;
