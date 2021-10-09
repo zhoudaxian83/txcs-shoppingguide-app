@@ -43,6 +43,9 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
             SPIResult<QueryResult> queryResultSPIResult = iGraphSpi.search(atomicQuery);
             if(queryResultSPIResult.isSuccess()) {
                 Long totalEnd = System.currentTimeMillis();
+                HadesLogUtil.stream("SupermarketHallIGraphSearchServiceImpl.search|totalCost|" + (totalEnd - totalStart))
+                        .kv("totalCost", String.valueOf(totalEnd - totalStart))
+                        .error();
                 HadesLogUtil.stream("SupermarketHallIGraphSearchServiceImpl.search|success")
                         .kv("totalCost", String.valueOf(totalEnd - totalStart))
                         .error();
