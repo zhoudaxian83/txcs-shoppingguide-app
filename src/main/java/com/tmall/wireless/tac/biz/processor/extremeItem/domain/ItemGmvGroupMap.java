@@ -20,6 +20,8 @@ public class ItemGmvGroupMap {
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    private static final DateTimeFormatter dfWithMilliSecond = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+
     private Map<Integer, ItemGmvGroup> innerItemGmvGroupMap;
 
     private Map<Integer, Integer> lastNDaysGmvRankMap;
@@ -42,11 +44,12 @@ public class ItemGmvGroupMap {
                         .map(item -> item.getGmv()).toArray(Double[]::new)));
 
         logger.info("ItemGmvGroupMap_valueOf_lastNDayGmvEntityMap: " + JSON.toJSONString(lastNDayGmvEntityMap));
-        String currentYMDH = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH"));
+        //String currentYMDH = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH"));
         Map<Long, Double> last1HourGmvEntityMap = last1HourGmvEntityList.stream()
                 .filter(Objects::nonNull)
                 .filter(e -> e.getWindowEnd() != null)
-                .filter(e->e.getWindowEnd().startsWith(currentYMDH))
+                .filter(e -> withIn1Hour(e.getWindowEnd()))
+                //.filter(e->e.getWindowEnd().startsWith(currentYMDH))
                 .collect(Collectors.toMap(e -> e.getItemId(), e -> e.getGmv()));
         logger.info("ItemGmvGroupMap_valueOf_last1HourGmvEntityMap: " + JSON.toJSONString(last1HourGmvEntityMap));
 
@@ -109,6 +112,12 @@ public class ItemGmvGroupMap {
 
     }
 
+    private static boolean withIn1Hour(String windowEnd) {
+        LocalDateTime windowEndTime = LocalDateTime.parse(windowEnd, dfWithMilliSecond);
+        LocalDateTime nowMinus1Hour = LocalDateTime.now().minusHours(1);
+        return windowEndTime.isAfter(nowMinus1Hour);
+    }
+
     public double raceValueOf(Integer groupNo) {
         return this.lastNDaysGmvRankMap.get(groupNo) * 0.5 + this.last1HourGmvRankMap.get(groupNo) * 0.5;
     }
@@ -143,5 +152,10 @@ public class ItemGmvGroupMap {
         lastNDaysDateSet.clear();
         lastNDaysDateSet.addAll(result);
         return lastNDaysDateSet;
+    }
+
+    public static void main(String[] args) {
+        boolean b = withIn1Hour("2021-10-09 14:30:00.000");
+        System.out.println("b = " + b);
     }
 }
