@@ -6,9 +6,6 @@ import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallCo
 import java.util.List;
 import java.util.Map;
 
-/**
- * 上下文映射方式——共享内核
- */
 public interface SupermarketHallRenderService {
     Map<Long, ItemDTO> batchQueryItem(List<Long> itemIdList, SupermarketHallContext supermarketHallContext);
 }

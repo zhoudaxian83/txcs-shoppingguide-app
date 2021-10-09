@@ -204,6 +204,12 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>third-part-spi</artifactId>
+            <version>1.0.12</version>
+        </dependency>
+
     </dependencies>
 
     <build>

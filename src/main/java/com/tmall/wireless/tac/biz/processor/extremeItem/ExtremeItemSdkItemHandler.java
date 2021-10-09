@@ -13,6 +13,8 @@ import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallIGraphSearchService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallRenderService;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfig;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroup;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroups;
@@ -28,8 +30,6 @@ import io.reactivex.Flowable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 @Component
 public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
-    Logger logger = LoggerFactory.getLogger(ExtremeItemSdkItemHandler.class);
+    Logger logger = LoggerProxy.getLogger(ExtremeItemSdkItemHandler.class);
 
     public static final int ASG_NAMESPACE = 625;
     private static final Integer tenThousand = 10000;
@@ -77,46 +77,36 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         try {
             //初始化SupermarketHallContext
             SupermarketHallContext supermarketHallContext = SupermarketHallContext.init(requestContext4Ald);
-            tacLogger.info("context:" + JSON.toJSONString(requestContext4Ald));
 
             //构造运营配置商品列表领域对象
             ItemConfigs itemConfigs = ItemConfigs.valueOf(supermarketHallContext.getAldManualConfigDataList());
-            tacLogger.info("itemConfigs:" + JSON.toJSONString(itemConfigs));
 
             //将运营配置的商品进行拆分组
             ItemConfigGroups itemConfigGroups = itemConfigs.splitGroup();
-            tacLogger.info("itemConfigGroups:" + JSON.toJSONString(itemConfigGroups));
 
             //获取需要进行渲染的商品ID列表
             List<Long> itemIds = itemConfigs.extractItemIds();
-            tacLogger.info("==========itemIds: " + JSON.toJSONString(itemIds));
-            logger.warn("==========itemIds: " + JSON.toJSONString(itemIds));
+            logger.info("==========itemIds: " + JSON.toJSONString(itemIds));
 
             //查询captain获取商品渲染信息
             Map<Long, ItemDTO> itemDTOMap = supermarketHallRenderService.batchQueryItem(itemIds, supermarketHallContext);
-            tacLogger.info("==========itemDTOs: " + JSON.toJSONString(itemDTOMap));
-            logger.warn("==========itemDTOs: " + JSON.toJSONString(itemDTOMap));
+            logger.info("==========itemDTOs: " + JSON.toJSONString(itemDTOMap));
 
             //进行组间排序
             groupSortDomainService.groupSort(itemConfigGroups, itemIds, supermarketHallContext);
-            tacLogger.info("==========after sort itemConfigGroupList:" + JSON.toJSONString(itemConfigGroups));
-            //itemGmvService.queryGmv(itemConfigGroups, itemIds);
 
             //构建"商品->是否售光"Map，供组内选品时库存过滤使用
-            Map<Long, Boolean> itemSoldOutMap = itemDTOMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().isSoldout()));
-            tacLogger.info("==========itemSoldOutMap: " + JSON.toJSONString(itemSoldOutMap));
+            Map<Long, Boolean> itemSoldOutMap = itemDTOMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> (e.getValue().isSoldout() || !e.getValue().isCanBuy())));
             logger.info("==========itemSoldOutMap: " + JSON.toJSONString(itemSoldOutMap));
 
             //组内曝光比例选品
             Map<Integer, ItemConfig> afterPickGroupMap = itemPickService.pickItems(itemConfigGroups, itemSoldOutMap);
-            tacLogger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
             logger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
 
             //构建响应对象
             List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
 
-            //tairFactorySpi.getDefaultTair().getMultiClusterTairManager().put(ASG_NAMESPACE, "extrem_item_" + supermarketHallContext.getCurrentResourceId(), JSON.toJSONString(generalItems), 0,30 * 60);
-            logger.warn("=========generalItems:" + JSON.toJSONString(generalItems));
+            logger.info("=========generalItems:" + JSON.toJSONString(generalItems));
             return Flowable.just(TacResult.newResult(generalItems));
 
         } catch (Exception e) {
@@ -181,7 +171,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         }
         itemMap.put("itemUrl", itemDTO.getDetailUrl());
         //itemMap.put("scm", getScm1(tmcsContext, String.valueOf(itemDTO.getItemId().getId())));
-        itemMap.put("_areaSellable", !itemDTO.isSoldout());
+        itemMap.put("_areaSellable", !itemDTO.isSoldout() && itemDTO.isCanBuy());
         itemMap.put("locType", itemDTO.getLocType().name());
         itemMap.put("sellerId", itemDTO.getSellerId());
 
