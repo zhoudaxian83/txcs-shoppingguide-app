@@ -154,7 +154,7 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             itemEntityVO.put("canBuy", entityVO.get("canBuy"));
             itemEntityVO.put("sellOut", entityVO.get("sellOut"));
             tacLogger.info("VO重写完成,VO结果集为："/*+JSON.toJSONString(itemEntityVO)*/);
-            //return Response.success(itemEntityVO);
+
             return Response.success(itemEntityVO);
         } catch (Exception e) {
             tacLogger.info("ERROR" + JSON.toJSONString(e));
