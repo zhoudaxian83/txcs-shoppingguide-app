@@ -98,7 +98,7 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
             .orElse(Maps.newHashMap());
         String source = MapUtils.getString(requestMap, "source", "gul-recipe");
         List<String> itemBusinessTypeList = Lists.newArrayList();
-        if (source.equals(ConstantValue.SOURCE_CHANNEL_GUL_RECIPE)) {
+        if (source.equals(ConstantValue.SOURCE_CHANNEL_GUL_RECIPE) || source.equals(ConstantValue.SOURCE_CHANNEL_RECIPE_DETAILS_PAGE)) {
             if (oneHourStoreId > 0L) {
                 itemBusinessTypeList.add(TppItemBusinessTypeEnum.OneHour.getType());
                 params.put("rt1HourStoreId", RenderLangUtil.safeString(oneHourStoreId));
@@ -117,6 +117,9 @@ public class GulMenuContentOriginDataRequestBuildSdkExtPt extends Register imple
         params.put("itemCountPerContent", MapUtils.getString(requestMap, "itemCountPerContent", "8"));
         Boolean isFirstPage = MapUtils.getBoolean(requestMap, "isFirstPage", true);
         params.put("isFirstPage", String.valueOf(isFirstPage));
+        if (source.equals(ConstantValue.SOURCE_CHANNEL_RECIPE_DETAILS_PAGE)) {
+            params.put("isFirstPage", "false");
+        }
         List<Long> contentSetIds = getLongWithDefault(requestMap, "recipeContentSetIds")
             .stream()
             .filter(contentSetId -> contentSetId > 0)
