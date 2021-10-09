@@ -55,7 +55,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         tacLogger.info("topList："+JSON.toJSONString(topList));
         tacLogger.info("TPP返回数据条数："+itemEntities.size());
-        tacLogger.info("TPP返回数据结果："+JSON.toJSONString(itemEntities));
         //todo mock
         //itemEntities = this.mock();
         tacLogger.info("topList："+JSON.toJSONString(topList));
