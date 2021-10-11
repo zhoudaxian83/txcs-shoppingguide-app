@@ -13,8 +13,11 @@ import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
+import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
+import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
+import com.tmall.tcls.gs.sdk.framework.model.context.UserDO;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
@@ -57,7 +60,7 @@ public class GshItemSetOriginDataRequestBuildSdkExtPt extends Register implement
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)context;
             Map<String, Object> aldParams = requestContext4Ald.getAldParam();
             Map<String, Object> aldContext = requestContext4Ald.getAldContext();
-
+            aldContext.get("UTDID");
             Map<String, String> params = Maps.newHashMap();
             Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, DEFAULT_SMAREAID);
             params.put("smAreaId", String.valueOf(smAreaId));
@@ -97,6 +100,10 @@ public class GshItemSetOriginDataRequestBuildSdkExtPt extends Register implement
             recommendRequest.setUserId(
                 MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, DefaultUserId));
             recommendRequest.setParams(params);
+
+            params.put("exposureDataUserId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
+
             tacLogger.debug("Tpp参数：" + JSONObject.toJSONString(recommendRequest));
             return recommendRequest;
         } catch (Exception e) {

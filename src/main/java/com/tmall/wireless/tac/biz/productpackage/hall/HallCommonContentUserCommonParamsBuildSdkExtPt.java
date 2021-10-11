@@ -36,10 +36,12 @@ public class HallCommonContentUserCommonParamsBuildSdkExtPt extends Register imp
         Map<String, Object> aldContext = requestContext4Ald.getAldContext();//对应solutionContext
         CommonUserParams commonUserParams = new CommonUserParams();
         UserDO userDO = new UserDO();
-        Long userId = MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.UTDID, 0L);
+        Long userId = MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, 0L);
         String userNick = MapUtil.getStringWithDefault(aldContext, HallCommonAldConstant.USER_NICK, "");
         userDO.setUserId(userId);
         userDO.setNick(userNick);
+        String utdid = MapUtil.getStringWithDefault(aldContext, HallCommonAldConstant.UTDID, "0");
+        userDO.setCna(utdid);
         commonUserParams.setUserDO(userDO);
 
         Long smAreaId = MapUtil.getLongWithDefault(aldParam, HallCommonAldConstant.SM_AREAID, 330100L);
