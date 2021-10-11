@@ -66,6 +66,7 @@ public class GshItemSetRecommendHandler extends TacReactiveHandler4Ald {
                 bizExtMap.put("hasMore", response.isHasMore());
                 bizExtMap.put("index", response.getIndex());
                 tacResult.setBizExtMap(bizExtMap);
+                logger.error("-------bizExtMap:{}", JSON.toJSONString(bizExtMap));
                 return tacResult;
             });
     }
