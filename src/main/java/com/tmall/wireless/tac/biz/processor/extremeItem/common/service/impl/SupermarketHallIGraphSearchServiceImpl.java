@@ -48,14 +48,12 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
                         .error();
                 queryResult = queryResultSPIResult.getData();
             } else {
-                Long iGraphEnd = System.currentTimeMillis();
-                HadesLogUtil.stream("ExtremeItemSdkItemHandler|igraph|" + Logger.isEagleEyeTest() + "|error|" + (iGraphEnd - iGraphStart))
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|igraph|" + Logger.isEagleEyeTest() + "|error")
                         .error();
                 return new ArrayList<>();
             }
         } catch (Exception e) {
-            Long iGraphEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler|igraph|" + Logger.isEagleEyeTest() + "|error|" + (iGraphEnd - iGraphStart))
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|igraph|" + Logger.isEagleEyeTest() + "|exception")
                     .error();
             logger.error("SupermarketHallIGraphSearchServiceImpl failed, traceId:" + EagleEye.getTraceId(), e);
             return new ArrayList<>();

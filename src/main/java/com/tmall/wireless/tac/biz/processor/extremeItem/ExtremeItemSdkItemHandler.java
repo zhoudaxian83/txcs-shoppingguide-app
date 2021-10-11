@@ -118,8 +118,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             return Flowable.just(TacResult.newResult(generalItems));
 
         } catch (Exception e) {
-            Long mainProcessEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|error|" + (mainProcessEnd - mainProcessStart))
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|exception")
                     .kv("errorMsg", StackTraceUtil.stackTrace(e))
                     .error();
             logger.error("ExtremeItemSdkItemHandler error, traceId:" + EagleEye.getTraceId(), e);

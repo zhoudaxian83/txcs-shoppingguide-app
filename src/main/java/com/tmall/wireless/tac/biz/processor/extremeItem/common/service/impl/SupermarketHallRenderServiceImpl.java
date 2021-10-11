@@ -76,15 +76,13 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
                 return captainItemMap;
             }
         } catch (Exception e) {
-            Long captainEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler|captain|" + Logger.isEagleEyeTest() + "|error|" + (captainEnd - captainStart))
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|captain|" + Logger.isEagleEyeTest() + "|exception")
                     .error();
             logger.error("SupermarketHallRenderServiceImpl.baItchQueryItem error, traceId:" + EagleEye.getTraceId(), e);
             return captainItemMap;
         }
         if(MapUtils.isEmpty(captainItemMap)) {
-            Long captainEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler|captain|" + Logger.isEagleEyeTest() + "|empty|" + (captainEnd - captainStart))
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|captain|" + Logger.isEagleEyeTest() + "|empty")
                     .error();
         }
         return captainItemMap;
