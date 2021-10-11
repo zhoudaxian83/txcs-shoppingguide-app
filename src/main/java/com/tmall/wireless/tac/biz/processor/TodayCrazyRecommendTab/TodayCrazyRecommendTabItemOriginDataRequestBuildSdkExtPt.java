@@ -49,6 +49,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         boolean isFirstPage = index == 0;
         sgFrameworkContextItem.getUserParams().put("isFirstPage", isFirstPage);
         AddressDTO addressDTO = AddressUtil.parseCSA(csa);
+        tacLogger.info("addressDTO" + JSON.toJSONString(addressDTO));
         String regionCode = addressDTO.getRegionCode();
         String categoryIdsString = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "categoryIds", "");
         String tabType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "tabType", "");
@@ -61,7 +62,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         params.put("isFirstPage", String.valueOf(isFirstPage));
         params.put("smAreaId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).map(Objects::toString).orElse("330100"));
         params.put("itemTairKeys", String.join(",", cacheKeyList));
-        if(StringUtils.isEmpty(regionCode)){
+        if (StringUtils.isEmpty(regionCode)) {
             regionCode = "107";
         }
         params.put("regionCode", regionCode);
