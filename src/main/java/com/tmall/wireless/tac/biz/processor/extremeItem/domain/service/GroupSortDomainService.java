@@ -1,6 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem.domain.service;
 
 import com.alibaba.fastjson.JSON;
+import com.taobao.eagleeye.EagleEye;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
@@ -31,6 +33,7 @@ public class GroupSortDomainService {
             logger.info("GroupSortDomainService_groupSort_itemConfigGroups_forceSort: " + JSON.toJSONString(itemConfigGroups));
             return;
         }
+        //如果为空，默认days是0
         int days = supermarketHallContext.getTacParamsMap().getIntValue("gmvDays");
         raceSort(itemConfigGroups, itemIds, days);
         logger.info("GroupSortDomainService_groupSort_itemConfigGroups_raceSort: " + JSON.toJSONString(itemConfigGroups));
@@ -44,12 +47,27 @@ public class GroupSortDomainService {
      * @param days
      */
     private void raceSort(ItemConfigGroups itemConfigGroups, List<Long> itemIds, int days) {
-        ItemGmvGroupMap itemGmvGroupMap = itemGmvService.queryGmv(itemConfigGroups, itemIds, days);
-        boolean lostLastNDaysGmv = itemGmvGroupMap.getInnerItemGmvGroupMap().values().stream().map(ItemGmvGroup::lastNDaysGmvSum).anyMatch(gmv -> gmv == 0);
-        if(lostLastNDaysGmv) {
+        Long raceSortStart = System.currentTimeMillis();
+        try {
+            ItemGmvGroupMap itemGmvGroupMap = itemGmvService.queryGmv(itemConfigGroups, itemIds, days);
+            boolean lostLastNDaysGmv = itemGmvGroupMap.getInnerItemGmvGroupMap().values().stream().map(ItemGmvGroup::lastNDaysGmvSum).anyMatch(gmv -> gmv == 0);
+            if (lostLastNDaysGmv) {
+                Long raceSortEnd = System.currentTimeMillis();
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|raceSort|" + Logger.isEagleEyeTest() + "|downgrade|" + (raceSortEnd - raceSortStart))
+                        .error();
+                itemConfigGroups.sortGroup();
+            } else {
+                itemConfigGroups.sortGroup(itemGmvGroupMap);
+                Long raceSortEnd = System.currentTimeMillis();
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|raceSort|" + Logger.isEagleEyeTest() + "|success|" + (raceSortEnd - raceSortStart))
+                        .error();
+            }
+        } catch (Exception e) {
+            Long raceSortEnd = System.currentTimeMillis();
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|raceSort|" + Logger.isEagleEyeTest() + "|error|" + (raceSortEnd - raceSortStart))
+                    .error();
+            logger.error("GroupSortDomainService error, traceId:" + EagleEye.getTraceId(), e);
             itemConfigGroups.sortGroup();
-        } else {
-            itemConfigGroups.sortGroup(itemGmvGroupMap);
         }
     }
 }

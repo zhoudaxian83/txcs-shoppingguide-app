@@ -47,7 +47,7 @@ public class Logger {
         this.logger.error(msg, e);
     }
 
-    private boolean isEagleEyeTest() {
+    public static boolean isEagleEyeTest() {
         try {
             String ut = EagleEye.getUserData("t");
             if ("1".equals(ut) || "2".equals(ut)) {

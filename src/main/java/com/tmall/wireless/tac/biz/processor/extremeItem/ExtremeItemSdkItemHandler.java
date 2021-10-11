@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.extremeItem;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.taobao.eagleeye.EagleEye;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
@@ -76,8 +77,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
+        Long mainProcessStart = System.currentTimeMillis();
         try {
-            Long totalStart = System.currentTimeMillis();
             //初始化SupermarketHallContext
             SupermarketHallContext supermarketHallContext = SupermarketHallContext.init(requestContext4Ald);
 
@@ -110,22 +111,18 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
             logger.info("=========generalItems:" + JSON.toJSONString(generalItems));
 
-            Long totalEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler.mainProcess|totalCost|" + (totalEnd - totalStart))
-                    .kv("totalCost", String.valueOf(totalEnd - totalStart))
-                    .error();
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler.mainProcess|success")
-                    .kv("totalCost", String.valueOf(totalEnd - totalStart))
+            Long mainProcessEnd = System.currentTimeMillis();
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|success|" + (mainProcessEnd - mainProcessStart))
                     .error();
 
             return Flowable.just(TacResult.newResult(generalItems));
 
         } catch (Exception e) {
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler.mainProcess|error")
-                    .kv("context", JSON.toJSONString(requestContext4Ald))
+            Long mainProcessEnd = System.currentTimeMillis();
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|error|" + (mainProcessEnd - mainProcessStart))
                     .kv("errorMsg", StackTraceUtil.stackTrace(e))
                     .error();
-            logger.error(e.getMessage(), e);
+            logger.error("ExtremeItemSdkItemHandler error, traceId:" + EagleEye.getTraceId(), e);
         }
         return Flowable.just(TacResult.newResult(new ArrayList<>()));
     }
