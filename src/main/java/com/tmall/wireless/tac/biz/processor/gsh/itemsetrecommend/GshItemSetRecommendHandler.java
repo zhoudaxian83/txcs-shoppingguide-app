@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.gsh.itemsetrecommend;
 import java.util.List;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
@@ -37,6 +38,7 @@ public class GshItemSetRecommendHandler extends TacReactiveHandler4Ald {
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald)
         throws Exception {
+        logger.error("-------requestContext4Ald:{}", JSON.toJSONString(requestContext4Ald));
         BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
             HallScenarioConstant.HALL_SCENARIO_USE_CASE_GSH,
             HallScenarioConstant.HALL_SCENARIO_SCENARIO_GSH_ITEM_SET_RECOMMEND);
