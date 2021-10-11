@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -24,6 +25,7 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.util.AldUrlParamUtil;
+import com.tmall.wireless.tac.biz.processor.common.util.TacResultBackupUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
@@ -124,14 +126,12 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
                 })
                 .map(TacResult::newResult)
                 .map(tacResult -> {
-                    if(tacResult.getData() == null || tacResult.getData() == null || tacResult.getData().isEmpty()){
-                        tacResult = TacResult.errorResult("test");
-                        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
-                            .kv("FirstScreenMindItemScene4Ald","recommend4Ald")
-                            .kv("tacResult",JSON.toJSONString(tacResult))
-                            .info();
-                    }
-                    tacResult.getBackupMetaData().setUseBackup(true);
+                    BizScenario b = BizScenario.valueOf(
+                        ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+                        ScenarioConstantApp.LOC_TYPE_B2C,
+                        ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM
+                    );
+                    TacResultBackupUtil.tacResultBackupItemAld(tacResult,b);
                     return tacResult;
                 })
                 .onErrorReturn(r -> TacResult.errorResult(""));
