@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem.common.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.taobao.eagleeye.EagleEye;
 import com.taobao.igraph.client.model.*;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
@@ -38,31 +39,23 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
 
         // 查询接口调用
         QueryResult queryResult;
-        Long totalStart = System.currentTimeMillis();
+        Long iGraphStart = System.currentTimeMillis();
         try {
             SPIResult<QueryResult> queryResultSPIResult = iGraphSpi.search(atomicQuery);
             if(queryResultSPIResult.isSuccess()) {
-                Long totalEnd = System.currentTimeMillis();
-                HadesLogUtil.stream("SupermarketHallIGraphSearchServiceImpl.search|totalCost|" + (totalEnd - totalStart))
-                        .kv("totalCost", String.valueOf(totalEnd - totalStart))
-                        .error();
-                HadesLogUtil.stream("SupermarketHallIGraphSearchServiceImpl.search|success")
-                        .kv("totalCost", String.valueOf(totalEnd - totalStart))
+                Long iGraphEnd = System.currentTimeMillis();
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|igraph|" + Logger.isEagleEyeTest() + "|success|" + (iGraphEnd - iGraphStart))
                         .error();
                 queryResult = queryResultSPIResult.getData();
             } else {
-                Long totalEnd = System.currentTimeMillis();
-                HadesLogUtil.stream("SupermarketHallIGraphSearchServiceImpl.search|error")
-                        .kv("totalCost", String.valueOf(totalEnd - totalStart))
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|igraph|" + Logger.isEagleEyeTest() + "|error")
                         .error();
                 return new ArrayList<>();
             }
         } catch (Exception e) {
-            Long totalEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("SupermarketHallIGraphSearchServiceImpl.search|error")
-                    .kv("totalCost", String.valueOf(totalEnd - totalStart))
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|igraph|" + Logger.isEagleEyeTest() + "|exception")
                     .error();
-            logger.error("search failed", e);
+            logger.error("SupermarketHallIGraphSearchServiceImpl failed, traceId:" + EagleEye.getTraceId(), e);
             return new ArrayList<>();
         }
 

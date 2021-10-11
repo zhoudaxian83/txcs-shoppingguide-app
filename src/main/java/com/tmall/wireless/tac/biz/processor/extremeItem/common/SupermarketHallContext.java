@@ -57,6 +57,7 @@ public class SupermarketHallContext {
             JSONObject tacParamsMap = JSON.parseObject(tacParams);
             supermarketHallContext.setTacParamsMap(tacParamsMap);
         }
+        //TODO 言武 添加预览时间
 
         //初始化运营手工配置的数据
         supermarketHallContext.setAldManualConfigDataList((List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA));
