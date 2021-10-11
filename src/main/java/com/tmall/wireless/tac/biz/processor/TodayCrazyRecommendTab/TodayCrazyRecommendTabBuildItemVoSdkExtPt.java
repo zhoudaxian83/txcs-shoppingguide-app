@@ -188,11 +188,18 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
     }
 
     private String buildItemDesc(ItemPromotionResp itemPromotionResp) {
-        try {
-            BigDecimal chaoShiPrice = new BigDecimal(itemPromotionResp.getUnifyPrice().getChaoShiPrice().getPrice());
-            BigDecimal showPrice = new BigDecimal(itemPromotionResp.getUnifyPrice().getShowPrice().getPrice());
-        } catch (Exception e) {
-            tacLogger.info("获取失败：" + e);
+        if (itemPromotionResp == null) {
+            return null;
+        }
+        if (itemPromotionResp.getUnifyPrice() == null) {
+            return null;
+        }
+        if (itemPromotionResp.getUnifyPrice().getChaoShiPrice() == null || itemPromotionResp.getUnifyPrice().getChaoShiPrice().getPrice() == null) {
+            return null;
+        }
+
+        if (itemPromotionResp.getUnifyPrice().getShowPrice() == null || itemPromotionResp.getUnifyPrice().getShowPrice().getPrice() == null) {
+            return null;
         }
         BigDecimal chaoShiPrice = new BigDecimal(itemPromotionResp.getUnifyPrice().getChaoShiPrice().getPrice());
         BigDecimal showPrice = new BigDecimal(itemPromotionResp.getUnifyPrice().getShowPrice().getPrice());
