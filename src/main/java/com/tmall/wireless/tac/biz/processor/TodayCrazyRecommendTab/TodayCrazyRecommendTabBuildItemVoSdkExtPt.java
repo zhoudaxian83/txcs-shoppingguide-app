@@ -88,7 +88,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         //todo
-        itemEntityVO.put("channelPrice", true);
+        //itemEntityVO.put("source", true);
         this.buildLimit(itemEntityVO, userParams);
         return Response.success(itemEntityVO);
     }
@@ -97,6 +97,17 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 
         return itemInfoBySourceDTO.getItemInfoVO();
 
+    }
+
+    private String getSource(BuildItemVoRequest buildItemVoRequest, long itemId) {
+        List<ItemEntity> itemEntityList = (List<ItemEntity>) buildItemVoRequest.getContext().getUserParams().get(CommonConstant.TPP_ITEMS);
+        if (CollectionUtils.isEmpty(itemEntityList)) {
+            return null;
+        }
+        itemEntityList.forEach(itemEntity -> {
+
+        });
+        return null;
     }
 
     private String processScm(String originScm, Map<String, String> scmKeyValue) {
