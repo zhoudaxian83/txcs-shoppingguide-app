@@ -109,7 +109,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
         tacLogger.info("vo异常-4");
-        JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(itemEntityVO.get("locType")));
+        JSONObject jsonObject = (JSONObject) itemEntityVO.get("locType");
         tacLogger.info("vo异常-5");
         String locType = jsonObject.getString("name");
         tacLogger.info("vo异常-6");
