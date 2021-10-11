@@ -79,13 +79,14 @@ public class TairCacheUtil {
                     .info();
 
             if (currentCount % interval == 1) {
-                tacLogger.info("tpp缓存写入了");
+                tacLogger.info("tpp缓存写入,key：" + tairKey);
                 ResultCode put = merchantsTair.getMultiClusterTairManager().put(merchantsTair.getNameSpace(),
                         tairKey,
                         JSON.toJSONString(itemFailProcessorRequest.getItemEntityOriginDataDTO().getResult()),
                         0);
 
                 if (put == null || put.getCode() != ResultCode.SUCCESS.getCode()) {
+                    tacLogger.info("tpp缓存写入失败");
                     HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                             .kv("step", logKey)
                             .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_TAIR_PUT_ERROR)
@@ -102,16 +103,17 @@ public class TairCacheUtil {
                     .kv("step", logKey)
                     .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_ORIGIN_DATA_FAIL)
                     .error();
-            tacLogger.info("tpp缓存读取");
+            tacLogger.info("tpp缓存读取,key：" + tairKey);
             List<ItemEntity> itemEntityList = readFromTair(tairKey, merchantsTair);
             if (CollectionUtils.isEmpty(itemEntityList)) {
+                tacLogger.info("tpp缓存读取失败");
                 HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                         .kv("step", logKey)
                         .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_FAIL)
                         .error();
                 return itemFailProcessorRequest.getItemEntityOriginDataDTO();
             }
-
+            tacLogger.info("tpp缓存读取成功");
             HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                     .kv("step", logKey)
                     .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_SUCCESS)
@@ -130,8 +132,7 @@ public class TairCacheUtil {
 
     private String buildTairKey(ItemFailProcessorRequest itemFailProcessorRequest) {
         String tabType = MapUtil.getStringWithDefault(itemFailProcessorRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", TabTypeEnum.TODAY_CHAO_SHENG.getType());
-        return "TPP_supermarket.b2c.TODAY_CRAZY_RECOMMEND_TAB_" + tabType;
-
+        return "TPP_supermarket_b2c_TODAY_CRAZY_RECOMMEND_TAB_" + tabType;
     }
 
     private List<ItemEntity> readFromTair(String tairKey, TairManager tairManager) {
@@ -149,7 +150,14 @@ public class TairCacheUtil {
     }
 
 
+    /**
+     * 大于3条做缓存
+     *
+     * @param originDataDTO
+     * @param <T>
+     * @return
+     */
     protected <T extends EntityDTO> boolean checkSuccess(OriginDataDTO<T> originDataDTO) {
-        return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult());
+        return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult()) && originDataDTO.getResult().size() > 3;
     }
 }
