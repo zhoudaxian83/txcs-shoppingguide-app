@@ -84,12 +84,14 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
                 ItemDTO itemDTO = itemInfoBySourceCaptainDTO.getItemDTO();
                 attachments = itemDTO.getAttachments();
                 ItemPromotionResp itemPromotionResp = itemDTO.getItemPromotionResp();
-
+                tacLogger.info("vo异常-1");
                 if (itemPromotionResp != null) {
                     itemDesc = this.buildItemDesc(itemPromotionResp);
+                    tacLogger.info("vo异常-2");
                     reservePrice = this.getReservePrice(itemPromotionResp);
-                }
 
+                }
+                tacLogger.info("vo异常-3");
             }
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceTppDTO) {
                 ItemInfoBySourceTppDTO itemInfoBySourceDTOOrigin = (ItemInfoBySourceTppDTO) itemInfoBySourceDTO;
@@ -106,8 +108,11 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         }
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
+        tacLogger.info("vo异常-4");
         JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(itemEntityVO.get("locType")));
+        tacLogger.info("vo异常-5");
         String locType = jsonObject.getString("name");
+        tacLogger.info("vo异常-6");
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("locType", locType);
