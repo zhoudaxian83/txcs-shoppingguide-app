@@ -4,6 +4,7 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.taobao.eagleeye.EagleEye;
 import com.taobao.tair.json.Json;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
@@ -106,6 +107,7 @@ public class FirstScreenMindContentScene {
                         response.setExtInfos(Maps.newHashMap());
                     }
                     response.getExtInfos().put("propertyMap", propertyMap);
+                    response.getExtInfos().put("traceId", EagleEye.getTraceId());
                     HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                             .kv("step", "requestLog")
                             .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))

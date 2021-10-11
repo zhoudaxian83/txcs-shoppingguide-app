@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.taobao.eagleeye.EagleEye;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
@@ -113,6 +114,7 @@ public class FirstScreenMindItemScene {
                         response.setExtInfos(Maps.newHashMap());
                     }
                     response.getExtInfos().put("contentModel", contentInfo);
+                    response.getExtInfos().put("traceId", EagleEye.getTraceId());
                     return response;
                 })
                 .map(TacResult::newResult)
