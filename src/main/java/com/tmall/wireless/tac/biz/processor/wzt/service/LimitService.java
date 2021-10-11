@@ -92,7 +92,6 @@ public class LimitService {
             }
         } catch (Exception e) {
             tacLogger.error(LOG_PREFIX + "获取限购信息异常", e);
-            LOGGER.error("获取限购信息异常,paramsValue:" + paramsValue);
             e.printStackTrace();
         }
         return null;
@@ -101,7 +100,9 @@ public class LimitService {
     public Map<Long, List<ItemLimitDTO>> getItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<Long, List<ItemLimitDTO>> limitResult;
         Map<String, Object> param = this.buildGetItemLimitParam(sgFrameworkContextItem);
+        tacLogger.info("limit查询入参：" + JSON.toJSONString(param));
         limitResult = this.getItemLimitResult(param);
+        tacLogger.info("limit返回结果：" + JSON.toJSONString(limitResult));
         return limitResult;
     }
 
