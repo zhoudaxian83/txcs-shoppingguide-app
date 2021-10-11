@@ -12,6 +12,7 @@ import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.model.ErrorCode;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
+import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.txcs.gs.model.model.dto.EntityDTO;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
@@ -130,9 +131,19 @@ public class TairCacheUtil {
 
     }
 
+    /**
+     * 区分线上线下
+     *
+     * @param itemFailProcessorRequest
+     * @return
+     */
     private String buildTairKey(ItemFailProcessorRequest itemFailProcessorRequest) {
         String tabType = MapUtil.getStringWithDefault(itemFailProcessorRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", TabTypeEnum.TODAY_CHAO_SHENG.getType());
-        return "TPP_supermarket_b2c_TODAY_CRAZY_RECOMMEND_TAB_" + tabType;
+        if (!RpmContants.enviroment.isOnline()) {
+            return "TPP_supermarket_b2c_TODAY_CRAZY_RECOMMEND_TAB_" + tabType + "_pre";
+        } else {
+            return "TPP_supermarket_b2c_TODAY_CRAZY_RECOMMEND_TAB_" + tabType;
+        }
     }
 
     private List<ItemEntity> readFromTair(String tairKey, TairManager tairManager) {
