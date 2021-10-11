@@ -99,16 +99,16 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 
     }
 
-    private String getSource(BuildItemVoRequest buildItemVoRequest, long itemId) {
-        List<ItemEntity> itemEntityList = (List<ItemEntity>) buildItemVoRequest.getContext().getUserParams().get(CommonConstant.TPP_ITEMS);
-        if (CollectionUtils.isEmpty(itemEntityList)) {
-            return null;
-        }
-        itemEntityList.forEach(itemEntity -> {
-
-        });
-        return null;
-    }
+//    private String getSource(BuildItemVoRequest buildItemVoRequest, long itemId) {
+//        List<ItemEntity> itemEntityList = (List<ItemEntity>) buildItemVoRequest.getContext().getUserParams().get(CommonConstant.TPP_ITEMS);
+//        if (CollectionUtils.isEmpty(itemEntityList)) {
+//            return null;
+//        }
+//        itemEntityList.forEach(itemEntity -> {
+//
+//        });
+//        return null;
+//    }
 
     private String processScm(String originScm, Map<String, String> scmKeyValue) {
 
