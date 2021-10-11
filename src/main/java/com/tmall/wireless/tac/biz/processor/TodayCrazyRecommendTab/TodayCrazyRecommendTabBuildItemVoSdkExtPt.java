@@ -73,27 +73,24 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
 
-            try {
-                if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainDTO) {
-                    ItemInfoBySourceCaptainDTO itemInfoBySourceCaptainDTO = (ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO;
-                    specifications = itemInfoBySourceCaptainDTO.getItemDTO().getSpecDetail();
-                    itemEntityVO.put("specifications", specifications);
-                    itemUrl = Optional.of(itemInfoBySourceCaptainDTO)
-                            .map(ItemInfoBySourceCaptainDTO::getItemDTO)
-                            .map(ItemDTO::getDetailUrl).orElse("");
+            if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainDTO) {
+                ItemInfoBySourceCaptainDTO itemInfoBySourceCaptainDTO = (ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO;
+                specifications = itemInfoBySourceCaptainDTO.getItemDTO().getSpecDetail();
+                itemEntityVO.put("specifications", specifications);
+                itemUrl = Optional.of(itemInfoBySourceCaptainDTO)
+                        .map(ItemInfoBySourceCaptainDTO::getItemDTO)
+                        .map(ItemDTO::getDetailUrl).orElse("");
 
-                    ItemDTO itemDTO = itemInfoBySourceCaptainDTO.getItemDTO();
-                    attachments = itemDTO.getAttachments();
-                    ItemPromotionResp itemPromotionResp = itemDTO.getItemPromotionResp();
-                    itemDesc = buildItemDesc(itemPromotionResp);
-                    UnifyPriceDTO unifyPrice = itemPromotionResp.getUnifyPrice();
-                    reservePrice = unifyPrice.getChaoShiPrice().getPrice();
+                ItemDTO itemDTO = itemInfoBySourceCaptainDTO.getItemDTO();
+                attachments = itemDTO.getAttachments();
+                ItemPromotionResp itemPromotionResp = itemDTO.getItemPromotionResp();
 
+                if (itemPromotionResp != null) {
+                    itemDesc = this.buildItemDesc(itemPromotionResp);
+                    reservePrice = this.getReservePrice(itemPromotionResp);
                 }
-            } catch (Exception e) {
-                tacLogger.info("vo异常：" + e);
-            }
 
+            }
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceTppDTO) {
                 ItemInfoBySourceTppDTO itemInfoBySourceDTOOrigin = (ItemInfoBySourceTppDTO) itemInfoBySourceDTO;
                 originScm = itemInfoBySourceDTOOrigin.getScm();
@@ -192,20 +189,32 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         itemEntityVO.put("itemLimit", itemLimitDTOS.get(0));
     }
 
-    private String buildItemDesc(ItemPromotionResp itemPromotionResp) {
-        if (itemPromotionResp == null) {
-            return null;
-        }
+    private String getReservePrice(ItemPromotionResp itemPromotionResp) {
         if (itemPromotionResp.getUnifyPrice() == null) {
             return null;
         }
         if (itemPromotionResp.getUnifyPrice().getChaoShiPrice() == null || itemPromotionResp.getUnifyPrice().getChaoShiPrice().getPrice() == null) {
             return null;
         }
+        return itemPromotionResp.getUnifyPrice().getChaoShiPrice().getPrice();
+    }
 
-        if (itemPromotionResp.getUnifyPrice().getShowPrice() == null || itemPromotionResp.getUnifyPrice().getShowPrice().getPrice() == null) {
-            return null;
+    private String buildItemDesc(ItemPromotionResp itemPromotionResp) {
+        try {
+            if (itemPromotionResp.getUnifyPrice() == null) {
+                return null;
+            }
+            if (itemPromotionResp.getUnifyPrice().getChaoShiPrice() == null || itemPromotionResp.getUnifyPrice().getChaoShiPrice().getPrice() == null) {
+                return null;
+            }
+
+            if (itemPromotionResp.getUnifyPrice().getShowPrice() == null || itemPromotionResp.getUnifyPrice().getShowPrice().getPrice() == null) {
+                return null;
+            }
+        } catch (Exception e) {
+            tacLogger.info("异常vo" + e);
         }
+
         BigDecimal chaoShiPrice = new BigDecimal(itemPromotionResp.getUnifyPrice().getChaoShiPrice().getPrice());
         BigDecimal showPrice = new BigDecimal(itemPromotionResp.getUnifyPrice().getShowPrice().getPrice());
         String text = "专享补贴";
