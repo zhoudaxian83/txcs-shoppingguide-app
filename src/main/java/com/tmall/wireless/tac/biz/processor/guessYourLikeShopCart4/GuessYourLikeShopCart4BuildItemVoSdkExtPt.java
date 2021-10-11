@@ -83,11 +83,11 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             Map<String, Object> clickParam = Maps.newHashMap();
             Map<String, Object> args = Maps.newHashMap();
             args.put("ext", "{\"index\":\"" + index + "\"}");
-            args.put("spm", "a1z60.7768435.recommend." + index);
+            args.put("spm", "a2141.24984500.recommend." + index);
             args.put("itemid", entityVO.get("itemId"));
             clickParam.put("args", args);
             clickParam.put("eventId", "2101");
-            clickParam.put("arg1", "Page_ShoppingCart_Button-a1z60.7768435.recommend." + index);
+            clickParam.put("arg1", "Page_ShoppingCart_Button-a2141.24984500.recommend." + index);
             clickParam.put("page", "Page_ShoppingCart");
             itemEntityVO.put("clickParam", clickParam);
 
@@ -141,11 +141,11 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
             Map<String, Object> exposureParam = Maps.newHashMap();
             Map<String, Object> args1 = Maps.newHashMap();
             args1.put("ext", "{\"index\":\"" + index + "\"}");
-            args1.put("spm", "a1z60.7768435.recommend." + index);
+            args1.put("spm", "a2141.24984500.recommend." + index);
             args1.put("itemId", entityVO.get("itemId"));
             exposureParam.put("args", args1);
             exposureParam.put("eventId", "2201");
-            exposureParam.put("arg1", "a1z60.7768435.recommend." + index);
+            exposureParam.put("arg1", "a2141.24984500.recommend." + index);
             exposureParam.put("page", "Page_ShoppingCart");
             itemEntityVO.put("exposureParam", exposureParam);
 
