@@ -76,6 +76,7 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
 //        }
 
 
+
         renderRequest.setQuery(query);
         renderRequest.setOption(option);
         //
