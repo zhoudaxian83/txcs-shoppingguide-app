@@ -10,6 +10,7 @@ import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
+import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.AppIdEnum;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.AppTypeEnum;
@@ -107,6 +108,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
      * 构建类目id作为tair的key
      * 区分线上线下环境
      * todo 跟程斐确认后再发布
+     *
      * @param categoryIds
      * @param tabType
      * @return
@@ -115,22 +117,21 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         List<String> cacheKeyList = Lists.newArrayList();
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             cacheKeyList.addAll(Arrays.asList("today_featured", "today_algorithm"));
-//            if (!RpmContants.enviroment.isOnline()) {
-//                cacheKeyList.addAll(Arrays.asList("today_featured_pre", "today_algorithm_pre"));
-//            } else {
-//                cacheKeyList.addAll(Arrays.asList("today_featured", "today_algorithm"));
-//            }
+            if (RpmContants.enviroment.isOnline()) {
+                cacheKeyList.addAll(Arrays.asList("today_featured", "today_algorithm"));
+            } else {
+                cacheKeyList.addAll(Arrays.asList("today_featured_pre", "today_algorithm_pre"));
+            }
         } else {
             categoryIds.forEach(categoryId -> {
-                cacheKeyList.add("today_" + categoryId);
-                cacheKeyList.add("today_algorithm_" + categoryId);
-//                if (!RpmContants.enviroment.isOnline()) {
-//                    cacheKeyList.add("today_" + categoryId + "_pre");
-//                    cacheKeyList.add("today_algorithm_" + categoryId + "_pre");
-//                } else {
-//                    cacheKeyList.add("today_" + categoryId);
-//                    cacheKeyList.add("today_algorithm_" + categoryId);
-//                }
+                if (RpmContants.enviroment.isOnline()) {
+                    cacheKeyList.add("today_" + categoryId);
+                    cacheKeyList.add("today_algorithm_" + categoryId);
+                } else {
+                    cacheKeyList.add("today_" + categoryId + "_pre");
+                    cacheKeyList.add("today_algorithm_" + categoryId + "_pre");
+
+                }
             });
         }
         return cacheKeyList;

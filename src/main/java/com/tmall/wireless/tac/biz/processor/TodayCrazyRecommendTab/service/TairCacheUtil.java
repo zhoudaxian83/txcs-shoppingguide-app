@@ -139,10 +139,10 @@ public class TairCacheUtil {
      */
     private String buildTairKey(ItemFailProcessorRequest itemFailProcessorRequest) {
         String tabType = MapUtil.getStringWithDefault(itemFailProcessorRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", TabTypeEnum.TODAY_CHAO_SHENG.getType());
-        if (!RpmContants.enviroment.isOnline()) {
-            return "TPP_supermarket_b2c_TODAY_CRAZY_RECOMMEND_TAB_" + tabType + "_pre";
-        } else {
+        if (RpmContants.enviroment.isOnline()) {
             return "TPP_supermarket_b2c_TODAY_CRAZY_RECOMMEND_TAB_" + tabType;
+        } else {
+            return "TPP_supermarket_b2c_TODAY_CRAZY_RECOMMEND_TAB_" + tabType + "_pre";
         }
     }
 
@@ -169,6 +169,6 @@ public class TairCacheUtil {
      * @return
      */
     protected <T extends EntityDTO> boolean checkSuccess(OriginDataDTO<T> originDataDTO) {
-        return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult()) && originDataDTO.getResult().size() > 3;
+        return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult());
     }
 }
