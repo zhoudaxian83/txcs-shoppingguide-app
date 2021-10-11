@@ -73,22 +73,27 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
 
-            if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainDTO) {
-                ItemInfoBySourceCaptainDTO itemInfoBySourceCaptainDTO = (ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO;
-                specifications = itemInfoBySourceCaptainDTO.getItemDTO().getSpecDetail();
-                itemEntityVO.put("specifications", specifications);
-                itemUrl = Optional.of(itemInfoBySourceCaptainDTO)
-                        .map(ItemInfoBySourceCaptainDTO::getItemDTO)
-                        .map(ItemDTO::getDetailUrl).orElse("");
+            try {
+                if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainDTO) {
+                    ItemInfoBySourceCaptainDTO itemInfoBySourceCaptainDTO = (ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO;
+                    specifications = itemInfoBySourceCaptainDTO.getItemDTO().getSpecDetail();
+                    itemEntityVO.put("specifications", specifications);
+                    itemUrl = Optional.of(itemInfoBySourceCaptainDTO)
+                            .map(ItemInfoBySourceCaptainDTO::getItemDTO)
+                            .map(ItemDTO::getDetailUrl).orElse("");
 
-                ItemDTO itemDTO = itemInfoBySourceCaptainDTO.getItemDTO();
-                attachments = itemDTO.getAttachments();
-                ItemPromotionResp itemPromotionResp = itemDTO.getItemPromotionResp();
-                itemDesc = buildItemDesc(itemPromotionResp);
-                UnifyPriceDTO unifyPrice = itemPromotionResp.getUnifyPrice();
-                reservePrice = unifyPrice.getChaoShiPrice().getPrice();
+                    ItemDTO itemDTO = itemInfoBySourceCaptainDTO.getItemDTO();
+                    attachments = itemDTO.getAttachments();
+                    ItemPromotionResp itemPromotionResp = itemDTO.getItemPromotionResp();
+                    itemDesc = buildItemDesc(itemPromotionResp);
+                    UnifyPriceDTO unifyPrice = itemPromotionResp.getUnifyPrice();
+                    reservePrice = unifyPrice.getChaoShiPrice().getPrice();
 
+                }
+            } catch (Exception e) {
+                tacLogger.info("vo异常：" + e);
             }
+
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceTppDTO) {
                 ItemInfoBySourceTppDTO itemInfoBySourceDTOOrigin = (ItemInfoBySourceTppDTO) itemInfoBySourceDTO;
                 originScm = itemInfoBySourceDTOOrigin.getScm();
