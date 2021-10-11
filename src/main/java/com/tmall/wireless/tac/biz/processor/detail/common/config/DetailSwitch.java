@@ -37,4 +37,7 @@ public class DetailSwitch {
     @AppSwitch(des="详情透传参数",level= Switch.Level.p3)
     public static Set<String> detailThoughParams = Sets.newHashSet("sourceChannel");
 
+    @AppSwitch(des="详情菜谱推荐模块是否出普通场景推荐开关",level= Switch.Level.p3)
+    public static boolean enableReciptCommonContent=false;
+
 }
