@@ -9,6 +9,7 @@ import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
+import com.tmall.wireless.tac.biz.processor.huichang.service.HallCommonItemRequestProxy;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -30,6 +31,9 @@ public class GshItemSetRecommendHandler extends TacReactiveHandler4Ald {
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
 
+    @Autowired
+    HallCommonItemRequestProxy hallCommonItemRequestProxy;
+
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald)
         throws Exception {
@@ -38,20 +42,23 @@ public class GshItemSetRecommendHandler extends TacReactiveHandler4Ald {
             HallScenarioConstant.HALL_SCENARIO_SCENARIO_GSH_ITEM_SET_RECOMMEND);
         bizScenario.addProducePackage(HallScenarioConstant.HALL_ITEM_SDK_PACKAGE);
 
-        return shoppingguideSdkItemService.recommend(requestContext4Ald, bizScenario)
-            .map(response -> {
-                List<GeneralItem> generalItemList = Lists.newArrayList();
-                List<ItemEntityVO> itemAndContentList = response.getItemAndContentList();
-                itemAndContentList.forEach(contentVO -> {
-                    GeneralItem generalItem = new GeneralItem();
-                    contentVO.keySet().forEach(key -> {
-                        generalItem.put(key, contentVO.get(key));
-                    });
-                    generalItemList.add(generalItem);
-                });
-                return generalItemList;
-            })
-            .map(TacResult::newResult)
-            .onErrorReturn(r -> TacResult.errorResult(""));
+        Flowable<TacResult<List<GeneralItem>>> recommend = hallCommonItemRequestProxy.recommend(requestContext4Ald,
+            bizScenario);
+        return recommend;
+        //return shoppingguideSdkItemService.recommend(requestContext4Ald, bizScenario)
+        //    .map(response -> {
+        //        List<GeneralItem> generalItemList = Lists.newArrayList();
+        //        List<ItemEntityVO> itemAndContentList = response.getItemAndContentList();
+        //        itemAndContentList.forEach(contentVO -> {
+        //            GeneralItem generalItem = new GeneralItem();
+        //            contentVO.keySet().forEach(key -> {
+        //                generalItem.put(key, contentVO.get(key));
+        //            });
+        //            generalItemList.add(generalItem);
+        //        });
+        //        return generalItemList;
+        //    })
+        //    .map(TacResult::newResult)
+        //    .onErrorReturn(r -> TacResult.errorResult(""));
     }
 }
