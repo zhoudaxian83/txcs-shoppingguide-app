@@ -72,7 +72,6 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
-
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainDTO) {
                 ItemInfoBySourceCaptainDTO itemInfoBySourceCaptainDTO = (ItemInfoBySourceCaptainDTO) itemInfoBySourceDTO;
                 specifications = itemInfoBySourceCaptainDTO.getItemDTO().getSpecDetail();
@@ -84,14 +83,11 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
                 ItemDTO itemDTO = itemInfoBySourceCaptainDTO.getItemDTO();
                 attachments = itemDTO.getAttachments();
                 ItemPromotionResp itemPromotionResp = itemDTO.getItemPromotionResp();
-                tacLogger.info("vo异常-1");
                 if (itemPromotionResp != null) {
                     itemDesc = this.buildItemDesc(itemPromotionResp);
-                    tacLogger.info("vo异常-2");
                     reservePrice = this.getReservePrice(itemPromotionResp);
 
                 }
-                tacLogger.info("vo异常-3");
             }
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceTppDTO) {
                 ItemInfoBySourceTppDTO itemInfoBySourceDTOOrigin = (ItemInfoBySourceTppDTO) itemInfoBySourceDTO;
@@ -108,27 +104,17 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         }
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
-        tacLogger.info("vo异常-4");
         try {
-            tacLogger.info("vo内容："+JSON.toJSONString(itemEntityVO));
-            tacLogger.info("vo异常-locType" + JSON.toJSONString(itemEntityVO.get("locType")));
             String locType1 = (String) itemEntityVO.get("locType");
-//            tacLogger.info("vo异常-locType-2"+itemEntityVO.get("locType"));
-//            JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(itemEntityVO.get("locType")));
-//            tacLogger.info("vo异常-5");
-//            String locType = jsonObject.getString("name");
             itemEntityVO.put("locType", locType1);
         } catch (Exception e) {
             tacLogger.info("转换异常" + e);
         }
-        tacLogger.info("vo异常-6");
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
-
         itemEntityVO.put("reservePrice", reservePrice);
         itemEntityVO.put("attachment", attachments);
         itemEntityVO.put("itemDesc", itemDesc);
-
         itemEntityVO.put(VoKeyConstantApp.UMP_CHANNEL, umpChannel);
         //todo
         //itemEntityVO.put("source", true);
