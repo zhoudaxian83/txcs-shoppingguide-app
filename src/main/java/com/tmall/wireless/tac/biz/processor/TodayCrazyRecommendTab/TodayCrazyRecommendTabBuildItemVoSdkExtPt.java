@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -29,7 +30,6 @@ import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.mortbay.util.ajax.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -104,13 +104,13 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         }
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
-        JSONObject jsonObject = JSONObject.parseObject(JSON.toString(itemEntityVO.get("locType")));
+        JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(itemEntityVO.get("locType")));
         String locType = jsonObject.getString("name");
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("locType", locType);
         itemEntityVO.put("reservePrice", reservePrice);
-        itemEntityVO.put("attachment", JSON.toString(attachments));
+        itemEntityVO.put("attachment", attachments);
         itemEntityVO.put("itemDesc", itemDesc);
 
         itemEntityVO.put(VoKeyConstantApp.UMP_CHANNEL, umpChannel);
