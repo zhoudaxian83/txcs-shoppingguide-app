@@ -129,7 +129,6 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
                     cacheKeyList.add("today_" + categoryId);
                     cacheKeyList.add("today_algorithm_" + categoryId);
                 }
-
             });
         }
         return cacheKeyList;
