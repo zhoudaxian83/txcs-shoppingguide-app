@@ -1,18 +1,17 @@
 package com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike;
 
-import com.alibaba.fastjson.JSON;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
-import com.tmall.wireless.tac.biz.processor.common.PackageNameKey;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
-import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,9 +24,6 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
 
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
-
-    @Autowired
-    TacLoggerImpl tacLogger;
     @Override
     public Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> executeFlowable(Context context) throws Exception {
 
@@ -39,25 +35,27 @@ public class AliPaySuccessGuessYouLikeHandler extends RpmReactiveHandler<SgFrame
         Flowable<TacResult<SgFrameworkResponse<ItemEntityVO>>> tacResultFlowable = shoppingguideSdkItemService.recommend(context, bizScenario)
                 .map(TacResult::newResult)
                 .map(tacResult -> {
-                    if (tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null
-                            || tacResult.getData().getItemAndContentList().isEmpty()) {
+                    if(bizScenario == null || StringUtils.isEmpty(bizScenario.getUniqueIdentity())){
+                        tacResult.getBackupMetaData().setUseBackup(true);
+                        return tacResult;
+                    }
+                    if(tacResult.getData() == null || tacResult.getData()== null || CollectionUtils.isEmpty(tacResult.getData().getItemAndContentList())){
+                        tacResult = TacResult.errorResult("TacResultBackup");
 
-                        tacLogger.info("进入tac打底");
-                        tacResult = TacResult.errorResult("test");
-                        HadesLogUtil.stream(ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE)
-                                .kv("shoppingguideSdkItemService", "recommend")
-                                .kv("tacResult", JSON.toJSONString(tacResult))
+                        HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                                .kv("key","tacBackup")
+                                .kv("tacResultBackup","true")
                                 .info();
-                        tacResult.setHasMore(false);
-                    } else {
-                        tacLogger.info("没进打底");
-                        tacResult.setHasMore(true);
+                    }else{
+                        HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                                .kv("key","tacBackup")
+                                .kv("tacResultBackup","false")
+                                .info();
                     }
                     tacResult.getBackupMetaData().setUseBackup(true);
                     return tacResult;
                 })
                 .onErrorReturn(r -> TacResult.errorResult(""));
-
 
         return tacResultFlowable;
     }

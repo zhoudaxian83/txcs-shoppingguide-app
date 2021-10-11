@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
  */
 @Component
 public class TodayCrazyLimitService {
-    Logger LOGGER = LoggerFactory.getLogger(TodayCrazyLimitService.class);
     private static final String LOG_PREFIX = "TodayCrazyLimitService-";
 
     @Autowired
@@ -51,12 +50,15 @@ public class TodayCrazyLimitService {
         List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
             Map<String, Object> skuMap = Maps.newHashMap();
             try {
-                Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
-                skuMap.put("skuId", itemInfoVO.get("skuId") == null ? 0L : itemInfoVO.get("skuId"));
-                skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
+                if (itemInfoDTO.getItemInfos().get("captain") != null) {
+                    Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
+                    skuMap.put("skuId", itemInfoVO.get("skuId") == null ? 0L : itemInfoVO.get("skuId"));
+                    skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
+                } else {
+                    tacLogger.info("buildGetItemLimitParam参数构建captain为空,itemId=" + itemInfoDTO.getItemEntity().getItemId());
+                }
             } catch (Exception e) {
                 tacLogger.info("buildGetItemLimitParam参数构建异常,itemId=" + itemInfoDTO.getItemEntity().getItemId() + JSON.toJSONString(e));
-                LOGGER.info("buildGetItemLimitParam参数构建异常,itemId=" + itemInfoDTO.getItemEntity().getItemId() + JSON.toJSONString(e));
             }
             return skuMap;
         }).collect(Collectors.toList());
@@ -78,8 +80,6 @@ public class TodayCrazyLimitService {
             if (success == null) {
                 tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue + "|jsonObject：" + JSON
                         .toJSONString(jsonObject));
-                LOGGER.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue + "|jsonObject：" + JSON
-                        .toJSONString(jsonObject));
                 return null;
             }
             if (success) {
@@ -89,12 +89,10 @@ public class TodayCrazyLimitService {
                         });
             } else {
                 tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
-                LOGGER.warn(LOG_PREFIX + "限购信息查询结果为空");
                 return null;
             }
         } catch (Exception e) {
             tacLogger.error(LOG_PREFIX + "获取限购信息异常", e);
-            LOGGER.error("获取限购信息异常,paramsValue:" + paramsValue);
             e.printStackTrace();
         }
         return null;

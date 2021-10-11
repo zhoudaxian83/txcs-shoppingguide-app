@@ -15,6 +15,7 @@ public class SwitchConfigBean {
 
             /*SwitchManager.init(APP_NAME, SxlSwitch.class);*/
             TacConfigManager.switchRegister(SxlSwitch.class);
+            TacConfigManager.switchRegister(TxcsShoppingguideAppSwitch.class);
 
         } catch (Throwable e) {
             throw new RuntimeException(e);

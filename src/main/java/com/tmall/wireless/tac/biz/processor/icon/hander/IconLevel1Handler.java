@@ -3,7 +3,10 @@ package com.tmall.wireless.tac.biz.processor.icon.hander;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.tmall.aself.shoppingguide.client.cat.model.LabelDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRequest;
 import com.tmall.wireless.tac.biz.processor.icon.level2.Level2RecommendService;
@@ -14,6 +17,7 @@ import com.tmall.wireless.tac.biz.processor.icon.model.IconResponse;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +41,7 @@ public class IconLevel1Handler extends RpmReactiveHandler<IconResponse> {
 
     @Override
     public Flowable<TacResult<IconResponse>> executeFlowable(Context context) throws Exception {
+
 
 
         Level2Request level2Request = new Level2Request();
@@ -82,13 +87,47 @@ public class IconLevel1Handler extends RpmReactiveHandler<IconResponse> {
                         return iconResponse;
                     });
                 }).map(TacResult::newResult)
-                .onErrorReturn(throwable -> {
+                .map(tacResult -> {
+                    BizScenario b = BizScenario.valueOf(
+                        ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+                        ScenarioConstantApp.LOC_TYPE_B2C,
+                        ScenarioConstantApp.ICON_CONTENT_LEVEL2
+                    );
+                    return tacResultBackup(tacResult,b);
+                    }).onErrorReturn(throwable -> {
                     LOGGER.error("IconLevel1Handler error:{}", JSON.toJSONString(level2Request), throwable);
 
                     return TacResult.newResult(iconResponse);
-                }).defaultIfEmpty(TacResult.newResult(iconResponse));
+                }).defaultIfEmpty(TacResult.newResult(iconResponse))
+                .map(tacResult -> {
+                    BizScenario b = BizScenario.valueOf(
+                        ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+                        ScenarioConstantApp.LOC_TYPE_B2C,
+                        ScenarioConstantApp.ICON_CONTENT_LEVEL2
+                    );
+                    return tacResultBackup(tacResult,b);
+                });
 
     }
+    private TacResult<IconResponse> tacResultBackup(TacResult<IconResponse> tacResult, BizScenario b){
+        if (tacResult.getData() == null || tacResult.getData() == null || tacResult.getData().getItemList() == null
+            || CollectionUtils.isEmpty(tacResult.getData().getItemList().getItemAndContentList())
+            || CollectionUtils.isEmpty(tacResult.getData().getSecondList())
+            || CollectionUtils.isEmpty(tacResult.getData().getThrirdList())) {
 
+            tacResult = TacResult.errorResult("TacResultBackup");
+            HadesLogUtil.stream(b.getUniqueIdentity())
+                .kv("key","tacBackup")
+                .kv("tacResultBackup", "true")
+                .info();
+        } else {
+            HadesLogUtil.stream(b.getUniqueIdentity())
+                .kv("key","tacBackup")
+                .kv("tacResultBackup", "false")
+                .info();
+        }
+        tacResult.getBackupMetaData().setUseBackup(true);
+        return tacResult;
+    }
 
 }
