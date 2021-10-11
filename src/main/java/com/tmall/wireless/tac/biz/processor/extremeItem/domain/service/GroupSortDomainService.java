@@ -52,8 +52,7 @@ public class GroupSortDomainService {
             ItemGmvGroupMap itemGmvGroupMap = itemGmvService.queryGmv(itemConfigGroups, itemIds, days);
             boolean lostLastNDaysGmv = itemGmvGroupMap.getInnerItemGmvGroupMap().values().stream().map(ItemGmvGroup::lastNDaysGmvSum).anyMatch(gmv -> gmv == 0);
             if (lostLastNDaysGmv) {
-                Long raceSortEnd = System.currentTimeMillis();
-                HadesLogUtil.stream("ExtremeItemSdkItemHandler|raceSort|" + Logger.isEagleEyeTest() + "|downgrade|" + (raceSortEnd - raceSortStart))
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|raceSort.downgrade|" + Logger.isEagleEyeTest() + "|downgrade")
                         .error();
                 itemConfigGroups.sortGroup();
             } else {
@@ -63,8 +62,7 @@ public class GroupSortDomainService {
                         .error();
             }
         } catch (Exception e) {
-            Long raceSortEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler|raceSort|" + Logger.isEagleEyeTest() + "|error|" + (raceSortEnd - raceSortStart))
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|raceSort|" + Logger.isEagleEyeTest() + "|exception")
                     .error();
             logger.error("GroupSortDomainService error, traceId:" + EagleEye.getTraceId(), e);
             itemConfigGroups.sortGroup();
