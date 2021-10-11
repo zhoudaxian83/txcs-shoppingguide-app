@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
@@ -88,6 +87,8 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
+        //todo
+        itemEntityVO.put("channelPrice", true);
         this.buildLimit(itemEntityVO, userParams);
         return Response.success(itemEntityVO);
     }

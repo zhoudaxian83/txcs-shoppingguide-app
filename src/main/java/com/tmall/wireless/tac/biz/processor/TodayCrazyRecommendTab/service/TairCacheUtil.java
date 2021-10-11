@@ -104,7 +104,7 @@ public class TairCacheUtil {
                     .error();
             tacLogger.info("tpp缓存读取");
             List<ItemEntity> itemEntityList = readFromTair(tairKey, merchantsTair);
-            if (org.apache.commons.collections.CollectionUtils.isEmpty(itemEntityList)) {
+            if (CollectionUtils.isEmpty(itemEntityList)) {
                 HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                         .kv("step", logKey)
                         .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_FAIL)

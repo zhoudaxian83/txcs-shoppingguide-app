@@ -46,6 +46,8 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         itemFailProcessorRequest.getSgFrameworkContextItem().setLocParams(locParams);
         itemFailProcessorRequest.getSgFrameworkContextItem().setBizScenario(bizScenario);
         List<ItemEntity> itemEntityList = JSON.parseArray(JSON.toJSONString(tairCacheUtil.process(itemFailProcessorRequest).getResult()), ItemEntity.class);
+        tacLogger.info("tpp打底返回数据条数："+itemEntityList.size());
+
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         originDataDTO.setResult(itemEntityList);
         originDataDTO.setResult(itemEntityList);
