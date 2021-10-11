@@ -111,16 +111,16 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         tacLogger.info("vo异常-4");
         try {
             tacLogger.info("vo异常-locType" + JSON.toJSONString(itemEntityVO.get("locType")));
+            String locType1 = (String) itemEntityVO.get("locType");
 //            tacLogger.info("vo异常-locType-2"+itemEntityVO.get("locType"));
 //            JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(itemEntityVO.get("locType")));
 //            tacLogger.info("vo异常-5");
 //            String locType = jsonObject.getString("name");
-            itemEntityVO.put("locType", itemEntityVO.get("locType"));
+            itemEntityVO.remove("locType");
+            itemEntityVO.put("locType", locType1);
         } catch (Exception e) {
             tacLogger.info("转换异常" + e);
         }
-
-
         tacLogger.info("vo异常-6");
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
