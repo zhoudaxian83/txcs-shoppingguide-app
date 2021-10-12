@@ -78,9 +78,11 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
         Long mainProcessStart = System.currentTimeMillis();
+        SupermarketHallContext supermarketHallContext = null;
+        List<GeneralItem> generalItems = new ArrayList<>();
         try {
             //初始化SupermarketHallContext
-            SupermarketHallContext supermarketHallContext = SupermarketHallContext.init(requestContext4Ald);
+            supermarketHallContext = SupermarketHallContext.init(requestContext4Ald);
 
             //构造运营配置商品列表领域对象
             ItemConfigs itemConfigs = ItemConfigs.valueOf(supermarketHallContext.getAldManualConfigDataList());
@@ -108,18 +110,20 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             logger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
 
             //构建响应对象
-            List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
+            generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
             logger.info("=========generalItems:" + JSON.toJSONString(generalItems));
 
             //写打底数据
-            if(CollectionUtils.isNotEmpty(generalItems)) {
-                supermarketHallBottomService.writeBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getSmAreaId(), generalItems);
+            if(CollectionUtils.isNotEmpty(generalItems) && generalItems.size() == itemConfigGroups.size()) {
+                supermarketHallBottomService.writeBottomData(supermarketHallContext.getCurrentResourceId(), generalItems);
+                Long mainProcessEnd = System.currentTimeMillis();
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|success|" + (mainProcessEnd - mainProcessStart))
+                        .error();
+            } else {
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess.bottom|" + Logger.isEagleEyeTest() + "|bottom")
+                        .error();
+                generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId());
             }
-
-            Long mainProcessEnd = System.currentTimeMillis();
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|success|" + (mainProcessEnd - mainProcessStart))
-                    .error();
-
             return Flowable.just(TacResult.newResult(generalItems));
 
         } catch (Exception e) {
@@ -127,22 +131,35 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
                     .kv("errorMsg", StackTraceUtil.stackTrace(e))
                     .error();
             logger.error("ExtremeItemSdkItemHandler error, traceId:" + EagleEye.getTraceId(), e);
+
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess.bottom|" + Logger.isEagleEyeTest() + "|bottom")
+                    .error();
+            if(supermarketHallContext != null) {
+                generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId());
+            }
         }
-        return Flowable.just(TacResult.newResult(new ArrayList<>()));
+        return Flowable.just(TacResult.newResult(generalItems));
     }
 
     private List<GeneralItem> buildResult(ItemConfigGroups itemConfigGroups, Map<Integer, ItemConfig> afterPickGroupMap, Map<Long, ItemDTO> longItemDTOMap, Map<Long, Boolean> itemSoldOutMap) {
         List<GeneralItem> result = new ArrayList<>();
         List<ItemConfigGroup> bottomItems = new ArrayList<>();
         for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroupList()) {
-            if(afterPickGroupMap.get(itemConfigGroup.getGroupNo()) != null && itemSoldOutMap.get(afterPickGroupMap.get(itemConfigGroup.getGroupNo()).getItemId())) {
+            Boolean soldOut = itemSoldOutMap.get(afterPickGroupMap.get(itemConfigGroup.getGroupNo()).getItemId());
+            if(afterPickGroupMap.get(itemConfigGroup.getGroupNo()) != null && soldOut != null && soldOut) {
                 bottomItems.add(itemConfigGroup);
             } else {
-                result.add(buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap));
+                GeneralItem generalItem = buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap);
+                if(generalItem != null) {
+                    result.add(generalItem);
+                }
             }
         }
         for (ItemConfigGroup itemConfigGroup : bottomItems) {
-            result.add(buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap));
+            GeneralItem generalItem = buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap);
+            if(generalItem != null) {
+                result.add(generalItem);
+            }
         }
         return result;
     }
@@ -150,6 +167,9 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     public GeneralItem buildItemMap(ItemConfigGroup itemConfigGroup, Map<Long, ItemDTO> longItemDTOMap, Map<Integer, ItemConfig> afterPickGroupMap) {
         ItemConfig itemConfig = afterPickGroupMap.get(itemConfigGroup.getGroupNo());
         ItemDTO itemDTO = longItemDTOMap.get(itemConfig.getItemId());
+        if(itemDTO == null) {
+            return null;
+        }
         GeneralItem itemMap = new GeneralItem();
         itemMap.put("id", itemDTO.getItemId().getId());
         itemMap.put("itemId", itemDTO.getItemId().getId());

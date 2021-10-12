@@ -34,6 +34,7 @@ public class SupermarketHallContext {
 
 
     public static SupermarketHallContext init(RequestContext4Ald requestContext4Ald) {
+        logger.info("SupermarketHallContext_requestContext4Ald" + JSON.toJSONString(requestContext4Ald));
 
         SupermarketHallContext supermarketHallContext = new SupermarketHallContext();
 
