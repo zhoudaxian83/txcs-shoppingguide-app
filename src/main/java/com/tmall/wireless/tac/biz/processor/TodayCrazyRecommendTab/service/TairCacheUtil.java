@@ -115,6 +115,7 @@ public class TairCacheUtil {
                 return itemFailProcessorRequest.getItemEntityOriginDataDTO();
             }
             tacLogger.info("tpp缓存读取成功");
+            tacLogger.info("UniqueIdentity标识"+sgFrameworkContextItem.getBizScenario().getUniqueIdentity());
             HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
                     .kv("step", logKey)
                     .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_SUCCESS)
