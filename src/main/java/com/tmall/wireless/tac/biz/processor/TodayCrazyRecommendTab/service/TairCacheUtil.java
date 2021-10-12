@@ -6,6 +6,7 @@ import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
@@ -18,6 +19,7 @@ import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -46,6 +48,12 @@ public class TairCacheUtil {
 
     public OriginDataDTO<ItemEntity> process(ItemFailProcessorRequest itemFailProcessorRequest) {
 
+        BizScenario bizScenario = BizScenario.valueOf(
+            ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+            ScenarioConstantApp.LOC_TYPE_B2C,
+            ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
+        );
+
         SgFrameworkContextItem sgFrameworkContextItem = itemFailProcessorRequest.getSgFrameworkContextItem();
 
         int interval = Optional.of(itemFailProcessorRequest)
@@ -64,7 +72,7 @@ public class TairCacheUtil {
         TairManager merchantsTair = tairFactorySpi.getOriginDataFailProcessTair();
         if (merchantsTair == null || merchantsTair.getMultiClusterTairManager() == null || merchantsTair.getNameSpace() <= 0) {
 
-            HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
                     .kv("step", logKey)
                     .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_TAIR_MANAGER_NULL)
                     .error();
@@ -74,7 +82,7 @@ public class TairCacheUtil {
 
 
         if (success) {
-            HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
                     .kv("step", logKey)
                     .kv("info", originDataSuccessKey)
                     .info();
@@ -88,7 +96,7 @@ public class TairCacheUtil {
 
                 if (put == null || put.getCode() != ResultCode.SUCCESS.getCode()) {
                     tacLogger.info("tpp缓存写入失败");
-                    HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
+                    HadesLogUtil.stream(bizScenario.getUniqueIdentity())
                             .kv("step", logKey)
                             .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_TAIR_PUT_ERROR)
                             .kv("tairKey", tairKey)
@@ -100,7 +108,7 @@ public class TairCacheUtil {
 
         } else {
 
-            HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
                     .kv("step", logKey)
                     .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_ORIGIN_DATA_FAIL)
                     .error();
@@ -108,14 +116,14 @@ public class TairCacheUtil {
             List<ItemEntity> itemEntityList = readFromTair(tairKey, merchantsTair);
             if (CollectionUtils.isEmpty(itemEntityList)) {
                 tacLogger.info("tpp缓存读取失败");
-                HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
+                HadesLogUtil.stream(bizScenario.getUniqueIdentity())
                         .kv("step", logKey)
                         .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_FAIL)
                         .error();
                 return itemFailProcessorRequest.getItemEntityOriginDataDTO();
             }
             tacLogger.info("tpp缓存读取成功");
-            HadesLogUtil.stream(sgFrameworkContextItem.getBizScenario().getUniqueIdentity())
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
                     .kv("step", logKey)
                     .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_SUCCESS)
                     .error();
