@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class DetailRequestConfig {
 
     private Long tppId;
