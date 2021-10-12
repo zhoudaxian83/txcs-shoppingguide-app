@@ -123,6 +123,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
                 HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess.bottom|" + Logger.isEagleEyeTest() + "|bottom")
                         .error();
                 generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId());
+            logger.info("=========readBottomData:" + JSON.toJSONString(generalItems));
             //}
             return Flowable.just(TacResult.newResult(generalItems));
 
