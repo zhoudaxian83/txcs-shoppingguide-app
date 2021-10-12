@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.config;
 
+import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.config.TacConfigManager;
 
 /**
@@ -16,6 +17,7 @@ public class SwitchConfigBean {
             /*SwitchManager.init(APP_NAME, SxlSwitch.class);*/
             TacConfigManager.switchRegister(SxlSwitch.class);
             TacConfigManager.switchRegister(TxcsShoppingguideAppSwitch.class);
+            TacConfigManager.switchRegister(DetailSwitch.class);
 
         } catch (Throwable e) {
             throw new RuntimeException(e);

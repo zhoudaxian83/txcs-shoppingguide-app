@@ -3,10 +3,13 @@ package com.tmall.wireless.tac.biz.processor.extremeItem;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.taobao.eagleeye.EagleEye;
 import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
+import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.store.spi.render.RenderSpi;
@@ -74,6 +77,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
+        Long mainProcessStart = System.currentTimeMillis();
         try {
             //初始化SupermarketHallContext
             SupermarketHallContext supermarketHallContext = SupermarketHallContext.init(requestContext4Ald);
@@ -105,13 +109,19 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
             //构建响应对象
             List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
-
             logger.info("=========generalItems:" + JSON.toJSONString(generalItems));
+
+            Long mainProcessEnd = System.currentTimeMillis();
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|success|" + (mainProcessEnd - mainProcessStart))
+                    .error();
+
             return Flowable.just(TacResult.newResult(generalItems));
 
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            tacLogger.error(e.getMessage(), e);
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|exception")
+                    .kv("errorMsg", StackTraceUtil.stackTrace(e))
+                    .error();
+            logger.error("ExtremeItemSdkItemHandler error, traceId:" + EagleEye.getTraceId(), e);
         }
         return Flowable.just(TacResult.newResult(new ArrayList<>()));
     }

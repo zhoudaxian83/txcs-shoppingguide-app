@@ -81,7 +81,8 @@ public class ReciptConverter extends AbstractConverter<DetailRecContentResultVO>
         }
 
         itemAndContentList.removeAll(recipeContents);
-        if (CollectionUtils.isNotEmpty(itemAndContentList) && itemAndContentList.size() >= sizeDTO.getMin()) {
+        if (DetailSwitch.enableReciptCommonContent && CollectionUtils.isNotEmpty(itemAndContentList)
+            && itemAndContentList.size() >= sizeDTO.getMin()) {
             //标题名称
             detailRecContentResultVO.setTitle(
                 Lists.newArrayList(new DetailTextComponentVO("为你推荐", new Style("12", "#111111", "true"))));
