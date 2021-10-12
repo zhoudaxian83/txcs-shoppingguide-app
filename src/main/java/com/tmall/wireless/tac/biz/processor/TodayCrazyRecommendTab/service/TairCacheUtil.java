@@ -53,9 +53,6 @@ public class TairCacheUtil {
                 ScenarioConstantApp.LOC_TYPE_B2C,
                 ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
         );
-        tacLogger.info("标识对比1：" + bizScenario.getUniqueIdentity());
-        tacLogger.info("标识对比2：" + itemFailProcessorRequest.getSgFrameworkContextItem().getBizScenario().getUniqueIdentity());
-
         int interval = Optional.of(itemFailProcessorRequest)
                 .map(ItemFailProcessorRequest::getSgFrameworkContextItem)
                 .map(SgFrameworkContextItem::getItemMetaInfo)
