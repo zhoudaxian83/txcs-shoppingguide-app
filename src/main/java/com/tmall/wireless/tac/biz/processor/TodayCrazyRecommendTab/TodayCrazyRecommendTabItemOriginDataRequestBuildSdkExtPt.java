@@ -14,6 +14,7 @@ import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.AppIdEnum;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.AppTypeEnum;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
@@ -115,21 +116,23 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
      */
     private List<String> buildCacheKeyList(List<String> categoryIds, String tabType) {
         List<String> cacheKeyList = Lists.newArrayList();
+        String _pre = "_pre";
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             if (RpmContants.enviroment.isOnline()) {
-                cacheKeyList.addAll(Arrays.asList("today_featured", "today_algorithm"));
+                cacheKeyList.addAll(Arrays.asList(CommonConstant.TODAY_CHANNEL_NEW_FEATURED, CommonConstant.TODAY_PROMOTION_FEATURED, CommonConstant.TODAY_ALGORITHM));
             } else {
-                cacheKeyList.addAll(Arrays.asList("today_featured_pre", "today_algorithm_pre"));
+                cacheKeyList.addAll(Arrays.asList(CommonConstant.TODAY_CHANNEL_NEW_FEATURED + _pre, CommonConstant.TODAY_PROMOTION_FEATURED + _pre, CommonConstant.TODAY_ALGORITHM + _pre));
             }
         } else {
             categoryIds.forEach(categoryId -> {
                 if (RpmContants.enviroment.isOnline()) {
-                    cacheKeyList.add("today_" + categoryId);
-                    cacheKeyList.add("today_algorithm_" + categoryId);
+                    cacheKeyList.add(CommonConstant.TODAY_CHANNEL_NEW + "_" + categoryId);
+                    cacheKeyList.add(CommonConstant.TODAY_PROMOTION + "_" + categoryId);
+                    cacheKeyList.add(CommonConstant.TODAY_ALGORITHM + "_" + categoryId);
                 } else {
-                    cacheKeyList.add("today_" + categoryId + "_pre");
-                    cacheKeyList.add("today_algorithm_" + categoryId + "_pre");
-
+                    cacheKeyList.add(CommonConstant.TODAY_CHANNEL_NEW + "_" + categoryId + _pre);
+                    cacheKeyList.add(CommonConstant.TODAY_PROMOTION + "_" + categoryId + _pre);
+                    cacheKeyList.add(CommonConstant.TODAY_ALGORITHM + "_" + categoryId + _pre);
                 }
             });
         }
