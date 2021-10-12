@@ -49,12 +49,12 @@ public class TairCacheUtil {
     public OriginDataDTO<ItemEntity> process(ItemFailProcessorRequest itemFailProcessorRequest) {
 
         BizScenario bizScenario = BizScenario.valueOf(
-            ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-            ScenarioConstantApp.LOC_TYPE_B2C,
-            ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
+                ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+                ScenarioConstantApp.LOC_TYPE_B2C,
+                ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
         );
-
-        SgFrameworkContextItem sgFrameworkContextItem = itemFailProcessorRequest.getSgFrameworkContextItem();
+        tacLogger.info("标识对比1：" + bizScenario.getUniqueIdentity());
+        tacLogger.info("标识对比2：" + itemFailProcessorRequest.getSgFrameworkContextItem().getBizScenario().getUniqueIdentity());
 
         int interval = Optional.of(itemFailProcessorRequest)
                 .map(ItemFailProcessorRequest::getSgFrameworkContextItem)
