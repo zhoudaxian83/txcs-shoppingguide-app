@@ -99,7 +99,7 @@ public class GuessYourLikeShopCart4ItemOriginDataFailProcessorSdkExtPt extends D
                 .kv("GuessYourLikeShopCart4ItemOriginDataFailProcessorSdkExtPt", "process")
                 .kv("baseOriginDataDTO.getResult().size()", String.valueOf(baseOriginDataDTO.getResult().size()))
                 .info();
-        tacLogger.info("元数据处理失败扩展点tair打底数据获取成功,baseOriginDataDTO="+JSON.toJSONString(baseOriginDataDTO));
+        tacLogger.info("元数据处理失败扩展点tair打底数据获取成功");
         return baseOriginDataDTO;
 
     }
