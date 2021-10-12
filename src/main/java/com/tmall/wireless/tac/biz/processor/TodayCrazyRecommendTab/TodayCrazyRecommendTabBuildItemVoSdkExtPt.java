@@ -23,6 +23,7 @@ import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.tpp.ItemInfoBySourceTppDTO;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.ItemLimitDTO;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.util.CommonUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
@@ -33,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,20 +50,18 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
+        if (buildItemVoRequest == null || buildItemVoRequest.getItemInfoDTO() == null) {
+            return Response.fail(ErrorCode.PARAMS_ERROR);
+        }
         Map<String, Object> userParams = buildItemVoRequest.getContext().getUserParams();
         ItemEntityVO itemEntityVO = new ItemEntityVO();
         String umpChannel = MapUtil.getStringWithDefault(userParams, VoKeyConstantApp.UMP_CHANNEL,
                 VoKeyConstantApp.CHANNEL_KEY);
         itemEntityVO.put("contentType", 0);
-        if (buildItemVoRequest == null || buildItemVoRequest.getItemInfoDTO() == null) {
-            return Response.fail(ErrorCode.PARAMS_ERROR);
-        }
-
+        HashMap<String, String> temIdAndCacheKeyMap = CommonUtil.getItemIdAndCacheKey(userParams);
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
-
         itemEntityVO.setItemId(Optional.of(itemInfoDTO).map(ItemInfoDTO::getItemEntity).map(ItemEntity::getItemId).orElse(0L));
         itemEntityVO.setO2oType(Optional.of(itemInfoDTO).map(ItemInfoDTO::getItemEntity).map(ItemEntity::getO2oType).orElse(O2oType.B2C.name()));
-
         String itemDesc = null;
         String originScm = "";
         String itemUrl = "";
@@ -69,7 +69,6 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         String reservePrice = "";
         Map<String, Object> attachments = null;
         Map<String, String> trackPoint = Maps.newHashMap();
-
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainDTO) {
@@ -110,19 +109,49 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 //        } catch (Exception e) {
 //            tacLogger.info("转换异常" + e);
 //        }
+        String cacheKey = this.getCacheKey(temIdAndCacheKeyMap, itemEntityVO.getItemId());
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("reservePrice", reservePrice);
-
+        if (cacheKey != null) {
+            itemEntityVO.put("itemType", this.getItemType(cacheKey));
+            //当前只区分algorithm或other
+            itemEntityVO.put("channel", this.getChannel(cacheKey));
+        } else {
+            tacLogger.info("vo获取tairKey为空");
+        }
         itemEntityVO.put("attachment", attachments);
         itemEntityVO.remove("attachments");
         itemEntityVO.put("itemDesc", itemDesc);
         itemEntityVO.put(VoKeyConstantApp.UMP_CHANNEL, umpChannel);
-        //todo 枚举形式，当前只区分algorithm或other
-        itemEntityVO.put("channel", "algorithm");
         this.buildLimit(itemEntityVO, userParams);
         return Response.success(itemEntityVO);
     }
+
+    private String getCacheKey(HashMap<String, String> temIdAndCacheKeyMap, Long itemId) {
+        return temIdAndCacheKeyMap.get(Long.toString(itemId));
+    }
+
+    private String getItemType(String cacheKey) {
+        //channelPriceNew,algorithm,promotion
+        if (cacheKey.startsWith(CommonConstant.TODAY_CHANNEL_NEW_FEATURED) || cacheKey.startsWith(CommonConstant.TODAY_CHANNEL_NEW)) {
+            return "channelPriceNew";
+        } else if (cacheKey.startsWith(CommonConstant.TODAY_ALGORITHM)) {
+            return "algorithm";
+        } else {
+            return "promotion";
+        }
+
+    }
+
+    private String getChannel(String cacheKey) {
+        if (cacheKey.startsWith(CommonConstant.TODAY_ALGORITHM)) {
+            return "algorithm";
+        } else {
+            return "other";
+        }
+    }
+
 
     protected Map<String, Object> getItemVoMap(ItemInfoBySourceDTO itemInfoBySourceDTO) {
 
@@ -130,16 +159,6 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 
     }
 
-//    private String getSource(BuildItemVoRequest buildItemVoRequest, long itemId) {
-//        List<ItemEntity> itemEntityList = (List<ItemEntity>) buildItemVoRequest.getContext().getUserParams().get(CommonConstant.TPP_ITEMS);
-//        if (CollectionUtils.isEmpty(itemEntityList)) {
-//            return null;
-//        }
-//        itemEntityList.forEach(itemEntity -> {
-//
-//        });
-//        return null;
-//    }
 
     private String processScm(String originScm, Map<String, String> scmKeyValue) {
 

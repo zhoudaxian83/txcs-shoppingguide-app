@@ -9,13 +9,15 @@ public class CommonConstant {
 
     public static final String TODAY_CHANNEL_NEW = "today_channel_new";
     public static final String TODAY_PROMOTION = "today_promotion";
+    public static final String ITEM_ID_AND_CACHE_KEYS = "ItemIdAndCacheKeys";
+
     /**
      * 来自算法
      */
     public static final String TODAY_ALGORITHM = "today_algorithm";
 
     /**
-     * 专享价
+     * 专享价,渠道价
      */
     public static final String TODAY_CHANNEL_NEW_FEATURED = "today_channel_new_featured";
     /**

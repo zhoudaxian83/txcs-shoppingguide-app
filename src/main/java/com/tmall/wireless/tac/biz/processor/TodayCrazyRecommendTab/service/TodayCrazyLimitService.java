@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.framework.model.ItemGroup;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoDTO;
@@ -10,18 +11,17 @@ import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.tcls.gs.sdk.framework.model.iteminfo.ItemInfoGroupResponse;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.ItemLimitDTO;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.util.CommonUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Author: luoJunChong
@@ -47,27 +47,49 @@ public class TodayCrazyLimitService {
         List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
                 itemGroup).getValue()
                 .values()), ItemInfoDTO.class);
-        List<Map> skuList = itemInfoDTOS.stream().map(itemInfoDTO -> {
-            Map<String, Object> skuMap = Maps.newHashMap();
-            try {
-                if (itemInfoDTO.getItemInfos().get("captain") != null) {
-                    Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
-                    skuMap.put("skuId", itemInfoVO.get("skuId") == null ? 0L : itemInfoVO.get("skuId"));
-                    skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
-                } else {
-                    tacLogger.info("buildGetItemLimitParam参数构建captain为空,itemId=" + itemInfoDTO.getItemEntity().getItemId());
+        HashMap<String, String> map = CommonUtil.getItemIdAndCacheKey(sgFrameworkContextItem.getUserParams());
+        List<Map> skuList = Lists.newArrayList();
+        itemInfoDTOS.forEach(itemInfoDTO -> {
+            if (this.doQuery(map, itemInfoDTO.getItemEntity().getItemId())) {
+                Map<String, Object> skuMap = Maps.newHashMap();
+                try {
+                    if (itemInfoDTO.getItemInfos().get("captain") != null) {
+                        Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
+                        skuMap.put("skuId", itemInfoVO.get("skuId") == null ? 0L : itemInfoVO.get("skuId"));
+                        skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
+                        skuList.add(skuMap);
+                    } else {
+                        tacLogger.info("buildGetItemLimitParam参数构建captain为空,itemId=" + itemInfoDTO.getItemEntity().getItemId());
+                    }
+                } catch (Exception e) {
+                    tacLogger.info("buildGetItemLimitParam参数构建异常,itemId=" + itemInfoDTO.getItemEntity().getItemId() + JSON.toJSONString(e));
                 }
-            } catch (Exception e) {
-                tacLogger.info("buildGetItemLimitParam参数构建异常,itemId=" + itemInfoDTO.getItemEntity().getItemId() + JSON.toJSONString(e));
             }
-            return skuMap;
-        }).collect(Collectors.toList());
+        });
+        if (skuList.size() == 0) {
+            return null;
+        }
         Map<String, Object> paramsValue = new HashMap<>(16);
         Map<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("userId", userId);
         paramMap.put("itemIdList", skuList);
         paramsValue.put("itemLimitInfoQuery", paramMap);
         return paramsValue;
+    }
+
+    /**
+     * 只有专享价的时候查询限购信息
+     *
+     * @param map
+     * @param itemId
+     * @return
+     */
+    private boolean doQuery(HashMap<String, String> map, long itemId) {
+        String cacheCey = map.get(Long.toString(itemId));
+        if (cacheCey == null) {
+            return false;
+        }
+        return cacheCey.startsWith(CommonConstant.TODAY_CHANNEL_NEW_FEATURED) || cacheCey.startsWith(CommonConstant.TODAY_CHANNEL_NEW);
     }
 
     private Map<Long, List<ItemLimitDTO>> getItemLimitResult(Map<String, Object> paramsValue) {
@@ -101,6 +123,9 @@ public class TodayCrazyLimitService {
     public Map<Long, List<ItemLimitDTO>> getItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<Long, List<ItemLimitDTO>> limitResult;
         Map<String, Object> param = this.buildGetItemLimitParam(sgFrameworkContextItem);
+        if (param == null) {
+            return null;
+        }
         limitResult = this.getItemLimitResult(param);
         return limitResult;
     }
