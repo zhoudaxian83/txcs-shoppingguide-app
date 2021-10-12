@@ -62,6 +62,7 @@ public class GshItemSetRecommendHandler extends TacReactiveHandler4Ald {
                     generalItemList.add(generalItem);
                 });
                 TacResult<List<GeneralItem>> tacResult = TacResult.newResult(generalItemList);
+                tacResult.setHasMore(response.isHasMore());
                 Map<String, Object> bizExtMap = new HashMap<>();
                 bizExtMap.put("hasMore", response.isHasMore());
                 bizExtMap.put("index", response.getIndex());
