@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.detail.common.convert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSONObject;
@@ -12,13 +13,17 @@ import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
+import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendContentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
+import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendVO.DetailEvent;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
 import com.tmall.wireless.tac.biz.processor.detail.model.config.SizeDTO;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -89,5 +94,20 @@ public class ReciptConverter extends AbstractConverter<DetailRecContentResultVO>
         }
 
         return null;
+    }
+
+    @Override
+    public List<DetailEvent> getContentEvents(DetailRecommendRequest recommendRequest, ContentVO contentVO, int index) {
+        String jumpUrl = contentVO.getString(FrontBackMapEnum.contentCustomLink.getFront());
+        if (StringUtils.isEmpty(jumpUrl)) {
+            jumpUrl = new StringBuilder(DetailSwitch.reciptCommonContentJumpUrl)
+                .append("&contentType=")
+                .append(contentVO.getString("contentType"))
+                .append("&itemSetIds=")
+                .append(contentVO.getString("itemSetIds")).toString();
+        }
+        return super.getEvents(recommendRequest.getRecType(), contentVO.getLong("contentId"), jumpUrl
+            , index + 1,
+            contentVO.getString("scm"));
     }
 }
