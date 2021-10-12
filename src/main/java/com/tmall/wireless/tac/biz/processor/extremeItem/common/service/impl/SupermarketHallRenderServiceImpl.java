@@ -60,7 +60,7 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
                             }
                             return longItemDTOMap;
                         } catch (Exception e) {
-                            logger.error("batchQueryItem_catchException", e);
+                            logger.error("batchQueryItem_catchException, traceId:" + EagleEye.getTraceId(), e);
                             return new HashMap<Long, ItemDTO>();
                         } finally {
                             if (Thread.currentThread().getId() != callerId) {

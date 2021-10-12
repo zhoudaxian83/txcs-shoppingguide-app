@@ -14,6 +14,7 @@ import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallBottomService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallIGraphSearchService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallRenderService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
@@ -71,9 +72,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Autowired
     ItemGmvService itemGmvService;
 
-    /*@Autowired
-    TairFactorySpi tairFactorySpi;*/
-
+    @Autowired
+    SupermarketHallBottomService supermarketHallBottomService;
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
@@ -110,6 +110,11 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             //构建响应对象
             List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
             logger.info("=========generalItems:" + JSON.toJSONString(generalItems));
+
+            //写打底数据
+            if(CollectionUtils.isNotEmpty(generalItems)) {
+                supermarketHallBottomService.writeBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getSmAreaId(), generalItems);
+            }
 
             Long mainProcessEnd = System.currentTimeMillis();
             HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|success|" + (mainProcessEnd - mainProcessStart))

@@ -1,0 +1,76 @@
+package com.tmall.wireless.tac.biz.processor.extremeItem.common.service;
+
+import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+import com.alibaba.fastjson.JSON;
+import com.taobao.eagleeye.EagleEye;
+import com.taobao.tair.DataEntry;
+import com.taobao.tair.Result;
+import com.taobao.tair.ResultCode;
+import com.tmall.txcs.gs.model.constant.RpmContants;
+import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
+import com.tmall.txcs.gs.spi.recommend.TairManager;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.impl.SupermarketHallIGraphSearchServiceImpl;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class SupermarketHallBottomService {
+    private static Logger logger = LoggerProxy.getLogger(SupermarketHallIGraphSearchServiceImpl.class);
+
+    private static final int NAME_SPACE = 625;
+
+    @Autowired
+    TairFactorySpi tairFactorySpi;
+
+    public void writeBottomData(String resourceId, String areaId, List<GeneralItem> generalItemList) {
+        String cacheKey = getCacheKey(resourceId, areaId);
+        try {
+            TairManager defaultTair = tairFactorySpi.getDefaultTair();
+            if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null) {
+                logger.error("tairFactorySpi.getDefaultTair fail, traceId:" + EagleEye.getTraceId());
+                return;
+            }
+            ResultCode resultCode = defaultTair.getMultiClusterTairManager().put(NAME_SPACE, cacheKey, JSON.toJSONString(generalItemList));
+            if (!resultCode.isSuccess()) {
+                logger.error("writeBottomData失败，traceId:" + EagleEye.getTraceId() + "," + "cacheKey: " + cacheKey);
+            }
+        } catch (Exception e) {
+            logger.error("writeBottomData异常，traceId:" + EagleEye.getTraceId() + "," + "cacheKey: " + cacheKey, e);
+        }
+    }
+
+    public List<GeneralItem> readBottomData(String resourceId, String areaId) {
+        String cacheKey = getCacheKey(resourceId, areaId);
+        try {
+            TairManager defaultTair = tairFactorySpi.getDefaultTair();
+            if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null) {
+                logger.error("tairFactorySpi.getDefaultTair fail, traceId:" + EagleEye.getTraceId());
+                return new ArrayList<>();
+            }
+            Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(NAME_SPACE, cacheKey);
+            if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
+                    && dataEntryResult.getValue().getValue() != null) {
+                return JSON.parseArray(String.valueOf(dataEntryResult.getValue().getValue()), GeneralItem.class);
+            } else {
+                logger.error( "readBottomData失败，traceId:" + EagleEye.getTraceId() + "," + "cacheKey: " + cacheKey);
+                return new ArrayList<>();
+            }
+        } catch (Exception e) {
+            logger.error("readBottomData异常，traceId:" + EagleEye.getTraceId() + "," + "cacheKey: " + cacheKey, e);
+        }
+        return new ArrayList<>();
+    }
+
+    private String getCacheKey(String resourceId, String areaId) {
+        if(!RpmContants.enviroment.isOnline()) {
+            return "pre_hall_bottom_" + resourceId + "_" + areaId;
+        }
+        return "hall_bottom_" + resourceId + "_" + areaId;
+    }
+
+}
