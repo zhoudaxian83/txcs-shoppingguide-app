@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.detail.o2o.content;
 
-import com.alibaba.cola.extension.Extension;
 
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataRequestBuildSdkExtPt;
@@ -11,7 +10,6 @@ import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
 import com.tmall.wireless.tac.biz.processor.detail.common.extabstract.AbstractDetailOriginDataRequestBuildSdkExtPt;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
-import com.tmall.wireless.tac.biz.processor.detail.model.config.DetailRequestConfig;
 
 /**
  * @author: guichen
