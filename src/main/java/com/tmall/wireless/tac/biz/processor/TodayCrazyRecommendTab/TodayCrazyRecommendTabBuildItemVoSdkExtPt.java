@@ -113,7 +113,9 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("reservePrice", reservePrice);
+
         itemEntityVO.put("attachment", attachments);
+        itemEntityVO.remove("attachments");
         itemEntityVO.put("itemDesc", itemDesc);
         itemEntityVO.put(VoKeyConstantApp.UMP_CHANNEL, umpChannel);
         //todo 枚举形式，当前只区分algorithm或other

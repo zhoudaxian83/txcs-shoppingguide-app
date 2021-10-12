@@ -116,7 +116,6 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
     private List<String> buildCacheKeyList(List<String> categoryIds, String tabType) {
         List<String> cacheKeyList = Lists.newArrayList();
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
-            cacheKeyList.addAll(Arrays.asList("today_featured", "today_algorithm"));
             if (RpmContants.enviroment.isOnline()) {
                 cacheKeyList.addAll(Arrays.asList("today_featured", "today_algorithm"));
             } else {
