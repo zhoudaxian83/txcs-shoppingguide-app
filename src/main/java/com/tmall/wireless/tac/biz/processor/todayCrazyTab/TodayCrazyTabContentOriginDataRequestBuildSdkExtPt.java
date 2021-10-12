@@ -69,7 +69,7 @@ public class TodayCrazyTabContentOriginDataRequestBuildSdkExtPt extends Register
         List<Map<String, Object>> staticScheduleDataList = (List<Map<String, Object>>)staticScheduleData;
         List<Long> longList = Lists.newArrayList();
         for (Map<String, Object> stringObjectMap : staticScheduleDataList) {
-            String itemSetId = String.valueOf(stringObjectMap.get("default_datasetId"));
+            String itemSetId = String.valueOf(stringObjectMap.get("itemSetId"));
             if (StringUtils.isNumeric(itemSetId)) {
                 longList.add(Long.valueOf(itemSetId));
             }
