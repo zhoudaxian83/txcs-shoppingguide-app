@@ -103,17 +103,13 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         }
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
-//        try {
-//            String locType1 = (String) itemEntityVO.get("locType");
-//            itemEntityVO.put("locType", locType1);
-//        } catch (Exception e) {
-//            tacLogger.info("转换异常" + e);
-//        }
         String cacheKey = this.getCacheKey(temIdAndCacheKeyMap, itemEntityVO.getItemId());
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("reservePrice", reservePrice);
+        String itemType = null;
         if (cacheKey != null) {
+            itemType = this.getItemType(cacheKey);
             itemEntityVO.put("itemType", this.getItemType(cacheKey));
             //当前只区分algorithm或other
             itemEntityVO.put("channel", this.getChannel(cacheKey));
@@ -124,7 +120,9 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         itemEntityVO.remove("attachments");
         itemEntityVO.put("itemDesc", itemDesc);
         itemEntityVO.put(VoKeyConstantApp.UMP_CHANNEL, umpChannel);
-        this.buildLimit(itemEntityVO, userParams);
+        if ("channelPriceNew".equals(itemType)) {
+            this.buildLimit(itemEntityVO, userParams);
+        }
         return Response.success(itemEntityVO);
     }
 
