@@ -104,12 +104,12 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         }
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
-        try {
-            String locType1 = (String) itemEntityVO.get("locType");
-            itemEntityVO.put("locType", locType1);
-        } catch (Exception e) {
-            tacLogger.info("转换异常" + e);
-        }
+//        try {
+//            String locType1 = (String) itemEntityVO.get("locType");
+//            itemEntityVO.put("locType", locType1);
+//        } catch (Exception e) {
+//            tacLogger.info("转换异常" + e);
+//        }
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("reservePrice", reservePrice);
