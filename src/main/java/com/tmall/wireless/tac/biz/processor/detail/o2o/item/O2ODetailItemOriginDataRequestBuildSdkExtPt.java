@@ -1,26 +1,18 @@
 package com.tmall.wireless.tac.biz.processor.detail.o2o.item;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
-import com.alibaba.cola.extension.Extension;
 import com.alibaba.metrics.StringUtils;
 
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
-import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
-import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.common.extabstract.AbstractDetailOriginDataRequestBuildSdkExtPt;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
 import com.tmall.wireless.tac.biz.processor.detail.util.CommonUtil;
-import org.springframework.stereotype.Service;
 
 /**
  * @author: guichen
