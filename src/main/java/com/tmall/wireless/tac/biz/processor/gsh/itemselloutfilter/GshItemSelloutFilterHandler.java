@@ -51,7 +51,7 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
     @Autowired
     RenderSpi renderSpi;
 
-    private final String captainSceneCode = "supermarket.hall.inventory";
+    private final String captainSceneCode = "conference.gsh.common";
 
 
     @Override

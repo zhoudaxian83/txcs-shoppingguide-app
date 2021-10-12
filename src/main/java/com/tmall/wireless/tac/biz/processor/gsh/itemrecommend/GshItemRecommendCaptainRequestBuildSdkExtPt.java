@@ -26,7 +26,7 @@ public class GshItemRecommendCaptainRequestBuildSdkExtPt extends DefaultCaptainR
 
     @Autowired
     TacLogger tacLogger;
-    private final String captainSceneCode = "supermarket.hall.inventory";
+    private final String captainSceneCode = "conference.gsh.common";
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {

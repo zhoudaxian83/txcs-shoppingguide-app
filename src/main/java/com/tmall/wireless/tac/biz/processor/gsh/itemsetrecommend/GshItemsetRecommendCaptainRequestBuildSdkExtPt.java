@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
     scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_GSH_ITEM_SET_RECOMMEND)
 public class GshItemsetRecommendCaptainRequestBuildSdkExtPt extends DefaultCaptainRequestBuildSdkExtPt implements CaptainRequestBuildSdkExtPt {
     Logger logger = LoggerFactory.getLogger(GshItemsetRecommendCaptainRequestBuildSdkExtPt.class);
-    private final String captainSceneCode = "supermarket.hall.inventory";
+    private final String captainSceneCode = "conference.gsh.common";
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
