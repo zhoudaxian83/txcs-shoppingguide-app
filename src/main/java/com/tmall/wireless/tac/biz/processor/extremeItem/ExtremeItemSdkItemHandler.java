@@ -114,16 +114,16 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             logger.info("=========generalItems:" + JSON.toJSONString(generalItems));
 
             //写打底数据
-            if(CollectionUtils.isNotEmpty(generalItems) && generalItems.size() == itemConfigGroups.size()) {
-                supermarketHallBottomService.writeBottomData(supermarketHallContext.getCurrentResourceId(), generalItems);
+            //if(CollectionUtils.isNotEmpty(generalItems) && generalItems.size() == itemConfigGroups.size()) {
+                /*supermarketHallBottomService.writeBottomData(supermarketHallContext.getCurrentResourceId(), generalItems);
                 Long mainProcessEnd = System.currentTimeMillis();
                 HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|success|" + (mainProcessEnd - mainProcessStart))
-                        .error();
-            } else {
+                        .error();*/
+            //} else {
                 HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess.bottom|" + Logger.isEagleEyeTest() + "|bottom")
                         .error();
                 generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId());
-            }
+            //}
             return Flowable.just(TacResult.newResult(generalItems));
 
         } catch (Exception e) {

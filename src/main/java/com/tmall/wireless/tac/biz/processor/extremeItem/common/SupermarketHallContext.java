@@ -22,6 +22,7 @@ public class SupermarketHallContext {
     private String userNick;
     private String smAreaId;
     private String currentResourceId;
+    private String currentScheduleId;
     /**
      * 运营手工配置的数据
      */
@@ -50,7 +51,9 @@ public class SupermarketHallContext {
         }
 
         //初始化当前资源位ID
-        supermarketHallContext.setCurrentResourceId((String)requestContext4Ald.getAldContext().get(ALD_CURRENT_RES_ID));
+        supermarketHallContext.setCurrentResourceId(String.valueOf(requestContext4Ald.getAldContext().get(ALD_CURRENT_RES_ID)));
+        //初始化当前排期ID
+        supermarketHallContext.setCurrentScheduleId(String.valueOf(requestContext4Ald.getAldContext().get(ALD_SCHEDULE_ID)));
 
         //初始化tac参数
         String tacParams = MapUtil.getStringWithDefault(requestContext4Ald.getAldParam(), "tacParams", "");
