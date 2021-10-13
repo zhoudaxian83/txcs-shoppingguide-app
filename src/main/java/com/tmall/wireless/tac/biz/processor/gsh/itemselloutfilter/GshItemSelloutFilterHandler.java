@@ -64,18 +64,29 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
             throw new Exception("数据未填写");
         }
         List<Long> itemIdList= new ArrayList<>();
+        Map<Long, Map<String, Object>> staticMap = new HashMap<>();
         for(Map<String, Object> data : aldManualConfigDataList){
             String contentId = MapUtil.getStringWithDefault(data, "contentId", "");
             if(StringUtils.isNotEmpty(contentId)){
                 itemIdList.add(Long.valueOf(contentId));
+                staticMap.put(Long.valueOf(contentId), data);
             }
         }
         Map<Long, ItemDTO> captainItemMap = batchQueryItem(itemIdList, supermarketHallContext);
+
         List<GeneralItem> list = new ArrayList<>();
         for (int a = 0; a < itemIdList.size(); a++) {
             ItemDTO itemDTO = captainItemMap.get(itemIdList.get(a));
             GeneralItem itemMap = new GeneralItem();
             buildItemDTO(itemMap, itemDTO);
+
+            //静态数据补充
+            Map<String, Object> stringObjectMap = staticMap.get(itemIdList.get(a));
+            if (stringObjectMap != null) {
+                for (Map.Entry<String, Object> entry : stringObjectMap.entrySet()) {
+                    itemMap.put(entry.getKey(), entry.getValue());
+                }
+            }
             list.add(itemMap);
         }
 
