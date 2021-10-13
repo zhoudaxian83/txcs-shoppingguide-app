@@ -79,11 +79,10 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         List<String> topList = topListStr.equals("") ? Lists.newArrayList() : Arrays.asList(topListStr.split(","));
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
-        //todo 只有今日超省走双置顶逻辑，1，双中判断置顶有效期；2，只有第一页做置顶这个置顶逻辑；3每页走要进行置顶去重
+        // 只有今日超省走双置顶逻辑，1，双中判断置顶有效期；2，只有第一页做置顶这个置顶逻辑；3每页走要进行置顶去重
         tacLogger.info("topList：" + JSON.toJSONString(topList));
         tacLogger.info("TPP返回数据条数：" + itemEntities.size());
         tacLogger.info("TPP返回数据itemEntities：" + JSON.toJSONString(itemEntities));
-        //todo mock
         //itemEntities = this.mock();
         tacLogger.info("topList：" + JSON.toJSONString(topList));
         if (CollectionUtils.isEmpty(topList)) {
@@ -148,7 +147,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             todayCrazySortItemEntities.add(todayCrazySortItemEntity);
         });
 
-        //定坑排序法
+        //定坑排序
         List<TodayCrazySortItemEntity> todayCrazySortItemEntities2 = todayCrazySortItemEntities.stream().sorted(
                 Comparator.comparing(TodayCrazySortItemEntity::getIndex)).collect(
                 Collectors.toList());
@@ -162,10 +161,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             }
         }
         return itemEntities;
-        //顺序排序法
-//        return todayCrazySortItemEntities.stream().sorted(
-//                Comparator.comparing(TodayCrazySortItemEntity::getIndex)).collect(
-//                Collectors.toList()).stream().map(TodayCrazySortItemEntity::getItemEntity).collect(Collectors.toList());
     }
 
     /**
@@ -192,24 +187,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (columnCenterDataRuleDTO == null) {
             return false;
         }
-        //mock
-        if (columnCenterDataRuleDTO.getDataRuleId() == 28036L) {
-            Calendar c = Calendar.getInstance();
-            // set Month
-            // MONTH starts with 0 i.e. ( 0 - Jan)
-            c.set(Calendar.MONTH, 11);
-
-            // set Date
-            c.set(Calendar.DATE, 05);
-
-            // set Year
-            c.set(Calendar.YEAR, 2022);
-
-            // creating a date object with specified time.
-            Date mockDate = c.getTime();
-            columnCenterDataRuleDTO.setItemStickEndTime(mockDate);
-            tacLogger.info("MOCK时间");
-        }
         Date itemScheduleStartTime = columnCenterDataRuleDTO.getItemScheduleStartTime();
         Date itemScheduleEndTime = columnCenterDataRuleDTO.getItemScheduleEndTime();
         Date itemStickStartTime = columnCenterDataRuleDTO.getItemStickStartTime();
@@ -218,10 +195,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (itemScheduleStartTime == null || itemScheduleEndTime == null || itemStickStartTime == null || itemStickEndTime == null || stick == null) {
             return false;
         }
-        tacLogger.info("日期不符合：" + JSON.toJSONString(columnCenterDataRuleDTO));
-        tacLogger.info("比对结果：" + nowDate.after(itemScheduleStartTime) + "|" + nowDate.before(itemScheduleEndTime) + "|" + nowDate.after(itemStickStartTime) + "|" + nowDate.before(itemStickEndTime));
-        tacLogger.info("格式化时间" + this.transform(nowDate) + "|" + this.transform(itemScheduleStartTime) + "|" + this.transform(itemScheduleEndTime) + "|" + this.transform(itemStickStartTime) + "|" + this.transform(itemStickEndTime));
-
         return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime) && nowDate.after(itemStickStartTime) && nowDate.before(itemStickEndTime);
     }
 
@@ -241,8 +214,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(entryPromotionPrice)) {
             centerDataSetItemRuleDTOS.addAll(entryPromotionPrice);
         }
-        tacLogger.info("entryChannelPriceNew：" + JSON.toJSONString(entryChannelPriceNew));
-        tacLogger.info("entryPromotionPrice：" + JSON.toJSONString(entryPromotionPrice));
         return centerDataSetItemRuleDTOS;
     }
 
