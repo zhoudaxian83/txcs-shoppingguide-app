@@ -6,6 +6,8 @@ import com.taobao.eagleeye.EagleEye;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
+import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
@@ -27,8 +29,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class SupermarketHallBottomService {
     private static Logger logger = LoggerProxy.getLogger(SupermarketHallIGraphSearchServiceImpl.class);
 
-    private static final AtomicLong bottomCounter = new AtomicLong(0);
-
     private static final Map<String, AtomicLong> bottomCounterMap = new ConcurrentHashMap<>();
 
     @Autowired
@@ -38,6 +38,7 @@ public class SupermarketHallBottomService {
         if(!satisfyBottom(resourceId, scheduleId)) {
             return;
         }
+        Long writeBottomDataStart = System.currentTimeMillis();
         String cacheKey = getCacheKey(resourceId, scheduleId);
         try {
             //defaultTair的namespace是184
@@ -48,9 +49,20 @@ public class SupermarketHallBottomService {
             }
             ResultCode resultCode = defaultTair.getMultiClusterTairManager().put(defaultTair.getNameSpace(), cacheKey, JSON.toJSONString(generalItemList), 0, 60 * 60 * 24);
             if (!resultCode.isSuccess()) {
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|writeBottomData|" + Logger.isEagleEyeTest() + "|error")
+                        .kv("cacheKey", cacheKey)
+                        .error();
                 logger.error("writeBottomData失败，traceId:" + EagleEye.getTraceId() + "," + "cacheKey: " + cacheKey);
+            } else {
+                Long writeBottomDataEnd = System.currentTimeMillis();
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|writeBottomData|" + Logger.isEagleEyeTest() + "|success|" + (writeBottomDataEnd - writeBottomDataStart))
+                        .kv("cacheKey", cacheKey)
+                        .error();
             }
         } catch (Exception e) {
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|writeBottomData|" + Logger.isEagleEyeTest() + "|exception")
+                    .kv("cacheKey", cacheKey)
+                    .error();
             logger.error("writeBottomData异常，traceId:" + EagleEye.getTraceId() + "," + "cacheKey: " + cacheKey, e);
         }
     }
@@ -59,22 +71,36 @@ public class SupermarketHallBottomService {
         if(StringUtils.isBlank(resourceId) || StringUtils.isBlank(scheduleId)) {
             return new ArrayList<>();
         }
+        Long readBottomDataStart = System.currentTimeMillis();
         String cacheKey = getCacheKey(resourceId, scheduleId);
         try {
             TairManager defaultTair = tairFactorySpi.getDefaultTair();
             if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null) {
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|readBottomData|" + Logger.isEagleEyeTest() + "|error")
+                        .kv("cacheKey", cacheKey)
+                        .error();
                 logger.error("tairFactorySpi.getDefaultTair fail, traceId:" + EagleEye.getTraceId());
                 return new ArrayList<>();
             }
             Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(defaultTair.getNameSpace(), cacheKey);
             if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
                     && dataEntryResult.getValue().getValue() != null) {
+                Long readBottomDataEnd = System.currentTimeMillis();
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|readBottomData|" + Logger.isEagleEyeTest() + "|success|" + (readBottomDataEnd - readBottomDataStart))
+                        .kv("cacheKey", cacheKey)
+                        .error();
                 return JSON.parseArray(String.valueOf(dataEntryResult.getValue().getValue()), GeneralItem.class);
             } else {
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|readBottomData|" + Logger.isEagleEyeTest() + "|error")
+                        .kv("cacheKey", cacheKey)
+                        .error();
                 logger.error( "readBottomData失败，traceId:" + EagleEye.getTraceId() + "," + "cacheKey: " + cacheKey);
                 return new ArrayList<>();
             }
         } catch (Exception e) {
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|readBottomData|" + Logger.isEagleEyeTest() + "|exception")
+                    .kv("cacheKey", cacheKey)
+                    .error();
             logger.error("readBottomData异常，traceId:" + EagleEye.getTraceId() + "," + "cacheKey: " + cacheKey, e);
         }
         return new ArrayList<>();

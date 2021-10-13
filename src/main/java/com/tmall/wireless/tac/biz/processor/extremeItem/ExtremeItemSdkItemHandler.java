@@ -86,7 +86,6 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
             //查询captain获取商品渲染信息
             Map<Long, ItemDTO> itemDTOMap = supermarketHallRenderService.batchQueryItem(itemIds, supermarketHallContext);
-            logger.info("==========itemDTOs: " + JSON.toJSONString(itemDTOMap));
 
             //进行组间排序
             groupSortDomainService.groupSort(itemConfigGroups, itemIds, supermarketHallContext);
@@ -97,11 +96,9 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
             //组内曝光比例选品
             Map<Integer, ItemConfig> afterPickGroupMap = itemPickService.pickItems(itemConfigGroups, itemSoldOutMap);
-            logger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
 
             //构建响应对象
             generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
-            logger.info("=========generalItems:" + JSON.toJSONString(generalItems));
 
             //写打底数据
             if(CollectionUtils.isNotEmpty(generalItems) && generalItems.size() == itemConfigGroups.size()) {
@@ -110,10 +107,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
                 HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|success|" + (mainProcessEnd - mainProcessStart))
                         .error();
             } else {
-                HadesLogUtil.stream("ExtremeItemSdkItemHandler|lossData.bottom|" + Logger.isEagleEyeTest() + "|bottom")
-                        .error();
                 generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId());
-                logger.info("=========readBottomData:" + JSON.toJSONString(generalItems));
             }
             return Flowable.just(TacResult.newResult(generalItems));
 
@@ -123,8 +117,6 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
                     .error();
             logger.error("ExtremeItemSdkItemHandler error, traceId:" + EagleEye.getTraceId(), e);
 
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler|exception.bottom|" + Logger.isEagleEyeTest() + "|bottom")
-                    .error();
             if(supermarketHallContext != null) {
                 generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId());
             }
