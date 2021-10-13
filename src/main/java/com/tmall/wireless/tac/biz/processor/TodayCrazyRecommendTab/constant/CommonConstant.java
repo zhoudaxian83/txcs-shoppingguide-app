@@ -24,4 +24,9 @@ public class CommonConstant {
      * 通透价
      */
     public static final String TODAY_PROMOTION_FEATURED = "today_promotion_featured";
+
+    /**
+     * ald资源位信息
+     */
+    public static final String ITEM_ALD_RES_ID = "7337863";
 }

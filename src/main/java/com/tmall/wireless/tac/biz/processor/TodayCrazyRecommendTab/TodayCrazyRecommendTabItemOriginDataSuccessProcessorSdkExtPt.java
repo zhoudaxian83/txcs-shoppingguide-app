@@ -12,6 +12,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.AldService;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TairCacheUtil;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.util.CommonUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -40,6 +41,9 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     @Autowired
     TairCacheUtil tairCacheUtil;
 
+    @Autowired
+    AldService aldService;
+
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         // 1,融合置顶商品；2，商品去重处理  直接把入参中的置顶商品置顶，每次查询进行去重处理
@@ -54,6 +58,8 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         boolean isFirstPage = (boolean) sgFrameworkContextItem.getUserParams().get("isFirstPage");
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
+        //todo 加入阿拉丁排序方式
+        this.sortAld();
         sgFrameworkContextItem.getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, CommonUtil.buildItemIdAndCacheKey(itemEntities));
         tacLogger.info("topList：" + JSON.toJSONString(topList));
         tacLogger.info("TPP返回数据条数：" + itemEntities.size());
@@ -86,6 +92,14 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
         //tpp请求成功写入缓存，供失败打底使用
         tairCacheUtil.process(itemFailProcessorRequest);
+    }
+
+    /**
+     * 根据ald配置排序
+     */
+    private void sortAld() {
+        List<Map<String, Object>> mapList = aldService.getAldData();
+        tacLogger.info("阿拉丁排序信息：" + JSON.toJSONString(mapList));
     }
 
     private List<ItemEntity> mock() {
