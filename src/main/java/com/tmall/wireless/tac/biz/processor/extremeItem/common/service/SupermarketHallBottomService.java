@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
@@ -27,14 +29,16 @@ public class SupermarketHallBottomService {
 
     private static final AtomicLong bottomCounter = new AtomicLong(0);
 
+    private static final Map<String, AtomicLong> bottomCounterMap = new ConcurrentHashMap<>();
+
     @Autowired
     TairFactorySpi tairFactorySpi;
 
-    public void writeBottomData(String resourceId, List<GeneralItem> generalItemList) {
-        if(!satisfyBottom()) {
+    public void writeBottomData(String resourceId, String scheduleId, List<GeneralItem> generalItemList) {
+        if(!satisfyBottom(resourceId, scheduleId)) {
             return;
         }
-        String cacheKey = getCacheKey(resourceId);
+        String cacheKey = getCacheKey(resourceId, scheduleId);
         try {
             //defaultTair的namespace是184
             TairManager defaultTair = tairFactorySpi.getDefaultTair();
@@ -51,11 +55,11 @@ public class SupermarketHallBottomService {
         }
     }
 
-    public List<GeneralItem> readBottomData(String resourceId) {
-        if(StringUtils.isBlank(resourceId)) {
+    public List<GeneralItem> readBottomData(String resourceId, String scheduleId) {
+        if(StringUtils.isBlank(resourceId) || StringUtils.isBlank(scheduleId)) {
             return new ArrayList<>();
         }
-        String cacheKey = getCacheKey(resourceId);
+        String cacheKey = getCacheKey(resourceId, scheduleId);
         try {
             TairManager defaultTair = tairFactorySpi.getDefaultTair();
             if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null) {
@@ -76,11 +80,11 @@ public class SupermarketHallBottomService {
         return new ArrayList<>();
     }
 
-    private String getCacheKey(String resourceId, String areaId) {
+    private String getCacheKey(String resourceId, String scheduleId) {
         if(!RpmContants.enviroment.isOnline()) {
-            return "pre_hall_bottom_" + resourceId + "_" + areaId;
+            return "pre_hall_bottom_" + resourceId + "_" + scheduleId;
         }
-        return "hall_bottom_" + resourceId + "_" + areaId;
+        return "hall_bottom_" + resourceId + "_" + scheduleId;
     }
 
     private String getCacheKey(String resourceId) {
@@ -90,9 +94,9 @@ public class SupermarketHallBottomService {
         return "hall_bottom_" + resourceId;
     }
 
-    public boolean satisfyBottom() {
-        long count = bottomCounter.getAndAdd(1);
-        return count % SupermarketHallSwitch.bottomCounterCycle == 0;
+    public boolean satisfyBottom(String resourceId, String scheduleId) {
+        AtomicLong counter = bottomCounterMap.putIfAbsent(resourceId + "_" + scheduleId, new AtomicLong(0));
+        return counter.getAndAdd(1) % SupermarketHallSwitch.bottomCounterCycle == 0;
     }
 
 }

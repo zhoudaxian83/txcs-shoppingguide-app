@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
+import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,8 @@ public class SupermarketHallContext {
     private String smAreaId;
     private String currentResourceId;
     private String currentScheduleId;
+
+    private String previewTime;
     /**
      * 运营手工配置的数据
      */
@@ -44,10 +47,14 @@ public class SupermarketHallContext {
             supermarketHallContext.setUserId(requestContext4Ald.getUserInfo().getUserId());
             supermarketHallContext.setUserNick(requestContext4Ald.getUserInfo().getNick());
         }
-        //初始化区域ID
         if(requestContext4Ald.getAldParam() != null) {
+            //初始化区域ID
             String smAreaId = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "330100");
             supermarketHallContext.setSmAreaId(smAreaId);
+
+            //初始化预览时间
+            supermarketHallContext.setPreviewTime(PageUrlUtil.getParamFromCurPageUrl(requestContext4Ald.getAldParam(), "previewTime"));
+
         }
 
         //初始化当前资源位ID
@@ -61,7 +68,6 @@ public class SupermarketHallContext {
             JSONObject tacParamsMap = JSON.parseObject(tacParams);
             supermarketHallContext.setTacParamsMap(tacParamsMap);
         }
-        //TODO 言武 添加预览时间
 
         //初始化运营手工配置的数据
         supermarketHallContext.setAldManualConfigDataList((List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA));

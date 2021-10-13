@@ -89,7 +89,7 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
     }
 
     private Map<Long, ItemDTO> queryItem(List<Long> itemIds, SupermarketHallContext supermarketHallContext) {
-        RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext.getSmAreaId(),null, supermarketHallContext.getUserId());
+        RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext.getSmAreaId(), supermarketHallContext.getPreviewTime(), supermarketHallContext.getUserId());
         logger.info("SupermarketHallRenderServiceImpl_queryItem:" + JSON.toJSONString(renderRequest));
         SPIResult<List<ItemDTO>> itemDTOsResult = renderSpi.query(renderRequest);
         if(itemDTOsResult.isSuccess()) {

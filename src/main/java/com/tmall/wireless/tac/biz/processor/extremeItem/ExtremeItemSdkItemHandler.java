@@ -4,15 +4,12 @@ import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.eagleeye.EagleEye;
-import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
-import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
-import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallBottomService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallIGraphSearchService;
@@ -27,7 +24,6 @@ import com.tmall.wireless.tac.biz.processor.extremeItem.domain.service.GroupSort
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.service.ItemPickService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.service.ItemGmvService;
 import com.tmall.wireless.tac.client.common.TacResult;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
@@ -37,7 +33,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,14 +48,9 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
     Logger logger = LoggerProxy.getLogger(ExtremeItemSdkItemHandler.class);
 
-    public static final int ASG_NAMESPACE = 625;
     private static final Integer tenThousand = 10000;
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
-    @Autowired
-    TacLogger tacLogger;
-    @Autowired
-    RenderSpi renderSpi;
     @Autowired
     GroupSortDomainService groupSortDomainService;
     @Autowired
@@ -114,17 +104,17 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             logger.info("=========generalItems:" + JSON.toJSONString(generalItems));
 
             //写打底数据
-            //if(CollectionUtils.isNotEmpty(generalItems) && generalItems.size() == itemConfigGroups.size()) {
-                /*supermarketHallBottomService.writeBottomData(supermarketHallContext.getCurrentResourceId(), generalItems);
+            if(CollectionUtils.isNotEmpty(generalItems) && generalItems.size() == itemConfigGroups.size()) {
+                supermarketHallBottomService.writeBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId(), generalItems);
                 Long mainProcessEnd = System.currentTimeMillis();
                 HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|success|" + (mainProcessEnd - mainProcessStart))
-                        .error();*/
-            //} else {
-                HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess.bottom|" + Logger.isEagleEyeTest() + "|bottom")
                         .error();
-                generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId());
-            logger.info("=========readBottomData:" + JSON.toJSONString(generalItems));
-            //}
+            } else {
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|lossData.bottom|" + Logger.isEagleEyeTest() + "|bottom")
+                        .error();
+                generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId());
+                logger.info("=========readBottomData:" + JSON.toJSONString(generalItems));
+            }
             return Flowable.just(TacResult.newResult(generalItems));
 
         } catch (Exception e) {
@@ -133,10 +123,10 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
                     .error();
             logger.error("ExtremeItemSdkItemHandler error, traceId:" + EagleEye.getTraceId(), e);
 
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess.bottom|" + Logger.isEagleEyeTest() + "|bottom")
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|exception.bottom|" + Logger.isEagleEyeTest() + "|bottom")
                     .error();
             if(supermarketHallContext != null) {
-                generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId());
+                generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId());
             }
         }
         return Flowable.just(TacResult.newResult(generalItems));
