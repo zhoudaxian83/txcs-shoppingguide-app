@@ -30,11 +30,12 @@ public class DetailSwitch {
             put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(),"{\"backUpWriteRate\":0,\"openBackUp\":false,"
                 + "\"sizeDTO\":{\"max\":2,\"min\":1},\"tppId\":28155}");
 
-            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), "{\"backUpWriteRate\":1,\"openBackUp\":true,"
+            put(RecTypeEnum.SIMILAR_ITEM_CONTENT_ITEM.getType(), "{\"backUpWriteRate\":1,\"openBackUp\":true,"
                 + "\"sizeDTO\":{\"max\":6,\"min\":6},\"tppId\":27506}");
 
-            put(RecTypeEnum.SIMILAR_ITEM_CONTENT_ITEM.getType(),"{\"backUpWriteRate\":0,\"openBackUp\":false,"
-                + "\"sizeDTO\":{\"max\":6,\"min\":6},\"tppId\":21174}");
+            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), "{\"backUpWriteRate\":0,\"openBackUp\":false,"
+                    + "\"sizeDTO\":{\"max\":6,\"min\":6},\"tppId\":21174}");
+
         }
     };
 
