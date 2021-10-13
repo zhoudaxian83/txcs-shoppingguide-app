@@ -29,4 +29,14 @@ public class CommonConstant {
      * ald资源位信息
      */
     public static final String ITEM_ALD_RES_ID = "7337863";
+
+    /**
+     * 今日疯抢渠道专享价缓存前缀
+     */
+    public static final String channelPriceNewPrefix = "channelPriceNew_";
+
+    /**
+     * 今日疯抢单品优惠价(通投价)缓存前缀
+     */
+    public static final String promotionPricePrefix = "promotionPrice_";
 }

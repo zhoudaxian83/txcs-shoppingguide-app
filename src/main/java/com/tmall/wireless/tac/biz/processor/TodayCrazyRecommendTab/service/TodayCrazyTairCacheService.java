@@ -18,24 +18,37 @@ import com.tmall.txcs.gs.model.model.dto.EntityDTO;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ecs.html.S;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 @Component
-public class TodayCrazyTairCacheUtil {
+public class TodayCrazyTairCacheService {
+    private static final String[] logicalArr = {"HD", "HB", "HN", "HZ", "XN"};
 
     public static final int SAMPLING_INTERVAL = 10;
 
     private static final AtomicLong counter = new AtomicLong(0L);
+
+    private static final BizScenario bizScenario = BizScenario.valueOf(
+            ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+            ScenarioConstantApp.LOC_TYPE_B2C,
+            ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
+    );
 
     @Autowired
     TairFactorySpi tairFactorySpi;
@@ -47,12 +60,6 @@ public class TodayCrazyTairCacheUtil {
     String originDataSuccessKey = "originDataSuccess";
 
     public OriginDataDTO<ItemEntity> process(ItemFailProcessorRequest itemFailProcessorRequest) {
-
-        BizScenario bizScenario = BizScenario.valueOf(
-                ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-                ScenarioConstantApp.LOC_TYPE_B2C,
-                ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
-        );
         int interval = Optional.of(itemFailProcessorRequest)
                 .map(ItemFailProcessorRequest::getSgFrameworkContextItem)
                 .map(SgFrameworkContextItem::getItemMetaInfo)
@@ -167,13 +174,90 @@ public class TodayCrazyTairCacheUtil {
 
 
     /**
-     * 大于3条做缓存
-     *
      * @param originDataDTO
      * @param <T>
      * @return
      */
     protected <T extends EntityDTO> boolean checkSuccess(OriginDataDTO<T> originDataDTO) {
         return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult());
+    }
+
+    public String getTairManager(String tairKey) {
+        TairManager tairManager = tairFactorySpi.getOriginDataFailProcessTair();
+        if (tairManager == null || tairManager.getMultiClusterTairManager() == null || tairManager.getNameSpace() <= 0) {
+            return null;
+        }
+        Result<DataEntry> dataEntryResult = tairManager.getMultiClusterTairManager().get(tairManager.getNameSpace(), tairKey);
+        String value = Optional.ofNullable(dataEntryResult).map(Result::getValue).map(DataEntry::getValue).map(Object::toString).orElse("");
+        if (StringUtils.isEmpty(value)) {
+            return null;
+        }
+        return value;
+    }
+
+    public Object getSortItems() {
+        this.getEntryChannelPriceNew();
+        this.getEntryPromotionPrice();
+        return null;
+    }
+
+    /**
+     * 渠道立减商品
+     */
+    public void getEntryChannelPriceNew() {
+        String channelPriceKey = getChannelPriceNewKey();
+        tacLogger.info("channelPriceKey" + channelPriceKey);
+        String value = this.getTairManager(channelPriceKey);
+        tacLogger.info("getEntryChannelPriceNew" + value);
+    }
+
+    /**
+     * Merge单品折扣价商品
+     */
+    public void getEntryPromotionPrice() {
+        String promotionPriceKey = getPromotionPriceKey();
+        tacLogger.info("promotionPriceKey" + promotionPriceKey);
+        String value = this.getTairManager(promotionPriceKey);
+
+        tacLogger.info("getEntryPromotionPrice" + value);
+    }
+
+
+    private String getRandomLogical() {
+        try {
+            int index = new Random().nextInt(logicalArr.length);
+            return logicalArr[index];
+        } catch (Exception e) {
+        }
+        return logicalArr[0];
+    }
+
+    private String getChannelPriceNewKey() {//channelPrice_XN_pre
+        return this.createKey(CommonConstant.channelPriceNewPrefix, getRandomLogical());
+    }
+
+    private String getPromotionPriceKey() {//channelPrice_XN_pre
+        return this.createKey(CommonConstant.promotionPricePrefix, getRandomLogical());
+    }
+
+    public String createKey(String prefix, Object... args) {
+        try {
+            checkArgument(args.length > 0, "key args.length can not be 0");
+            StringBuilder buf = new StringBuilder(prefix);
+            for (Object arg : args) {
+                buf.append(String.valueOf(checkNotNull(arg, "key arg"))).append('_');
+            }
+            // 用于预发环境测试(新的key)
+            if (RpmContants.enviroment.isPreline()) {
+                buf.append("pre_");
+            }
+            return buf.substring(0, buf.length() - 1);
+        } catch (Exception e) {
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                    .kv("step", logKey)
+                    .kv("errorCode", "GoCreateKeyExc")
+                    .error();
+        }
+        return "";
     }
 }
