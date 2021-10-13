@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.gsh.itemsetrecommend;
+package com.tmall.wireless.tac.biz.processor.gsh.itemrecommend;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +22,10 @@ import org.slf4j.LoggerFactory;
  */
 @SdkExtension(bizId = HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
     useCase = HallScenarioConstant.HALL_SCENARIO_USE_CASE_GSH,
-    scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_GSH_ITEM_SET_RECOMMEND)
-public class GshItemSetRecommendBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt implements BuildItemVoSdkExtPt {
+    scenario = HallScenarioConstant.HALL_SCENARIO_SCENARIO_GSH_ITEM_RECOMMEND)
+public class GshItemRecommendBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt implements BuildItemVoSdkExtPt {
 
-    Logger logger = LoggerFactory.getLogger(GshItemSetRecommendBuildItemVoSdkExtPt.class);
+    Logger logger = LoggerFactory.getLogger(GshItemRecommendBuildItemVoSdkExtPt.class);
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
@@ -45,7 +45,7 @@ public class GshItemSetRecommendBuildItemVoSdkExtPt extends DefaultBuildItemVoSd
         }
         ItemEntityVO itemEntityVO = process.getValue();
         if (itemEntityVO != null) {
-            itemEntityVO.put("solutionName", "gshItemSetRecommend");
+            itemEntityVO.put("solutionName", "gshItemRecommend");
             itemEntityVO.put("currentResourceId", String.valueOf(aldCurrentResId));
             Long itemId = itemEntityVO.getItemId();
             Map<String, Object> stringObjectMap = staticMap.get(itemId);
