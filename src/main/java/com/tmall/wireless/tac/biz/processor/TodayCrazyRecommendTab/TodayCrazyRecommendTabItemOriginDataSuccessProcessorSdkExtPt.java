@@ -2,6 +2,8 @@ package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataRuleDTO;
+import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataSuccessProcessorSdkExtPt;
@@ -13,15 +15,20 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.TodayCrazySortItemEntity;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TodayCrazyTairCacheService;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.util.CommonUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created from template by 罗俊冲 on 2021-09-23 14:14:31.
@@ -53,9 +60,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         todayCrazyTairCacheService.process(itemFailProcessorRequest);
         boolean isFirstPage = (boolean) originDataProcessRequest.getSgFrameworkContextItem().getUserParams().get("isFirstPage");
         String tabType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", "");
+        System.out.println("置顶执行完成前：" + JSON.toJSONString(originDataDTO.getResult()));
         this.doTopItems(originDataDTO, originDataProcessRequest.getSgFrameworkContextItem(), isFirstPage);
+        System.out.println("置顶执行完成后：" + JSON.toJSONString(originDataDTO.getResult()));
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
-            this.doItemSort(originDataDTO, originDataProcessRequest.getSgFrameworkContextItem(), isFirstPage);
+            this.itemSort(originDataDTO, originDataProcessRequest.getSgFrameworkContextItem(), isFirstPage);
+            System.out.println("坑位执行完成后：" + JSON.toJSONString(originDataDTO.getResult()));
         }
         return originDataDTO;
     }
@@ -109,14 +119,102 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @param sgFrameworkContextItem
      * @param isFirstPage
      */
-    private void doItemSort(OriginDataDTO<ItemEntity> originDataDTO, SgFrameworkContextItem sgFrameworkContextItem, boolean isFirstPage) {
+    private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, SgFrameworkContextItem sgFrameworkContextItem, boolean isFirstPage) {
         List<ItemEntity> itemEntities = originDataDTO.getResult();
-        Object o = todayCrazyTairCacheService.getSortItems();
+        List<ColumnCenterDataSetItemRuleDTO> sortItems = this.getSortItems();
+        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = this.getNeedEnterDataSetItemRuleDTOS(sortItems);
+        List<ColumnCenterDataSetItemRuleDTO> needEnterDataSetItemRuleDTOS = pair.getRight();
+        List<Long> itemIdList = pair.getLeft();
+        //去重原有的
+        itemEntities.removeIf(itemEntity -> itemIdList.contains(itemEntity.getItemId()));
+        tacLogger.info("过滤后效果itemStickEndTime：" + JSON.toJSONString(needEnterDataSetItemRuleDTOS));
         //只有首页进行置顶操作，但每一页需要去重操作
-        if (isFirstPage) {
-
+        if (isFirstPage && CollectionUtils.isNotEmpty(needEnterDataSetItemRuleDTOS)) {
+            //资源位操作
+            originDataDTO.setResult(this.doItemSort(itemEntities, needEnterDataSetItemRuleDTOS));
         }
+    }
 
+    private List<ItemEntity> doItemSort(List<ItemEntity> itemEntities, List<ColumnCenterDataSetItemRuleDTO> needEnterDataSetItemRuleDTOS) {
+        int total = itemEntities.size() + needEnterDataSetItemRuleDTOS.size();
+        List<TodayCrazySortItemEntity> todayCrazySortItemEntities = Lists.newArrayList();
+        itemEntities.forEach(itemEntity -> {
+            TodayCrazySortItemEntity todayCrazySortItemEntity = new TodayCrazySortItemEntity();
+            todayCrazySortItemEntity.setItemEntity(itemEntity);
+            todayCrazySortItemEntity.setIndex(CommonConstant.MAX_INDEX);
+            todayCrazySortItemEntities.add(todayCrazySortItemEntity);
+        });
+        needEnterDataSetItemRuleDTOS.forEach(columnCenterDataSetItemRuleDTO -> {
+            ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
+            TodayCrazySortItemEntity todayCrazySortItemEntity = new TodayCrazySortItemEntity();
+            ItemEntity itemEntity = new ItemEntity();
+            itemEntity.setO2oType("B2C");
+            itemEntity.setBizType("sm");
+            itemEntity.setItemId(columnCenterDataSetItemRuleDTO.getItemId());
+            itemEntity.setTop(true);
+            todayCrazySortItemEntity.setItemEntity(itemEntity);
+            if (columnCenterDataRuleDTO.getStick() > total) {
+                todayCrazySortItemEntity.setIndex(CommonConstant.MAX_INDEX);
+            } else {
+                todayCrazySortItemEntity.setIndex(columnCenterDataRuleDTO.getStick());
+            }
+            todayCrazySortItemEntities.add(todayCrazySortItemEntity);
+
+        });
+        return todayCrazySortItemEntities.stream().sorted(
+                Comparator.comparing(TodayCrazySortItemEntity::getIndex)).collect(
+                Collectors.toList()).stream().map(TodayCrazySortItemEntity::getItemEntity).collect(Collectors.toList());
+    }
+
+    /**
+     * 过滤出需要坑位信息
+     *
+     * @param columnCenterDataSetItemRuleDTOS
+     * @return
+     */
+    private Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> getNeedEnterDataSetItemRuleDTOS(List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS) {
+        List<ColumnCenterDataSetItemRuleDTO> needEnterDataSetItemRuleDTOS = Lists.newArrayList();
+        List<Long> itemList = Lists.newArrayList();
+        columnCenterDataSetItemRuleDTOS.forEach(columnCenterDataSetItemRuleDTO -> {
+            ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
+            if (this.isNeedSort(columnCenterDataRuleDTO) && !itemList.contains(columnCenterDataSetItemRuleDTO.getItemId())) {
+                itemList.add(columnCenterDataSetItemRuleDTO.getItemId());
+                needEnterDataSetItemRuleDTOS.add(columnCenterDataSetItemRuleDTO);
+            }
+        });
+        return Pair.of(itemList, needEnterDataSetItemRuleDTOS);
+    }
+
+    private boolean isNeedSort(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
+        Date nowDate = new Date();
+        if (columnCenterDataRuleDTO == null) {
+            return false;
+        }
+        Date itemScheduleStartTime = columnCenterDataRuleDTO.getItemScheduleStartTime();
+        Date itemScheduleEndTime = columnCenterDataRuleDTO.getItemScheduleEndTime();
+        Date itemStickStartTime = columnCenterDataRuleDTO.getItemStickStartTime();
+        Date itemStickEndTime = columnCenterDataRuleDTO.getItemStickEndTime();
+        Long stick = columnCenterDataRuleDTO.getStick();
+        if (itemScheduleStartTime == null || itemScheduleEndTime == null || itemStickStartTime == null || itemStickEndTime == null || stick == null) {
+            return false;
+        }
+        return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime) && nowDate.after(itemStickStartTime) && nowDate.before(itemStickEndTime);
+    }
+
+
+    private List<ColumnCenterDataSetItemRuleDTO> getSortItems() {
+        List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = Lists.newArrayList();
+        List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = todayCrazyTairCacheService.getEntryChannelPriceNew();
+        List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice = todayCrazyTairCacheService.getEntryPromotionPrice();
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(entryChannelPriceNew)) {
+            centerDataSetItemRuleDTOS.addAll(entryChannelPriceNew);
+        }
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(entryPromotionPrice)) {
+            centerDataSetItemRuleDTOS.addAll(entryPromotionPrice);
+        }
+        tacLogger.info("entryChannelPriceNew：" + JSON.toJSONString(entryChannelPriceNew));
+        tacLogger.info("entryPromotionPrice：" + JSON.toJSONString(entryPromotionPrice));
+        return centerDataSetItemRuleDTOS;
     }
 
 

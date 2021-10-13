@@ -203,34 +203,29 @@ public class TodayCrazyTairCacheService {
         if (jsonObject == null) {
             return null;
         }
-        return JSON.parseArray(JSONObject.toJSONString(jsonObject.get("dataSetItemRuleDTOList")), ColumnCenterDataSetItemRuleDTO.class);
+        Object dataSetItemRuleDTOList = jsonObject.get("dataSetItemRuleDTOList");
+        if (dataSetItemRuleDTOList == null) {
+            return null;
+        }
+        return JSON.parseArray(JSONObject.toJSONString(dataSetItemRuleDTOList), ColumnCenterDataSetItemRuleDTO.class);
 
     }
 
-    public Object getSortItems() {
-        this.getEntryChannelPriceNew();
-        this.getEntryPromotionPrice();
-        return null;
-    }
 
     /**
      * 渠道立减商品
      */
-    public void getEntryChannelPriceNew() {
+    public List<ColumnCenterDataSetItemRuleDTO> getEntryChannelPriceNew() {
         String channelPriceKey = getChannelPriceNewKey();
-        tacLogger.info("channelPriceKey" + channelPriceKey);
-        List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = this.getTairManager(channelPriceKey);
-        tacLogger.info("getEntryChannelPriceNew" + JSON.toJSONString(centerDataSetItemRuleDTOS));
+        return this.getTairManager(channelPriceKey);
     }
 
     /**
      * Merge单品折扣价商品
      */
-    public void getEntryPromotionPrice() {
+    public List<ColumnCenterDataSetItemRuleDTO> getEntryPromotionPrice() {
         String promotionPriceKey = getPromotionPriceKey();
-        tacLogger.info("promotionPriceKey" + promotionPriceKey);
-        List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = this.getTairManager(promotionPriceKey);
-        tacLogger.info("getEntryPromotionPrice" + JSON.toJSONString(centerDataSetItemRuleDTOS));
+        return this.getTairManager(promotionPriceKey);
     }
 
 

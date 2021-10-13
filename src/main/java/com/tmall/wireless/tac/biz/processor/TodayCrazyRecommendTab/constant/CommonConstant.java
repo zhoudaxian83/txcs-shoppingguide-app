@@ -11,6 +11,8 @@ public class CommonConstant {
     public static final String TODAY_PROMOTION = "today_promotion";
     public static final String ITEM_ID_AND_CACHE_KEYS = "ItemIdAndCacheKeys";
 
+    public static final Long MAX_INDEX = 10000L;
+
     /**
      * 来自算法
      */
