@@ -24,6 +24,10 @@ public class AldService {
     @Autowired
     TacLoggerImpl tacLogger;
 
+    public AldService(AldSpi aldSpi) {
+        this.aldSpi = aldSpi;
+    }
+
     public List<Map<String, Object>> getAldData() {
         Map<String, ResResponse> mapResponse = aldSpi.queryAldInfoSync(buildAldRequest());
         if (MapUtils.isNotEmpty(mapResponse)) {
