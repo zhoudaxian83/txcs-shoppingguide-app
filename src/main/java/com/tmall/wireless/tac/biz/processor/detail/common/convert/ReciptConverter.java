@@ -18,6 +18,7 @@ import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendVO.DetailEvent;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
+import com.tmall.wireless.tac.biz.processor.detail.model.config.DetailRequestConfig;
 import com.tmall.wireless.tac.biz.processor.detail.model.config.SizeDTO;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.FrontBackMapEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
@@ -50,7 +51,7 @@ public class ReciptConverter extends AbstractConverter<DetailRecContentResultVO>
         List<ContentVO> itemAndContentList) {
 
         //取大小限制
-        SizeDTO sizeDTO = DetailSwitch.requestConfigMap.get(recommendRequest.getRecType()).getSizeDTO();
+        SizeDTO sizeDTO = DetailRequestConfig.parse(recommendRequest.getRecType()).getSizeDTO();
 
         DetailRecContentResultVO detailRecContentResultVO=new DetailRecContentResultVO();
         detailRecContentResultVO.setEnableScroll(true);

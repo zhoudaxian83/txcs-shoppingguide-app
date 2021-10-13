@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.alibaba.fastjson.JSON;
+
 import com.google.common.collect.Sets;
 import com.taobao.csp.switchcenter.annotation.AppSwitch;
 import com.taobao.csp.switchcenter.annotation.NameSpace;
@@ -21,13 +23,19 @@ import com.tmall.wireless.tac.biz.processor.detail.model.config.SizeDTO;
 public class DetailSwitch {
 
     @AppSwitch(des = "详情推荐的限制推荐size", level = Switch.Level.p3)
-    public static Map<String, DetailRequestConfig> requestConfigMap=new HashMap<String,DetailRequestConfig>(){
+    public static Map<String, String> requestConfigMap=new HashMap<String,String>(){
         {
-            put(RecTypeEnum.RECIPE.getType(), new DetailRequestConfig(28151L,new SizeDTO(3,6)));
-            put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(),new DetailRequestConfig(28155L, new SizeDTO(1,2)));
-            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), new DetailRequestConfig(21174L,new SizeDTO(6,6)));
-            put(RecTypeEnum.SIMILAR_ITEM_CONTENT_ITEM.getType(), new DetailRequestConfig(27506L,new SizeDTO(6,6),true,1));
+            DetailRequestConfig detailRequestConfig = new DetailRequestConfig(28151L, new SizeDTO(3, 6));
+            put(RecTypeEnum.RECIPE.getType(), JSON.toJSONString(detailRequestConfig));
 
+            detailRequestConfig=new DetailRequestConfig(28155L, new SizeDTO(1,2));
+            put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(),JSON.toJSONString(detailRequestConfig));
+
+            detailRequestConfig=new DetailRequestConfig(21174L,new SizeDTO(6,6));
+            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), JSON.toJSONString(detailRequestConfig));
+
+            detailRequestConfig= new DetailRequestConfig(27506L,new SizeDTO(6,6),true,1);
+            put(RecTypeEnum.SIMILAR_ITEM_CONTENT_ITEM.getType(),JSON.toJSONString(detailRequestConfig));
         }
     };
 

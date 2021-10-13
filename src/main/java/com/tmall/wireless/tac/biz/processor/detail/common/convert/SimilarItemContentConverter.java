@@ -19,6 +19,7 @@ import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecContentResultVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendVO.DetailEvent;
+import com.tmall.wireless.tac.biz.processor.detail.model.config.DetailRequestConfig;
 import com.tmall.wireless.tac.biz.processor.detail.util.CommonUtil;
 import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections4.CollectionUtils;
@@ -70,7 +71,7 @@ public class SimilarItemContentConverter extends AbstractConverter<DetailRecCont
         //推荐内容
         detailRecContentResultVO.getResult().addAll(super
             .convertContentResult(recommendRequest, itemAndContentList.subList(0,
-                Math.min(DetailSwitch.requestConfigMap.get(recommendRequest.getRecType()).getSizeDTO().getMax()
+                Math.min(DetailRequestConfig.parse(recommendRequest.getRecType()).getSizeDTO().getMax()
                     , itemAndContentList.size())),
                 scmJoin));
 

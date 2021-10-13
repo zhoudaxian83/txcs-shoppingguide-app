@@ -12,6 +12,7 @@ import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.DetailConstant;
 import com.tmall.wireless.tac.biz.processor.detail.common.extabstract.AbstractDetailOriginDataRequestBuildSdkExtPt;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendRequest;
+import com.tmall.wireless.tac.biz.processor.detail.model.config.DetailRequestConfig;
 import com.tmall.wireless.tac.biz.processor.detail.util.CommonUtil;
 
 /**
@@ -27,7 +28,7 @@ public class O2ODetailItemOriginDataRequestBuildSdkExtPt extends AbstractDetailO
 
     @Override
     public Long getAppId(String recType, SgFrameworkContext sgFrameworkContextContent) {
-        return DetailSwitch.requestConfigMap.get(recType).getTppId();
+        return DetailRequestConfig.parse(recType).getTppId();
     }
 
     @Override

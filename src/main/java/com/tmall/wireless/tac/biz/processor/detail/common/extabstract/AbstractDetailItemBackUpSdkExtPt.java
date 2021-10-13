@@ -46,7 +46,7 @@ public class AbstractDetailItemBackUpSdkExtPt extends Register{
 
         DetailRecommendRequest detailRequest = DetailRecommendRequest.getDetailRequest(
             sgFrameworkContextItem.getTacContext());
-        DetailRequestConfig detailRequestConfig = DetailSwitch.requestConfigMap.get(detailRequest.getRecType());
+        DetailRequestConfig detailRequestConfig =DetailRequestConfig.parse(detailRequest.getRecType()) ;
 
         if (!detailRequestConfig.isOpenBackUp()) {
             return sgFrameworkContextItem;
