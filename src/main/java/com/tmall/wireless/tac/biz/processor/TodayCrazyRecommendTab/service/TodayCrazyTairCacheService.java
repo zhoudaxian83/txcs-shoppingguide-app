@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
+import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -181,18 +182,19 @@ public class TodayCrazyTairCacheService {
         return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult());
     }
 
-    public String getTairManager(String tairKey) {
+    public PmtRuleDataItemRuleDTO getTairManager(String tairKey) {
         TairManager tairManager = tairFactorySpi.getOriginDataFailProcessTair();
         if (tairManager == null || tairManager.getMultiClusterTairManager() == null || tairManager.getNameSpace() <= 0) {
             return null;
         }
         Result<DataEntry> dataEntryResult = tairManager.getMultiClusterTairManager().get(tairManager.getNameSpace(), tairKey);
-        tacLogger.info(tairKey+"tair原始结果"+JSON.toJSONString(dataEntryResult));
-        String value = Optional.ofNullable(dataEntryResult).map(Result::getValue).map(DataEntry::getValue).map(Object::toString).orElse("");
-        if (StringUtils.isEmpty(value)) {
+        if (!dataEntryResult.isSuccess() || dataEntryResult.getValue() == null || dataEntryResult.getValue().getValue() == null) {
             return null;
         }
-        return value;
+        tacLogger.info(tairKey + "tair原始结果" + JSON.toJSONString(dataEntryResult.getValue().getValue()));
+        PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = (PmtRuleDataItemRuleDTO) dataEntryResult.getValue().getValue();
+
+        return pmtRuleDataItemRuleDTO;
     }
 
     public Object getSortItems() {
@@ -207,8 +209,8 @@ public class TodayCrazyTairCacheService {
     public void getEntryChannelPriceNew() {
         String channelPriceKey = getChannelPriceNewKey();
         tacLogger.info("channelPriceKey" + channelPriceKey);
-        String value = this.getTairManager(channelPriceKey);
-        tacLogger.info("getEntryChannelPriceNew" + value);
+        PmtRuleDataItemRuleDTO ruleDataItemRuleDTO = this.getTairManager(channelPriceKey);
+        tacLogger.info("getEntryChannelPriceNew" + JSON.toJSONString(ruleDataItemRuleDTO));
     }
 
     /**
@@ -217,9 +219,8 @@ public class TodayCrazyTairCacheService {
     public void getEntryPromotionPrice() {
         String promotionPriceKey = getPromotionPriceKey();
         tacLogger.info("promotionPriceKey" + promotionPriceKey);
-        String value = this.getTairManager(promotionPriceKey);
-
-        tacLogger.info("getEntryPromotionPrice" + value);
+        PmtRuleDataItemRuleDTO ruleDataItemRuleDTO = this.getTairManager(promotionPriceKey);
+        tacLogger.info("getEntryPromotionPrice" + JSON.toJSONString(ruleDataItemRuleDTO));
     }
 
 
