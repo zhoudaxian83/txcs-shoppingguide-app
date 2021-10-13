@@ -24,10 +24,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -198,9 +196,33 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (itemScheduleStartTime == null || itemScheduleEndTime == null || itemStickStartTime == null || itemStickEndTime == null || stick == null) {
             return false;
         }
+        //mock
+        if (columnCenterDataRuleDTO.getDataRuleId() == 28036L) {
+            Calendar c = Calendar.getInstance();
+            // set Month
+            // MONTH starts with 0 i.e. ( 0 - Jan)
+            c.set(Calendar.MONTH, 11);
+
+            // set Date
+            c.set(Calendar.DATE, 05);
+
+            // set Year
+            c.set(Calendar.YEAR, 2022);
+
+            // creating a date object with specified time.
+            Date mockDate = c.getTime();
+            columnCenterDataRuleDTO.setItemStickEndTime(mockDate);
+        }
         tacLogger.info("日期不符合：" + JSON.toJSONString(columnCenterDataRuleDTO));
-        tacLogger.info("比对结果：" + nowDate.after(itemScheduleStartTime) +"|"+ nowDate.before(itemScheduleEndTime) +"|"+  nowDate.after(itemStickStartTime) +"|"+ nowDate.before(itemStickEndTime));
+        tacLogger.info("比对结果：" + nowDate.after(itemScheduleStartTime) + "|" + nowDate.before(itemScheduleEndTime) + "|" + nowDate.after(itemStickStartTime) + "|" + nowDate.before(itemStickEndTime));
+        tacLogger.info("格式化时间" + this.transform(nowDate) + "|" + this.transform(itemScheduleStartTime) + "|" + this.transform(itemScheduleEndTime) + "|" + this.transform(itemStickStartTime) + "|" + this.transform(itemStickEndTime));
+
         return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime) && nowDate.after(itemStickStartTime) && nowDate.before(itemStickEndTime);
+    }
+
+    private String transform(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  // 设置日期格式
+        return simpleDateFormat.format(date);  // 格式转换
     }
 
 
