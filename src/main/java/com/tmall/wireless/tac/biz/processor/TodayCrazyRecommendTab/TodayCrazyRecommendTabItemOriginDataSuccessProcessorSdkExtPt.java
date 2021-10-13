@@ -134,14 +134,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     }
 
     private List<ItemEntity> doItemSort(List<ItemEntity> itemEntities, List<ColumnCenterDataSetItemRuleDTO> needEnterDataSetItemRuleDTOS) {
-        int total = itemEntities.size() + needEnterDataSetItemRuleDTOS.size();
         List<TodayCrazySortItemEntity> todayCrazySortItemEntities = Lists.newArrayList();
-        itemEntities.forEach(itemEntity -> {
-            TodayCrazySortItemEntity todayCrazySortItemEntity = new TodayCrazySortItemEntity();
-            todayCrazySortItemEntity.setItemEntity(itemEntity);
-            todayCrazySortItemEntity.setIndex(CommonConstant.MAX_INDEX);
-            todayCrazySortItemEntities.add(todayCrazySortItemEntity);
-        });
         needEnterDataSetItemRuleDTOS.forEach(columnCenterDataSetItemRuleDTO -> {
             ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
             TodayCrazySortItemEntity todayCrazySortItemEntity = new TodayCrazySortItemEntity();
@@ -151,17 +144,28 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             itemEntity.setItemId(columnCenterDataSetItemRuleDTO.getItemId());
             itemEntity.setTop(true);
             todayCrazySortItemEntity.setItemEntity(itemEntity);
-            if (columnCenterDataRuleDTO.getStick() > total) {
-                todayCrazySortItemEntity.setIndex(CommonConstant.MAX_INDEX);
-            } else {
-                todayCrazySortItemEntity.setIndex(columnCenterDataRuleDTO.getStick());
-            }
+            todayCrazySortItemEntity.setIndex(columnCenterDataRuleDTO.getStick());
             todayCrazySortItemEntities.add(todayCrazySortItemEntity);
-
         });
-        return todayCrazySortItemEntities.stream().sorted(
+
+        //定坑排序法
+        List<TodayCrazySortItemEntity> todayCrazySortItemEntities2 = todayCrazySortItemEntities.stream().sorted(
                 Comparator.comparing(TodayCrazySortItemEntity::getIndex)).collect(
-                Collectors.toList()).stream().map(TodayCrazySortItemEntity::getItemEntity).collect(Collectors.toList());
+                Collectors.toList());
+        for (TodayCrazySortItemEntity todayCrazySortItemEntity : todayCrazySortItemEntities2) {
+            long index = todayCrazySortItemEntity.getIndex();
+            if (todayCrazySortItemEntity.getIndex() > itemEntities.size()) {
+                //坑位大于总条数放末尾
+                itemEntities.add(todayCrazySortItemEntity.getItemEntity());
+            } else {
+                itemEntities.add((int) index - 1, todayCrazySortItemEntity.getItemEntity());
+            }
+        }
+        return itemEntities;
+        //顺序排序法
+//        return todayCrazySortItemEntities.stream().sorted(
+//                Comparator.comparing(TodayCrazySortItemEntity::getIndex)).collect(
+//                Collectors.toList()).stream().map(TodayCrazySortItemEntity::getItemEntity).collect(Collectors.toList());
     }
 
     /**
