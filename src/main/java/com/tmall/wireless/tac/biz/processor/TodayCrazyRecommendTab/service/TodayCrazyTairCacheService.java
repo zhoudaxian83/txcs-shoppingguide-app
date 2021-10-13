@@ -187,6 +187,7 @@ public class TodayCrazyTairCacheService {
             return null;
         }
         Result<DataEntry> dataEntryResult = tairManager.getMultiClusterTairManager().get(tairManager.getNameSpace(), tairKey);
+        tacLogger.info(tairKey+"tair原始结果"+JSON.toJSONString(dataEntryResult));
         String value = Optional.ofNullable(dataEntryResult).map(Result::getValue).map(DataEntry::getValue).map(Object::toString).orElse("");
         if (StringUtils.isEmpty(value)) {
             return null;
