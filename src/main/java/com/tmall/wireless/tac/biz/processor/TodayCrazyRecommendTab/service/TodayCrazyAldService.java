@@ -24,9 +24,14 @@ public class TodayCrazyAldService {
     @Autowired
     TacLoggerImpl tacLogger;
 
+    public TodayCrazyAldService(AldSpi aldSpi) {
+        this.aldSpi = aldSpi;
+    }
+
     public List<Map<String, Object>> getAldData() {
-        tacLogger.info("aldSpi:"+aldSpi);
+        tacLogger.info("aldSpi：" + aldSpi);
         Map<String, ResResponse> mapResponse = aldSpi.queryAldInfoSync(buildAldRequest());
+        tacLogger.info("ald返回结果：" + JSON.toJSONString(mapResponse));
         if (MapUtils.isNotEmpty(mapResponse)) {
             List<Map<String, Object>> dataList = (List<Map<String, Object>>) mapResponse.get(Constant.ITEM_ALD_RES_ID).get("data");
             return dataList;
