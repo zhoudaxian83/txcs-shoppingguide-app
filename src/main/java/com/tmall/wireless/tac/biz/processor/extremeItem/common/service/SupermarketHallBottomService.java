@@ -95,7 +95,7 @@ public class SupermarketHallBottomService {
     }
 
     public boolean satisfyBottom(String resourceId, String scheduleId) {
-        AtomicLong counter = bottomCounterMap.putIfAbsent(resourceId + "_" + scheduleId, new AtomicLong(0));
+        AtomicLong counter = bottomCounterMap.computeIfAbsent(resourceId + "_" + scheduleId, v -> new AtomicLong(0));
         return counter.getAndAdd(1) % SupermarketHallSwitch.bottomCounterCycle == 0;
     }
 
