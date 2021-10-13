@@ -199,6 +199,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             return false;
         }
         tacLogger.info("日期不符合：" + JSON.toJSONString(columnCenterDataRuleDTO));
+        tacLogger.info("比对结果：" + nowDate.after(itemScheduleStartTime) +"|"+ nowDate.before(itemScheduleEndTime) +"|"+  nowDate.after(itemStickStartTime) +"|"+ nowDate.before(itemStickEndTime));
         return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime) && nowDate.after(itemStickStartTime) && nowDate.before(itemStickEndTime);
     }
 
