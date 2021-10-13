@@ -188,14 +188,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (columnCenterDataRuleDTO == null) {
             return false;
         }
-        Date itemScheduleStartTime = columnCenterDataRuleDTO.getItemScheduleStartTime();
-        Date itemScheduleEndTime = columnCenterDataRuleDTO.getItemScheduleEndTime();
-        Date itemStickStartTime = columnCenterDataRuleDTO.getItemStickStartTime();
-        Date itemStickEndTime = columnCenterDataRuleDTO.getItemStickEndTime();
-        Long stick = columnCenterDataRuleDTO.getStick();
-        if (itemScheduleStartTime == null || itemScheduleEndTime == null || itemStickStartTime == null || itemStickEndTime == null || stick == null) {
-            return false;
-        }
         //mock
         if (columnCenterDataRuleDTO.getDataRuleId() == 28036L) {
             Calendar c = Calendar.getInstance();
@@ -212,6 +204,15 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             // creating a date object with specified time.
             Date mockDate = c.getTime();
             columnCenterDataRuleDTO.setItemStickEndTime(mockDate);
+            tacLogger.info("MOCK时间");
+        }
+        Date itemScheduleStartTime = columnCenterDataRuleDTO.getItemScheduleStartTime();
+        Date itemScheduleEndTime = columnCenterDataRuleDTO.getItemScheduleEndTime();
+        Date itemStickStartTime = columnCenterDataRuleDTO.getItemStickStartTime();
+        Date itemStickEndTime = columnCenterDataRuleDTO.getItemStickEndTime();
+        Long stick = columnCenterDataRuleDTO.getStick();
+        if (itemScheduleStartTime == null || itemScheduleEndTime == null || itemStickStartTime == null || itemStickEndTime == null || stick == null) {
+            return false;
         }
         tacLogger.info("日期不符合：" + JSON.toJSONString(columnCenterDataRuleDTO));
         tacLogger.info("比对结果：" + nowDate.after(itemScheduleStartTime) + "|" + nowDate.before(itemScheduleEndTime) + "|" + nowDate.after(itemStickStartTime) + "|" + nowDate.before(itemStickEndTime));
