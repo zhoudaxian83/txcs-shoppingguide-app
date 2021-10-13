@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.detail.model.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author: guichen
@@ -10,6 +11,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class SizeDTO {
     private Integer min;
     private Integer max;
