@@ -34,10 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @SdkExtension(
         bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
@@ -107,12 +104,23 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("reservePrice", reservePrice);
+
+        List<String> singleFreeShipList = (List<String>) itemEntityVO.get("itemTags");
+        List<String> freeShipping = Arrays.asList("458434", "1670722");
+        itemEntityVO.put("isFreeShip", false);
+        if (CollectionUtils.isNotEmpty(singleFreeShipList)) {
+            singleFreeShipList.forEach(s -> {
+                if (freeShipping.contains(s)) {
+                    itemEntityVO.put("isFreeShip", true);
+                }
+            });
+        }
         String itemType = null;
         if (cacheKey != null) {
             itemType = this.getItemType(cacheKey);
             itemEntityVO.put("itemType", this.getItemType(cacheKey));
             //当前只区分algorithm或other
-            itemEntityVO.put("channel", this.getChannel(cacheKey));
+            //itemEntityVO.put("channel", this.getChannel(cacheKey));
         } else {
             tacLogger.info("vo获取tairKey为空");
         }
