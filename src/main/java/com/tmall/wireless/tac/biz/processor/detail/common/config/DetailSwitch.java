@@ -4,16 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.alibaba.fastjson.JSON;
-
 import com.google.common.collect.Sets;
 import com.taobao.csp.switchcenter.annotation.AppSwitch;
 import com.taobao.csp.switchcenter.annotation.NameSpace;
 import com.taobao.csp.switchcenter.bean.Switch;
 import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
-import com.tmall.wireless.tac.biz.processor.detail.model.config.DetailRequestConfig;
-import com.tmall.wireless.tac.biz.processor.detail.model.config.SizeDTO;
-
 /**
  * @author: guichen
  * @Data: 2021/9/10
@@ -39,10 +34,6 @@ public class DetailSwitch {
         }
     };
 
-    public static void main(String[] args) {
-        DetailRequestConfig detailRequestConfig = new DetailRequestConfig(28151L, new SizeDTO(3, 6));
-        System.out.println( JSON.toJSONString(detailRequestConfig));
-    }
     @AppSwitch(des = "忽略的营销类型", level = Switch.Level.p3)
     public static Set<String> ignorePromotionList= Sets.newHashSet("O2O_StraightDown");
 
