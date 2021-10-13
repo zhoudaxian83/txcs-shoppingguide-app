@@ -60,7 +60,6 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
         }
 
         SingleQueryResult singleQueryResult = queryResult.getSingleQueryResult();
-        logger.info("=========singleQueryResult:" + JSON.toJSONString(singleQueryResult));
         return handler.handleResponse(singleQueryResult);
     }
 }

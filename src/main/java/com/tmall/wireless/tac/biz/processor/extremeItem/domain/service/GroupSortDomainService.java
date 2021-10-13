@@ -30,13 +30,11 @@ public class GroupSortDomainService {
     public void groupSort(ItemConfigGroups itemConfigGroups, List<Long> itemIds, SupermarketHallContext supermarketHallContext) {
         if(itemConfigGroups.forceSort()) {
             itemConfigGroups.sortGroup();
-            logger.info("GroupSortDomainService_groupSort_itemConfigGroups_forceSort: " + JSON.toJSONString(itemConfigGroups));
             return;
         }
         //如果为空，默认days是0
         int days = supermarketHallContext.getTacParamsMap().getIntValue("gmvDays");
         raceSort(itemConfigGroups, itemIds, days);
-        logger.info("GroupSortDomainService_groupSort_itemConfigGroups_raceSort: " + JSON.toJSONString(itemConfigGroups));
     }
 
     /**

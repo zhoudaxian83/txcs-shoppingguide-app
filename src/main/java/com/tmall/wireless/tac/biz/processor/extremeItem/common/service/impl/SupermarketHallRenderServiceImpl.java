@@ -60,7 +60,7 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
                             }
                             return longItemDTOMap;
                         } catch (Exception e) {
-                            logger.error("batchQueryItem_catchException", e);
+                            logger.error("batchQueryItem_catchException, traceId:" + EagleEye.getTraceId(), e);
                             return new HashMap<Long, ItemDTO>();
                         } finally {
                             if (Thread.currentThread().getId() != callerId) {
@@ -89,8 +89,7 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
     }
 
     private Map<Long, ItemDTO> queryItem(List<Long> itemIds, SupermarketHallContext supermarketHallContext) {
-        RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext.getSmAreaId(),null, supermarketHallContext.getUserId());
-        logger.info("SupermarketHallRenderServiceImpl_queryItem:" + JSON.toJSONString(renderRequest));
+        RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext.getSmAreaId(), supermarketHallContext.getPreviewTime(), supermarketHallContext.getUserId());
         SPIResult<List<ItemDTO>> itemDTOsResult = renderSpi.query(renderRequest);
         if(itemDTOsResult.isSuccess()) {
             return itemDTOsResult.getData().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
@@ -106,8 +105,8 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
         if (StringUtils.isNotBlank(smAreaId) && !"0".equals(smAreaId)) {
             query.setAreaId(Long.valueOf(smAreaId));
         } else {
-            logger.warn("smAreaId is null" + smAreaId);
-            return null;
+            logger.warn("smAreaId is null, use 330110" + smAreaId);
+            query.setAreaId(330110L);
         }
         List<ItemId> itemIdList = itemIds.stream()
                 .map(itemId -> ItemId.valueOf(itemId, ItemId.ItemType.B2C))

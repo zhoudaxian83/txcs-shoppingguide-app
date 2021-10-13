@@ -34,16 +34,10 @@ public class Logger {
     }
 
     public void error(String msg) {
-        if(isEagleEyeTest()) {
-            return;
-        }
         this.logger.error(msg);
     }
 
     public void error(String msg, Throwable e) {
-        if(isEagleEyeTest()) {
-            return;
-        }
         this.logger.error(msg, e);
     }
 
