@@ -1,10 +1,13 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
+import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
@@ -182,7 +185,7 @@ public class TodayCrazyTairCacheService {
         return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult());
     }
 
-    public PmtRuleDataItemRuleDTO getTairManager(String tairKey) {
+    public List<ColumnCenterDataSetItemRuleDTO> getTairManager(String tairKey) {
         TairManager tairManager = tairFactorySpi.getOriginDataFailProcessTair();
         if (tairManager == null || tairManager.getMultiClusterTairManager() == null || tairManager.getNameSpace() <= 0) {
             return null;
@@ -192,7 +195,16 @@ public class TodayCrazyTairCacheService {
             return null;
         }
         tacLogger.info(tairKey + "tair原始结果" + JSON.toJSONString(dataEntryResult.getValue().getValue()));
-        return JSON.parseObject(JSON.toJSONString(dataEntryResult.getValue().getValue()), PmtRuleDataItemRuleDTO.class);
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(dataEntryResult.getValue().getValue()));
+        if (jsonArray.size() == 0) {
+            return null;
+        }
+        JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(jsonArray.get(0)));
+        if (jsonObject == null) {
+            return null;
+        }
+        return JSON.parseArray(JSONObject.toJSONString(jsonObject.get("dataSetItemRuleDTOList")), ColumnCenterDataSetItemRuleDTO.class);
+
     }
 
     public Object getSortItems() {
@@ -207,8 +219,8 @@ public class TodayCrazyTairCacheService {
     public void getEntryChannelPriceNew() {
         String channelPriceKey = getChannelPriceNewKey();
         tacLogger.info("channelPriceKey" + channelPriceKey);
-        PmtRuleDataItemRuleDTO ruleDataItemRuleDTO = this.getTairManager(channelPriceKey);
-        tacLogger.info("getEntryChannelPriceNew" + JSON.toJSONString(ruleDataItemRuleDTO));
+        List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = this.getTairManager(channelPriceKey);
+        tacLogger.info("getEntryChannelPriceNew" + JSON.toJSONString(centerDataSetItemRuleDTOS));
     }
 
     /**
@@ -217,8 +229,8 @@ public class TodayCrazyTairCacheService {
     public void getEntryPromotionPrice() {
         String promotionPriceKey = getPromotionPriceKey();
         tacLogger.info("promotionPriceKey" + promotionPriceKey);
-        PmtRuleDataItemRuleDTO ruleDataItemRuleDTO = this.getTairManager(promotionPriceKey);
-        tacLogger.info("getEntryPromotionPrice" + JSON.toJSONString(ruleDataItemRuleDTO));
+        List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = this.getTairManager(promotionPriceKey);
+        tacLogger.info("getEntryPromotionPrice" + JSON.toJSONString(centerDataSetItemRuleDTOS));
     }
 
 
