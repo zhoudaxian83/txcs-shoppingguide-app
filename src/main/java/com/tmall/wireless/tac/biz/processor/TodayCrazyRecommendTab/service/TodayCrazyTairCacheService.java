@@ -194,7 +194,6 @@ public class TodayCrazyTairCacheService {
         if (!dataEntryResult.isSuccess() || dataEntryResult.getValue() == null || dataEntryResult.getValue().getValue() == null) {
             return null;
         }
-        tacLogger.info(tairKey + "tair原始结果" + JSON.toJSONString(dataEntryResult.getValue().getValue()));
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(dataEntryResult.getValue().getValue()));
         if (jsonArray.size() == 0) {
             return null;
