@@ -31,7 +31,7 @@ public class DetailRequestConfig {
     }
 
     public static DetailRequestConfig parse(String recType){
-        String s = DetailSwitch.requestConfigMap.get(recType);
+        String s = DetailSwitch.tppConfigMap.get(recType);
         return JSONObject.parseObject(s,DetailRequestConfig.class);
     }
 }

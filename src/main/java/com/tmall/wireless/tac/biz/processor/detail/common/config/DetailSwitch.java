@@ -18,7 +18,7 @@ import com.tmall.wireless.tac.biz.processor.detail.common.constant.RecTypeEnum;
 public class DetailSwitch {
 
     @AppSwitch(des = "详情推荐的限制推荐size", level = Switch.Level.p3)
-    public static Map<String, String> requestConfigMap=new HashMap<String,String>(){
+    public static Map<String, String> tppConfigMap =new HashMap<String,String>(){
         {
             put(RecTypeEnum.RECIPE.getType(), "{\"backUpWriteRate\":0,\"openBackUp\":false,\"sizeDTO\":{\"max\":6,"
                 + "\"min\":3},\"tppId\":28151}");
