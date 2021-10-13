@@ -25,20 +25,23 @@ public class DetailSwitch {
     @AppSwitch(des = "详情推荐的限制推荐size", level = Switch.Level.p3)
     public static Map<String, String> requestConfigMap=new HashMap<String,String>(){
         {
-            DetailRequestConfig detailRequestConfig = new DetailRequestConfig(28151L, new SizeDTO(3, 6));
-            put(RecTypeEnum.RECIPE.getType(), JSON.toJSONString(detailRequestConfig));
+            put(RecTypeEnum.RECIPE.getType(), "{\"backUpWriteRate\":0,\"openBackUp\":false,\"sizeDTO\":{\"max\":6,"
+                + "\"min\":3},\"tppId\":28151}");
+            put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(),"{\"backUpWriteRate\":0,\"openBackUp\":false,"
+                + "\"sizeDTO\":{\"max\":2,\"min\":1},\"tppId\":28155}");
 
-            detailRequestConfig=new DetailRequestConfig(28155L, new SizeDTO(1,2));
-            put(RecTypeEnum.SIMILAR_ITEM_CONTENT.getType(),JSON.toJSONString(detailRequestConfig));
+            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), "{\"backUpWriteRate\":1,\"openBackUp\":true,"
+                + "\"sizeDTO\":{\"max\":6,\"min\":6},\"tppId\":27506}");
 
-            detailRequestConfig=new DetailRequestConfig(21174L,new SizeDTO(6,6));
-            put(RecTypeEnum.SIMILAR_ITEM_ITEM.getType(), JSON.toJSONString(detailRequestConfig));
-
-            detailRequestConfig= new DetailRequestConfig(27506L,new SizeDTO(6,6),true,1);
-            put(RecTypeEnum.SIMILAR_ITEM_CONTENT_ITEM.getType(),JSON.toJSONString(detailRequestConfig));
+            put(RecTypeEnum.SIMILAR_ITEM_CONTENT_ITEM.getType(),"{\"backUpWriteRate\":0,\"openBackUp\":false,"
+                + "\"sizeDTO\":{\"max\":6,\"min\":6},\"tppId\":21174}");
         }
     };
 
+    public static void main(String[] args) {
+        DetailRequestConfig detailRequestConfig = new DetailRequestConfig(28151L, new SizeDTO(3, 6));
+        System.out.println( JSON.toJSONString(detailRequestConfig));
+    }
     @AppSwitch(des = "忽略的营销类型", level = Switch.Level.p3)
     public static Set<String> ignorePromotionList= Sets.newHashSet("O2O_StraightDown");
 
