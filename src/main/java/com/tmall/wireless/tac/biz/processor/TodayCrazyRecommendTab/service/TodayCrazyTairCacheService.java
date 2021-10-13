@@ -192,9 +192,7 @@ public class TodayCrazyTairCacheService {
             return null;
         }
         tacLogger.info(tairKey + "tair原始结果" + JSON.toJSONString(dataEntryResult.getValue().getValue()));
-        PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = (PmtRuleDataItemRuleDTO) dataEntryResult.getValue().getValue();
-
-        return pmtRuleDataItemRuleDTO;
+        return JSON.parseObject(JSON.toJSONString(dataEntryResult.getValue().getValue()), PmtRuleDataItemRuleDTO.class);
     }
 
     public Object getSortItems() {
