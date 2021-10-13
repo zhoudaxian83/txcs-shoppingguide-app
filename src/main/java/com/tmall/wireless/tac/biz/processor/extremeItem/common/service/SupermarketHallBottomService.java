@@ -38,6 +38,7 @@ public class SupermarketHallBottomService {
         if(!satisfyBottom(resourceId, scheduleId)) {
             return;
         }
+        logger.info("traceId:" + EagleEye.getTraceId() + ", bottomCounterMap:" + JSON.toJSONString(bottomCounterMap));
         Long writeBottomDataStart = System.currentTimeMillis();
         String cacheKey = getCacheKey(resourceId, scheduleId);
         try {
