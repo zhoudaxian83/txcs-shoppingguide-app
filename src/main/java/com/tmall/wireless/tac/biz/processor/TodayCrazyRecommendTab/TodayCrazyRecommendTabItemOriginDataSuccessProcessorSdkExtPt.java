@@ -12,8 +12,8 @@ import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
-import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.AldService;
-import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TairCacheUtil;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TodayCrazyAldService;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TodayCrazyTairCacheUtil;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.util.CommonUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
@@ -39,10 +39,10 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     TacLoggerImpl tacLogger;
 
     @Autowired
-    TairCacheUtil tairCacheUtil;
+    TodayCrazyTairCacheUtil todayCrazyTairCacheUtil;
 
     @Autowired
-    AldService aldService;
+    TodayCrazyAldService todayCrazyAldService;
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
@@ -91,14 +91,14 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         }
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
         //tpp请求成功写入缓存，供失败打底使用
-        tairCacheUtil.process(itemFailProcessorRequest);
+        todayCrazyTairCacheUtil.process(itemFailProcessorRequest);
     }
 
     /**
      * 根据ald配置排序
      */
     private void sortAld() {
-        List<Map<String, Object>> mapList = aldService.getAldData();
+        List<Map<String, Object>> mapList = todayCrazyAldService.getAldData();
         tacLogger.info("阿拉丁排序信息：" + JSON.toJSONString(mapList));
     }
 

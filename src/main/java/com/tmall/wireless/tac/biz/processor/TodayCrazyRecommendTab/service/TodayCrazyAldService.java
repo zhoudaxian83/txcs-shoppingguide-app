@@ -17,14 +17,14 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class AldService {
+public class TodayCrazyAldService {
     @Autowired
     private AldSpi aldSpi;
 
     @Autowired
     TacLoggerImpl tacLogger;
 
-    public AldService(AldSpi aldSpi) {
+    public TodayCrazyAldService(AldSpi aldSpi) {
         this.aldSpi = aldSpi;
     }
 

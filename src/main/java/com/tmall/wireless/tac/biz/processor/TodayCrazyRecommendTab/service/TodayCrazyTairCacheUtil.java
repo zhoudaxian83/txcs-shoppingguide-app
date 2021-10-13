@@ -31,7 +31,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Component
-public class TairCacheUtil {
+public class TodayCrazyTairCacheUtil {
 
     public static final int SAMPLING_INTERVAL = 10;
 

@@ -11,7 +11,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
 import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
-import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TairCacheUtil;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TodayCrazyTairCacheUtil;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.util.CommonUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
@@ -33,7 +33,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
     TacLoggerImpl tacLogger;
 
     @Autowired
-    TairCacheUtil tairCacheUtil;
+    TodayCrazyTairCacheUtil todayCrazyTairCacheUtil;
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
@@ -47,7 +47,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         locParams.setRtNextDayStoreId(locParams1.getRtNextDayStoreId());
         itemFailProcessorRequest.getSgFrameworkContextItem().setLocParams(locParams);
         itemFailProcessorRequest.getSgFrameworkContextItem().setBizScenario(bizScenario);
-        List<ItemEntity> itemEntityList = JSON.parseArray(JSON.toJSONString(tairCacheUtil.process(itemFailProcessorRequest).getResult()), ItemEntity.class);
+        List<ItemEntity> itemEntityList = JSON.parseArray(JSON.toJSONString(todayCrazyTairCacheUtil.process(itemFailProcessorRequest).getResult()), ItemEntity.class);
         tacLogger.info("tpp打底返回数据条数：" + itemEntityList.size());
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, CommonUtil.buildItemIdAndCacheKey(itemEntityList));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
