@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -106,12 +107,12 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         itemEntityVO.put("reservePrice", reservePrice);
         tacLogger.info("标签内容打印"+JSON.toJSONString(itemEntityVO.get("itemTags")));
         try{
-            List<String> singleFreeShipList = (List<String>) itemEntityVO.get("itemTags");
+            List<String> singleFreeShipList = JSONArray.parseArray(JSON.toJSONString(itemEntityVO.get("itemTags")), String.class);
         }catch (Exception e){
             tacLogger.info("标签获取失败："+e);
         }
-
-        List<String> singleFreeShipList = (List<String>) itemEntityVO.get("itemTags");
+        List<String> singleFreeShipList = JSONArray.parseArray(JSON.toJSONString(itemEntityVO.get("itemTags")), String.class);
+        //List<String> singleFreeShipList = (List<String>) itemEntityVO.get("itemTags");
         List<String> freeShipping = Arrays.asList("458434", "1670722");
         itemEntityVO.put("isFreeShip", false);
         if (CollectionUtils.isNotEmpty(singleFreeShipList)) {
