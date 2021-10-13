@@ -58,12 +58,9 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         todayCrazyTairCacheService.process(itemFailProcessorRequest);
         boolean isFirstPage = (boolean) originDataProcessRequest.getSgFrameworkContextItem().getUserParams().get("isFirstPage");
         String tabType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", "");
-        tacLogger.info("置顶执行完成前：" + JSON.toJSONString(originDataDTO.getResult()));
         this.doTopItems(originDataDTO, originDataProcessRequest.getSgFrameworkContextItem(), isFirstPage);
-        tacLogger.info("置顶执行完成后：" + JSON.toJSONString(originDataDTO.getResult()));
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             this.itemSort(originDataDTO, originDataProcessRequest.getSgFrameworkContextItem(), isFirstPage);
-            tacLogger.info("坑位执行完成后：" + JSON.toJSONString(originDataDTO.getResult()));
         }
         return originDataDTO;
     }
