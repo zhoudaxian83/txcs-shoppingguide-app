@@ -104,6 +104,12 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("reservePrice", reservePrice);
+        tacLogger.info("标签内容打印"+JSON.toJSONString(itemEntityVO.get("itemTags")));
+        try{
+            List<String> singleFreeShipList = (List<String>) itemEntityVO.get("itemTags");
+        }catch (Exception e){
+            tacLogger.info("标签获取失败："+e);
+        }
 
         List<String> singleFreeShipList = (List<String>) itemEntityVO.get("itemTags");
         List<String> freeShipping = Arrays.asList("458434", "1670722");
