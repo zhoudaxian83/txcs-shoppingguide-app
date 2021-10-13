@@ -63,10 +63,10 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         smartUiItemInfoSource.setMktSceneCode("index.guessULike");
         itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(new ItemInfoSourceMetaInfo[]{item,
             tppItemInfoSource,smartUiItemInfoSource}));
-        HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-            .kv("IconItemItemMetaInfoBuildSdkExtPt","buildDefaultItemInfoNodes")
-            .kv("itemInfoNode", JSON.toJSONString(itemInfoNode))
-            .info();
+//        HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
+//            .kv("IconItemItemMetaInfoBuildSdkExtPt","buildDefaultItemInfoNodes")
+//            .kv("itemInfoNode", JSON.toJSONString(itemInfoNode))
+//            .info();
         return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
     }
 }
