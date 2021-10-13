@@ -60,12 +60,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         todayCrazyTairCacheService.process(itemFailProcessorRequest);
         boolean isFirstPage = (boolean) originDataProcessRequest.getSgFrameworkContextItem().getUserParams().get("isFirstPage");
         String tabType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", "");
-        System.out.println("置顶执行完成前：" + JSON.toJSONString(originDataDTO.getResult()));
+        tacLogger.info("置顶执行完成前：" + JSON.toJSONString(originDataDTO.getResult()));
         this.doTopItems(originDataDTO, originDataProcessRequest.getSgFrameworkContextItem(), isFirstPage);
-        System.out.println("置顶执行完成后：" + JSON.toJSONString(originDataDTO.getResult()));
+        tacLogger.info("置顶执行完成后：" + JSON.toJSONString(originDataDTO.getResult()));
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             this.itemSort(originDataDTO, originDataProcessRequest.getSgFrameworkContextItem(), isFirstPage);
-            System.out.println("坑位执行完成后：" + JSON.toJSONString(originDataDTO.getResult()));
+            tacLogger.info("坑位执行完成后：" + JSON.toJSONString(originDataDTO.getResult()));
         }
         return originDataDTO;
     }
@@ -198,6 +198,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (itemScheduleStartTime == null || itemScheduleEndTime == null || itemStickStartTime == null || itemStickEndTime == null || stick == null) {
             return false;
         }
+        tacLogger.info("日期不符合：" + JSON.toJSONString(columnCenterDataRuleDTO));
         return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime) && nowDate.after(itemStickStartTime) && nowDate.before(itemStickEndTime);
     }
 
