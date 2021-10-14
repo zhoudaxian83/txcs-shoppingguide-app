@@ -43,6 +43,7 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
+        tacLogger.info("captain参数构建执行了");
         RenderRequest renderRequest = new RenderRequest();
         ItemQueryDO query = new ItemQueryDO();
         SgFrameworkContextItem contextItem = captainRequestBuildRequest.getContextItem();

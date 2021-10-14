@@ -51,9 +51,11 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         //已曝光置顶itemIds
         String entryItemIdsStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "entryItemIds", "");
         List<String> entryItemIds = entryItemIdsStr.equals("") ? Lists.newArrayList() : Arrays.asList(entryItemIdsStr.split(","));
+        tacLogger.info("entryItemIds:" + JSON.toJSONString(entryItemIds));
         //鸿雁置顶itemIds
         String topListStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "topList", "");
         List<String> topList = topListStr.equals("") ? Lists.newArrayList() : Arrays.asList(topListStr.split(","));
+        tacLogger.info("topList:" + JSON.toJSONString(topList));
         boolean isFirstPage = (boolean) originDataProcessRequest.getSgFrameworkContextItem().getUserParams().get("isFirstPage");
         String tabType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", "");
         // 1,融合置顶商品；2，商品去重处理  直接把入参中的置顶商品置顶，每次查询进行去重处理
