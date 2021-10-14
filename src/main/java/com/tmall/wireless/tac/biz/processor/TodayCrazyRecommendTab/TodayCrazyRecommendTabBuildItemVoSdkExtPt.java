@@ -122,7 +122,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
             //当前只区分algorithm或other
             //itemEntityVO.put("channel", this.getChannel(cacheKey));
         } else {
-            tacLogger.info("vo获取tairKey为空");
+            tacLogger.info("vo获取tairKey为空itemId"+itemEntityVO.getItemId());
         }
         itemEntityVO.put("attachment", attachments);
         itemEntityVO.remove("attachments");
