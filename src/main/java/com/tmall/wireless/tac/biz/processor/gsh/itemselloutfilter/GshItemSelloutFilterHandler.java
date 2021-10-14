@@ -75,11 +75,12 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
         Map<Long, ItemDTO> captainItemMap = batchQueryItem(itemIdList, supermarketHallContext);
 
         List<GeneralItem> list = new ArrayList<>();
+        List<GeneralItem> sellOutList = new ArrayList<>();
         for (int a = 0; a < itemIdList.size(); a++) {
             ItemDTO itemDTO = captainItemMap.get(itemIdList.get(a));
+
             GeneralItem itemMap = new GeneralItem();
             buildItemDTO(itemMap, itemDTO);
-
             //静态数据补充
             Map<String, Object> stringObjectMap = staticMap.get(itemIdList.get(a));
             if (stringObjectMap != null) {
@@ -87,8 +88,13 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
                     itemMap.put(entry.getKey(), entry.getValue());
                 }
             }
-            list.add(itemMap);
+            if (itemDTO == null || itemDTO.isSoldout() || !itemDTO.isCanBuy()) {
+                sellOutList.add(itemMap);
+            }else {
+                list.add(itemMap);
+            }
         }
+        list.addAll(sellOutList);
 
         return Flowable.just(TacResult.newResult(list));
     }

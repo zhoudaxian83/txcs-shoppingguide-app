@@ -142,6 +142,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemrecommend.GshItemRecommendOriginDataRequestBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemrecommend.GshItemRecommendCaptainRequestBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemrecommend.GshItemRecommendBuildItemVoSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemrecommend.GshItemRecommendFilterSdkExtPt"/>
 
     <!--够实惠商品库存过滤-->
     <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemselloutfilter.GshItemSelloutFilterHandler"/>
