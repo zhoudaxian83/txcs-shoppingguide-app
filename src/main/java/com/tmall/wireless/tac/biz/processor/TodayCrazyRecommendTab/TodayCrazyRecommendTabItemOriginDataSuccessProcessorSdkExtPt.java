@@ -58,25 +58,23 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         tacLogger.info("topList:" + JSON.toJSONString(topList));
         boolean isFirstPage = (boolean) originDataProcessRequest.getSgFrameworkContextItem().getUserParams().get("isFirstPage");
         String tabType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", "");
-        tacLogger.info("debug-1");
         // 1,融合置顶商品；2，商品去重处理  直接把入参中的置顶商品置顶，每次查询进行去重处理
         OriginDataDTO<ItemEntity> originDataDTO = originDataProcessRequest.getItemEntityOriginDataDTO();
         List<ItemEntity> itemEntities = originDataDTO.getResult();
-        tacLogger.info("debug-2");
         //保存tairKey和item关联供后面逻辑使用
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, CommonUtil.buildItemIdAndCacheKey(itemEntities));
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
-        tacLogger.info("debug-3");
         //tpp请求成功写入缓存，供失败打底使用
         todayCrazyTairCacheService.process(itemFailProcessorRequest);
-        tacLogger.info("debug-4");
         //排序优先级：已曝光>鸿雁>坑位排序
         entryItemIds.addAll(topList);
+        tacLogger.info("合并结果：" + JSON.toJSONString(entryItemIds));
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
+            tacLogger.info("debug-1");
             this.itemSort(originDataDTO, isFirstPage);
         }
         if (CollectionUtils.isNotEmpty(entryItemIds)) {
-            tacLogger.info("合并结果：" + JSON.toJSONString(entryItemIds));
+            tacLogger.info("debug-2");
             this.doTopItems(originDataDTO, entryItemIds, isFirstPage);
         }
         return originDataDTO;
@@ -123,11 +121,14 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @param isFirstPage
      */
     private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage) {
+        tacLogger.info("debug-3");
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         List<ColumnCenterDataSetItemRuleDTO> sortItems = this.getSortItems();
+        tacLogger.info("debug-4");
         Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = this.getNeedEnterDataSetItemRuleDTOS(sortItems);
         List<ColumnCenterDataSetItemRuleDTO> needEnterDataSetItemRuleDTOS = pair.getRight();
         List<Long> itemIdList = pair.getLeft();
+        tacLogger.info("debug-5");
         //去重原有的
         itemEntities.removeIf(itemEntity -> itemIdList.contains(itemEntity.getItemId()));
         tacLogger.info("过滤后效果itemStickEndTime：" + JSON.toJSONString(needEnterDataSetItemRuleDTOS));
