@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem.domain;
 
 import com.alibaba.fastjson.JSON;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.extremeItem.service.entity.GmvEntity;
@@ -43,7 +44,7 @@ public class ItemGmvGroupMap {
                         .filter(gmvEntity -> lastNDaysDateSet.contains(gmvEntity.getWindowEnd().split(" ")[0]))
                         .map(item -> item.getGmv()).toArray(Double[]::new)));
 
-        logger.info("ItemGmvGroupMap_valueOf_lastNDayGmvEntityMap: " + JSON.toJSONString(lastNDayGmvEntityMap));
+        //logger.info("ItemGmvGroupMap_valueOf_lastNDayGmvEntityMap: " + JSON.toJSONString(lastNDayGmvEntityMap));
         //String currentYMDH = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH"));
         Map<Long, Double> last1HourGmvEntityMap = last1HourGmvEntityList.stream()
                 .filter(Objects::nonNull)
@@ -51,7 +52,7 @@ public class ItemGmvGroupMap {
                 .filter(e -> withIn1Hour(e.getWindowEnd()))
                 //.filter(e->e.getWindowEnd().startsWith(currentYMDH))
                 .collect(Collectors.toMap(e -> e.getItemId(), e -> e.getGmv()));
-        logger.info("ItemGmvGroupMap_valueOf_last1HourGmvEntityMap: " + JSON.toJSONString(last1HourGmvEntityMap));
+        //logger.info("ItemGmvGroupMap_valueOf_last1HourGmvEntityMap: " + JSON.toJSONString(last1HourGmvEntityMap));
 
         for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroupList()) {
             ItemGmvGroup itemGmvGroup = new ItemGmvGroup();
@@ -101,6 +102,8 @@ public class ItemGmvGroupMap {
             }
             logger.info("ItemGmvGroupMap_valueOf_itemGmvGroupMap: " + JSON.toJSONString(itemGmvGroupMap));
         } else {
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|raceSort.downgrade.L1|" + Logger.isEagleEyeTest() + "|success")
+                    .error();
             int oneHoursSize = last1HourGmvRankList.size();
             for (int index = 0; index < oneHoursSize; index++) {
                 ItemGmvGroup itemGmvGroup = last1HourGmvRankList.get(index);

@@ -114,17 +114,17 @@ public class SupermarketHallBottomService {
     }
 
     private String getCacheKey(String resourceId, String scheduleId) {
-        if(!enviroment.isOnline()) {
-            return "pre_hall_bottom_" + resourceId + "_" + scheduleId;
+        if(enviroment != null && enviroment.isOnline()) {
+            return "hall_bottom_" + resourceId + "_" + scheduleId;
         }
-        return "hall_bottom_" + resourceId + "_" + scheduleId;
+        return "pre_hall_bottom_" + resourceId + "_" + scheduleId;
     }
 
     private String getCacheKey(String resourceId) {
-        if(!enviroment.isOnline()) {
-            return "pre_hall_bottom_" + resourceId;
+        if(enviroment != null && enviroment.isOnline()) {
+            return "hall_bottom_" + resourceId;
         }
-        return "hall_bottom_" + resourceId;
+        return "pre_hall_bottom_" + resourceId;
     }
 
     public boolean satisfyBottom(String resourceId, String scheduleId) {

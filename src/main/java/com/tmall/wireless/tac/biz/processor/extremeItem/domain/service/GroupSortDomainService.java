@@ -50,7 +50,7 @@ public class GroupSortDomainService {
             ItemGmvGroupMap itemGmvGroupMap = itemGmvService.queryGmv(itemConfigGroups, itemIds, days);
             boolean lostLastNDaysGmv = itemGmvGroupMap.getInnerItemGmvGroupMap().values().stream().map(ItemGmvGroup::lastNDaysGmvSum).anyMatch(gmv -> gmv == 0);
             if (lostLastNDaysGmv) {
-                HadesLogUtil.stream("ExtremeItemSdkItemHandler|raceSort.downgrade|" + Logger.isEagleEyeTest() + "|downgrade")
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|raceSort.downgrade|" + Logger.isEagleEyeTest() + "|success")
                         .error();
                 itemConfigGroups.sortGroup();
             } else {
