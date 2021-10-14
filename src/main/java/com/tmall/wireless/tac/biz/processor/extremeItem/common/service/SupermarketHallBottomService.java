@@ -9,6 +9,7 @@ import com.taobao.tair.ResultCode;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.model.constant.RpmContants;
+import com.tmall.txcs.gs.spi.factory.CommonFactoryAbs;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch;
@@ -33,6 +34,8 @@ public class SupermarketHallBottomService {
 
     @Autowired
     TairFactorySpi tairFactorySpi;
+    @Autowired
+    CommonFactoryAbs commonFactoryAbs;
 
     public void writeBottomData(String resourceId, String scheduleId, List<GeneralItem> generalItemList) {
         if(!satisfyBottom(resourceId, scheduleId)) {
@@ -108,14 +111,14 @@ public class SupermarketHallBottomService {
     }
 
     private String getCacheKey(String resourceId, String scheduleId) {
-        if(!RpmContants.enviroment.isOnline()) {
+        if(!commonFactoryAbs.getEnviroment().isOnline()) {
             return "pre_hall_bottom_" + resourceId + "_" + scheduleId;
         }
         return "hall_bottom_" + resourceId + "_" + scheduleId;
     }
 
     private String getCacheKey(String resourceId) {
-        if(!RpmContants.enviroment.isOnline()) {
+        if(!commonFactoryAbs.getEnviroment().isOnline()) {
             return "pre_hall_bottom_" + resourceId;
         }
         return "hall_bottom_" + resourceId;
