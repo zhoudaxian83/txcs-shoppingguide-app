@@ -65,6 +65,11 @@ public class GshItemSetOriginDataRequestBuildSdkExtPt extends Register implement
             Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, DEFAULT_SMAREAID);
             params.put("smAreaId", String.valueOf(smAreaId));
 
+            String resourceId = MapUtil.getStringWithDefault(aldParams, HallCommonAldConstant.ALD_CURRENT_RES_ID, "0");
+            params.put("resourceId", resourceId);
+            params.put("uniqueIdentity", sgFrameworkContextItem.getBizScenario().getUniqueIdentity());
+
+
             Object csa = aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA);
             LocParams locParams = null;
             if (csa == null) {
