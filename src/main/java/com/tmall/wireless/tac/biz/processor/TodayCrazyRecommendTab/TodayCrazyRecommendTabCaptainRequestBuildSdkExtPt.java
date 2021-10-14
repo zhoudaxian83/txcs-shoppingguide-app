@@ -43,14 +43,11 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
-        tacLogger.info("captain参数构建执行了");
         RenderRequest renderRequest = new RenderRequest();
         ItemQueryDO query = new ItemQueryDO();
         SgFrameworkContextItem contextItem = captainRequestBuildRequest.getContextItem();
         ItemInfoRequestSm itemInfoRequest = captainRequestBuildRequest.getItemInfoRequest();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfo = captainRequestBuildRequest.getItemInfoSourceMetaInfo();
-
-
         Long storeId = itemInfoRequest.getStoreId();
         List<ItemId> itemIdList = itemInfoRequest.getList().stream().map(itemEntity ->
                 ItemId.valueOf(itemEntity.getItemId(), ItemId.ItemType.valueOf(itemEntity.getO2oType()))).collect(Collectors.toList());
@@ -82,11 +79,10 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
 //        }
 
 
-
         renderRequest.setQuery(query);
         renderRequest.setOption(option);
         //
-        tacLogger.info("captain入参："+ JSON.toJSONString(renderRequest));
+        tacLogger.info("captain入参：" + JSON.toJSONString(renderRequest));
         return renderRequest;
     }
 }
