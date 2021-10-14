@@ -109,8 +109,6 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             } else {
                 generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId());
             }
-            return Flowable.just(TacResult.newResult(generalItems));
-
         } catch (Exception e) {
             HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|exception")
                     .kv("errorMsg", StackTraceUtil.stackTrace(e))

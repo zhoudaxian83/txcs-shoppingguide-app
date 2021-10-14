@@ -29,7 +29,7 @@ public class ItemConfigs {
             ItemConfig itemConfig = ItemConfig.valueOf(stringObjectMap);
             itemConfigs.itemConfigList.add(itemConfig);
         }
-        logger.info("ItemConfigs_valueOf_itemConfigs: " + JSON.toJSONString(itemConfigs));
+        //logger.info("ItemConfigs_valueOf_itemConfigs: " + JSON.toJSONString(itemConfigs));
         itemConfigs.checkItemConfig();
         return itemConfigs;
     }
@@ -75,7 +75,7 @@ public class ItemConfigs {
                     return itemConfigGroup;
                 }).collect(Collectors.toList());
         itemConfigGroups.getItemConfigGroupList().addAll(itemConfigGroupList);
-        logger.info("ItemConfigs_splitGroup_itemConfigGroups: " + JSON.toJSONString(itemConfigGroups));
+        //logger.info("ItemConfigs_splitGroup_itemConfigGroups: " + JSON.toJSONString(itemConfigGroups));
         return itemConfigGroups;
     }
 

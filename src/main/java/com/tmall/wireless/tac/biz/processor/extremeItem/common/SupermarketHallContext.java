@@ -2,7 +2,9 @@ package com.tmall.wireless.tac.biz.processor.extremeItem.common;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.taobao.eagleeye.EagleEye;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.DateTimeUtil;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
@@ -53,7 +55,16 @@ public class SupermarketHallContext {
             supermarketHallContext.setSmAreaId(smAreaId);
 
             //初始化预览时间
-            supermarketHallContext.setPreviewTime(PageUrlUtil.getParamFromCurPageUrl(requestContext4Ald.getAldParam(), "previewTime"));
+            String previewTimeStampStr = PageUrlUtil.getParamFromCurPageUrl(requestContext4Ald.getAldParam(), "previewTime");
+            if(StringUtils.isNotBlank(previewTimeStampStr)) {
+                try {
+                    supermarketHallContext.setPreviewTime(DateTimeUtil.formatTimestamp(Long.parseLong(previewTimeStampStr)));
+                } catch (Exception e) {
+                    logger.error("SupermarketHallContext.init error, traceId:" + EagleEye.getTraceId() + ", previewTimeStampStr" + previewTimeStampStr, e);
+                    //ignore
+                    supermarketHallContext.setPreviewTime(null);
+                }
+            }
 
         }
 
