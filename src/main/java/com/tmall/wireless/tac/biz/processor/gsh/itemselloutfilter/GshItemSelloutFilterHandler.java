@@ -192,6 +192,7 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
         RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext.getSmAreaId(),null, supermarketHallContext.getUserId(), supermarketHallContext);
         logger.error("GshItemSelloutFilterHandler.traceId:{}, captainRequest:{}", traceId, JSON.toJSONString(renderRequest));
         SPIResult<List<ItemDTO>> itemDTOs = renderSpi.query(renderRequest);
+        logger.error("GshItemSelloutFilterHandler.traceId:{}, captainReponse:{}", traceId, JSON.toJSONString(itemDTOs));
         return itemDTOs.getData().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     }
 
