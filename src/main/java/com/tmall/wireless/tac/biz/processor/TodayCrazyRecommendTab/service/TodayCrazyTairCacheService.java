@@ -185,6 +185,7 @@ public class TodayCrazyTairCacheService {
     }
 
     public List<ColumnCenterDataSetItemRuleDTO> getTairManager(String tairKey) {
+        List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = Lists.newArrayList();
         TairManager tairManager = tairFactorySpi.getOriginDataFailProcessTair();
         if (tairManager == null || tairManager.getMultiClusterTairManager() == null || tairManager.getNameSpace() <= 0) {
             return null;
@@ -205,7 +206,15 @@ public class TodayCrazyTairCacheService {
         if (dataSetItemRuleDTOList == null) {
             return null;
         }
-        return JSON.parseArray(JSONObject.toJSONString(dataSetItemRuleDTOList), ColumnCenterDataSetItemRuleDTO.class);
+        try {
+            centerDataSetItemRuleDTOS = JSON.parseArray(JSONObject.toJSONString(dataSetItemRuleDTOList), ColumnCenterDataSetItemRuleDTO.class);
+        } catch (Exception e) {
+            HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                    .kv("get centerDataSetItemRuleDTOS parse error,tairKEY:", tairKey)
+                    .kv("tairManager", JSON.toJSONString(tairManager))
+                    .info();
+        }
+        return centerDataSetItemRuleDTOS;
 
     }
 

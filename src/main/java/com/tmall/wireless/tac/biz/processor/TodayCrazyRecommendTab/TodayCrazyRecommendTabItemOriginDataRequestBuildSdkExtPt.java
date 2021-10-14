@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
@@ -81,29 +82,13 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
         tacLogger.info("tpp入参_recommendRequest_:" + JSON.toJSONString(recommendRequest));
-        // todo MOCK
-        //recommendRequest = this.mock();
+        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
+                .kv("recommendRequest", JSON.toJSONString(recommendRequest))
+                .info();
         return recommendRequest;
     }
 
-    private RecommendRequest mock() {
-        RecommendRequest mockData = JSON.parseObject("{\n" +
-                "\t\"appId\": 27154,\n" +
-                "\t\"logResult\": false,\n" +
-                "\t\"params\": {\n" +
-                "\t\t\"itemBusinessType\": \"OneHour\",\n" +
-                "\t\t\"itemSetIdList\": \"13545\",\n" +
-                "\t\t\"appid\": \"27154\",\n" +
-                "\t\t\"logicAreaId\": \"107\",\n" +
-                "\t\t\"rt1HourStoreId\": \"233930003\",\n" +
-                "\t\t\"isFirstPage\": \"true\",\n" +
-                "\t\t\"smAreaId\": \"330100\",\n" +
-                "\t\t\"userId\": \"1832025789\"\n" +
-                "\t},\n" +
-                "\t\"userId\": 1832025789\n" +
-                "}", RecommendRequest.class);
-        return mockData;
-    }
 
     /**
      * 构建类目id作为tair的key

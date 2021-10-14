@@ -24,10 +24,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -51,12 +48,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         tacLogger.info("TPP返回数据条数：" + originDataProcessRequest.getItemEntityOriginDataDTO().getResult().size());
-        tacLogger.info("TPP返回数据itemEntities：" + JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
-        //已曝光置顶itemIds
-        String entryItemIdsStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "entryItemIds", "");
-        List<String> entryItemIds = entryItemIdsStr.equals("") ? Lists.newArrayList() : Arrays.asList(entryItemIdsStr.split(","));
-        tacLogger.info("entryItemIds:" + JSON.toJSONString(entryItemIds));
-        //鸿雁置顶itemIds
+        //鸿雁置顶itemIds和已曝光置顶itemIds,按照前端入参顺序(前端已做合并，原先是已曝光置顶itemIds在最上面，然后是鸿雁置顶itemIds的)
         String topListStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "topList", "");
         List<String> topList = topListStr.equals("") ? Lists.newArrayList() : Arrays.asList(topListStr.split(","));
         tacLogger.info("topList:" + JSON.toJSONString(topList));
@@ -71,14 +63,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         //tpp请求成功写入缓存，供失败打底使用
         todayCrazyTairCacheService.process(itemFailProcessorRequest);
         //排序优先级：已曝光>鸿雁>坑位排序
-        List<String> allTopItems = Lists.newArrayList();
-        allTopItems.addAll(entryItemIds);
-        allTopItems.addAll(topList);
+        Set<String> topSet = new HashSet<>(topList);
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             this.itemSort(originDataDTO, isFirstPage);
         }
-        if (CollectionUtils.isNotEmpty(allTopItems)) {
-            this.doTopItems(originDataDTO, allTopItems, isFirstPage);
+        if (CollectionUtils.isNotEmpty(topSet)) {
+            this.doTopItems(originDataDTO, topSet, isFirstPage);
         }
         return originDataDTO;
     }
@@ -90,7 +80,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @param topList
      * @param isFirstPage
      */
-    public void doTopItems(OriginDataDTO<ItemEntity> originDataDTO, List<String> topList, boolean isFirstPage) {
+    public void doTopItems(OriginDataDTO<ItemEntity> originDataDTO, Set<String> topList, boolean isFirstPage) {
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         // 只有今日超省走双置顶逻辑，1，双中判断置顶有效期；2，只有第一页做置顶这个置顶逻辑；3每页走要进行置顶去重
@@ -123,6 +113,9 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage) {
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         List<ColumnCenterDataSetItemRuleDTO> sortItems = this.getSortItems();
+        if(CollectionUtils.isEmpty(sortItems)){
+            return;
+        }
         Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = this.getNeedEnterDataSetItemRuleDTOS(sortItems);
         List<ColumnCenterDataSetItemRuleDTO> needEnterDataSetItemRuleDTOS = pair.getRight();
         List<Long> itemIdList = pair.getLeft();
@@ -212,10 +205,10 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = Lists.newArrayList();
         List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = todayCrazyTairCacheService.getEntryChannelPriceNew();
         List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice = todayCrazyTairCacheService.getEntryPromotionPrice();
-        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(entryChannelPriceNew)) {
+        if (CollectionUtils.isNotEmpty(entryChannelPriceNew)) {
             centerDataSetItemRuleDTOS.addAll(entryChannelPriceNew);
         }
-        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(entryPromotionPrice)) {
+        if (CollectionUtils.isNotEmpty(entryPromotionPrice)) {
             centerDataSetItemRuleDTOS.addAll(entryPromotionPrice);
         }
         return centerDataSetItemRuleDTOS;

@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
 import com.alibaba.cola.extension.BizScenario;
 import com.alibaba.fastjson.JSON;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataFailProcessorSdkExtPt;
@@ -57,6 +58,9 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         originDataDTO.setHasMore(false);
         originDataDTO.setPvid("");
         originDataDTO.setScm("1007.0.0.0");
+        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                .kv("originDataDTO", JSON.toJSONString(originDataDTO))
+                .info();
         return originDataDTO;
     }
 }

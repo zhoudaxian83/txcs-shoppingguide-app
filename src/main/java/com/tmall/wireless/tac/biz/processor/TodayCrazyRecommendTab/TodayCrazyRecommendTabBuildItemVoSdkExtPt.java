@@ -1,9 +1,11 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoRequest;
@@ -117,7 +119,14 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
             itemType = this.getItemType(cacheKey);
             itemEntityVO.put("itemType", this.getItemType(cacheKey));
         } else {
-            // todo 打可查询日志
+            String itemId = Long.toString(itemEntityVO.getItemId());
+            Set<String> stringSet = temIdAndCacheKeyMap.keySet();
+            if (stringSet.contains(itemId)) {
+                //设置置顶或者坑位排序的排除掉
+                HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                        .kv("vo itemId tairKey is null", JSON.toJSONString(itemEntityVO.getItemId()))
+                        .info();
+            }
             tacLogger.info("vo获取tairKey为空itemId" + itemEntityVO.getItemId());
         }
         itemEntityVO.put("attachment", attachments);
