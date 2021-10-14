@@ -28,6 +28,7 @@ import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.util.TacResultBackupUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -174,18 +175,16 @@ public class FirstScreenMindItemScene {
         }
     }
 
-    public ItemMetaInfo getRecommendItemMetaInfo(LocParams locParams) {
+    public ItemMetaInfo getRecommendItemMetaInfo(SgFrameworkContextItem sgFrameworkContextItem) {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-        if(locParams!=null &&
-            locParams.getRt1HourStoreId() == 0
-            && locParams.getRtHalfDayStoreId() == 0){
+
+        if(!isO2oScene(sgFrameworkContextItem)){
             itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         }
-
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
@@ -234,6 +233,7 @@ public class FirstScreenMindItemScene {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
+
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
@@ -279,5 +279,11 @@ public class FirstScreenMindItemScene {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfo = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfo.setSourceName("timeLabel");
         return itemInfoSourceMetaInfo;
+    }
+
+    private boolean isO2oScene(SgFrameworkContext sgFrameworkContext) {
+
+        String contentType = MapUtil.getStringWithDefault(sgFrameworkContext.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
+        return RenderContentTypeEnum.checkO2OContentType(contentType);
     }
 }
