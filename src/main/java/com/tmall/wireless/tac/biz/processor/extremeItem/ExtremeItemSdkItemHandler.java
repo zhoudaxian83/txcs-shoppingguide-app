@@ -107,6 +107,10 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
                 HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|success|" + (mainProcessEnd - mainProcessStart))
                         .error();
             } else {
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|error")
+                        .kv("configSize", String.valueOf(itemConfigGroups.size()))
+                        .kv("actualSize", String.valueOf(generalItems.size()))
+                        .error();
                 generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId());
             }
         } catch (Exception e) {
