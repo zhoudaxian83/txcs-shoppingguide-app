@@ -2,7 +2,6 @@ package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
-import com.taobao.xmp.common.collections.Sets;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
@@ -63,7 +62,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         String specifications = "";
         String reservePrice = "";
         Map<String, Object> attachments = null;
-        Set<Integer> singleFreeShipSet = Sets.newHashSet();
+        Set<Integer> singleFreeShipSet = new HashSet<>();
         Map<String, String> trackPoint = Maps.newHashMap();
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
