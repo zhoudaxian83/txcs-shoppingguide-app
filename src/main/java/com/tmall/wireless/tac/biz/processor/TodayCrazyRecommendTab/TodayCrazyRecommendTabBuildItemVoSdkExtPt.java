@@ -1,12 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import com.taobao.xmp.common.collections.Sets;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
-import com.tcls.mkt.atmosphere.model.response.UnifyPriceDTO;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -66,6 +63,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         String specifications = "";
         String reservePrice = "";
         Map<String, Object> attachments = null;
+        Set<Integer> singleFreeShipSet = Sets.newHashSet();
         Map<String, String> trackPoint = Maps.newHashMap();
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
@@ -78,6 +76,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
                         .map(ItemDTO::getDetailUrl).orElse("");
 
                 ItemDTO itemDTO = itemInfoBySourceCaptainDTO.getItemDTO();
+                singleFreeShipSet = itemDTO.getItemTags();
                 attachments = itemDTO.getAttachments();
                 ItemPromotionResp itemPromotionResp = itemDTO.getItemPromotionResp();
                 if (itemPromotionResp != null) {
@@ -105,13 +104,11 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("reservePrice", reservePrice);
-        List<String> singleFreeShipList = JSONArray.parseArray(JSON.toJSONString(itemEntityVO.get("itemTags")), String.class);
-        List<String> freeShipping = Arrays.asList("458434", "1670722");
         //单品包邮
         itemEntityVO.put("isFreeShip", false);
-        if (CollectionUtils.isNotEmpty(singleFreeShipList)) {
-            singleFreeShipList.forEach(s -> {
-                if (freeShipping.contains(s)) {
+        if (CollectionUtils.isNotEmpty(singleFreeShipSet)) {
+            singleFreeShipSet.forEach(s -> {
+                if (s == 458434 || s == 1670722) {
                     itemEntityVO.put("isFreeShip", true);
                 }
             });
@@ -120,10 +117,9 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         if (cacheKey != null) {
             itemType = this.getItemType(cacheKey);
             itemEntityVO.put("itemType", this.getItemType(cacheKey));
-            //当前只区分algorithm或other
-            //itemEntityVO.put("channel", this.getChannel(cacheKey));
         } else {
-            tacLogger.info("vo获取tairKey为空itemId"+itemEntityVO.getItemId());
+            // todo 打可查询日志
+            tacLogger.info("vo获取tairKey为空itemId" + itemEntityVO.getItemId());
         }
         itemEntityVO.put("attachment", attachments);
         itemEntityVO.remove("attachments");
@@ -150,15 +146,6 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         }
 
     }
-
-    private String getChannel(String cacheKey) {
-        if (cacheKey.startsWith(CommonConstant.TODAY_ALGORITHM)) {
-            return "algorithm";
-        } else {
-            return "other";
-        }
-    }
-
 
     protected Map<String, Object> getItemVoMap(ItemInfoBySourceDTO itemInfoBySourceDTO) {
 
