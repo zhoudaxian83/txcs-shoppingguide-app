@@ -190,9 +190,9 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
     private Map<Long, ItemDTO> queryItem(List<Long> itemIds, SupermarketHallContext supermarketHallContext) {
         String traceId = EagleEye.getTraceId();
         RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext.getSmAreaId(),null, supermarketHallContext.getUserId(), supermarketHallContext);
-        logger.error("GshItemSelloutFilterHandler.traceId:{}, captainRequest:{}", traceId, JSON.toJSONString(renderRequest));
+        logger.error("GshItemSelloutFilterHandler.traceId:{}, recourceId:{}, captainRequest:{}", traceId, supermarketHallContext.getCurrentResourceId(), JSON.toJSONString(renderRequest));
         SPIResult<List<ItemDTO>> itemDTOs = renderSpi.query(renderRequest);
-        logger.error("GshItemSelloutFilterHandler.traceId:{}, captainReponse:{}", traceId, JSON.toJSONString(itemDTOs));
+        logger.error("GshItemSelloutFilterHandler.traceId:{}, recourceId:{}, captainReponse:{}", traceId, supermarketHallContext.getCurrentResourceId(), JSON.toJSONString(itemDTOs));
         return itemDTOs.getData().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     }
 
