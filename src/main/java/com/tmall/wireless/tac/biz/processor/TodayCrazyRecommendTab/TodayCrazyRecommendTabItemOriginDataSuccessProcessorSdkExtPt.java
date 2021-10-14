@@ -71,20 +71,22 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         todayCrazyTairCacheService.process(itemFailProcessorRequest);
         tacLogger.info("debug-b");
         //排序优先级：已曝光>鸿雁>坑位排序
+        List<String> allTopItems = Lists.newArrayList();
         try {
-            entryItemIds.addAll(topList);
-        }catch (Exception e){
-            tacLogger.info("这不该报错吧。。"+e);
+            allTopItems.addAll(entryItemIds);
+            allTopItems.addAll(topList);
+        } catch (Exception e) {
+            tacLogger.info("这不该报错吧。。" + e);
         }
         tacLogger.info("debug-c");
-        tacLogger.info("合并结果：" + JSON.toJSONString(entryItemIds));
+        tacLogger.info("合并结果：" + JSON.toJSONString(allTopItems));
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             tacLogger.info("debug-1");
             this.itemSort(originDataDTO, isFirstPage);
         }
-        if (CollectionUtils.isNotEmpty(entryItemIds)) {
+        if (CollectionUtils.isNotEmpty(allTopItems)) {
             tacLogger.info("debug-2");
-            this.doTopItems(originDataDTO, entryItemIds, isFirstPage);
+            this.doTopItems(originDataDTO, allTopItems, isFirstPage);
         }
         return originDataDTO;
     }
