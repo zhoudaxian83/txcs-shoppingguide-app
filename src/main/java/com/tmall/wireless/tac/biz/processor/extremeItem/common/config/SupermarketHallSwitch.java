@@ -8,5 +8,5 @@ import com.taobao.csp.switchcenter.bean.Switch;
 public class SupermarketHallSwitch {
 
     @AppSwitch(des = "极致单品打底数据计数周期", level = Switch.Level.p3)
-    public static Integer bottomCounterCycle = 1000;
+    public static Integer bottomCounterCycle = 100;
 }

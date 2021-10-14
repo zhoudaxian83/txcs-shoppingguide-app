@@ -9,12 +9,14 @@ import com.taobao.tair.ResultCode;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.model.constant.RpmContants;
+import com.tmall.txcs.gs.spi.factory.CommonFactoryAbs;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.impl.SupermarketHallIGraphSearchServiceImpl;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
+import com.tmall.wireless.tac.client.domain.Enviroment;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,10 @@ public class SupermarketHallBottomService {
 
     @Autowired
     TairFactorySpi tairFactorySpi;
+    @Autowired
+    CommonFactoryAbs commonFactoryAbs;
+    @Autowired
+    Enviroment enviroment;
 
     public void writeBottomData(String resourceId, String scheduleId, List<GeneralItem> generalItemList) {
         if(!satisfyBottom(resourceId, scheduleId)) {
@@ -108,17 +114,17 @@ public class SupermarketHallBottomService {
     }
 
     private String getCacheKey(String resourceId, String scheduleId) {
-        if(!RpmContants.enviroment.isOnline()) {
-            return "pre_hall_bottom_" + resourceId + "_" + scheduleId;
+        if(enviroment != null && enviroment.isOnline()) {
+            return "hall_bottom_" + resourceId + "_" + scheduleId;
         }
-        return "hall_bottom_" + resourceId + "_" + scheduleId;
+        return "pre_hall_bottom_" + resourceId + "_" + scheduleId;
     }
 
     private String getCacheKey(String resourceId) {
-        if(!RpmContants.enviroment.isOnline()) {
-            return "pre_hall_bottom_" + resourceId;
+        if(enviroment != null && enviroment.isOnline()) {
+            return "hall_bottom_" + resourceId;
         }
-        return "hall_bottom_" + resourceId;
+        return "pre_hall_bottom_" + resourceId;
     }
 
     public boolean satisfyBottom(String resourceId, String scheduleId) {
