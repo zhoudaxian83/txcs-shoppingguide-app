@@ -16,6 +16,7 @@ import com.tmall.wireless.tac.biz.processor.extremeItem.common.config.Supermarke
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.impl.SupermarketHallIGraphSearchServiceImpl;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
+import com.tmall.wireless.tac.client.domain.Enviroment;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,8 @@ public class SupermarketHallBottomService {
     TairFactorySpi tairFactorySpi;
     @Autowired
     CommonFactoryAbs commonFactoryAbs;
+    @Autowired
+    Enviroment enviroment;
 
     public void writeBottomData(String resourceId, String scheduleId, List<GeneralItem> generalItemList) {
         if(!satisfyBottom(resourceId, scheduleId)) {
@@ -111,14 +114,14 @@ public class SupermarketHallBottomService {
     }
 
     private String getCacheKey(String resourceId, String scheduleId) {
-        if(!commonFactoryAbs.getEnviroment().isOnline()) {
+        if(!enviroment.isOnline()) {
             return "pre_hall_bottom_" + resourceId + "_" + scheduleId;
         }
         return "hall_bottom_" + resourceId + "_" + scheduleId;
     }
 
     private String getCacheKey(String resourceId) {
-        if(!commonFactoryAbs.getEnviroment().isOnline()) {
+        if(!enviroment.isOnline()) {
             return "pre_hall_bottom_" + resourceId;
         }
         return "hall_bottom_" + resourceId;
