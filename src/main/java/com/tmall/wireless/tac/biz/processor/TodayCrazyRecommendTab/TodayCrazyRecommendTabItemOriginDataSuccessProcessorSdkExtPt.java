@@ -74,7 +74,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         try {
             entryItemIds.addAll(topList);
         }catch (Exception e){
-            tacLogger.info("这不该报错吧。。");
+            tacLogger.info("这不该报错吧。。"+e);
         }
         tacLogger.info("debug-c");
         tacLogger.info("合并结果：" + JSON.toJSONString(entryItemIds));
