@@ -48,6 +48,14 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
+        //已曝光置顶itemIds
+        String entryItemIdsStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "entryItemIds", "");
+        List<String> entryItemIds = entryItemIdsStr.equals("") ? Lists.newArrayList() : Arrays.asList(entryItemIdsStr.split(","));
+        //鸿雁置顶itemIds
+        String topListStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "topList", "");
+        List<String> topList = topListStr.equals("") ? Lists.newArrayList() : Arrays.asList(topListStr.split(","));
+        boolean isFirstPage = (boolean) originDataProcessRequest.getSgFrameworkContextItem().getUserParams().get("isFirstPage");
+        String tabType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", "");
         // 1,融合置顶商品；2，商品去重处理  直接把入参中的置顶商品置顶，每次查询进行去重处理
         OriginDataDTO<ItemEntity> originDataDTO = originDataProcessRequest.getItemEntityOriginDataDTO();
         List<ItemEntity> itemEntities = originDataDTO.getResult();
@@ -56,24 +64,25 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
         //tpp请求成功写入缓存，供失败打底使用
         todayCrazyTairCacheService.process(itemFailProcessorRequest);
-        boolean isFirstPage = (boolean) originDataProcessRequest.getSgFrameworkContextItem().getUserParams().get("isFirstPage");
-        String tabType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", "");
-        this.doTopItems(originDataDTO, originDataProcessRequest.getSgFrameworkContextItem(), isFirstPage);
+        //排序优先级：已曝光>鸿雁>坑位排序
+        entryItemIds.addAll(topList);
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
-            this.itemSort(originDataDTO, originDataProcessRequest.getSgFrameworkContextItem(), isFirstPage);
+            this.itemSort(originDataDTO, isFirstPage);
+        }
+        if (CollectionUtils.isNotEmpty(entryItemIds)) {
+            this.doTopItems(originDataDTO, entryItemIds, isFirstPage);
         }
         return originDataDTO;
     }
 
     /**
-     * 根据鸿雁传入置顶处理
+     * 置顶排序
      *
      * @param originDataDTO
-     * @param sgFrameworkContextItem
+     * @param topList
+     * @param isFirstPage
      */
-    public void doTopItems(OriginDataDTO<ItemEntity> originDataDTO, SgFrameworkContextItem sgFrameworkContextItem, boolean isFirstPage) {
-        String topListStr = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "topList", "");
-        List<String> topList = topListStr.equals("") ? Lists.newArrayList() : Arrays.asList(topListStr.split(","));
+    public void doTopItems(OriginDataDTO<ItemEntity> originDataDTO, List<String> topList, boolean isFirstPage) {
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         // 只有今日超省走双置顶逻辑，1，双中判断置顶有效期；2，只有第一页做置顶这个置顶逻辑；3每页走要进行置顶去重
@@ -82,10 +91,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         tacLogger.info("TPP返回数据itemEntities：" + JSON.toJSONString(itemEntities));
         //itemEntities = this.mock();
         tacLogger.info("topList：" + JSON.toJSONString(topList));
-        if (CollectionUtils.isEmpty(topList)) {
-            originDataDTO.setResult(itemEntities);
-            return;
-        }
         itemEntities.removeIf(itemEntity -> topList.contains(String.valueOf(itemEntity.getItemId())));
         tacLogger.info("isFirstPage：" + isFirstPage);
         if (isFirstPage) {
@@ -110,10 +115,9 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * 根据资源位置顶操作
      *
      * @param originDataDTO
-     * @param sgFrameworkContextItem
      * @param isFirstPage
      */
-    private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, SgFrameworkContextItem sgFrameworkContextItem, boolean isFirstPage) {
+    private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage) {
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         List<ColumnCenterDataSetItemRuleDTO> sortItems = this.getSortItems();
         Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = this.getNeedEnterDataSetItemRuleDTOS(sortItems);

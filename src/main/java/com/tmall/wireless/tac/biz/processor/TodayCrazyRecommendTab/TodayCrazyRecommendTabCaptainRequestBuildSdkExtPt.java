@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.item.constant.Channel;
 import com.tmall.aselfcaptain.item.model.ItemId;
@@ -15,8 +16,9 @@ import com.tmall.tcls.gs.sdk.framework.suport.iteminfo.sm.ItemInfoRequestSm;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,9 @@ import java.util.stream.Collectors;
 )
 public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register implements CaptainRequestBuildSdkExtPt {
     public static final String UMP_CHANNEL = "umpChannel";
+
+    @Autowired
+    TacLoggerImpl tacLogger;
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
@@ -80,6 +85,7 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         renderRequest.setQuery(query);
         renderRequest.setOption(option);
         //
+        tacLogger.info("captain入参："+ JSON.toJSONString(renderRequest));
         return renderRequest;
     }
 }
