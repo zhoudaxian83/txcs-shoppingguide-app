@@ -62,13 +62,18 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
         //tpp请求成功写入缓存，供失败打底使用
         todayCrazyTairCacheService.process(itemFailProcessorRequest);
-        //排序优先级：已曝光>鸿雁>坑位排序
-        Set<String> topSet = new HashSet<>(topList);
+        //排序优先级：已曝光>鸿雁>坑位排序(保证顺序去重)
+        List<String> topItemIds = Lists.newArrayList();
+        topList.forEach(s -> {
+            if (!topItemIds.contains(s)) {
+                topItemIds.add(s);
+            }
+        });
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             this.itemSort(originDataDTO, isFirstPage);
         }
-        if (CollectionUtils.isNotEmpty(topSet)) {
-            this.doTopItems(originDataDTO, topSet, isFirstPage);
+        if (CollectionUtils.isNotEmpty(topItemIds)) {
+            this.doTopItems(originDataDTO, topItemIds, isFirstPage);
         }
         return originDataDTO;
     }
@@ -80,7 +85,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @param topList
      * @param isFirstPage
      */
-    public void doTopItems(OriginDataDTO<ItemEntity> originDataDTO, Set<String> topList, boolean isFirstPage) {
+    public void doTopItems(OriginDataDTO<ItemEntity> originDataDTO, List<String> topList, boolean isFirstPage) {
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         // 只有今日超省走双置顶逻辑，1，双中判断置顶有效期；2，只有第一页做置顶这个置顶逻辑；3每页走要进行置顶去重
@@ -113,7 +118,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage) {
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         List<ColumnCenterDataSetItemRuleDTO> sortItems = this.getSortItems();
-        if(CollectionUtils.isEmpty(sortItems)){
+        if (CollectionUtils.isEmpty(sortItems)) {
             return;
         }
         Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = this.getNeedEnterDataSetItemRuleDTOS(sortItems);

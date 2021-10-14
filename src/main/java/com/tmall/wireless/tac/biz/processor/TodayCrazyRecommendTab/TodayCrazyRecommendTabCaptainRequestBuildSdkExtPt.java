@@ -6,6 +6,7 @@ import com.tmall.aselfcaptain.item.constant.Channel;
 import com.tmall.aselfcaptain.item.model.ItemId;
 import com.tmall.aselfcaptain.item.model.ItemQueryDO;
 import com.tmall.aselfcaptain.item.model.QueryOptionDO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.iteminfo.CaptainRequestBuildRequest;
@@ -74,6 +75,7 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         option.setIncludeTiming(true);
         option.setSceneCode(CommonConstant.SUPER_MARKET_TODAY_CRAZY);
         option.setOpenMkt(true);
+
 //        if (StringUtils.isNotEmpty(itemInfoSourceMetaInfo.getMktSceneCode())) {
 //            option.setSceneCode(itemInfoSourceMetaInfo.getMktSceneCode());
 //        }
@@ -83,6 +85,9 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         renderRequest.setOption(option);
         //
         tacLogger.info("captain入参：" + JSON.toJSONString(renderRequest));
+        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                .kv("renderRequest", JSON.toJSONString(renderRequest))
+                .info();
         return renderRequest;
     }
 }
