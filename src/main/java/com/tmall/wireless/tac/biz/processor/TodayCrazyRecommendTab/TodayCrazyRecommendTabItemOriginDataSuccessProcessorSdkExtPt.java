@@ -50,6 +50,8 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
+        tacLogger.info("TPP返回数据条数：" + originDataProcessRequest.getItemEntityOriginDataDTO().getResult().size());
+        tacLogger.info("TPP返回数据itemEntities：" + JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
         //已曝光置顶itemIds
         String entryItemIdsStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "entryItemIds", "");
         List<String> entryItemIds = entryItemIdsStr.equals("") ? Lists.newArrayList() : Arrays.asList(entryItemIdsStr.split(","));
@@ -92,9 +94,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         // 只有今日超省走双置顶逻辑，1，双中判断置顶有效期；2，只有第一页做置顶这个置顶逻辑；3每页走要进行置顶去重
-        tacLogger.info("topList：" + JSON.toJSONString(topList));
-        tacLogger.info("TPP返回数据条数：" + itemEntities.size());
-        tacLogger.info("TPP返回数据itemEntities：" + JSON.toJSONString(itemEntities));
         itemEntities.removeIf(itemEntity -> topList.contains(String.valueOf(itemEntity.getItemId())));
         tacLogger.info("isFirstPage：" + isFirstPage);
         if (isFirstPage) {

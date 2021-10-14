@@ -107,6 +107,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         itemEntityVO.put("reservePrice", reservePrice);
         List<String> singleFreeShipList = JSONArray.parseArray(JSON.toJSONString(itemEntityVO.get("itemTags")), String.class);
         List<String> freeShipping = Arrays.asList("458434", "1670722");
+        //单品包邮
         itemEntityVO.put("isFreeShip", false);
         if (CollectionUtils.isNotEmpty(singleFreeShipList)) {
             singleFreeShipList.forEach(s -> {
