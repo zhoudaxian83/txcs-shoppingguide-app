@@ -131,6 +131,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         //只有首页进行置顶操作，但每一页需要去重操作
         if (isFirstPage && CollectionUtils.isNotEmpty(needEnterDataSetItemRuleDTOS)) {
             //资源位操作
+            tacLogger.info("定坑过滤后的结果：" + JSON.toJSONString(needEnterDataSetItemRuleDTOS));
             originDataDTO.setResult(this.doItemSort(itemEntities, needEnterDataSetItemRuleDTOS));
         }
     }
