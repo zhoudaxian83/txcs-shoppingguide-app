@@ -70,6 +70,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 topItemIds.add(s);
             }
         });
+        //保存tairKey和item关联供后面逻辑使用
+        try {
+            itemIdAndCacheKey.putAll(todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
+        } catch (Exception e) {
+            tacLogger.info("tairKey保存失败：" + e);
+        }
         tacLogger.info("topList去重后" + JSON.toJSONString(topItemIds));
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             this.itemSortV2(originDataDTO, isFirstPage, itemIdAndCacheKey);
@@ -78,12 +84,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             this.doTopItems(originDataDTO, topItemIds, isFirstPage);
         }
         tacLogger.info("debug-1");
-        //保存tairKey和item关联供后面逻辑使用
-        try {
-            itemIdAndCacheKey.putAll(todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
-        } catch (Exception e) {
-            tacLogger.info("tairKey保存失败：" + e);
-        }
+
         tacLogger.info("debug-2");
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, itemIdAndCacheKey);
         tacLogger.info("debug-3");

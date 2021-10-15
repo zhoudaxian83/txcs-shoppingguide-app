@@ -283,9 +283,8 @@ public class TodayCrazyTairCacheService {
                         .kv("buildItemIdAndCacheKey", "tairKey is null ")
                         .kv("itemEntity", JSON.toJSONString(itemEntity))
                         .info();
-                tacLogger.info("获取失败，itemEntity：" + JSON.toJSONString(itemEntity));
+                tacLogger.info("tairKey获取失败，itemEntity：" + JSON.toJSONString(itemEntity));
             }
-
         });
         return map;
     }
