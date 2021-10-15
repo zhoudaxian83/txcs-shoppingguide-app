@@ -57,59 +57,63 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
 
     @Override
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
-        logger.error("--> HotItemProcessBeforeReturnSdkExtPt.start");
-        SgFrameworkResponse<ItemEntityVO> entityVOSgFrameworkResponse = sgFrameworkContextItem
-            .getEntityVOSgFrameworkResponse();
 
-        List<ItemEntityVO> itemAndContentList = entityVOSgFrameworkResponse.getItemAndContentList();
+        try{
 
-        if (CollectionUtils.isEmpty(itemAndContentList)) {
-            return sgFrameworkContextItem;
-        }
+            SgFrameworkResponse<ItemEntityVO> entityVOSgFrameworkResponse = sgFrameworkContextItem
+                .getEntityVOSgFrameworkResponse();
 
-        //if(SxlSwitch.openHotItemDouble){
-        //    List<ItemEntityVO> itemEntityVOList = dealDouble(sgFrameworkContextItem, itemAndContentList);
-        //    itemAndContentList= itemEntityVOList;
-        //}
-        Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
-        String customItemSetId = MapUtil.getStringWithDefault(userParams, "customItemSetId", "0");
+            List<ItemEntityVO> itemAndContentList = entityVOSgFrameworkResponse.getItemAndContentList();
 
-        List<ItemEntityVO> finalItemAndContentList = Lists.newArrayList();
-        //售罄的商品列表
-        List<ItemEntityVO> sellOutItemAndContentList = Lists.newArrayList();
-
-        for (ItemEntityVO entityVO : itemAndContentList) {
-            if(canBuy(entityVO)){
-                finalItemAndContentList.add(entityVO);
-            }else {
-                sellOutItemAndContentList.add(entityVO);
+            if (CollectionUtils.isEmpty(itemAndContentList)) {
+                return sgFrameworkContextItem;
             }
-        }
-        int totalSize = itemAndContentList.size();
-        int canBuySize = finalItemAndContentList.size();
-        int sellOutSize = sellOutItemAndContentList.size();
-        List<Long> sellOutItemIds = sellOutItemAndContentList.stream().map(ItemEntityVO::getItemId).collect(
-            Collectors.toList());
-        logger.error("爆款专区库存沉底结果.totalSize:{}, canBuySize:{}, sellOutSize:{}, sellOutItemIds:{}",
-            totalSize, canBuySize, sellOutSize, JSON.toJSONString(sellOutItemIds));
-        finalItemAndContentList.addAll(sellOutItemAndContentList);
 
+            //if(SxlSwitch.openHotItemDouble){
+            //    List<ItemEntityVO> itemEntityVOList = dealDouble(sgFrameworkContextItem, itemAndContentList);
+            //    itemAndContentList= itemEntityVOList;
+            //}
+            Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
+            String customItemSetId = MapUtil.getStringWithDefault(userParams, "customItemSetId", "0");
 
-        entityVOSgFrameworkResponse.setItemAndContentList(finalItemAndContentList);
+            List<ItemEntityVO> finalItemAndContentList = Lists.newArrayList();
+            //售罄的商品列表
+            List<ItemEntityVO> sellOutItemAndContentList = Lists.newArrayList();
 
-        //打底逻辑
-        if(CollectionUtils.isEmpty(finalItemAndContentList)){
-            SPIResult<Result<DataEntry>> resultSPIResult = tairSpi.get(HOT_ITEM_TAIR_USER_NAME, HOT_ITEM_NAME_SPACE, buildKey(customItemSetId));
-            Object o = Optional.ofNullable(resultSPIResult).map(SPIResult::getData).map(Result::getValue).map(DataEntry::getValue).orElse(null);
-            if(o != null){
-                List<ItemEntityVO> itemEntityVOList = JSON.parseArray(o.toString(), ItemEntityVO.class);
-                entityVOSgFrameworkResponse.setItemAndContentList(itemEntityVOList);
+            for (ItemEntityVO entityVO : itemAndContentList) {
+                if(canBuy(entityVO)){
+                    finalItemAndContentList.add(entityVO);
+                }else {
+                    sellOutItemAndContentList.add(entityVO);
+                }
             }
-        }else if (CollectionUtils.isNotEmpty(finalItemAndContentList) && isItemBackup(backUpCounter) && StringUtils.isNotEmpty(String.valueOf(customItemSetId))) {
-            //todo 日志
-            tairSpi.put(HOT_ITEM_TAIR_USER_NAME, HOT_ITEM_NAME_SPACE,  buildKey(customItemSetId), JSON.toJSONString(finalItemAndContentList));
-        }
+            int totalSize = itemAndContentList.size();
+            int canBuySize = finalItemAndContentList.size();
+            int sellOutSize = sellOutItemAndContentList.size();
+            List<Long> sellOutItemIds = sellOutItemAndContentList.stream().map(ItemEntityVO::getItemId).collect(
+                Collectors.toList());
+            logger.error("爆款专区库存沉底结果.totalSize:{}, canBuySize:{}, sellOutSize:{}, sellOutItemIds:{}",
+                totalSize, canBuySize, sellOutSize, JSON.toJSONString(sellOutItemIds));
+            finalItemAndContentList.addAll(sellOutItemAndContentList);
 
+
+            entityVOSgFrameworkResponse.setItemAndContentList(finalItemAndContentList);
+
+            //打底逻辑
+            if(CollectionUtils.isEmpty(finalItemAndContentList)){
+                SPIResult<Result<DataEntry>> resultSPIResult = tairSpi.get(HOT_ITEM_TAIR_USER_NAME, HOT_ITEM_NAME_SPACE, buildKey(customItemSetId));
+                Object o = Optional.ofNullable(resultSPIResult).map(SPIResult::getData).map(Result::getValue).map(DataEntry::getValue).orElse(null);
+                if(o != null){
+                    List<ItemEntityVO> itemEntityVOList = JSON.parseArray(o.toString(), ItemEntityVO.class);
+                    entityVOSgFrameworkResponse.setItemAndContentList(itemEntityVOList);
+                }
+            }else if (CollectionUtils.isNotEmpty(finalItemAndContentList) && isItemBackup(backUpCounter) && StringUtils.isNotEmpty(String.valueOf(customItemSetId))) {
+                //todo 日志
+                tairSpi.put(HOT_ITEM_TAIR_USER_NAME, HOT_ITEM_NAME_SPACE,  buildKey(customItemSetId), JSON.toJSONString(finalItemAndContentList));
+            }
+        }catch (Exception e){
+
+        }
         return sgFrameworkContextItem;
 
     }
