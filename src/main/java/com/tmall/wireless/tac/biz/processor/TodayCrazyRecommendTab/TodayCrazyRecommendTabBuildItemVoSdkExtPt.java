@@ -129,8 +129,8 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
                 HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                         .kv("vo itemId tairKey is null", JSON.toJSONString(itemEntityVO.getItemId()))
                         .info();
+                tacLogger.info("vo获取tairKey为空itemId" + itemEntityVO.getItemId());
             }
-            tacLogger.info("vo获取tairKey为空itemId" + itemEntityVO.getItemId());
         }
         itemEntityVO.put("attachment", attachments);
         itemEntityVO.remove("attachments");

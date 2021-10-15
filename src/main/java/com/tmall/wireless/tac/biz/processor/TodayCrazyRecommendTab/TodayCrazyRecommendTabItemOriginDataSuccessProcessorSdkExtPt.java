@@ -49,7 +49,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         tacLogger.info("TPP返回数据条数：" + originDataProcessRequest.getItemEntityOriginDataDTO().getResult().size());
         tacLogger.info("TPP返回数据结果：" + JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
-        HashMap<String, String> itemIdAndCacheKey = new HashMap<>();
         //鸿雁置顶itemIds和已曝光置顶itemIds,按照前端入参顺序(前端已做合并，原先是已曝光置顶itemIds在最上面，然后是鸿雁置顶itemIds的)
         String topListStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "topList", "");
         List<String> topList = topListStr.equals("") ? Lists.newArrayList() : Arrays.asList(topListStr.split(","));
@@ -71,11 +70,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             }
         });
         //保存tairKey和item关联供后面逻辑使用
-        try {
-            itemIdAndCacheKey.putAll(todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
-        } catch (Exception e) {
-            tacLogger.info("tairKey保存失败：" + e);
-        }
+        HashMap<String, String> itemIdAndCacheKey = new HashMap<>(todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
         tacLogger.info("topList去重后" + JSON.toJSONString(topItemIds));
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             this.itemSortV2(originDataDTO, isFirstPage, itemIdAndCacheKey);
@@ -83,11 +78,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (CollectionUtils.isNotEmpty(topItemIds)) {
             this.doTopItems(originDataDTO, topItemIds, isFirstPage);
         }
-        tacLogger.info("debug-1");
-
-        tacLogger.info("debug-2");
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, itemIdAndCacheKey);
-        tacLogger.info("debug-3");
         HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                 .kv("class", "TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt")
                 .kv("tpp data size", Integer.toString(originDataDTO.getResult().size()))
