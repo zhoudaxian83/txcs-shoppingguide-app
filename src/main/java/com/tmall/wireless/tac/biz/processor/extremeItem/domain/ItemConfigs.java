@@ -1,10 +1,11 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem.domain;
 
 import com.alibaba.fastjson.JSON;
+import com.taobao.eagleeye.EagleEye;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Data
 public class ItemConfigs {
-    private static Logger logger = LoggerFactory.getLogger(ItemConfigs.class);
+    private static Logger logger = LoggerProxy.getLogger(ItemConfigs.class);
 
     private List<ItemConfig> itemConfigList = new ArrayList<>();
 
@@ -24,12 +25,16 @@ public class ItemConfigs {
      * @return 商品配置列表领域对象
      */
     public static ItemConfigs valueOf(List<Map<String, Object>> aldDataList) {
+        if(CollectionUtils.isEmpty(aldDataList)) {
+            logger.error("ItemConfigs.valueOf error,aldDataList empty, traceId:{}", EagleEye.getTraceId());
+            throw new RuntimeException("商品配置数据不允许为空");
+        }
         ItemConfigs itemConfigs = new ItemConfigs();
         for (Map<String, Object> stringObjectMap : aldDataList) {
             ItemConfig itemConfig = ItemConfig.valueOf(stringObjectMap);
             itemConfigs.itemConfigList.add(itemConfig);
         }
-        logger.info("ItemConfigs_valueOf_itemConfigs: " + JSON.toJSONString(itemConfigs));
+        //logger.info("ItemConfigs_valueOf_itemConfigs: " + JSON.toJSONString(itemConfigs));
         itemConfigs.checkItemConfig();
         return itemConfigs;
     }
@@ -75,7 +80,7 @@ public class ItemConfigs {
                     return itemConfigGroup;
                 }).collect(Collectors.toList());
         itemConfigGroups.getItemConfigGroupList().addAll(itemConfigGroupList);
-        logger.info("ItemConfigs_splitGroup_itemConfigGroups: " + JSON.toJSONString(itemConfigGroups));
+        //logger.info("ItemConfigs_splitGroup_itemConfigGroups: " + JSON.toJSONString(itemConfigGroups));
         return itemConfigGroups;
     }
 

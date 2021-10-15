@@ -2,7 +2,9 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.taobao.eagleeye.EagleEye;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -24,7 +26,9 @@ import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.common.util.TacResultBackupUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -111,18 +115,17 @@ public class FirstScreenMindItemScene {
                         response.setExtInfos(Maps.newHashMap());
                     }
                     response.getExtInfos().put("contentModel", contentInfo);
+                    response.getExtInfos().put("traceId", EagleEye.getTraceId());
                     return response;
                 })
                 .map(TacResult::newResult)
                 .map(tacResult -> {
-                    if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
-                        tacResult = TacResult.errorResult("test");
-                        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
-                            .kv("FirstScreenMindItemScene","recommend")
-                            .kv("tacResult",JSON.toJSONString(tacResult))
-                            .info();
-                    }
-                    tacResult.getBackupMetaData().setUseBackup(true);
+                    BizScenario b = BizScenario.valueOf(
+                        ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+                        ScenarioConstantApp.LOC_TYPE_B2C,
+                        ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM
+                    );
+                    tacResult = TacResultBackupUtil.tacResultBackupItem(tacResult,b);
                     return tacResult;
                 })
                 .onErrorReturn(r -> TacResult.errorResult(""));
@@ -172,18 +175,16 @@ public class FirstScreenMindItemScene {
         }
     }
 
-    public ItemMetaInfo getRecommendItemMetaInfo(LocParams locParams) {
+    public ItemMetaInfo getRecommendItemMetaInfo(SgFrameworkContextItem sgFrameworkContextItem) {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         List<ItemGroupMetaInfo> itemGroupMetaInfoList = Lists.newArrayList();
         List<ItemInfoSourceMetaInfo> itemInfoSourceMetaInfoList = Lists.newArrayList();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-        if(locParams!=null &&
-            locParams.getRt1HourStoreId() == 0
-            && locParams.getRtHalfDayStoreId() == 0){
+
+        if(!isO2oScene(sgFrameworkContextItem)){
             itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         }
-
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
@@ -232,6 +233,7 @@ public class FirstScreenMindItemScene {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
         itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
+
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();
@@ -277,5 +279,11 @@ public class FirstScreenMindItemScene {
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfo = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfo.setSourceName("timeLabel");
         return itemInfoSourceMetaInfo;
+    }
+
+    private boolean isO2oScene(SgFrameworkContext sgFrameworkContext) {
+
+        String contentType = MapUtil.getStringWithDefault(sgFrameworkContext.getRequestParams(), RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
+        return RenderContentTypeEnum.checkO2OContentType(contentType);
     }
 }

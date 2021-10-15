@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.paySuccessGuessYouLike;
+package com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4;
 
 import com.alibaba.fastjson.JSON;
 import com.tmall.tcls.gs.sdk.biz.extensions.item.origindata.DefaultItemOriginDataResponseConvertSdkExtPt;
@@ -11,11 +11,12 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_B2C
-        , scenario = ScenarioConstantApp.PAY_FOR_SUCCESS_GUESS_YOU_LIKE
+@SdkExtension(
+        bizId = "supermarket",
+        useCase = "b2c",
+        scenario = "guessYourLikeShopCart4"
 )
-public class AliPaySuccessGuessYouLikeItemOriginDataResponseConvertSdkExtPt
+public class GuessYourLikeShopCart4ItemOriginDataResponseConvertSdkExtPt
         extends DefaultItemOriginDataResponseConvertSdkExtPt implements ItemOriginDataResponseConvertSdkExtPt {
 
 

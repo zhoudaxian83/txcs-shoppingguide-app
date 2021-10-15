@@ -1,12 +1,15 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem.common.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.taobao.eagleeye.EagleEye;
 import com.taobao.igraph.client.model.*;
+import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.IGraphResponseHandler;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallIGraphSearchService;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -18,12 +21,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHallIGraphSearchService<T> {
-    private static Logger logger = LoggerFactory.getLogger(SupermarketHallIGraphSearchServiceImpl.class);
+    private static Logger logger = LoggerProxy.getLogger(SupermarketHallIGraphSearchServiceImpl.class);
 
     @Autowired
-    TacLogger tacLogger;
-    @Autowired
-    com.taobao.igraph.client.core.IGraphClientWrap iGraphClientWrap;
+    com.tmall.wireless.store.spi.third.IGraphSpi iGraphSpi;
 
     @Override
     public List<T> search(String tableName, List<String> keyList, String[] fields, int perKeySize,  IGraphResponseHandler<T> handler) {
@@ -38,14 +39,27 @@ public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHal
 
         // 查询接口调用
         QueryResult queryResult;
+        Long iGraphStart = System.currentTimeMillis();
         try {
-            queryResult = iGraphClientWrap.search(atomicQuery);
+            SPIResult<QueryResult> queryResultSPIResult = iGraphSpi.search(atomicQuery);
+            if(queryResultSPIResult.isSuccess()) {
+                Long iGraphEnd = System.currentTimeMillis();
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|igraph|" + Logger.isEagleEyeTest() + "|success|" + (iGraphEnd - iGraphStart))
+                        .error();
+                queryResult = queryResultSPIResult.getData();
+            } else {
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|igraph|" + Logger.isEagleEyeTest() + "|error")
+                        .error();
+                return new ArrayList<>();
+            }
         } catch (Exception e) {
-            logger.error("search failed", e);
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|igraph|" + Logger.isEagleEyeTest() + "|exception")
+                    .error();
+            logger.error("SupermarketHallIGraphSearchServiceImpl failed, traceId:" + EagleEye.getTraceId(), e);
             return new ArrayList<>();
         }
+
         SingleQueryResult singleQueryResult = queryResult.getSingleQueryResult();
-        logger.info("=========singleQueryResult:" + JSON.toJSONString(singleQueryResult));
         return handler.handleResponse(singleQueryResult);
     }
 }

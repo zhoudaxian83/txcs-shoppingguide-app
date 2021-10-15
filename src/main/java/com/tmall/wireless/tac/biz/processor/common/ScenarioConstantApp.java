@@ -86,5 +86,10 @@ public class ScenarioConstantApp extends ScenarioConstant {
 
 
 
+    /**
+     * 今日疯抢tab页
+     */
+    public static final String TODAY_CRAZY_RECOMMEND_TAB = "TODAY_CRAZY_RECOMMEND_TAB";
+
 
 }
