@@ -22,7 +22,7 @@ import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.tpp.ItemInfoBySourceTppDTO;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.ItemLimitDTO;
-import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.util.CommonUtil;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TodayCrazyTairCacheService;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
@@ -44,6 +44,9 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
     @Autowired
     TacLoggerImpl tacLogger;
 
+    @Autowired
+    TodayCrazyTairCacheService todayCrazyTairCacheService;
+
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         if (buildItemVoRequest == null || buildItemVoRequest.getItemInfoDTO() == null) {
@@ -54,7 +57,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         String umpChannel = MapUtil.getStringWithDefault(userParams, VoKeyConstantApp.UMP_CHANNEL,
                 VoKeyConstantApp.CHANNEL_KEY);
         itemEntityVO.put("contentType", 0);
-        HashMap<String, String> temIdAndCacheKeyMap = CommonUtil.getItemIdAndCacheKey(userParams);
+        HashMap<String, String> temIdAndCacheKeyMap = todayCrazyTairCacheService.getItemIdAndCacheKey(userParams);
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
         itemEntityVO.setItemId(Optional.of(itemInfoDTO).map(ItemInfoDTO::getItemEntity).map(ItemEntity::getItemId).orElse(0L));
         itemEntityVO.setO2oType(Optional.of(itemInfoDTO).map(ItemInfoDTO::getItemEntity).map(ItemEntity::getO2oType).orElse(O2oType.B2C.name()));

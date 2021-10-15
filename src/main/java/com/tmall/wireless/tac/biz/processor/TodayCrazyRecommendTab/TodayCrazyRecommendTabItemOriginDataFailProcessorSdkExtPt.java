@@ -13,7 +13,6 @@ import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorReq
 import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TodayCrazyTairCacheService;
-import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.util.CommonUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         itemFailProcessorRequest.getSgFrameworkContextItem().setBizScenario(bizScenario);
         List<ItemEntity> itemEntityList = JSON.parseArray(JSON.toJSONString(todayCrazyTairCacheService.process(itemFailProcessorRequest).getResult()), ItemEntity.class);
         tacLogger.info("tpp打底返回数据条数：" + itemEntityList.size());
-        originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, CommonUtil.buildItemIdAndCacheKey(itemEntityList));
+        originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntityList));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         originDataDTO.setResult(itemEntityList);
         originDataDTO.setResult(itemEntityList);

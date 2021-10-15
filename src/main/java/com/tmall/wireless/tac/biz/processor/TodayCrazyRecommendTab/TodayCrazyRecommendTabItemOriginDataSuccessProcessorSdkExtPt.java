@@ -16,7 +16,6 @@ import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.Comm
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.TodayCrazySortItemEntity;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TodayCrazyTairCacheService;
-import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.util.CommonUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections.CollectionUtils;
@@ -59,7 +58,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         tacLogger.info("debug-1");
         //保存tairKey和item关联供后面逻辑使用
-        originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, CommonUtil.buildItemIdAndCacheKey(itemEntities));
+        originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
         tacLogger.info("debug-1-a");
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
         tacLogger.info("debug-2");

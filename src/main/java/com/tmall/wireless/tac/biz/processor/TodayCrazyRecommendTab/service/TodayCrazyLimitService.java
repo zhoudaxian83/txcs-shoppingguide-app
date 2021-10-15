@@ -13,7 +13,6 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.ItemLimitDTO;
-import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.util.CommonUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +37,13 @@ public class TodayCrazyLimitService {
     @Autowired
     TacLogger tacLogger;
 
+    @Autowired
+    TodayCrazyTairCacheService todayCrazyTairCacheService;
+
     private Map<String, Object> buildGetItemLimitParam(SgFrameworkContextItem sgFrameworkContextItem) {
         Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
+        //特殊需要查询限购信息的
+        //List<String> doQueryItemIds = (List<String>) sgFrameworkContextItem.getUserParams().get(CommonConstant.DO_QUERY_ITEM_IDS);
         Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
                 .getItemInfoGroupResponseMap();
         ItemGroup itemGroup = new ItemGroup("sm", "B2C");
@@ -47,7 +51,7 @@ public class TodayCrazyLimitService {
         List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
                 itemGroup).getValue()
                 .values()), ItemInfoDTO.class);
-        HashMap<String, String> map = CommonUtil.getItemIdAndCacheKey(sgFrameworkContextItem.getUserParams());
+        HashMap<String, String> map = todayCrazyTairCacheService.getItemIdAndCacheKey(sgFrameworkContextItem.getUserParams());
         List<Map> skuList = Lists.newArrayList();
         itemInfoDTOS.forEach(itemInfoDTO -> {
             if (this.doQuery(map, itemInfoDTO.getItemEntity().getItemId())) {

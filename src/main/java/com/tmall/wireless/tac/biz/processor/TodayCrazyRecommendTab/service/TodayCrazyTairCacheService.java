@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
@@ -30,9 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -272,5 +271,22 @@ public class TodayCrazyTairCacheService {
                     .error();
         }
         return "";
+    }
+
+    public  HashMap<String, String> buildItemIdAndCacheKey(List<com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity> itemEntities) {
+        HashMap<String, String> map = Maps.newHashMap();
+        itemEntities.forEach(itemEntity -> {
+            if (itemEntity.getExtMap().get("todayCrazyChannel") != null) {
+                map.put(itemEntity.getItemId().toString(), itemEntity.getExtMap().get("todayCrazyChannel").toString());
+            } else {
+                tacLogger.info("tairKey为空itemId");
+            }
+
+        });
+        return map;
+    }
+
+    public  HashMap<String, String> getItemIdAndCacheKey(Map<String, Object> userParams) {
+        return (HashMap<String, String>) userParams.get(CommonConstant.ITEM_ID_AND_CACHE_KEYS);
     }
 }
