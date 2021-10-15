@@ -109,6 +109,8 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             params.put("index", "0"); // 不要求分页
             params.put("pageSize", String.valueOf(PAGE_SIZE));
             params.put("itemSets", ITEM_SET_PREFIX + itemSetId);
+            //给后面的打底key用
+            customParams.put("customItemSetId", itemSetId);
 
             recommendRequest.setAppId(SCENE_ITEM_RECOMMEND_APPID);
             recommendRequest.setUserId(
@@ -135,14 +137,14 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             if(industryId == null || showNum == null){
                 continue;
             }
-            String newShowNum = String.valueOf(showNum);
-            if(SxlSwitch.openHotItemDouble){
-                BigDecimal num1 = new BigDecimal(String.valueOf(showNum));
-                BigDecimal num2 = new BigDecimal("2");
-                newShowNum = num1.multiply(num2).toString();
-            }
+            //String newShowNum = String.valueOf(showNum);
+            //if(SxlSwitch.openHotItemDouble){
+            //    BigDecimal num1 = new BigDecimal(String.valueOf(showNum));
+            //    BigDecimal num2 = new BigDecimal("2");
+            //    newShowNum = num1.multiply(num2).toString();
+            //}
             Object itemId = map.get("contentId");
-            sb.append(itemId).append(":").append(industryId).append(":").append(newShowNum).append(";");
+            sb.append(itemId).append(":").append(industryId).append(":").append(showNum).append(";");
         }
         return sb.toString();
     }

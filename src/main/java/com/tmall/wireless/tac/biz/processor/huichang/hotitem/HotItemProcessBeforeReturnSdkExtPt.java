@@ -4,17 +4,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
+import com.taobao.tair.DataEntry;
+import com.taobao.tair.Result;
+import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemProcessBeforeReturnSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
+import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
+import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
+import com.tmall.tmallwireless.tac.spi.context.SPIResult;
+import com.tmall.wireless.store.spi.tair.TairSpi;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
@@ -23,6 +32,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 爆款专区不需要库存过滤，但是需要把没有库存的沉淀
@@ -33,7 +43,17 @@ import org.slf4j.LoggerFactory;
     scenario = HallScenarioConstant.HALL_SCENARIO_HOT_ITEM)
 public class HotItemProcessBeforeReturnSdkExtPt extends Register implements ItemProcessBeforeReturnSdkExtPt {
 
+
+    private static final AtomicLong backUpCounter = new AtomicLong(0);
+
+
+    public static final String HOT_ITEM_TAIR_USER_NAME = "d25d96066001464b";
+    public static final int HOT_ITEM_NAME_SPACE = 625;
+
     Logger logger = LoggerFactory.getLogger(HotItemProcessBeforeReturnSdkExtPt.class);
+
+    @Autowired
+    TairSpi tairSpi;
 
     @Override
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
@@ -47,10 +67,12 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
             return sgFrameworkContextItem;
         }
 
-        if(SxlSwitch.openHotItemDouble){
-            List<ItemEntityVO> itemEntityVOList = dealDouble(sgFrameworkContextItem, itemAndContentList);
-            itemAndContentList= itemEntityVOList;
-        }
+        //if(SxlSwitch.openHotItemDouble){
+        //    List<ItemEntityVO> itemEntityVOList = dealDouble(sgFrameworkContextItem, itemAndContentList);
+        //    itemAndContentList= itemEntityVOList;
+        //}
+        Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
+        String customItemSetId = MapUtil.getStringWithDefault(userParams, "customItemSetId", "0");
 
         List<ItemEntityVO> finalItemAndContentList = Lists.newArrayList();
         //售罄的商品列表
@@ -71,10 +93,37 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
         logger.error("爆款专区库存沉底结果.totalSize:{}, canBuySize:{}, sellOutSize:{}, sellOutItemIds:{}",
             totalSize, canBuySize, sellOutSize, JSON.toJSONString(sellOutItemIds));
         finalItemAndContentList.addAll(sellOutItemAndContentList);
+
+
         entityVOSgFrameworkResponse.setItemAndContentList(finalItemAndContentList);
+
+        //打底逻辑
+        if(CollectionUtils.isEmpty(finalItemAndContentList)){
+            SPIResult<Result<DataEntry>> resultSPIResult = tairSpi.get(HOT_ITEM_TAIR_USER_NAME, HOT_ITEM_NAME_SPACE, buildKey(customItemSetId));
+            Object o = Optional.ofNullable(resultSPIResult).map(SPIResult::getData).map(Result::getValue).map(DataEntry::getValue).orElse(null);
+            if(o != null){
+                List<ItemEntityVO> itemEntityVOList = JSON.parseArray(o.toString(), ItemEntityVO.class);
+                entityVOSgFrameworkResponse.setItemAndContentList(itemEntityVOList);
+            }
+        }else if (CollectionUtils.isNotEmpty(finalItemAndContentList) && isItemBackup(backUpCounter) && StringUtils.isNotEmpty(String.valueOf(customItemSetId))) {
+            //todo 日志
+            tairSpi.put(HOT_ITEM_TAIR_USER_NAME, HOT_ITEM_NAME_SPACE,  buildKey(customItemSetId), JSON.toJSONString(finalItemAndContentList));
+        }
 
         return sgFrameworkContextItem;
 
+    }
+
+    private String buildKey(String customItemSetId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("hall_bottom_hot_").append(customItemSetId);
+        return sb.toString();
+
+    }
+
+    public boolean isItemBackup(AtomicLong backUpCounter) {
+        long count = backUpCounter.getAndAdd(1);
+        return count % SxlSwitch.backUpHotItem == 0;
     }
 
     //特殊处理逻辑。放大倍数的去拿了tpp的结果，需要这一步，按照库存过滤，来选出符合每个行业固定数量的商品
