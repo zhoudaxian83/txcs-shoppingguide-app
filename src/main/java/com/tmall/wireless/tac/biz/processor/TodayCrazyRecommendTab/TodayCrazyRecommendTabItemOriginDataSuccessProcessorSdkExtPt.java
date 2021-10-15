@@ -60,6 +60,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         tacLogger.info("debug-1");
         //保存tairKey和item关联供后面逻辑使用
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, CommonUtil.buildItemIdAndCacheKey(itemEntities));
+        tacLogger.info("debug-1-a");
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
         tacLogger.info("debug-2");
         //tpp请求成功写入缓存，供失败打底使用
