@@ -130,7 +130,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
 
         List<Long> itemIdList = pair.getLeft();
         //运用后台数据要查询限购信息
-        originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.DO_QUERY_ITEM_IDS,itemIdList);
+       // originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.DO_QUERY_ITEM_IDS,itemIdList);
         //去重原有的
         itemEntities.removeIf(itemEntity -> itemIdList.contains(itemEntity.getItemId()));
         //只有首页进行置顶操作，但每一页需要去重操作
