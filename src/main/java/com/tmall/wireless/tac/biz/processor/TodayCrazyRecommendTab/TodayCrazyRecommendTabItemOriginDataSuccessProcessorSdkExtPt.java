@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataRuleDTO;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataSuccessProcessorSdkExtPt;
@@ -79,6 +80,11 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         //保存tairKey和item关联供后面逻辑使用
         itemIdAndCacheKey.putAll(todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, itemIdAndCacheKey);
+        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                .kv("class", "TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt")
+                .kv("tpp data size", Integer.toString(originDataDTO.getResult().size()))
+                .info();
+        tacLogger.info("tpp最终条数："+originDataDTO.getResult().size());
         return originDataDTO;
     }
 

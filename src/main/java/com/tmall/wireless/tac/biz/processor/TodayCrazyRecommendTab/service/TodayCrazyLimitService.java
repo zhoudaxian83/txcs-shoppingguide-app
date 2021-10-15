@@ -49,6 +49,10 @@ public class TodayCrazyLimitService {
         Map<ItemGroup, ItemInfoGroupResponse> itemGroupItemInfoGroupResponseMap = sgFrameworkContextItem
                 .getItemInfoGroupResponseMap();
         ItemGroup itemGroup = new ItemGroup("sm", "B2C");
+        tacLogger.info("captain结果总条数:" + itemGroupItemInfoGroupResponseMap.get(itemGroup).getValue().values().size());
+        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                .kv("captain return itemInfoDTOS size ", Integer.toString(itemGroupItemInfoGroupResponseMap.get(itemGroup).getValue().values().size()))
+                .info();
         //captain获取skuId
         List<ItemInfoDTO> itemInfoDTOS = JSON.parseArray(JSON.toJSONString(itemGroupItemInfoGroupResponseMap.get(
                 itemGroup).getValue()
@@ -65,9 +69,17 @@ public class TodayCrazyLimitService {
                         skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
                         skuList.add(skuMap);
                     } else {
+                        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                                .kv("method", "buildGetItemLimitParam")
+                                .kv("captain is null ,itemId ", Long.toString(itemInfoDTO.getItemEntity().getItemId()))
+                                .info();
                         tacLogger.info("buildGetItemLimitParam参数构建captain为空,itemId=" + itemInfoDTO.getItemEntity().getItemId());
                     }
                 } catch (Exception e) {
+                    HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                            .kv("method", "buildGetItemLimitParam")
+                            .kv("build Exception", JSON.toJSONString(e))
+                            .info();
                     tacLogger.info("buildGetItemLimitParam参数构建异常,itemId=" + itemInfoDTO.getItemEntity().getItemId() + JSON.toJSONString(e));
                 }
             }
