@@ -69,8 +69,9 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 topItemIds.add(s);
             }
         });
+        tacLogger.info("topList去重后"+JSON.toJSONString(topItemIds));
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
-            this.itemSort(originDataDTO, isFirstPage);
+            this.itemSort(originDataDTO, isFirstPage,originDataProcessRequest);
         }
         if (CollectionUtils.isNotEmpty(topItemIds)) {
             this.doTopItems(originDataDTO, topItemIds, isFirstPage);
@@ -115,15 +116,21 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @param originDataDTO
      * @param isFirstPage
      */
-    private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage) {
+    private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage,OriginDataProcessRequest originDataProcessRequest) {
         List<ItemEntity> itemEntities = originDataDTO.getResult();
-        List<ColumnCenterDataSetItemRuleDTO> sortItems = this.getSortItems();
+        List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = todayCrazyTairCacheService.getEntryChannelPriceNew();
+        List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice = todayCrazyTairCacheService.getEntryPromotionPrice();
+        List<ColumnCenterDataSetItemRuleDTO> sortItems = this.merge(entryChannelPriceNew,entryPromotionPrice);
         if (CollectionUtils.isEmpty(sortItems)) {
             return;
         }
         Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = this.getNeedEnterDataSetItemRuleDTOS(sortItems);
         List<ColumnCenterDataSetItemRuleDTO> needEnterDataSetItemRuleDTOS = pair.getRight();
+
+
         List<Long> itemIdList = pair.getLeft();
+        //运用后台数据要查询限购信息
+        originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.DO_QUERY_ITEM_IDS,itemIdList);
         //去重原有的
         itemEntities.removeIf(itemEntity -> itemIdList.contains(itemEntity.getItemId()));
         //只有首页进行置顶操作，但每一页需要去重操作
@@ -181,6 +188,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 needEnterDataSetItemRuleDTOS.add(columnCenterDataSetItemRuleDTO);
             }
         });
+
         return Pair.of(itemList, needEnterDataSetItemRuleDTOS);
     }
 
@@ -206,10 +214,8 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     }
 
 
-    private List<ColumnCenterDataSetItemRuleDTO> getSortItems() {
+    private List<ColumnCenterDataSetItemRuleDTO> merge(List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew, List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice) {
         List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = Lists.newArrayList();
-        List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = todayCrazyTairCacheService.getEntryChannelPriceNew();
-        List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice = todayCrazyTairCacheService.getEntryPromotionPrice();
         if (CollectionUtils.isNotEmpty(entryChannelPriceNew)) {
             centerDataSetItemRuleDTOS.addAll(entryChannelPriceNew);
         }

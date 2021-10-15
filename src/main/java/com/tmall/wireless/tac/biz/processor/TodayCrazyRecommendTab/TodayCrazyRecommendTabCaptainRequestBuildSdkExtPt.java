@@ -49,6 +49,8 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         SgFrameworkContextItem contextItem = captainRequestBuildRequest.getContextItem();
         ItemInfoRequestSm itemInfoRequest = captainRequestBuildRequest.getItemInfoRequest();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfo = captainRequestBuildRequest.getItemInfoSourceMetaInfo();
+        //TODO 后面整理到参数构建扩展点
+        itemInfoSourceMetaInfo.setUmpChannelKey(CommonConstant.SUPER_MARKET_TODAY_CRAZY);
         Long storeId = itemInfoRequest.getStoreId();
         List<ItemId> itemIdList = itemInfoRequest.getList().stream().map(itemEntity ->
                 ItemId.valueOf(itemEntity.getItemId(), ItemId.ItemType.valueOf(itemEntity.getO2oType()))).collect(Collectors.toList());
