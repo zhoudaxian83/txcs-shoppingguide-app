@@ -27,11 +27,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch.openSampleBottom;
+
 @Service
 public class SupermarketHallBottomService {
     private static Logger logger = LoggerProxy.getLogger(SupermarketHallIGraphSearchServiceImpl.class);
-
-    private static final Map<String, AtomicLong> bottomCounterMap = new ConcurrentHashMap<>();
 
     @Autowired
     TairFactorySpi tairFactorySpi;
@@ -44,7 +44,6 @@ public class SupermarketHallBottomService {
         if(!satisfyBottom(resourceId, scheduleId)) {
             return;
         }
-        logger.info("traceId:" + EagleEye.getTraceId() + ", bottomCounterMap:" + JSON.toJSONString(bottomCounterMap));
         Long writeBottomDataStart = System.currentTimeMillis();
         String cacheKey = getCacheKey(resourceId, scheduleId);
         try {
@@ -101,7 +100,7 @@ public class SupermarketHallBottomService {
                 HadesLogUtil.stream("ExtremeItemSdkItemHandler|readBottomData|" + Logger.isEagleEyeTest() + "|error")
                         .kv("cacheKey", cacheKey)
                         .error();
-                logger.error( "readBottomData失败，traceId:" + EagleEye.getTraceId() + "," + "cacheKey: " + cacheKey);
+                logger.error( "readBottomData失败,traceId:{},cacheKey:{}", EagleEye.getTraceId(), cacheKey);
                 return new ArrayList<>();
             }
         } catch (Exception e) {
@@ -127,9 +126,59 @@ public class SupermarketHallBottomService {
         return "pre_hall_bottom_" + resourceId;
     }
 
+    private String getCounterKey(String resourceId, String scheduleId) {
+        if(enviroment != null && enviroment.isOnline()) {
+            return "hall_counter_" + resourceId + "_" + scheduleId;
+        }
+        return "pre_hall_counter_" + resourceId + "_" + scheduleId;
+    }
+
+    private String getCounterKey(String resourceId) {
+        if(enviroment != null && enviroment.isOnline()) {
+            return "hall_counter_" + resourceId;
+        }
+        return "pre_hall_counter_" + resourceId;
+    }
+
     public boolean satisfyBottom(String resourceId, String scheduleId) {
-        AtomicLong counter = bottomCounterMap.computeIfAbsent(resourceId + "_" + scheduleId, v -> new AtomicLong(0));
-        return counter.getAndAdd(1) % SupermarketHallSwitch.bottomCounterCycle == 0;
+        if(!openSampleBottom) {
+            return false;
+        }
+
+        TairManager defaultTair = tairFactorySpi.getDefaultTair();
+        if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null) {
+            logger.error("tairFactorySpi.getDefaultTair fail, traceId:{}", EagleEye.getTraceId());
+            return false;
+        }
+        Long bottomCountStart = System.currentTimeMillis();
+        String counterKey = getCounterKey(resourceId, scheduleId);
+        try {
+            Result<Integer> counterResult = defaultTair.getMultiClusterTairManager().incr(defaultTair.getNameSpace(), counterKey, 1, -1, 60 * 60 * 24);
+            if (counterResult.isSuccess() && counterResult.getValue() != null) {
+                Long bottomCountEnd = System.currentTimeMillis();
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|bottomCount|" + Logger.isEagleEyeTest() + "|success|" + (bottomCountEnd - bottomCountStart))
+                        .kv("counterKey", counterKey)
+                        .kv("counterValue", String.valueOf(counterResult.getValue()))
+                        .info();
+                boolean satisfy = counterResult.getValue() % SupermarketHallSwitch.bottomCounterCycle == 0;
+                if (satisfy) {
+                    HadesLogUtil.stream("ExtremeItemSdkItemHandler|bottomCount.hit|" + Logger.isEagleEyeTest() + "|success|" + (bottomCountEnd - bottomCountStart))
+                            .kv("counterKey", counterKey)
+                            .kv("counterValue", String.valueOf(counterResult.getValue()))
+                            .info();
+                }
+                return satisfy;
+            } else {
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|bottomCount|" + Logger.isEagleEyeTest() + "|error")
+                        .kv("counterKey", counterKey)
+                        .error();
+            }
+        } catch (Exception e) {
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|bottomCount|" + Logger.isEagleEyeTest() + "|exception")
+                    .kv("counterKey", counterKey)
+                    .error();
+        }
+        return false;
     }
 
 }
