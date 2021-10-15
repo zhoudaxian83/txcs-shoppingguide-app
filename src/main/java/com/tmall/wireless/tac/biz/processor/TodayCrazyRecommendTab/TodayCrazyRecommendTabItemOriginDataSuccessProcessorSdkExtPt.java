@@ -48,6 +48,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         tacLogger.info("TPP返回数据条数：" + originDataProcessRequest.getItemEntityOriginDataDTO().getResult().size());
         tacLogger.info("TPP返回数据结果：" + JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
+        HashMap<String, String> itemIdAndCacheKey = new HashMap<>();
         //鸿雁置顶itemIds和已曝光置顶itemIds,按照前端入参顺序(前端已做合并，原先是已曝光置顶itemIds在最上面，然后是鸿雁置顶itemIds的)
         String topListStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "topList", "");
         List<String> topList = topListStr.equals("") ? Lists.newArrayList() : Arrays.asList(topListStr.split(","));
@@ -58,8 +59,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         OriginDataDTO<ItemEntity> originDataDTO = originDataProcessRequest.getItemEntityOriginDataDTO();
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         tacLogger.info("debug-1");
-        //保存tairKey和item关联供后面逻辑使用
-        originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
+
         tacLogger.info("debug-1-a");
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
         tacLogger.info("debug-2");
@@ -75,11 +75,14 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         });
         tacLogger.info("topList去重后" + JSON.toJSONString(topItemIds));
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
-            this.itemSort(originDataDTO, isFirstPage, originDataProcessRequest);
+            this.itemSortV2(originDataDTO, isFirstPage, itemIdAndCacheKey);
         }
         if (CollectionUtils.isNotEmpty(topItemIds)) {
             this.doTopItems(originDataDTO, topItemIds, isFirstPage);
         }
+        //保存tairKey和item关联供后面逻辑使用
+        itemIdAndCacheKey.putAll(todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
+        originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, itemIdAndCacheKey);
         return originDataDTO;
     }
 
@@ -120,18 +123,57 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @param originDataDTO
      * @param isFirstPage
      */
-    private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage, OriginDataProcessRequest originDataProcessRequest) {
+    private void itemSortV2(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage, HashMap<String, String> itemIdAndCacheKey) {
         List<ItemEntity> itemEntities = originDataDTO.getResult();
+        //渠道立减商品
+        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryChannelPriceNewPair = this.getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryChannelPriceNew());
+        List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = entryChannelPriceNewPair.getRight();
+        List<Long> entryChannelPriceNewItemIdList = entryChannelPriceNewPair.getLeft();
+        //单品折扣价商品
+        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryPromotionPriceNewPair = this.getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryPromotionPrice());
+        List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice = entryPromotionPriceNewPair.getRight();
+        List<Long> entryPromotionPriceItemIdList = entryPromotionPriceNewPair.getLeft();
+        //如果坑位信息有重复，专享价优先
+        entryPromotionPrice.removeIf(columnCenterDataSetItemRuleDTO -> entryChannelPriceNewItemIdList.contains(columnCenterDataSetItemRuleDTO.getItemId()));
+        entryPromotionPriceItemIdList.removeIf(entryChannelPriceNewItemIdList::contains);
+        //写入渠道区分tairKey
+        entryChannelPriceNewItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_CHANNEL_NEW));
+        entryPromotionPriceItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_PROMOTION));
+        //merge
+        entryChannelPriceNew.addAll(entryPromotionPrice);
+        entryChannelPriceNewItemIdList.addAll(entryPromotionPriceItemIdList);
+        //去重原有的
+        itemEntities.removeIf(itemEntity -> entryChannelPriceNewItemIdList.contains(itemEntity.getItemId()));
+        //只有首页进行置顶操作，但每一页需要去重操作
+        if (isFirstPage && CollectionUtils.isNotEmpty(entryChannelPriceNew)) {
+            //资源位操作
+            tacLogger.info("定坑过滤后的结果：" + JSON.toJSONString(entryChannelPriceNew));
+            originDataDTO.setResult(this.doItemSort(itemEntities, entryChannelPriceNew));
+        }
+    }
+
+    /**
+     * 根据资源位置顶操作
+     *
+     * @param originDataDTO
+     * @param isFirstPage
+     */
+    private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage) {
+        List<ItemEntity> itemEntities = originDataDTO.getResult();
+        //渠道立减商品
         List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = todayCrazyTairCacheService.getEntryChannelPriceNew();
+
+        //单品折扣价商品
         List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice = todayCrazyTairCacheService.getEntryPromotionPrice();
+
         List<ColumnCenterDataSetItemRuleDTO> sortItems = this.merge(entryChannelPriceNew, entryPromotionPrice);
         if (CollectionUtils.isEmpty(sortItems)) {
             return;
         }
         Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = this.getNeedEnterDataSetItemRuleDTOS(sortItems);
+
+
         List<ColumnCenterDataSetItemRuleDTO> needEnterDataSetItemRuleDTOS = pair.getRight();
-
-
         List<Long> itemIdList = pair.getLeft();
         //运用后台数据要查询限购信息
         // originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.DO_QUERY_ITEM_IDS,itemIdList);
@@ -210,11 +252,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             return false;
         }
         return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime) && nowDate.after(itemStickStartTime) && nowDate.before(itemStickEndTime);
-    }
-
-    private String transform(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  // 设置日期格式
-        return simpleDateFormat.format(date);  // 格式转换
     }
 
 

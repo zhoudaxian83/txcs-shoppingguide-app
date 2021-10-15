@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.framework.model.ItemGroup;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
@@ -13,6 +14,7 @@ import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.ItemLimitDTO;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,20 +106,42 @@ public class TodayCrazyLimitService {
             Boolean success = jsonObject.getBoolean(Constant.SUCCESS);
             //适配异常情况
             if (success == null) {
+                HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                        .kv("getItemLimitResult", "success is null")
+                        .info();
                 tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue + "|jsonObject：" + JSON
                         .toJSONString(jsonObject));
                 return null;
             }
             if (success) {
-                return JSONObject.parseObject(((JSONObject) jsonObject.get(
-                        Constant.LIMIT_INFO)).toJSONString(),
-                        new TypeReference<Map<Long, List<ItemLimitDTO>>>() {
-                        });
+                Map<Long, List<ItemLimitDTO>> longListMap = null;
+                try {
+                    longListMap = JSONObject.parseObject(((JSONObject) jsonObject.get(
+                            Constant.LIMIT_INFO)).toJSONString(),
+                            new TypeReference<Map<Long, List<ItemLimitDTO>>>() {
+                            });
+                } catch (Exception e) {
+                    HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                            .kv("getItemLimitResult", "convert json error")
+                            .info();
+                }
+                HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                        .kv("paramsValue", JSON.toJSONString(paramsValue))
+                        .kv("longListMap", JSON.toJSONString(longListMap))
+                        .info();
+                return longListMap;
             } else {
+                HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                        .kv("getItemLimitResult", "query limit success is false")
+                        .info();
                 tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
                 return null;
             }
         } catch (Exception e) {
+            HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                    .kv("getItemLimitResult", "query limit Exception")
+                    .kv("Exception", JSON.toJSONString(e))
+                    .info();
             tacLogger.error(LOG_PREFIX + "获取限购信息异常", e);
             e.printStackTrace();
         }
