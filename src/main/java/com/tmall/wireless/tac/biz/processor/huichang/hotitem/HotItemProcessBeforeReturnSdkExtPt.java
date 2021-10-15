@@ -11,8 +11,11 @@ import java.util.stream.Collectors;
 import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
+import com.taobao.eagleeye.EagleEye;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
+import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -27,6 +30,7 @@ import com.tmall.wireless.store.spi.tair.TairSpi;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
+import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -57,17 +61,16 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
 
     @Override
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
-
+        SgFrameworkResponse<ItemEntityVO> entityVOSgFrameworkResponse = sgFrameworkContextItem
+            .getEntityVOSgFrameworkResponse();
+        String aldCurrentResId = "0";
+        List<ItemEntityVO> finalItemAndContentList = new ArrayList<>();
         try{
-
-            SgFrameworkResponse<ItemEntityVO> entityVOSgFrameworkResponse = sgFrameworkContextItem
-                .getEntityVOSgFrameworkResponse();
-
+            Context context = sgFrameworkContextItem.getTacContext();
+            RequestContext4Ald requestContext4Ald = (RequestContext4Ald)context;
+            Map<String, Object> aldContext = requestContext4Ald.getAldContext();
+            aldCurrentResId = MapUtil.getStringWithDefault(aldContext, HallCommonAldConstant.ALD_CURRENT_RES_ID, "0");
             List<ItemEntityVO> itemAndContentList = entityVOSgFrameworkResponse.getItemAndContentList();
-
-            if (CollectionUtils.isEmpty(itemAndContentList)) {
-                return sgFrameworkContextItem;
-            }
 
             //if(SxlSwitch.openHotItemDouble){
             //    List<ItemEntityVO> itemEntityVOList = dealDouble(sgFrameworkContextItem, itemAndContentList);
@@ -76,7 +79,6 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
             Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
             String customItemSetId = MapUtil.getStringWithDefault(userParams, "customItemSetId", "0");
 
-            List<ItemEntityVO> finalItemAndContentList = Lists.newArrayList();
             //售罄的商品列表
             List<ItemEntityVO> sellOutItemAndContentList = Lists.newArrayList();
 
@@ -96,26 +98,48 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
                 totalSize, canBuySize, sellOutSize, JSON.toJSONString(sellOutItemIds));
             finalItemAndContentList.addAll(sellOutItemAndContentList);
 
-
-            entityVOSgFrameworkResponse.setItemAndContentList(finalItemAndContentList);
-
             //打底逻辑
-            if(CollectionUtils.isEmpty(finalItemAndContentList)){
-                SPIResult<Result<DataEntry>> resultSPIResult = tairSpi.get(HOT_ITEM_TAIR_USER_NAME, HOT_ITEM_NAME_SPACE, buildKey(customItemSetId));
-                Object o = Optional.ofNullable(resultSPIResult).map(SPIResult::getData).map(Result::getValue).map(DataEntry::getValue).orElse(null);
-                if(o != null){
-                    List<ItemEntityVO> itemEntityVOList = JSON.parseArray(o.toString(), ItemEntityVO.class);
-                    entityVOSgFrameworkResponse.setItemAndContentList(itemEntityVOList);
-                }
-            }else if (CollectionUtils.isNotEmpty(finalItemAndContentList) && isItemBackup(backUpCounter) && StringUtils.isNotEmpty(String.valueOf(customItemSetId))) {
-                //todo 日志
-                tairSpi.put(HOT_ITEM_TAIR_USER_NAME, HOT_ITEM_NAME_SPACE,  buildKey(customItemSetId), JSON.toJSONString(finalItemAndContentList));
+            if(CollectionUtils.isNotEmpty(finalItemAndContentList)){
+                String tairKey = buildKey(customItemSetId);
+                writeBottomData(tairKey, finalItemAndContentList);
+                HadesLogUtil.stream("HotItemModuleHandler|HotItemProcessBeforeReturnSdkExtPt|" + isEagleEyeTest() + "|success|")
+                    .kv("resourceId", aldCurrentResId)
+                    .error();
+            }else {
+                HadesLogUtil.stream("HotItemModuleHandler|HotItemProcessBeforeReturnSdkExtPt|" + isEagleEyeTest() + "|bottom")
+                    .kv("resourceId", aldCurrentResId)
+                    .error();
+                String tairKey = buildKey(customItemSetId);
+                finalItemAndContentList = readeBottomData(tairKey);
             }
         }catch (Exception e){
-
+            HadesLogUtil.stream("HotItemModuleHandler|HotItemProcessBeforeReturnSdkExtPt|" + isEagleEyeTest() + "|exception")
+                .kv("resourceId", aldCurrentResId)
+                .kv("errorMsg", StackTraceUtil.stackTrace(e))
+                .error();
         }
+        entityVOSgFrameworkResponse.setItemAndContentList(finalItemAndContentList);
         return sgFrameworkContextItem;
 
+    }
+
+
+    //读打底数据
+    private List<ItemEntityVO> readeBottomData(String key){
+        SPIResult<Result<DataEntry>> resultSPIResult = tairSpi.get(HOT_ITEM_TAIR_USER_NAME, HOT_ITEM_NAME_SPACE, key);
+        Object o = Optional.ofNullable(resultSPIResult).map(SPIResult::getData).map(Result::getValue).map(DataEntry::getValue).orElse(null);
+        if(o != null){
+            List<ItemEntityVO> itemEntityVOList = JSON.parseArray(o.toString(), ItemEntityVO.class);
+            return itemEntityVOList;
+        }else {
+            return new ArrayList<>();
+        }
+    }
+
+    private void writeBottomData(String key, List<ItemEntityVO> itemEntityVOList){
+        if(isItemBackup(backUpCounter)){
+            tairSpi.put(HOT_ITEM_TAIR_USER_NAME, HOT_ITEM_NAME_SPACE,  key, JSON.toJSONString(itemEntityVOList));
+        }
     }
 
     private String buildKey(String customItemSetId) {
@@ -123,6 +147,24 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
         sb.append("hall_bottom_hot_").append(customItemSetId);
         return sb.toString();
 
+    }
+
+    /**
+     * 是否是压测请求
+     *
+     * @return
+     */
+    protected boolean isEagleEyeTest() {
+        try {
+            String ut = EagleEye.getUserData("t");
+            if ("1".equals(ut) || "2".equals(ut)) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            logger.error("method isEagleEyeTest error.", e);
+            return false;
+        }
     }
 
     public boolean isItemBackup(AtomicLong backUpCounter) {
