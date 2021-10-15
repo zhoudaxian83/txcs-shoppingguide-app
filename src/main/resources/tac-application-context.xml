@@ -17,6 +17,12 @@
     <context:component-scan base-package="com.tmall.tcls.gs.sdk.biz"/>
     <context:component-scan base-package="com.tmall.tcls.gs.sdk.sm"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.todayCrazyTab.TodayCrazyTabContentInfoQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todayCrazyTab.TodayCrazyTabContentMetaInfoBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todayCrazyTab.TodayCrazyTabContentOriginDataPostProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todayCrazyTab.TodayCrazyTabContentOriginDataRequestBuildSdkExtPt"/>
+
+
     <bean class="com.tmall.wireless.tac.biz.processor.icon.level2.ext.IconLevel2ContentMetaInfoBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.icon.level3.ext.IconLevel3ContentMetaInfoBuildSdkExtPt"/>
 
@@ -220,5 +226,20 @@
     <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemInfoPostProcessSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemFilterSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemProcessBeforeReturnSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt"/>
 
+    <!--详情推荐接口-->
+
+    <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.content.O2ODetailOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.content.O2ODetailRecContentContextCheckExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.content.O2ODetailRecContentMetaInfoBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.content.O2ODetailRecContentOriginDataResponseConvertSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.content.O2ODetailContentFilterSdkExtPt"/>
+
+    <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailItemOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailRecItemContextCheckExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailItemOriginDataResponseConvertSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailItemBackUpSdkExtPt"/>
+    <!--详情推荐接口结束-->
 </beans>

@@ -1,10 +1,12 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem.domain;
 
 import com.alibaba.fastjson.JSON;
+import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.extremeItem.service.entity.GmvEntity;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,9 +17,11 @@ import java.util.stream.Collectors;
 
 @Data
 public class ItemGmvGroupMap {
-    private static Logger logger = LoggerFactory.getLogger(ItemGmvGroupMap.class);
+    private static Logger logger = LoggerProxy.getLogger(ItemGmvGroupMap.class);
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    private static final DateTimeFormatter dfWithMilliSecond = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     private Map<Integer, ItemGmvGroup> innerItemGmvGroupMap;
 
@@ -35,13 +39,20 @@ public class ItemGmvGroupMap {
                 .collect(Collectors.groupingBy(e -> e.getItemId()))
                 .entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().stream()
+                        .filter(Objects::nonNull)
+                        .filter(gmvEntity -> StringUtils.isNotBlank(gmvEntity.getWindowEnd()))
                         .filter(gmvEntity -> lastNDaysDateSet.contains(gmvEntity.getWindowEnd().split(" ")[0]))
                         .map(item -> item.getGmv()).toArray(Double[]::new)));
 
-        logger.info("ItemGmvGroupMap_valueOf_lastNDayGmvEntityMap: " + JSON.toJSONString(lastNDayGmvEntityMap));
-        String currentYMDH = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH"));
-        Map<Long, Double> last1HourGmvEntityMap = last1HourGmvEntityList.stream().filter(e->e.getWindowEnd().startsWith(currentYMDH)).collect(Collectors.toMap(e -> e.getItemId(), e -> e.getGmv()));
-        logger.info("ItemGmvGroupMap_valueOf_last1HourGmvEntityMap: " + JSON.toJSONString(last1HourGmvEntityMap));
+        //logger.info("ItemGmvGroupMap_valueOf_lastNDayGmvEntityMap: " + JSON.toJSONString(lastNDayGmvEntityMap));
+        //String currentYMDH = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH"));
+        Map<Long, Double> last1HourGmvEntityMap = last1HourGmvEntityList.stream()
+                .filter(Objects::nonNull)
+                .filter(e -> e.getWindowEnd() != null)
+                .filter(e -> withIn1Hour(e.getWindowEnd()))
+                //.filter(e->e.getWindowEnd().startsWith(currentYMDH))
+                .collect(Collectors.toMap(e -> e.getItemId(), e -> e.getGmv()));
+        //logger.info("ItemGmvGroupMap_valueOf_last1HourGmvEntityMap: " + JSON.toJSONString(last1HourGmvEntityMap));
 
         for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroupList()) {
             ItemGmvGroup itemGmvGroup = new ItemGmvGroup();
@@ -56,7 +67,6 @@ public class ItemGmvGroupMap {
                 itemGmvList.add(itemGmv);
             }
             itemGmvGroup.setItemGmvList(itemGmvList);
-            logger.info("ItemGmvGroupMap_valueOf_itemGmvGroup: " + JSON.toJSONString(itemGmvGroup));
             itemGmvGroupMap.innerItemGmvGroupMap.put(itemConfigGroup.getGroupNo(), itemGmvGroup);
         }
 
@@ -78,18 +88,37 @@ public class ItemGmvGroupMap {
             }
             itemGmvGroupMap.lastNDaysGmvRankMap.put(itemGmvGroup.getGroupNo(), i++);
         }
-        i = 1;
-        int oneHoursSize = last1HourGmvRankList.size();
-        for(int index = 0; index < oneHoursSize; index++) {
-            ItemGmvGroup itemGmvGroup = last1HourGmvRankList.get(index);
-            if(index > 0 && Math.abs(last1HourGmvRankList.get(index).last1HourGmvSum() - last1HourGmvRankList.get(index-1).last1HourGmvSum()) < 0.01) {
-                i--;
+
+        boolean lost1HourGmvData = last1HourGmvRankList.stream().anyMatch(itemGmvGroup -> itemGmvGroup.last1HourGmvSum() == 0);
+        if(!lost1HourGmvData) {
+            i = 1;
+            int oneHoursSize = last1HourGmvRankList.size();
+            for (int index = 0; index < oneHoursSize; index++) {
+                ItemGmvGroup itemGmvGroup = last1HourGmvRankList.get(index);
+                if (index > 0 && Math.abs(last1HourGmvRankList.get(index).last1HourGmvSum() - last1HourGmvRankList.get(index - 1).last1HourGmvSum()) < 0.01) {
+                    i--;
+                }
+                itemGmvGroupMap.last1HourGmvRankMap.put(itemGmvGroup.getGroupNo(), i++);
             }
-            itemGmvGroupMap.last1HourGmvRankMap.put(itemGmvGroup.getGroupNo(), i++);
+            logger.info("ItemGmvGroupMap_valueOf_itemGmvGroupMap: " + JSON.toJSONString(itemGmvGroupMap));
+        } else {
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|raceSort.downgrade.L1|" + Logger.isEagleEyeTest() + "|success")
+                    .error();
+            int oneHoursSize = last1HourGmvRankList.size();
+            for (int index = 0; index < oneHoursSize; index++) {
+                ItemGmvGroup itemGmvGroup = last1HourGmvRankList.get(index);
+                itemGmvGroupMap.last1HourGmvRankMap.put(itemGmvGroup.getGroupNo(), 1);
+            }
+            logger.info("ItemGmvGroupMap_valueOf_itemGmvGroupMap(lost1HourGmvData): " + JSON.toJSONString(itemGmvGroupMap));
         }
-        logger.info("ItemGmvGroupMap_valueOf_itemGmvGroupMap: " + JSON.toJSONString(itemGmvGroupMap));
         return itemGmvGroupMap;
 
+    }
+
+    private static boolean withIn1Hour(String windowEnd) {
+        LocalDateTime windowEndTime = LocalDateTime.parse(windowEnd, dfWithMilliSecond);
+        LocalDateTime nowMinus1Hour = LocalDateTime.now().minusHours(1);
+        return windowEndTime.isAfter(nowMinus1Hour);
     }
 
     public double raceValueOf(Integer groupNo) {
@@ -128,9 +157,8 @@ public class ItemGmvGroupMap {
         return lastNDaysDateSet;
     }
 
-    public static String getYMDH() {
-        String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH"));
-        return format;
+    public static void main(String[] args) {
+        boolean b = withIn1Hour("2021-10-09 14:30:00.000");
+        System.out.println("b = " + b);
     }
-
 }

@@ -46,7 +46,7 @@ public class ItemConfigGroup {
      */
     public void inventoryFilter(Map<Long, Boolean> itemSoldOutMap) {
         for (ItemConfig itemConfig : this.itemConfigList) {
-            if(!itemSoldOutMap.get(itemConfig.getItemId())) {
+            if(itemSoldOutMap.get(itemConfig.getItemId()) != null && !itemSoldOutMap.get(itemConfig.getItemId())) {
                 this.invFilteredItemList.add(itemConfig);
             }
         }

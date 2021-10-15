@@ -42,6 +42,8 @@ public class HallCommonAldConstant {
     public static final String PAGE_SIZE = "pageSize";
     public static final String PAGE_INDEX = "pageIndex";
     public static final String ITEM_SET_ID = "itemSetId";
+    public static final String CUR_PAGE_URL = "curPageUrl";
+    public static final String TAC_PARAMS = "tacParams";
 
     //-----------------aldParams end--------------------
 

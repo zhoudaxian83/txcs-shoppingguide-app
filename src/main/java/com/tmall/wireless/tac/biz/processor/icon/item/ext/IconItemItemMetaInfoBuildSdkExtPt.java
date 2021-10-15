@@ -16,6 +16,7 @@ import com.tmall.tcls.gs.sdk.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.tcls.gs.sdk.framework.model.meta.ItemMetaInfo;
 import com.tmall.tcls.gs.sdk.framework.model.meta.node.ItemInfoNode;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.config.TxcsShoppingguideAppSwitch;
 import com.tmall.wireless.tac.client.domain.Context;
 
 @SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
@@ -24,6 +25,8 @@ import com.tmall.wireless.tac.client.domain.Context;
 )
 public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemMetaInfoBuildSdkExtPt {
 
+
+    public static final String SCENE_CODE = "shoppingguide.category";
     @Override
     public ItemMetaInfo process(Context context) {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
@@ -43,7 +46,7 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
     private List<ItemInfoNode> buildDefaultItemInfoNodes() {
         ItemInfoNode itemInfoNode = new ItemInfoNode();
         ItemInfoSourceMetaInfo item = ItemInfoSourceMetaInfo.build("captain");
-        item.setMktSceneCode("index.guessULike");
+        item.setMktSceneCode(SCENE_CODE);
         ItemInfoSourceMetaInfo tppItemInfoSource = ItemInfoSourceMetaInfo.build("tpp");
         ItemInfoSourceMetaInfo smartUiItemInfoSource = ItemInfoSourceMetaInfo.build("smartui");
         smartUiItemInfoSource.setStrategyPackageId("707_11169");
@@ -60,13 +63,15 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         requireListList.add(requireListPrice);
         smartUiItemInfoSource.setRequiredMaterials(requireListList);
         smartUiItemInfoSource.setAppId(27642L);
-        smartUiItemInfoSource.setMktSceneCode("index.guessULike");
-        itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(new ItemInfoSourceMetaInfo[]{item,
-            tppItemInfoSource,smartUiItemInfoSource}));
-        HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-            .kv("IconItemItemMetaInfoBuildSdkExtPt","buildDefaultItemInfoNodes")
-            .kv("itemInfoNode", JSON.toJSONString(itemInfoNode))
-            .info();
+
+        smartUiItemInfoSource.setMktSceneCode(SCENE_CODE);
+
+        if (TxcsShoppingguideAppSwitch.openSmartUiInIconCategory) {
+            itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource, smartUiItemInfoSource));
+        } else {
+            itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource));
+        }
+
         return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
     }
 }
