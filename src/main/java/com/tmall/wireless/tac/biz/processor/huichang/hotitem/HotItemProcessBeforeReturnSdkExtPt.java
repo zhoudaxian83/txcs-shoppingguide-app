@@ -22,8 +22,6 @@ import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemProcessBeforeReturnSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
-import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
-import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.tair.TairSpi;
@@ -50,9 +48,8 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
 
     private static final AtomicLong backUpCounter = new AtomicLong(0);
 
-
-    public static final String HOT_ITEM_TAIR_USER_NAME = "d25d96066001464b";
-    public static final int HOT_ITEM_NAME_SPACE = 625;
+    public static final String HOT_ITEM_TAIR_USER_NAME = "b6241830ca7f4b9d";
+    public static final int HOT_ITEM_NAME_SPACE = 184;
 
     Logger logger = LoggerFactory.getLogger(HotItemProcessBeforeReturnSdkExtPt.class);
 
