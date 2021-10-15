@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem.domain;
 
 import com.alibaba.fastjson.JSON;
+import com.taobao.eagleeye.EagleEye;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import lombok.Data;
@@ -24,6 +25,10 @@ public class ItemConfigs {
      * @return 商品配置列表领域对象
      */
     public static ItemConfigs valueOf(List<Map<String, Object>> aldDataList) {
+        if(CollectionUtils.isEmpty(aldDataList)) {
+            logger.error("ItemConfigs.valueOf error,aldDataList empty, traceId:{}", EagleEye.getTraceId());
+            throw new RuntimeException("商品配置数据不允许为空");
+        }
         ItemConfigs itemConfigs = new ItemConfigs();
         for (Map<String, Object> stringObjectMap : aldDataList) {
             ItemConfig itemConfig = ItemConfig.valueOf(stringObjectMap);

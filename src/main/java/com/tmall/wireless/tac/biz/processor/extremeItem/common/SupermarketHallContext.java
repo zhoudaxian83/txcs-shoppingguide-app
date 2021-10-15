@@ -26,6 +26,7 @@ public class SupermarketHallContext {
     private String smAreaId;
     private String currentResourceId;
     private String currentScheduleId;
+    private String currentPageUrl;
 
     private String previewTime;
     /**
@@ -73,8 +74,12 @@ public class SupermarketHallContext {
         //初始化当前排期ID
         supermarketHallContext.setCurrentScheduleId(String.valueOf(requestContext4Ald.getAldContext().get(ALD_SCHEDULE_ID)));
 
+        //初始化当前页面URL
+        String curPageUrl = MapUtil.getStringWithDefault(requestContext4Ald.getAldParam(), CUR_PAGE_URL, "");
+        supermarketHallContext.setCurrentPageUrl(curPageUrl);
+
         //初始化tac参数
-        String tacParams = MapUtil.getStringWithDefault(requestContext4Ald.getAldParam(), "tacParams", "");
+        String tacParams = MapUtil.getStringWithDefault(requestContext4Ald.getAldParam(), TAC_PARAMS, "");
         if(StringUtils.isNotBlank(tacParams)){
             JSONObject tacParamsMap = JSON.parseObject(tacParams);
             supermarketHallContext.setTacParamsMap(tacParamsMap);

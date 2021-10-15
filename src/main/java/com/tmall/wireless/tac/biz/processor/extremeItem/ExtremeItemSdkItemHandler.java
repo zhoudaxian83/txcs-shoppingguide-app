@@ -68,7 +68,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
         Long mainProcessStart = System.currentTimeMillis();
-        SupermarketHallContext supermarketHallContext = null;
+        SupermarketHallContext supermarketHallContext = new SupermarketHallContext();
         List<GeneralItem> generalItems = new ArrayList<>();
         try {
             //初始化SupermarketHallContext
@@ -110,18 +110,23 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
                 HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|error")
                         .kv("configSize", String.valueOf(itemConfigGroups.size()))
                         .kv("actualSize", String.valueOf(generalItems.size()))
+                        .kv("curPageUrl", supermarketHallContext.getCurrentResourceId())
+                        .kv("resourceId", supermarketHallContext.getCurrentResourceId())
+                        .kv("scheduleId", supermarketHallContext.getCurrentScheduleId())
                         .error();
                 generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId());
             }
         } catch (Exception e) {
             HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|exception")
                     .kv("errorMsg", StackTraceUtil.stackTrace(e))
+                    .kv("curPageUrl", supermarketHallContext.getCurrentResourceId())
+                    .kv("resourceId", supermarketHallContext.getCurrentResourceId())
+                    .kv("scheduleId", supermarketHallContext.getCurrentScheduleId())
                     .error();
             logger.error("ExtremeItemSdkItemHandler error, traceId:" + EagleEye.getTraceId(), e);
+            logger.error("ExtremeItemSdkItemHandler error, traceID:{}, requestContext4Ald:{}", EagleEye.getTraceId(), JSON.toJSONString(requestContext4Ald));
 
-            if(supermarketHallContext != null) {
-                generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId());
-            }
+            generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId());
         }
         return Flowable.just(TacResult.newResult(generalItems));
     }
