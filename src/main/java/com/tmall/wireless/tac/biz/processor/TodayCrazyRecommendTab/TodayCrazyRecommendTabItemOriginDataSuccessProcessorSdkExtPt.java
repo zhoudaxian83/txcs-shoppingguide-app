@@ -126,6 +126,8 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      */
     private void itemSortV2(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage, HashMap<String, String> itemIdAndCacheKey) {
         List<ItemEntity> itemEntities = originDataDTO.getResult();
+        List<ColumnCenterDataSetItemRuleDTO> result = Lists.newArrayList();
+        List<Long> resultItemIds = Lists.newArrayList();
         //渠道立减商品
         Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryChannelPriceNewPair = this.getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryChannelPriceNew());
         List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = entryChannelPriceNewPair.getRight();
@@ -138,10 +140,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         entryPromotionPrice.removeIf(columnCenterDataSetItemRuleDTO -> entryChannelPriceNewItemIdList.contains(columnCenterDataSetItemRuleDTO.getItemId()));
         entryPromotionPriceItemIdList.removeIf(entryChannelPriceNewItemIdList::contains);
         //merge
-        entryChannelPriceNew.addAll(entryPromotionPrice);
-        entryChannelPriceNewItemIdList.addAll(entryPromotionPriceItemIdList);
+        resultItemIds.addAll(entryChannelPriceNewItemIdList);
+        resultItemIds.addAll(entryPromotionPriceItemIdList);
+        result.addAll(entryChannelPriceNew);
+        result.addAll(entryPromotionPrice);
         //去重原有的
-        itemEntities.removeIf(itemEntity -> entryChannelPriceNewItemIdList.contains(itemEntity.getItemId()));
+        itemEntities.removeIf(itemEntity -> resultItemIds.contains(itemEntity.getItemId()));
         //只有首页进行置顶操作，但每一页需要去重操作
         if (isFirstPage && CollectionUtils.isNotEmpty(entryChannelPriceNew)) {
             //写入渠道区分tairKey
@@ -149,7 +153,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             entryChannelPriceNewItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_CHANNEL_NEW));
             //资源位操作
             tacLogger.info("定坑过滤后的结果：" + JSON.toJSONString(entryChannelPriceNew));
-            originDataDTO.setResult(this.doItemSort(itemEntities, entryChannelPriceNew));
+            originDataDTO.setResult(this.doItemSort(itemEntities, result));
         } else {
             originDataDTO.setResult(itemEntities);
         }
