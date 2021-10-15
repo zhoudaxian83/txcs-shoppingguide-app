@@ -47,6 +47,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         tacLogger.info("TPP返回数据条数：" + originDataProcessRequest.getItemEntityOriginDataDTO().getResult().size());
+        tacLogger.info("TPP返回数据结果：" + JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
         //鸿雁置顶itemIds和已曝光置顶itemIds,按照前端入参顺序(前端已做合并，原先是已曝光置顶itemIds在最上面，然后是鸿雁置顶itemIds的)
         String topListStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "topList", "");
         List<String> topList = topListStr.equals("") ? Lists.newArrayList() : Arrays.asList(topListStr.split(","));
@@ -72,9 +73,9 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 topItemIds.add(s);
             }
         });
-        tacLogger.info("topList去重后"+JSON.toJSONString(topItemIds));
+        tacLogger.info("topList去重后" + JSON.toJSONString(topItemIds));
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
-            this.itemSort(originDataDTO, isFirstPage,originDataProcessRequest);
+            this.itemSort(originDataDTO, isFirstPage, originDataProcessRequest);
         }
         if (CollectionUtils.isNotEmpty(topItemIds)) {
             this.doTopItems(originDataDTO, topItemIds, isFirstPage);
@@ -119,11 +120,11 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @param originDataDTO
      * @param isFirstPage
      */
-    private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage,OriginDataProcessRequest originDataProcessRequest) {
+    private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage, OriginDataProcessRequest originDataProcessRequest) {
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = todayCrazyTairCacheService.getEntryChannelPriceNew();
         List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice = todayCrazyTairCacheService.getEntryPromotionPrice();
-        List<ColumnCenterDataSetItemRuleDTO> sortItems = this.merge(entryChannelPriceNew,entryPromotionPrice);
+        List<ColumnCenterDataSetItemRuleDTO> sortItems = this.merge(entryChannelPriceNew, entryPromotionPrice);
         if (CollectionUtils.isEmpty(sortItems)) {
             return;
         }
@@ -133,7 +134,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
 
         List<Long> itemIdList = pair.getLeft();
         //运用后台数据要查询限购信息
-       // originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.DO_QUERY_ITEM_IDS,itemIdList);
+        // originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.DO_QUERY_ITEM_IDS,itemIdList);
         //去重原有的
         itemEntities.removeIf(itemEntity -> itemIdList.contains(itemEntity.getItemId()));
         //只有首页进行置顶操作，但每一页需要去重操作
