@@ -54,18 +54,14 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         List<String> topList = topListStr.equals("") ? Lists.newArrayList() : Arrays.asList(topListStr.split(","));
         tacLogger.info("topList:" + JSON.toJSONString(topList));
         boolean isFirstPage = (boolean) originDataProcessRequest.getSgFrameworkContextItem().getUserParams().get("isFirstPage");
+        tacLogger.info("isFirstPage：" + isFirstPage);
         String tabType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", "");
         // 1,融合置顶商品；2，商品去重处理  直接把入参中的置顶商品置顶，每次查询进行去重处理
         OriginDataDTO<ItemEntity> originDataDTO = originDataProcessRequest.getItemEntityOriginDataDTO();
         List<ItemEntity> itemEntities = originDataDTO.getResult();
-        tacLogger.info("debug-1");
-
-        tacLogger.info("debug-1-a");
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
-        tacLogger.info("debug-2");
         //tpp请求成功写入缓存，供失败打底使用
         todayCrazyTairCacheService.process(itemFailProcessorRequest);
-        tacLogger.info("debug-3");
         //排序优先级：已曝光>鸿雁>坑位排序(保证顺序去重)
         List<String> topItemIds = Lists.newArrayList();
         topList.forEach(s -> {
@@ -98,7 +94,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         List<ItemEntity> itemEntities = originDataDTO.getResult();
         // 只有今日超省走双置顶逻辑，1，双中判断置顶有效期；2，只有第一页做置顶这个置顶逻辑；3每页走要进行置顶去重
         itemEntities.removeIf(itemEntity -> topList.contains(String.valueOf(itemEntity.getItemId())));
-        tacLogger.info("isFirstPage：" + isFirstPage);
+        tacLogger.info("过滤后条数：" + itemEntities.size());
         if (isFirstPage) {
             List<ItemEntity> topResultsItemEntityList = Lists.newArrayList();
             topList.forEach(itemId -> {
@@ -109,8 +105,8 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 itemEntity.setTop(true);
                 topResultsItemEntityList.add(itemEntity);
             });
-            tacLogger.info("过滤后条数：" + itemEntities.size());
             topResultsItemEntityList.addAll(itemEntities);
+            tacLogger.info("加上topList总条数:" + topResultsItemEntityList.size());
             originDataDTO.setResult(topResultsItemEntityList);
         } else {
             originDataDTO.setResult(itemEntities);
