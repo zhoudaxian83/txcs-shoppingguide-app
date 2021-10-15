@@ -132,9 +132,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         //如果坑位信息有重复，专享价优先
         entryPromotionPrice.removeIf(columnCenterDataSetItemRuleDTO -> entryChannelPriceNewItemIdList.contains(columnCenterDataSetItemRuleDTO.getItemId()));
         entryPromotionPriceItemIdList.removeIf(entryChannelPriceNewItemIdList::contains);
-        //写入渠道区分tairKey
-        entryChannelPriceNewItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_CHANNEL_NEW));
-        entryPromotionPriceItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_PROMOTION));
         //merge
         entryChannelPriceNew.addAll(entryPromotionPrice);
         entryChannelPriceNewItemIdList.addAll(entryPromotionPriceItemIdList);
@@ -142,9 +139,14 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         itemEntities.removeIf(itemEntity -> entryChannelPriceNewItemIdList.contains(itemEntity.getItemId()));
         //只有首页进行置顶操作，但每一页需要去重操作
         if (isFirstPage && CollectionUtils.isNotEmpty(entryChannelPriceNew)) {
+            //写入渠道区分tairKey
+            entryPromotionPriceItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_PROMOTION));
+            entryChannelPriceNewItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_CHANNEL_NEW));
             //资源位操作
             tacLogger.info("定坑过滤后的结果：" + JSON.toJSONString(entryChannelPriceNew));
             originDataDTO.setResult(this.doItemSort(itemEntities, entryChannelPriceNew));
+        } else {
+            originDataDTO.setResult(itemEntities);
         }
     }
 
@@ -184,6 +186,9 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     }
 
     private List<ItemEntity> doItemSort(List<ItemEntity> itemEntities, List<ColumnCenterDataSetItemRuleDTO> needEnterDataSetItemRuleDTOS) {
+        if (CollectionUtils.isEmpty(needEnterDataSetItemRuleDTOS)) {
+            return itemEntities;
+        }
         List<TodayCrazySortItemEntity> todayCrazySortItemEntities = Lists.newArrayList();
         needEnterDataSetItemRuleDTOS.forEach(columnCenterDataSetItemRuleDTO -> {
             ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
