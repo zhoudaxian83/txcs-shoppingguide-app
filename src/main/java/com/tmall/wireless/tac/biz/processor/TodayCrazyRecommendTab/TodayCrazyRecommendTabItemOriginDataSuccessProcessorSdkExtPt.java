@@ -23,7 +23,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,35 +48,59 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         tacLogger.info("TPP返回数据条数：" + originDataProcessRequest.getItemEntityOriginDataDTO().getResult().size());
         tacLogger.info("TPP返回数据结果：" + JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
-        //鸿雁置顶itemIds和已曝光置顶itemIds,按照前端入参顺序(前端已做合并，原先是已曝光置顶itemIds在最上面，然后是鸿雁置顶itemIds的)
+        /**
+         * 鸿雁置顶itemIds和已曝光置顶itemIds,按照前端入参顺序(前端已做合并，原先是已曝光置顶itemIds在最上面，然后是鸿雁置顶itemIds的)
+         */
         String topListStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "topList", "");
         List<String> topList = topListStr.equals("") ? Lists.newArrayList() : Arrays.asList(topListStr.split(","));
-        tacLogger.info("topList:" + JSON.toJSONString(topList));
         boolean isFirstPage = (boolean) originDataProcessRequest.getSgFrameworkContextItem().getUserParams().get("isFirstPage");
         tacLogger.info("isFirstPage：" + isFirstPage);
         String tabType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", "");
-        // 1,融合置顶商品；2，商品去重处理  直接把入参中的置顶商品置顶，每次查询进行去重处理
+
+
         OriginDataDTO<ItemEntity> originDataDTO = originDataProcessRequest.getItemEntityOriginDataDTO();
         List<ItemEntity> itemEntities = originDataDTO.getResult();
+
+        /**
+         * tpp请求成功写入缓存，供失败打底使用
+         */
         ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
-        //tpp请求成功写入缓存，供失败打底使用
         todayCrazyTairCacheService.process(itemFailProcessorRequest);
-        //排序优先级：已曝光>鸿雁>坑位排序(保证顺序去重)
+
+        /**
+         * 排序优先级：已曝光>鸿雁>坑位排序(保证顺序去重)
+         * 去重的同时保证入参的顺序
+         */
         List<String> topItemIds = Lists.newArrayList();
         topList.forEach(s -> {
             if (!topItemIds.contains(s)) {
                 topItemIds.add(s);
             }
         });
-        //保存tairKey和item关联供后面逻辑使用
+
+        /**
+         * 保存tairKey和item关联关系。供后面逻辑使用查询限购，区分渠道的判断依据
+         */
         HashMap<String, String> itemIdAndCacheKey = new HashMap<>(todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
         tacLogger.info("topList去重后" + JSON.toJSONString(topItemIds));
+
+        /**
+         * 只有今日超省才走定坑逻辑
+         */
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
             this.itemSortV2(originDataDTO, isFirstPage, itemIdAndCacheKey);
         }
+
+        /**
+         * 置顶逻辑，根据topItemIds前端传入的顺序置顶操作
+         */
         if (CollectionUtils.isNotEmpty(topItemIds)) {
             this.doTopItems(originDataDTO, topItemIds, isFirstPage);
         }
+
+        /**
+         * 保存到上下文中，供后面查询限购，区分渠道的判断依据
+         */
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, itemIdAndCacheKey);
         HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                 .kv("class", "TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt")
@@ -95,9 +118,14 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @param isFirstPage
      */
     public void doTopItems(OriginDataDTO<ItemEntity> originDataDTO, List<String> topList, boolean isFirstPage) {
-        //如果是第一页去除重复且置顶，非第一页只去重
+        /**
+         * 如果是第一页去除重复且置顶，非第一页只去重
+         */
         List<ItemEntity> itemEntities = originDataDTO.getResult();
-        // 只有今日超省走双置顶逻辑，1，双中判断置顶有效期；2，只有第一页做置顶这个置顶逻辑；3每页走要进行置顶去重
+
+        /**
+         * 只有今日超省走双置顶逻辑，1，双中判断置顶有效期；2，只有第一页做置顶这个置顶逻辑；3每页走要进行置顶去重
+         */
         itemEntities.removeIf(itemEntity -> topList.contains(String.valueOf(itemEntity.getItemId())));
         tacLogger.info("过滤后条数：" + itemEntities.size());
         if (isFirstPage) {
@@ -125,79 +153,64 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @param isFirstPage
      */
     private void itemSortV2(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage, HashMap<String, String> itemIdAndCacheKey) {
+        /**
+         * tpp返回的全部结果集
+         */
         List<ItemEntity> itemEntities = originDataDTO.getResult();
+
+        /**
+         * 全部定坑数据集
+         */
         List<ColumnCenterDataSetItemRuleDTO> result = Lists.newArrayList();
+
+        //全部定坑数据itemId
         List<Long> resultItemIds = Lists.newArrayList();
-        //渠道立减商品
+
+        //获取渠道立减商品和对应itemIds
         Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryChannelPriceNewPair = this.getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryChannelPriceNew());
         List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = entryChannelPriceNewPair.getRight();
         List<Long> entryChannelPriceNewItemIdList = entryChannelPriceNewPair.getLeft();
-        //单品折扣价商品
+
+        //获取单品折扣价商品和对应itemIds
         Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryPromotionPriceNewPair = this.getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryPromotionPrice());
         List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice = entryPromotionPriceNewPair.getRight();
         List<Long> entryPromotionPriceItemIdList = entryPromotionPriceNewPair.getLeft();
-        //如果坑位信息有重复，专享价优先
+
+        //如果渠道立减商品和单品折扣价商品有重复，则渠道立减商品优先，防止重复
         entryPromotionPrice.removeIf(columnCenterDataSetItemRuleDTO -> entryChannelPriceNewItemIdList.contains(columnCenterDataSetItemRuleDTO.getItemId()));
         entryPromotionPriceItemIdList.removeIf(entryChannelPriceNewItemIdList::contains);
-        //merge
+
+        //合并后进行定坑处理
         resultItemIds.addAll(entryChannelPriceNewItemIdList);
         resultItemIds.addAll(entryPromotionPriceItemIdList);
         result.addAll(entryChannelPriceNew);
         result.addAll(entryPromotionPrice);
-        //去重原有的
+
+        //根据定坑数据对原tpp返回结果集进行去重处理
         itemEntities.removeIf(itemEntity -> resultItemIds.contains(itemEntity.getItemId()));
-        //只有首页进行置顶操作，但每一页需要去重操作
-        if (isFirstPage && CollectionUtils.isNotEmpty(entryChannelPriceNew)) {
-            //写入渠道区分tairKey
+
+        //只有首页才进行定坑处理，且要有坑位数据
+        if (isFirstPage && CollectionUtils.isNotEmpty(result)) {
+            //保存tairKey和item关联关系。供后面逻辑使用查询限购，区分渠道的判断依据(因为定坑商品也要展示渠道)
             entryPromotionPriceItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_PROMOTION));
             entryChannelPriceNewItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_CHANNEL_NEW));
-            //资源位操作
             tacLogger.info("定坑过滤后的结果：" + JSON.toJSONString(entryChannelPriceNew));
+            //坑位排序
             originDataDTO.setResult(this.doItemSort(itemEntities, result));
         } else {
             originDataDTO.setResult(itemEntities);
         }
     }
 
-    /**
-     * 根据资源位置顶操作
-     *
-     * @param originDataDTO
-     * @param isFirstPage
-     */
-    private void itemSort(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage) {
-        List<ItemEntity> itemEntities = originDataDTO.getResult();
-        //渠道立减商品
-        List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = todayCrazyTairCacheService.getEntryChannelPriceNew();
-
-        //单品折扣价商品
-        List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice = todayCrazyTairCacheService.getEntryPromotionPrice();
-
-        List<ColumnCenterDataSetItemRuleDTO> sortItems = this.merge(entryChannelPriceNew, entryPromotionPrice);
-        if (CollectionUtils.isEmpty(sortItems)) {
-            return;
-        }
-        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = this.getNeedEnterDataSetItemRuleDTOS(sortItems);
-
-
-        List<ColumnCenterDataSetItemRuleDTO> needEnterDataSetItemRuleDTOS = pair.getRight();
-        List<Long> itemIdList = pair.getLeft();
-        //运用后台数据要查询限购信息
-        // originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.DO_QUERY_ITEM_IDS,itemIdList);
-        //去重原有的
-        itemEntities.removeIf(itemEntity -> itemIdList.contains(itemEntity.getItemId()));
-        //只有首页进行置顶操作，但每一页需要去重操作
-        if (isFirstPage && CollectionUtils.isNotEmpty(needEnterDataSetItemRuleDTOS)) {
-            //资源位操作
-            tacLogger.info("定坑过滤后的结果：" + JSON.toJSONString(needEnterDataSetItemRuleDTOS));
-            originDataDTO.setResult(this.doItemSort(itemEntities, needEnterDataSetItemRuleDTOS));
-        }
-    }
 
     private List<ItemEntity> doItemSort(List<ItemEntity> itemEntities, List<ColumnCenterDataSetItemRuleDTO> needEnterDataSetItemRuleDTOS) {
         if (CollectionUtils.isEmpty(needEnterDataSetItemRuleDTOS)) {
             return itemEntities;
         }
+
+        /**
+         * 组装坑位数据为TPP需要的标准入参数据，做排序准备
+         */
         List<TodayCrazySortItemEntity> todayCrazySortItemEntities = Lists.newArrayList();
         needEnterDataSetItemRuleDTOS.forEach(columnCenterDataSetItemRuleDTO -> {
             ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
@@ -212,14 +225,19 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             todayCrazySortItemEntities.add(todayCrazySortItemEntity);
         });
 
-        //定坑排序
+        /**
+         * 对坑位做排序处理
+         */
         List<TodayCrazySortItemEntity> todayCrazySortItemEntities2 = todayCrazySortItemEntities.stream().sorted(
                 Comparator.comparing(TodayCrazySortItemEntity::getIndex)).collect(
                 Collectors.toList());
+
+        /**
+         * 根据坑位先后顺序向原有tpp结果数据中进行插入,当坑位值大于总数据条数的时候就放在末尾（正常情况下每页返回20条不会出现）
+         */
         for (TodayCrazySortItemEntity todayCrazySortItemEntity : todayCrazySortItemEntities2) {
             long index = todayCrazySortItemEntity.getIndex();
             if (todayCrazySortItemEntity.getIndex() > itemEntities.size()) {
-                //坑位大于总条数放末尾
                 itemEntities.add(todayCrazySortItemEntity.getItemEntity());
             } else {
                 itemEntities.add((int) index - 1, todayCrazySortItemEntity.getItemEntity());
@@ -229,7 +247,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     }
 
     /**
-     * 过滤出需要坑位信息
+     * 过滤出需要坑位信息,且去重处理（一般不会重复的）
      *
      * @param columnCenterDataSetItemRuleDTOS
      * @return
@@ -244,10 +262,16 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 needEnterDataSetItemRuleDTOS.add(columnCenterDataSetItemRuleDTO);
             }
         });
-
         return Pair.of(itemList, needEnterDataSetItemRuleDTOS);
     }
 
+    /**
+     * 1，必须同时有排序起止时间和置顶起止时间
+     * 2，当前时间必须同时在排期和置顶的起止时间段内
+     *
+     * @param columnCenterDataRuleDTO
+     * @return
+     */
     private boolean isNeedSort(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
         Date nowDate = new Date();
         if (columnCenterDataRuleDTO == null) {
