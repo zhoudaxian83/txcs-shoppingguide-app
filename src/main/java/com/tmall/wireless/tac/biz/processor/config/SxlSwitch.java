@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.config;
 import com.taobao.csp.switchcenter.annotation.AppSwitch;
 import com.taobao.csp.switchcenter.annotation.NameSpace;
 import com.taobao.csp.switchcenter.bean.Switch;
+import com.taobao.csp.switchcenter.bean.Switch.Level;
 import com.taobao.csp.switchcenter.core.SwitchManager;
 
 /**
@@ -29,6 +30,9 @@ public class SxlSwitch {
     @AppSwitch(des = "招商主活动id", level = Switch.Level.p4)
     public static Long SXL_MAIN_ACTIVEX_ID = 885L;
 
+    @AppSwitch(des = "爆款专区打底", level = Level.p2)
+    public static Integer backUpHotItem = 1000;
+
     @AppSwitch(des = "o2o榜单跳转链接", level = Switch.Level.p4)
     public static String O2O_BD_JUMP_UTL = "https://pages.tmall.com/wow/an/cs/act/wupr?wh_biz=tm&wh_pid=scenes/17a79a93163&disableNav=YES&contentId=%s&contentType=%s&itemSetIds=%s&entryItemIds=%s";
     /**预发**/
@@ -45,6 +49,11 @@ public class SxlSwitch {
 
     @AppSwitch(des = "上新了超市算法选品ab实验id", level = Switch.Level.p4)
     public static String SXL_ALG_ITEMSET_ID_AB = "129";
+
+    //@AppSwitch(des = "爆款专区获取tpp翻倍开关", level = Switch.Level.p4)
+    //public static boolean openHotItemDouble = true;
+
+
 
 
 }

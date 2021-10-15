@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.huichang.hotitem;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
+import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
@@ -107,6 +109,8 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             params.put("index", "0"); // 不要求分页
             params.put("pageSize", String.valueOf(PAGE_SIZE));
             params.put("itemSets", ITEM_SET_PREFIX + itemSetId);
+            //给后面的打底key用
+            customParams.put("customItemSetId", itemSetId);
 
             recommendRequest.setAppId(SCENE_ITEM_RECOMMEND_APPID);
             recommendRequest.setUserId(
@@ -130,10 +134,25 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
         for(Map<String, Object> map : aldStaticDataList){
             Object industryId = map.get("industryId");
             Object showNum = map.get("showNum");
+            if(industryId == null || showNum == null){
+                continue;
+            }
+            //String newShowNum = String.valueOf(showNum);
+            //if(SxlSwitch.openHotItemDouble){
+            //    BigDecimal num1 = new BigDecimal(String.valueOf(showNum));
+            //    BigDecimal num2 = new BigDecimal("2");
+            //    newShowNum = num1.multiply(num2).toString();
+            //}
             Object itemId = map.get("contentId");
             sb.append(itemId).append(":").append(industryId).append(":").append(showNum).append(";");
         }
         return sb.toString();
     }
 
+    public static void main(String[] args) {
+        BigDecimal num1 = new BigDecimal(String.valueOf(2));
+        BigDecimal num2 = new BigDecimal("2");
+        String s = num1.multiply(num2).toString();
+        System.out.println(s);
+    }
 }

@@ -2,7 +2,9 @@ package com.tmall.wireless.tac.biz.processor.extremeItem.common;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.taobao.eagleeye.EagleEye;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.DateTimeUtil;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
@@ -24,6 +26,7 @@ public class SupermarketHallContext {
     private String smAreaId;
     private String currentResourceId;
     private String currentScheduleId;
+    private String currentPageUrl;
 
     private String previewTime;
     /**
@@ -38,7 +41,7 @@ public class SupermarketHallContext {
 
 
     public static SupermarketHallContext init(RequestContext4Ald requestContext4Ald) {
-        logger.info("SupermarketHallContext_requestContext4Ald" + JSON.toJSONString(requestContext4Ald));
+        //logger.info("SupermarketHallContext_requestContext4Ald" + JSON.toJSONString(requestContext4Ald));
 
         SupermarketHallContext supermarketHallContext = new SupermarketHallContext();
 
@@ -53,7 +56,16 @@ public class SupermarketHallContext {
             supermarketHallContext.setSmAreaId(smAreaId);
 
             //初始化预览时间
-            supermarketHallContext.setPreviewTime(PageUrlUtil.getParamFromCurPageUrl(requestContext4Ald.getAldParam(), "previewTime"));
+            String previewTimeStampStr = PageUrlUtil.getParamFromCurPageUrl(requestContext4Ald.getAldParam(), "previewTime");
+            if(StringUtils.isNotBlank(previewTimeStampStr)) {
+                try {
+                    supermarketHallContext.setPreviewTime(DateTimeUtil.formatTimestamp(Long.parseLong(previewTimeStampStr)));
+                } catch (Exception e) {
+                    logger.error("SupermarketHallContext.init error, traceId:" + EagleEye.getTraceId() + ", previewTimeStampStr" + previewTimeStampStr, e);
+                    //ignore
+                    supermarketHallContext.setPreviewTime(null);
+                }
+            }
 
         }
 
@@ -62,8 +74,12 @@ public class SupermarketHallContext {
         //初始化当前排期ID
         supermarketHallContext.setCurrentScheduleId(String.valueOf(requestContext4Ald.getAldContext().get(ALD_SCHEDULE_ID)));
 
+        //初始化当前页面URL
+        String curPageUrl = MapUtil.getStringWithDefault(requestContext4Ald.getAldParam(), CUR_PAGE_URL, "");
+        supermarketHallContext.setCurrentPageUrl(curPageUrl);
+
         //初始化tac参数
-        String tacParams = MapUtil.getStringWithDefault(requestContext4Ald.getAldParam(), "tacParams", "");
+        String tacParams = MapUtil.getStringWithDefault(requestContext4Ald.getAldParam(), TAC_PARAMS, "");
         if(StringUtils.isNotBlank(tacParams)){
             JSONObject tacParamsMap = JSON.parseObject(tacParams);
             supermarketHallContext.setTacParamsMap(tacParamsMap);
