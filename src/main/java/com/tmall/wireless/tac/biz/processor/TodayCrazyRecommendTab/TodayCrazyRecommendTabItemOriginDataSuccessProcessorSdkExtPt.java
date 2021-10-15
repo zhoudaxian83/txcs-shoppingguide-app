@@ -10,6 +10,8 @@ import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
+import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TairCacheUtil;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections.CollectionUtils;
@@ -33,29 +35,36 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     @Autowired
     TacLoggerImpl tacLogger;
 
+    @Autowired
+    TairCacheUtil tairCacheUtil;
+
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         // 1,融合置顶商品；2，商品去重处理  直接把入参中的置顶商品置顶，每次查询进行去重处理
         OriginDataDTO<ItemEntity> originDataDTO = originDataProcessRequest.getItemEntityOriginDataDTO();
-        this.addIsTopList(originDataDTO, originDataProcessRequest.getSgFrameworkContextItem());
+        this.addIsTopList(originDataDTO, originDataProcessRequest.getSgFrameworkContextItem(), originDataProcessRequest);
         return originDataDTO;
     }
 
-    public void addIsTopList(OriginDataDTO<ItemEntity> originDataDTO, SgFrameworkContextItem sgFrameworkContextItem) {
+    public void addIsTopList(OriginDataDTO<ItemEntity> originDataDTO, SgFrameworkContextItem sgFrameworkContextItem, OriginDataProcessRequest originDataProcessRequest) {
         String topListStr = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "topList", "");
         List<String> topList = topListStr.equals("") ? Lists.newArrayList() : Arrays.asList(topListStr.split(","));
         boolean isFirstPage = (boolean) sgFrameworkContextItem.getUserParams().get("isFirstPage");
         Map<String, Object> objectMap = sgFrameworkContextItem.getUserParams();
         //如果是第一页去除重复且置顶，非第一页只去重
         List<ItemEntity> itemEntities = originDataDTO.getResult();
-        tacLogger.info("TPP返回数据条数："+itemEntities.size());
+        tacLogger.info("topList：" + JSON.toJSONString(topList));
+        tacLogger.info("TPP返回数据条数：" + itemEntities.size());
+        tacLogger.info("TPP返回数据itemEntities：" + JSON.toJSONString(itemEntities));
         //todo mock
         //itemEntities = this.mock();
+        tacLogger.info("topList：" + JSON.toJSONString(topList));
         if (CollectionUtils.isEmpty(topList)) {
             originDataDTO.setResult(itemEntities);
             return;
         }
         itemEntities.removeIf(itemEntity -> topList.contains(String.valueOf(itemEntity.getItemId())));
+        tacLogger.info("isFirstPage：" + isFirstPage);
         if (isFirstPage) {
             List<ItemEntity> topResultsItemEntityList = Lists.newArrayList();
             topList.forEach(itemId -> {
@@ -66,11 +75,15 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 itemEntity.setTop(true);
                 topResultsItemEntityList.add(itemEntity);
             });
+            tacLogger.info("过滤后条数：" + itemEntities.size());
             topResultsItemEntityList.addAll(itemEntities);
             originDataDTO.setResult(topResultsItemEntityList);
         } else {
             originDataDTO.setResult(itemEntities);
         }
+        ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
+        //tpp请求成功写入缓存，供失败打底使用
+        tairCacheUtil.process(itemFailProcessorRequest);
     }
 
     private List<ItemEntity> mock() {
