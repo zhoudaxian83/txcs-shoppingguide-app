@@ -12,6 +12,7 @@ import com.tmall.tcls.gs.sdk.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.tcls.gs.sdk.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.tcls.gs.sdk.framework.model.meta.ItemMetaInfo;
 import com.tmall.tcls.gs.sdk.framework.model.meta.node.ItemInfoNode;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.domain.Context;
 
@@ -23,8 +24,6 @@ import java.util.List;
         scenario = ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
 )
 public class TodayCrazyRecommendTabItemItemMetaInfoBuildSdkExtPt extends Register implements ItemMetaInfoBuildSdkExtPt {
-
-    public static final String SCENE_CODE = "shoppingguide.category";
 
     @Override
     public ItemMetaInfo process(Context context) {
@@ -50,7 +49,7 @@ public class TodayCrazyRecommendTabItemItemMetaInfoBuildSdkExtPt extends Registe
     private List<ItemInfoNode> buildDefaultItemInfoNodes() {
         ItemInfoNode itemInfoNode = new ItemInfoNode();
         ItemInfoSourceMetaInfo item = ItemInfoSourceMetaInfo.build("captain");
-        item.setMktSceneCode(SCENE_CODE);
+        item.setMktSceneCode(CommonConstant.SUPER_MARKET_TODAY_CRAZY);
         ItemInfoSourceMetaInfo tppItemInfoSource = ItemInfoSourceMetaInfo.build("tpp");
 
 //        ItemInfoSourceMetaInfo smartUiItemInfoSource = ItemInfoSourceMetaInfo.build("smartui");
