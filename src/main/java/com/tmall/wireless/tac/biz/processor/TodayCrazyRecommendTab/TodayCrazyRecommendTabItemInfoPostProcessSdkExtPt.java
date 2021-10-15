@@ -28,6 +28,7 @@ public class TodayCrazyRecommendTabItemInfoPostProcessSdkExtPt extends Register 
 
     @Override
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
+        tacLogger.info("开始查询限购信息");
         Map<Long, List<ItemLimitDTO>> itemLimitResult = todayCrazyLimitService.getItemLimitResult(sgFrameworkContextItem);
         if (itemLimitResult != null) {
             sgFrameworkContextItem.getUserParams().put(Constant.ITEM_LIMIT_RESULT, itemLimitResult);

@@ -43,6 +43,7 @@ public class TodayCrazyLimitService {
     TodayCrazyTairCacheService todayCrazyTairCacheService;
 
     private Map<String, Object> buildGetItemLimitParam(SgFrameworkContextItem sgFrameworkContextItem) {
+        tacLogger.info("开始构建新购参数");
         Long userId = MapUtil.getLongWithDefault(sgFrameworkContextItem.getRequestParams(), "userId", 0L);
         //特殊需要查询限购信息的
         //List<String> doQueryItemIds = (List<String>) sgFrameworkContextItem.getUserParams().get(CommonConstant.DO_QUERY_ITEM_IDS);
