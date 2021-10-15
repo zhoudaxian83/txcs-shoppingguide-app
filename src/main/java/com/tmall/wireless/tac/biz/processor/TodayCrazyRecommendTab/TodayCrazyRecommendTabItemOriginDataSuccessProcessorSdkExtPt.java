@@ -79,7 +79,11 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         }
         tacLogger.info("debug-1");
         //保存tairKey和item关联供后面逻辑使用
-        itemIdAndCacheKey.putAll(todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
+        try {
+            itemIdAndCacheKey.putAll(todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
+        } catch (Exception e) {
+            tacLogger.info("tairKey保存失败：" + e);
+        }
         tacLogger.info("debug-2");
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, itemIdAndCacheKey);
         tacLogger.info("debug-3");
@@ -87,7 +91,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 .kv("class", "TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt")
                 .kv("tpp data size", Integer.toString(originDataDTO.getResult().size()))
                 .info();
-        tacLogger.info("tpp最终条数："+originDataDTO.getResult().size());
+        tacLogger.info("tpp最终条数：" + originDataDTO.getResult().size());
         return originDataDTO;
     }
 

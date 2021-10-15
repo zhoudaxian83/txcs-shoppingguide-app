@@ -276,14 +276,14 @@ public class TodayCrazyTairCacheService {
     public HashMap<String, String> buildItemIdAndCacheKey(List<com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity> itemEntities) {
         HashMap<String, String> map = Maps.newHashMap();
         itemEntities.forEach(itemEntity -> {
-            if (itemEntity.getExtMap().get("todayCrazyChannel") != null) {
+            if (itemEntity.getExtMap() != null && itemEntity.getExtMap().get("todayCrazyChannel") != null) {
                 map.put(itemEntity.getItemId().toString(), itemEntity.getExtMap().get("todayCrazyChannel").toString());
             } else {
                 HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                         .kv("buildItemIdAndCacheKey", "tairKey is null ")
-                        .kv("itemId", JSON.toJSONString(itemEntity.getItemId()))
+                        .kv("itemEntity", JSON.toJSONString(itemEntity))
                         .info();
-                tacLogger.info("tairKey为空itemId=" + itemEntity.getItemId());
+                tacLogger.info("获取失败，itemEntity：" + JSON.toJSONString(itemEntity));
             }
 
         });
