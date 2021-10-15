@@ -77,9 +77,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (CollectionUtils.isNotEmpty(topItemIds)) {
             this.doTopItems(originDataDTO, topItemIds, isFirstPage);
         }
+        tacLogger.info("debug-1");
         //保存tairKey和item关联供后面逻辑使用
         itemIdAndCacheKey.putAll(todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
+        tacLogger.info("debug-2");
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, itemIdAndCacheKey);
+        tacLogger.info("debug-3");
         HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                 .kv("class", "TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt")
                 .kv("tpp data size", Integer.toString(originDataDTO.getResult().size()))
