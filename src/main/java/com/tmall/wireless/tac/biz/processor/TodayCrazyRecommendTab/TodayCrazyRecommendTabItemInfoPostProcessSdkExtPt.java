@@ -9,8 +9,6 @@ import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.Today
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -27,10 +25,10 @@ public class TodayCrazyRecommendTabItemInfoPostProcessSdkExtPt extends Register 
 
     @Autowired
     TacLoggerImpl tacLogger;
-    private static final Logger LOGGER = LoggerFactory.getLogger(TodayCrazyRecommendTabItemInfoPostProcessSdkExtPt.class);
 
     @Override
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
+        tacLogger.info("开始查询限购信息");
         Map<Long, List<ItemLimitDTO>> itemLimitResult = todayCrazyLimitService.getItemLimitResult(sgFrameworkContextItem);
         if (itemLimitResult != null) {
             sgFrameworkContextItem.getUserParams().put(Constant.ITEM_LIMIT_RESULT, itemLimitResult);

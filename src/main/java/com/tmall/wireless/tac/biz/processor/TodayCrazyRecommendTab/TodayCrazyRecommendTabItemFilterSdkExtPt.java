@@ -1,6 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemFilterRequest;
@@ -54,7 +56,7 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
         for (ItemEntityVO entityVO : itemAndContentList) {
             if (entityVO != null) {
                 if (!this.canBuy(entityVO) || !this.noLimitBuy(entityVO)) {
-                    tacLogger.info("被过滤数据："+entityVO.getString("itemId"));
+                    tacLogger.info("被过滤数据：" + entityVO.getString("itemId"));
                 } else {
                     if (checkField(entityVO)) {
                         itemAndContentListAfterFilter.add(entityVO);
@@ -115,8 +117,18 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
         if (userLimit) {
             return itemLimitDTO.getTotalLimit() > itemLimitDTO.getUsedCount();
         }
-        return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
-                && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
+        if (itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
+                && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit()) {
+            return true;
+        } else {
+            tacLogger.info("被限购过滤itemId=" + itemEntityVO.getItemId() + JSON.toJSONString(itemLimitDTO));
+            HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                    .kv("TodayCrazyRecommendTabItemFilterSdkExtPt", "noLimitBuy")
+                    .kv("itemId", Long.toString(itemEntityVO.getItemId()))
+                    .kv("recommendRequest", JSON.toJSONString(itemLimitDTO))
+                    .info();
+            return false;
+        }
     }
 
 
