@@ -109,11 +109,11 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("reservePrice", reservePrice);
         //单品包邮
-        itemEntityVO.put("isFreeShip", false);
+        itemEntityVO.put("freeShipping", false);
         if (CollectionUtils.isNotEmpty(singleFreeShipSet)) {
             singleFreeShipSet.forEach(s -> {
                 if (s == 458434 || s == 1670722) {
-                    itemEntityVO.put("isFreeShip", true);
+                    itemEntityVO.put("freeShipping", true);
                 }
             });
         }
