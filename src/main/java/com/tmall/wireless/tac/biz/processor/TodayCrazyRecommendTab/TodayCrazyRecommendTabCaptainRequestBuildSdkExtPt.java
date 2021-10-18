@@ -1,10 +1,12 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.item.constant.Channel;
 import com.tmall.aselfcaptain.item.model.ItemId;
 import com.tmall.aselfcaptain.item.model.ItemQueryDO;
 import com.tmall.aselfcaptain.item.model.QueryOptionDO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.iteminfo.CaptainRequestBuildRequest;
@@ -15,8 +17,9 @@ import com.tmall.tcls.gs.sdk.framework.suport.iteminfo.sm.ItemInfoRequestSm;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -36,6 +39,9 @@ import java.util.stream.Collectors;
 public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register implements CaptainRequestBuildSdkExtPt {
     public static final String UMP_CHANNEL = "umpChannel";
 
+    @Autowired
+    TacLoggerImpl tacLogger;
+
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
         RenderRequest renderRequest = new RenderRequest();
@@ -43,8 +49,7 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         SgFrameworkContextItem contextItem = captainRequestBuildRequest.getContextItem();
         ItemInfoRequestSm itemInfoRequest = captainRequestBuildRequest.getItemInfoRequest();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfo = captainRequestBuildRequest.getItemInfoSourceMetaInfo();
-
-
+        itemInfoSourceMetaInfo.setUmpChannelKey(CommonConstant.CHANNEL_KEY);
         Long storeId = itemInfoRequest.getStoreId();
         List<ItemId> itemIdList = itemInfoRequest.getList().stream().map(itemEntity ->
                 ItemId.valueOf(itemEntity.getItemId(), ItemId.ItemType.valueOf(itemEntity.getO2oType()))).collect(Collectors.toList());
@@ -70,15 +75,20 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         option.setIncludeMaiFanCard(true);
         option.setIncludeTiming(true);
         option.setSceneCode(CommonConstant.SUPER_MARKET_TODAY_CRAZY);
-        if (StringUtils.isNotEmpty(itemInfoSourceMetaInfo.getMktSceneCode())) {
-            option.setSceneCode(itemInfoSourceMetaInfo.getMktSceneCode());
-            option.setOpenMkt(true);
-        }
+        option.setOpenMkt(true);
+
+//        if (StringUtils.isNotEmpty(itemInfoSourceMetaInfo.getMktSceneCode())) {
+//            option.setSceneCode(itemInfoSourceMetaInfo.getMktSceneCode());
+//        }
 
 
         renderRequest.setQuery(query);
         renderRequest.setOption(option);
         //
+        tacLogger.info("captain入参：" + JSON.toJSONString(renderRequest));
+        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                .kv("renderRequest", JSON.toJSONString(renderRequest))
+                .info();
         return renderRequest;
     }
 }

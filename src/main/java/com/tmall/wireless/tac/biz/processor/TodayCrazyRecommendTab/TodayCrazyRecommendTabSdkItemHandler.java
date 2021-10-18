@@ -45,7 +45,7 @@ public class TodayCrazyRecommendTabSdkItemHandler extends RpmReactiveHandler<SgF
                         tacResult.getBackupMetaData().setUseBackup(true);
                         return tacResult;
                     }
-                    if (tacResult.getData() == null || tacResult.getData() == null || CollectionUtils.isEmpty(tacResult.getData().getItemAndContentList())) {
+                    if (tacResult == null || tacResult.getData() == null || CollectionUtils.isEmpty(tacResult.getData().getItemAndContentList())) {
                         tacResult = TacResult.errorResult("TacResultBackup");
                         HadesLogUtil.stream(bizScenario.getUniqueIdentity())
                                 .kv("key", "tacBackup")
