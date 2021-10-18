@@ -49,7 +49,6 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         SgFrameworkContextItem contextItem = captainRequestBuildRequest.getContextItem();
         ItemInfoRequestSm itemInfoRequest = captainRequestBuildRequest.getItemInfoRequest();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfo = captainRequestBuildRequest.getItemInfoSourceMetaInfo();
-        //TODO 后面整理到参数构建扩展点     public static final String CHANNEL_KEY = "panicBuyingToday";
         itemInfoSourceMetaInfo.setUmpChannelKey(CommonConstant.CHANNEL_KEY);
         Long storeId = itemInfoRequest.getStoreId();
         List<ItemId> itemIdList = itemInfoRequest.getList().stream().map(itemEntity ->
