@@ -17,6 +17,12 @@
     <context:component-scan base-package="com.tmall.tcls.gs.sdk.biz"/>
     <context:component-scan base-package="com.tmall.tcls.gs.sdk.sm"/>
 
+    <bean class="com.tmall.wireless.tac.biz.processor.todayCrazyTab.TodayCrazyTabContentInfoQuerySdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todayCrazyTab.TodayCrazyTabContentMetaInfoBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todayCrazyTab.TodayCrazyTabContentOriginDataPostProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.todayCrazyTab.TodayCrazyTabContentOriginDataRequestBuildSdkExtPt"/>
+
+
     <bean class="com.tmall.wireless.tac.biz.processor.icon.level2.ext.IconLevel2ContentMetaInfoBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.icon.level3.ext.IconLevel3ContentMetaInfoBuildSdkExtPt"/>
 
@@ -203,6 +209,9 @@
     <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemFilterSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemProcessBeforeReturnSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemUserCommonParamsBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.TodayCrazyRecommendTabItemItemMetaInfoBuildSdkExtPt"/>
 
     <!--详情推荐接口-->
 

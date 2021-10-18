@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.tcls.shoppingguide</groupId>
             <artifactId>shoppingguide-biz</artifactId>
-            <version>1.0.10</version>
+            <version>1.0.15</version>
         </dependency>
 
 

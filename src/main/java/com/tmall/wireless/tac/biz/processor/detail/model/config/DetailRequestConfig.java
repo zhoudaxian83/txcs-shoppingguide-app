@@ -1,5 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.detail.model.config;
 
+import com.alibaba.fastjson.JSONObject;
+
+import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +14,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class DetailRequestConfig {
 
     private Long tppId;
@@ -24,5 +28,10 @@ public class DetailRequestConfig {
     public DetailRequestConfig(Long tppId,SizeDTO sizeDTO){
         this.tppId=tppId;
         this.sizeDTO=sizeDTO;
+    }
+
+    public static DetailRequestConfig parse(String recType){
+        String s = DetailSwitch.tppConfigMap.get(recType);
+        return JSONObject.parseObject(s,DetailRequestConfig.class);
     }
 }

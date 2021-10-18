@@ -64,6 +64,9 @@ public class ItemConfig {
         }
         if(stringObjectMap.get("groupNo") != null) {
             itemConfig.setGroupNo(Integer.valueOf(String.valueOf(stringObjectMap.get("groupNo"))));
+        } else {
+            //给一个默认值，避免报错，正常不会走到这里
+            itemConfig.setGroupNo(100);
         }
         itemConfig.setForceSort("1".equals(String.valueOf(stringObjectMap.get("forceSort"))));
         if(stringObjectMap.get("sequenceNo") != null) {
@@ -77,6 +80,8 @@ public class ItemConfig {
             } catch (Exception e) {
                 itemConfig.setExposurePercent(0);
             }
+        } else {
+            itemConfig.setExposurePercent(0);
         }
         if(stringObjectMap.get("activityId") != null) {
             itemConfig.setActivityId(String.valueOf(stringObjectMap.get("activityId")));

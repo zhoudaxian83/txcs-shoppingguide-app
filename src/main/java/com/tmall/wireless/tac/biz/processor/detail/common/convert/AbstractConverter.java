@@ -188,7 +188,7 @@ public abstract class AbstractConverter<T> {
             contentVO.getString("scm"));
     }
 
-    private List<DetailEvent> getEvents(String scene, Long id, String jumpUrl, Integer index, String scm) {
+    public List<DetailEvent> getEvents(String scene, Long id, String jumpUrl, Integer index, String scm) {
 
         DetailEvent eventView1 = new DetailEvent("openUrl");
 

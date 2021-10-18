@@ -63,6 +63,7 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         requireListList.add(requireListPrice);
         smartUiItemInfoSource.setRequiredMaterials(requireListList);
         smartUiItemInfoSource.setAppId(27642L);
+
         smartUiItemInfoSource.setMktSceneCode(SCENE_CODE);
 
         if (TxcsShoppingguideAppSwitch.openSmartUiInIconCategory) {
@@ -71,10 +72,6 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
             itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource));
         }
 
-        HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-            .kv("IconItemItemMetaInfoBuildSdkExtPt","buildDefaultItemInfoNodes")
-            .kv("itemInfoNode", JSON.toJSONString(itemInfoNode))
-            .info();
         return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
     }
 }

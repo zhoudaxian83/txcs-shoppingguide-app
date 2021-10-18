@@ -3,14 +3,15 @@ package com.tmall.wireless.tac.biz.processor.extremeItem;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.taobao.tair.impl.mc.MultiClusterTairManager;
+import com.taobao.eagleeye.EagleEye;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
+import com.tmall.aselfcaptain.util.StackTraceUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
-import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
-import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallBottomService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallIGraphSearchService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.SupermarketHallRenderService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
@@ -23,7 +24,6 @@ import com.tmall.wireless.tac.biz.processor.extremeItem.domain.service.GroupSort
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.service.ItemPickService;
 import com.tmall.wireless.tac.biz.processor.extremeItem.service.ItemGmvService;
 import com.tmall.wireless.tac.client.common.TacResult;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
@@ -33,7 +33,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -49,14 +48,9 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
     Logger logger = LoggerProxy.getLogger(ExtremeItemSdkItemHandler.class);
 
-    public static final int ASG_NAMESPACE = 625;
     private static final Integer tenThousand = 10000;
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
-    @Autowired
-    TacLogger tacLogger;
-    @Autowired
-    RenderSpi renderSpi;
     @Autowired
     GroupSortDomainService groupSortDomainService;
     @Autowired
@@ -68,15 +62,17 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     @Autowired
     ItemGmvService itemGmvService;
 
-    /*@Autowired
-    TairFactorySpi tairFactorySpi;*/
-
+    @Autowired
+    SupermarketHallBottomService supermarketHallBottomService;
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
+        Long mainProcessStart = System.currentTimeMillis();
+        SupermarketHallContext supermarketHallContext = new SupermarketHallContext();
+        List<GeneralItem> generalItems = new ArrayList<>();
         try {
             //初始化SupermarketHallContext
-            SupermarketHallContext supermarketHallContext = SupermarketHallContext.init(requestContext4Ald);
+            supermarketHallContext = SupermarketHallContext.init(requestContext4Ald);
 
             //构造运营配置商品列表领域对象
             ItemConfigs itemConfigs = ItemConfigs.valueOf(supermarketHallContext.getAldManualConfigDataList());
@@ -90,7 +86,6 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
             //查询captain获取商品渲染信息
             Map<Long, ItemDTO> itemDTOMap = supermarketHallRenderService.batchQueryItem(itemIds, supermarketHallContext);
-            logger.info("==========itemDTOs: " + JSON.toJSONString(itemDTOMap));
 
             //进行组间排序
             groupSortDomainService.groupSort(itemConfigGroups, itemIds, supermarketHallContext);
@@ -101,33 +96,60 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
             //组内曝光比例选品
             Map<Integer, ItemConfig> afterPickGroupMap = itemPickService.pickItems(itemConfigGroups, itemSoldOutMap);
-            logger.info("==========afterPickGroupMap: " + JSON.toJSONString(afterPickGroupMap));
 
             //构建响应对象
-            List<GeneralItem> generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
+            generalItems = buildResult(itemConfigGroups, afterPickGroupMap, itemDTOMap, itemSoldOutMap);
 
-            logger.info("=========generalItems:" + JSON.toJSONString(generalItems));
-            return Flowable.just(TacResult.newResult(generalItems));
-
+            //写打底数据
+            if(CollectionUtils.isNotEmpty(generalItems) && generalItems.size() == itemConfigGroups.size()) {
+                supermarketHallBottomService.writeBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId(), generalItems);
+                Long mainProcessEnd = System.currentTimeMillis();
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|success|" + (mainProcessEnd - mainProcessStart))
+                        .error();
+            } else {
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|error")
+                        .kv("configSize", String.valueOf(itemConfigGroups.size()))
+                        .kv("actualSize", String.valueOf(generalItems.size()))
+                        .kv("curPageUrl", supermarketHallContext.getCurrentResourceId())
+                        .kv("resourceId", supermarketHallContext.getCurrentResourceId())
+                        .kv("scheduleId", supermarketHallContext.getCurrentScheduleId())
+                        .error();
+                generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId());
+            }
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            tacLogger.error(e.getMessage(), e);
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|exception")
+                    .kv("errorMsg", StackTraceUtil.stackTrace(e))
+                    .kv("curPageUrl", supermarketHallContext.getCurrentResourceId())
+                    .kv("resourceId", supermarketHallContext.getCurrentResourceId())
+                    .kv("scheduleId", supermarketHallContext.getCurrentScheduleId())
+                    .error();
+            logger.error("ExtremeItemSdkItemHandler error, traceId:" + EagleEye.getTraceId(), e);
+            logger.error("ExtremeItemSdkItemHandler error, traceID:{}, requestContext4Ald:{}", EagleEye.getTraceId(), JSON.toJSONString(requestContext4Ald));
+
+            generalItems = supermarketHallBottomService.readBottomData(supermarketHallContext.getCurrentResourceId(), supermarketHallContext.getCurrentScheduleId());
         }
-        return Flowable.just(TacResult.newResult(new ArrayList<>()));
+        return Flowable.just(TacResult.newResult(generalItems));
     }
 
     private List<GeneralItem> buildResult(ItemConfigGroups itemConfigGroups, Map<Integer, ItemConfig> afterPickGroupMap, Map<Long, ItemDTO> longItemDTOMap, Map<Long, Boolean> itemSoldOutMap) {
         List<GeneralItem> result = new ArrayList<>();
         List<ItemConfigGroup> bottomItems = new ArrayList<>();
         for (ItemConfigGroup itemConfigGroup : itemConfigGroups.getItemConfigGroupList()) {
-            if(afterPickGroupMap.get(itemConfigGroup.getGroupNo()) != null && itemSoldOutMap.get(afterPickGroupMap.get(itemConfigGroup.getGroupNo()).getItemId())) {
+            Boolean soldOut = itemSoldOutMap.get(afterPickGroupMap.get(itemConfigGroup.getGroupNo()).getItemId());
+            if(afterPickGroupMap.get(itemConfigGroup.getGroupNo()) != null && soldOut != null && soldOut) {
                 bottomItems.add(itemConfigGroup);
             } else {
-                result.add(buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap));
+                GeneralItem generalItem = buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap);
+                if(generalItem != null) {
+                    result.add(generalItem);
+                }
             }
         }
         for (ItemConfigGroup itemConfigGroup : bottomItems) {
-            result.add(buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap));
+            GeneralItem generalItem = buildItemMap(itemConfigGroup, longItemDTOMap, afterPickGroupMap);
+            if(generalItem != null) {
+                result.add(generalItem);
+            }
         }
         return result;
     }
@@ -135,6 +157,9 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     public GeneralItem buildItemMap(ItemConfigGroup itemConfigGroup, Map<Long, ItemDTO> longItemDTOMap, Map<Integer, ItemConfig> afterPickGroupMap) {
         ItemConfig itemConfig = afterPickGroupMap.get(itemConfigGroup.getGroupNo());
         ItemDTO itemDTO = longItemDTOMap.get(itemConfig.getItemId());
+        if(itemDTO == null) {
+            return null;
+        }
         GeneralItem itemMap = new GeneralItem();
         itemMap.put("id", itemDTO.getItemId().getId());
         itemMap.put("itemId", itemDTO.getItemId().getId());

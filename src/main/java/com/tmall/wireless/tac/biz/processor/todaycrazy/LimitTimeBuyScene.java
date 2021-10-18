@@ -82,12 +82,12 @@ public class LimitTimeBuyScene {
         pageInfoDO.setIndex(0);
         pageInfoDO.setPageSize(20);
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("step", "requestLog")
-            .kv("userId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
-                Objects::toString).orElse("0"))
-            .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
-            .info();
+//        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+//            .kv("step", "requestLog")
+//            .kv("userId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
+//                Objects::toString).orElse("0"))
+//            .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
+//            .info();
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(response ->
                     buildGeneralItemse(response,sgFrameworkContextItem)

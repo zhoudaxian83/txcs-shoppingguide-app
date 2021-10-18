@@ -5,14 +5,17 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
+import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.AppIdEnum;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.AppTypeEnum;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
@@ -49,6 +52,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         boolean isFirstPage = index == 0;
         sgFrameworkContextItem.getUserParams().put("isFirstPage", isFirstPage);
         AddressDTO addressDTO = AddressUtil.parseCSA(csa);
+        tacLogger.info("addressDTO" + JSON.toJSONString(addressDTO));
         String regionCode = addressDTO.getRegionCode();
         String categoryIdsString = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "categoryIds", "");
         String tabType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "tabType", "");
@@ -61,7 +65,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         params.put("isFirstPage", String.valueOf(isFirstPage));
         params.put("smAreaId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getSmAreaId).map(Objects::toString).orElse("330100"));
         params.put("itemTairKeys", String.join(",", cacheKeyList));
-        if(StringUtils.isEmpty(regionCode)){
+        if (StringUtils.isEmpty(regionCode)) {
             regionCode = "107";
         }
         params.put("regionCode", regionCode);
@@ -78,32 +82,18 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
         tacLogger.info("tpp入参_recommendRequest_:" + JSON.toJSONString(recommendRequest));
-        // todo MOCK
-        //recommendRequest = this.mock();
+        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
+                .kv("recommendRequest", JSON.toJSONString(recommendRequest))
+                .info();
         return recommendRequest;
     }
 
-    private RecommendRequest mock() {
-        RecommendRequest mockData = JSON.parseObject("{\n" +
-                "\t\"appId\": 27154,\n" +
-                "\t\"logResult\": false,\n" +
-                "\t\"params\": {\n" +
-                "\t\t\"itemBusinessType\": \"OneHour\",\n" +
-                "\t\t\"itemSetIdList\": \"13545\",\n" +
-                "\t\t\"appid\": \"27154\",\n" +
-                "\t\t\"logicAreaId\": \"107\",\n" +
-                "\t\t\"rt1HourStoreId\": \"233930003\",\n" +
-                "\t\t\"isFirstPage\": \"true\",\n" +
-                "\t\t\"smAreaId\": \"330100\",\n" +
-                "\t\t\"userId\": \"1832025789\"\n" +
-                "\t},\n" +
-                "\t\"userId\": 1832025789\n" +
-                "}", RecommendRequest.class);
-        return mockData;
-    }
 
     /**
      * 构建类目id作为tair的key
+     * 区分线上线下环境
+     * todo 跟程斐确认后再发布
      *
      * @param categoryIds
      * @param tabType
@@ -111,12 +101,24 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
      */
     private List<String> buildCacheKeyList(List<String> categoryIds, String tabType) {
         List<String> cacheKeyList = Lists.newArrayList();
+        String _pre = "_pre";
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
-            cacheKeyList.addAll(Arrays.asList("today_featured", "today_algorithm"));
+            if (RpmContants.enviroment.isOnline()) {
+                cacheKeyList.addAll(Arrays.asList(CommonConstant.TODAY_CHANNEL_NEW_FEATURED, CommonConstant.TODAY_PROMOTION_FEATURED, CommonConstant.TODAY_ALGORITHM));
+            } else {
+                cacheKeyList.addAll(Arrays.asList(CommonConstant.TODAY_CHANNEL_NEW_FEATURED + _pre, CommonConstant.TODAY_PROMOTION_FEATURED + _pre, CommonConstant.TODAY_ALGORITHM + _pre));
+            }
         } else {
             categoryIds.forEach(categoryId -> {
-                cacheKeyList.add("today_" + categoryId);
-                cacheKeyList.add("today_algorithm_" + categoryId);
+                if (RpmContants.enviroment.isOnline()) {
+                    cacheKeyList.add(CommonConstant.TODAY_CHANNEL_NEW + "_" + categoryId);
+                    cacheKeyList.add(CommonConstant.TODAY_PROMOTION + "_" + categoryId);
+                    cacheKeyList.add(CommonConstant.TODAY_ALGORITHM + "_" + categoryId);
+                } else {
+                    cacheKeyList.add(CommonConstant.TODAY_CHANNEL_NEW + "_" + categoryId + _pre);
+                    cacheKeyList.add(CommonConstant.TODAY_PROMOTION + "_" + categoryId + _pre);
+                    cacheKeyList.add(CommonConstant.TODAY_ALGORITHM + "_" + categoryId + _pre);
+                }
             });
         }
         return cacheKeyList;

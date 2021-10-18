@@ -24,6 +24,7 @@ import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecItemResultVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailRecommendItemVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO;
 import com.tmall.wireless.tac.biz.processor.detail.model.DetailTextComponentVO.Style;
+import com.tmall.wireless.tac.biz.processor.detail.model.config.DetailRequestConfig;
 import com.tmall.wireless.tac.biz.processor.detail.model.config.SizeDTO;
 import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections4.CollectionUtils;
@@ -50,7 +51,7 @@ public class SimilarItemItemConverter extends AbstractConverter<DetailRecItemRes
     public DetailRecItemResultVO convert(Context context, SgFrameworkResponse sgFrameworkResponse) {
 
         //取大小限制
-        SizeDTO sizeDTO = DetailSwitch.requestConfigMap.get(super.getRecType(context)).getSizeDTO();
+        SizeDTO sizeDTO = DetailRequestConfig.parse(super.getRecType(context)).getSizeDTO();
 
         //开始构建
         DetailRecItemResultVO detailRecItemResultVO = new DetailRecItemResultVO();
