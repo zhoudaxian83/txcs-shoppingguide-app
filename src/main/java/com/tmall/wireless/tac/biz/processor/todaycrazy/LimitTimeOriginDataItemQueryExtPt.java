@@ -85,9 +85,9 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 }
             }
         }
-        if(CollectionUtils.isEmpty(hitpmtRuleDataItemRuleDTOList)){
+        /*if(CollectionUtils.isEmpty(hitpmtRuleDataItemRuleDTOList)){
             return Flowable.just(originDataDTO);
-        }
+        }*/
         originDataDTO.setResult(aldInfoUtil.buildItemList(dingKengDeal(hitpmtRuleDataItemRuleDTOList)));
         return Flowable.just(originDataDTO);
     }
