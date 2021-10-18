@@ -6,7 +6,7 @@ public class CommonConstant {
      */
     public static final boolean LIMIT_BUY_SWITCH = true;
     public static final String CHANNEL_KEY = "superMarket_todayCrazy";
-    //public static final String SUPER_MARKET_TODAY_CRAZY = "superMarket_todayCrazy";
+    public static final String SUPER_MARKET_TODAY_CRAZY = "superMarket_todayCrazy";
     //public static final String CHANNEL_KEY = "panicBuyingToday";
 
     public static final String TODAY_CHANNEL_NEW = "today_channel_new";

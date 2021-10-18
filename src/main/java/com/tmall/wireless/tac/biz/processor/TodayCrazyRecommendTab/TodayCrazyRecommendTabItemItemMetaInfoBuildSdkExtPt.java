@@ -49,7 +49,7 @@ public class TodayCrazyRecommendTabItemItemMetaInfoBuildSdkExtPt extends Registe
     private List<ItemInfoNode> buildDefaultItemInfoNodes() {
         ItemInfoNode itemInfoNode = new ItemInfoNode();
         ItemInfoSourceMetaInfo item = ItemInfoSourceMetaInfo.build("captain");
-        item.setMktSceneCode(CommonConstant.CHANNEL_KEY);
+        item.setMktSceneCode(CommonConstant.SUPER_MARKET_TODAY_CRAZY);
         ItemInfoSourceMetaInfo tppItemInfoSource = ItemInfoSourceMetaInfo.build("tpp");
 
 //        ItemInfoSourceMetaInfo smartUiItemInfoSource = ItemInfoSourceMetaInfo.build("smartui");
