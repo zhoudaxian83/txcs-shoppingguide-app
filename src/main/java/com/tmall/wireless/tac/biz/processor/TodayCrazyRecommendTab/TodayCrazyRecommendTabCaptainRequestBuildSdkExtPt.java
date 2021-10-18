@@ -49,8 +49,8 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         SgFrameworkContextItem contextItem = captainRequestBuildRequest.getContextItem();
         ItemInfoRequestSm itemInfoRequest = captainRequestBuildRequest.getItemInfoRequest();
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfo = captainRequestBuildRequest.getItemInfoSourceMetaInfo();
-        //TODO 后面整理到参数构建扩展点
-        itemInfoSourceMetaInfo.setUmpChannelKey(CommonConstant.SUPER_MARKET_TODAY_CRAZY);
+        //TODO 后面整理到参数构建扩展点     public static final String CHANNEL_KEY = "panicBuyingToday";
+        itemInfoSourceMetaInfo.setUmpChannelKey(CommonConstant.CHANNEL_KEY);
         Long storeId = itemInfoRequest.getStoreId();
         List<ItemId> itemIdList = itemInfoRequest.getList().stream().map(itemEntity ->
                 ItemId.valueOf(itemEntity.getItemId(), ItemId.ItemType.valueOf(itemEntity.getO2oType()))).collect(Collectors.toList());
@@ -75,7 +75,7 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         option.setIncludeItemFeature(true);
         option.setIncludeMaiFanCard(true);
         option.setIncludeTiming(true);
-        option.setSceneCode(CommonConstant.SUPER_MARKET_TODAY_CRAZY);
+        option.setSceneCode(CommonConstant.CHANNEL_KEY);
         option.setOpenMkt(true);
 
 //        if (StringUtils.isNotEmpty(itemInfoSourceMetaInfo.getMktSceneCode())) {
