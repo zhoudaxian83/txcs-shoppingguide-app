@@ -13,8 +13,11 @@ import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
+import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
+import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
+import com.tmall.tcls.gs.sdk.framework.model.context.UserDO;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
@@ -75,11 +78,19 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
                     .kv("InventoryChannelPageContentOriginDataRequestBuildSdkExtPt", "process")
                     .kv("aldParams", JSONObject.toJSONString(aldParams))
                     .info();
-            // 如果url有带，从url取，否则从aldParams取
+            //// 如果url有带，从url取，否则从aldParams取
             int pageIndex = Optional.ofNullable(PageUrlUtil.getParamFromCurPageUrl(aldParams, "pageIndex")).map(Integer::valueOf).orElse(MapUtil.getIntWithDefault(aldParams, "pageIndex", 0));
-            // 前端的pageIndex换算到Tpp感知的index
-            int index = pageIndex * PAGE_SIZE;
-            params.put("index", String.valueOf(index));
+            //// 前端的pageIndex换算到Tpp感知的index
+            //int index = pageIndex * PAGE_SIZE;
+            //params.put("index", String.valueOf(index));
+            if(pageIndex == 0){
+                params.put("isFirstPage", "true");
+            }else {
+                params.put("isFirstPage", "false");
+            }
+            params.put("index", "0");
+            params.put("exposureDataUserId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
 
             params.put("pageSize", String.valueOf(PAGE_SIZE));
             Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, DEFAULT_SMAREAID);

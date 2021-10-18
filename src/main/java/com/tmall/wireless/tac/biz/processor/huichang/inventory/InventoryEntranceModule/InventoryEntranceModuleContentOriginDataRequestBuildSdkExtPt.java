@@ -22,8 +22,11 @@ import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
+import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
+import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
+import com.tmall.tcls.gs.sdk.framework.model.context.UserDO;
 import com.tmall.txcs.gs.spi.recommend.AldSpi;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
@@ -111,6 +114,9 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
 
             Map<String, Object> userParams = sgFrameworkContextContent.getUserParams();
             buildTppParams(tppRequestParams, aldParam, aldContext, userParams);
+            //曝光过滤需要参数
+            tppRequestParams.put("exposureDataUserId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
             String urlParamsByMap = URLUtil.getUrlParamsByMap(tppRequestParams);
             tacLogger.debug("urlParamsByMap:" + JSON.toJSONString(urlParamsByMap));
             logger.info("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.urlParamsByMap:{}", JSON.toJSONString(urlParamsByMap));
@@ -128,6 +134,9 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
     private void buildTppParams(Map<String, String> params, Map<String, Object> aldParams,
         Map<String, Object> aldContext, Map<String, Object> userParams) throws Exception{
         params.put("index", "0");
+        //升级实时推荐新增字段
+        params.put("isFirstPage", "true");
+
 
 
         Long smAreaId = MapUtil.getLongWithDefault(aldParams, HallCommonAldConstant.SM_AREAID, 330100L);
