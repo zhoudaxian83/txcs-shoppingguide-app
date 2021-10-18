@@ -70,4 +70,13 @@ public class ItemConfigGroups {
             }
         }
     }
+
+    /**
+     * 坑位数，每个组占一个坑
+     *
+     * @return
+     */
+    public int size() {
+        return itemConfigGroupList.size();
+    }
 }

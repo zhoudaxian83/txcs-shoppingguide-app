@@ -9,6 +9,7 @@ import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.aselfcaptain.item.model.ItemId;
 import com.tmall.aselfcaptain.item.model.ItemQueryDO;
 import com.tmall.aselfcaptain.item.model.QueryOptionDO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
@@ -37,44 +38,58 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
 
     @Override
     public Map<Long, ItemDTO> batchQueryItem(List<Long> itemIdList, SupermarketHallContext supermarketHallContext) {
-
+        Long captainStart = System.currentTimeMillis();
         Map<Long, ItemDTO> captainItemMap = Maps.newHashMap();
+        try {
+            final Object rpcContext = EagleEye.currentRpcContext();
+            final long callerId = Thread.currentThread().getId();
 
-        final Object rpcContext = EagleEye.currentRpcContext();
-        final long callerId = Thread.currentThread().getId();
+            if (CollectionUtils.isEmpty(itemIdList)) {
+                logger.warn("batchQueryItem, itemIdList empty, traceId:" + EagleEye.getTraceId());
+                return captainItemMap;
+            }
 
-        if (CollectionUtils.isEmpty(itemIdList)) {
-            logger.warn("batchQueryItem start, itemIdList empty");
+            Lists.partition(itemIdList, 20)
+                    .parallelStream()
+                    .map(list -> {
+                        try {
+                            EagleEye.setRpcContext(rpcContext);
+                            Map<Long, ItemDTO> longItemDTOMap = queryItem(list, supermarketHallContext);
+                            if (MapUtils.isEmpty(longItemDTOMap)) {
+                                logger.info("batch query capatin empty;" + JSON.toJSONString(list));
+                            }
+                            return longItemDTOMap;
+                        } catch (Exception e) {
+                            logger.error("batchQueryItem_catchException, traceId:" + EagleEye.getTraceId(), e);
+                            return new HashMap<Long, ItemDTO>();
+                        } finally {
+                            if (Thread.currentThread().getId() != callerId) {
+                                EagleEye.clearRpcContext();
+                            }
+                        }
+                    })
+                    .forEach(e -> captainItemMap.putAll(e));
+            if(MapUtils.isNotEmpty(captainItemMap)) {
+                Long captainEnd = System.currentTimeMillis();
+                HadesLogUtil.stream("ExtremeItemSdkItemHandler|captain|" + Logger.isEagleEyeTest() + "|success|" + (captainEnd - captainStart))
+                        .error();
+                return captainItemMap;
+            }
+        } catch (Exception e) {
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|captain|" + Logger.isEagleEyeTest() + "|exception")
+                    .error();
+            logger.error("SupermarketHallRenderServiceImpl.baItchQueryItem error, traceId:" + EagleEye.getTraceId(), e);
             return captainItemMap;
         }
-
-        Lists.partition(itemIdList, 20)
-                .parallelStream()
-                .map(list -> {
-                    try {
-                        EagleEye.setRpcContext(rpcContext);
-                        Map<Long, ItemDTO> longItemDTOMap = queryItem(list, supermarketHallContext);
-                        if (MapUtils.isEmpty(longItemDTOMap)) {
-                            logger.info("batch query capatin empty;" + JSON.toJSONString(list));
-                        }
-                        return longItemDTOMap;
-                    } catch (Exception e) {
-                        logger.error("batchQueryItem_catchException", e);
-                        return new HashMap<Long, ItemDTO>();
-                    } finally {
-                        if (Thread.currentThread().getId() != callerId) {
-                            EagleEye.clearRpcContext();
-                        }
-                    }
-                })
-                .forEach(e -> captainItemMap.putAll(e));
-
+        if(MapUtils.isEmpty(captainItemMap)) {
+            HadesLogUtil.stream("ExtremeItemSdkItemHandler|captain|" + Logger.isEagleEyeTest() + "|empty")
+                    .error();
+        }
         return captainItemMap;
     }
 
     private Map<Long, ItemDTO> queryItem(List<Long> itemIds, SupermarketHallContext supermarketHallContext) {
-        RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext.getSmAreaId(),null, supermarketHallContext.getUserId());
-        logger.info("SupermarketHallRenderServiceImpl_queryItem:" + JSON.toJSONString(renderRequest));
+        RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext.getSmAreaId(), supermarketHallContext.getPreviewTime(), supermarketHallContext.getUserId());
         SPIResult<List<ItemDTO>> itemDTOsResult = renderSpi.query(renderRequest);
         if(itemDTOsResult.isSuccess()) {
             return itemDTOsResult.getData().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
@@ -90,8 +105,8 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
         if (StringUtils.isNotBlank(smAreaId) && !"0".equals(smAreaId)) {
             query.setAreaId(Long.valueOf(smAreaId));
         } else {
-            logger.warn("smAreaId is null" + smAreaId);
-            return null;
+            logger.warn("smAreaId is null, use 330110" + smAreaId);
+            query.setAreaId(330110L);
         }
         List<ItemId> itemIdList = itemIds.stream()
                 .map(itemId -> ItemId.valueOf(itemId, ItemId.ItemType.B2C))
