@@ -66,6 +66,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         String itemUrl = "";
         String specifications = "";
         String reservePrice = "";
+        Integer salesAmount = null;
         Map<String, Object> attachments = null;
         Set<Integer> singleFreeShipSet = new HashSet<>();
         Map<String, String> trackPoint = Maps.newHashMap();
@@ -82,6 +83,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
                 ItemDTO itemDTO = itemInfoBySourceCaptainDTO.getItemDTO();
                 singleFreeShipSet = itemDTO.getItemTags();
                 attachments = itemDTO.getAttachments();
+                salesAmount = itemDTO.getSalesAmount();
                 ItemPromotionResp itemPromotionResp = itemDTO.getItemPromotionResp();
                 if (itemPromotionResp != null) {
                     itemDesc = this.buildItemDesc(itemPromotionResp);
@@ -131,6 +133,9 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
                         .info();
                 tacLogger.info("vo获取tairKey为空itemId" + itemEntityVO.getItemId());
             }
+        }
+        if (salesAmount != null) {
+            itemEntityVO.put("monthlySales", Integer.toString(salesAmount));
         }
         itemEntityVO.put("attachment", attachments);
         itemEntityVO.remove("attachments");
