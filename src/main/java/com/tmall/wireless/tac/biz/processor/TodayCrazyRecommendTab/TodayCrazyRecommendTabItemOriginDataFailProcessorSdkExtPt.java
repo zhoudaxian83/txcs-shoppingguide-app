@@ -52,7 +52,6 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntityList));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         originDataDTO.setResult(itemEntityList);
-        originDataDTO.setResult(itemEntityList);
         originDataDTO.setIndex(0);
         originDataDTO.setHasMore(false);
         originDataDTO.setPvid("");
