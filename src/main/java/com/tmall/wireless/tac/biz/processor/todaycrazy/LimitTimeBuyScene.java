@@ -89,8 +89,13 @@ public class LimitTimeBuyScene {
 //            .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
 //            .info();
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-                .map(response ->
-                    buildGeneralItemse(response,sgFrameworkContextItem)
+                .map(response ->{
+                        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                            .kv("LimitTimeBuyScene","recommend")
+                            .kv("response",JSON.toJSONString(response))
+                            .info();
+                        return buildGeneralItemse(response,sgFrameworkContextItem);
+                    }
                 ).map(TacResult::newResult)
                 .onErrorReturn(r -> TacResult.errorResult(""));
 
@@ -120,6 +125,10 @@ public class LimitTimeBuyScene {
 
 
         });
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("LimitTimeBuyScene","buildGeneralItemse")
+            .kv("generalItemse",JSON.toJSONString(generalItemse))
+            .info();
         return generalItemse;
     }
 
