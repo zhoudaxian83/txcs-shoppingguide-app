@@ -50,6 +50,11 @@ public class TodayCrazyTabContentOriginDataPostProcessorSdkExtPt extends Registe
                 .map(OriginDataDTO::getResult)
                 .orElse(Lists.newArrayList());
 
+        int i = 0;
+        for (ContentEntity contentEntity : contentEntityList) {
+            contentEntity.setRn(i ++);
+        }
+
         Map<Long, ContentEntity> itemSetIdToContent = contentEntityList.stream().collect(Collectors.toMap(ContentEntity::getContentId, c -> c));
 
 //        Long contentId;
