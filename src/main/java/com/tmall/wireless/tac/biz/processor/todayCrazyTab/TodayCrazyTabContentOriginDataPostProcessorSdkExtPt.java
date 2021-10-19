@@ -70,7 +70,7 @@ public class TodayCrazyTabContentOriginDataPostProcessorSdkExtPt extends Registe
         List<ContentEntity> contentEntityListNotFixed = Lists.newArrayList();
         for (Map<String, Object> stringObjectMap : staticScheduleDataList) {
             Long id = Long.valueOf(String.valueOf(stringObjectMap.get("default_contentId")));
-            String itemSetId = String.valueOf(stringObjectMap.get("default_datasetId"));
+            String itemSetId = String.valueOf(stringObjectMap.get("itemSetId"));
             ContentEntity contentEntity = null;
             if (!StringUtils.isNumeric(itemSetId) || itemSetIdToContent.get(Long.valueOf(itemSetId)) == null) {
                 contentEntity = new ContentEntity();
@@ -90,18 +90,18 @@ public class TodayCrazyTabContentOriginDataPostProcessorSdkExtPt extends Registe
 
             Integer position = getPosition(contentEntity);
 
-            if (position > 0) {
+            if (position >= 0) {
                 contentEntityListFixed.add(contentEntity);
             } else {
                 contentEntityListNotFixed.add(contentEntity);
             }
         }
 
-        contentEntityListNotFixed.sort((o1, o2) -> o2.getRn() - o1.getRn());
+        contentEntityListNotFixed.sort(Comparator.comparingInt(ContentEntity::getRn));
 
         if (CollectionUtils.isNotEmpty(contentEntityListFixed)) {
 
-            contentEntityListFixed.sort((o1, o2) -> getPosition(o2) - getPosition(o1));
+            contentEntityListFixed.sort(Comparator.comparingInt(this::getPosition));
 
             for (ContentEntity contentEntity : contentEntityListFixed) {
                 contentEntityListNotFixed.add(Math.min(getPosition(contentEntity) - 1, contentEntityListNotFixed.size()), contentEntity);

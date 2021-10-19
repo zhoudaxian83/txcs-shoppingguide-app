@@ -73,7 +73,7 @@ public class TodayCrazyTabContentOriginDataRequestBuildSdkExtPt extends Register
 
         Map<String, Object> aldContext = requestContext4Ald.getAldContext();
 
-        LOGGER.warn("aldContext:{}", JSON.toJSONString(aldContext));
+//        LOGGER.warn("aldContext:{}", JSON.toJSONString(aldContext));
 
         Object staticScheduleData = aldContext.get(HallCommonAldConstant.STATIC_SCHEDULE_DATA);
         List<Map<String, Object>> staticScheduleDataList = (List<Map<String, Object>>)staticScheduleData;
