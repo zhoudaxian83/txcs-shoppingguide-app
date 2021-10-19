@@ -90,7 +90,7 @@ public class TodayCrazyTabContentOriginDataPostProcessorSdkExtPt extends Registe
 
             Integer position = getPosition(contentEntity);
 
-            if (position > 0) {
+            if (position >= 0) {
                 contentEntityListFixed.add(contentEntity);
             } else {
                 contentEntityListNotFixed.add(contentEntity);
