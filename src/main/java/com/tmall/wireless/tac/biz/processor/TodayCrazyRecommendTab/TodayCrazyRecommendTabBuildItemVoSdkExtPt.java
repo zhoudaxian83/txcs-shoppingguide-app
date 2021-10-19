@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 @SdkExtension(
@@ -46,6 +47,8 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 
     @Autowired
     TodayCrazyTairCacheService todayCrazyTairCacheService;
+
+    private static final Integer tenThousand = 10000;
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
@@ -134,9 +137,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
                 tacLogger.info("vo获取tairKey为空itemId" + itemEntityVO.getItemId());
             }
         }
-        if (salesAmount != null) {
-            itemEntityVO.put("monthlySales", Integer.toString(salesAmount));
-        }
+        itemEntityVO.put("monthlySales", this.toMonthlySalesView(salesAmount));
         itemEntityVO.put("attachment", attachments);
         itemEntityVO.remove("attachments");
         itemEntityVO.put("itemDesc", itemDesc);
@@ -146,6 +147,28 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         }
         return Response.success(itemEntityVO);
     }
+
+    /**
+     * 销量转化
+     *
+     * @param salesAmount
+     * @return
+     */
+    private String toMonthlySalesView(Integer salesAmount) {
+        if (salesAmount == null) {
+            return "";
+        }
+        if (salesAmount < tenThousand) {
+            return salesAmount.toString();
+        }
+        float tenThousands = Float.valueOf(salesAmount) / Float.valueOf(tenThousand);
+        /**构造方法的字符格式这里如果小数不足2位,会以0补足**/
+        DecimalFormat decimalFormat = new DecimalFormat(".0");
+        String monthlySalesView = decimalFormat.format(tenThousands);
+        return monthlySalesView + "万";
+
+    }
+
 
     private String getCacheKey(HashMap<String, String> temIdAndCacheKeyMap, Long itemId) {
         return temIdAndCacheKeyMap.get(Long.toString(itemId));
