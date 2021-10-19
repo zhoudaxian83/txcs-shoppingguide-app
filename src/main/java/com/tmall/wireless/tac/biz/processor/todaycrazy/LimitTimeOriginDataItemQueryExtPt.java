@@ -88,6 +88,10 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         /*if(CollectionUtils.isEmpty(hitpmtRuleDataItemRuleDTOList)){
             return Flowable.just(originDataDTO);
         }*/
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("LimitTimeOriginDataItemQueryExtPt","process")
+            .kv("hitpmtRuleDataItemRuleDTOList",JSON.toJSONString(hitpmtRuleDataItemRuleDTOList))
+            .info();
         originDataDTO.setResult(aldInfoUtil.buildItemList(dingKengDeal(hitpmtRuleDataItemRuleDTOList)));
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
             .kv("LimitTimeOriginDataItemQueryExtPt","process")
