@@ -133,7 +133,8 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
             userUsedCount = MapUtil.getIntWithDefault(itemLimitResult,"userUsedCount",0);
 
         }
-
+        HadesLogUtil.stream("测试test")
+            .info();
         if(!canBuy || sellout || usedCount >= totalLimit || userUsedCount >= userLimit){
             soldOut = true;
         }
