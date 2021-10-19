@@ -48,7 +48,7 @@ public class TodayCrazyTabContentInfoQuerySdkExtPt extends Register implements C
                 .map(SgFrameworkContextContent::getContentEntityOriginDataDTO)
                 .map(OriginDataDTO::getResult)
                 .orElse(Lists.newArrayList());
-        LOGGER.warn("contentEntityList:{}", JSON.toJSONString(contentEntityList));
+//        LOGGER.warn("contentEntityList:{}", JSON.toJSONString(contentEntityList));
 
         return contentEntityList.stream()
                 .collect(Collectors.toMap(ContentEntity::getContentId, contentEntity -> {
