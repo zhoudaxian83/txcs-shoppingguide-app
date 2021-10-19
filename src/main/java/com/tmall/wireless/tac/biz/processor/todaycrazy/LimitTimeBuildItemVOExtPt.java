@@ -91,16 +91,15 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
             itemEntityVO.putAll(itemInfoBySourceDTO.getItemInfoVO());
 
         }
-
-
-
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("canBuy", String.valueOf(canBuy))
-            .kv("sellout", String.valueOf(sellout))
-            .kv("itemLimitResult", JSON.toJSONString(itemEntityVO.get(Constant.ITEM_LIMIT_RESULT)))
-            .info();
+        if(itemEntityVO.get(Constant.ITEM_LIMIT_RESULT) != null){
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                .kv("canBuy", String.valueOf(canBuy))
+                .kv("sellout", String.valueOf(sellout))
+                .kv("itemLimitResult", JSON.toJSONString(itemEntityVO.get(Constant.ITEM_LIMIT_RESULT)))
+                .info();
+        }
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("soldOut",getSoldOut(itemEntityVO,canBuy,sellout));
@@ -134,13 +133,16 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
             userUsedCount = MapUtil.getIntWithDefault(itemLimitResult,"userUsedCount",0);
 
         }
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("ItemId",itemEntityVO.getItemId().toString())
-            .kv("totalLimit",String.valueOf(totalLimit))
-            .kv("usedCount",String.valueOf(usedCount))
-            .kv("userLimit",String.valueOf(userLimit))
-            .kv("userUsedCount",String.valueOf(userUsedCount))
-            .info();
+        if(itemEntityVO.get("itemId") != null){
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                .kv("itemId",itemEntityVO.get("itemId").toString())
+                .kv("totalLimit",String.valueOf(totalLimit))
+                .kv("usedCount",String.valueOf(usedCount))
+                .kv("userLimit",String.valueOf(userLimit))
+                .kv("userUsedCount",String.valueOf(userUsedCount))
+                .info();
+        }
+
         if(!canBuy || sellout || usedCount >= totalLimit || userUsedCount >= userLimit){
             soldOut = true;
         }

@@ -60,7 +60,10 @@ public class LimitTimeBuyScene {
 
         Long smAreaId = MapUtil.getLongWithDefault(requestContext4Ald.getParams(), "smAreaId", 330100L);
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
-
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("LimitTimeBuyScene","recommend")
+            .kv("requestContext4Ald.getParams()",JSON.toJSONString(requestContext4Ald.getParams()))
+            .info();
         sgFrameworkContextItem.setRequestParams(requestContext4Ald.getParams());
 
         SceneInfo sceneInfo = new SceneInfo();
@@ -82,18 +85,9 @@ public class LimitTimeBuyScene {
         pageInfoDO.setIndex(0);
         pageInfoDO.setPageSize(20);
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
-//        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-//            .kv("step", "requestLog")
-//            .kv("userId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
-//                Objects::toString).orElse("0"))
-//            .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
-//            .info();
+
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(response ->{
-                        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-                            .kv("LimitTimeBuyScene","recommend")
-                            .kv("response",JSON.toJSONString(response))
-                            .info();
                         return buildGeneralItemse(response,sgFrameworkContextItem);
                     }
                 ).map(TacResult::newResult)
@@ -125,10 +119,6 @@ public class LimitTimeBuyScene {
 
 
         });
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("LimitTimeBuyScene","buildGeneralItemse")
-            .kv("generalItemse",JSON.toJSONString(generalItemse))
-            .info();
         return generalItemse;
     }
 

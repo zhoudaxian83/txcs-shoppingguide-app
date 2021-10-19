@@ -71,10 +71,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
         List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList = Lists.newArrayList();
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = tairUtil.getCacheData();
-//        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-//            .kv("tair pmtRuleDataItemRuleDTOList.size()",String.valueOf(pmtRuleDataItemRuleDTOList.size()))
-//            .kv("tair pmtRuleDataItemRuleDTOList.size()",JSON.toJSONString(pmtRuleDataItemRuleDTOList))
-//            .info();
         for(PmtRuleDataItemRuleDTO pmtRule : pmtRuleDataItemRuleDTOList){
             List<ColumnCenterDataSetItemRuleDTO> itemList = pmtRule.getDataSetItemRuleDTOList();
             for(ColumnCenterDataSetItemRuleDTO item : itemList){
@@ -85,18 +81,14 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 }
             }
         }
-        /*if(CollectionUtils.isEmpty(hitpmtRuleDataItemRuleDTOList)){
-            return Flowable.just(originDataDTO);
-        }*/
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("LimitTimeOriginDataItemQueryExtPt","process")
-            .kv("hitpmtRuleDataItemRuleDTOList",JSON.toJSONString(hitpmtRuleDataItemRuleDTOList))
-            .info();
-        originDataDTO.setResult(aldInfoUtil.buildItemList(dingKengDeal(hitpmtRuleDataItemRuleDTOList)));
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
             .kv("LimitTimeOriginDataItemQueryExtPt","process")
             .kv("originDataDTO.getResult().size()",JSON.toJSONString(originDataDTO.getResult().size()))
             .info();
+        if(CollectionUtils.isEmpty(hitpmtRuleDataItemRuleDTOList)){
+            return Flowable.just(originDataDTO);
+        }
+        originDataDTO.setResult(aldInfoUtil.buildItemList(dingKengDeal(hitpmtRuleDataItemRuleDTOList)));
         return Flowable.just(originDataDTO);
     }
 
@@ -114,6 +106,10 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<ColumnCenterDataSetItemRuleDTO> originList = new ArrayList<>();
 
         hitpmtRuleDataItemRuleDTOList.forEach(item -> {
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                .kv("dingKengDeal","dingKengDeal")
+                .kv("item",JSON.toJSONString(item))
+                .info();
             Long stick = item.getDataRule().getStick();
             if(stick != null && 1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()){
                 stickMap.put(stick,item);
