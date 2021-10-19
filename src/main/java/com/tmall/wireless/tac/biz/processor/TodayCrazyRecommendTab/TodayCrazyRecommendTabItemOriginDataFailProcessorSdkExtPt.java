@@ -60,6 +60,7 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         originDataDTO.setHasMore(false);
         originDataDTO.setPvid("");
         originDataDTO.setScm("1007.0.0.0");
+        tacLogger.info("tpp打底失败结果集originDataDTO：" + JSON.toJSONString(originDataDTO));
         HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                 .kv("originDataDTO", JSON.toJSONString(originDataDTO))
                 .info();
