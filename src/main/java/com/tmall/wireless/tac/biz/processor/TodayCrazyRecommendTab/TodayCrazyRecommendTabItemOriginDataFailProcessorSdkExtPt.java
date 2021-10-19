@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
 import com.alibaba.cola.extension.BizScenario;
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -47,8 +48,11 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         locParams.setRtNextDayStoreId(locParams1.getRtNextDayStoreId());
         itemFailProcessorRequest.getSgFrameworkContextItem().setLocParams(locParams);
         itemFailProcessorRequest.getSgFrameworkContextItem().setBizScenario(bizScenario);
-        List<ItemEntity> itemEntityList = JSON.parseArray(JSON.toJSONString(todayCrazyTairCacheService.process(itemFailProcessorRequest).getResult()), ItemEntity.class);
-        tacLogger.info("tpp打底返回数据条数：" + itemEntityList.size());
+        OriginDataDTO<ItemEntity> itemEntityOriginDataDTO = todayCrazyTairCacheService.process(originDataProcessRequest);
+        List<ItemEntity> itemEntityList = Lists.newArrayList();
+        if (itemEntityOriginDataDTO != null) {
+            itemEntityList = todayCrazyTairCacheService.process(originDataProcessRequest).getResult();
+        }
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntityList));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
         originDataDTO.setResult(itemEntityList);

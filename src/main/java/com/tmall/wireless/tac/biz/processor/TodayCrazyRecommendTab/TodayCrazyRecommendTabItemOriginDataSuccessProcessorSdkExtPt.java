@@ -12,7 +12,6 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProc
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
-import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.TodayCrazySortItemEntity;
@@ -64,8 +63,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         /**
          * tpp请求成功写入缓存，供失败打底使用
          */
-        ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
-        todayCrazyTairCacheService.process(itemFailProcessorRequest);
+        todayCrazyTairCacheService.process(originDataProcessRequest);
 
         /**
          * 排序优先级：已曝光>鸿雁>坑位排序(保证顺序去重)

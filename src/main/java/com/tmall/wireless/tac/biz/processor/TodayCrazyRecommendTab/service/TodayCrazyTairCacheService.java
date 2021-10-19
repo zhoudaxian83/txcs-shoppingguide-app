@@ -11,15 +11,13 @@ import com.taobao.tair.ResultCode;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
+import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProcessRequest;
+import com.tmall.tcls.gs.sdk.framework.model.context.EntityDTO;
+import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
+import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
-import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
-import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.model.ErrorCode;
-import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
-import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
 import com.tmall.txcs.gs.model.constant.RpmContants;
-import com.tmall.txcs.gs.model.model.dto.EntityDTO;
-import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
@@ -60,19 +58,20 @@ public class TodayCrazyTairCacheService {
     String logKey = "originDataFailProcessor";
     String originDataSuccessKey = "originDataSuccess";
 
-    public OriginDataDTO<ItemEntity> process(ItemFailProcessorRequest itemFailProcessorRequest) {
-        int interval = Optional.of(itemFailProcessorRequest)
-                .map(ItemFailProcessorRequest::getSgFrameworkContextItem)
-                .map(SgFrameworkContextItem::getItemMetaInfo)
-                .map(ItemMetaInfo::getSamplingInterval)
-                .orElse(SAMPLING_INTERVAL);
-        if (interval <= 0) {
-            interval = SAMPLING_INTERVAL;
-        }
+    public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
+        int interval = SAMPLING_INTERVAL;
+//        int interval = Optional.of(originDataProcessRequest)
+//                .map(ItemFailProcessorRequest::getSgFrameworkContextItem)
+//                .map(SgFrameworkContextItem::getItemMetaInfo)
+//                .map(ItemMetaInfo::getSamplingInterval)
+//                .orElse(SAMPLING_INTERVAL);
+//        if (interval <= 0) {
+//            interval = SAMPLING_INTERVAL;
+//        }
 
-        String tairKey = buildTairKey(itemFailProcessorRequest);
+        String tairKey = buildTairKey(originDataProcessRequest);
         long currentCount = counter.addAndGet(1);
-        boolean success = checkSuccess(itemFailProcessorRequest.getItemEntityOriginDataDTO());
+        boolean success = checkSuccess(originDataProcessRequest.getItemEntityOriginDataDTO());
 
         TairManager merchantsTair = tairFactorySpi.getOriginDataFailProcessTair();
         if (merchantsTair == null || merchantsTair.getMultiClusterTairManager() == null || merchantsTair.getNameSpace() <= 0) {
@@ -82,7 +81,7 @@ public class TodayCrazyTairCacheService {
                     .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_TAIR_MANAGER_NULL)
                     .error();
 
-            return itemFailProcessorRequest.getItemEntityOriginDataDTO();
+            return originDataProcessRequest.getItemEntityOriginDataDTO();
         }
 
 
@@ -96,7 +95,7 @@ public class TodayCrazyTairCacheService {
                 tacLogger.info("tpp缓存写入,key：" + tairKey);
                 ResultCode put = merchantsTair.getMultiClusterTairManager().put(merchantsTair.getNameSpace(),
                         tairKey,
-                        JSON.toJSONString(itemFailProcessorRequest.getItemEntityOriginDataDTO().getResult()),
+                        JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()),
                         0);
 
                 if (put == null || put.getCode() != ResultCode.SUCCESS.getCode()) {
@@ -109,7 +108,7 @@ public class TodayCrazyTairCacheService {
                 }
 
             }
-            return itemFailProcessorRequest.getItemEntityOriginDataDTO();
+            return originDataProcessRequest.getItemEntityOriginDataDTO();
 
         } else {
 
@@ -125,7 +124,7 @@ public class TodayCrazyTairCacheService {
                         .kv("step", logKey)
                         .kv("errorCode", ErrorCode.ITEM_FAIL_PROCESSOR_READ_FROM_TARI_FAIL)
                         .error();
-                return itemFailProcessorRequest.getItemEntityOriginDataDTO();
+                return originDataProcessRequest.getItemEntityOriginDataDTO();
             }
             tacLogger.info("tpp缓存读取成功");
             HadesLogUtil.stream(bizScenario.getUniqueIdentity())
@@ -147,11 +146,11 @@ public class TodayCrazyTairCacheService {
     /**
      * 区分线上线下
      *
-     * @param itemFailProcessorRequest
+     * @param originDataProcessRequest
      * @return
      */
-    private String buildTairKey(ItemFailProcessorRequest itemFailProcessorRequest) {
-        String tabType = MapUtil.getStringWithDefault(itemFailProcessorRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", TabTypeEnum.TODAY_CHAO_SHENG.getType());
+    private String buildTairKey(OriginDataProcessRequest originDataProcessRequest) {
+        String tabType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", TabTypeEnum.TODAY_CHAO_SHENG.getType());
         if (RpmContants.enviroment.isOnline()) {
             return "TPP_supermarket_b2c_TODAY_CRAZY_RECOMMEND_TAB_" + tabType;
         } else {
