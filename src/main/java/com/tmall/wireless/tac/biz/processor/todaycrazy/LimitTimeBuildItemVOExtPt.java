@@ -133,15 +133,6 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
             userUsedCount = MapUtil.getIntWithDefault(itemLimitResult,"userUsedCount",0);
 
         }
-        if(itemEntityVO.get("itemId") != null){
-            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-                .kv("itemId",itemEntityVO.get("itemId").toString())
-                .kv("totalLimit",String.valueOf(totalLimit))
-                .kv("usedCount",String.valueOf(usedCount))
-                .kv("userLimit",String.valueOf(userLimit))
-                .kv("userUsedCount",String.valueOf(userUsedCount))
-                .info();
-        }
 
         if(!canBuy || sellout || usedCount >= totalLimit || userUsedCount >= userLimit){
             soldOut = true;
