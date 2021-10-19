@@ -19,6 +19,7 @@ import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created from template by 罗俊冲 on 2021-09-30 16:51:23.
@@ -60,9 +61,12 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         originDataDTO.setHasMore(false);
         originDataDTO.setPvid("");
         originDataDTO.setScm("1007.0.0.0");
-        tacLogger.info("tpp打底失败结果集originDataDTO：" + JSON.toJSONString(originDataDTO));
+
+        List<Long> itemIds = originDataDTO.getResult().stream().map(ItemEntity::getItemId).collect(Collectors.toList());
+        tacLogger.info("tpp打底失败结果集originDataDTO：" + JSON.toJSONString(itemIds));
         HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
-                .kv("originDataDTO", JSON.toJSONString(originDataDTO))
+                .kv("method", "TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt")
+                .kv("itemIds", JSON.toJSONString(itemIds))
                 .info();
         return originDataDTO;
     }
