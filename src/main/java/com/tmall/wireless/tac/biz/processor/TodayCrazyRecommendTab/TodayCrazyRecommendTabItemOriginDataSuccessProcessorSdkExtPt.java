@@ -47,6 +47,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         tacLogger.info("TPP返回数据条数：" + originDataProcessRequest.getItemEntityOriginDataDTO().getResult().size());
         tacLogger.info("TPP返回数据结果：" + JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
+
+        /**
+         * 用户置顶
+         */
+        String crowdTopStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "crowdTop", "");
+        List<String> crowdTopList = crowdTopStr.equals("") ? Lists.newArrayList() : Arrays.asList(crowdTopStr.split(","));
         /**
          * 鸿雁置顶itemIds和已曝光置顶itemIds,按照前端入参顺序(前端已做合并，原先是已曝光置顶itemIds在最上面，然后是鸿雁置顶itemIds的)
          */
@@ -70,6 +76,15 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
          * 去重的同时保证入参的顺序
          */
         List<String> topItemIds = Lists.newArrayList();
+        /**
+         * 用户特殊置顶在所有置顶之上
+         */
+        if (CollectionUtils.isNotEmpty(crowdTopList)) {
+            topItemIds.addAll(crowdTopList);
+        }
+        /**
+         * 对所有需要置顶的商品去重处理，保证优先出现的顺序不变
+         */
         topList.forEach(s -> {
             if (!topItemIds.contains(s)) {
                 topItemIds.add(s);
