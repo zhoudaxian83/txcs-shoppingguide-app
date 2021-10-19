@@ -97,11 +97,11 @@ public class TodayCrazyTabContentOriginDataPostProcessorSdkExtPt extends Registe
             }
         }
 
-        contentEntityListNotFixed.sort((o1, o2) -> o2.getRn() - o1.getRn());
+        contentEntityListNotFixed.sort(Comparator.comparingInt(ContentEntity::getRn));
 
         if (CollectionUtils.isNotEmpty(contentEntityListFixed)) {
 
-            contentEntityListFixed.sort((o1, o2) -> getPosition(o2) - getPosition(o1));
+            contentEntityListFixed.sort(Comparator.comparingInt(this::getPosition));
 
             for (ContentEntity contentEntity : contentEntityListFixed) {
                 contentEntityListNotFixed.add(Math.min(getPosition(contentEntity) - 1, contentEntityListNotFixed.size()), contentEntity);
