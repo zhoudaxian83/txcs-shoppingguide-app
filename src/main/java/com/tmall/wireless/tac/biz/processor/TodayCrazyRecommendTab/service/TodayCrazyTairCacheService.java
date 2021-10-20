@@ -266,7 +266,6 @@ public class TodayCrazyTairCacheService {
             tacLogger.info("环境验证isDaily：" + RpmContants.enviroment.isDaily());
             tacLogger.info("环境验证isOnline：" + RpmContants.enviroment.isOnline());
             // 用于预发环境测试(新的key)
-            buf.append("pre_");
 //            if (RpmContants.enviroment.isPreline()) {
 //                buf.append("pre_");
 //            }
