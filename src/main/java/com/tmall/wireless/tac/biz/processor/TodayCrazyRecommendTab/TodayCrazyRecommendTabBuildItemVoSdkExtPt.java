@@ -225,6 +225,13 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         }
     }
 
+    /**
+     * 限购信息
+     * TODO 如果前端要兼容0的话就给默认值0返回
+     *
+     * @param itemEntityVO
+     * @param userParams
+     */
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
         if (!CommonConstant.LIMIT_BUY_SWITCH) {
             return;
@@ -237,10 +244,12 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
             return;
         }
         itemLimitDTOS = limitResult.get(itemId);
-        /**
-         * 限购信息
-         */
-        itemEntityVO.put("itemLimit", itemLimitDTOS.get(0));
+        if (CollectionUtils.isNotEmpty(itemLimitDTOS)) {
+            itemEntityVO.put("itemLimit", itemLimitDTOS.get(0));
+        } else {
+            itemEntityVO.put("itemLimit", new ItemLimitDTO());
+        }
+
     }
 
     private String getReservePrice(ItemPromotionResp itemPromotionResp) {
