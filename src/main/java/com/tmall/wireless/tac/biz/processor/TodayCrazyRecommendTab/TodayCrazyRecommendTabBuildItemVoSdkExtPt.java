@@ -227,7 +227,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 
     /**
      * 限购信息
-     * 兼容前端查询不到的返回0
+     * 没有限购信息就不返回
      *
      * @param itemEntityVO
      * @param userParams
