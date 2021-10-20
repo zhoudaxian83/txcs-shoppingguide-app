@@ -213,6 +213,7 @@ public class TodayCrazyTairCacheService {
                     .kv("tairManager", JSON.toJSONString(tairManager))
                     .info();
         }
+        tacLogger.info("定坑源数据："+JSON.toJSONString(centerDataSetItemRuleDTOS));
         return centerDataSetItemRuleDTOS;
 
     }
