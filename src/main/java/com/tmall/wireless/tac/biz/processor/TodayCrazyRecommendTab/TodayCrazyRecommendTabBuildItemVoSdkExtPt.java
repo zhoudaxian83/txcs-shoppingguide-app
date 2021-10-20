@@ -225,22 +225,24 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         }
     }
 
+    /**
+     * 限购信息
+     * 没有限购信息就不返回
+     *
+     * @param itemEntityVO
+     * @param userParams
+     */
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
-        if (!CommonConstant.LIMIT_BUY_SWITCH) {
-            return;
-        }
         List<ItemLimitDTO> itemLimitDTOS;
         Long itemId = (Long) itemEntityVO.get("itemId");
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
         if (limitResult == null || CollectionUtils.isEmpty(limitResult.get(itemId))) {
-            itemEntityVO.put("itemLimit", new ItemLimitDTO());
             return;
         }
         itemLimitDTOS = limitResult.get(itemId);
-        /**
-         * 限购信息
-         */
-        itemEntityVO.put("itemLimit", itemLimitDTOS.get(0));
+        if (CollectionUtils.isNotEmpty(itemLimitDTOS)) {
+            itemEntityVO.put("itemLimit", itemLimitDTOS.get(0));
+        }
     }
 
     private String getReservePrice(ItemPromotionResp itemPromotionResp) {
