@@ -31,6 +31,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -65,6 +67,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
          * tair获取推荐商品
          */
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(smAreaId);
+        //todo mock
+        columnCenterDataSetItemRuleDTOList.get(3).getDataRule().setItemScheduleStartTime(this.buildDate("2021-12-01"));
         /**
          * 过滤掉不是当前时间段的定坑商品
          */
@@ -110,7 +114,26 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         if (itemScheduleStartTime == null || itemScheduleEndTime == null) {
             return false;
         }
+        tacLogger.info("开始时间：" + buildDateFormat(itemScheduleStartTime) + "结束时间：" + buildDateFormat(itemScheduleEndTime));
         return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime);
+    }
+
+    private String buildDateFormat(Date nowDate) {
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return ft.format(nowDate);
+    }
+
+    public Date buildDate(String input) {
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+        Date t = null;
+        try {
+            t = ft.parse(input);
+            System.out.println(t);
+            //Wed Nov 11 00:00:00 CST 1818
+        } catch (ParseException e) {
+            System.out.println("Unparseable using " + ft);
+        }
+        return t;
     }
 
     private void sortItemEntityList(OriginDataDTO<ItemEntity> originDataDTO, Map<Long, Long> stringLongMap) {
