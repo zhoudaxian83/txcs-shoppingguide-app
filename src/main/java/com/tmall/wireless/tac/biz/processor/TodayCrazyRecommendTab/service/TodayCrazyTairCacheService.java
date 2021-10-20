@@ -224,6 +224,7 @@ public class TodayCrazyTairCacheService {
      */
     public List<ColumnCenterDataSetItemRuleDTO> getEntryChannelPriceNew() {
         String channelPriceKey = getChannelPriceNewKey();
+        tacLogger.info("channelPriceKey:"+channelPriceKey);
         return this.getTairManager(channelPriceKey);
     }
 
@@ -232,6 +233,7 @@ public class TodayCrazyTairCacheService {
      */
     public List<ColumnCenterDataSetItemRuleDTO> getEntryPromotionPrice() {
         String promotionPriceKey = getPromotionPriceKey();
+        tacLogger.info("promotionPriceKey:"+promotionPriceKey);
         return this.getTairManager(promotionPriceKey);
     }
 
