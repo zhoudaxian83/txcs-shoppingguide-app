@@ -227,7 +227,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 
     /**
      * 限购信息
-     * TODO 如果前端要兼容0的话就给默认值0返回
+     * 兼容前端查询不到的返回0
      *
      * @param itemEntityVO
      * @param userParams
@@ -237,17 +237,22 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
             return;
         }
         List<ItemLimitDTO> itemLimitDTOS;
+        ItemLimitDTO itemLimitDTO = new ItemLimitDTO();
+        itemLimitDTO.setTotalLimit(0L);
+        itemLimitDTO.setUsedCount(0L);
+        itemLimitDTO.setUserLimit(0L);
+        itemLimitDTO.setUserUsedCount(0L);
         Long itemId = (Long) itemEntityVO.get("itemId");
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
         if (limitResult == null || CollectionUtils.isEmpty(limitResult.get(itemId))) {
-            itemEntityVO.put("itemLimit", new ItemLimitDTO());
+            itemEntityVO.put("itemLimit", itemLimitDTO);
             return;
         }
         itemLimitDTOS = limitResult.get(itemId);
         if (CollectionUtils.isNotEmpty(itemLimitDTOS)) {
             itemEntityVO.put("itemLimit", itemLimitDTOS.get(0));
         } else {
-            itemEntityVO.put("itemLimit", new ItemLimitDTO());
+            itemEntityVO.put("itemLimit", itemLimitDTO);
         }
 
     }
