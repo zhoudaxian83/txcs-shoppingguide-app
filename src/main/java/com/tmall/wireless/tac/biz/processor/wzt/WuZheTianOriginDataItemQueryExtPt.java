@@ -67,14 +67,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
          * tair获取推荐商品
          */
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(smAreaId);
-        //todo mock
-        columnCenterDataSetItemRuleDTOList.get(3).getDataRule().setItemScheduleStartTime(this.buildDate("2021-12-01"));
         /**
          * 过滤掉不是当前时间段的定坑商品
          */
-        tacLogger.info("过滤前：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
         columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule()));
-        tacLogger.info("过滤后：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
         /**
          * 获取id和排序信息
          */
@@ -98,14 +94,13 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     }
 
     /**
-     * 1，必须同时有排序起止时间和置顶起止时间
-     * 2，当前时间必须同时在排期和置顶的起止时间段内
+     * 1，需要再展示时间内，不需要坑位时间
      *
      * @param columnCenterDataRuleDTO
      * @return
      */
     private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
-        long nowTime = new Date().getTime();
+        long nowTime = System.currentTimeMillis();
         if (columnCenterDataRuleDTO == null) {
             return false;
         }
@@ -114,28 +109,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         if (itemScheduleStartDate == null || itemScheduleEndDate == null) {
             return false;
         }
-        long itemScheduleStartTime =itemScheduleStartDate.getTime();
+        long itemScheduleStartTime = itemScheduleStartDate.getTime();
         long itemScheduleEndTime = itemScheduleEndDate.getTime();
-        tacLogger.info("开始时间：" + buildDateFormat(itemScheduleStartDate) + "结束时间：" + buildDateFormat(itemScheduleEndDate));
-        return itemScheduleStartTime<nowTime&&itemScheduleEndTime>nowTime;
-    }
-
-    private String buildDateFormat(Date nowDate) {
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        return ft.format(nowDate);
-    }
-
-    public Date buildDate(String input) {
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-        Date t = null;
-        try {
-            t = ft.parse(input);
-            System.out.println(t);
-            //Wed Nov 11 00:00:00 CST 1818
-        } catch (ParseException e) {
-            System.out.println("Unparseable using " + ft);
-        }
-        return t;
+        tacLogger.info("时间过滤：nowTime=" + nowTime + "itemScheduleStartDate=" + itemScheduleStartDate + "itemScheduleEndDate" + itemScheduleEndDate);
+        return itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
     }
 
     private void sortItemEntityList(OriginDataDTO<ItemEntity> originDataDTO, Map<Long, Long> stringLongMap) {
