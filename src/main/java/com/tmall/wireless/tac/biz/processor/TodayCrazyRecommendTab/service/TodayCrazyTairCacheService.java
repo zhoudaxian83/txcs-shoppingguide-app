@@ -213,7 +213,7 @@ public class TodayCrazyTairCacheService {
                     .kv("tairManager", JSON.toJSONString(tairManager))
                     .info();
         }
-        tacLogger.info("定坑源数据："+JSON.toJSONString(centerDataSetItemRuleDTOS));
+        tacLogger.info("定坑源数据：" + JSON.toJSONString(centerDataSetItemRuleDTOS));
         return centerDataSetItemRuleDTOS;
 
     }
@@ -224,7 +224,7 @@ public class TodayCrazyTairCacheService {
      */
     public List<ColumnCenterDataSetItemRuleDTO> getEntryChannelPriceNew() {
         String channelPriceKey = getChannelPriceNewKey();
-        tacLogger.info("channelPriceKey:"+channelPriceKey);
+        tacLogger.info("channelPriceKey:" + channelPriceKey);
         return this.getTairManager(channelPriceKey);
     }
 
@@ -233,7 +233,7 @@ public class TodayCrazyTairCacheService {
      */
     public List<ColumnCenterDataSetItemRuleDTO> getEntryPromotionPrice() {
         String promotionPriceKey = getPromotionPriceKey();
-        tacLogger.info("promotionPriceKey:"+promotionPriceKey);
+        tacLogger.info("promotionPriceKey:" + promotionPriceKey);
         return this.getTairManager(promotionPriceKey);
     }
 
@@ -262,6 +262,9 @@ public class TodayCrazyTairCacheService {
             for (Object arg : args) {
                 buf.append(String.valueOf(checkNotNull(arg, "key arg"))).append('_');
             }
+            tacLogger.info("环境验证isPreline：" + RpmContants.enviroment.isPreline());
+            tacLogger.info("环境验证isDaily：" + RpmContants.enviroment.isDaily());
+            tacLogger.info("环境验证isOnline：" + RpmContants.enviroment.isOnline());
             // 用于预发环境测试(新的key)
 //            if (RpmContants.enviroment.isPreline()) {
 //                buf.append("pre_");
