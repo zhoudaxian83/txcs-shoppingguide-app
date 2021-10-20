@@ -286,7 +286,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @return
      */
     private boolean isNeedSort(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
-        Date nowDate = new Date();
+        long nowDate = System.currentTimeMillis();
         if (columnCenterDataRuleDTO == null) {
             return false;
         }
@@ -298,7 +298,11 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (itemScheduleStartTime == null || itemScheduleEndTime == null || itemStickStartTime == null || itemStickEndTime == null || stick == null) {
             return false;
         }
-        return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime) && nowDate.after(itemStickStartTime) && nowDate.before(itemStickEndTime);
+        long scheduleStartTime = itemScheduleStartTime.getTime();
+        long scheduleEndTime = itemScheduleEndTime.getTime();
+        long stickStartTime = itemStickStartTime.getTime();
+        long stickEndTime = itemStickEndTime.getTime();
+        return nowDate > scheduleStartTime && nowDate < scheduleEndTime && nowDate > stickStartTime && nowDate < stickEndTime;
     }
 
 
