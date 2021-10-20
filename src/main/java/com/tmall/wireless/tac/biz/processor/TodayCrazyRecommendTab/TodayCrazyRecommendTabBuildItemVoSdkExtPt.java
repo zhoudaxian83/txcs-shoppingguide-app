@@ -233,28 +233,16 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
      * @param userParams
      */
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
-        if (!CommonConstant.LIMIT_BUY_SWITCH) {
-            return;
-        }
         List<ItemLimitDTO> itemLimitDTOS;
-        ItemLimitDTO itemLimitDTO = new ItemLimitDTO();
-        itemLimitDTO.setTotalLimit(0L);
-        itemLimitDTO.setUsedCount(0L);
-        itemLimitDTO.setUserLimit(0L);
-        itemLimitDTO.setUserUsedCount(0L);
         Long itemId = (Long) itemEntityVO.get("itemId");
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
         if (limitResult == null || CollectionUtils.isEmpty(limitResult.get(itemId))) {
-            itemEntityVO.put("itemLimit", itemLimitDTO);
             return;
         }
         itemLimitDTOS = limitResult.get(itemId);
         if (CollectionUtils.isNotEmpty(itemLimitDTOS)) {
             itemEntityVO.put("itemLimit", itemLimitDTOS.get(0));
-        } else {
-            itemEntityVO.put("itemLimit", itemLimitDTO);
         }
-
     }
 
     private String getReservePrice(ItemPromotionResp itemPromotionResp) {
