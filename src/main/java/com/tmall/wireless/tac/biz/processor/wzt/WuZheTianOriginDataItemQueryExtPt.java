@@ -18,6 +18,7 @@ import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
+import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.DataContext;
 import com.tmall.wireless.tac.biz.processor.wzt.model.SortItemEntity;
@@ -60,10 +61,19 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         dataContext.setIndex(index);
         dataContext.setPageSize(pageSize);
-        //tair获取推荐商品
-        List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
-                smAreaId);
-        //获取id和排序信息
+        /**
+         * tair获取推荐商品
+         */
+        List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(smAreaId);
+        /**
+         * 过滤掉不是当前时间段的定坑商品
+         */
+        tacLogger.info("过滤前：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
+        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needSort(columnCenterDataSetItemRuleDTO.getDataRule()));
+        tacLogger.info("过滤后：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
+        /**
+         * 获取id和排序信息
+         */
         Map<Long, Long> stringLongMap = new HashMap<>(16);
         List<Long> items = Lists.newArrayList();
         columnCenterDataSetItemRuleDTOList.forEach(columnCenterDataSetItemRuleDTO -> {
@@ -81,6 +91,29 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                     this.sortItemEntityList(originDataDTO, stringLongMap);
                     return this.getItemPage(originDataDTO, dataContext);
                 });
+    }
+
+    /**
+     * 1，必须同时有排序起止时间和置顶起止时间
+     * 2，当前时间必须同时在排期和置顶的起止时间段内
+     *
+     * @param columnCenterDataRuleDTO
+     * @return
+     */
+    private boolean needSort(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
+        Date nowDate = new Date();
+        if (columnCenterDataRuleDTO == null) {
+            return false;
+        }
+        Date itemScheduleStartTime = columnCenterDataRuleDTO.getItemScheduleStartTime();
+        Date itemScheduleEndTime = columnCenterDataRuleDTO.getItemScheduleEndTime();
+        Date itemStickStartTime = columnCenterDataRuleDTO.getItemStickStartTime();
+        Date itemStickEndTime = columnCenterDataRuleDTO.getItemStickEndTime();
+        Long stick = columnCenterDataRuleDTO.getStick();
+        if (itemScheduleStartTime == null || itemScheduleEndTime == null || itemStickStartTime == null || itemStickEndTime == null || stick == null) {
+            return false;
+        }
+        return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime) && nowDate.after(itemStickStartTime) && nowDate.before(itemStickEndTime);
     }
 
     private void sortItemEntityList(OriginDataDTO<ItemEntity> originDataDTO, Map<Long, Long> stringLongMap) {
