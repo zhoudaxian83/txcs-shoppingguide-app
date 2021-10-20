@@ -184,6 +184,10 @@ public class TodayCrazyTairCacheService {
     }
 
     public List<ColumnCenterDataSetItemRuleDTO> getTairManager(String tairKey) {
+        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                .kv("tairKey", tairKey)
+                .kv("method", "getTairManager")
+                .info();
         List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = Lists.newArrayList();
         TairManager tairManager = tairFactorySpi.getOriginDataFailProcessTair();
         if (tairManager == null || tairManager.getMultiClusterTairManager() == null || tairManager.getNameSpace() <= 0) {
@@ -193,6 +197,7 @@ public class TodayCrazyTairCacheService {
         if (!dataEntryResult.isSuccess() || dataEntryResult.getValue() == null || dataEntryResult.getValue().getValue() == null) {
             return null;
         }
+        tacLogger.info("定坑源数据：" + JSON.toJSONString(dataEntryResult.getValue().getValue()));
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(dataEntryResult.getValue().getValue()));
         if (jsonArray.size() == 0) {
             return null;
@@ -213,7 +218,6 @@ public class TodayCrazyTairCacheService {
                     .kv("tairManager", JSON.toJSONString(tairManager))
                     .info();
         }
-        tacLogger.info("定坑源数据：" + JSON.toJSONString(centerDataSetItemRuleDTOS));
         return centerDataSetItemRuleDTOS;
 
     }

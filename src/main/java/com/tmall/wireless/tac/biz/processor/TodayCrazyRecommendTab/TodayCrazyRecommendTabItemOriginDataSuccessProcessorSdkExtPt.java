@@ -199,10 +199,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         result.addAll(entryChannelPriceNew);
         result.addAll(entryPromotionPrice);
         tacLogger.info("定坑去重后结果：" + JSON.toJSONString(result));
-
+        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                .kv("result", JSON.toJSONString(result))
+                .kv("method", "itemSortV2")
+                .info();
         //根据定坑数据对原tpp返回结果集进行去重处理
         itemEntities.removeIf(itemEntity -> resultItemIds.contains(itemEntity.getItemId()));
-
         //只有首页才进行定坑处理，且要有坑位数据
         if (isFirstPage && CollectionUtils.isNotEmpty(result)) {
             //保存tairKey和item关联关系。供后面逻辑使用查询限购，区分渠道的判断依据(因为定坑商品也要展示渠道)
