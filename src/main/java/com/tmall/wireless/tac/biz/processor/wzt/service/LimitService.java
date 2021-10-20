@@ -97,8 +97,6 @@ public class LimitService {
                 HadesLogUtil.stream(ScenarioConstantApp.WU_ZHE_TIAN)
                         .kv("getItemLimitResult", "success is null")
                         .info();
-                tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + paramsValue + "|jsonObject：" + JSON
-                        .toJSONString(jsonObject));
                 return null;
             }
             if (success) {
@@ -117,6 +115,8 @@ public class LimitService {
                         .kv("paramsValue", JSON.toJSONString(paramsValue))
                         .kv("longListMap", JSON.toJSONString(longListMap))
                         .info();
+                tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + JSON.toJSONString(paramsValue) + "|jsonObject：" + JSON
+                        .toJSONString(jsonObject));
                 return longListMap;
             } else {
                 HadesLogUtil.stream(ScenarioConstantApp.WU_ZHE_TIAN)
@@ -139,7 +139,7 @@ public class LimitService {
     public Map<Long, List<ItemLimitDTO>> getItemLimitResult(SgFrameworkContextItem sgFrameworkContextItem) {
         Map<Long, List<ItemLimitDTO>> limitResult;
         Map<String, Object> param = this.buildGetItemLimitParam(sgFrameworkContextItem);
-        if(param==null){
+        if (param == null) {
             return null;
         }
         tacLogger.info("limit查询入参：" + JSON.toJSONString(param));
