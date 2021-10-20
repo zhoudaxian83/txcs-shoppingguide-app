@@ -73,7 +73,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
          * 过滤掉不是当前时间段的定坑商品
          */
         tacLogger.info("过滤前：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
-        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needSort(columnCenterDataSetItemRuleDTO.getDataRule()));
+        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule()));
         tacLogger.info("过滤后：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
         /**
          * 获取id和排序信息
@@ -104,18 +104,20 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @param columnCenterDataRuleDTO
      * @return
      */
-    private boolean needSort(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
-        Date nowDate = new Date();
+    private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
+        long nowTime = new Date().getTime();
         if (columnCenterDataRuleDTO == null) {
             return false;
         }
-        Date itemScheduleStartTime = columnCenterDataRuleDTO.getItemScheduleStartTime();
-        Date itemScheduleEndTime = columnCenterDataRuleDTO.getItemScheduleEndTime();
-        if (itemScheduleStartTime == null || itemScheduleEndTime == null) {
+        Date itemScheduleStartDate = columnCenterDataRuleDTO.getItemScheduleStartTime();
+        Date itemScheduleEndDate = columnCenterDataRuleDTO.getItemScheduleEndTime();
+        if (itemScheduleStartDate == null || itemScheduleEndDate == null) {
             return false;
         }
-        tacLogger.info("开始时间：" + buildDateFormat(itemScheduleStartTime) + "结束时间：" + buildDateFormat(itemScheduleEndTime));
-        return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime);
+        long itemScheduleStartTime =itemScheduleStartDate.getTime();
+        long itemScheduleEndTime = itemScheduleEndDate.getTime();
+        tacLogger.info("开始时间：" + buildDateFormat(itemScheduleStartDate) + "结束时间：" + buildDateFormat(itemScheduleEndDate));
+        return itemScheduleStartTime<nowTime&&itemScheduleEndTime>nowTime;
     }
 
     private String buildDateFormat(Date nowDate) {
