@@ -208,7 +208,7 @@ public class TodayCrazyTairCacheService {
             HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                     .kv("method:", "getTairColumnCenterDataSetItemRuleDTO")
                     .kv("tairKey", tairKey)
-                    .kv("pmtRuleDataSetDTO", JSON.toJSONString(pmtRuleDataItemRuleDTOS.get(0).getPmtRuleDataSetDTO()))
+                    .kv("in use pmtRuleDataSetDTO", JSON.toJSONString(pmtRuleDataItemRuleDTOS.get(0).getPmtRuleDataSetDTO()))
                     .info();
         }
         if (CollectionUtils.isNotEmpty(centerDataSetItemRuleDTOS)) {

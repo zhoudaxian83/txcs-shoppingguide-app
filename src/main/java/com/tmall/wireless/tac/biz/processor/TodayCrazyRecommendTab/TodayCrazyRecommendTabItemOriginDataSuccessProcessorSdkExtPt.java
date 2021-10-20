@@ -210,7 +210,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             //保存tairKey和item关联关系。供后面逻辑使用查询限购，区分渠道的判断依据(因为定坑商品也要展示渠道)
             entryPromotionPriceItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_PROMOTION));
             entryChannelPriceNewItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_CHANNEL_NEW));
-            tacLogger.info("定坑过滤后的结果：" + JSON.toJSONString(entryChannelPriceNew));
             //坑位排序
             originDataDTO.setResult(this.doItemSort(itemEntities, result));
         } else {
