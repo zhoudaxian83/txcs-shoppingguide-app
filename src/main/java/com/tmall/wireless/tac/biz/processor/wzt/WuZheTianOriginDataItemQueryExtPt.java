@@ -107,13 +107,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         }
         Date itemScheduleStartTime = columnCenterDataRuleDTO.getItemScheduleStartTime();
         Date itemScheduleEndTime = columnCenterDataRuleDTO.getItemScheduleEndTime();
-        Date itemStickStartTime = columnCenterDataRuleDTO.getItemStickStartTime();
-        Date itemStickEndTime = columnCenterDataRuleDTO.getItemStickEndTime();
-        Long stick = columnCenterDataRuleDTO.getStick();
-        if (itemScheduleStartTime == null || itemScheduleEndTime == null || itemStickStartTime == null || itemStickEndTime == null || stick == null) {
+        if (itemScheduleStartTime == null || itemScheduleEndTime == null) {
             return false;
         }
-        return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime) && nowDate.after(itemStickStartTime) && nowDate.before(itemStickEndTime);
+        return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime);
     }
 
     private void sortItemEntityList(OriginDataDTO<ItemEntity> originDataDTO, Map<Long, Long> stringLongMap) {
