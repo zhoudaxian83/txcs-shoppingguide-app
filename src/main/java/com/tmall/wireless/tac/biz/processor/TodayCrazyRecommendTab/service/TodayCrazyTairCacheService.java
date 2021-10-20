@@ -261,9 +261,9 @@ public class TodayCrazyTairCacheService {
                 buf.append(String.valueOf(checkNotNull(arg, "key arg"))).append('_');
             }
             // 用于预发环境测试(新的key)
-            if (RpmContants.enviroment.isPreline()) {
-                buf.append("pre_");
-            }
+//            if (RpmContants.enviroment.isPreline()) {
+//                buf.append("pre_");
+//            }
             return buf.substring(0, buf.length() - 1);
         } catch (Exception e) {
             HadesLogUtil.stream(bizScenario.getUniqueIdentity())
