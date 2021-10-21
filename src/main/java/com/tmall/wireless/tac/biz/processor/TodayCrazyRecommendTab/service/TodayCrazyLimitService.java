@@ -140,14 +140,13 @@ public class TodayCrazyLimitService {
                         .kv("paramsValue", JSON.toJSONString(paramsValue))
                         .kv("longListMap", JSON.toJSONString(longListMap))
                         .info();
-                tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + JSON.toJSONString(paramsValue) + "|jsonObject：" + JSON
-                        .toJSONString(jsonObject));
                 return longListMap;
             } else {
                 HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                         .kv("getItemLimitResult", "query limit success is false")
                         .info();
-                tacLogger.warn(LOG_PREFIX + "限购信息查询结果为空");
+                tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + JSON.toJSONString(paramsValue) + "|jsonObject：" + JSON
+                        .toJSONString(jsonObject));
                 return null;
             }
         } catch (Exception e) {
