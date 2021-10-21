@@ -75,7 +75,8 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             Map<Long, Map<String, Object>> aldStaticDataMap = aldStaticDataList.stream().collect(
                 Collectors.toMap(e -> Long.valueOf(String.valueOf(e.get("contentId"))), Function.identity(), (key1, key2) -> key2));
             customParams.put("aldStaticDataMap", aldStaticDataMap);
-
+            params.put("aldCurrentResId", aldCurrentResId);
+            params.put("uniqueIdentity", sgFrameworkContextItem.getBizScenario().getUniqueIdentity());
             String itemAndIndustryData = convertStaticData(aldStaticDataList);
             params.put("itemAndIndustry", itemAndIndustryData);
             Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, DEFAULT_SMAREAID);
@@ -92,8 +93,14 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
                 }
             }
 
-            params.put("regionCode", Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode())
-                .map(String::valueOf).orElse(String.valueOf(DEFAULT_LOGAREAID)));
+            Long regionCode = Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode())
+                .orElse(DEFAULT_LOGAREAID);
+
+            if(regionCode != null && regionCode != 0L){
+                params.put("regionCode", String.valueOf(regionCode));
+            }else {
+                params.put("regionCode", String.valueOf(DEFAULT_LOGAREAID));
+            }
 
             String itemSetId = "";
             String tacParams = MapUtil.getStringWithDefault(aldParams, "tacParams", "");
