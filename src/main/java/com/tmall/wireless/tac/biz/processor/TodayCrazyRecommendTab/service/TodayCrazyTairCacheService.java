@@ -210,13 +210,11 @@ public class TodayCrazyTairCacheService {
                     .kv("in use pmtRuleDataSetDTO", JSON.toJSONString(pmtRuleDataItemRuleDTOS.get(0).getPmtRuleDataSetDTO()))
                     .info();
         }
-        //todo 无数据验证
-        return Lists.newArrayList();
-//        if (CollectionUtils.isNotEmpty(centerDataSetItemRuleDTOS)) {
-//            return centerDataSetItemRuleDTOS;
-//        } else {
-//            return Lists.newArrayList();
-//        }
+        if (CollectionUtils.isNotEmpty(centerDataSetItemRuleDTOS)) {
+            return centerDataSetItemRuleDTOS;
+        } else {
+            return Lists.newArrayList();
+        }
     }
 
     /**
