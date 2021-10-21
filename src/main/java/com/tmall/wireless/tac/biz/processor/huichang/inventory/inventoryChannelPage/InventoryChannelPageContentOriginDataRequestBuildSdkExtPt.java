@@ -40,6 +40,7 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
     @Autowired
     TacLogger tacLogger;
 
+    private static final Long defaultLogAreaId = 107L;
     private static final Long DEFAULT_SMAREAID = 310100L;
     private static final Long DEFAULT_LOGAREAID = 107L;
     private static final String SCENE_SET_PREFIX = "intelligentCombinationItems_";
@@ -97,7 +98,16 @@ public class InventoryChannelPageContentOriginDataRequestBuildSdkExtPt extends R
             params.put("smAreaId", String.valueOf(smAreaId));
 
             LocParams locParams = ParseCsa.parseCsaObj(aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA), smAreaId);
-            params.put("regionCode", Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode()).map(String::valueOf).orElse(String.valueOf(DEFAULT_LOGAREAID)));
+
+            Long regionCode = Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode())
+                .orElse(defaultLogAreaId);
+
+            if(regionCode != null && regionCode != 0L){
+                params.put("regionCode", String.valueOf(regionCode));
+            }else {
+                params.put("regionCode", String.valueOf(defaultLogAreaId));
+            }
+
 
             String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
             if(locType == null || "B2C".equals(locType)){
