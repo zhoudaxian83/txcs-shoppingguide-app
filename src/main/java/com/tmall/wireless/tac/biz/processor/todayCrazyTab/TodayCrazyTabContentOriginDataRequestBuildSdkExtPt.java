@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.todayCrazyTab;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -9,9 +10,12 @@ import com.tmall.tcls.gs.sdk.framework.extensions.content.origindata.ContentOrig
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
+import com.tmall.wireless.tac.biz.processor.icon.level3.Level3RecommendService;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +32,7 @@ import java.util.Optional;
         scenario = "todayCrazyTab"
 )
 public class TodayCrazyTabContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
+    Logger LOGGER = LoggerFactory.getLogger(TodayCrazyTabContentOriginDataRequestBuildSdkExtPt.class);
 
     //    https://tui.taobao.com/recommend?
 //    appid=18697
@@ -64,7 +69,12 @@ public class TodayCrazyTabContentOriginDataRequestBuildSdkExtPt extends Register
         Context tacContext = sgFrameworkContextContent.getTacContext();
         RequestContext4Ald requestContext4Ald = (RequestContext4Ald) tacContext;
 
+
+
         Map<String, Object> aldContext = requestContext4Ald.getAldContext();
+
+//        LOGGER.warn("aldContext:{}", JSON.toJSONString(aldContext));
+
         Object staticScheduleData = aldContext.get(HallCommonAldConstant.STATIC_SCHEDULE_DATA);
         List<Map<String, Object>> staticScheduleDataList = (List<Map<String, Object>>)staticScheduleData;
         List<Long> longList = Lists.newArrayList();

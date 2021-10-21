@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.todayCrazyTab;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -41,10 +42,13 @@ public class TodayCrazyTabContentInfoQuerySdkExtPt extends Register implements C
 
     private Map<Long, ContentInfoDTO> getContentInfo(SgFrameworkContextContent sgFrameworkContextContent) {
 
+
+
         List<ContentEntity> contentEntityList = Optional.of(sgFrameworkContextContent)
                 .map(SgFrameworkContextContent::getContentEntityOriginDataDTO)
                 .map(OriginDataDTO::getResult)
                 .orElse(Lists.newArrayList());
+//        LOGGER.warn("contentEntityList:{}", JSON.toJSONString(contentEntityList));
 
         return contentEntityList.stream()
                 .collect(Collectors.toMap(ContentEntity::getContentId, contentEntity -> {

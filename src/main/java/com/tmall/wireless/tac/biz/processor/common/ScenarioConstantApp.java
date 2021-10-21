@@ -80,7 +80,7 @@ public class ScenarioConstantApp extends ScenarioConstant {
      */
     public static final String PAY_FOR_SUCCESS_GUESS_YOU_LIKE = "PAY_FOR_SUCCESS_GUESS_YOU_LIKE";
 
-
+    public static final String GUESS_YOU_LIKE_SHOP_CART = "GUESS_YOU_LIKE_SHOP_CART";
     public static final String CNXH_MENU_FEEDS = "CNXH_MENU_FEEDS";
 
 
