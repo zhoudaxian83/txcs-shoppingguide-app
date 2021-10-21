@@ -17,7 +17,6 @@ import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.ErrorCode;
-import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
@@ -280,9 +279,6 @@ public class TodayCrazyTairCacheService {
             for (Object arg : args) {
                 buf.append(String.valueOf(checkNotNull(arg, "key arg"))).append('_');
             }
-            tacLogger.info("环境验证isPreline：" + RpmContants.enviroment.isPreline());
-            tacLogger.info("环境验证isDaily：" + RpmContants.enviroment.isDaily());
-            tacLogger.info("环境验证isOnline：" + RpmContants.enviroment.isOnline());
             // 用于预发环境测试(新的key)
 //            if (RpmContants.enviroment.isPreline()) {
 //                buf.append("pre_");
@@ -333,7 +329,6 @@ public class TodayCrazyTairCacheService {
             return itemIds;
         }
         try {
-            tacLogger.info("专享价全部数据源数据：" + JSON.toJSONString(dataEntryResult.getValue().getValue()));
             itemIds = JSON.parseArray(String.valueOf(dataEntryResult.getValue().getValue()), String.class);
         } catch (Exception e) {
             tacLogger.info("getItemIdAndCacheKeyList json转换失败");
@@ -341,6 +336,12 @@ public class TodayCrazyTairCacheService {
                     .kv("method", "getItemIdAndCacheKeyList")
                     .kv("errorCode", "json error")
                     .kv("Exception", JSON.toJSONString(e))
+                    .error();
+        }
+        if (CollectionUtils.isEmpty(itemIds)) {
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                    .kv("method", "getItemIdAndCacheKeyList")
+                    .kv("errorCode", "itemIds is null")
                     .error();
         }
         return itemIds;

@@ -45,8 +45,8 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
-        tacLogger.info("TPP返回数据条数：" + originDataProcessRequest.getItemEntityOriginDataDTO().getResult().size());
-        tacLogger.info("TPP返回数据结果：" + JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
+        //tacLogger.info("TPP返回数据条数：" + originDataProcessRequest.getItemEntityOriginDataDTO().getResult().size());
+        //tacLogger.info("TPP返回数据结果：" + JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
 
         /**
          * 用户置顶
