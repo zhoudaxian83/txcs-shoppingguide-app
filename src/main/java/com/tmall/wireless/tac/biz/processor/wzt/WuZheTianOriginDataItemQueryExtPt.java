@@ -18,6 +18,7 @@ import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
+import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.DataContext;
 import com.tmall.wireless.tac.biz.processor.wzt.model.SortItemEntity;
@@ -30,6 +31,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,10 +63,17 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         dataContext.setIndex(index);
         dataContext.setPageSize(pageSize);
-        //tair获取推荐商品
-        List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
-                smAreaId);
-        //获取id和排序信息
+        /**
+         * tair获取推荐商品
+         */
+        List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(smAreaId);
+        /**
+         * 过滤掉不是当前时间段的定坑商品
+         */
+        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule()));
+        /**
+         * 获取id和排序信息
+         */
         Map<Long, Long> stringLongMap = new HashMap<>(16);
         List<Long> items = Lists.newArrayList();
         columnCenterDataSetItemRuleDTOList.forEach(columnCenterDataSetItemRuleDTO -> {
@@ -81,6 +91,28 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                     this.sortItemEntityList(originDataDTO, stringLongMap);
                     return this.getItemPage(originDataDTO, dataContext);
                 });
+    }
+
+    /**
+     * 1，需要再展示时间内，不需要坑位时间
+     *
+     * @param columnCenterDataRuleDTO
+     * @return
+     */
+    private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
+        long nowTime = System.currentTimeMillis();
+        if (columnCenterDataRuleDTO == null) {
+            return false;
+        }
+        Date itemScheduleStartDate = columnCenterDataRuleDTO.getItemScheduleStartTime();
+        Date itemScheduleEndDate = columnCenterDataRuleDTO.getItemScheduleEndTime();
+        if (itemScheduleStartDate == null || itemScheduleEndDate == null) {
+            return false;
+        }
+        long itemScheduleStartTime = itemScheduleStartDate.getTime();
+        long itemScheduleEndTime = itemScheduleEndDate.getTime();
+        tacLogger.info("时间过滤：nowTime=" + nowTime + "itemScheduleStartDate=" + itemScheduleStartDate + "itemScheduleEndDate" + itemScheduleEndDate);
+        return itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
     }
 
     private void sortItemEntityList(OriginDataDTO<ItemEntity> originDataDTO, Map<Long, Long> stringLongMap) {
