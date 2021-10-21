@@ -62,10 +62,6 @@ public class LimitTimeBuyScene {
 
         Long smAreaId = MapUtil.getLongWithDefault(requestContext4Ald.getParams(), "smAreaId", 330100L);
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("LimitTimeBuyScene","recommend")
-            .kv("requestContext4Ald.getParams()",JSON.toJSONString(requestContext4Ald.getParams()))
-            .info();
         sgFrameworkContextItem.setRequestParams(requestContext4Ald.getParams());
 
         SceneInfo sceneInfo = new SceneInfo();
@@ -87,31 +83,8 @@ public class LimitTimeBuyScene {
         pageInfoDO.setIndex(0);
         pageInfoDO.setPageSize(20);
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
-        try{
-            sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-                .map(response ->{
-                        return buildGeneralItemse(response,sgFrameworkContextItem);
-                    }
-                ).map(TacResult::newResult)
-                .onErrorReturn(r -> {
-                    HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-                        .kv("generalItemse is","empty")
-                        .info();
-                    List<GeneralItem> generalItemse = new ArrayList<>();
-                    TacResult tacResult = TacResult.newResult(generalItemse);
-                    return tacResult;
-                });
-        }catch (Exception e){
-            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-                .kv("LimitTimeBuyScene","recommend")
-                .kv("Exception e",JSON.toJSONString(e))
-                .info();
-        }
-        List<GeneralItem> generalItemse = new ArrayList<>();
-        TacResult tacResult = TacResult.newResult(generalItemse);
-        return Flowable.just(tacResult);
 
-        /*return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+        return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(response ->{
                         return buildGeneralItemse(response,sgFrameworkContextItem);
                     }
@@ -123,14 +96,11 @@ public class LimitTimeBuyScene {
                     List<GeneralItem> generalItemse = new ArrayList<>();
                     TacResult tacResult = TacResult.newResult(generalItemse);
                     return tacResult;
-                    });*/
+                    });
 
     }
     public List<GeneralItem> buildGeneralItemse(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
         /*perfect(sgFrameworkResponse,sgFrameworkContextItem);*/
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("buildGeneralItemse","in")
-            .info();
         List<GeneralItem> generalItemse = new ArrayList<>();
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
         //第几个时间段
