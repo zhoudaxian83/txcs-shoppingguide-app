@@ -316,4 +316,31 @@ public class TodayCrazyTairCacheService {
     public HashMap<String, String> getItemIdAndCacheKey(Map<String, Object> userParams) {
         return (HashMap<String, String>) userParams.get(CommonConstant.ITEM_ID_AND_CACHE_KEYS);
     }
+
+    /**
+     * 获取所有专享价的商品id
+     *
+     * @return
+     */
+    public List<String> getItemIdAndCacheKeyList(String tairKey) {
+        List<String> itemIds = Lists.newArrayList();
+        TairManager tairManager = tairFactorySpi.getOriginDataFailProcessTair();
+        if (tairManager == null || tairManager.getMultiClusterTairManager() == null || tairManager.getNameSpace() <= 0) {
+            return itemIds;
+        }
+        Result<DataEntry> dataEntryResult = tairManager.getMultiClusterTairManager().get(tairManager.getNameSpace(), tairKey);
+        if (!dataEntryResult.isSuccess() || dataEntryResult.getValue() == null || dataEntryResult.getValue().getValue() == null) {
+            return itemIds;
+        }
+        try {
+            itemIds = JSON.parseArray(JSON.toJSONString(dataEntryResult.getValue().getValue()), String.class);
+        } catch (Exception e) {
+            tacLogger.info("getItemIdAndCacheKeyList json转换失败");
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                    .kv("method", "getItemIdAndCacheKeyList")
+                    .kv("errorCode", "json error")
+                    .error();
+        }
+        return itemIds;
+    }
 }
