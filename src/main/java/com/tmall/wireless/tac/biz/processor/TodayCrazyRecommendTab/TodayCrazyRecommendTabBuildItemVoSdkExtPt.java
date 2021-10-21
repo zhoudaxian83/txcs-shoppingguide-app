@@ -125,7 +125,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         String itemType = null;
         if (cacheKey != null) {
             itemType = this.getItemType(cacheKey);
-            itemEntityVO.put("itemType", this.getItemType(cacheKey));
+            itemEntityVO.put("itemType", itemType);
         } else {
             String itemId = Long.toString(itemEntityVO.getItemId());
             Set<String> stringSet = temIdAndCacheKeyMap.keySet();
@@ -135,6 +135,10 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
                         .kv("vo itemId tairKey is null", JSON.toJSONString(itemEntityVO.getItemId()))
                         .info();
                 tacLogger.info("vo获取tairKey为空itemId" + itemEntityVO.getItemId());
+            } else {
+                HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                        .kv("vo itemId itemType is null", JSON.toJSONString(itemEntityVO.getItemId()))
+                        .info();
             }
         }
         itemEntityVO.put("monthlySales", this.toMonthlySalesView(salesAmount));

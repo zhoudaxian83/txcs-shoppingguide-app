@@ -197,7 +197,6 @@ public class TodayCrazyTairCacheService {
         if (!dataEntryResult.isSuccess() || dataEntryResult.getValue() == null || dataEntryResult.getValue().getValue() == null) {
             return centerDataSetItemRuleDTOS;
         }
-        tacLogger.info("定坑源数据：" + JSON.toJSONString(dataEntryResult.getValue().getValue()));
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = JSON.parseArray(JSON.toJSONString(dataEntryResult.getValue().getValue()), PmtRuleDataItemRuleDTO.class);
         /**
          * 去除当前时间不在排期时间内的
@@ -211,11 +210,13 @@ public class TodayCrazyTairCacheService {
                     .kv("in use pmtRuleDataSetDTO", JSON.toJSONString(pmtRuleDataItemRuleDTOS.get(0).getPmtRuleDataSetDTO()))
                     .info();
         }
-        if (CollectionUtils.isNotEmpty(centerDataSetItemRuleDTOS)) {
-            return centerDataSetItemRuleDTOS;
-        } else {
-            return Lists.newArrayList();
-        }
+        //todo 无数据验证
+        return Lists.newArrayList();
+//        if (CollectionUtils.isNotEmpty(centerDataSetItemRuleDTOS)) {
+//            return centerDataSetItemRuleDTOS;
+//        } else {
+//            return Lists.newArrayList();
+//        }
     }
 
     /**
