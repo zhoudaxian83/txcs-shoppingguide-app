@@ -13,7 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <common.rpm.version>1.0.20-SNAPSHOT</common.rpm.version>
-        <spi.store.version>1.0.12</spi.store.version>
+        <spi.store.version>1.0.14-detail-SNAPSHOT</spi.store.version>
     </properties>
 
 
@@ -202,12 +202,6 @@
                     <groupId>com.aliyun.oss</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>com.tmall.wireless.store</groupId>
-            <artifactId>third-part-spi</artifactId>
-            <version>1.0.12</version>
         </dependency>
 
     </dependencies>
