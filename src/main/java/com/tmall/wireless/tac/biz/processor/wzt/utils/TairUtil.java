@@ -1,20 +1,13 @@
 package com.tmall.wireless.tac.biz.processor.wzt.utils;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-
 import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
-import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
@@ -28,6 +21,9 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: luoJunChong
@@ -52,27 +48,24 @@ public class TairUtil {
     private static final String AREA_SORT_SUFFIX = "_AREA_SORT";
 
     public Object getCache(String cacheKey) {
-        try {
-            TairManager defaultTair = tairFactorySpi.getDefaultTair();
-            if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null) {
-                tacLogger.warn(
-                        LOG_PREFIX + "缓存异常，cacheKey: " + cacheKey);
-                return null;
-            }
-            Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(NAME_SPACE,
-                    cacheKey);
-            if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
-                    && dataEntryResult.getValue().getValue() != null) {
-                return dataEntryResult.getValue().getValue();
-            } else {
-                tacLogger.info(LOG_PREFIX + "getCache获取缓存为空，cacheKey: " + cacheKey);
-                return null;
-            }
-        } catch (Exception e) {
-            tacLogger.error(LOG_PREFIX + "getCache获取缓存异常,cacheKey:" + cacheKey, e);
+        TairManager defaultTair = tairFactorySpi.getDefaultTair();
+        if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null) {
+            tacLogger.warn(
+                    LOG_PREFIX + "缓存异常，cacheKey: " + cacheKey);
+            return null;
         }
-        return null;
+        Result<DataEntry> dataEntryResult = defaultTair.getMultiClusterTairManager().get(NAME_SPACE,
+                cacheKey);
+        if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
+                && dataEntryResult.getValue().getValue() != null) {
+            tacLogger.info("缓存源数据：" + JSON.toJSONString(dataEntryResult.getValue()));
+            return dataEntryResult.getValue().getValue();
+        } else {
+            tacLogger.info(LOG_PREFIX + "getCache获取缓存为空，cacheKey: " + cacheKey);
+            return null;
+        }
     }
+
 
     public Boolean setCache(Object data, String cacheKey) {
         try {
@@ -130,16 +123,16 @@ public class TairUtil {
         return Lists.newArrayList();
     }
 
-    private List<PmtRuleDataItemRuleDTO> getCachePmtRuleDataItemRuleDTOList(Long smAreaId) {
+    public List<PmtRuleDataItemRuleDTO> getCachePmtRuleDataItemRuleDTOList(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
             tacLogger.warn(LOG_PREFIX + "getTairItems大区id未匹配：smAreaId：" + smAreaId);
             return Lists.newArrayList();
         }
         String cacheKey = logicalArea.getCacheKey();
-        if (!RpmContants.enviroment.isOnline()) {
-            cacheKey = cacheKey + "_pre";
-        }
+//        if (!RpmContants.enviroment.isOnline()) {
+//            cacheKey = cacheKey + "_pre";
+//        }
         try {
             return (List<PmtRuleDataItemRuleDTO>) getCache(cacheKey);
         } catch (Exception e) {
