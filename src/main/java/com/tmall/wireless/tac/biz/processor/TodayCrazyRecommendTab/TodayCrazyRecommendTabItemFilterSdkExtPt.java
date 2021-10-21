@@ -55,7 +55,7 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
 
         for (ItemEntityVO entityVO : itemAndContentList) {
             if (entityVO != null) {
-                if (!this.canBuy(entityVO) || !this.noLimitBuy(entityVO)) {
+                if (!this.canBuy(entityVO) || !this.noLimitBuyV2(entityVO)) {
                     tacLogger.info("被过滤数据：" + entityVO.getString("itemId"));
                 } else {
                     if (checkField(entityVO)) {
@@ -129,6 +129,32 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
                     .info();
             return false;
         }
+    }
+
+    public boolean noLimitBuyV2(ItemEntityVO itemEntityVO) {
+        ItemLimitDTO itemLimitDTO = (ItemLimitDTO) itemEntityVO.get("itemLimit");
+        if (itemLimitDTO == null) {
+            return true;
+        }
+        //兼容只有总限购或个人限购的情况
+        boolean totalLimit = itemLimitDTO.getUsedCount() != null && itemLimitDTO.getTotalLimit() != null;
+        boolean userLimit = itemLimitDTO.getUserUsedCount() != null && itemLimitDTO.getUserLimit() != null;
+        if (!totalLimit && !userLimit) {
+            return true;
+        }
+        if (totalLimit && userLimit) {
+            /**
+             * 当已售数量大于等于总限制数，个人限制数量大于等于个人限购数不过滤。否则过滤
+             */
+            return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
+                    && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
+        }
+        if (totalLimit) {
+            return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit();
+        } else {
+            return itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
+        }
+
     }
 
 

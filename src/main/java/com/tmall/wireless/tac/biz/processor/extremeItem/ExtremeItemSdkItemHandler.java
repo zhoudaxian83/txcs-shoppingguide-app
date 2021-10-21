@@ -110,7 +110,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
                 HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|error")
                         .kv("configSize", String.valueOf(itemConfigGroups.size()))
                         .kv("actualSize", String.valueOf(generalItems.size()))
-                        .kv("curPageUrl", supermarketHallContext.getCurrentResourceId())
+                        .kv("curPageUrl", supermarketHallContext.getCurrentPageUrl())
                         .kv("resourceId", supermarketHallContext.getCurrentResourceId())
                         .kv("scheduleId", supermarketHallContext.getCurrentScheduleId())
                         .error();
@@ -119,7 +119,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         } catch (Exception e) {
             HadesLogUtil.stream("ExtremeItemSdkItemHandler|mainProcess|" + Logger.isEagleEyeTest() + "|exception")
                     .kv("errorMsg", StackTraceUtil.stackTrace(e))
-                    .kv("curPageUrl", supermarketHallContext.getCurrentResourceId())
+                    .kv("curPageUrl", supermarketHallContext.getCurrentPageUrl())
                     .kv("resourceId", supermarketHallContext.getCurrentResourceId())
                     .kv("scheduleId", supermarketHallContext.getCurrentScheduleId())
                     .error();

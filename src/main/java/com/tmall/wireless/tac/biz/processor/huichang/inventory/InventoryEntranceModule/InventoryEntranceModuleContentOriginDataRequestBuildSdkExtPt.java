@@ -86,9 +86,8 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
     @Override
     public RecommendRequest process(SgFrameworkContextContent sgFrameworkContextContent) {
         RecommendRequest recommendRequest = new RecommendRequest();
+        String aldCurrentResId = "";
         try{
-            tacOptLogger.debug("tacOptLogger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.start");
-            logger.debug("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.start");
 
             Context tacContext = sgFrameworkContextContent.getTacContext();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)tacContext;
@@ -97,8 +96,7 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
             logger.info("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.aldParam:{}", JSON.toJSONString(aldParam));
             logger.info("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.aldContext:{}", JSON.toJSONString(aldContext));
             Map<String, String> tppRequestParams = new HashMap<>();
-
-            Object aldCurrentResId = aldContext.get(HallCommonAldConstant.ALD_CURRENT_RES_ID);
+            aldCurrentResId = MapUtil.getStringWithDefault(aldContext, HallCommonAldConstant.ALD_CURRENT_RES_ID, "0");
             Object userId = aldContext.get(HallCommonAldConstant.USER_ID);
             tppRequestParams.put("resourceId", String.valueOf(aldCurrentResId));
             BizScenario bizScenario = sgFrameworkContextContent.getBizScenario();
@@ -118,11 +116,10 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
             tppRequestParams.put("exposureDataUserId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
             String urlParamsByMap = URLUtil.getUrlParamsByMap(tppRequestParams);
-            tacLogger.debug("urlParamsByMap:" + JSON.toJSONString(urlParamsByMap));
             logger.info("logger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.urlParamsByMap:{}", JSON.toJSONString(urlParamsByMap));
             return recommendRequest;
         }catch (Exception e){
-            tacLogger.error("tacLogger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.error,", e);
+            logger.error("tacLogger.InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt.error.resourceId:" + aldCurrentResId, e);
             return recommendRequest;
         }
 
@@ -144,7 +141,15 @@ public class InventoryEntranceModuleContentOriginDataRequestBuildSdkExtPt extend
 
         LocParams locParams = ParseCsa.parseCsaObj(aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA), smAreaId);
 
-        params.put("regionCode", Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode()).map(String::valueOf).orElse(String.valueOf(defaultLogAreaId)));
+        Long regionCode = Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode())
+            .orElse(defaultLogAreaId);
+
+        if(regionCode != null && regionCode != 0L){
+            params.put("regionCode", String.valueOf(regionCode));
+        }else {
+            params.put("regionCode", String.valueOf(defaultLogAreaId));
+        }
+
 
         //先从绑定的流程模板参数中拿，如果拿不到，代表是二跳页面的模块，这个时候从URL里面获取，如果还获取不到，则默认是B2C
         // 年羽改的

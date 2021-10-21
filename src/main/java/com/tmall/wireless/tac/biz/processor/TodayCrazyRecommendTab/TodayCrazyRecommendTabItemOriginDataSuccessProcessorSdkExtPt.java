@@ -12,7 +12,6 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProc
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
-import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.TodayCrazySortItemEntity;
@@ -48,6 +47,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         tacLogger.info("TPP返回数据条数：" + originDataProcessRequest.getItemEntityOriginDataDTO().getResult().size());
         tacLogger.info("TPP返回数据结果：" + JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
+
+        /**
+         * 用户置顶
+         */
+        String crowdTopStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "crowdTop", "");
+        List<String> crowdTopList = crowdTopStr.equals("") ? Lists.newArrayList() : Arrays.asList(crowdTopStr.split(","));
         /**
          * 鸿雁置顶itemIds和已曝光置顶itemIds,按照前端入参顺序(前端已做合并，原先是已曝光置顶itemIds在最上面，然后是鸿雁置顶itemIds的)
          */
@@ -64,14 +69,22 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         /**
          * tpp请求成功写入缓存，供失败打底使用
          */
-        ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
-        todayCrazyTairCacheService.process(itemFailProcessorRequest);
+        todayCrazyTairCacheService.process(originDataProcessRequest);
 
         /**
          * 排序优先级：已曝光>鸿雁>坑位排序(保证顺序去重)
          * 去重的同时保证入参的顺序
          */
         List<String> topItemIds = Lists.newArrayList();
+        /**
+         * 用户特殊置顶在所有置顶之上
+         */
+        if (CollectionUtils.isNotEmpty(crowdTopList)) {
+            topItemIds.addAll(crowdTopList);
+        }
+        /**
+         * 对所有需要置顶的商品去重处理，保证优先出现的顺序不变
+         */
         topList.forEach(s -> {
             if (!topItemIds.contains(s)) {
                 topItemIds.add(s);
@@ -185,6 +198,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         resultItemIds.addAll(entryPromotionPriceItemIdList);
         result.addAll(entryChannelPriceNew);
         result.addAll(entryPromotionPrice);
+        tacLogger.info("定坑去重后结果：" + JSON.toJSONString(result));
 
         //根据定坑数据对原tpp返回结果集进行去重处理
         itemEntities.removeIf(itemEntity -> resultItemIds.contains(itemEntity.getItemId()));
@@ -258,6 +272,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         columnCenterDataSetItemRuleDTOS.forEach(columnCenterDataSetItemRuleDTO -> {
             ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
             if (this.isNeedSort(columnCenterDataRuleDTO) && !itemList.contains(columnCenterDataSetItemRuleDTO.getItemId())) {
+                tacLogger.info("去重保留itemId：：" + columnCenterDataSetItemRuleDTO.getItemId());
                 itemList.add(columnCenterDataSetItemRuleDTO.getItemId());
                 needEnterDataSetItemRuleDTOS.add(columnCenterDataSetItemRuleDTO);
             }
@@ -273,7 +288,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @return
      */
     private boolean isNeedSort(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
-        Date nowDate = new Date();
+        long nowDate = System.currentTimeMillis();
         if (columnCenterDataRuleDTO == null) {
             return false;
         }
@@ -285,7 +300,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (itemScheduleStartTime == null || itemScheduleEndTime == null || itemStickStartTime == null || itemStickEndTime == null || stick == null) {
             return false;
         }
-        return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime) && nowDate.after(itemStickStartTime) && nowDate.before(itemStickEndTime);
+        long scheduleStartTime = itemScheduleStartTime.getTime();
+        long scheduleEndTime = itemScheduleEndTime.getTime();
+        long stickStartTime = itemStickStartTime.getTime();
+        long stickEndTime = itemStickEndTime.getTime();
+        tacLogger.info("去重判断：nowDate=" + nowDate + "itemScheduleStartTime=" + itemScheduleStartTime + "itemScheduleEndTime=" + itemScheduleEndTime + "itemStickStartTime=" + itemStickStartTime + "itemStickEndTime=" + itemStickEndTime);
+        return nowDate > scheduleStartTime && nowDate < scheduleEndTime && nowDate > stickStartTime && nowDate < stickEndTime;
     }
 
 

@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 @SdkExtension(
@@ -46,6 +47,8 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
 
     @Autowired
     TodayCrazyTairCacheService todayCrazyTairCacheService;
+
+    private static final Integer tenThousand = 10000;
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
@@ -66,6 +69,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         String itemUrl = "";
         String specifications = "";
         String reservePrice = "";
+        Integer salesAmount = null;
         Map<String, Object> attachments = null;
         Set<Integer> singleFreeShipSet = new HashSet<>();
         Map<String, String> trackPoint = Maps.newHashMap();
@@ -82,6 +86,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
                 ItemDTO itemDTO = itemInfoBySourceCaptainDTO.getItemDTO();
                 singleFreeShipSet = itemDTO.getItemTags();
                 attachments = itemDTO.getAttachments();
+                salesAmount = itemDTO.getSalesAmount();
                 ItemPromotionResp itemPromotionResp = itemDTO.getItemPromotionResp();
                 if (itemPromotionResp != null) {
                     itemDesc = this.buildItemDesc(itemPromotionResp);
@@ -109,11 +114,11 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("reservePrice", reservePrice);
         //单品包邮
-        itemEntityVO.put("isFreeShip", false);
+        itemEntityVO.put("freeShipping", false);
         if (CollectionUtils.isNotEmpty(singleFreeShipSet)) {
             singleFreeShipSet.forEach(s -> {
                 if (s == 458434 || s == 1670722) {
-                    itemEntityVO.put("isFreeShip", true);
+                    itemEntityVO.put("freeShipping", true);
                 }
             });
         }
@@ -132,6 +137,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
                 tacLogger.info("vo获取tairKey为空itemId" + itemEntityVO.getItemId());
             }
         }
+        itemEntityVO.put("monthlySales", this.toMonthlySalesView(salesAmount));
         itemEntityVO.put("attachment", attachments);
         itemEntityVO.remove("attachments");
         itemEntityVO.put("itemDesc", itemDesc);
@@ -141,6 +147,28 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         }
         return Response.success(itemEntityVO);
     }
+
+    /**
+     * 销量转化
+     *
+     * @param salesAmount
+     * @return
+     */
+    private String toMonthlySalesView(Integer salesAmount) {
+        if (salesAmount == null) {
+            return "";
+        }
+        if (salesAmount < tenThousand) {
+            return salesAmount.toString();
+        }
+        float tenThousands = Float.valueOf(salesAmount) / Float.valueOf(tenThousand);
+        /**构造方法的字符格式这里如果小数不足2位,会以0补足**/
+        DecimalFormat decimalFormat = new DecimalFormat(".0");
+        String monthlySalesView = decimalFormat.format(tenThousands);
+        return monthlySalesView + "万";
+
+    }
+
 
     private String getCacheKey(HashMap<String, String> temIdAndCacheKeyMap, Long itemId) {
         return temIdAndCacheKeyMap.get(Long.toString(itemId));
@@ -197,15 +225,18 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         }
     }
 
+    /**
+     * 限购信息
+     * 没有限购信息就不返回
+     *
+     * @param itemEntityVO
+     * @param userParams
+     */
     private void buildLimit(ItemEntityVO itemEntityVO, Map<String, Object> userParams) {
-        if (!CommonConstant.LIMIT_BUY_SWITCH) {
-            return;
-        }
         List<ItemLimitDTO> itemLimitDTOS;
         Long itemId = (Long) itemEntityVO.get("itemId");
         Map<Long, List<ItemLimitDTO>> limitResult = this.getLimitResult(userParams);
         if (limitResult == null || CollectionUtils.isEmpty(limitResult.get(itemId))) {
-            itemEntityVO.put("itemLimit", new ItemLimitDTO());
             return;
         }
         itemLimitDTOS = limitResult.get(itemId);

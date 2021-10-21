@@ -28,8 +28,6 @@ public class ItemGmvGroupMap {
     private Map<Integer, Integer> lastNDaysGmvRankMap;
     private Map<Integer, Integer> last1HourGmvRankMap;
 
-    private static Set<String> lastNDaysDateSet = new CopyOnWriteArraySet<>();
-
     public static ItemGmvGroupMap valueOf(ItemConfigGroups itemConfigGroups, List<GmvEntity> lastNDayGmvEntityList, List<GmvEntity> last1HourGmvEntityList, int days) {
         Set<String> lastNDaysDateSet = loadLastNDaysDateSet(days);
         ItemGmvGroupMap itemGmvGroupMap = new ItemGmvGroupMap();
@@ -146,19 +144,16 @@ public class ItemGmvGroupMap {
 
         LocalDate todayDate =  LocalDate.now();
 
-        if(lastNDaysDateSet.contains(todayDate.format(dateTimeFormatter)) && lastNDaysDateSet.size() == n + 1) {
-            return lastNDaysDateSet;
-        }
         for(int i=0; i<=n; i++) {
             result.add(todayDate.minusDays(i).format(dateTimeFormatter));
         }
-        lastNDaysDateSet.clear();
-        lastNDaysDateSet.addAll(result);
-        return lastNDaysDateSet;
+        return result;
     }
 
     public static void main(String[] args) {
         boolean b = withIn1Hour("2021-10-09 14:30:00.000");
         System.out.println("b = " + b);
+
+        loadLastNDaysDateSet(5);
     }
 }

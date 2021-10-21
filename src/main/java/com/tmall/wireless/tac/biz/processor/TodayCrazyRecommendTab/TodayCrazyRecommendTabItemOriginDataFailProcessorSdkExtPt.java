@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
 import com.alibaba.cola.extension.BizScenario;
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -18,6 +19,7 @@ import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created from template by 罗俊冲 on 2021-09-30 16:51:23.
@@ -47,18 +49,24 @@ public class TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt extends R
         locParams.setRtNextDayStoreId(locParams1.getRtNextDayStoreId());
         itemFailProcessorRequest.getSgFrameworkContextItem().setLocParams(locParams);
         itemFailProcessorRequest.getSgFrameworkContextItem().setBizScenario(bizScenario);
-        List<ItemEntity> itemEntityList = JSON.parseArray(JSON.toJSONString(todayCrazyTairCacheService.process(itemFailProcessorRequest).getResult()), ItemEntity.class);
-        tacLogger.info("tpp打底返回数据条数：" + itemEntityList.size());
+        OriginDataDTO<ItemEntity> itemEntityOriginDataDTO = todayCrazyTairCacheService.process(originDataProcessRequest);
+        List<ItemEntity> itemEntityList = Lists.newArrayList();
+        if (itemEntityOriginDataDTO != null) {
+            itemEntityList = todayCrazyTairCacheService.process(originDataProcessRequest).getResult();
+        }
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntityList));
         OriginDataDTO<ItemEntity> originDataDTO = new OriginDataDTO<>();
-        originDataDTO.setResult(itemEntityList);
         originDataDTO.setResult(itemEntityList);
         originDataDTO.setIndex(0);
         originDataDTO.setHasMore(false);
         originDataDTO.setPvid("");
         originDataDTO.setScm("1007.0.0.0");
+
+        List<Long> itemIds = originDataDTO.getResult().stream().map(ItemEntity::getItemId).collect(Collectors.toList());
+        tacLogger.info("tpp打底失败结果集originDataDTO：" + JSON.toJSONString(itemIds));
         HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
-                .kv("originDataDTO", JSON.toJSONString(originDataDTO))
+                .kv("method", "TodayCrazyRecommendTabItemOriginDataFailProcessorSdkExtPt")
+                .kv("itemIds", JSON.toJSONString(itemIds))
                 .info();
         return originDataDTO;
     }
