@@ -78,7 +78,7 @@ public class O2oBangdanContentInfoQueryExtPt implements ContentInfoQueryExtPt {
             tacLogger.info("O2oBangdanContentInfoQueryExtPt sKeyList:"+JSON.toJSONString(sKeyList));
 
             Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-            tacLogger.info("O2oBangdanContentInfoQueryExtPt mgetResult:"+mgetResult.getValue());
+            //tacLogger.info("O2oBangdanContentInfoQueryExtPt mgetResult:"+mgetResult.getValue());
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail(""));
             }
