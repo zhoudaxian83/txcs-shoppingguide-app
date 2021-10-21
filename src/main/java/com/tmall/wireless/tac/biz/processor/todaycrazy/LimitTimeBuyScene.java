@@ -85,7 +85,7 @@ public class LimitTimeBuyScene {
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-                .defaultIfEmpty(new SgFrameworkResponse<>())
+                .defaultIfEmpty(new SgFrameworkResponse<EntityVO>())
                 .map(response ->{
                         return buildGeneralItemse(response,sgFrameworkContextItem);
                     }
