@@ -1,14 +1,14 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
+import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterPmtRuleDataSetDTO;
+import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProcessRequest;
@@ -17,7 +17,6 @@ import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.ErrorCode;
-import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
@@ -183,39 +182,57 @@ public class TodayCrazyTairCacheService {
         return originDataDTO != null && CollectionUtils.isNotEmpty(originDataDTO.getResult());
     }
 
-    public List<ColumnCenterDataSetItemRuleDTO> getTairManager(String tairKey) {
+    public List<ColumnCenterDataSetItemRuleDTO> getTairColumnCenterDataSetItemRuleDTO(String tairKey) {
+        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                .kv("tairKey", tairKey)
+                .kv("method", "getTairManager")
+                .info();
         List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = Lists.newArrayList();
         TairManager tairManager = tairFactorySpi.getOriginDataFailProcessTair();
         if (tairManager == null || tairManager.getMultiClusterTairManager() == null || tairManager.getNameSpace() <= 0) {
-            return null;
+            return centerDataSetItemRuleDTOS;
         }
         Result<DataEntry> dataEntryResult = tairManager.getMultiClusterTairManager().get(tairManager.getNameSpace(), tairKey);
         if (!dataEntryResult.isSuccess() || dataEntryResult.getValue() == null || dataEntryResult.getValue().getValue() == null) {
-            return null;
+            return centerDataSetItemRuleDTOS;
         }
-        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(dataEntryResult.getValue().getValue()));
-        if (jsonArray.size() == 0) {
-            return null;
-        }
-        JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(jsonArray.get(0)));
-        if (jsonObject == null) {
-            return null;
-        }
-        Object dataSetItemRuleDTOList = jsonObject.get("dataSetItemRuleDTOList");
-        if (dataSetItemRuleDTOList == null) {
-            return null;
-        }
-        try {
-            centerDataSetItemRuleDTOS = JSON.parseArray(JSONObject.toJSONString(dataSetItemRuleDTOList), ColumnCenterDataSetItemRuleDTO.class);
-        } catch (Exception e) {
+        List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = JSON.parseArray(JSON.toJSONString(dataEntryResult.getValue().getValue()), PmtRuleDataItemRuleDTO.class);
+        /**
+         * 去除当前时间不在排期时间内的
+         */
+        pmtRuleDataItemRuleDTOS.removeIf(pmtRuleDataItemRuleDTO -> !this.inUse(pmtRuleDataItemRuleDTO.getPmtRuleDataSetDTO()));
+        if (CollectionUtils.isNotEmpty(pmtRuleDataItemRuleDTOS)) {
+            centerDataSetItemRuleDTOS = pmtRuleDataItemRuleDTOS.get(0).getDataSetItemRuleDTOList();
             HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
-                    .kv("get centerDataSetItemRuleDTOS parse error,tairKEY:", tairKey)
-                    .kv("tairManager", JSON.toJSONString(tairManager))
+                    .kv("method:", "getTairColumnCenterDataSetItemRuleDTO")
+                    .kv("tairKey", tairKey)
+                    .kv("in use pmtRuleDataSetDTO", JSON.toJSONString(pmtRuleDataItemRuleDTOS.get(0).getPmtRuleDataSetDTO()))
                     .info();
         }
-        tacLogger.info("定坑源数据："+JSON.toJSONString(centerDataSetItemRuleDTOS));
-        return centerDataSetItemRuleDTOS;
+        if (CollectionUtils.isNotEmpty(centerDataSetItemRuleDTOS)) {
+            return centerDataSetItemRuleDTOS;
+        } else {
+            return Lists.newArrayList();
+        }
+    }
 
+    /**
+     * 是否在用，
+     * 当前时间必须在排期时间段内
+     *
+     * @return
+     */
+    private boolean inUse(ColumnCenterPmtRuleDataSetDTO columnCenterPmtRuleDataSetDTO) {
+        long nowTime = System.currentTimeMillis();
+        if (columnCenterPmtRuleDataSetDTO == null) {
+            return false;
+        }
+        if (columnCenterPmtRuleDataSetDTO.getScheduleStartTime() == null || columnCenterPmtRuleDataSetDTO.getScheduleEndTime() == null) {
+            return false;
+        }
+        long scheduleStartTime = columnCenterPmtRuleDataSetDTO.getScheduleStartTime().getTime();
+        long scheduleEndTime = columnCenterPmtRuleDataSetDTO.getScheduleEndTime().getTime();
+        return nowTime > scheduleStartTime && nowTime < scheduleEndTime;
     }
 
 
@@ -224,7 +241,8 @@ public class TodayCrazyTairCacheService {
      */
     public List<ColumnCenterDataSetItemRuleDTO> getEntryChannelPriceNew() {
         String channelPriceKey = getChannelPriceNewKey();
-        return this.getTairManager(channelPriceKey);
+        tacLogger.info("channelPriceKey:" + channelPriceKey);
+        return this.getTairColumnCenterDataSetItemRuleDTO(channelPriceKey);
     }
 
     /**
@@ -232,7 +250,8 @@ public class TodayCrazyTairCacheService {
      */
     public List<ColumnCenterDataSetItemRuleDTO> getEntryPromotionPrice() {
         String promotionPriceKey = getPromotionPriceKey();
-        return this.getTairManager(promotionPriceKey);
+        tacLogger.info("promotionPriceKey:" + promotionPriceKey);
+        return this.getTairColumnCenterDataSetItemRuleDTO(promotionPriceKey);
     }
 
 
@@ -261,9 +280,9 @@ public class TodayCrazyTairCacheService {
                 buf.append(String.valueOf(checkNotNull(arg, "key arg"))).append('_');
             }
             // 用于预发环境测试(新的key)
-            if (RpmContants.enviroment.isPreline()) {
-                buf.append("pre_");
-            }
+//            if (RpmContants.enviroment.isPreline()) {
+//                buf.append("pre_");
+//            }
             return buf.substring(0, buf.length() - 1);
         } catch (Exception e) {
             HadesLogUtil.stream(bizScenario.getUniqueIdentity())
@@ -292,5 +311,39 @@ public class TodayCrazyTairCacheService {
 
     public HashMap<String, String> getItemIdAndCacheKey(Map<String, Object> userParams) {
         return (HashMap<String, String>) userParams.get(CommonConstant.ITEM_ID_AND_CACHE_KEYS);
+    }
+
+    /**
+     * 获取所有专享价的商品id
+     *
+     * @return
+     */
+    public List<String> getItemIdAndCacheKeyList(String tairKey) {
+        List<String> itemIds = Lists.newArrayList();
+        TairManager tairManager = tairFactorySpi.getOriginDataFailProcessTair();
+        if (tairManager == null || tairManager.getMultiClusterTairManager() == null || tairManager.getNameSpace() <= 0) {
+            return itemIds;
+        }
+        Result<DataEntry> dataEntryResult = tairManager.getMultiClusterTairManager().get(tairManager.getNameSpace(), tairKey);
+        if (!dataEntryResult.isSuccess() || dataEntryResult.getValue() == null || dataEntryResult.getValue().getValue() == null) {
+            return itemIds;
+        }
+        try {
+            itemIds = JSON.parseArray(String.valueOf(dataEntryResult.getValue().getValue()), String.class);
+        } catch (Exception e) {
+            tacLogger.info("getItemIdAndCacheKeyList json转换失败");
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                    .kv("method", "getItemIdAndCacheKeyList")
+                    .kv("errorCode", "json error")
+                    .kv("Exception", JSON.toJSONString(e))
+                    .error();
+        }
+        if (CollectionUtils.isEmpty(itemIds)) {
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                    .kv("method", "getItemIdAndCacheKeyList")
+                    .kv("errorCode", "itemIds is null")
+                    .error();
+        }
+        return itemIds;
     }
 }
