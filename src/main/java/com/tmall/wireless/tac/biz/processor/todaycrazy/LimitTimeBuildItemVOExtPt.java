@@ -49,12 +49,8 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
             }
         }
         itemEntityVO.put("contentType", 0);
-        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-            .kv("buildItemVoRequest", "buildItemVoRequest")
-            .info();
         if (buildItemVoRequest == null || buildItemVoRequest.getItemInfoDTO() == null) {
-            return Response.success(itemEntityVO);
-            //return Response.fail(ErrorCode.PARAMS_ERROR);
+            return Response.fail(ErrorCode.PARAMS_ERROR);
         }
 
         String originScm = "";
@@ -96,13 +92,6 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
         }
         String scm = processScm(originScm, trackPoint);
         itemUrl = itemUrl + "&scm=" + scm;
-        if(itemEntityVO.get(Constant.ITEM_LIMIT_RESULT) != null){
-            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-                .kv("canBuy", String.valueOf(canBuy))
-                .kv("sellout", String.valueOf(sellout))
-                .kv("itemLimitResult", JSON.toJSONString(itemEntityVO.get(Constant.ITEM_LIMIT_RESULT)))
-                .info();
-        }
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
         itemEntityVO.put("soldOut",getSoldOut(itemEntityVO,canBuy,sellout));
