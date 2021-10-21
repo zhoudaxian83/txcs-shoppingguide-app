@@ -144,6 +144,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         }
         topItemIds.forEach(itemId -> {
             if (allChannelPriceNewItemIds.contains(itemId)) {
+                tacLogger.info("专享价打标成功，itemId=" + itemId);
                 itemIdAndCacheKey.put(itemId, CommonConstant.TODAY_CHANNEL_NEW);
             }
         });
