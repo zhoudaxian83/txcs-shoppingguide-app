@@ -49,9 +49,12 @@ public class LimitTimeBuildItemVOExtPt implements BuildItemVOExtPt {
             }
         }
         itemEntityVO.put("contentType", 0);
-
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("buildItemVoRequest", "buildItemVoRequest")
+            .info();
         if (buildItemVoRequest == null || buildItemVoRequest.getItemInfoDTO() == null) {
-            return Response.fail(ErrorCode.PARAMS_ERROR);
+            return Response.success(itemEntityVO);
+            //return Response.fail(ErrorCode.PARAMS_ERROR);
         }
 
         String originScm = "";

@@ -45,6 +45,10 @@ public class LimitTimeCaptainRequestExtPt implements CaptainRequestExtPt {
 
     @Override
     public ItemDataRequest process(SgFrameworkContextItem contextItem) {
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("LimitTimeCaptainRequestExtPt","process")
+            .info();
+
         ItemDataRequest itemDataRequest = new ItemDataRequest();
 
         Map<String,Object> userParam = contextItem.getUserParams();
