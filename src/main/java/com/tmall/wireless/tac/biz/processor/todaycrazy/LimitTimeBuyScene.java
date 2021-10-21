@@ -85,6 +85,7 @@ public class LimitTimeBuyScene {
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+                .defaultIfEmpty(new SgFrameworkResponse<>())
                 .map(response ->{
                         return buildGeneralItemse(response,sgFrameworkContextItem);
                     }
@@ -96,8 +97,7 @@ public class LimitTimeBuyScene {
                     List<GeneralItem> generalItemse = new ArrayList<>();
                     TacResult tacResult = TacResult.newResult(generalItemse);
                     return tacResult;
-                    }).defaultIfEmpty(TacResult.newResult(new ArrayList<GeneralItem>()));
-
+                    });
     }
     public List<GeneralItem> buildGeneralItemse(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
         /*perfect(sgFrameworkResponse,sgFrameworkContextItem);*/
