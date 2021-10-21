@@ -26,6 +26,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -334,12 +335,13 @@ public class TodayCrazyTairCacheService {
         }
         try {
             tacLogger.info("专享价全部数据源数据：" + JSON.toJSONString(dataEntryResult.getValue().getValue()));
-            itemIds = JSON.parseArray(JSON.toJSONString(dataEntryResult.getValue().getValue()), String.class);
+            itemIds = JSON.parseArray(String.valueOf(dataEntryResult.getValue().getValue()), String.class);
         } catch (Exception e) {
             tacLogger.info("getItemIdAndCacheKeyList json转换失败");
             HadesLogUtil.stream(bizScenario.getUniqueIdentity())
                     .kv("method", "getItemIdAndCacheKeyList")
                     .kv("errorCode", "json error")
+                    .kv("Exception", JSON.toJSONString(e))
                     .error();
         }
         return itemIds;
