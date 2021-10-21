@@ -111,10 +111,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<ColumnCenterDataSetItemRuleDTO> originList = new ArrayList<>();
 
         hitpmtRuleDataItemRuleDTOList.forEach(item -> {
-            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-                .kv("dingKengDeal","dingKengDeal")
-                .kv("item",JSON.toJSONString(item))
-                .info();
             Long stick = item.getDataRule().getStick();
             if(stick != null && 1L <= stick && stick <= hitpmtRuleDataItemRuleDTOList.size()){
                 stickMap.put(stick,item);
