@@ -5,6 +5,7 @@ import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.alibaba.cola.extension.Extension;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
@@ -17,12 +18,14 @@ import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
+import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.DataContext;
 import com.tmall.wireless.tac.biz.processor.wzt.model.SortItemEntity;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.LogicPageUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.SmAreaIdUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.TairUtil;
+import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import io.reactivex.Flowable;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     @Autowired
     RecommendSpi recommendSpi;
 
+    @Autowired
+    TacLogger tacLogger;
+
     @Override
     public Flowable<OriginDataDTO<ItemEntity>> process(SgFrameworkContextItem context) {
         DataContext dataContext = new DataContext();
@@ -55,10 +61,21 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Long pageSize = MapUtil.getLongWithDefault(context.getRequestParams(), "pageSize", 20L);
         dataContext.setIndex(index);
         dataContext.setPageSize(pageSize);
-        //tair获取推荐商品
-        List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(
-                smAreaId);
-        //获取id和排序信息
+        /**
+         * tair获取推荐商品
+         */
+        List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(smAreaId);
+
+        //List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = tairUtil.getCachePmtRuleDataItemRuleDTOList(smAreaId);
+
+
+        /**
+         * 过滤掉不是当前时间段的定坑商品
+         */
+        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule()));
+        /**
+         * 获取id和排序信息
+         */
         Map<Long, Long> stringLongMap = new HashMap<>(16);
         List<Long> items = Lists.newArrayList();
         columnCenterDataSetItemRuleDTOList.forEach(columnCenterDataSetItemRuleDTO -> {
@@ -76,6 +93,28 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                     this.sortItemEntityList(originDataDTO, stringLongMap);
                     return this.getItemPage(originDataDTO, dataContext);
                 });
+    }
+
+    /**
+     * 1，需要再展示时间内，不需要坑位时间
+     *
+     * @param columnCenterDataRuleDTO
+     * @return
+     */
+    private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
+        long nowTime = System.currentTimeMillis();
+        if (columnCenterDataRuleDTO == null) {
+            return false;
+        }
+        Date itemScheduleStartDate = columnCenterDataRuleDTO.getItemScheduleStartTime();
+        Date itemScheduleEndDate = columnCenterDataRuleDTO.getItemScheduleEndTime();
+        if (itemScheduleStartDate == null || itemScheduleEndDate == null) {
+            return false;
+        }
+        long itemScheduleStartTime = itemScheduleStartDate.getTime();
+        long itemScheduleEndTime = itemScheduleEndDate.getTime();
+        tacLogger.info("时间过滤：nowTime=" + nowTime + "itemScheduleStartDate=" + itemScheduleStartDate + "itemScheduleEndDate" + itemScheduleEndDate);
+        return itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
     }
 
     private void sortItemEntityList(OriginDataDTO<ItemEntity> originDataDTO, Map<Long, Long> stringLongMap) {
@@ -135,7 +174,6 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @return
      */
     private OriginDataDTO<ItemEntity> getItemPage(OriginDataDTO<ItemEntity> originDataDTO, DataContext dataContext) {
-
         Pair<Boolean, List<ItemEntity>> pair = LogicPageUtil.getPage(originDataDTO.getResult(), dataContext.getIndex(),
                 dataContext.getPageSize());
         List<ItemEntity> itemEntities = pair.getRight();

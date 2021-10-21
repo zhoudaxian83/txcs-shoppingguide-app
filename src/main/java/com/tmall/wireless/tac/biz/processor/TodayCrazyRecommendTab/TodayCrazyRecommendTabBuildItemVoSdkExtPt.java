@@ -242,7 +242,10 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         itemLimitDTOS = limitResult.get(itemId);
         if (CollectionUtils.isNotEmpty(itemLimitDTOS)) {
             itemEntityVO.put("itemLimit", itemLimitDTOS.get(0));
+        } else {
+            itemEntityVO.put("itemLimit", new ItemLimitDTO());
         }
+
     }
 
     private String getReservePrice(ItemPromotionResp itemPromotionResp) {
