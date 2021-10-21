@@ -38,10 +38,10 @@ public class TodayCrazyRecommendTabItemItemMetaInfoBuildSdkExtPt extends Registe
         itemGroupMetaInfoSmNextDay.setItemInfoNodes(this.buildDefaultItemInfoNodes());
         itemMetaInfo.setItemGroupRenderInfoList(Lists
                 .newArrayList(new ItemGroupMetaInfo[]{itemGroupMetaInfoSmB2c, itemGroupMetaInfoSmOneHour, itemGroupMetaInfoSmHalfDay, itemGroupMetaInfoSmNextDay}));
-        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+        /*HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                 .kv("TodayCrazyRecommendTabItemItemMetaInfoBuildSdkExtPt", "process")
                 .kv("itemMetaInfo", JSON.toJSONString(itemMetaInfo))
-                .info();
+                .info();*/
         return itemMetaInfo;
     }
 
@@ -75,10 +75,10 @@ public class TodayCrazyRecommendTabItemItemMetaInfoBuildSdkExtPt extends Registe
 //            itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource));
 //        }
         itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource));
-        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+        /*HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                 .kv("TodayCrazyRecommendTabItemItemMetaInfoBuildSdkExtPt", "buildDefaultItemInfoNodes")
                 .kv("itemInfoNode", JSON.toJSONString(itemInfoNode))
-                .info();
+                .info();*/
         return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
     }
 }

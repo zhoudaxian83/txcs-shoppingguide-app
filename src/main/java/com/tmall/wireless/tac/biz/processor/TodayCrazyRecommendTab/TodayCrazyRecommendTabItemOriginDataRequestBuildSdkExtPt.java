@@ -44,7 +44,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
     }
 
     private RecommendRequest buildTppParam(SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info("tpp参数构建originDataProcessRequest:" + JSON.toJSONString(sgFrameworkContextItem));
+        //tacLogger.info("tpp参数构建originDataProcessRequest:" + JSON.toJSONString(sgFrameworkContextItem));
         String csa = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "csa", "");
         String appType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "appType", AppTypeEnum.INDEX_PAGE.getType());
         long userId = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
@@ -81,11 +81,11 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         recommendRequest.setUserId(userId);
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
-        tacLogger.info("tpp入参_recommendRequest_:" + JSON.toJSONString(recommendRequest));
+        /*tacLogger.info("tpp入参_recommendRequest_:" + JSON.toJSONString(recommendRequest));
         HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                 .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
                 .kv("recommendRequest", JSON.toJSONString(recommendRequest))
-                .info();
+                .info();*/
         return recommendRequest;
     }
 
