@@ -333,6 +333,7 @@ public class TodayCrazyTairCacheService {
             return itemIds;
         }
         try {
+            tacLogger.info("专享价全部数据源数据：" + JSON.toJSONString(dataEntryResult.getValue().getValue()));
             itemIds = JSON.parseArray(JSON.toJSONString(dataEntryResult.getValue().getValue()), String.class);
         } catch (Exception e) {
             tacLogger.info("getItemIdAndCacheKeyList json转换失败");
