@@ -10,7 +10,6 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
-import com.tmall.dataenginer.client.api.crowd.domain.KvBasedFeature;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
@@ -87,6 +86,7 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 .kv("LimitTimeOriginDataItemQueryExtPt","process")
                 .kv("hitpmtRuleDataItemRuleDTOList","is Empty")
                 .info();
+            originDataDTO.setResult(Lists.newArrayList(new ItemEntity()));
             return Flowable.just(originDataDTO);
         }
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
