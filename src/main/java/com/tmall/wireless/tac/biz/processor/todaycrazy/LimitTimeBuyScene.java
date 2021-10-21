@@ -19,6 +19,7 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.model.LimitBuyDto;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil;
+import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -88,6 +89,7 @@ public class LimitTimeBuyScene {
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(response ->{
+
                         return buildGeneralItemse(response,sgFrameworkContextItem);
                     }
                 ).map(TacResult::newResult)
@@ -96,6 +98,9 @@ public class LimitTimeBuyScene {
     }
     public List<GeneralItem> buildGeneralItemse(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
         /*perfect(sgFrameworkResponse,sgFrameworkContextItem);*/
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("buildGeneralItemse", "in")
+            .info();
         List<GeneralItem> generalItemse = new ArrayList<>();
         Map<String, Object> params = sgFrameworkContextItem.getRequestParams();
         //第几个时间段
@@ -113,7 +118,12 @@ public class LimitTimeBuyScene {
             generalItem.put("startTime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
             generalItem.put("__pos__",i.getAndIncrement());
             if(limitBuyDto.getIsHit()){
-                generalItem.put("itemAndContentList",soltOutSort(sgFrameworkResponse.getItemAndContentList()));
+                if(CollectionUtils.isEmpty(sgFrameworkResponse.getItemAndContentList())){
+                    generalItem.put("itemAndContentList",Lists.newArrayList(new ItemEntityVO()));
+                }else{
+                    generalItem.put("itemAndContentList",soltOutSort(sgFrameworkResponse.getItemAndContentList()));
+                }
+
             }
             generalItemse.add(generalItem);
 
