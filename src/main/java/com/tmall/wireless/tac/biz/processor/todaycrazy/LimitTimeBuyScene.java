@@ -96,7 +96,7 @@ public class LimitTimeBuyScene {
                     List<GeneralItem> generalItemse = new ArrayList<>();
                     TacResult tacResult = TacResult.newResult(generalItemse);
                     return tacResult;
-                    });
+                    }).defaultIfEmpty(TacResult.newResult(new ArrayList<GeneralItem>()));
 
     }
     public List<GeneralItem> buildGeneralItemse(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
