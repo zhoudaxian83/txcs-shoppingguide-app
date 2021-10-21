@@ -5,6 +5,7 @@ import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
+import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.ItemEntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -86,8 +87,8 @@ public class LimitTimeBuyScene {
         pageInfoDO.setIndex(0);
         pageInfoDO.setPageSize(20);
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
-
-        return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+        try{
+            sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
                 .map(response ->{
                         return buildGeneralItemse(response,sgFrameworkContextItem);
                     }
@@ -99,7 +100,30 @@ public class LimitTimeBuyScene {
                     List<GeneralItem> generalItemse = new ArrayList<>();
                     TacResult tacResult = TacResult.newResult(generalItemse);
                     return tacResult;
-                    });
+                });
+        }catch (Exception e){
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                .kv("LimitTimeBuyScene","recommend")
+                .kv("Exception e",JSON.toJSONString(e))
+                .info();
+        }
+        List<GeneralItem> generalItemse = new ArrayList<>();
+        TacResult tacResult = TacResult.newResult(generalItemse);
+        return Flowable.just(tacResult);
+
+        /*return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+                .map(response ->{
+                        return buildGeneralItemse(response,sgFrameworkContextItem);
+                    }
+                ).map(TacResult::newResult)
+                .onErrorReturn(r -> {
+                    HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                        .kv("generalItemse is","empty")
+                        .info();
+                    List<GeneralItem> generalItemse = new ArrayList<>();
+                    TacResult tacResult = TacResult.newResult(generalItemse);
+                    return tacResult;
+                    });*/
 
     }
     public List<GeneralItem> buildGeneralItemse(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
