@@ -115,7 +115,7 @@ public class LimitService {
                         .kv("paramsValue", JSON.toJSONString(paramsValue))
                         .kv("longListMap", JSON.toJSONString(longListMap))
                         .info();
-                tacLogger.info(LOG_PREFIX + "限购接口RPC调用返回异常paramsValue:" + JSON.toJSONString(paramsValue) + "|jsonObject：" + JSON
+                tacLogger.info(LOG_PREFIX + "限购接口查询paramsValue:" + JSON.toJSONString(paramsValue) + "|jsonObject：" + JSON
                         .toJSONString(jsonObject));
                 return longListMap;
             } else {

@@ -5,7 +5,8 @@ import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.alibaba.cola.extension.Extension;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
+import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataRuleDTO;
+import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
@@ -18,8 +19,6 @@ import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpi;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
-import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataRuleDTO;
-import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.model.DataContext;
 import com.tmall.wireless.tac.biz.processor.wzt.model.SortItemEntity;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.LogicPageUtil;
@@ -65,21 +64,18 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
          * tair获取推荐商品
          */
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(smAreaId);
-
-        //List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = tairUtil.getCachePmtRuleDataItemRuleDTOList(smAreaId);
-
-
         /**
-         * 过滤掉不是当前时间段的定坑商品
+         * 去除掉活动冲不满足当前时间的商品
          */
-        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule(),columnCenterDataSetItemRuleDTO));
+        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule(), columnCenterDataSetItemRuleDTO));
+
         /**
          * 获取id和排序信息
          */
         Map<Long, Long> stringLongMap = new HashMap<>(16);
         List<Long> items = Lists.newArrayList();
         columnCenterDataSetItemRuleDTOList.forEach(columnCenterDataSetItemRuleDTO -> {
-            stringLongMap.put(columnCenterDataSetItemRuleDTO.getItemId(), columnCenterDataSetItemRuleDTO.getIndex());
+            stringLongMap.put(columnCenterDataSetItemRuleDTO.getItemId(), columnCenterDataSetItemRuleDTO.getDataRule().getStick());
             items.add(columnCenterDataSetItemRuleDTO.getItemId());
         });
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
@@ -101,7 +97,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @param columnCenterDataRuleDTO
      * @return
      */
-    private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO,ColumnCenterDataSetItemRuleDTO columnCenterDataSetItemRuleDTO) {
+    private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO, ColumnCenterDataSetItemRuleDTO columnCenterDataSetItemRuleDTO) {
         long nowTime = System.currentTimeMillis();
         if (columnCenterDataRuleDTO == null) {
             return false;
@@ -115,13 +111,14 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         long itemScheduleEndTime = itemScheduleEndDate.getTime();
         tacLogger.info("时间过滤：nowTime=" + nowTime + "itemScheduleStartDate=" + itemScheduleStartDate + "itemScheduleEndDate" + itemScheduleEndDate);
         boolean needData = itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
-        if(needData){
-            tacLogger.info("在排期内的商品："+columnCenterDataSetItemRuleDTO.getItemId());
-        }else {
-            tacLogger.info("非排期内的商品："+columnCenterDataSetItemRuleDTO.getItemId());
+        if (needData) {
+            tacLogger.info("在排期内的商品：" + columnCenterDataSetItemRuleDTO.getItemId());
+        } else {
+            tacLogger.info("非排期内的商品：" + columnCenterDataSetItemRuleDTO.getItemId());
         }
         return needData;
     }
+
 
     private void sortItemEntityList(OriginDataDTO<ItemEntity> originDataDTO, Map<Long, Long> stringLongMap) {
         List<SortItemEntity> resultItemEntityList = Lists.newArrayList();

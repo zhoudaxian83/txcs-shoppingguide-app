@@ -6,17 +6,20 @@ import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
+import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
+import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterPmtRuleDataSetDTO;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TodayCrazyUtils;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.enums.LogicalArea;
-import com.tmall.wireless.tac.biz.processor.wzt.model.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,37 +98,34 @@ public class TairUtil {
      * @return
      */
     public List<ColumnCenterDataSetItemRuleDTO> getOriginalRecommend(Long smAreaId) {
-        List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOS = getCachePmtRuleDataItemRuleDTOList(smAreaId);
-        if (com.ali.unit.rule.util.lang.CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOS)) {
-            tacLogger.info(LOG_PREFIX + "getOriginalRecommend获取tair原始数据为空，请检查tair数据源配置");
+        PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = this.getPmtRuleDataItemRuleDTO(smAreaId);
+        if (pmtRuleDataItemRuleDTO == null) {
             return Lists.newArrayList();
-        } else {
-            try {
-                com.tmall.wireless.tac.biz.processor.wzt.model.PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = JSON
-                        .parseObject(
-                                JSON.toJSON(pmtRuleDataItemRuleDTOS.get(0)).toString(),
-                                com.tmall.wireless.tac.biz.processor.wzt.model.PmtRuleDataItemRuleDTO.class);
-                List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS = pmtRuleDataItemRuleDTO
-                        .getDataSetItemRuleDTOList();
-                columnCenterDataSetItemRuleDTOS.forEach(item -> {
-                    if (item.getDataRule().getStick() != null) {
-                        item.setIndex(item.getDataRule().getStick());
-                    } else {
-                        item.setIndex(Constant.INDEX);
-                    }
-                });
-                return columnCenterDataSetItemRuleDTOS;
-            } catch (Exception e) {
-                tacLogger.error(LOG_PREFIX + "getOriginalRecommend获取tair原始items异常", e);
-            }
         }
-        return Lists.newArrayList();
+        List<ColumnCenterDataSetItemRuleDTO> dataSetItemRuleDTOList = pmtRuleDataItemRuleDTO.getDataSetItemRuleDTOList();
+        if (CollectionUtils.isEmpty(dataSetItemRuleDTOList)) {
+            return Lists.newArrayList();
+        }
+        /**
+         * 定坑排序打标转换
+         */
+        dataSetItemRuleDTOList.forEach(columnCenterDataSetItemRuleDTO -> {
+            Long stick = columnCenterDataSetItemRuleDTO.getDataRule().getStick();
+            if (stick == null) {
+                columnCenterDataSetItemRuleDTO.getDataRule().setStick(Constant.INDEX);
+            }
+        });
+        return dataSetItemRuleDTOList;
     }
+
 
     public List<PmtRuleDataItemRuleDTO> getCachePmtRuleDataItemRuleDTOList(Long smAreaId) {
         LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
         if (logicalArea == null) {
-            tacLogger.warn(LOG_PREFIX + "getTairItems大区id未匹配：smAreaId：" + smAreaId);
+            HadesLogUtil.stream(ScenarioConstantApp.WU_ZHE_TIAN)
+                    .kv("method:", "getCachePmtRuleDataItemRuleDTOList")
+                    .kv("errorMessage", "smAreaId is null")
+                    .info();
             return Lists.newArrayList();
         }
         String cacheKey = logicalArea.getCacheKey();
@@ -140,14 +140,63 @@ public class TairUtil {
         return Lists.newArrayList();
     }
 
+    /**
+     * 获取指定的活动
+     *
+     * @param smAreaId
+     * @return
+     */
+    public PmtRuleDataItemRuleDTO getPmtRuleDataItemRuleDTO(Long smAreaId) {
+        /**
+         * 获取全部活动商品
+         */
+        List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = this.getCachePmtRuleDataItemRuleDTOList(smAreaId);
+        if (CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOList)) {
+            HadesLogUtil.stream(ScenarioConstantApp.WU_ZHE_TIAN)
+                    .kv("method:", "getPmtRuleDataItemRuleDTO")
+                    .kv("errorMessage1", "pmtRuleDataItemRuleDTOList is null")
+                    .info();
+            return null;
+        }
+        /**
+         * 去除当前时间不在排期时间内的
+         */
+        pmtRuleDataItemRuleDTOList.removeIf(pmtRuleDataItemRuleDTO -> !this.inUse(pmtRuleDataItemRuleDTO.getPmtRuleDataSetDTO()));
+        if (CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOList)) {
+            HadesLogUtil.stream(ScenarioConstantApp.WU_ZHE_TIAN)
+                    .kv("method:", "getPmtRuleDataItemRuleDTO")
+                    .kv("errorMessage2", "pmtRuleDataItemRuleDTOList is null")
+                    .info();
+            return null;
+        }
+        return pmtRuleDataItemRuleDTOList.get(0);
+    }
+
+    /**
+     * 是否在用，
+     * 当前时间必须在排期时间段内
+     *
+     * @return
+     */
+    private boolean inUse(ColumnCenterPmtRuleDataSetDTO columnCenterPmtRuleDataSetDTO) {
+        long nowTime = System.currentTimeMillis();
+        if (columnCenterPmtRuleDataSetDTO == null) {
+            return false;
+        }
+        if (columnCenterPmtRuleDataSetDTO.getScheduleStartTime() == null || columnCenterPmtRuleDataSetDTO.getScheduleEndTime() == null) {
+            return false;
+        }
+        long scheduleStartTime = columnCenterPmtRuleDataSetDTO.getScheduleStartTime().getTime();
+        long scheduleEndTime = columnCenterPmtRuleDataSetDTO.getScheduleEndTime().getTime();
+        return nowTime > scheduleStartTime && nowTime < scheduleEndTime;
+    }
+
     public String getChannelKey(Long smAreaId) {
-        List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = getCachePmtRuleDataItemRuleDTOList(smAreaId);
-        if (CollectionUtils.isNotEmpty(pmtRuleDataItemRuleDTOList) && pmtRuleDataItemRuleDTOList.get(0)
-                .getPmtRuleDataSetDTO() != null) {
-            String promotionExtension = pmtRuleDataItemRuleDTOList.get(0).getPmtRuleDataSetDTO().getExtension();
+        PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = this.getPmtRuleDataItemRuleDTO(smAreaId);
+        if (pmtRuleDataItemRuleDTO != null && pmtRuleDataItemRuleDTO.getPmtRuleDataSetDTO() != null) {
+            String promotionExtension = pmtRuleDataItemRuleDTO.getPmtRuleDataSetDTO().getExtension();
             Map<String, Object> extensionMap = TodayCrazyUtils.parseExtension(promotionExtension, "\\|", "\\=", true);
-            String channelKey = MapUtil.getStringWithDefault(extensionMap, "channelKey", VoKeyConstantApp.CHANNEL_KEY);
-            return channelKey;
+            return MapUtil.getStringWithDefault(extensionMap, "channelKey", VoKeyConstantApp.CHANNEL_KEY);
         }
         return VoKeyConstantApp.CHANNEL_KEY;
     }
