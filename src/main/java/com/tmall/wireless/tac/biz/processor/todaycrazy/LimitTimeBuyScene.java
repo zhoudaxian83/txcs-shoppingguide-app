@@ -118,12 +118,9 @@ public class LimitTimeBuyScene {
             generalItem.put("startTime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
             generalItem.put("__pos__",i.getAndIncrement());
             if(limitBuyDto.getIsHit()){
-                if(CollectionUtils.isEmpty(sgFrameworkResponse.getItemAndContentList())){
-                    generalItem.put("itemAndContentList",Lists.newArrayList(new ItemEntityVO()));
-                }else{
+                if(CollectionUtils.isNotEmpty(sgFrameworkResponse.getItemAndContentList())){
                     generalItem.put("itemAndContentList",soltOutSort(sgFrameworkResponse.getItemAndContentList()));
                 }
-
             }
             generalItemse.add(generalItem);
 
