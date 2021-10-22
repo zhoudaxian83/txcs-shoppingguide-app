@@ -74,7 +74,7 @@ public class IconRecommendSceneContentInfoQueryExtPt implements ContentInfoQuery
             }
 
             Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-            logger.info("[SceneContentInfoQueryExtPt] mgetResult:" + mgetResult.getValue());
+            /*logger.info("[SceneContentInfoQueryExtPt] mgetResult:" + mgetResult.getValue());*/
             if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
                 return Flowable.just(Response.fail(""));
             }

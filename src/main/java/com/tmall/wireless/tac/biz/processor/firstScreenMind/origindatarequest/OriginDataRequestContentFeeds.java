@@ -112,10 +112,10 @@ public class OriginDataRequestContentFeeds implements OriginDataRequest{
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContext).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
-        HadesLogUtil.stream(FirstScreenConstant.SUB_CONTENT_FEEDS)
+        /*HadesLogUtil.stream(FirstScreenConstant.SUB_CONTENT_FEEDS)
             .kv("OriginDataRequestContentFeeds","buildRecommendRequest")
             .kv("tppRequest", JSON.toJSONString(tppRequest))
-            .info();
+            .info();*/
         return tppRequest;
     }
 
