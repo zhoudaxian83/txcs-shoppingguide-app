@@ -80,7 +80,7 @@ public class ContentInfoSupport {
             sKeyList.add(CONTENT_TAIR_INFO_KEY + contentId);
         }
         Result<List<DataEntry>> mgetResult =tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
-        tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+mgetResult.toString());
+        /*tacLogger.info("***********FirstScreenMindContentInfoQueryExtPt mgetResult*******:"+mgetResult.toString());*/
         if (!mgetResult.isSuccess() || CollectionUtils.isEmpty(mgetResult.getValue())) {
             return Maps.newHashMap();
         }
