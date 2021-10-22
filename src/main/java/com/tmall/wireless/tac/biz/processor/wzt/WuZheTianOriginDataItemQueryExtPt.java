@@ -72,7 +72,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         /**
          * 过滤掉不是当前时间段的定坑商品
          */
-        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule()));
+        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule(),columnCenterDataSetItemRuleDTO));
         /**
          * 获取id和排序信息
          */
@@ -101,7 +101,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @param columnCenterDataRuleDTO
      * @return
      */
-    private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
+    private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO,ColumnCenterDataSetItemRuleDTO columnCenterDataSetItemRuleDTO) {
         long nowTime = System.currentTimeMillis();
         if (columnCenterDataRuleDTO == null) {
             return false;
@@ -114,7 +114,13 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         long itemScheduleStartTime = itemScheduleStartDate.getTime();
         long itemScheduleEndTime = itemScheduleEndDate.getTime();
         tacLogger.info("时间过滤：nowTime=" + nowTime + "itemScheduleStartDate=" + itemScheduleStartDate + "itemScheduleEndDate" + itemScheduleEndDate);
-        return itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
+        boolean needData = itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
+        if(needData){
+            tacLogger.info("在排期内的商品："+columnCenterDataSetItemRuleDTO.getItemId());
+        }else {
+            tacLogger.info("非排期内的商品："+columnCenterDataSetItemRuleDTO.getItemId());
+        }
+        return needData;
     }
 
     private void sortItemEntityList(OriginDataDTO<ItemEntity> originDataDTO, Map<Long, Long> stringLongMap) {
