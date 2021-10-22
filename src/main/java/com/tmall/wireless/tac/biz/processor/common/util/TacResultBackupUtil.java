@@ -2,11 +2,14 @@ package com.tmall.wireless.tac.biz.processor.common.util;
 
 import java.util.List;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+import com.alibaba.fastjson.JSON;
+
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.txcs.gs.framework.model.ContentVO;
 import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +43,48 @@ public class TacResultBackupUtil {
                     .kv("key",TAC_BACKUP_KEY)
                     .kv("tacResultBackup","false")
                     .info();
+        }
+        tacResult.getBackupMetaData().setUseBackup(true);
+        return tacResult;
+    }
+    /**
+     *
+     * @param tacResult 内容推荐--带参数的
+     * @param bizScenario  业务身份必须传，否则无法根据业务身份监控
+     * @return
+     */
+    public static TacResult tacResultBackupContentParam(TacResult<SgFrameworkResponse<ContentVO>> tacResult, BizScenario bizScenario
+            ,List<String> backupParams){
+        if(bizScenario == null || StringUtils.isEmpty(bizScenario.getUniqueIdentity())){
+            /**打底参数**/
+            if(CollectionUtils.isNotEmpty(backupParams)){
+                tacResult.getBackupMetaData().setBackupWithParam(true);
+                tacResult.getBackupMetaData().setBackupParams(backupParams);
+            }
+            tacResult.getBackupMetaData().setUseBackup(true);
+            return tacResult;
+        }
+        if(tacResult == null || tacResult.getData()== null || CollectionUtils.isEmpty(tacResult.getData().getItemAndContentList())){
+            tacResult = TacResult.errorResult("TacResultBackup");
+
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                .kv("key",TAC_BACKUP_KEY)
+                .kv("tacResultBackup","true")
+                .info();
+        }else{
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                .kv("key",TAC_BACKUP_KEY)
+                .kv("tacResultBackup","false")
+                .info();
+        }
+        /**打底参数**/
+        if(CollectionUtils.isNotEmpty(backupParams)){
+            tacResult.getBackupMetaData().setBackupWithParam(true);
+            tacResult.getBackupMetaData().setBackupParams(backupParams);
+            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("TacResultBackupUtil","tacResultBackupContentParam")
+                .kv("backupParams", JSON.toJSONString(backupParams))
+                .info();
         }
         tacResult.getBackupMetaData().setUseBackup(true);
         return tacResult;

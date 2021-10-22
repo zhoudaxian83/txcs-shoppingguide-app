@@ -132,6 +132,7 @@
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemBuildItemVoSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemFilterSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemProcessBeforeReturnSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemCaptainRequestBuildSdkExtPt"/>
 
 
     <!--够实惠圈品集推荐-->

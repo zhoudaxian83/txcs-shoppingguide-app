@@ -151,12 +151,12 @@ public class SceneFeedsContentInfoQuerySdkExtPt extends Register implements Cont
                 contentDTO.setContentInfo(contentInfo);
                 contentDTOMap.put(contentId,contentDTO);
             }
-            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+            /*HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                     .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).map(
                             Objects::toString).orElse("0"))
                     .kv("FirstScreenMindContentInfoQueryExtPt","process")
                     .kv("contentDTOMap",JSON.toJSONString(contentDTOMap))
-                    .info();
+                    .info();*/
         }catch (Exception e){
             LOGGER.info(RenderErrorEnum.contentBatchTairExc.getCode() + "" + RenderErrorEnum.contentBatchTairExc.getMessage());
             return Flowable.just(Response.fail(RenderErrorEnum.contentBatchTairExc.getCode()));

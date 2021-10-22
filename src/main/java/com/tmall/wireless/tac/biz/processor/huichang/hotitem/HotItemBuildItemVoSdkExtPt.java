@@ -39,7 +39,6 @@ public class HotItemBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkExtPt imple
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Map<ItemGroup, ItemInfoGroupResponse> itemInfoGroupResponseMap = buildItemVoRequest.getContext()
             .getItemInfoGroupResponseMap();
-        logger.error("HotItemBuildItemVoSdkExtPt.itemInfoGroupResponseMap:{}", JSON.toJSONString(itemInfoGroupResponseMap));
         Response<ItemEntityVO> process = super.process(buildItemVoRequest);
 
         ItemEntityVO itemEntityVO = process.getValue();
