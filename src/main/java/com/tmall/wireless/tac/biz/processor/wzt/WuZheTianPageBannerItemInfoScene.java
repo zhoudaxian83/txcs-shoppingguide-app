@@ -87,7 +87,6 @@ public class WuZheTianPageBannerItemInfoScene {
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
             .map(TacResult::newResult).map(tacResult -> {
                 List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
-                    tacLogger.info("过滤前originalEntityVOList:"+ JSON.toJSONString(originalEntityVOList));
                 if (!CollectionUtils.isEmpty(originalEntityVOList)) {
                     List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
                     if (noLimitEntityVOList.size() != originalEntityVOList.size() && noLimitEntityVOList.size() != 0) {
