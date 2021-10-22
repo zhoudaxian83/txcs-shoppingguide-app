@@ -10,7 +10,6 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
-import com.tmall.dataenginer.client.api.crowd.domain.KvBasedFeature;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataItemQueryExtPt;
@@ -71,10 +70,6 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
         List<ColumnCenterDataSetItemRuleDTO> hitpmtRuleDataItemRuleDTOList = Lists.newArrayList();
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = tairUtil.getCacheData();
-//        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-//            .kv("tair pmtRuleDataItemRuleDTOList.size()",String.valueOf(pmtRuleDataItemRuleDTOList.size()))
-//            .kv("tair pmtRuleDataItemRuleDTOList.size()",JSON.toJSONString(pmtRuleDataItemRuleDTOList))
-//            .info();
         for(PmtRuleDataItemRuleDTO pmtRule : pmtRuleDataItemRuleDTOList){
             List<ColumnCenterDataSetItemRuleDTO> itemList = pmtRule.getDataSetItemRuleDTOList();
             for(ColumnCenterDataSetItemRuleDTO item : itemList){
@@ -85,9 +80,19 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 }
             }
         }
+
         if(CollectionUtils.isEmpty(hitpmtRuleDataItemRuleDTOList)){
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                .kv("LimitTimeOriginDataItemQueryExtPt","process")
+                .kv("hitpmtRuleDataItemRuleDTOList","is Empty")
+                .info();
+            originDataDTO.setResult(Lists.newArrayList(new ItemEntity()));
             return Flowable.just(originDataDTO);
         }
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("LimitTimeOriginDataItemQueryExtPt","process")
+            .kv("hitpmtRuleDataItemRuleDTOList.size()",JSON.toJSONString(hitpmtRuleDataItemRuleDTOList.size()))
+            .info();
         originDataDTO.setResult(aldInfoUtil.buildItemList(dingKengDeal(hitpmtRuleDataItemRuleDTOList)));
         return Flowable.just(originDataDTO);
     }
@@ -113,6 +118,10 @@ public class LimitTimeOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 originList.add(item);
             }
         });
+        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+            .kv("LimitTimeOriginDataItemQueryExtPt","dingKengDeal")
+            .kv("stickMap",JSON.toJSONString(stickMap))
+            .info();
         int j = 0;
         for(int i=1;i<=hitpmtRuleDataItemRuleDTOList.size();i++){
             if(stickMap.containsKey(Long.valueOf(i))){

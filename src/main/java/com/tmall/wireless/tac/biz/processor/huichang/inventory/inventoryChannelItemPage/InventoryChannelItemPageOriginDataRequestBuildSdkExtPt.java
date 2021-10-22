@@ -122,7 +122,14 @@ public class InventoryChannelItemPageOriginDataRequestBuildSdkExtPt extends Regi
                 }
             }
 
-            params.put("regionCode", Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode()).map(String::valueOf).orElse(String.valueOf(DEFAULT_LOGAREAID)));
+            Long regionCode = Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode())
+                .orElse(DEFAULT_LOGAREAID);
+
+            if(regionCode != null && regionCode != 0L){
+                params.put("regionCode", String.valueOf(regionCode));
+            }else {
+                params.put("regionCode", String.valueOf(DEFAULT_LOGAREAID));
+            }
 
             String locType = PageUrlUtil.getParamFromCurPageUrl(aldParams, "locType");
             if(locType == null || "B2C".equals(locType)){

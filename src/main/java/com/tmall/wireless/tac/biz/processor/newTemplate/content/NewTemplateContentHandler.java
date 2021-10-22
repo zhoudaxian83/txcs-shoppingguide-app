@@ -28,6 +28,6 @@ public class NewTemplateContentHandler extends RpmReactiveHandler<SgFrameworkRes
                 "CONTENT_TEST"
         );
         b.addProducePackage(PackageNameKey.CONTENT_FEEDS);
-        return shoppingguideSdkContentService.recommend0(context, b).map(TacResult::newResult);
+        return shoppingguideSdkContentService.recommend(context, b).map(TacResult::newResult);
     }
 }

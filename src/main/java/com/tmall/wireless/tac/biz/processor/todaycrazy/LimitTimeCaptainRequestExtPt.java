@@ -45,6 +45,7 @@ public class LimitTimeCaptainRequestExtPt implements CaptainRequestExtPt {
 
     @Override
     public ItemDataRequest process(SgFrameworkContextItem contextItem) {
+
         ItemDataRequest itemDataRequest = new ItemDataRequest();
 
         Map<String,Object> userParam = contextItem.getUserParams();
@@ -74,11 +75,7 @@ public class LimitTimeCaptainRequestExtPt implements CaptainRequestExtPt {
         String umpChannel = tairUtil.getChannelKey();
         itemDataRequest.setChannelKey(umpChannel);
         userParam.put(VoKeyConstantApp.UMP_CHANNEL,umpChannel);
-//        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-//            .kv("userId",String.valueOf(Optional.ofNullable(contextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).orElse(0L)))
-//            .kv("LimitTimeCaptainRequestExtPt","process")
-//            .kv("itemDataRequest", JSON.toJSONString(itemDataRequest))
-//            .info();
+
         return itemDataRequest;
     }
 }

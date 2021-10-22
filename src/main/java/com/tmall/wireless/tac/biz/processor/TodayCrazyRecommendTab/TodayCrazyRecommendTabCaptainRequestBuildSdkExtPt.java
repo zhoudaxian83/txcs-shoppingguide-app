@@ -85,10 +85,10 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         renderRequest.setQuery(query);
         renderRequest.setOption(option);
         //
-        tacLogger.info("captain入参：" + JSON.toJSONString(renderRequest));
-        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+        //tacLogger.info("captain入参：" + JSON.toJSONString(renderRequest));
+        /*HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                 .kv("renderRequest", JSON.toJSONString(renderRequest))
-                .info();
+                .info();*/
         return renderRequest;
     }
 }

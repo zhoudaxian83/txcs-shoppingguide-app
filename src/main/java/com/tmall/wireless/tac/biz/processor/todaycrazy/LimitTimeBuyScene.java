@@ -1,11 +1,11 @@
 package com.tmall.wireless.tac.biz.processor.todaycrazy;
 
 import com.google.common.collect.Lists;
-import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
+import com.tmall.txcs.gs.framework.model.EntityVO;
 import com.tmall.txcs.gs.framework.model.ItemEntityVO;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
@@ -18,11 +18,10 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.model.LimitBuyDto;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.AldInfoUtil;
+import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.client.common.TacResult;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.domain.UserInfo;
@@ -36,16 +35,12 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.management.ObjectName;
-
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 
@@ -61,18 +56,12 @@ public class LimitTimeBuyScene {
     @Autowired
     AldInfoUtil aldInfoUtil;
 
-    @Autowired
-    TacLogger tacLogger;
-
     private static final String SceneCode = "superMarket_todayCrazy";
 
     public Flowable<TacResult<List<GeneralItem>>> recommend(RequestContext4Ald requestContext4Ald) {
-        tacLogger.info("***LimitTimeBuyScene context.getParams()****:"+requestContext4Ald.getParams());
-        LOGGER.info("***LimitTimeBuyScene context.getParams()****:"+requestContext4Ald.getParams());
 
         Long smAreaId = MapUtil.getLongWithDefault(requestContext4Ald.getParams(), "smAreaId", 330100L);
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
-
         sgFrameworkContextItem.setRequestParams(requestContext4Ald.getParams());
 
         SceneInfo sceneInfo = new SceneInfo();
@@ -94,18 +83,21 @@ public class LimitTimeBuyScene {
         pageInfoDO.setIndex(0);
         pageInfoDO.setPageSize(20);
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
-//        HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
-//            .kv("step", "requestLog")
-//            .kv("userId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
-//                Objects::toString).orElse("0"))
-//            .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
-//            .info();
-        return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-                .map(response ->
-                    buildGeneralItemse(response,sgFrameworkContextItem)
-                ).map(TacResult::newResult)
-                .onErrorReturn(r -> TacResult.errorResult(""));
 
+        return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
+                .defaultIfEmpty(new SgFrameworkResponse<EntityVO>())
+                .map(response ->{
+                        return buildGeneralItemse(response,sgFrameworkContextItem);
+                    }
+                ).map(TacResult::newResult)
+                .onErrorReturn(r -> {
+                    HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                        .kv("generalItemse is","empty")
+                        .info();
+                    List<GeneralItem> generalItemse = new ArrayList<>();
+                    TacResult tacResult = TacResult.newResult(generalItemse);
+                    return tacResult;
+                    });
     }
     public List<GeneralItem> buildGeneralItemse(SgFrameworkResponse sgFrameworkResponse,SgFrameworkContextItem sgFrameworkContextItem){
         /*perfect(sgFrameworkResponse,sgFrameworkContextItem);*/
@@ -126,7 +118,12 @@ public class LimitTimeBuyScene {
             generalItem.put("startTime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(limitBuyDto.getStartTime()*1000)));
             generalItem.put("__pos__",i.getAndIncrement());
             if(limitBuyDto.getIsHit()){
-                generalItem.put("itemAndContentList",soltOutSort(sgFrameworkResponse.getItemAndContentList()));
+                if(CollectionUtils.isEmpty(sgFrameworkResponse.getItemAndContentList())){
+                    generalItem.put("itemAndContentList",Lists.newArrayList(new ItemEntityVO()));
+                }else{
+                    generalItem.put("itemAndContentList",soltOutSort(sgFrameworkResponse.getItemAndContentList()));
+                }
+
             }
             generalItemse.add(generalItem);
 

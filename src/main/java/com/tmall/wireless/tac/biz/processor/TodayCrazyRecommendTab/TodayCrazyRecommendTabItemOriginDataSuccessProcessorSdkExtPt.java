@@ -12,7 +12,6 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProc
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
-import com.tmall.txcs.gs.framework.extensions.failprocessor.ItemFailProcessorRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.TodayCrazySortItemEntity;
@@ -46,8 +45,14 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
-        tacLogger.info("TPP返回数据条数：" + originDataProcessRequest.getItemEntityOriginDataDTO().getResult().size());
-        tacLogger.info("TPP返回数据结果：" + JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
+        //tacLogger.info("TPP返回数据条数：" + originDataProcessRequest.getItemEntityOriginDataDTO().getResult().size());
+        //tacLogger.info("TPP返回数据结果：" + JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
+
+        /**
+         * 用户置顶
+         */
+        String crowdTopStr = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "crowdTop", "");
+        List<String> crowdTopList = crowdTopStr.equals("") ? Lists.newArrayList() : Arrays.asList(crowdTopStr.split(","));
         /**
          * 鸿雁置顶itemIds和已曝光置顶itemIds,按照前端入参顺序(前端已做合并，原先是已曝光置顶itemIds在最上面，然后是鸿雁置顶itemIds的)
          */
@@ -64,25 +69,34 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         /**
          * tpp请求成功写入缓存，供失败打底使用
          */
-        ItemFailProcessorRequest itemFailProcessorRequest = JSON.parseObject(JSON.toJSONString(originDataProcessRequest), ItemFailProcessorRequest.class);
-        todayCrazyTairCacheService.process(itemFailProcessorRequest);
+        todayCrazyTairCacheService.process(originDataProcessRequest);
 
         /**
          * 排序优先级：已曝光>鸿雁>坑位排序(保证顺序去重)
          * 去重的同时保证入参的顺序
          */
         List<String> topItemIds = Lists.newArrayList();
+        /**
+         * 用户特殊置顶在所有置顶之上
+         */
+        if (CollectionUtils.isNotEmpty(crowdTopList)) {
+            topItemIds.addAll(crowdTopList);
+        }
+        /**
+         * 对所有需要置顶的商品去重处理，保证优先出现的顺序不变
+         */
         topList.forEach(s -> {
             if (!topItemIds.contains(s)) {
                 topItemIds.add(s);
             }
         });
+        tacLogger.info("topList去重后" + JSON.toJSONString(topItemIds));
 
         /**
          * 保存tairKey和item关联关系。供后面逻辑使用查询限购，区分渠道的判断依据
          */
         HashMap<String, String> itemIdAndCacheKey = new HashMap<>(todayCrazyTairCacheService.buildItemIdAndCacheKey(itemEntities));
-        tacLogger.info("topList去重后" + JSON.toJSONString(topItemIds));
+
 
         /**
          * 只有今日超省才走定坑逻辑
@@ -99,15 +113,41 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         }
 
         /**
+         * 如果topItemIds在专享价中则优先打专享标
+         *
+         */
+        this.topItemIdsIsChannelPriceNew(topItemIds, itemIdAndCacheKey);
+
+        /**
          * 保存到上下文中，供后面查询限购，区分渠道的判断依据
          */
         originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(CommonConstant.ITEM_ID_AND_CACHE_KEYS, itemIdAndCacheKey);
+
         HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                 .kv("class", "TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt")
                 .kv("tpp data size", Integer.toString(originDataDTO.getResult().size()))
                 .info();
         tacLogger.info("tpp最终条数：" + originDataDTO.getResult().size());
         return originDataDTO;
+    }
+
+    /**
+     * 如果前端入参的itemId存在专享价则优先打专享标
+     *
+     * @param topItemIds
+     * @param itemIdAndCacheKey
+     */
+    private void topItemIdsIsChannelPriceNew(List<String> topItemIds, HashMap<String, String> itemIdAndCacheKey) {
+        List<String> allChannelPriceNewItemIds = todayCrazyTairCacheService.getItemIdAndCacheKeyList(CommonConstant.CHANNEL_ITEM_IDS);
+        if (CollectionUtils.isEmpty(allChannelPriceNewItemIds)) {
+            return;
+        }
+        topItemIds.forEach(itemId -> {
+            if (allChannelPriceNewItemIds.contains(itemId)) {
+                tacLogger.info("专享价打标成功，itemId=" + itemId);
+                itemIdAndCacheKey.put(itemId, CommonConstant.TODAY_CHANNEL_NEW);
+            }
+        });
     }
 
     /**
@@ -185,16 +225,18 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         resultItemIds.addAll(entryPromotionPriceItemIdList);
         result.addAll(entryChannelPriceNew);
         result.addAll(entryPromotionPrice);
-
+        tacLogger.info("定坑去重后结果：" + JSON.toJSONString(result));
+        HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
+                .kv("result", JSON.toJSONString(result))
+                .kv("method", "itemSortV2")
+                .info();
         //根据定坑数据对原tpp返回结果集进行去重处理
         itemEntities.removeIf(itemEntity -> resultItemIds.contains(itemEntity.getItemId()));
-
         //只有首页才进行定坑处理，且要有坑位数据
         if (isFirstPage && CollectionUtils.isNotEmpty(result)) {
             //保存tairKey和item关联关系。供后面逻辑使用查询限购，区分渠道的判断依据(因为定坑商品也要展示渠道)
             entryPromotionPriceItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_PROMOTION));
             entryChannelPriceNewItemIdList.forEach(itemId -> itemIdAndCacheKey.put(Long.toString(itemId), CommonConstant.TODAY_CHANNEL_NEW));
-            tacLogger.info("定坑过滤后的结果：" + JSON.toJSONString(entryChannelPriceNew));
             //坑位排序
             originDataDTO.setResult(this.doItemSort(itemEntities, result));
         } else {
@@ -258,6 +300,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         columnCenterDataSetItemRuleDTOS.forEach(columnCenterDataSetItemRuleDTO -> {
             ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
             if (this.isNeedSort(columnCenterDataRuleDTO) && !itemList.contains(columnCenterDataSetItemRuleDTO.getItemId())) {
+                tacLogger.info("去重保留itemId：：" + columnCenterDataSetItemRuleDTO.getItemId());
                 itemList.add(columnCenterDataSetItemRuleDTO.getItemId());
                 needEnterDataSetItemRuleDTOS.add(columnCenterDataSetItemRuleDTO);
             }
@@ -273,7 +316,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @return
      */
     private boolean isNeedSort(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
-        Date nowDate = new Date();
+        long nowDate = System.currentTimeMillis();
         if (columnCenterDataRuleDTO == null) {
             return false;
         }
@@ -285,7 +328,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (itemScheduleStartTime == null || itemScheduleEndTime == null || itemStickStartTime == null || itemStickEndTime == null || stick == null) {
             return false;
         }
-        return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime) && nowDate.after(itemStickStartTime) && nowDate.before(itemStickEndTime);
+        long scheduleStartTime = itemScheduleStartTime.getTime();
+        long scheduleEndTime = itemScheduleEndTime.getTime();
+        long stickStartTime = itemStickStartTime.getTime();
+        long stickEndTime = itemStickEndTime.getTime();
+        tacLogger.info("去重判断：nowDate=" + nowDate + "itemScheduleStartTime=" + itemScheduleStartTime + "itemScheduleEndTime=" + itemScheduleEndTime + "itemStickStartTime=" + itemStickStartTime + "itemStickEndTime=" + itemStickEndTime);
+        return nowDate > scheduleStartTime && nowDate < scheduleEndTime && nowDate > stickStartTime && nowDate < stickEndTime;
     }
 
 

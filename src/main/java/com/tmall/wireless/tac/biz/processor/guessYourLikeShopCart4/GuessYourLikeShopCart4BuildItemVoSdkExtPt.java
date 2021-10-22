@@ -2,28 +2,26 @@ package com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4;
 
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.base.Joiner;
+
 import com.tmall.tcls.gs.sdk.biz.extensions.item.vo.DefaultBuildItemVoSdkExtPt;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
-import com.tmall.tcls.gs.sdk.ext.extension.Register;
+
 import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoRequest;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.vo.BuildItemVoSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.Response;
-import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
-import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoDTO;
-import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
-import com.tmall.txcs.biz.supermarket.iteminfo.source.origindate.ItemInfoBySourceDTOOrigin;
-import com.tmall.txcs.gs.framework.model.ErrorCode;
-import com.tmall.txcs.gs.model.spi.model.ItemDataDTO;
+import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
+import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
+import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 
 import com.google.common.collect.Maps;
-import com.tmall.hades.monitor.print.HadesLogUtil;
+
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -41,38 +39,63 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
 
     @Autowired
     TacLoggerImpl tacLogger;
+
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
 
         try {
             tacLogger.info("VO重写开始");
-            Response<ItemEntityVO> entityVOResponse = super.process(buildItemVoRequest);
+            //tacLogger.info("buildItemVoRequest="+JSON.toJSONString(buildItemVoRequest));
 
-            if(!entityVOResponse.isSuccess()){
+            //获取默认VO扩展点组装的数据
+            Response<ItemEntityVO> entityVOResponse = super.process(buildItemVoRequest);
+            if (!entityVOResponse.isSuccess()) {
                 return entityVOResponse;
             }
             ItemEntityVO entityVO = entityVOResponse.getValue();
 
-            //cff
+            //获取tpp返回数据
+            SgFrameworkContextItem context = buildItemVoRequest.getContext();
+            List<ItemEntity> itemEntities = Optional.of(context).map(SgFrameworkContextItem::getItemEntityOriginDataDTO)
+                    .map(OriginDataDTO<ItemEntity>::getResult).orElse(new ArrayList<>());
+            if (CollectionUtils.isEmpty(itemEntities)) {
+                return Response.fail("tpp返回数据为空。");
+            }
+
+            //获取当前商品序号
+            int index = 0;
+            for (int i = 0; i < itemEntities.size(); i++) {
+                Long itemId = (Long) entityVO.get("itemId");
+
+                if (itemEntities.get(i) != null) {
+                    Long itemEntityId = itemEntities.get(i).getItemId();
+                    if (itemEntityId != null && itemId.longValue() == itemEntityId.longValue()) {
+                        index = i + 1;
+                        break;
+                    }
+                }
+            }
+
+            //商品组装
             ItemEntityVO itemEntityVO = new ItemEntityVO();
             itemEntityVO.put("scm", entityVO.get("scm"));
             /**点击埋点**/
-            Map<String,Object> clickParam = Maps.newHashMap();
-            Map<String,Object> args = Maps.newHashMap();
-            args.put("ext",0);
-            args.put("spm",0);
-            args.put("itemid",entityVO.get("itemId"));
-            clickParam.put("args",args);
-            clickParam.put("eventId",0);
-            clickParam.put("arg1",0);
-            clickParam.put("page",0);
+            Map<String, Object> clickParam = Maps.newHashMap();
+            Map<String, Object> args = Maps.newHashMap();
+            args.put("ext", "{\"index\":\"" + index + "\"}");
+            args.put("spm", "a2141.24984500.recommend." + index);
+            args.put("itemid", entityVO.get("itemId"));
+            clickParam.put("args", args);
+            clickParam.put("eventId", "2101");
+            clickParam.put("arg1", "Page_ShoppingCart_Button-a2141.24984500.recommend." + index);
+            clickParam.put("page", "Page_ShoppingCart");
             itemEntityVO.put("clickParam", clickParam);
 
             /**价格区域**/
-            Map<String,Object> priceArea = Maps.newHashMap();
-            priceArea.put("price",entityVO.get("showPrice"));
-            priceArea.put("originPrice",0);
-            priceArea.put("pricePrefix",0);
+            Map<String, Object> priceArea = Maps.newHashMap();
+            priceArea.put("price", entityVO.get("showPrice"));
+            priceArea.put("originPrice", 0);
+            priceArea.put("pricePrefix", 0);
             itemEntityVO.put("priceArea", priceArea);
 
             /****benefitInfo****//*
@@ -99,41 +122,43 @@ public class GuessYourLikeShopCart4BuildItemVoSdkExtPt extends DefaultBuildItemV
 
             itemEntityVO.put("benefitInfo", benefitInfo);*/
             /**标题区域**/
-            Map<String,Object> titleInfo = Maps.newHashMap();
-            titleInfo.put("textSize",0);
-            titleInfo.put("textContent",entityVO.get("title"));
-            titleInfo.put("textColor",0);
-            titleInfo.put("textMaxLines",0);
-            titleInfo.put("labelImgUrl",0);
-            titleInfo.put("labelImgHeight",0);
-            titleInfo.put("labelImgWidth",0);
+            Map<String, Object> titleInfo = Maps.newHashMap();
+            titleInfo.put("textSize", 0);
+            titleInfo.put("textContent", entityVO.get("title"));
+            titleInfo.put("textColor", 0);
+            titleInfo.put("textMaxLines", 0);
+            titleInfo.put("labelImgUrl", 0);
+            titleInfo.put("labelImgHeight", 0);
+            titleInfo.put("labelImgWidth", 0);
             itemEntityVO.put("titleInfo", titleInfo);
             /**点击事件，跳转到该商品详情**/
             itemEntityVO.put("action", entityVO.get("itemUrl"));
             /********/
-            itemEntityVO.put("type", 0);
+            itemEntityVO.put("type", "tmall_common_recommend_item");
             /********/
             itemEntityVO.put("pageParam", 0);
             /**曝光埋点**/
-            Map<String,Object> exposureParam = Maps.newHashMap();
-            Map<String,Object> args1 = Maps.newHashMap();
-            args1.put("ext",0);
-            args1.put("spm",0);
-            args1.put("itemId",entityVO.get("itemId"));
-            exposureParam.put("args",args1);
-            exposureParam.put("eventId",0);
-            exposureParam.put("arg1",0);
-            exposureParam.put("page",0);
+            Map<String, Object> exposureParam = Maps.newHashMap();
+            Map<String, Object> args1 = Maps.newHashMap();
+            args1.put("ext", "{\"index\":\"" + index + "\"}");
+            args1.put("spm", "a2141.24984500.recommend." + index);
+            args1.put("itemId", entityVO.get("itemId"));
+            exposureParam.put("args", args1);
+            exposureParam.put("eventId", "2201");
+            exposureParam.put("arg1", "a2141.24984500.recommend." + index);
+            exposureParam.put("page", "Page_ShoppingCart");
             itemEntityVO.put("exposureParam", exposureParam);
 
             itemEntityVO.put("imgUrl", entityVO.get("itemImg"));
             itemEntityVO.put("itemImg", entityVO.get("itemImg"));
-            tacLogger.info("VO重写完成,VO结果集为："+JSON.toJSONString(itemEntityVO));
-            //return Response.success(itemEntityVO);
+            itemEntityVO.put("canBuy", entityVO.get("canBuy"));
+            itemEntityVO.put("sellOut", entityVO.get("sellOut"));
+            tacLogger.info("VO重写完成,VO结果集为："/*+JSON.toJSONString(itemEntityVO)*/);
+
             return Response.success(itemEntityVO);
         } catch (Exception e) {
             tacLogger.info("ERROR" + JSON.toJSONString(e));
-            return Response.fail("ERROR_TEXT="+JSON.toJSONString(e));
+            return Response.fail("ERROR_TEXT=" + JSON.toJSONString(e));
         }
     }
 }

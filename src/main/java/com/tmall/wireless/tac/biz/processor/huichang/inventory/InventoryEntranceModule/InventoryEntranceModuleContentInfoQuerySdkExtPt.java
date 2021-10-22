@@ -66,8 +66,6 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
     @Override
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
         logger.info("------------InventoryEntranceModuleContentInfoQuerySdkExtPt.start------------------");
-        logger.info("InventoryEntranceModuleContentInfoQuerySdkExtPt.getContentDTOList:{}" , JSON.toJSONString(sgFrameworkContextContent.getContentDTOList()));
-        logger.info("InventoryEntranceModuleContentInfoQuerySdkExtPt.getContentEntityOriginDataDTO:{}" , JSON.toJSONString(sgFrameworkContextContent.getContentEntityOriginDataDTO()));
         Map<Long, ContentInfoDTO> contentDTOMap = Maps.newHashMap();
         try {
             Map<String, Object> userParams = sgFrameworkContextContent.getUserParams();
@@ -146,8 +144,6 @@ public class InventoryEntranceModuleContentInfoQuerySdkExtPt extends Register im
                 contentInfoDTO.setContentInfo(contentInfo);
                 contentDTOMap.put(contentId, contentInfoDTO);
             }
-            logger.info("------------InventoryEntranceModuleContentInfoQuerySdkExtPt.end.------------");
-            logger.info("------------InventoryEntranceModuleContentInfoQuerySdkExtPt.contentDTOMap:{}", JSON.toJSONString(contentDTOMap));
             return Flowable.just(Response.success(contentDTOMap));
         } catch (Exception e) {
             logger.error("InventoryEntranceModuleContentInfoQuerySdkExtPt.error:{}", StackTraceUtil.stackTrace(e));

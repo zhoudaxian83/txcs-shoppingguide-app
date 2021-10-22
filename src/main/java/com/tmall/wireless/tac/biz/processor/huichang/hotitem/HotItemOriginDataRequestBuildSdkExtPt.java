@@ -56,9 +56,8 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
     // &itemAndIndustry=649361494634:1100:1;651103243384:1200:1
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
-        logger.error("-----HotItemOriginDataRequestBuildSdkExtPt.start----");
-        tacLogger.debug("HotItemOriginDataRequestBuildSdkExtPt");
         RecommendRequest recommendRequest = new RecommendRequest();
+        String aldCurrentResId = "0";
         try {
             Context context = sgFrameworkContextItem.getTacContext();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)context;
@@ -66,15 +65,18 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             Map<String, Object> aldContext = requestContext4Ald.getAldContext();
             Map<String, Object> customParams = requestContext4Ald.getParams();
             Map<String, String> params = Maps.newHashMap();
+            aldCurrentResId = MapUtil.getStringWithDefault(aldContext, HallCommonAldConstant.ALD_CURRENT_RES_ID, "0");
             Object aldStaticData = aldContext.get(HallCommonAldConstant.STATIC_SCHEDULE_DATA);
             if(aldStaticData == null){
+                logger.error("-----HotItemOriginDataRequestBuildSdkExtPt.getStaticData is empty.resourceId:{}", aldCurrentResId);
                 throw new Exception("获取阿拉丁静态数据为空");
             }
             List<Map<String, Object>> aldStaticDataList = (List<Map<String, Object>>)aldStaticData;
             Map<Long, Map<String, Object>> aldStaticDataMap = aldStaticDataList.stream().collect(
                 Collectors.toMap(e -> Long.valueOf(String.valueOf(e.get("contentId"))), Function.identity(), (key1, key2) -> key2));
             customParams.put("aldStaticDataMap", aldStaticDataMap);
-
+            params.put("aldCurrentResId", aldCurrentResId);
+            params.put("uniqueIdentity", sgFrameworkContextItem.getBizScenario().getUniqueIdentity());
             String itemAndIndustryData = convertStaticData(aldStaticDataList);
             params.put("itemAndIndustry", itemAndIndustryData);
             Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, DEFAULT_SMAREAID);
@@ -91,8 +93,14 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
                 }
             }
 
-            params.put("regionCode", Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode())
-                .map(String::valueOf).orElse(String.valueOf(DEFAULT_LOGAREAID)));
+            Long regionCode = Optional.ofNullable(locParams).map(locParams1 -> locParams1.getRegionCode())
+                .orElse(DEFAULT_LOGAREAID);
+
+            if(regionCode != null && regionCode != 0L){
+                params.put("regionCode", String.valueOf(regionCode));
+            }else {
+                params.put("regionCode", String.valueOf(DEFAULT_LOGAREAID));
+            }
 
             String itemSetId = "";
             String tacParams = MapUtil.getStringWithDefault(aldParams, "tacParams", "");
@@ -101,7 +109,7 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
                 itemSetId = Optional.ofNullable(tacParamsMap.getString(HallCommonAldConstant.ITEM_SET_ID)).orElse("");
             }
             if (StringUtils.isEmpty(itemSetId)) {
-                logger.error("-----HotItemOriginDataRequestBuildSdkExtPt.itemSetId is empty-------");
+                logger.error("-----HotItemOriginDataRequestBuildSdkExtPt.itemSetId is empty.resourceId:{}", aldCurrentResId);
                 throw new Exception("itemSetId is empty");
             }
 
@@ -120,9 +128,7 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             tacLogger.debug("Tpp参数：" + JSONObject.toJSONString(recommendRequest));
             return recommendRequest;
         } catch (Exception e) {
-            tacLogger.debug(
-                "HotItemOriginDataRequestBuildSdkExtPt 失败" + StackTraceUtil.stackTrace(e));
-            logger.error("HotItemOriginDataRequestBuildSdkExtPt 失败.", e);
+            logger.error("HotItemOriginDataRequestBuildSdkExtPt 失败.resourceId:" + aldCurrentResId, e);
             return recommendRequest;
         }
     }

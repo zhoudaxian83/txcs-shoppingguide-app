@@ -38,8 +38,6 @@ public class InventoryEntranceModuleHandler extends TacReactiveHandler4Ald {
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
         try {
-            tacLogger.info("tacLogger.InventoryEntranceModuleHandler.statr");
-            logger.warn("LOGGER.InventoryEntranceModuleHandler.statr", JSON.toJSONString(requestContext4Ald));
             BizScenario bizScenario = BizScenario.valueOf(HallScenarioConstant.HALL_SCENARIO_BIZ_ID,
                 HallScenarioConstant.HALL_SCENARIO_USE_CASE_B2C,
                 HallScenarioConstant.HALL_SCENARIO_SCENARIO_INVENTORY_ENTRANCE_MODULE);

@@ -32,7 +32,6 @@ public class InventoryEntranceModuleContentFilterSdkExtPt extends Register imple
 
     @Override
     public SgFrameworkResponse<ContentVO> process(SgFrameworkContextContent sgFrameworkContextContent) {
-        logger.info("InventoryEntranceModuleContentFilterSdkExtPt.start");
         SgFrameworkResponse<ContentVO> entityVOSgFrameworkResponse = sgFrameworkContextContent.getContentVOSgFrameworkResponse();
 
         List<ContentVO> itemAndContentList = entityVOSgFrameworkResponse.getItemAndContentList();

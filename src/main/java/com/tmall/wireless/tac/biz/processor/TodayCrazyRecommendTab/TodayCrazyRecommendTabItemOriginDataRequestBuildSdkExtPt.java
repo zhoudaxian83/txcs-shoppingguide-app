@@ -44,7 +44,7 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
     }
 
     private RecommendRequest buildTppParam(SgFrameworkContextItem sgFrameworkContextItem) {
-        tacLogger.info("tpp参数构建originDataProcessRequest:" + JSON.toJSONString(sgFrameworkContextItem));
+        //tacLogger.info("tpp参数构建originDataProcessRequest:" + JSON.toJSONString(sgFrameworkContextItem));
         String csa = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "csa", "");
         String appType = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "appType", AppTypeEnum.INDEX_PAGE.getType());
         long userId = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getUserId).orElse(0L);
@@ -81,11 +81,11 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         recommendRequest.setUserId(userId);
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
-        tacLogger.info("tpp入参_recommendRequest_:" + JSON.toJSONString(recommendRequest));
+        /*tacLogger.info("tpp入参_recommendRequest_:" + JSON.toJSONString(recommendRequest));
         HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB)
                 .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
                 .kv("recommendRequest", JSON.toJSONString(recommendRequest))
-                .info();
+                .info();*/
         return recommendRequest;
     }
 
@@ -103,14 +103,16 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         List<String> cacheKeyList = Lists.newArrayList();
         String _pre = "_pre";
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
-            if (RpmContants.enviroment.isOnline()) {
+//            if (RpmContants.enviroment.isOnline()) {
+            if (true) {
                 cacheKeyList.addAll(Arrays.asList(CommonConstant.TODAY_CHANNEL_NEW_FEATURED, CommonConstant.TODAY_PROMOTION_FEATURED, CommonConstant.TODAY_ALGORITHM));
             } else {
                 cacheKeyList.addAll(Arrays.asList(CommonConstant.TODAY_CHANNEL_NEW_FEATURED + _pre, CommonConstant.TODAY_PROMOTION_FEATURED + _pre, CommonConstant.TODAY_ALGORITHM + _pre));
             }
         } else {
             categoryIds.forEach(categoryId -> {
-                if (RpmContants.enviroment.isOnline()) {
+//                if (RpmContants.enviroment.isOnline()) {
+                if (true) {
                     cacheKeyList.add(CommonConstant.TODAY_CHANNEL_NEW + "_" + categoryId);
                     cacheKeyList.add(CommonConstant.TODAY_PROMOTION + "_" + categoryId);
                     cacheKeyList.add(CommonConstant.TODAY_ALGORITHM + "_" + categoryId);

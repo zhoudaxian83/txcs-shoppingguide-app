@@ -43,4 +43,9 @@ public class CommonConstant {
      * 今日疯抢单品优惠价(通投价)缓存前缀
      */
     public static final String promotionPricePrefix = "promotionPrice_";
+
+    /**
+     * 全量专享价tairkey
+     */
+    public static final String CHANNEL_ITEM_IDS = "channel_item_ids";
 }

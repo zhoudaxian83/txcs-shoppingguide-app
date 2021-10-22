@@ -132,8 +132,27 @@
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemBuildItemVoSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemFilterSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemProcessBeforeReturnSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.huichang.hotitem.HotItemCaptainRequestBuildSdkExtPt"/>
 
 
+    <!--够实惠圈品集推荐-->
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemsetrecommend.GshItemSetRecommendHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemsetrecommend.GshItemSetOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemsetrecommend.GshItemsetRecommendCaptainRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemsetrecommend.GshItemSetRecommendBuildItemVoSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemsetrecommend.GshItemSetRecommendFilterSdkExtPt"/>
+
+
+
+    <!--够实惠商品个性化推荐-->
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemrecommend.GshItemRecommendHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemrecommend.GshItemRecommendOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemrecommend.GshItemRecommendCaptainRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemrecommend.GshItemRecommendBuildItemVoSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemrecommend.GshItemRecommendFilterSdkExtPt"/>
+
+    <!--够实惠商品库存过滤-->
+    <bean class="com.tmall.wireless.tac.biz.processor.gsh.itemselloutfilter.GshItemSelloutFilterHandler"/>
 
     <!--内容渲染场景-->
     <bean id="entityRenderService" class="com.taobao.hsf.app.spring.util.HSFSpringConsumerBean"
@@ -176,11 +195,9 @@
     <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4SdkItemHandler"/>
     <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4ItemOriginDataRequestBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4BuildItemVoSdkExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4ItemOriginDataResponseConvertSdkExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4ItemOriginDataCheckSuccessSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4ItemOriginDataFailProcessorSdkExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4ItemFilterSdkExtPt"/>
-    <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4ItemProcessBeforeReturnSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.guessYourLikeShopCart4.GuessYourLikeShopCart4ItemOriginDataSuccessProcessorSdkExtPt"/>
+
     <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentFilterSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuBuildItemVoSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentOriginDataFailProcessorSdkExtPt"/>
