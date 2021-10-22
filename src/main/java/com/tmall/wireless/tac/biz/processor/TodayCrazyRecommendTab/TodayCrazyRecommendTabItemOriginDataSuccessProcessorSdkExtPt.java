@@ -198,6 +198,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         resultItemIds.addAll(entryPromotionPriceItemIdList);
         result.addAll(entryChannelPriceNew);
         result.addAll(entryPromotionPrice);
+        tacLogger.info("定坑去重后结果：" + JSON.toJSONString(result));
 
         //根据定坑数据对原tpp返回结果集进行去重处理
         itemEntities.removeIf(itemEntity -> resultItemIds.contains(itemEntity.getItemId()));
@@ -271,6 +272,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         columnCenterDataSetItemRuleDTOS.forEach(columnCenterDataSetItemRuleDTO -> {
             ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
             if (this.isNeedSort(columnCenterDataRuleDTO) && !itemList.contains(columnCenterDataSetItemRuleDTO.getItemId())) {
+                tacLogger.info("去重保留itemId：：" + columnCenterDataSetItemRuleDTO.getItemId());
                 itemList.add(columnCenterDataSetItemRuleDTO.getItemId());
                 needEnterDataSetItemRuleDTOS.add(columnCenterDataSetItemRuleDTO);
             }
@@ -286,7 +288,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @return
      */
     private boolean isNeedSort(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
-        Date nowDate = new Date();
+        long nowDate = System.currentTimeMillis();
         if (columnCenterDataRuleDTO == null) {
             return false;
         }
@@ -298,7 +300,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         if (itemScheduleStartTime == null || itemScheduleEndTime == null || itemStickStartTime == null || itemStickEndTime == null || stick == null) {
             return false;
         }
-        return nowDate.after(itemScheduleStartTime) && nowDate.before(itemScheduleEndTime) && nowDate.after(itemStickStartTime) && nowDate.before(itemStickEndTime);
+        long scheduleStartTime = itemScheduleStartTime.getTime();
+        long scheduleEndTime = itemScheduleEndTime.getTime();
+        long stickStartTime = itemStickStartTime.getTime();
+        long stickEndTime = itemStickEndTime.getTime();
+        tacLogger.info("去重判断：nowDate=" + nowDate + "itemScheduleStartTime=" + itemScheduleStartTime + "itemScheduleEndTime=" + itemScheduleEndTime + "itemStickStartTime=" + itemStickStartTime + "itemStickEndTime=" + itemStickEndTime);
+        return nowDate > scheduleStartTime && nowDate < scheduleEndTime && nowDate > stickStartTime && nowDate < stickEndTime;
     }
 
 

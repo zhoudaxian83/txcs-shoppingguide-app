@@ -151,7 +151,8 @@ public class TodayCrazyTairCacheService {
      */
     private String buildTairKey(OriginDataProcessRequest originDataProcessRequest) {
         String tabType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", TabTypeEnum.TODAY_CHAO_SHENG.getType());
-        if (RpmContants.enviroment.isOnline()) {
+//        if (RpmContants.enviroment.isOnline()) {
+        if (true) {
             return "TPP_supermarket_b2c_TODAY_CRAZY_RECOMMEND_TAB_" + tabType;
         } else {
             return "TPP_supermarket_b2c_TODAY_CRAZY_RECOMMEND_TAB_" + tabType + "_pre";
@@ -212,6 +213,7 @@ public class TodayCrazyTairCacheService {
                     .kv("tairManager", JSON.toJSONString(tairManager))
                     .info();
         }
+        tacLogger.info("定坑源数据："+JSON.toJSONString(centerDataSetItemRuleDTOS));
         return centerDataSetItemRuleDTOS;
 
     }

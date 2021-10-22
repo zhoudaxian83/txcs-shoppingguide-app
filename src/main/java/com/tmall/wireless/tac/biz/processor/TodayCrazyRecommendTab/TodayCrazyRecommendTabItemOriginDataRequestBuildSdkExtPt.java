@@ -103,14 +103,16 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         List<String> cacheKeyList = Lists.newArrayList();
         String _pre = "_pre";
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
-            if (RpmContants.enviroment.isOnline()) {
+//            if (RpmContants.enviroment.isOnline()) {
+            if (true) {
                 cacheKeyList.addAll(Arrays.asList(CommonConstant.TODAY_CHANNEL_NEW_FEATURED, CommonConstant.TODAY_PROMOTION_FEATURED, CommonConstant.TODAY_ALGORITHM));
             } else {
                 cacheKeyList.addAll(Arrays.asList(CommonConstant.TODAY_CHANNEL_NEW_FEATURED + _pre, CommonConstant.TODAY_PROMOTION_FEATURED + _pre, CommonConstant.TODAY_ALGORITHM + _pre));
             }
         } else {
             categoryIds.forEach(categoryId -> {
-                if (RpmContants.enviroment.isOnline()) {
+//                if (RpmContants.enviroment.isOnline()) {
+                if (true) {
                     cacheKeyList.add(CommonConstant.TODAY_CHANNEL_NEW + "_" + categoryId);
                     cacheKeyList.add(CommonConstant.TODAY_PROMOTION + "_" + categoryId);
                     cacheKeyList.add(CommonConstant.TODAY_ALGORITHM + "_" + categoryId);

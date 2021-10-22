@@ -11,14 +11,14 @@ public class ItemLimitDTO {
     private long skuId;
 
     //总体限购
-    private long totalLimit;
+    private Long totalLimit;
 
     //已经售卖的件数
-    private long usedCount;
+    private Long usedCount;
 
     //用户限购信息
-    private long userLimit;
+    private Long userLimit;
 
     //用户已经消费
-    private long userUsedCount;
+    private Long userUsedCount;
 }
