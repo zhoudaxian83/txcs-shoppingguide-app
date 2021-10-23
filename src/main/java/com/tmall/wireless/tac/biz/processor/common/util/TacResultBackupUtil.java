@@ -61,6 +61,8 @@ public class TacResultBackupUtil {
                 tacResult.getBackupMetaData().setBackupWithParam(true);
                 tacResult.getBackupMetaData().setBackupKey(backupParams);
             }
+            /**不开启oss兜底**/
+            tacResult.getBackupMetaData().setUseOss(false);
             tacResult.getBackupMetaData().setUseBackup(true);
             return tacResult;
         }
@@ -86,6 +88,8 @@ public class TacResultBackupUtil {
                 .kv("backupParams", JSON.toJSONString(backupParams))
                 .info();
         }
+        /**不开启oss兜底**/
+        tacResult.getBackupMetaData().setUseOss(false);
         tacResult.getBackupMetaData().setUseBackup(true);
         return tacResult;
     }
