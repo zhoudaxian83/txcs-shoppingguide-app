@@ -121,7 +121,7 @@ public class FirstScreenMindContentScene {
                         ScenarioConstantApp.LOC_TYPE_B2C,
                         ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT
                     );
-                    tacResult = TacResult.errorResult("test");
+                    //tacResult = TacResult.errorResult("test");
                     /**取b2c普通场景集id打底**/
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
                     String contentSetIdB2c = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, "");
