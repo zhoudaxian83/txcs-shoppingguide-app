@@ -125,7 +125,8 @@ public class FirstScreenMindContentScene {
                     /**取b2c普通场景集id打底**/
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
                     String contentSetIdB2c = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, "");
-                    tacResult = TacResultBackupUtil.tacResultBackupContentParam(tacResult,b,Lists.newArrayList(contentSetIdB2c));
+                    //tacResult = TacResultBackupUtil.tacResultBackupContentParam(tacResult,b,Lists.newArrayList(contentSetIdB2c));
+                    tacResult = TacResultBackupUtil.tacResultBackupContentParam(tacResult,b,contentSetIdB2c);
                     return tacResult;
                 }).onErrorReturn(r -> TacResult.errorResult(""));
     }
