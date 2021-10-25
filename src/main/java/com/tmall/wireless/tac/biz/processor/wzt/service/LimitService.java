@@ -111,12 +111,15 @@ public class LimitService {
                             .kv("getItemLimitResult", "convert json error")
                             .info();
                 }
-                HadesLogUtil.stream(ScenarioConstantApp.WU_ZHE_TIAN)
-                        .kv("paramsValue", JSON.toJSONString(paramsValue))
-                        .kv("longListMap", JSON.toJSONString(longListMap))
-                        .info();
-                tacLogger.info(LOG_PREFIX + "限购接口查询paramsValue:" + JSON.toJSONString(paramsValue) + "|jsonObject：" + JSON
-                        .toJSONString(jsonObject));
+                if (Constant.DEBUG) {
+                    tacLogger.info(LOG_PREFIX + "限购接口查询paramsValue:" + JSON.toJSONString(paramsValue) + "|jsonObject：" + JSON
+                            .toJSONString(jsonObject));
+                }
+
+//                HadesLogUtil.stream(ScenarioConstantApp.WU_ZHE_TIAN)
+//                        .kv("paramsValue", JSON.toJSONString(paramsValue))
+//                        .kv("longListMap", JSON.toJSONString(longListMap))
+//                        .info();
                 return longListMap;
             } else {
                 HadesLogUtil.stream(ScenarioConstantApp.WU_ZHE_TIAN)
@@ -142,9 +145,15 @@ public class LimitService {
         if (param == null) {
             return null;
         }
-        tacLogger.info("limit查询入参：" + JSON.toJSONString(param));
+        if (Constant.DEBUG) {
+            tacLogger.info("limit查询入参：" + JSON.toJSONString(param));
+        }
+
         limitResult = this.getItemLimitResult(param);
-        tacLogger.info("limit返回结果：" + JSON.toJSONString(limitResult));
+        if (Constant.DEBUG) {
+            tacLogger.info("limit返回结果：" + JSON.toJSONString(limitResult));
+        }
+
         return limitResult;
     }
 

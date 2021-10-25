@@ -25,7 +25,7 @@ public class LimitItemUtil {
         if (totalLimit && userLimit) {
             //当已售数量大于等于总限制数，个人限制数量大于等于个人限购数沉底处理
             return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit()
-                && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
+                    && itemLimitDTO.getUserUsedCount() < itemLimitDTO.getUserLimit();
         }
         if (totalLimit) {
             return itemLimitDTO.getUsedCount() < itemLimitDTO.getTotalLimit();
@@ -37,14 +37,10 @@ public class LimitItemUtil {
     public static List<EntityVO> doLimitItems(List<EntityVO> entityVOList) {
         List<EntityVO> noLimitEntityVOList = Lists.newArrayList();
         entityVOList.forEach(entityVO -> {
-            ItemLimitDTO itemLimitDTO = (ItemLimitDTO)entityVO.get("itemLimit");
-            boolean canBuy = (boolean)entityVO.get("canBuy");
-            boolean sellout = (boolean)entityVO.get("sellout");
+            ItemLimitDTO itemLimitDTO = (ItemLimitDTO) entityVO.get("itemLimit");
+            boolean canBuy = (boolean) entityVO.get("canBuy");
+            boolean sellout = (boolean) entityVO.get("sellout");
             boolean limit = LimitItemUtil.notLimit(itemLimitDTO);
-            if(!limit){
-                //单品限购日志
-
-            }
             //去掉超出限购的，如果都超出限购则正常放回全部数据
             //且拥有库存，可以购买的
             if (limit && canBuy && !sellout) {
