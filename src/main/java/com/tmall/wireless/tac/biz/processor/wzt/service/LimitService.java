@@ -56,6 +56,7 @@ public class LimitService {
             try {
                 if (itemInfoDTO.getItemInfos().get("captain") != null) {
                     Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
+                    tacLogger.info("itemInfoVO:" + JSON.toJSONString(itemInfoVO));
                     skuMap.put("skuId", itemInfoVO.get("skuId") == null ? 0L : itemInfoVO.get("skuId"));
                     skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
                     skuList.add(skuMap);
