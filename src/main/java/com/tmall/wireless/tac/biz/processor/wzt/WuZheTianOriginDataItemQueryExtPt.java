@@ -71,7 +71,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         /**
          * 去除掉活动冲不满足当前时间的商品
          */
-        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule(), columnCenterDataSetItemRuleDTO));
+        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule()));
         if (Constant.DEBUG) {
             tacLogger.info("返回原始缓存过滤后：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
         }
@@ -113,7 +113,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @param columnCenterDataRuleDTO
      * @return
      */
-    private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO, ColumnCenterDataSetItemRuleDTO columnCenterDataSetItemRuleDTO) {
+    private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
         long nowTime = System.currentTimeMillis();
         if (columnCenterDataRuleDTO == null) {
             return false;
@@ -125,12 +125,11 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         }
         long itemScheduleStartTime = itemScheduleStartDate.getTime();
         long itemScheduleEndTime = itemScheduleEndDate.getTime();
-        tacLogger.info("时间过滤：nowTime=" + nowTime + "itemScheduleStartDate=" + itemScheduleStartDate + "itemScheduleEndDate" + itemScheduleEndDate);
+
         boolean needData = itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
-        if (needData) {
-            tacLogger.info("在排期内的商品：" + columnCenterDataSetItemRuleDTO.getItemId());
-        } else {
-            tacLogger.info("非排期内的商品：" + columnCenterDataSetItemRuleDTO.getItemId());
+        if (Constant.DEBUG) {
+            tacLogger.info("时间过滤：nowTime=" + nowTime + "itemScheduleStartDate=" + itemScheduleStartDate + "itemScheduleEndDate" + itemScheduleEndDate);
+            tacLogger.info("在排期内的商品：" + needData);
         }
         return needData;
     }
