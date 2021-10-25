@@ -300,7 +300,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         columnCenterDataSetItemRuleDTOS.forEach(columnCenterDataSetItemRuleDTO -> {
             ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
             if (this.isNeedSort(columnCenterDataRuleDTO) && !itemList.contains(columnCenterDataSetItemRuleDTO.getItemId())) {
-                tacLogger.info("去重保留itemId：：" + columnCenterDataSetItemRuleDTO.getItemId());
+                //tacLogger.info("去重保留itemId：：" + columnCenterDataSetItemRuleDTO.getItemId());
                 itemList.add(columnCenterDataSetItemRuleDTO.getItemId());
                 needEnterDataSetItemRuleDTOS.add(columnCenterDataSetItemRuleDTO);
             }
@@ -332,7 +332,6 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         long scheduleEndTime = itemScheduleEndTime.getTime();
         long stickStartTime = itemStickStartTime.getTime();
         long stickEndTime = itemStickEndTime.getTime();
-        tacLogger.info("去重判断：nowDate=" + nowDate + "itemScheduleStartTime=" + itemScheduleStartTime + "itemScheduleEndTime=" + itemScheduleEndTime + "itemStickStartTime=" + itemStickStartTime + "itemStickEndTime=" + itemStickEndTime);
         return nowDate > scheduleStartTime && nowDate < scheduleEndTime && nowDate > stickStartTime && nowDate < stickEndTime;
     }
 
