@@ -48,6 +48,8 @@ public class TairUtil {
     private static final String AREA_SORT_SUFFIX = "_AREA_SORT";
 
     public Object getCache(String cacheKey) {
+        //todo mock
+        cacheKey = "channelPriceNew_XN";
         TairManager defaultTair = tairFactorySpi.getDefaultTair();
         if (defaultTair == null || defaultTair.getMultiClusterTairManager() == null) {
             tacLogger.warn(
