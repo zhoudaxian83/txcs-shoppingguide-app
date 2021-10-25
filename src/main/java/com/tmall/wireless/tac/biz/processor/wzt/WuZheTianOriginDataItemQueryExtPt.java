@@ -90,6 +90,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                     if (!recommendResponseEntityResponse.isSuccess()
                             || recommendResponseEntityResponse.getValue() == null
                             || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
+                        if (Constant.DEBUG) {
+                            tacLogger.info("结果集为空，会走默认打底逻辑");
+                        }
                         return new OriginDataDTO<>();
                     }
                     if (Constant.DEBUG) {
