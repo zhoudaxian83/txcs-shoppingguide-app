@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.wzt.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
@@ -10,8 +9,6 @@ import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetIt
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterPmtRuleDataSetDTO;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
-import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
-import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -61,6 +58,7 @@ public class TairUtil {
                 cacheKey);
         if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
                 && dataEntryResult.getValue().getValue() != null) {
+            tacLogger.info("Tair原始数据key：" + cacheKey + ";JSON:" + JSON.toJSONString(dataEntryResult.getValue().getValue()));
             return dataEntryResult.getValue().getValue();
         } else {
             tacLogger.info(LOG_PREFIX + "getCache获取缓存为空，cacheKey: " + cacheKey);
@@ -151,7 +149,7 @@ public class TairUtil {
          */
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = this.getCachePmtRuleDataItemRuleDTOList(smAreaId);
 
-        tacLogger.info("不同活动过滤前："+JSON.toJSONString(pmtRuleDataItemRuleDTOList));
+        tacLogger.info("不同活动过滤前：" + JSON.toJSONString(pmtRuleDataItemRuleDTOList));
 
         if (CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOList)) {
             HadesLogUtil.stream(ScenarioConstantApp.WU_ZHE_TIAN)
@@ -201,41 +199,6 @@ public class TairUtil {
             return MapUtil.getStringWithDefault(extensionMap, "channelKey", VoKeyConstantApp.CHANNEL_KEY);
         }
         return VoKeyConstantApp.CHANNEL_KEY;
-    }
-
-    /**
-     * 区分大区缓存获取推荐信息
-     *
-     * @param smAreaId
-     * @return
-     */
-    private OriginDataDTO<ItemEntity> getItemToCacheOfArea(Long smAreaId) {
-        LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
-        if (logicalArea == null) {
-            tacLogger.warn(LOG_PREFIX + "getItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
-            return null;
-        }
-        Object o = getCache(logicalArea.getCacheKey() + AREA_SORT_SUFFIX);
-        if (o == null) {
-            return null;
-        }
-        return JSON.parseObject((String) o, new TypeReference<OriginDataDTO<ItemEntity>>() {
-        });
-    }
-
-    /**
-     * 缓存个性化排序后的商品信息，区分大区
-     *
-     * @return
-     */
-    private boolean setItemToCacheOfArea(OriginDataDTO<ItemEntity> originDataDTO, Long smAreaId) {
-        LogicalArea logicalArea = LogicalArea.ofCoreCityCode(smAreaId);
-        if (logicalArea == null) {
-            tacLogger.warn(LOG_PREFIX + "setItemToCacheOfArea大区id未匹配：smAreaId：" + smAreaId);
-            return false;
-        }
-        return setCache(originDataDTO,
-                logicalArea.getCacheKey() + AREA_SORT_SUFFIX);
     }
 
 }
