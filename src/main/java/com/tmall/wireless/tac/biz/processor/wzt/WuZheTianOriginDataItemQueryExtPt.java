@@ -152,6 +152,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         List<SortItemEntity> sortItemEntityList2 = sortItemEntityList.stream().sorted(
                 Comparator.comparing(SortItemEntity::getIndex)).collect(
                 Collectors.toList());
+        if (Constant.DEBUG) {
+            tacLogger.info("定坑商品：" + JSON.toJSONString(sortItemEntityList2));
+        }
         //如果能按顺序插入按顺序插入，大于总数放最后面
         for (SortItemEntity sortItemEntity : sortItemEntityList2) {
             long index = sortItemEntity.getIndex();
