@@ -93,12 +93,10 @@ public class TairUtil {
 
     /**
      * 获取原始tair
-     *
-     * @param smAreaId
+     * @param pmtRuleDataItemRuleDTO
      * @return
      */
-    public List<ColumnCenterDataSetItemRuleDTO> getOriginalRecommend(Long smAreaId) {
-        PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = this.getPmtRuleDataItemRuleDTO(smAreaId);
+    public List<ColumnCenterDataSetItemRuleDTO> getOriginalRecommend(PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO) {
         if (pmtRuleDataItemRuleDTO == null) {
             return Lists.newArrayList();
         }
@@ -200,6 +198,15 @@ public class TairUtil {
             String promotionExtension = pmtRuleDataItemRuleDTO.getPmtRuleDataSetDTO().getExtension();
             Map<String, Object> extensionMap = TodayCrazyUtils.parseExtension(promotionExtension, "\\|", "\\=", true);
             return MapUtil.getStringWithDefault(extensionMap, "channelKey", VoKeyConstantApp.CHANNEL_KEY);
+        }
+        return VoKeyConstantApp.CHANNEL_KEY;
+    }
+
+    public String getChannelKeyV2(PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO) {
+        if (pmtRuleDataItemRuleDTO != null && pmtRuleDataItemRuleDTO.getPmtRuleDataSetDTO() != null) {
+            String promotionExtension = pmtRuleDataItemRuleDTO.getPmtRuleDataSetDTO().getExtension();
+            Map<String, Object> extensionMap = TodayCrazyUtils.parseExtension(promotionExtension, "\\|", "\\=", true);
+            return MapUtil.getStringWithDefault(extensionMap, Constant.CHANNEL_KEY, VoKeyConstantApp.CHANNEL_KEY);
         }
         return VoKeyConstantApp.CHANNEL_KEY;
     }
