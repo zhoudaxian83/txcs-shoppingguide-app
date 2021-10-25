@@ -57,8 +57,9 @@ public class LimitService {
                 if (itemInfoDTO.getItemInfos().get("captain") != null) {
                     Map<String, Object> itemInfoVO = itemInfoDTO.getItemInfos().get("captain").getItemInfoVO();
                     tacLogger.info("itemInfoVO:" + JSON.toJSONString(itemInfoVO));
+                    tacLogger.info("ItemEntity:" + JSON.toJSONString(itemInfoDTO.getItemEntity()));
                     skuMap.put("skuId", itemInfoVO.get("skuId") == null ? 0L : itemInfoVO.get("skuId"));
-                    skuMap.put("itemId", itemInfoVO.get("itemId") == null ? 0L : itemInfoVO.get("itemId"));
+                    skuMap.put("itemId", itemInfoDTO.getItemEntity().getItemId());
                     skuList.add(skuMap);
                 } else {
                     HadesLogUtil.stream(ScenarioConstantApp.WU_ZHE_TIAN)
