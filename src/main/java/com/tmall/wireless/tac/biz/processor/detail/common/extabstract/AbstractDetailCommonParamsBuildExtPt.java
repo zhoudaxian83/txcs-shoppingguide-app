@@ -1,4 +1,4 @@
-package com.tmall.wireless.tac.biz.processor.detail.common;
+package com.tmall.wireless.tac.biz.processor.detail.common.extabstract;
 
 import java.util.Objects;
 
@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
  * @Description:详情没有csa的话，从tair取数据
  */
 @Slf4j
-public class DetailCommonParamsBuildExtPt extends Register{
+public class AbstractDetailCommonParamsBuildExtPt extends Register{
     @Resource
     PlaceSpi placeSpi;
 
