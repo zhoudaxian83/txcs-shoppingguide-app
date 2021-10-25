@@ -150,6 +150,9 @@ public class TairUtil {
          * 获取全部活动商品
          */
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = this.getCachePmtRuleDataItemRuleDTOList(smAreaId);
+
+        tacLogger.info("不同活动过滤前："+JSON.toJSONString(pmtRuleDataItemRuleDTOList));
+
         if (CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOList)) {
             HadesLogUtil.stream(ScenarioConstantApp.WU_ZHE_TIAN)
                     .kv("method:", "getPmtRuleDataItemRuleDTO")
