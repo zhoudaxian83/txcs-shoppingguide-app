@@ -65,13 +65,17 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
          * tair获取推荐商品
          */
         List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOList = tairUtil.getOriginalRecommend(smAreaId);
-        tacLogger.info("返回原始缓存过滤前：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
+        if (Constant.DEBUG) {
+            tacLogger.info("返回原始缓存过滤前：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
+        }
         /**
          * 去除掉活动冲不满足当前时间的商品
          */
         columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule(), columnCenterDataSetItemRuleDTO));
+        if (Constant.DEBUG) {
+            tacLogger.info("返回原始缓存过滤后：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
+        }
 
-        tacLogger.info("返回原始缓存过滤后：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
         /**
          * 获取id和排序信息
          */
@@ -88,9 +92,16 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                             || CollectionUtils.isEmpty(recommendResponseEntityResponse.getValue().getResult())) {
                         return new OriginDataDTO<>();
                     }
-                    tacLogger.info("tpp返回结果：" + JSON.toJSONString(recommendResponseEntityResponse.getValue()));
+                    if (Constant.DEBUG) {
+                        tacLogger.info("tpp返回结果：" + JSON.toJSONString(recommendResponseEntityResponse.getValue()));
+                    }
+
                     OriginDataDTO<ItemEntity> originDataDTO = convert(recommendResponseEntityResponse.getValue());
-                    tacLogger.info("tpp返回结果originDataDTO：" + JSON.toJSONString(originDataDTO));
+
+                    if (Constant.DEBUG) {
+                        tacLogger.info("tpp返回结果originDataDTO：" + JSON.toJSONString(originDataDTO));
+                    }
+
                     this.sortItemEntityList(originDataDTO, stringLongMap);
                     return this.getItemPage(originDataDTO, dataContext);
                 });

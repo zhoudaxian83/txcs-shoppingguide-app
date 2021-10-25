@@ -58,7 +58,9 @@ public class TairUtil {
                 cacheKey);
         if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
                 && dataEntryResult.getValue().getValue() != null) {
-            tacLogger.info("Tair原始数据key：" + cacheKey + ";JSON:" + JSON.toJSONString(dataEntryResult.getValue().getValue()));
+            if (Constant.DEBUG) {
+                tacLogger.info("Tair原始数据key：" + cacheKey + ";JSON:" + JSON.toJSONString(dataEntryResult.getValue().getValue()));
+            }
             return dataEntryResult.getValue().getValue();
         } else {
             tacLogger.info(LOG_PREFIX + "getCache获取缓存为空，cacheKey: " + cacheKey);
@@ -148,9 +150,9 @@ public class TairUtil {
          * 获取全部活动商品
          */
         List<PmtRuleDataItemRuleDTO> pmtRuleDataItemRuleDTOList = this.getCachePmtRuleDataItemRuleDTOList(smAreaId);
-
-        tacLogger.info("不同活动过滤前：" + JSON.toJSONString(pmtRuleDataItemRuleDTOList));
-
+        if (Constant.DEBUG) {
+            tacLogger.info("不同活动过滤前：" + JSON.toJSONString(pmtRuleDataItemRuleDTOList));
+        }
         if (CollectionUtils.isEmpty(pmtRuleDataItemRuleDTOList)) {
             HadesLogUtil.stream(ScenarioConstantApp.WU_ZHE_TIAN)
                     .kv("method:", "getPmtRuleDataItemRuleDTO")
