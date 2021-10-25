@@ -5,6 +5,7 @@ import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.alibaba.cola.extension.Extension;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.taobao.vipserver.fastjson.JSON;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataRuleDTO;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.txcs.biz.supermarket.extpt.origindata.ConvertUtil;
@@ -69,6 +70,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
          */
         columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule(), columnCenterDataSetItemRuleDTO));
 
+        tacLogger.info("返回原始缓存：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
         /**
          * 获取id和排序信息
          */
