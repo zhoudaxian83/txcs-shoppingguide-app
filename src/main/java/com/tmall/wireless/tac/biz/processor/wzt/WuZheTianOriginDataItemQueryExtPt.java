@@ -78,7 +78,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             tacLogger.info("返回原始缓存过滤前(当前时间没有活动或者没有商品信息)：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
         }
         /**
-         * 去除掉活动冲不满足当前时间的商品
+         * 去除掉活动中不满足当前时间的商品
          */
         columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule()));
         if (Constant.DEBUG) {
@@ -126,7 +126,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @return
      */
     private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
-        long nowTime = System.currentTimeMillis();
+        //TODO
+       // long nowTime = System.currentTimeMillis();
+        long nowTime = 1635469200000L;
         if (columnCenterDataRuleDTO == null) {
             return false;
         }

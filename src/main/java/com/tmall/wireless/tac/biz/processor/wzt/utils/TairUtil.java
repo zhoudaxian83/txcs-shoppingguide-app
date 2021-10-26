@@ -93,6 +93,7 @@ public class TairUtil {
 
     /**
      * 获取原始tair
+     *
      * @param pmtRuleDataItemRuleDTO
      * @return
      */
@@ -180,7 +181,9 @@ public class TairUtil {
      * @return
      */
     private boolean inUse(ColumnCenterPmtRuleDataSetDTO columnCenterPmtRuleDataSetDTO) {
-        long nowTime = System.currentTimeMillis();
+        //TODO
+        // long nowTime = System.currentTimeMillis();
+        long nowTime = 1635469200000L;
         if (columnCenterPmtRuleDataSetDTO == null) {
             return false;
         }
@@ -190,16 +193,6 @@ public class TairUtil {
         long scheduleStartTime = columnCenterPmtRuleDataSetDTO.getScheduleStartTime().getTime();
         long scheduleEndTime = columnCenterPmtRuleDataSetDTO.getScheduleEndTime().getTime();
         return nowTime > scheduleStartTime && nowTime < scheduleEndTime;
-    }
-
-    public String getChannelKey(Long smAreaId) {
-        PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO = this.getPmtRuleDataItemRuleDTO(smAreaId);
-        if (pmtRuleDataItemRuleDTO != null && pmtRuleDataItemRuleDTO.getPmtRuleDataSetDTO() != null) {
-            String promotionExtension = pmtRuleDataItemRuleDTO.getPmtRuleDataSetDTO().getExtension();
-            Map<String, Object> extensionMap = TodayCrazyUtils.parseExtension(promotionExtension, "\\|", "\\=", true);
-            return MapUtil.getStringWithDefault(extensionMap, "channelKey", VoKeyConstantApp.CHANNEL_KEY);
-        }
-        return VoKeyConstantApp.CHANNEL_KEY;
     }
 
     public String getChannelKeyV2(PmtRuleDataItemRuleDTO pmtRuleDataItemRuleDTO) {
