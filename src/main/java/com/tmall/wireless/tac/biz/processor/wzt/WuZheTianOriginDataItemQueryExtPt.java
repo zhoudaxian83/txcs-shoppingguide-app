@@ -134,9 +134,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      * @return
      */
     private boolean needData(ColumnCenterDataSetItemRuleDTO columnCenterDataSetItemRuleDTO) {
-        //TODO
-        // long nowTime = System.currentTimeMillis();
-        long nowTime = 1635490800000L;
+        long nowTime = System.currentTimeMillis();
         ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
         if (columnCenterDataRuleDTO == null) {
             return false;

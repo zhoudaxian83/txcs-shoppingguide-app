@@ -119,9 +119,7 @@ public class TairUtil {
              * 定坑商品如果定坑时间不能满足当前时间，则置为非定坑商品
              */
             if (stick != null && itemStickStartDate != null && itemStickEndDate != null) {
-                //TODO
-                // long nowTime = System.currentTimeMillis();
-                long nowTime = 1635490800000L;
+                long nowTime = System.currentTimeMillis();
                 long itemStickStartTime = itemStickStartDate.getTime();
                 long itemStickEndTime = itemStickEndDate.getTime();
                 boolean stickTime = itemStickStartTime < nowTime && itemStickEndTime > nowTime;
@@ -201,9 +199,7 @@ public class TairUtil {
      * @return
      */
     private boolean inUse(ColumnCenterPmtRuleDataSetDTO columnCenterPmtRuleDataSetDTO) {
-        //TODO
-        // long nowTime = System.currentTimeMillis();
-        long nowTime = 1635490800000L;
+        long nowTime = System.currentTimeMillis();
         if (columnCenterPmtRuleDataSetDTO == null) {
             return false;
         }

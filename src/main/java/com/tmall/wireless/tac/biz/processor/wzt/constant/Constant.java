@@ -14,6 +14,6 @@ public class Constant {
 
     public static final Long APP_ID = 21431L;
     public static final Long INDEX = 10000L;
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
 }
