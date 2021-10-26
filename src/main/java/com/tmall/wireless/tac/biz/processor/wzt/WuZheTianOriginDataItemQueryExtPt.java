@@ -156,7 +156,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             needData = itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
         }
         if (Constant.DEBUG) {
-            tacLogger.info("是否在排期内的商品：" + needData + " itemId:" + columnCenterDataRuleDTO);
+            tacLogger.info("是否在排期内的商品：" + needData + " itemId:" + columnCenterDataSetItemRuleDTO.getItemId());
         }
         return needData;
     }
