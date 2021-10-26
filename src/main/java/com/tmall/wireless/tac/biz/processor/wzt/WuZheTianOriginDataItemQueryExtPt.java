@@ -127,23 +127,34 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
      */
     private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
         //TODO
-       // long nowTime = System.currentTimeMillis();
+        // long nowTime = System.currentTimeMillis();
         long nowTime = 1635469200000L;
         if (columnCenterDataRuleDTO == null) {
             return false;
         }
         Date itemScheduleStartDate = columnCenterDataRuleDTO.getItemScheduleStartTime();
         Date itemScheduleEndDate = columnCenterDataRuleDTO.getItemScheduleEndTime();
+        Long stick = columnCenterDataRuleDTO.getStick();
+        Date itemStickStartDate = columnCenterDataRuleDTO.getItemStickStartTime();
+        Date itemStickEndDate = columnCenterDataRuleDTO.getItemStickEndTime();
         if (itemScheduleStartDate == null || itemScheduleEndDate == null) {
             return false;
         }
         long itemScheduleStartTime = itemScheduleStartDate.getTime();
         long itemScheduleEndTime = itemScheduleEndDate.getTime();
-
-        boolean needData = itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
+        boolean needData;
+        /**
+         * 分情況处理，如果是定坑商品需要校验定坑时间
+         */
+        if (stick != null && itemStickStartDate != null && itemStickEndDate != null) {
+            long itemStickStartTime = itemStickStartDate.getTime();
+            long itemStickEndTime = itemStickEndDate.getTime();
+            needData = itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime && itemStickStartTime < nowTime && itemStickEndTime > nowTime;
+        } else {
+            needData = itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
+        }
         if (Constant.DEBUG) {
-            tacLogger.info("时间过滤：nowTime=" + nowTime + "itemScheduleStartDate=" + itemScheduleStartDate + "itemScheduleEndDate" + itemScheduleEndDate);
-            tacLogger.info("在排期内的商品：" + needData);
+            tacLogger.info("是否在排期内的商品：" + needData);
         }
         return needData;
     }
