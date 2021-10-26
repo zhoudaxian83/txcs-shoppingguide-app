@@ -112,6 +112,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
                 long itemStickEndTime = itemStickEndDate.getTime();
                 inStickTime = itemStickStartTime < nowTime && itemStickEndTime > nowTime;
             }
+            if (Constant.DEBUG) {
+                tacLogger.info("inStickTime:" + inStickTime);
+            }
             if (inStickTime) {
                 stringLongMap.put(columnCenterDataSetItemRuleDTO.getItemId(), columnCenterDataRuleDTO.getStick());
             } else {
