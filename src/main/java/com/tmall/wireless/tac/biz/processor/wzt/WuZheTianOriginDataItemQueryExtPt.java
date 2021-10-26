@@ -86,14 +86,42 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         }
 
         /**
-         * 获取id和排序信息
+         * 获取id和定坑排序信息
          */
         Map<Long, Long> stringLongMap = new HashMap<>(16);
         List<Long> items = Lists.newArrayList();
+
+        /**
+         * 获取商品列表ids，itemId和stick关联关系
+         * 如果排序坑位不属于当前有效期，则置为非坑位商品
+         */
         columnCenterDataSetItemRuleDTOList.forEach(columnCenterDataSetItemRuleDTO -> {
-            stringLongMap.put(columnCenterDataSetItemRuleDTO.getItemId(), columnCenterDataSetItemRuleDTO.getDataRule().getStick());
+            ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
+            Long stick = columnCenterDataRuleDTO.getStick();
+            Date itemStickStartDate = columnCenterDataRuleDTO.getItemStickStartTime();
+            Date itemStickEndDate = columnCenterDataRuleDTO.getItemStickEndTime();
+            boolean inStickTime = false;
+            /**
+             * 定坑商品如果定坑时间不能满足当前时间，则置为非定坑商品
+             */
+            if (stick != null && itemStickStartDate != null && itemStickEndDate != null) {
+                //TODO
+                // long nowTime = System.currentTimeMillis();
+                long nowTime = 1635469200000L;
+                long itemStickStartTime = itemStickStartDate.getTime();
+                long itemStickEndTime = itemStickEndDate.getTime();
+                inStickTime = itemStickStartTime < nowTime && itemStickEndTime > nowTime;
+            }
+            if (inStickTime) {
+                stringLongMap.put(columnCenterDataSetItemRuleDTO.getItemId(), columnCenterDataRuleDTO.getStick());
+            } else {
+                stringLongMap.put(columnCenterDataSetItemRuleDTO.getItemId(), null);
+            }
             items.add(columnCenterDataSetItemRuleDTO.getItemId());
         });
+        if (Constant.DEBUG) {
+            tacLogger.info("定坑信息stringLongMap:" + JSON.toJSONString(stringLongMap));
+        }
         return recommendSpi.recommendItem(this.buildRecommendRequestParam(userId, items))
                 .map(recommendResponseEntityResponse -> {
                     if (!recommendResponseEntityResponse.isSuccess()
@@ -128,33 +156,20 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private boolean needData(ColumnCenterDataSetItemRuleDTO columnCenterDataSetItemRuleDTO) {
         //TODO
         // long nowTime = System.currentTimeMillis();
-
-        ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
         long nowTime = 1635469200000L;
+        ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
         if (columnCenterDataRuleDTO == null) {
             return false;
         }
         Date itemScheduleStartDate = columnCenterDataRuleDTO.getItemScheduleStartTime();
         Date itemScheduleEndDate = columnCenterDataRuleDTO.getItemScheduleEndTime();
-        Long stick = columnCenterDataRuleDTO.getStick();
-        Date itemStickStartDate = columnCenterDataRuleDTO.getItemStickStartTime();
-        Date itemStickEndDate = columnCenterDataRuleDTO.getItemStickEndTime();
+
         if (itemScheduleStartDate == null || itemScheduleEndDate == null) {
             return false;
         }
         long itemScheduleStartTime = itemScheduleStartDate.getTime();
         long itemScheduleEndTime = itemScheduleEndDate.getTime();
-        boolean needData;
-        /**
-         * 分情況处理，如果是定坑商品需要校验定坑时间
-         */
-        if (stick != null && itemStickStartDate != null && itemStickEndDate != null) {
-            long itemStickStartTime = itemStickStartDate.getTime();
-            long itemStickEndTime = itemStickEndDate.getTime();
-            needData = itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime && itemStickStartTime < nowTime && itemStickEndTime > nowTime;
-        } else {
-            needData = itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
-        }
+        boolean needData = itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
         if (Constant.DEBUG) {
             tacLogger.info("是否在排期内的商品：" + needData + " itemId:" + columnCenterDataSetItemRuleDTO.getItemId());
         }
