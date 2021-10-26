@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
+import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataRuleDTO;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterPmtRuleDataSetDTO;
 import com.tmall.aselfmanager.client.columncenter.response.PmtRuleDataItemRuleDTO;
@@ -22,6 +23,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -109,8 +111,26 @@ public class TairUtil {
          * 定坑排序打标转换
          */
         dataSetItemRuleDTOList.forEach(columnCenterDataSetItemRuleDTO -> {
-            Long stick = columnCenterDataSetItemRuleDTO.getDataRule().getStick();
-            if (stick == null) {
+            ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
+            Long stick = columnCenterDataRuleDTO.getStick();
+            Date itemStickStartDate = columnCenterDataRuleDTO.getItemStickStartTime();
+            Date itemStickEndDate = columnCenterDataRuleDTO.getItemStickEndTime();
+            /**
+             * 定坑商品如果定坑时间不能满足当前时间，则置为非定坑商品
+             */
+            if (stick != null && itemStickStartDate != null && itemStickEndDate != null) {
+                //TODO
+                // long nowTime = System.currentTimeMillis();
+                long nowTime = 1635490800000L;
+                long itemStickStartTime = itemStickStartDate.getTime();
+                long itemStickEndTime = itemStickEndDate.getTime();
+                boolean stickTime = itemStickStartTime < nowTime && itemStickEndTime > nowTime;
+                if (stickTime) {
+                    columnCenterDataSetItemRuleDTO.getDataRule().setStick(stick);
+                } else {
+                    columnCenterDataSetItemRuleDTO.getDataRule().setStick(Constant.INDEX);
+                }
+            } else {
                 columnCenterDataSetItemRuleDTO.getDataRule().setStick(Constant.INDEX);
             }
         });

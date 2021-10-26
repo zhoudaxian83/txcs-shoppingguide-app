@@ -93,33 +93,10 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
 
         /**
          * 获取商品列表ids，itemId和stick关联关系
-         * 如果排序坑位不属于当前有效期，则置为非坑位商品
          */
         columnCenterDataSetItemRuleDTOList.forEach(columnCenterDataSetItemRuleDTO -> {
             ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
-            Long stick = columnCenterDataRuleDTO.getStick();
-            Date itemStickStartDate = columnCenterDataRuleDTO.getItemStickStartTime();
-            Date itemStickEndDate = columnCenterDataRuleDTO.getItemStickEndTime();
-            boolean inStickTime = false;
-            /**
-             * 定坑商品如果定坑时间不能满足当前时间，则置为非定坑商品
-             */
-            if (stick != null && itemStickStartDate != null && itemStickEndDate != null) {
-                //TODO
-                // long nowTime = System.currentTimeMillis();
-                long nowTime = 1635490800000L;
-                long itemStickStartTime = itemStickStartDate.getTime();
-                long itemStickEndTime = itemStickEndDate.getTime();
-                inStickTime = itemStickStartTime < nowTime && itemStickEndTime > nowTime;
-            }
-            if (Constant.DEBUG) {
-                tacLogger.info("inStickTime:" + inStickTime + " itemId：" + columnCenterDataSetItemRuleDTO.getItemId());
-            }
-            if (inStickTime) {
-                stringLongMap.put(columnCenterDataSetItemRuleDTO.getItemId(), columnCenterDataRuleDTO.getStick());
-            } else {
-                stringLongMap.put(columnCenterDataSetItemRuleDTO.getItemId(), null);
-            }
+            stringLongMap.put(columnCenterDataSetItemRuleDTO.getItemId(), columnCenterDataRuleDTO.getStick());
             items.add(columnCenterDataSetItemRuleDTO.getItemId());
         });
         if (Constant.DEBUG) {
