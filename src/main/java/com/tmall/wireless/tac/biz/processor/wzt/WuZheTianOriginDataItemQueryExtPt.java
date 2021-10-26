@@ -80,7 +80,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         /**
          * 去除掉活动中不满足当前时间的商品
          */
-        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO.getDataRule()));
+        columnCenterDataSetItemRuleDTOList.removeIf(columnCenterDataSetItemRuleDTO -> !needData(columnCenterDataSetItemRuleDTO));
         if (Constant.DEBUG) {
             tacLogger.info("返回原始缓存过滤后：" + JSON.toJSONString(columnCenterDataSetItemRuleDTOList));
         }
@@ -122,12 +122,14 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     /**
      * 1，需要再展示时间内，不需要坑位时间
      *
-     * @param columnCenterDataRuleDTO
+     * @param columnCenterDataSetItemRuleDTO
      * @return
      */
-    private boolean needData(ColumnCenterDataRuleDTO columnCenterDataRuleDTO) {
+    private boolean needData(ColumnCenterDataSetItemRuleDTO columnCenterDataSetItemRuleDTO) {
         //TODO
         // long nowTime = System.currentTimeMillis();
+
+        ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
         long nowTime = 1635469200000L;
         if (columnCenterDataRuleDTO == null) {
             return false;
@@ -154,7 +156,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             needData = itemScheduleStartTime < nowTime && itemScheduleEndTime > nowTime;
         }
         if (Constant.DEBUG) {
-            tacLogger.info("是否在排期内的商品：" + needData);
+            tacLogger.info("是否在排期内的商品：" + needData + " itemId:" + columnCenterDataRuleDTO);
         }
         return needData;
     }
