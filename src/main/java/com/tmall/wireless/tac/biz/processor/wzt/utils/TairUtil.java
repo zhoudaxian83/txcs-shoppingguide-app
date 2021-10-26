@@ -183,7 +183,7 @@ public class TairUtil {
     private boolean inUse(ColumnCenterPmtRuleDataSetDTO columnCenterPmtRuleDataSetDTO) {
         //TODO
         // long nowTime = System.currentTimeMillis();
-        long nowTime = 1635469200000L;
+        long nowTime = 1635490800000L;
         if (columnCenterPmtRuleDataSetDTO == null) {
             return false;
         }

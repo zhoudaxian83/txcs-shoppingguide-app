@@ -107,7 +107,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
             if (stick != null && itemStickStartDate != null && itemStickEndDate != null) {
                 //TODO
                 // long nowTime = System.currentTimeMillis();
-                long nowTime = 1635469200000L;
+                long nowTime = 1635490800000L;
                 long itemStickStartTime = itemStickStartDate.getTime();
                 long itemStickEndTime = itemStickEndDate.getTime();
                 inStickTime = itemStickStartTime < nowTime && itemStickEndTime > nowTime;
@@ -159,7 +159,7 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
     private boolean needData(ColumnCenterDataSetItemRuleDTO columnCenterDataSetItemRuleDTO) {
         //TODO
         // long nowTime = System.currentTimeMillis();
-        long nowTime = 1635469200000L;
+        long nowTime = 1635490800000L;
         ColumnCenterDataRuleDTO columnCenterDataRuleDTO = columnCenterDataSetItemRuleDTO.getDataRule();
         if (columnCenterDataRuleDTO == null) {
             return false;
