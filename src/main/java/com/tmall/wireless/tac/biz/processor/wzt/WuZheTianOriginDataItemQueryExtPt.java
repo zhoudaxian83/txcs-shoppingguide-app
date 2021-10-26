@@ -211,6 +211,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         }
         List<ItemEntity> itemEntityList = resultItemEntityList.stream().map(
                 SortItemEntity::getItemEntity).collect(Collectors.toList());
+        if (Constant.DEBUG) {
+            tacLogger.info("排序后结果itemEntityList：" + JSON.toJSONString(itemEntityList));
+        }
         originDataDTO.setResult(itemEntityList);
     }
 
