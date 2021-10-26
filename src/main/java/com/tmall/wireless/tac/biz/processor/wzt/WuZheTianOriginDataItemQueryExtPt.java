@@ -232,6 +232,9 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         Map<String, String> params = Maps.newHashMap();
         params.put("userItemIdList", Joiner.on(",").join(itemIds));
         recommendRequest.setParams(params);
+        if (Constant.DEBUG) {
+            tacLogger.info("tpp入参构建：" + JSON.toJSONString(recommendRequest));
+        }
         return recommendRequest;
     }
 
