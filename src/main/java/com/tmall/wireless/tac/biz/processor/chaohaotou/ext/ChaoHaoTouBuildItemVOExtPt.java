@@ -1,12 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.chaohaotou.ext;
 
-import java.math.BigDecimal;
-import java.util.Map;
-import java.util.Optional;
-
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSONObject;
-
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
@@ -22,13 +17,13 @@ import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @Author: luoJunChong
@@ -40,7 +35,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChaoHaoTouBuildItemVOExtPt implements BuildItemVOExtPt {
 
-    Logger LOGGER = LoggerFactory.getLogger(ChaoHaoTouBuildItemVOExtPt.class);
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {

@@ -13,11 +13,8 @@ import com.tmall.txcs.gs.spi.recommend.RpcSpi;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.chaohaotou.model.TmcsZntItemDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,35 +31,32 @@ public class CommercialFeedsService {
     @Autowired
     RpcSpi rpcSpi;
 
-    @Autowired
-    TacLogger tacLogger;
-
-
     public Pair<Boolean, List<TmcsZntItemDTO>> getCommercialFeeds(SgFrameworkContextItem sgFrameworkContextItem) {
         Pair<Boolean, List<TmcsZntItemDTO>> booleanListPair = null;
-        HadesLogUtil.debug("sgFrameworkContextItem_debug" + JSON.toJSONString(sgFrameworkContextItem) + "end_");
         Map<String, Object> paramMap = this.buildParam(sgFrameworkContextItem);
-        tacLogger.info("getCommercialFeeds_入参" + JSON.toJSONString(paramMap));
-        HadesLogUtil.debug("getCommercialFeeds_debug_paramMap" + JSON.toJSONString(paramMap) + "end_");
         try {
             Object o = rpcSpi.invokeHsf(Constant.TMCS_ZNT_ENGINE, paramMap);
             if (o == null) {
+                HadesLogUtil.stream(ScenarioConstantApp.CHAO_HAO_TOU)
+                        .kv("method", "getCommercialFeeds")
+                        .kv("paramMap", JSON.toJSONString(paramMap))
+                        .kv("errorMessage", "Object is null")
+                        .info();
                 return null;
             }
             booleanListPair = this.convert(o);
         } catch (Exception e) {
-            tacLogger.error("tmcsZntEngine接口调用异常", e);
+            HadesLogUtil.stream(ScenarioConstantApp.CHAO_HAO_TOU)
+                    .kv("method", "getCommercialFeeds")
+                    .kv("paramMap", JSON.toJSONString(paramMap))
+                    .kv("errorMessage", "getCommercialFeeds Exception")
+                    .kv("Exception", JSON.toJSONString(e)).info();
         }
-        HadesLogUtil.stream("getCommercialFeeds_")
-                .kv("booleanListPair_", JSON.toJSONString(booleanListPair))
-                .info();
-        tacLogger.info("booleanListPair_:" + JSON.toJSONString(booleanListPair));
         return booleanListPair;
     }
 
     private Pair<Boolean, List<TmcsZntItemDTO>> convert(Object o) {
         String jsonStr = JSONObject.toJSONString(o);
-        tacLogger.info("convert_2" + jsonStr);
         JSONObject jsonObject = JSONObject.parseObject(jsonStr);
         List<TmcsZntItemDTO> tmcsZntItemDTOList = Lists.newArrayList();
         if (!jsonObject.getBoolean("success")) {
