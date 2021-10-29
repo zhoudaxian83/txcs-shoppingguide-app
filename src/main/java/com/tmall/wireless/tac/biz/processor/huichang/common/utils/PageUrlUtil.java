@@ -2,6 +2,8 @@ package com.tmall.wireless.tac.biz.processor.huichang.common.utils;
 
 import com.alibaba.aladdin.lamp.domain.request.RequestItem;
 import com.alibaba.aladdin.lamp.sdk.solution.context.SolutionContext;
+
+import com.taobao.csp.hotsensor.fastjson.JSON;
 import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.wireless.tac.biz.processor.huichang.inventory.InventoryEntranceModule.InventoryEntranceModuleContentInfoQuerySdkExtPt;
@@ -66,10 +68,25 @@ public class PageUrlUtil {
         return pageUrl + "&" + paramKey + "=" + paramValue;
     }
 
-    public static void main(String[] args)throws Exception{
-        String url="https://pre-wormhole.wapa.tmall.com/wow/an/cs/act/wupr?wh_pid=act/173992bc4d1&topicIds=73941,77135,68753,65676&activityCode=57_223585&csa=7409543869_0_30.28743.120.038878_185203378_230146055_0_330110_107_110_0_236635411_330110005_318055001&disableNav=YES";
-        String urldecode=URLDecoder.decode(url,"UTF-8");
-        System.out.println(urldecode);
-        System.out.println(URLDecoder.decode(urldecode,"UTF-8"));
+    /**
+     * 删除url里面某个参数
+     * @param url
+     * @param name
+     * @return
+     */
+    public static String removeParam(String url, String ...name){
+        for (String s : name) {
+            // 使用replaceAll正则替换,replace不支持正则
+            url = url.replaceAll("&?"+s+"=[^&]*","");
+        }
+        return url;
     }
+
+    public static void main(String[] args)throws Exception{
+        String urlRequest = "//detail.tmall.com/item.htm?&id=634542893398&locType=GSH&scm=1007.38364.250179.0.FF-hyhsfZ_appId-28364_I-_Q-befaabab-272e-46b4-a8c9-257490a21a11_D-634542893398_T-ITEM_businessType-B2C_predCTR-0_predCVR-0.4911979094_predCTCVR-0_calibCTR-0_calibCVR-0_calibCTCVR-0_finalScore-0.4911979094-FF";
+        String locType = removeParam(urlRequest, "locType");
+        System.out.println(locType);
+    }
+
+
 }
