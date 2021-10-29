@@ -1,8 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
-import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.contextbuild.ItemMetaInfoBuildSdkExtPt;
@@ -15,6 +13,8 @@ import com.tmall.tcls.gs.sdk.framework.model.meta.node.ItemInfoNode;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.domain.Context;
+import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -24,9 +24,14 @@ import java.util.List;
         scenario = ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
 )
 public class TodayCrazyRecommendTabItemItemMetaInfoBuildSdkExtPt extends Register implements ItemMetaInfoBuildSdkExtPt {
-
+    @Autowired
+    TacLoggerImpl tacLogger;
     @Override
     public ItemMetaInfo process(Context context) {
+        if(CommonConstant.DEBUG){
+            tacLogger.info("TodayCrazyRecommendTabItemItemMetaInfoBuildSdkExtPt 执行了");
+
+        }
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         ItemGroupMetaInfo itemGroupMetaInfoSmB2c = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.B2C.name());
         itemGroupMetaInfoSmB2c.setItemInfoNodes(this.buildDefaultItemInfoNodes());
