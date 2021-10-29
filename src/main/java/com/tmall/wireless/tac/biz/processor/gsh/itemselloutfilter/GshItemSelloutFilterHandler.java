@@ -126,7 +126,7 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
         }
         itemMap.put("itemUrl", itemDTO.getDetailUrl());
         itemMap.put("_areaSellable", !itemDTO.isSoldout());
-        itemMap.put("locType", itemDTO.getLocType().name());
+        //itemMap.put("locType", itemDTO.getLocType().name());
         itemMap.put("sellerId", itemDTO.getSellerId());
         itemMap.put("sellOut", itemDTO.isSoldout());
         itemMap.put("canBuy", itemDTO.isCanBuy());

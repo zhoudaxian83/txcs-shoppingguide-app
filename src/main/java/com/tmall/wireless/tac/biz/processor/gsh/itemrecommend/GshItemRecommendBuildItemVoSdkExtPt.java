@@ -54,6 +54,7 @@ public class GshItemRecommendBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkEx
                     itemEntityVO.put(entry.getKey(), entry.getValue());
                 }
             }
+            itemEntityVO.put("locType", "");
         }
         return process;
     }
