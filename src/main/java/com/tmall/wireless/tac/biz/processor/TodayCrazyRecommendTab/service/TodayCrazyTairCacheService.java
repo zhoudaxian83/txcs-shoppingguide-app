@@ -364,30 +364,24 @@ public class TodayCrazyTairCacheService {
             .build(new CacheLoader<DataSourceRequest, List<String>>() {
                 @Override
                 public List<String> load(DataSourceRequest dataSourceRequest) {
-                    List<String> stringList = doGetItemIdAndCacheKeyList(CommonConstant.CHANNEL_ITEM_IDS);
-                    if (CommonConstant.DEBUG) {
-                        tacLogger.info("topItemIdsIsChannelPriceNew_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
-                        tacLogger.info("topItemIdsIsChannelPrice" + JSON.toJSONString(stringList));
+                    try {
+                        List<String> stringList = doGetItemIdAndCacheKeyList(CommonConstant.CHANNEL_ITEM_IDS);
+                        if (CommonConstant.DEBUG) {
+                            tacLogger.info("topItemIdsIsChannelPriceNew_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
+                            tacLogger.info("topItemIdsIsChannelPrice" + JSON.toJSONString(stringList));
+                        }
+                        if (CollectionUtils.isEmpty(stringList)) {
+                            return Lists.newArrayList();
+                        } else {
+                            return stringList;
+                        }
+                    } catch (Exception e) {
+                        HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                                .kv("method", "topItemIdsIsChannelPriceNew")
+                                .kv("Exception", JSON.toJSONString(e))
+                                .error();
+                        return Lists.newArrayList();
                     }
-                    return stringList;
-//                    try {
-//                        List<String> stringList = doGetItemIdAndCacheKeyList(CommonConstant.CHANNEL_ITEM_IDS);
-//                        if (CommonConstant.DEBUG) {
-//                            tacLogger.info("topItemIdsIsChannelPriceNew_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
-//                            tacLogger.info("topItemIdsIsChannelPrice" + JSON.toJSONString(stringList));
-//                        }
-//                        if (CollectionUtils.isEmpty(stringList)) {
-//                            return Lists.newArrayList();
-//                        } else {
-//                            return stringList;
-//                        }
-//                    } catch (Exception e) {
-//                        HadesLogUtil.stream(bizScenario.getUniqueIdentity())
-//                                .kv("method", "topItemIdsIsChannelPriceNew")
-//                                .kv("Exception", JSON.toJSONString(e))
-//                                .error();
-//                        return Lists.newArrayList();
-//                    }
                 }
             });
 

@@ -160,6 +160,39 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 itemIdAndCacheKey.put(itemId, CommonConstant.TODAY_CHANNEL_NEW);
             }
         });
+        //todo 测试
+        DataSourceRequest dataSourceRequest = todayCrazyTairCacheService.buildDataSourceRequest(1, "TEST", appType);
+        try {
+            Pair<List<String>, List<String>> pair = testData.get(dataSourceRequest);
+            tacLogger.info("打印测试元数据：" + JSON.toJSONString(pair));
+        } catch (Exception e) {
+            tacLogger.info("获取测试元数据异常：" + JSON.toJSONString(e));
+        }
+
+    }
+
+    private LoadingCache<DataSourceRequest, Pair<List<String>, List<String>>> testData = CacheBuilder
+            .newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(10, TimeUnit.SECONDS)
+            .build(new CacheLoader<DataSourceRequest, Pair<List<String>, List<String>>>() {
+                @Override
+                public Pair<List<String>, List<String>> load(DataSourceRequest dataSourceRequest) {
+                    try {
+                        Pair<List<String>, List<String>> pair = getList();
+                        tacLogger.info("获取测试元数据");
+                        return pair;
+                    } catch (Exception e) {
+                        return Pair.of(Lists.newArrayList(), Lists.newArrayList());
+                    }
+                }
+            });
+
+    public Pair<List<String>, List<String>> getList() {
+        tacLogger.info("构建测试元数据");
+        List<String> stringList = Lists.newArrayList();
+        stringList.add("123");
+        return Pair.of(Lists.newArrayList(), Lists.newArrayList());
     }
 
 
@@ -266,7 +299,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     public Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> getEntryChannelPriceNewPair(String appType) {
         //String channelPriceKey = todayCrazyTairCacheService.getChannelPriceNewKey();
         // todo
-         String channelPriceKey = "channelPriceKey";
+        String channelPriceKey = "channelPriceKey";
         DataSourceRequest dataSourceRequest = todayCrazyTairCacheService.buildDataSourceRequest(1, channelPriceKey, appType);
         try {
             return entryChannelPriceNewPair.get(dataSourceRequest);
