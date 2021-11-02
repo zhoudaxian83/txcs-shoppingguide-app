@@ -81,7 +81,7 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             params.put("itemAndIndustry", itemAndIndustryData);
             Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, DEFAULT_SMAREAID);
             params.put("smAreaId", String.valueOf(smAreaId));
-
+            params.put("openHotItemDouble", String.valueOf(SxlSwitch.openHotItemDouble));
             Object csa = aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA);
             LocParams locParams = null;
             if (csa == null) {
@@ -143,14 +143,15 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             if(industryId == null || showNum == null){
                 continue;
             }
-            //String newShowNum = String.valueOf(showNum);
-            //if(SxlSwitch.openHotItemDouble){
-            //    BigDecimal num1 = new BigDecimal(String.valueOf(showNum));
-            //    BigDecimal num2 = new BigDecimal("2");
-            //    newShowNum = num1.multiply(num2).toString();
-            //}
             Object itemId = map.get("contentId");
-            sb.append(itemId).append(":").append(industryId).append(":").append(showNum).append(";");
+            String newShowNum = String.valueOf(showNum);
+            if(SxlSwitch.openHotItemDouble) {
+                BigDecimal num1 = new BigDecimal(String.valueOf(showNum));
+                BigDecimal num2 = new BigDecimal("2");
+                newShowNum = num1.multiply(num2).toString();
+            }
+            sb.append(itemId).append(":").append(industryId).append(":").append(newShowNum).append(";");
+
         }
         return sb.toString();
     }
@@ -160,5 +161,7 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
         BigDecimal num2 = new BigDecimal("2");
         String s = num1.multiply(num2).toString();
         System.out.println(s);
+        boolean flag = false;
+        System.out.println(String.valueOf(flag));
     }
 }

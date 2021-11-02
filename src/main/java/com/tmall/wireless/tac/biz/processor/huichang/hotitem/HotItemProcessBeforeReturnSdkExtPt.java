@@ -69,10 +69,16 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
             aldCurrentResId = MapUtil.getStringWithDefault(aldContext, HallCommonAldConstant.ALD_CURRENT_RES_ID, "0");
             List<ItemEntityVO> itemAndContentList = entityVOSgFrameworkResponse.getItemAndContentList();
 
-            //if(SxlSwitch.openHotItemDouble){
-            //    List<ItemEntityVO> itemEntityVOList = dealDouble(sgFrameworkContextItem, itemAndContentList);
-            //    itemAndContentList= itemEntityVOList;
-            //}
+            try{
+                if(SxlSwitch.openHotItemDouble){
+                    logger.error("HotItemProcessBeforeReturnSdkExtPt.openHotItemDouble");
+                    List<ItemEntityVO> itemEntityVOList = dealDouble(sgFrameworkContextItem, itemAndContentList);
+                    itemAndContentList= itemEntityVOList;
+                }
+            }catch (Exception e){
+                logger.error("HotItemProcessBeforeReturnSdkExtPt.openHotItemDouble.exception", e);
+            }
+
             Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
             String customItemSetId = MapUtil.getStringWithDefault(userParams, "customItemSetId", "0");
 

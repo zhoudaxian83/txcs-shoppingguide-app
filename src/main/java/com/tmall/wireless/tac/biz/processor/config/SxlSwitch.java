@@ -50,8 +50,8 @@ public class SxlSwitch {
     @AppSwitch(des = "上新了超市算法选品ab实验id", level = Switch.Level.p4)
     public static String SXL_ALG_ITEMSET_ID_AB = "129";
 
-    //@AppSwitch(des = "爆款专区获取tpp翻倍开关", level = Switch.Level.p4)
-    //public static boolean openHotItemDouble = true;
+    @AppSwitch(des = "爆款专区获取tpp翻倍开关", level = Switch.Level.p4)
+    public static boolean openHotItemDouble = true;
 
 
 
