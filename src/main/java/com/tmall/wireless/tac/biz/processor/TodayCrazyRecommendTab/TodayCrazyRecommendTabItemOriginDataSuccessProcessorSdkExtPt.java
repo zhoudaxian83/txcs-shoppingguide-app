@@ -266,7 +266,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     public Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> getEntryChannelPriceNewPair(String appType) {
         //String channelPriceKey = todayCrazyTairCacheService.getChannelPriceNewKey();
         // todo
-        String channelPriceKey = "channelPriceKey";
+         String channelPriceKey = "channelPriceKey";
         DataSourceRequest dataSourceRequest = todayCrazyTairCacheService.buildDataSourceRequest(1, channelPriceKey, appType);
         try {
             return entryChannelPriceNewPair.get(dataSourceRequest);
