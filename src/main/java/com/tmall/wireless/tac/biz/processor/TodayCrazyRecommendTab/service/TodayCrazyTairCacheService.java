@@ -293,7 +293,7 @@ public class TodayCrazyTairCacheService {
                         List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = getTairColumnCenterDataSetItemRuleDTO(dataSourceRequest.getDateStr());
                         if (CommonConstant.DEBUG) {
                             tacLogger.info("channelPriceNewCache_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
-                            tacLogger.info("centerDataSetItemRuleDTOS" + JSON.toJSONString(centerDataSetItemRuleDTOS));
+                            tacLogger.info("channelPriceNewCache_centerDataSetItemRuleDTOS" + JSON.toJSONString(centerDataSetItemRuleDTOS));
                         }
                         if (CollectionUtils.isEmpty(centerDataSetItemRuleDTOS)) {
                             return Lists.newArrayList();
@@ -325,7 +325,7 @@ public class TodayCrazyTairCacheService {
                         List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = getTairColumnCenterDataSetItemRuleDTO(dataSourceRequest.getDateStr());
                         if (CommonConstant.DEBUG) {
                             tacLogger.info("entryPromotionPrice_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
-                            tacLogger.info("centerDataSetItemRuleDTOS" + JSON.toJSONString(centerDataSetItemRuleDTOS));
+                            tacLogger.info("channelPriceNewCache_centerDataSetItemRuleDTOS" + JSON.toJSONString(centerDataSetItemRuleDTOS));
                         }
                         if (CollectionUtils.isEmpty(centerDataSetItemRuleDTOS)) {
                             return Lists.newArrayList();
@@ -421,7 +421,7 @@ public class TodayCrazyTairCacheService {
             return topItemIdsIsChannelPriceNew.get(dataSourceRequest);
         } catch (Exception e) {
             HadesLogUtil.stream(bizScenario.getUniqueIdentity())
-                    .kv("method", "getEntryPromotionPrice")
+                    .kv("method", "getItemIdAndCacheKeyList")
                     .kv("dataSourceRequest", JSON.toJSONString(dataSourceRequest))
                     .kv("Exception", JSON.toJSONString(e))
                     .error();
