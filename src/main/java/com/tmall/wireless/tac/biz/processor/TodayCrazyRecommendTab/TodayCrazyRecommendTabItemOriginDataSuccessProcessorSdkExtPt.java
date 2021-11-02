@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataRuleDTO;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataSuccessProcessorSdkExtPt;
@@ -42,6 +43,11 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     @Autowired
     TodayCrazyTairCacheService todayCrazyTairCacheService;
 
+    private static final BizScenario bizScenario = BizScenario.valueOf(
+            ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+            ScenarioConstantApp.LOC_TYPE_B2C,
+            ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
+    );
 
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
@@ -61,6 +67,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         boolean isFirstPage = (boolean) originDataProcessRequest.getSgFrameworkContextItem().getUserParams().get("isFirstPage");
         tacLogger.info("isFirstPage：" + isFirstPage);
         String tabType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "tabType", "");
+        String appType = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "appType", "");
 
 
         OriginDataDTO<ItemEntity> originDataDTO = originDataProcessRequest.getItemEntityOriginDataDTO();
@@ -102,7 +109,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
          * 只有今日超省才走定坑逻辑
          */
         if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
-            this.itemSortV2(originDataDTO, isFirstPage, itemIdAndCacheKey);
+            this.itemSortV2(originDataDTO, isFirstPage, itemIdAndCacheKey, appType);
         }
 
         /**
@@ -116,7 +123,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
          * 如果topItemIds在专享价中则优先打专享标
          *
          */
-        this.topItemIdsIsChannelPriceNew(topItemIds, itemIdAndCacheKey);
+        this.topItemIdsIsChannelPriceNew(topItemIds, itemIdAndCacheKey,appType);
 
         /**
          * 保存到上下文中，供后面查询限购，区分渠道的判断依据
@@ -137,8 +144,8 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @param topItemIds
      * @param itemIdAndCacheKey
      */
-    private void topItemIdsIsChannelPriceNew(List<String> topItemIds, HashMap<String, String> itemIdAndCacheKey) {
-        List<String> allChannelPriceNewItemIds = todayCrazyTairCacheService.getItemIdAndCacheKeyList(CommonConstant.CHANNEL_ITEM_IDS);
+    private void topItemIdsIsChannelPriceNew(List<String> topItemIds, HashMap<String, String> itemIdAndCacheKey,String appType) {
+        List<String> allChannelPriceNewItemIds = todayCrazyTairCacheService.getItemIdAndCacheKeyList(CommonConstant.CHANNEL_ITEM_IDS,appType);
         if (CollectionUtils.isEmpty(allChannelPriceNewItemIds)) {
             return;
         }
@@ -149,6 +156,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             }
         });
     }
+
 
     /**
      * 置顶排序
@@ -192,7 +200,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @param originDataDTO
      * @param isFirstPage
      */
-    private void itemSortV2(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage, HashMap<String, String> itemIdAndCacheKey) {
+    private void itemSortV2(OriginDataDTO<ItemEntity> originDataDTO, boolean isFirstPage, HashMap<String, String> itemIdAndCacheKey, String appType) {
         /**
          * tpp返回的全部结果集
          */
@@ -207,12 +215,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         List<Long> resultItemIds = Lists.newArrayList();
 
         //获取渠道立减商品和对应itemIds
-        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryChannelPriceNewPair = this.getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryChannelPriceNew());
+        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryChannelPriceNewPair = this.getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryChannelPriceNew(appType));
         List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = entryChannelPriceNewPair.getRight();
         List<Long> entryChannelPriceNewItemIdList = entryChannelPriceNewPair.getLeft();
 
         //获取单品折扣价商品和对应itemIds
-        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryPromotionPriceNewPair = this.getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryPromotionPrice());
+        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryPromotionPriceNewPair = this.getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryPromotionPrice(appType));
         List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice = entryPromotionPriceNewPair.getRight();
         List<Long> entryPromotionPriceItemIdList = entryPromotionPriceNewPair.getLeft();
 
