@@ -174,7 +174,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     private LoadingCache<DataSourceRequest, Pair<List<String>, List<String>>> testData = CacheBuilder
             .newBuilder()
             .maximumSize(1000)
-            .expireAfterWrite(10, TimeUnit.SECONDS)
+            .expireAfterWrite(30, TimeUnit.SECONDS)
             .build(new CacheLoader<DataSourceRequest, Pair<List<String>, List<String>>>() {
                 @Override
                 public Pair<List<String>, List<String>> load(DataSourceRequest dataSourceRequest) {
