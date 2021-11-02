@@ -48,4 +48,6 @@ public class CommonConstant {
      * 全量专享价tairkey
      */
     public static final String CHANNEL_ITEM_IDS = "channel_item_ids";
+
+    public static final boolean DEBUG = false;
 }
