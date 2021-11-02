@@ -49,5 +49,5 @@ public class CommonConstant {
      */
     public static final String CHANNEL_ITEM_IDS = "channel_item_ids";
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 }
