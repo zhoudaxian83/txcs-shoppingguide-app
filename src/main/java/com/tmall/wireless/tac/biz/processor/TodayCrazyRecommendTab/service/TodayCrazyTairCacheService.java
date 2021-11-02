@@ -33,7 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -446,7 +445,7 @@ public class TodayCrazyTairCacheService {
                             tacLogger.info("topItemIdsIsChannelPriceNew_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
                             tacLogger.info("topItemIdsIsChannelPrice" + JSON.toJSONString(stringList));
                         }
-                        if (org.apache.commons.collections.CollectionUtils.isEmpty(stringList)) {
+                        if (CollectionUtils.isEmpty(stringList)) {
                             return Lists.newArrayList();
                         } else {
                             return stringList;
