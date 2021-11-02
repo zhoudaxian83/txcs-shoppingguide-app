@@ -256,11 +256,17 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryChannelPriceNewPair = this.getEntryChannelPriceNewPair(appType);
         List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = entryChannelPriceNewPair.getRight();
         List<Long> entryChannelPriceNewItemIdList = entryChannelPriceNewPair.getLeft();
+        if (CommonConstant.DEBUG) {
+            tacLogger.info("entryChannelPriceNewPair结果集：" + JSON.toJSONString(entryChannelPriceNewPair));
+        }
 
         //获取单品折扣价商品和对应itemIds
         Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryPromotionPriceNewPair = this.getEntryPromotionPriceNewPair(appType);
         List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice = entryPromotionPriceNewPair.getRight();
         List<Long> entryPromotionPriceItemIdList = entryPromotionPriceNewPair.getLeft();
+        if (CommonConstant.DEBUG) {
+            tacLogger.info("entryPromotionPriceItemIdList结果集：" + JSON.toJSONString(entryChannelPriceNewPair));
+        }
 
         //如果渠道立减商品和单品折扣价商品有重复，则渠道立减商品优先，防止重复
         entryPromotionPrice.removeIf(columnCenterDataSetItemRuleDTO -> entryChannelPriceNewItemIdList.contains(columnCenterDataSetItemRuleDTO.getItemId()));
@@ -297,9 +303,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @return
      */
     public Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> getEntryChannelPriceNewPair(String appType) {
-        //String channelPriceKey = todayCrazyTairCacheService.getChannelPriceNewKey();
-        // todo
-        String channelPriceKey = "channelPriceKey";
+        String channelPriceKey = todayCrazyTairCacheService.getChannelPriceNewKey();
         DataSourceRequest dataSourceRequest = todayCrazyTairCacheService.buildDataSourceRequest(1, channelPriceKey, appType);
         try {
             return entryChannelPriceNewPair.get(dataSourceRequest);

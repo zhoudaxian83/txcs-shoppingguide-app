@@ -2,10 +2,12 @@ package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model;
 
 import lombok.Data;
 
-@Data
-public class DataSourceRequest {
+import java.io.Serializable;
 
-    //private static final long serialVersionUID = -1L;
+@Data
+public class DataSourceRequest implements Serializable {
+
+    private static final long serialVersionUID = -1L;
 
     private String cacheKey;
 
