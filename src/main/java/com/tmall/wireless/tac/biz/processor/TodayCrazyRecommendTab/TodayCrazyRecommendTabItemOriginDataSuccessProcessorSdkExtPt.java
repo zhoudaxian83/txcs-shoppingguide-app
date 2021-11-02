@@ -1,6 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataRuleDTO;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
@@ -15,6 +18,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.DataSourceRequest;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.TodayCrazySortItemEntity;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service.TodayCrazyTairCacheService;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
@@ -24,6 +28,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -123,7 +128,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
          * 如果topItemIds在专享价中则优先打专享标
          *
          */
-        this.topItemIdsIsChannelPriceNew(topItemIds, itemIdAndCacheKey,appType);
+        this.topItemIdsIsChannelPriceNew(topItemIds, itemIdAndCacheKey, appType);
 
         /**
          * 保存到上下文中，供后面查询限购，区分渠道的判断依据
@@ -144,8 +149,8 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @param topItemIds
      * @param itemIdAndCacheKey
      */
-    private void topItemIdsIsChannelPriceNew(List<String> topItemIds, HashMap<String, String> itemIdAndCacheKey,String appType) {
-        List<String> allChannelPriceNewItemIds = todayCrazyTairCacheService.getItemIdAndCacheKeyList(CommonConstant.CHANNEL_ITEM_IDS,appType);
+    private void topItemIdsIsChannelPriceNew(List<String> topItemIds, HashMap<String, String> itemIdAndCacheKey, String appType) {
+        List<String> allChannelPriceNewItemIds = todayCrazyTairCacheService.getItemIdAndCacheKeyList(CommonConstant.CHANNEL_ITEM_IDS, appType);
         if (CollectionUtils.isEmpty(allChannelPriceNewItemIds)) {
             return;
         }
@@ -215,12 +220,12 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
         List<Long> resultItemIds = Lists.newArrayList();
 
         //获取渠道立减商品和对应itemIds
-        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryChannelPriceNewPair = this.getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryChannelPriceNew(appType));
+        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryChannelPriceNewPair = this.getEntryChannelPriceNewPair(appType);
         List<ColumnCenterDataSetItemRuleDTO> entryChannelPriceNew = entryChannelPriceNewPair.getRight();
         List<Long> entryChannelPriceNewItemIdList = entryChannelPriceNewPair.getLeft();
 
         //获取单品折扣价商品和对应itemIds
-        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryPromotionPriceNewPair = this.getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryPromotionPrice(appType));
+        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> entryPromotionPriceNewPair = this.getEntryPromotionPriceNewPair(appType);
         List<ColumnCenterDataSetItemRuleDTO> entryPromotionPrice = entryPromotionPriceNewPair.getRight();
         List<Long> entryPromotionPriceItemIdList = entryPromotionPriceNewPair.getLeft();
 
@@ -251,6 +256,103 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
             originDataDTO.setResult(itemEntities);
         }
     }
+
+    /**
+     * 本地缓存模式
+     *
+     * @param appType
+     * @return
+     */
+    public Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> getEntryChannelPriceNewPair(String appType) {
+        String channelPriceKey = todayCrazyTairCacheService.getChannelPriceNewKey();
+        DataSourceRequest dataSourceRequest = todayCrazyTairCacheService.buildDataSourceRequest(1, channelPriceKey, appType);
+        try {
+            return entryChannelPriceNewPair.get(dataSourceRequest);
+        } catch (Exception e) {
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                    .kv("method", "getEntryChannelPriceNewPair")
+                    .kv("dataSourceRequest", JSON.toJSONString(dataSourceRequest))
+                    .kv("Exception", JSON.toJSONString(e))
+                    .error();
+            return Pair.of(Lists.newArrayList(), Lists.newArrayList());
+        }
+    }
+
+    /**
+     * 本地缓存模式
+     *
+     * @param appType
+     * @return
+     */
+    public Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> getEntryPromotionPriceNewPair(String appType) {
+        String channelPriceKey = todayCrazyTairCacheService.getPromotionPriceKey();
+        DataSourceRequest dataSourceRequest = todayCrazyTairCacheService.buildDataSourceRequest(1, channelPriceKey, appType);
+        try {
+            return entryPromotionPriceNewPair.get(dataSourceRequest);
+        } catch (Exception e) {
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                    .kv("method", "getEntryPromotionPriceNewPair")
+                    .kv("dataSourceRequest", JSON.toJSONString(dataSourceRequest))
+                    .kv("Exception", JSON.toJSONString(e))
+                    .error();
+            return Pair.of(Lists.newArrayList(), Lists.newArrayList());
+        }
+    }
+
+
+    /**
+     * 30ms从tair加载最新的值，此处使用LocalCache的目的是为了避免热点 todo 极值验证10000
+     */
+    private LoadingCache<DataSourceRequest, Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>>> entryChannelPriceNewPair = CacheBuilder
+            .newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(10000, TimeUnit.SECONDS)
+            .build(new CacheLoader<DataSourceRequest, Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>>>() {
+                @Override
+                public Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> load(DataSourceRequest dataSourceRequest) {
+                    try {
+                        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryChannelPriceNew());
+                        if (CommonConstant.DEBUG) {
+                            tacLogger.info("entryChannelPriceNewPair_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
+                            tacLogger.info("entryChannelPriceNewPair_pair" + JSON.toJSONString(pair));
+                        }
+                        return pair;
+                    } catch (Exception e) {
+                        HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                                .kv("method", "entryChannelPriceNewPair")
+                                .kv("Exception", JSON.toJSONString(e))
+                                .error();
+                        return Pair.of(Lists.newArrayList(), Lists.newArrayList());
+                    }
+                }
+            });
+
+    /**
+     * 30ms从tair加载最新的值，此处使用LocalCache的目的是为了避免热点
+     */
+    private LoadingCache<DataSourceRequest, Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>>> entryPromotionPriceNewPair = CacheBuilder
+            .newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(30, TimeUnit.SECONDS)
+            .build(new CacheLoader<DataSourceRequest, Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>>>() {
+                @Override
+                public Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> load(DataSourceRequest dataSourceRequest) {
+                    try {
+                        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryPromotionPrice());
+                        if (CommonConstant.DEBUG) {
+                            tacLogger.info("entryPromotionPriceNewPair_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
+                            tacLogger.info("entryPromotionPriceNewPair_pair" + JSON.toJSONString(pair));
+                        }
+                        return pair;
+                    } catch (Exception e) {
+                        HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                                .kv("method", "entryPromotionPriceNewPair")
+                                .kv("Exception", JSON.toJSONString(e))
+                                .error();
+                        return Pair.of(Lists.newArrayList(), Lists.newArrayList());
+                    }
+                }
+            });
 
 
     private List<ItemEntity> doItemSort(List<ItemEntity> itemEntities, List<ColumnCenterDataSetItemRuleDTO> needEnterDataSetItemRuleDTOS) {

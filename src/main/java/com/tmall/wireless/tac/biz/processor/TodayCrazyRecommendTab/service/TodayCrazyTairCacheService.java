@@ -244,105 +244,28 @@ public class TodayCrazyTairCacheService {
     /**
      * 渠道立减商品
      */
-    public List<ColumnCenterDataSetItemRuleDTO> getEntryChannelPriceNew(String appType) {
+    public List<ColumnCenterDataSetItemRuleDTO> getEntryChannelPriceNew() {
         String channelPriceKey = getChannelPriceNewKey();
-        DataSourceRequest dataSourceRequest = this.buildDataSourceRequest(1, channelPriceKey, appType);
-        try {
-            return channelPriceNewCache.get(dataSourceRequest);
-        } catch (Exception e) {
-            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
-                    .kv("method", "getEntryChannelPriceNew")
-                    .kv("dataSourceRequest", JSON.toJSONString(dataSourceRequest))
-                    .kv("Exception", JSON.toJSONString(e))
-                    .error();
-            return Lists.newArrayList();
+        if (CommonConstant.DEBUG) {
+            tacLogger.info("channelPriceKey:" + channelPriceKey);
         }
+        return this.getTairColumnCenterDataSetItemRuleDTO(channelPriceKey);
     }
 
 
     /**
      * 单品折扣价商品
      */
-    public List<ColumnCenterDataSetItemRuleDTO> getEntryPromotionPrice(String appType) {
-        String channelPriceKey = getPromotionPriceKey();
-        DataSourceRequest dataSourceRequest = this.buildDataSourceRequest(1, channelPriceKey, appType);
-        try {
-            return entryPromotionPrice.get(dataSourceRequest);
-        } catch (Exception e) {
-            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
-                    .kv("method", "getEntryPromotionPrice")
-                    .kv("dataSourceRequest", JSON.toJSONString(dataSourceRequest))
-                    .kv("Exception", JSON.toJSONString(e))
-                    .error();
-            return Lists.newArrayList();
+    public List<ColumnCenterDataSetItemRuleDTO> getEntryPromotionPrice() {
+        String promotionPriceKey = getPromotionPriceKey();
+        if (CommonConstant.DEBUG) {
+            tacLogger.info("promotionPriceKey:" + promotionPriceKey);
         }
+        return this.getTairColumnCenterDataSetItemRuleDTO(promotionPriceKey);
     }
 
-    /**
-     * 30ms从tair加载最新的值，此处使用LocalCache的目的是为了避免热点
-     */
-    private LoadingCache<DataSourceRequest, List<ColumnCenterDataSetItemRuleDTO>> channelPriceNewCache = CacheBuilder
-            .newBuilder()
-            .maximumSize(1000)
-            .expireAfterWrite(30, TimeUnit.SECONDS)
-            .build(new CacheLoader<DataSourceRequest, List<ColumnCenterDataSetItemRuleDTO>>() {
-                @Override
-                public List<ColumnCenterDataSetItemRuleDTO> load(DataSourceRequest dataSourceRequest) {
-                    try {
-                        List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = getTairColumnCenterDataSetItemRuleDTO(dataSourceRequest.getDateStr());
-                        if (CommonConstant.DEBUG) {
-                            tacLogger.info("channelPriceNewCache_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
-                            tacLogger.info("channelPriceNewCache_centerDataSetItemRuleDTOS" + JSON.toJSONString(centerDataSetItemRuleDTOS));
-                        }
-                        if (CollectionUtils.isEmpty(centerDataSetItemRuleDTOS)) {
-                            return Lists.newArrayList();
-                        } else {
-                            return centerDataSetItemRuleDTOS;
-                        }
-                    } catch (Exception e) {
-                        HadesLogUtil.stream(bizScenario.getUniqueIdentity())
-                                .kv("method", "channelPriceNewCache")
-                                .kv("Exception", JSON.toJSONString(e))
-                                .error();
-                        return Lists.newArrayList();
-                    }
-                }
-            });
 
-
-    /**
-     * 30ms从tair加载最新的值，此处使用LocalCache的目的是为了避免热点
-     */
-    private LoadingCache<DataSourceRequest, List<ColumnCenterDataSetItemRuleDTO>> entryPromotionPrice = CacheBuilder
-            .newBuilder()
-            .maximumSize(1000)
-            .expireAfterWrite(30, TimeUnit.SECONDS)
-            .build(new CacheLoader<DataSourceRequest, List<ColumnCenterDataSetItemRuleDTO>>() {
-                @Override
-                public List<ColumnCenterDataSetItemRuleDTO> load(DataSourceRequest dataSourceRequest) {
-                    try {
-                        List<ColumnCenterDataSetItemRuleDTO> centerDataSetItemRuleDTOS = getTairColumnCenterDataSetItemRuleDTO(dataSourceRequest.getDateStr());
-                        if (CommonConstant.DEBUG) {
-                            tacLogger.info("entryPromotionPrice_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
-                            tacLogger.info("channelPriceNewCache_centerDataSetItemRuleDTOS" + JSON.toJSONString(centerDataSetItemRuleDTOS));
-                        }
-                        if (CollectionUtils.isEmpty(centerDataSetItemRuleDTOS)) {
-                            return Lists.newArrayList();
-                        } else {
-                            return centerDataSetItemRuleDTOS;
-                        }
-                    } catch (Exception e) {
-                        HadesLogUtil.stream(bizScenario.getUniqueIdentity())
-                                .kv("method", "entryPromotionPrice")
-                                .kv("Exception", JSON.toJSONString(e))
-                                .error();
-                        return Lists.newArrayList();
-                    }
-                }
-            });
-
-
-    private DataSourceRequest buildDataSourceRequest(int version, String dateStr, String tab) {
+    public DataSourceRequest buildDataSourceRequest(int version, String dateStr, String tab) {
         DataSourceRequest dataSourceRequest = new DataSourceRequest();
         dataSourceRequest.setVersion(version);
         dataSourceRequest.setTab(tab);
@@ -360,11 +283,11 @@ public class TodayCrazyTairCacheService {
         return logicalArr[0];
     }
 
-    private String getChannelPriceNewKey() {//channelPrice_XN_pre
+    public String getChannelPriceNewKey() {//channelPrice_XN_pre
         return this.createKey(CommonConstant.channelPriceNewPrefix, getRandomLogical());
     }
 
-    private String getPromotionPriceKey() {//channelPrice_XN_pre
+    public String getPromotionPriceKey() {//channelPrice_XN_pre
         return this.createKey(CommonConstant.promotionPricePrefix, getRandomLogical());
     }
 
