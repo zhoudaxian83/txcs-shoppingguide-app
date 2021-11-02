@@ -244,8 +244,9 @@ public class TodayCrazyTairCacheService {
     /**
      * 渠道立减商品
      */
-    public List<ColumnCenterDataSetItemRuleDTO> getEntryChannelPriceNew() {
-        String channelPriceKey = getChannelPriceNewKey();
+    public List<ColumnCenterDataSetItemRuleDTO> getEntryChannelPriceNew(String cacheKey) {
+        //String channelPriceKey = getChannelPriceNewKey();
+        String channelPriceKey = cacheKey;
         if (CommonConstant.DEBUG) {
             tacLogger.info("channelPriceKey:" + channelPriceKey);
         }
@@ -256,8 +257,9 @@ public class TodayCrazyTairCacheService {
     /**
      * 单品折扣价商品
      */
-    public List<ColumnCenterDataSetItemRuleDTO> getEntryPromotionPrice() {
-        String promotionPriceKey = getPromotionPriceKey();
+    public List<ColumnCenterDataSetItemRuleDTO> getEntryPromotionPrice(String cacheKey) {
+        //String promotionPriceKey = getPromotionPriceKey();
+        String promotionPriceKey = cacheKey;
         if (CommonConstant.DEBUG) {
             tacLogger.info("promotionPriceKey:" + promotionPriceKey);
         }
@@ -265,11 +267,11 @@ public class TodayCrazyTairCacheService {
     }
 
 
-    public DataSourceRequest buildDataSourceRequest(int version, String dateStr, String tab) {
+    public DataSourceRequest buildDataSourceRequest(int version, String cacheKey, String tab) {
         DataSourceRequest dataSourceRequest = new DataSourceRequest();
         dataSourceRequest.setVersion(version);
         dataSourceRequest.setTab(tab);
-        dataSourceRequest.setDateStr(dateStr);
+        dataSourceRequest.setCacheKey(cacheKey);
         return dataSourceRequest;
     }
 

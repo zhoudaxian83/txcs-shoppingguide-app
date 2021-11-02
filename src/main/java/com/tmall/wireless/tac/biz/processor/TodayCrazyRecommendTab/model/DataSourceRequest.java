@@ -22,7 +22,7 @@ public class DataSourceRequest implements Serializable {
 
     @Getter
     @Setter
-    private String dateStr;
+    private String cacheKey;
     @Getter
     @Setter
     private int version;

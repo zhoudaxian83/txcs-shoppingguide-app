@@ -264,7 +264,9 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
      * @return
      */
     public Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> getEntryChannelPriceNewPair(String appType) {
-        String channelPriceKey = todayCrazyTairCacheService.getChannelPriceNewKey();
+        //String channelPriceKey = todayCrazyTairCacheService.getChannelPriceNewKey();
+        // todo
+        String channelPriceKey = "channelPriceKey";
         DataSourceRequest dataSourceRequest = todayCrazyTairCacheService.buildDataSourceRequest(1, channelPriceKey, appType);
         try {
             return entryChannelPriceNewPair.get(dataSourceRequest);
@@ -311,7 +313,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 @Override
                 public Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> load(DataSourceRequest dataSourceRequest) {
                     try {
-                        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryChannelPriceNew());
+                        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryChannelPriceNew(dataSourceRequest.getCacheKey()));
                         if (CommonConstant.DEBUG) {
                             tacLogger.info("entryChannelPriceNewPair_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
                             tacLogger.info("entryChannelPriceNewPair_pair" + JSON.toJSONString(pair));
@@ -338,7 +340,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
                 @Override
                 public Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> load(DataSourceRequest dataSourceRequest) {
                     try {
-                        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryPromotionPrice());
+                        Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> pair = getNeedEnterDataSetItemRuleDTOS(todayCrazyTairCacheService.getEntryPromotionPrice(dataSourceRequest.getCacheKey()));
                         if (CommonConstant.DEBUG) {
                             tacLogger.info("entryPromotionPriceNewPair_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
                             tacLogger.info("entryPromotionPriceNewPair_pair" + JSON.toJSONString(pair));
