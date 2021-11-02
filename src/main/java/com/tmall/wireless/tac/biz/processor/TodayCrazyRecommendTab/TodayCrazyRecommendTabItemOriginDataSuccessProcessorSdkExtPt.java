@@ -308,7 +308,7 @@ public class TodayCrazyRecommendTabItemOriginDataSuccessProcessorSdkExtPt extend
     private LoadingCache<DataSourceRequest, Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>>> entryChannelPriceNewPair = CacheBuilder
             .newBuilder()
             .maximumSize(1000)
-            .expireAfterWrite(10000, TimeUnit.SECONDS)
+            .expireAfterWrite(30, TimeUnit.SECONDS)
             .build(new CacheLoader<DataSourceRequest, Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>>>() {
                 @Override
                 public Pair<List<Long>, List<ColumnCenterDataSetItemRuleDTO>> load(DataSourceRequest dataSourceRequest) {

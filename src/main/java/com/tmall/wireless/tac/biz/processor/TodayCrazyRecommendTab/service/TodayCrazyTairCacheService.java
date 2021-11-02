@@ -248,7 +248,7 @@ public class TodayCrazyTairCacheService {
         //String channelPriceKey = getChannelPriceNewKey();
         String channelPriceKey = cacheKey;
         if (CommonConstant.DEBUG) {
-            tacLogger.info("channelPriceKey:" + channelPriceKey);
+            tacLogger.info("获取元数据：getEntryChannelPriceNew:");
         }
         return this.getTairColumnCenterDataSetItemRuleDTO(channelPriceKey);
     }
