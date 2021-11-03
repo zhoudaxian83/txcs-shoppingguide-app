@@ -26,6 +26,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.tair.TairSpi;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
+import com.tmall.wireless.tac.biz.processor.config.TxcsShoppingguideAppSwitch;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -69,10 +70,16 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
             aldCurrentResId = MapUtil.getStringWithDefault(aldContext, HallCommonAldConstant.ALD_CURRENT_RES_ID, "0");
             List<ItemEntityVO> itemAndContentList = entityVOSgFrameworkResponse.getItemAndContentList();
 
-            //if(SxlSwitch.openHotItemDouble){
-            //    List<ItemEntityVO> itemEntityVOList = dealDouble(sgFrameworkContextItem, itemAndContentList);
-            //    itemAndContentList= itemEntityVOList;
-            //}
+            try{
+                if(TxcsShoppingguideAppSwitch.openHotItemDouble){
+                    logger.error("HotItemProcessBeforeReturnSdkExtPt.openHotItemDouble");
+                    List<ItemEntityVO> itemEntityVOList = dealDouble(sgFrameworkContextItem, itemAndContentList);
+                    itemAndContentList= itemEntityVOList;
+                }
+            }catch (Exception e){
+                logger.error("HotItemProcessBeforeReturnSdkExtPt.openHotItemDouble.exception", e);
+            }
+
             Map<String, Object> userParams = sgFrameworkContextItem.getUserParams();
             String customItemSetId = MapUtil.getStringWithDefault(userParams, "customItemSetId", "0");
 
