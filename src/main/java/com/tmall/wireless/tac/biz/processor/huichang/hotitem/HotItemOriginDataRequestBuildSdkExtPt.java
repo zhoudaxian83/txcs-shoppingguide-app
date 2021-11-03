@@ -21,6 +21,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
+import com.tmall.wireless.tac.biz.processor.config.TxcsShoppingguideAppSwitch;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.ParseCsa;
@@ -81,7 +82,7 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             params.put("itemAndIndustry", itemAndIndustryData);
             Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, DEFAULT_SMAREAID);
             params.put("smAreaId", String.valueOf(smAreaId));
-            params.put("openHotItemDouble", String.valueOf(SxlSwitch.openHotItemDouble));
+            params.put("openHotItemDouble", String.valueOf(TxcsShoppingguideAppSwitch.openHotItemDouble));
             Object csa = aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA);
             LocParams locParams = null;
             if (csa == null) {
@@ -145,7 +146,7 @@ public class HotItemOriginDataRequestBuildSdkExtPt extends Register implements I
             }
             Object itemId = map.get("contentId");
             String newShowNum = String.valueOf(showNum);
-            if(SxlSwitch.openHotItemDouble) {
+            if(TxcsShoppingguideAppSwitch.openHotItemDouble) {
                 BigDecimal num1 = new BigDecimal(String.valueOf(showNum));
                 BigDecimal num2 = new BigDecimal("2");
                 newShowNum = num1.multiply(num2).toString();

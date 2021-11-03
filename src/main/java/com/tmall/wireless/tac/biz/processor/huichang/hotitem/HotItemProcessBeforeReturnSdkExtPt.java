@@ -26,6 +26,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.tair.TairSpi;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
+import com.tmall.wireless.tac.biz.processor.config.TxcsShoppingguideAppSwitch;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import com.tmall.wireless.tac.client.domain.Context;
@@ -70,7 +71,7 @@ public class HotItemProcessBeforeReturnSdkExtPt extends Register implements Item
             List<ItemEntityVO> itemAndContentList = entityVOSgFrameworkResponse.getItemAndContentList();
 
             try{
-                if(SxlSwitch.openHotItemDouble){
+                if(TxcsShoppingguideAppSwitch.openHotItemDouble){
                     logger.error("HotItemProcessBeforeReturnSdkExtPt.openHotItemDouble");
                     List<ItemEntityVO> itemEntityVOList = dealDouble(sgFrameworkContextItem, itemAndContentList);
                     itemAndContentList= itemEntityVOList;
