@@ -18,7 +18,10 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusines
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.Enviroment;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.zookeeper.Op;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,8 @@ import java.util.stream.Collectors;
 )
 @Service
 public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register implements ContentOriginDataRequestBuildSdkExtPt {
+
+    Logger LOGGER = LoggerFactory.getLogger(BrandClubFpContentOriginDataRequestBuildSdkExtPt.class);
 
     @Autowired
     BrandContentSetIdService brandContentSetIdService;
@@ -75,11 +80,14 @@ public class BrandClubFpContentOriginDataRequestBuildSdkExtPt extends Register i
                 map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO)
                 .map(UserDO::getUserId).orElse(0L));
         tppRequest.setAppId(27402L);
-
+        params.put("brandId", String.valueOf(brandId));
 
         List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id)
                 .collect(
                         Collectors.toList());
+        if(CollectionUtils.isEmpty(newContentSetIdList)){
+            LOGGER.error("BrandClubFpContentOriginDataRequestBuildSdkExtPt getSceneSet empty. brandId:{}", brandId);
+        }
         params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
         /**心智场景支持O2O场景**/
         Long oneHour = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
