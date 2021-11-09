@@ -55,7 +55,7 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         ItemInfoSourceMetaInfo smartUiItemInfoSource = ItemInfoSourceMetaInfo.build("smartui");
         smartUiItemInfoSource.setStrategyPackageId("707_11169");
 
-        ItemInfoSourceMetaInfo channelDataItemInfoSource = ItemInfoSourceMetaInfo.build(ItemInfoSourceKey.CHANNEL);
+        ItemInfoSourceMetaInfo channelDataItemInfoSource = ItemInfoSourceMetaInfo.build("channel");
         ChannelDataDO mostBuyChannelData = new ChannelDataDO();
         mostBuyChannelData.setChannelField("value");
         mostBuyChannelData.setChannelName("salePoint");

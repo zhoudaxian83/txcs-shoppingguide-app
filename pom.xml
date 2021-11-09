@@ -204,6 +204,12 @@
             </exclusions>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.txcs</groupId>-->
+<!--            <artifactId>txcs-item-normalization-igraph-api</artifactId>-->
+<!--            <version>1.0.42</version>-->
+<!--        </dependency>-->
+
     </dependencies>
 
     <build>
