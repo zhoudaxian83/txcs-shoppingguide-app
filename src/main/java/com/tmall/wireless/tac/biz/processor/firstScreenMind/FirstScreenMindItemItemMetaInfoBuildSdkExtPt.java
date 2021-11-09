@@ -26,11 +26,13 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentT
 import com.tmall.wireless.tac.client.domain.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 @Extension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
     useCase = ScenarioConstantApp.LOC_TYPE_B2C,
     scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
-public class FirstScreenMindItemItemMetaInfoBuildSdkExtPt extends Register implements ItemMetaInfoBuildSdkExtPt {
+@Service
+public class FirstScreenMindItemItemMetaInfoBuildSdkExtPt implements ItemMetaInfoBuildSdkExtPt {
 
 
     Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindItemItemMetaInfoBuildSdkExtPt.class);
