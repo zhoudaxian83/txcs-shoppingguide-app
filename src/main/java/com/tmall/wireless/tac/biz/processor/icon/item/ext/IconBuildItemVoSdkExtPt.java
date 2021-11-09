@@ -43,7 +43,7 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
 
     private static final String MOST_WORTH_BUY_KEY = "mostWorthBuy";
 
-    private static final String MOST_WORTH_BUY_PIC = "";
+    private static final String MOST_WORTH_BUY_PIC = "https://gw.alicdn.com/imgextra/i1/O1CN01W6XWQV1woBJKJRyhV_!!6000000006354-2-tps-87-45.png";
 
 
     @Override
@@ -56,7 +56,7 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
         Boolean isMostWorthBuying = false;
         if (itemChannelInfo instanceof ItemInfoBySourceChannelDTO) {
             ItemInfoBySourceChannelDTO channelDTO = (ItemInfoBySourceChannelDTO) itemChannelInfo;
-            isMostWorthBuying = channelDTO.getChannelDataMap().containsKey("mostWorthBuy");
+            isMostWorthBuying = channelDTO.getChannelDataMap().containsKey(MOST_WORTH_BUY_KEY);
         }
         if (!isMostWorthBuying) {
             return response;
