@@ -58,6 +58,9 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
             ItemInfoBySourceChannelDTO channelDTO = (ItemInfoBySourceChannelDTO) itemChannelInfo;
             isMostWorthBuying = channelDTO.getChannelDataMap().containsKey("mostWorthBuy");
         }
+        if (!isMostWorthBuying) {
+            return response;
+        }
         ItemInfoBySourceDTO itemCaptainInfo =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.CAPTAIN);
         List<IconAtmosphereDTO> newIconAtmosphereDTO = Lists.newArrayList();
         if (itemCaptainInfo instanceof ItemInfoBySourceCaptainDTO) {
