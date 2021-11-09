@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
 import com.tmall.aselfcaptain.item.model.ChannelDataDO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.biz.iteminfo.bysource.ItemInfoSourceKey;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.contextbuild.ItemMetaInfoBuildSdkExtPt;
@@ -41,6 +42,10 @@ public class FirstScreenMindItemItemMetaInfoBuildSdkExtPt extends Register imple
     @Override
     public ItemMetaInfo process(Context context) {
         LOGGER.error("FirstScreenMindItemItemMetaInfoBuildSdkExtPt.context:{}", JSON.toJSONString(context));
+        //HadesLogUtil.stream(ScenarioConstantApp.SCE
+        HadesLogUtil.stream("HadesLogUtil.FirstScreenMindItemItemMetaInfoBuildSdkExtPt.context")
+            .kv("context",JSON.toJSONString(context))
+            .error();
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         ItemGroupMetaInfo itemGroupMetaInfoSmB2c = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.B2C.name());
         itemGroupMetaInfoSmB2c.setItemInfoNodes(this.buildDefaultItemInfoNodes());
