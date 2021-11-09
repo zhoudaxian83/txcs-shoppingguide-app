@@ -77,6 +77,7 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 .kv("sKeyList",JSON.toJSONString(sKeyList))
                 .info();
             Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
+            LOGGER.error("FirstScreenMindContentInfoQueryExtPt.mgetResult:{}", JSON.toJSONString(mgetResult));
             /*HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                 .kv("sKeyList",JSON.toJSONString(sKeyList))
                 .kv("mgetResult.getValue()",JSON.toJSONString(mgetResult.getValue()))
