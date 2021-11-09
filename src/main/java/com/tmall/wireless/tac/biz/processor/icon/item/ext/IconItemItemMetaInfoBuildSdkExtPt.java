@@ -1,11 +1,15 @@
 package com.tmall.wireless.tac.biz.processor.icon.item.ext;
 
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.tmall.aselfcaptain.item.model.ChannelDataDO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.tcls.gs.sdk.biz.iteminfo.bysource.ItemInfoSourceKey;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.contextbuild.ItemMetaInfoBuildSdkExtPt;
@@ -50,6 +54,20 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         ItemInfoSourceMetaInfo tppItemInfoSource = ItemInfoSourceMetaInfo.build("tpp");
         ItemInfoSourceMetaInfo smartUiItemInfoSource = ItemInfoSourceMetaInfo.build("smartui");
         smartUiItemInfoSource.setStrategyPackageId("707_11169");
+
+        ItemInfoSourceMetaInfo channelDataItemInfoSource = ItemInfoSourceMetaInfo.build(ItemInfoSourceKey.CHANNEL);
+        ChannelDataDO mostBuyChannelData = new ChannelDataDO();
+        mostBuyChannelData.setChannelField("value");
+        mostBuyChannelData.setChannelName("salePoint");
+        mostBuyChannelData.setDataKey("MOST_WORTH_BUYING");
+        List<ChannelDataDO> datas = Lists.newArrayList(mostBuyChannelData);
+        channelDataItemInfoSource.setChannelFields(datas);
+        Map<String, String> extraMap = Maps.newHashMap();
+        extraMap.put("salePointType", "MOST_WORTH_BUYING");
+        channelDataItemInfoSource.setExtraMap(extraMap);
+
+
+
         List<String> e1 = Lists.newArrayList(new String[]{"supermarketPrice", "timesBot", "salesLast30d"});
         List<String> e2 = Lists.newArrayList(new String[]{"priceLabel", "timesBot", "salesLast30d"});
         List<List<String>> exclusiveMaterials = Lists.newArrayList();
@@ -67,10 +85,11 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         smartUiItemInfoSource.setMktSceneCode(SCENE_CODE);
 
         if (TxcsShoppingguideAppSwitch.openSmartUiInIconCategory) {
-            itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource, smartUiItemInfoSource));
+            itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource, smartUiItemInfoSource, channelDataItemInfoSource));
         } else {
-            itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource));
+            itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource, channelDataItemInfoSource));
         }
+
 
         return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
     }
