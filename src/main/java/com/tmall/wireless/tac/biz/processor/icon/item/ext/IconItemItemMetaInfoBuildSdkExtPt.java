@@ -59,7 +59,7 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         ChannelDataDO mostBuyChannelData = new ChannelDataDO();
         mostBuyChannelData.setChannelField("value");
         mostBuyChannelData.setChannelName("salePoint");
-        mostBuyChannelData.setDataKey("MOST_WORTH_BUYING");
+        mostBuyChannelData.setDataKey("mostWorthBuy");
         List<ChannelDataDO> datas = Lists.newArrayList(mostBuyChannelData);
         channelDataItemInfoSource.setChannelFields(datas);
         Map<String, String> extraMap = Maps.newHashMap();
@@ -84,11 +84,11 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
 
         smartUiItemInfoSource.setMktSceneCode(SCENE_CODE);
 
-        //if (TxcsShoppingguideAppSwitch.openSmartUiInIconCategory) {
-        //    itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource, smartUiItemInfoSource, channelDataItemInfoSource));
-        //} else {
+        if (TxcsShoppingguideAppSwitch.openSmartUiInIconCategory) {
+            itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource, smartUiItemInfoSource, channelDataItemInfoSource));
+        } else {
             itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource, channelDataItemInfoSource));
-        //}
+        }
 
 
         return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
