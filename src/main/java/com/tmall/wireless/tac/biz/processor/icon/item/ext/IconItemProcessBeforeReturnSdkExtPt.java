@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.icon.item.ext;
 
+import com.alibaba.fastjson.JSON;
+
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemProcessBeforeReturnSdkExtPt;
@@ -17,7 +19,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 public class IconItemProcessBeforeReturnSdkExtPt extends Register implements ItemProcessBeforeReturnSdkExtPt {
     @Override
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
-        LOGGER.error("IconItemProcessBeforeReturnSdkExtPt:{}", sgFrameworkContextItem);
+        LOGGER.error("IconItemProcessBeforeReturnSdkExtPt:{}", JSON.toJSONString(sgFrameworkContextItem.getEntityVOSgFrameworkResponse()));
         return sgFrameworkContextItem;
     }
 }
