@@ -50,9 +50,8 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
 
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
-        LOGGER.error("IconBuildItemVoSdkExtPt error: processor:{}", JSON.toJSONString(buildItemVoRequest));
-
         Response<ItemEntityVO> response = super.process(buildItemVoRequest);
+        LOGGER.error("IconBuildItemVoSdkExtPt response:{}", JSON.toJSONString(response));
         ItemInfoBySourceDTO itemChannelInfo =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.CHANNEL);
         if (itemChannelInfo == null) {
             return response;
