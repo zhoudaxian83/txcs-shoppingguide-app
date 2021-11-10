@@ -85,9 +85,9 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         smartUiItemInfoSource.setMktSceneCode(SCENE_CODE);
 
         if (TxcsShoppingguideAppSwitch.openSmartUiInIconCategory) {
-            itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource, smartUiItemInfoSource/*, channelDataItemInfoSource*/));
+            itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource, smartUiItemInfoSource, channelDataItemInfoSource));
         } else {
-            itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource/*, channelDataItemInfoSource*/));
+            itemInfoNode.setItemInfoSourceMetaInfos(Lists.newArrayList(item, tppItemInfoSource, channelDataItemInfoSource));
         }
 
 
