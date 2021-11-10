@@ -51,17 +51,15 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Response<ItemEntityVO> response = super.process(buildItemVoRequest);
-        LOGGER.error("IconBuildItemVoSdkExtPt response:{}", JSON.toJSONString(response));
         ItemInfoBySourceDTO itemChannelInfo =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.CHANNEL);
         if (itemChannelInfo == null) {
             return response;
         }
-        Boolean isMostWorthBuying = false;
+        boolean isMostWorthBuying = false;
         if (itemChannelInfo instanceof ItemInfoBySourceChannelDTO) {
             ItemInfoBySourceChannelDTO channelDTO = (ItemInfoBySourceChannelDTO) itemChannelInfo;
             isMostWorthBuying = channelDTO.getChannelDataMap().containsKey(MOST_WORTH_BUY_KEY);
         }
-        LOGGER.error("IconBuildItemVoSdkExtPt channel:{} response:{}", isMostWorthBuying, JSON.toJSONString(response));
         if (!isMostWorthBuying) {
             return response;
         }
@@ -74,14 +72,12 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
             newIconAtmosphereDTO = sortIconAtmosphereLabel(iconAtmosphereDTOList, isMostWorthBuying);
             captainDTO.getItemDTO().getItemPromotionResp().setIconAtmosphereList(newIconAtmosphereDTO);
         }
-        LOGGER.error("IconBuildItemVoSdkExtPt captain response:{}", JSON.toJSONString(response));
         ItemInfoBySourceDTO smartUIDTO =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.SMART_UI);
         if (smartUIDTO instanceof ItemInfoBySourceSmartUiDTOSdk) {
             ItemInfoBySourceSmartUiDTOSdk smartUiDTOSdk = (ItemInfoBySourceSmartUiDTOSdk) smartUIDTO;
             List<String> smartUilabels = newIconAtmosphereDTO.stream().map(IconAtmosphereDTO::getIconUrl).collect(Collectors.toList());
             smartUiDTOSdk.getSmartUiInfoMap().put("timeServiceLable", smartUilabels);
         }
-        LOGGER.error("IconBuildItemVoSdkExtPt smartUI response:{}", JSON.toJSONString(response));
         return response;
     }
 

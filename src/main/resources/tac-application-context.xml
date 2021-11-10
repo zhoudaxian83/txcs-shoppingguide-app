@@ -53,6 +53,8 @@
     <bean class="com.tmall.wireless.tac.biz.processor.icon.item.ext.IconItemOriginDataFailProcessorSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.icon.item.ext.IconItemOriginDataSuccessProcessorSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.icon.item.ext.IconBuildItemVoSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.icon.item.ext.IconItemProcessBeforeReturnSdkExtPt"/>
+
 
     <bean class="com.tmall.aselfcommon.model.column.KeyUtil"/>
 
