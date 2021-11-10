@@ -49,34 +49,34 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Response<ItemEntityVO> response = super.process(buildItemVoRequest);
-        ItemInfoBySourceDTO itemChannelInfo =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.CHANNEL);
-        if (itemChannelInfo == null) {
-            return response;
-        }
-        Boolean isMostWorthBuying = false;
-        if (itemChannelInfo instanceof ItemInfoBySourceChannelDTO) {
-            ItemInfoBySourceChannelDTO channelDTO = (ItemInfoBySourceChannelDTO) itemChannelInfo;
-            isMostWorthBuying = channelDTO.getChannelDataMap().containsKey(MOST_WORTH_BUY_KEY);
-        }
-        if (!isMostWorthBuying) {
-            return response;
-        }
-        ItemInfoBySourceDTO itemCaptainInfo =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.CAPTAIN);
-        List<IconAtmosphereDTO> newIconAtmosphereDTO = Lists.newArrayList();
-        if (itemCaptainInfo instanceof ItemInfoBySourceCaptainDTO) {
-            ItemInfoBySourceCaptainDTO captainDTO = (ItemInfoBySourceCaptainDTO) itemCaptainInfo;
-            List<IconAtmosphereDTO> iconAtmosphereDTOList =  Optional.ofNullable(captainDTO.getItemDTO().getItemPromotionResp())
-                .map(ItemPromotionResp::getIconAtmosphereList).orElse(Lists.newArrayList());
-            newIconAtmosphereDTO = sortIconAtmosphereLabel(iconAtmosphereDTOList, isMostWorthBuying);
-            captainDTO.getItemDTO().getItemPromotionResp().setIconAtmosphereList(newIconAtmosphereDTO);
-        }
-
-        ItemInfoBySourceDTO smartUIDTO =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.SMART_UI);
-        if (smartUIDTO instanceof ItemInfoBySourceSmartUiDTOSdk) {
-            ItemInfoBySourceSmartUiDTOSdk smartUiDTOSdk = (ItemInfoBySourceSmartUiDTOSdk) smartUIDTO;
-            List<String> smartUilabels = newIconAtmosphereDTO.stream().map(IconAtmosphereDTO::getIconUrl).collect(Collectors.toList());
-            smartUiDTOSdk.getSmartUiInfoMap().put("timeServiceLable", smartUilabels);
-        }
+        //ItemInfoBySourceDTO itemChannelInfo =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.CHANNEL);
+        //if (itemChannelInfo == null) {
+        //    return response;
+        //}
+        //Boolean isMostWorthBuying = false;
+        //if (itemChannelInfo instanceof ItemInfoBySourceChannelDTO) {
+        //    ItemInfoBySourceChannelDTO channelDTO = (ItemInfoBySourceChannelDTO) itemChannelInfo;
+        //    isMostWorthBuying = channelDTO.getChannelDataMap().containsKey(MOST_WORTH_BUY_KEY);
+        //}
+        //if (!isMostWorthBuying) {
+        //    return response;
+        //}
+        //ItemInfoBySourceDTO itemCaptainInfo =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.CAPTAIN);
+        //List<IconAtmosphereDTO> newIconAtmosphereDTO = Lists.newArrayList();
+        //if (itemCaptainInfo instanceof ItemInfoBySourceCaptainDTO) {
+        //    ItemInfoBySourceCaptainDTO captainDTO = (ItemInfoBySourceCaptainDTO) itemCaptainInfo;
+        //    List<IconAtmosphereDTO> iconAtmosphereDTOList =  Optional.ofNullable(captainDTO.getItemDTO().getItemPromotionResp())
+        //        .map(ItemPromotionResp::getIconAtmosphereList).orElse(Lists.newArrayList());
+        //    newIconAtmosphereDTO = sortIconAtmosphereLabel(iconAtmosphereDTOList, isMostWorthBuying);
+        //    captainDTO.getItemDTO().getItemPromotionResp().setIconAtmosphereList(newIconAtmosphereDTO);
+        //}
+        //
+        //ItemInfoBySourceDTO smartUIDTO =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.SMART_UI);
+        //if (smartUIDTO instanceof ItemInfoBySourceSmartUiDTOSdk) {
+        //    ItemInfoBySourceSmartUiDTOSdk smartUiDTOSdk = (ItemInfoBySourceSmartUiDTOSdk) smartUIDTO;
+        //    List<String> smartUilabels = newIconAtmosphereDTO.stream().map(IconAtmosphereDTO::getIconUrl).collect(Collectors.toList());
+        //    smartUiDTOSdk.getSmartUiInfoMap().put("timeServiceLable", smartUilabels);
+        //}
         return response;
     }
 
