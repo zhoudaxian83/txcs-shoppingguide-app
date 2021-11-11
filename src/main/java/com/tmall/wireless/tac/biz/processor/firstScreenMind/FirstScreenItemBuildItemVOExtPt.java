@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
+import com.tmall.txcs.biz.supermarket.iteminfo.source.captainChannel.ItemInfoBySourceCaptainChannelDTO;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.origindate.ItemInfoBySourceDTOOrigin;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVOExtPt;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVoRequest;
@@ -68,6 +69,11 @@ public class FirstScreenItemBuildItemVOExtPt implements BuildItemVOExtPt {
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOOrigin) {
                 ItemInfoBySourceDTOOrigin itemInfoBySourceDTOOrigin = (ItemInfoBySourceDTOOrigin) itemInfoBySourceDTO;
                 originScm = itemInfoBySourceDTOOrigin.getScm();
+
+            }
+            if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainChannelDTO) {
+                ItemInfoBySourceCaptainChannelDTO itemInfoBySourceCaptainChannelDTO = (ItemInfoBySourceCaptainChannelDTO) itemInfoBySourceDTO;
+                itemInfoBySourceCaptainChannelDTO
 
             }
             Map<String, String> scmKeyValue = itemInfoBySourceDTO.getScmKeyValue();

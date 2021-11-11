@@ -256,7 +256,7 @@ public class FirstScreenMindItemScene {
             channelDataItemInfoSource.setQueryCaptainChannelKeyPrefix(key);
 
             List<ChannelDataDO> channelDataDOList = new ArrayList<>();
-            List<String> paramsName = Arrays.asList("itemId", "itemRankValue");
+            List<String> paramsName = Arrays.asList("itemId", "itemRankValue", "rankValueDesc");
             for(String paramName : paramsName){
                 ChannelDataDO channelDataDO = new ChannelDataDO();
                 channelDataDO.setDataKey(paramName);

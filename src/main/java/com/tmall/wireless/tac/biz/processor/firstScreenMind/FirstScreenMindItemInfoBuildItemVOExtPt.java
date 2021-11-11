@@ -17,6 +17,8 @@ import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -40,7 +42,6 @@ public class FirstScreenMindItemInfoBuildItemVOExtPt implements BuildItemVOExtPt
         }
 
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
-        log.error("FirstScreenMindItemInfoBuildItemVOExtPt.itemInfoDTO:{}", JSON.toJSONString(itemInfoDTO));
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOMain) {
