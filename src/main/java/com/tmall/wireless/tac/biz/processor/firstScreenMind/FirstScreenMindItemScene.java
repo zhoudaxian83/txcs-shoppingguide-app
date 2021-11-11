@@ -250,7 +250,7 @@ public class FirstScreenMindItemScene {
             ItemInfoSourceMetaInfo channelDataItemInfoSource = new ItemInfoSourceMetaInfo();
             channelDataItemInfoSource.setSourceName("captain_channel");
             String sKey = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),"contentId","");
-            String key  = ACTIVITY_SCENE_PREFIX + sKey;
+            String key  = ACTIVITY_SCENE_PREFIX + sKey + "_";
             channelDataItemInfoSource.setQueryCaptainChannelKeyPrefix(key);
             ChannelDataDO channelDataDO = new ChannelDataDO();
             channelDataDO.setChannelField("data");
