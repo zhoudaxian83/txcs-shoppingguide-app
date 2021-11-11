@@ -94,7 +94,7 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
         String csa = MapUtils.getString(requestContext4Ald.getAldParam(), UserParamsKeyConstant.USER_PARAMS_KEY_CSA);
         sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(csa, smAreaId));
 
-        sgFrameworkContextItem.setItemMetaInfo(getRecommendItemMetaInfo());
+        sgFrameworkContextItem.setItemMetaInfo(getRecommendItemMetaInfo(sgFrameworkContextItem));
         
         HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
             .kv("step", "requestLog")
