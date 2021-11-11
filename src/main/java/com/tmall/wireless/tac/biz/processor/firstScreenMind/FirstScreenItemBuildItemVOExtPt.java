@@ -44,7 +44,6 @@ public class FirstScreenItemBuildItemVOExtPt implements BuildItemVOExtPt {
         }
 
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
-        log.error("FirstScreenItemBuildItemVOExtPt.itemInfoDTO:{}", JSON.toJSONString(itemInfoDTO));
         itemEntityVO.put("isTop",itemInfoDTO.getItemEntity().isTop());
         String originScm = "";
         String itemUrl = "";

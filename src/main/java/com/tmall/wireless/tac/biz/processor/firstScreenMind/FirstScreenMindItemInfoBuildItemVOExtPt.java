@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 import java.util.Optional;
 
 import com.alibaba.cola.extension.Extension;
+import com.alibaba.fastjson.JSON;
 
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVOExtPt;
@@ -15,6 +16,7 @@ import com.tmall.txcs.gs.model.spi.model.ItemDataDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
         useCase = ScenarioConstantApp.LOC_TYPE_B2C,
     scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
 @Service
+@Slf4j
 public class FirstScreenMindItemInfoBuildItemVOExtPt implements BuildItemVOExtPt {
     @Override
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
@@ -37,7 +40,7 @@ public class FirstScreenMindItemInfoBuildItemVOExtPt implements BuildItemVOExtPt
         }
 
         ItemInfoDTO itemInfoDTO = buildItemVoRequest.getItemInfoDTO();
-
+        log.error("FirstScreenMindItemInfoBuildItemVOExtPt.itemInfoDTO:{}", JSON.toJSONString(itemInfoDTO));
         for (String s : itemInfoDTO.getItemInfos().keySet()) {
             ItemInfoBySourceDTO itemInfoBySourceDTO = itemInfoDTO.getItemInfos().get(s);
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceDTOMain) {
