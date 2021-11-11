@@ -45,6 +45,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -252,12 +254,17 @@ public class FirstScreenMindItemScene {
             String sKey = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),"contentId","");
             String key  = ACTIVITY_SCENE_PREFIX + sKey + "_";
             channelDataItemInfoSource.setQueryCaptainChannelKeyPrefix(key);
-            ChannelDataDO channelDataDO = new ChannelDataDO();
-            channelDataDO.setChannelField("data");
-            channelDataDO.setDataKey("data");
-            channelDataDO.setChannelName(CHANNELNAME);
-            List<ChannelDataDO> datas = Lists.newArrayList(channelDataDO);
-            channelDataItemInfoSource.setChannelFields(datas);
+
+            List<ChannelDataDO> channelDataDOList = new ArrayList<>();
+            List<String> paramsName = Arrays.asList("itemId", "itemRankValue");
+            for(String paramName : paramsName){
+                ChannelDataDO channelDataDO = new ChannelDataDO();
+                channelDataDO.setDataKey(paramName);
+                channelDataDO.setChannelField(paramName);
+                channelDataDO.setChannelName(CHANNELNAME);
+                channelDataDOList.add(channelDataDO);
+            }
+            channelDataItemInfoSource.setChannelFields(channelDataDOList);
             //Map<String, String> extraMap = Maps.newHashMap();
             //extraMap.put("salePointType", "MOST_WORTH_BUYING");
             //channelDataItemInfoSource.setExtraMap(extraMap);
