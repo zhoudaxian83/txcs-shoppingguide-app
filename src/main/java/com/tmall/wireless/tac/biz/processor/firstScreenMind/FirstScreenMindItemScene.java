@@ -57,6 +57,7 @@ import com.alibaba.fastjson.JSON;
 public class FirstScreenMindItemScene {
 
     private static final String CHANNELNAME = "sceneLdb";
+    private static final String ACTIVITY_SCENE_PREFIX = "tcls_ugc_scene_v1_";
 
     @Autowired
     TacLogger tacLogger;
@@ -248,6 +249,9 @@ public class FirstScreenMindItemScene {
         if(bangdan){
             ItemInfoSourceMetaInfo channelDataItemInfoSource = new ItemInfoSourceMetaInfo();
             channelDataItemInfoSource.setSourceName("captain_channel");
+            String sKey = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),"contentId","");
+            String key  = ACTIVITY_SCENE_PREFIX + sKey;
+            channelDataItemInfoSource.setQueryCaptainChannelKeyPrefix(key);
             ChannelDataDO channelDataDO = new ChannelDataDO();
             channelDataDO.setChannelField("data");
             channelDataDO.setDataKey("data");
