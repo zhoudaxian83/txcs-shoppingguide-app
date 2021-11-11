@@ -73,7 +73,14 @@ public class FirstScreenItemBuildItemVOExtPt implements BuildItemVOExtPt {
             }
             if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainChannelDTO) {
                 ItemInfoBySourceCaptainChannelDTO itemInfoBySourceCaptainChannelDTO = (ItemInfoBySourceCaptainChannelDTO) itemInfoBySourceDTO;
-                itemInfoBySourceCaptainChannelDTO
+                Map<String, Object> channelDataMap = itemInfoBySourceCaptainChannelDTO.getChannelDataMap();
+                if(MapUtils.isNotEmpty(channelDataMap)){
+                    //"itemRankValue", "rankValueDesc"
+                    Object rankValueDesc = channelDataMap.get("rankValueDesc");
+                    if(rankValueDesc == null){
+
+                    }
+                }
 
             }
             Map<String, String> scmKeyValue = itemInfoBySourceDTO.getScmKeyValue();
