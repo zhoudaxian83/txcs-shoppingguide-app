@@ -73,7 +73,7 @@ public class FirstScreenMindContentScene {
         sgFrameworkContextContent.setUserDO(getUserDO(context));
         sgFrameworkContextContent.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
 
-        sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo(sgFrameworkContextContent));
+        sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo(sgFrameworkContextContent.getRequestParams()));
 
 
         PageInfoDO pageInfoDO = new PageInfoDO();
