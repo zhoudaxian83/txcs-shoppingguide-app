@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -19,6 +20,7 @@ import com.tmall.txcs.gs.model.spi.model.ItemDataDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.config.TxcsShoppingguideAppSwitch;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -76,9 +78,11 @@ public class FirstScreenItemBuildItemVOExtPt implements BuildItemVOExtPt {
                 Map<String, Object> channelDataMap = itemInfoBySourceCaptainChannelDTO.getChannelDataMap();
                 if(MapUtils.isNotEmpty(channelDataMap)){
                     //"itemRankValue", "rankValueDesc"
-                    Object rankValueDesc = channelDataMap.get("rankValueDesc");
+                    Object rankValueDesc = channelDataMap.get("itemRankDesc");
                     if(rankValueDesc == null){
-
+                        //JSONObject chengJieDoudi = JSON.parseObject(TxcsShoppingguideAppSwitch.chengJieDoudi);
+                        //description = chengJieDoudi.getString(rankType);
+                        //item.put("description", description);
                     }
                 }
 
