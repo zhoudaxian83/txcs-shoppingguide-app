@@ -187,26 +187,26 @@ public class FirstScreenMindContentScene {
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 
 
-        boolean bangdan = isBangdan(requestParams);
-        if(bangdan){
-            ItemInfoSourceMetaInfo channelDataItemInfoSource = new ItemInfoSourceMetaInfo();
-            channelDataItemInfoSource.setSourceName("captain_channel");
-            String sKey = MapUtil.getStringWithDefault(requestParams,"contentId","");
-            String key  = ACTIVITY_SCENE_PREFIX + sKey + "_";
-            channelDataItemInfoSource.setQueryCaptainChannelKeyPrefix(key);
-
-            List<ChannelDataDO> channelDataDOList = new ArrayList<>();
-            List<String> paramsName = Arrays.asList("itemId", "itemRankValue", "itemRankDesc");
-            for(String paramName : paramsName){
-                ChannelDataDO channelDataDO = new ChannelDataDO();
-                channelDataDO.setDataKey(paramName);
-                channelDataDO.setChannelField(paramName);
-                channelDataDO.setChannelName(CHANNELNAME);
-                channelDataDOList.add(channelDataDO);
-            }
-            channelDataItemInfoSource.setChannelFields(channelDataDOList);
-            itemInfoSourceMetaInfoList.add(channelDataItemInfoSource);
-        }
+        //boolean bangdan = isBangdan(requestParams);
+        //if(bangdan){
+        //    ItemInfoSourceMetaInfo channelDataItemInfoSource = new ItemInfoSourceMetaInfo();
+        //    channelDataItemInfoSource.setSourceName("captain_channel");
+        //    String sKey = MapUtil.getStringWithDefault(requestParams,"contentId","");
+        //    String key  = ACTIVITY_SCENE_PREFIX + sKey + "_";
+        //    channelDataItemInfoSource.setQueryCaptainChannelKeyPrefix(key);
+        //
+        //    List<ChannelDataDO> channelDataDOList = new ArrayList<>();
+        //    List<String> paramsName = Arrays.asList("itemId", "itemRankValue", "itemRankDesc");
+        //    for(String paramName : paramsName){
+        //        ChannelDataDO channelDataDO = new ChannelDataDO();
+        //        channelDataDO.setDataKey(paramName);
+        //        channelDataDO.setChannelField(paramName);
+        //        channelDataDO.setChannelName(CHANNELNAME);
+        //        channelDataDOList.add(channelDataDO);
+        //    }
+        //    channelDataItemInfoSource.setChannelFields(channelDataDOList);
+        //    itemInfoSourceMetaInfoList.add(channelDataItemInfoSource);
+        //}
 
 
 
