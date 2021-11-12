@@ -265,9 +265,6 @@ public class FirstScreenMindItemScene {
                 channelDataDOList.add(channelDataDO);
             }
             channelDataItemInfoSource.setChannelFields(channelDataDOList);
-            //Map<String, String> extraMap = Maps.newHashMap();
-            //extraMap.put("salePointType", "MOST_WORTH_BUYING");
-            //channelDataItemInfoSource.setExtraMap(extraMap);
             itemInfoSourceMetaInfoList.add(channelDataItemInfoSource);
         }
 
