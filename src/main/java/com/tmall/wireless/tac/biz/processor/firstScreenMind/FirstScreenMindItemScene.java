@@ -251,7 +251,7 @@ public class FirstScreenMindItemScene {
         if(bangdan){
             ItemInfoSourceMetaInfo channelDataItemInfoSource = new ItemInfoSourceMetaInfo();
             channelDataItemInfoSource.setSourceName("captain_channel");
-            String sKey = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),"contentId","");
+            String sKey = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),"moduleId","");
             String key  = ACTIVITY_SCENE_PREFIX + sKey + "_";
             channelDataItemInfoSource.setQueryCaptainChannelKeyPrefix(key);
 
