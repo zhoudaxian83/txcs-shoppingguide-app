@@ -254,8 +254,10 @@ public class FirstScreenMindItemScene {
             log.error("com bangdan process");
             ItemInfoSourceMetaInfo channelDataItemInfoSource = new ItemInfoSourceMetaInfo();
             channelDataItemInfoSource.setSourceName("captain_channel");
-            String sKey = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),"moduleId","");
-            String key  = ACTIVITY_SCENE_PREFIX + sKey + "_";
+            String moduleId = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),"moduleId","");
+            String contentId = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),"contentId","");
+            String dataId = StringUtils.isNotEmpty(moduleId) ? moduleId : contentId;
+            String key  = ACTIVITY_SCENE_PREFIX + dataId + "_";
             channelDataItemInfoSource.setQueryCaptainChannelKeyPrefix(key);
 
             List<ChannelDataDO> channelDataDOList = new ArrayList<>();
