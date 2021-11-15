@@ -15,6 +15,7 @@ import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusines
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.Enviroment;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,7 +73,11 @@ public class BrandClubBangdanContentOriginDataRequestBuildSdkExtPt extends Regis
         List<String> newContentSetIdList = contentSetIdList.stream().map(id -> "intelligentCombinationItems_" + id)
                 .collect(
                         Collectors.toList());
+        if(CollectionUtils.isEmpty(newContentSetIdList)){
+            LOGGER.error("BrandClubBangdanContentOriginDataRequestBuildSdkExtPt getSceneSetBangDan empty. brandId:{}", brandId);
+        }
         params.put("sceneSet", Joiner.on(",").join(newContentSetIdList));
+        params.put("brandId", String.valueOf(brandId));
         params.put("sceneTop", String.valueOf(topContentIdList));
         /**心智场景支持O2O场景**/
         Long oneHour = Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
