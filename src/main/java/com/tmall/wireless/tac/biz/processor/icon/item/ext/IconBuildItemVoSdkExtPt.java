@@ -43,7 +43,7 @@ import org.apache.commons.collections.MapUtils;
 )
 public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt implements BuildItemVoSdkExtPt {
 
-    private static final String MOST_WORTH_BUY_KEY = "mostWorthBuy";
+    public static final String MOST_WORTH_BUY_KEY = "mostWorthBuy";
 
     private static final String MOST_WORTH_BUY_PIC = "https://img.alicdn.com/imgextra/i1/O1CN01kAxxAD1aO9GC7TSzp_!!6000000003319-2-tps-216-90.png";
 
