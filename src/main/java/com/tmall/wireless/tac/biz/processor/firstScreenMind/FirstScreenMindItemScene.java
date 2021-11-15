@@ -254,6 +254,7 @@ public class FirstScreenMindItemScene {
             log.error("com bangdan process");
             ItemInfoSourceMetaInfo channelDataItemInfoSource = new ItemInfoSourceMetaInfo();
             channelDataItemInfoSource.setSourceName("captain_channel");
+            //两个都是内容id，之前历史原因，mtop请求来的使用的是moduleId
             String moduleId = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),"moduleId","");
             String contentId = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),"contentId","");
             String dataId = StringUtils.isNotEmpty(moduleId) ? moduleId : contentId;
