@@ -251,7 +251,6 @@ public class FirstScreenMindItemScene {
 
         boolean bangdan = isBangdan(sgFrameworkContextItem);
         if(bangdan){
-            log.error("com bangdan process");
             ItemInfoSourceMetaInfo channelDataItemInfoSource = new ItemInfoSourceMetaInfo();
             channelDataItemInfoSource.setSourceName("captain_channel");
             //两个都是内容id，之前历史原因，mtop请求来的使用的是moduleId

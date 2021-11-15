@@ -73,20 +73,6 @@ public class FirstScreenItemBuildItemVOExtPt implements BuildItemVOExtPt {
                 originScm = itemInfoBySourceDTOOrigin.getScm();
 
             }
-            if (itemInfoBySourceDTO instanceof ItemInfoBySourceCaptainChannelDTO) {
-                ItemInfoBySourceCaptainChannelDTO itemInfoBySourceCaptainChannelDTO = (ItemInfoBySourceCaptainChannelDTO) itemInfoBySourceDTO;
-                Map<String, Object> channelDataMap = itemInfoBySourceCaptainChannelDTO.getChannelDataMap();
-                if(MapUtils.isNotEmpty(channelDataMap)){
-                    //"itemRankValue", "rankValueDesc"
-                    Object rankValueDesc = channelDataMap.get("itemRankDesc");
-                    if(rankValueDesc == null){
-                        //JSONObject chengJieDoudi = JSON.parseObject(TxcsShoppingguideAppSwitch.chengJieDoudi);
-                        //description = chengJieDoudi.getString(rankType);
-                        //item.put("description", description);
-                    }
-                }
-
-            }
             Map<String, String> scmKeyValue = itemInfoBySourceDTO.getScmKeyValue();
             if (MapUtils.isNotEmpty(scmKeyValue)) {
                 trackPoint.putAll(scmKeyValue);

@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.eagleeye.EagleEye;
 import com.taobao.tair.json.Json;
-import com.tmall.aselfcaptain.item.model.ChannelDataDO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
@@ -22,7 +21,6 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.util.TacResultBackupUtil;
-import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.MindUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
@@ -40,9 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.OAEPParameterSpec;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -51,9 +46,6 @@ import java.util.Optional;
 @Service
 public class FirstScreenMindContentScene {
     Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindContentScene.class);
-
-    private static final String CHANNELNAME = "sceneLdb";
-    private static final String ACTIVITY_SCENE_PREFIX = "tcls_ugc_scene_v1_";
 
     @Autowired
     SgFrameworkServiceContent sgFrameworkServiceContent;
@@ -73,7 +65,7 @@ public class FirstScreenMindContentScene {
         sgFrameworkContextContent.setUserDO(getUserDO(context));
         sgFrameworkContextContent.setLocParams(CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
 
-        sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo(sgFrameworkContextContent.getRequestParams()));
+        sgFrameworkContextContent.setContentMetaInfo(getContentMetaInfo(context.getParams()));
 
 
         PageInfoDO pageInfoDO = new PageInfoDO();
@@ -186,30 +178,6 @@ public class FirstScreenMindContentScene {
         itemInfoSourceMetaInfoCaptain.setSceneCode("visitSupermarket.main");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
 
-
-        //boolean bangdan = isBangdan(requestParams);
-        //if(bangdan){
-        //    ItemInfoSourceMetaInfo channelDataItemInfoSource = new ItemInfoSourceMetaInfo();
-        //    channelDataItemInfoSource.setSourceName("captain_channel");
-        //    String sKey = MapUtil.getStringWithDefault(requestParams,"contentId","");
-        //    String key  = ACTIVITY_SCENE_PREFIX + sKey + "_";
-        //    channelDataItemInfoSource.setQueryCaptainChannelKeyPrefix(key);
-        //
-        //    List<ChannelDataDO> channelDataDOList = new ArrayList<>();
-        //    List<String> paramsName = Arrays.asList("itemId", "itemRankValue", "itemRankDesc");
-        //    for(String paramName : paramsName){
-        //        ChannelDataDO channelDataDO = new ChannelDataDO();
-        //        channelDataDO.setDataKey(paramName);
-        //        channelDataDO.setChannelField(paramName);
-        //        channelDataDO.setChannelName(CHANNELNAME);
-        //        channelDataDOList.add(channelDataDO);
-        //    }
-        //    channelDataItemInfoSource.setChannelFields(channelDataDOList);
-        //    itemInfoSourceMetaInfoList.add(channelDataItemInfoSource);
-        //}
-
-
-
         ItemGroupMetaInfo itemGroupMetaInfo = new ItemGroupMetaInfo();
         itemGroupMetaInfo.setGroupName("sm_B2C");
         itemGroupMetaInfo.setItemInfoSourceMetaInfos(itemInfoSourceMetaInfoList);
@@ -243,11 +211,4 @@ public class FirstScreenMindContentScene {
         contentMetaInfo.setContentRecommendMetaInfo(contentRecommendMetaInfo);
         return contentMetaInfo;
     }
-
-
-    private boolean isBangdan(Map<String, Object> requestParams) {
-        String contentType = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.CONTENT_TYPE, RenderContentTypeEnum.b2cNormalContent.getType());
-        return RenderContentTypeEnum.bangdanContent.getType().equals(contentType) || RenderContentTypeEnum.bangdanO2OContent.getType().equals(contentType);
-    }
-
 }
