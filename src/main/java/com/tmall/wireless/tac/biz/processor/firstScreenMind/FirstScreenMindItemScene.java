@@ -37,6 +37,7 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -56,6 +57,7 @@ import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 
 @Service
+@Slf4j
 public class FirstScreenMindItemScene {
 
     private static final String CHANNELNAME = "sceneLdb";
@@ -249,6 +251,7 @@ public class FirstScreenMindItemScene {
 
         boolean bangdan = isBangdan(sgFrameworkContextItem);
         if(bangdan){
+            log.error("com bangdan process");
             ItemInfoSourceMetaInfo channelDataItemInfoSource = new ItemInfoSourceMetaInfo();
             channelDataItemInfoSource.setSourceName("captain_channel");
             String sKey = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),"moduleId","");
