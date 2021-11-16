@@ -89,13 +89,10 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
 
         smartUiItemInfoSource.setMktSceneCode(SCENE_CODE);
         List<ItemInfoSourceMetaInfo> metaInfos = Lists.newArrayList(item, tppItemInfoSource);
-        //if (TxcsShoppingguideAppSwitch.openSmartUiInIconCategory) {
-        //    metaInfos.add(smartUiItemInfoSource);
-        //}
-        if (TxcsShoppingguideAppSwitch.openMostWorthBuy) {
-            metaInfos.add(channelDataItemInfoSource);
+        if (TxcsShoppingguideAppSwitch.openSmartUiInIconCategory) {
+            metaInfos.add(smartUiItemInfoSource);
         }
-        channelDataItemInfoSource.setOpenChannelFlag(Boolean.TRUE);
+        channelDataItemInfoSource.setOpenChannelFlag(TxcsShoppingguideAppSwitch.openMostWorthBuy);
         itemInfoNode.setItemInfoSourceMetaInfos(metaInfos);
         return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
     }
