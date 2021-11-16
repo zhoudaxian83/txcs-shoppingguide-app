@@ -18,6 +18,6 @@ public class TxcsShoppingguideAppSwitch {
     @AppSwitch(des = "爆款专区获取tpp翻倍开关", level = Switch.Level.p4)
     public static boolean openHotItemDouble = true;
 
-    @AppSwitch(des = "icon分类值得买标签开发", level = Switch.Level.p4)
+    @AppSwitch(des = "icon分类值得买标签开关", level = Switch.Level.p4)
     public static Boolean openMostWorthBuy = true;
 }

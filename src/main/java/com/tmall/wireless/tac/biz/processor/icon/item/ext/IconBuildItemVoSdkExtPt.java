@@ -78,6 +78,7 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
             List<String> smartUilabels = newIconAtmosphereDTO.stream().map(IconAtmosphereDTO::getIconUrl).collect(Collectors.toList());
             smartUiDTOSdk.getSmartUiInfoMap().put("timeServiceLable", smartUilabels);
         }
+        response.getValue().put("itemAtmosphereList", newIconAtmosphereDTO);
         return response;
     }
 
