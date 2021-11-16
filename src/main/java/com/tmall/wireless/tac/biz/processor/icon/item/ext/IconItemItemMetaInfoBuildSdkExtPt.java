@@ -95,7 +95,7 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         if (TxcsShoppingguideAppSwitch.openMostWorthBuy) {
             metaInfos.add(channelDataItemInfoSource);
         }
-        channelDataItemInfoSource.setOpenChannelFlag(Boolean.FALSE);
+        channelDataItemInfoSource.setOpenChannelFlag(Boolean.TRUE);
         itemInfoNode.setItemInfoSourceMetaInfos(metaInfos);
         return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
     }
