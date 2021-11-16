@@ -70,6 +70,8 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         // 约定字段
         extraMap.put("salePointType", "MOST_WORTH_BUYING");
         channelDataItemInfoSource.setExtraMap(extraMap);
+        // 降级开关
+        channelDataItemInfoSource.setOpenChannelFlag(TxcsShoppingguideAppSwitch.openMostWorthBuy);
 
 
 
@@ -88,12 +90,10 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         smartUiItemInfoSource.setAppId(27642L);
 
         smartUiItemInfoSource.setMktSceneCode(SCENE_CODE);
-        List<ItemInfoSourceMetaInfo> metaInfos = Lists.newArrayList(item, tppItemInfoSource);
+        List<ItemInfoSourceMetaInfo> metaInfos = Lists.newArrayList(item, tppItemInfoSource, channelDataItemInfoSource);
         if (TxcsShoppingguideAppSwitch.openSmartUiInIconCategory) {
             metaInfos.add(smartUiItemInfoSource);
         }
-        channelDataItemInfoSource.setOpenChannelFlag(TxcsShoppingguideAppSwitch.openMostWorthBuy);
-        metaInfos.add(channelDataItemInfoSource);
         itemInfoNode.setItemInfoSourceMetaInfos(metaInfos);
         return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
     }
