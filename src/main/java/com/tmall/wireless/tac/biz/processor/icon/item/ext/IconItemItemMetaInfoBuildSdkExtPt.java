@@ -93,6 +93,7 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
             metaInfos.add(smartUiItemInfoSource);
         }
         channelDataItemInfoSource.setOpenChannelFlag(TxcsShoppingguideAppSwitch.openMostWorthBuy);
+        metaInfos.add(channelDataItemInfoSource);
         itemInfoNode.setItemInfoSourceMetaInfos(metaInfos);
         return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
     }
