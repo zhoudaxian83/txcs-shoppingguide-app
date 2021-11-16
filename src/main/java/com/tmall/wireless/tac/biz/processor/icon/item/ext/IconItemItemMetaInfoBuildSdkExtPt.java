@@ -55,14 +55,19 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         ItemInfoSourceMetaInfo smartUiItemInfoSource = ItemInfoSourceMetaInfo.build("smartui");
         smartUiItemInfoSource.setStrategyPackageId("707_11169");
 
+        // 表示走captain管道服务获取数据
         ItemInfoSourceMetaInfo channelDataItemInfoSource = ItemInfoSourceMetaInfo.build("channel");
+        // captain入参
         ChannelDataDO mostBuyChannelData = new ChannelDataDO();
         mostBuyChannelData.setChannelField("value");
+        // 表示查询的表
         mostBuyChannelData.setChannelName("salePoint");
+        // 表示返回字段的field
         mostBuyChannelData.setDataKey(IconBuildItemVoSdkExtPt.MOST_WORTH_BUY_KEY);
         List<ChannelDataDO> datas = Lists.newArrayList(mostBuyChannelData);
         channelDataItemInfoSource.setChannelFields(datas);
         Map<String, String> extraMap = Maps.newHashMap();
+        // 约定字段
         extraMap.put("salePointType", "MOST_WORTH_BUYING");
         channelDataItemInfoSource.setExtraMap(extraMap);
 
@@ -90,8 +95,7 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         if (TxcsShoppingguideAppSwitch.openMostWorthBuy) {
             metaInfos.add(channelDataItemInfoSource);
         }
-        itemInfoNode.setItemInfoSourceMetaInfos(metaInfos);
-
+        channelDataItemInfoSource.setOpenChannelFlag(Boolean.FALSE);
         return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
     }
 }

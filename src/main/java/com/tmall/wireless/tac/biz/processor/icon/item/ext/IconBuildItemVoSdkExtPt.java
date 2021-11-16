@@ -64,7 +64,7 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
             List<IconAtmosphereDTO> iconAtmosphereDTOList =  Optional.ofNullable(captainDTO.getItemDTO().getItemPromotionResp())
                 .map(ItemPromotionResp::getIconAtmosphereList).orElse(Lists.newArrayList());
             newIconAtmosphereDTO = sortIconAtmosphereLabel(iconAtmosphereDTOList, isMostWorthBuying);
-            captainDTO.getItemDTO().getItemPromotionResp().setIconAtmosphereList(newIconAtmosphereDTO);
+            //captainDTO.getItemDTO().getItemPromotionResp().setIconAtmosphereList(newIconAtmosphereDTO);
         }
         response.getValue().put("itemAtmosphereList", newIconAtmosphereDTO);
         ItemInfoBySourceDTO smartUIDTO =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.SMART_UI);
