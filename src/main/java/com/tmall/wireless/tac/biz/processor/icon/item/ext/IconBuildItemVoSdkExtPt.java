@@ -52,9 +52,6 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
     public Response<ItemEntityVO> process(BuildItemVoRequest buildItemVoRequest) {
         Response<ItemEntityVO> response = super.process(buildItemVoRequest);
         ItemInfoBySourceDTO itemChannelInfo =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.CHANNEL);
-        if (itemChannelInfo == null) {
-            return response;
-        }
         boolean isMostWorthBuying = false;
         if (itemChannelInfo instanceof ItemInfoBySourceChannelDTO) {
             ItemInfoBySourceChannelDTO channelDTO = (ItemInfoBySourceChannelDTO) itemChannelInfo;
