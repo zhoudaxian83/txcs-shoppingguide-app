@@ -60,9 +60,6 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
             ItemInfoBySourceChannelDTO channelDTO = (ItemInfoBySourceChannelDTO) itemChannelInfo;
             isMostWorthBuying = channelDTO.getChannelDataMap().containsKey(MOST_WORTH_BUY_KEY);
         }
-        if (!isMostWorthBuying) {
-            return response;
-        }
         ItemInfoBySourceDTO itemCaptainInfo =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.CAPTAIN);
         List<IconAtmosphereDTO> newIconAtmosphereDTO = Lists.newArrayList();
         if (itemCaptainInfo instanceof ItemInfoBySourceCaptainDTO) {
@@ -72,13 +69,13 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
             newIconAtmosphereDTO = sortIconAtmosphereLabel(iconAtmosphereDTOList, isMostWorthBuying);
             captainDTO.getItemDTO().getItemPromotionResp().setIconAtmosphereList(newIconAtmosphereDTO);
         }
+        response.getValue().put("itemAtmosphereList", newIconAtmosphereDTO);
         ItemInfoBySourceDTO smartUIDTO =  buildItemVoRequest.getItemInfoDTO().getItemInfos().get(ItemInfoSourceKey.SMART_UI);
         if (smartUIDTO instanceof ItemInfoBySourceSmartUiDTOSdk) {
             ItemInfoBySourceSmartUiDTOSdk smartUiDTOSdk = (ItemInfoBySourceSmartUiDTOSdk) smartUIDTO;
             List<String> smartUilabels = newIconAtmosphereDTO.stream().map(IconAtmosphereDTO::getIconUrl).collect(Collectors.toList());
             smartUiDTOSdk.getSmartUiInfoMap().put("timeServiceLable", smartUilabels);
         }
-        response.getValue().put("itemAtmosphereList", newIconAtmosphereDTO);
         return response;
     }
 
