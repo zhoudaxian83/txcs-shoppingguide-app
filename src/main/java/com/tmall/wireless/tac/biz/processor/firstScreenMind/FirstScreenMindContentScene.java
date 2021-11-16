@@ -73,11 +73,11 @@ public class FirstScreenMindContentScene {
         pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
 
-        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+        /*HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                 .kv("step", "requestLog")
                 .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
                 .kv("sgFrameworkContextContent",JSON.toJSONString(sgFrameworkContextContent))
-                .info();
+                .info();*/
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> {
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
@@ -124,7 +124,8 @@ public class FirstScreenMindContentScene {
                     /**取b2c普通场景集id打底**/
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
                     String contentSetIdB2c = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, "");
-                    tacResult = TacResultBackupUtil.tacResultBackupContentParam(tacResult,b,Lists.newArrayList(contentSetIdB2c));
+                    //tacResult = TacResultBackupUtil.tacResultBackupContentParam(tacResult,b,Lists.newArrayList(contentSetIdB2c));
+                    tacResult = TacResultBackupUtil.tacResultBackupContentParam(tacResult,b,contentSetIdB2c);
                     return tacResult;
                 }).onErrorReturn(r -> TacResult.errorResult(""));
     }

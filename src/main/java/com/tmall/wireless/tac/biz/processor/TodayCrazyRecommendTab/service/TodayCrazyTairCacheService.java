@@ -1,6 +1,9 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.service;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
@@ -21,6 +24,7 @@ import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.CommonConstant;
 import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.constant.TabTypeEnum;
+import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.DataSourceRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import org.apache.commons.collections4.CollectionUtils;
@@ -29,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -239,19 +244,35 @@ public class TodayCrazyTairCacheService {
     /**
      * 渠道立减商品
      */
-    public List<ColumnCenterDataSetItemRuleDTO> getEntryChannelPriceNew() {
-        String channelPriceKey = getChannelPriceNewKey();
-        tacLogger.info("channelPriceKey:" + channelPriceKey);
+    public List<ColumnCenterDataSetItemRuleDTO> getEntryChannelPriceNew(String cacheKey) {
+        //String channelPriceKey = getChannelPriceNewKey();
+        String channelPriceKey = cacheKey;
+        if (CommonConstant.DEBUG) {
+            tacLogger.info("获取元数据：getEntryChannelPriceNew:");
+        }
         return this.getTairColumnCenterDataSetItemRuleDTO(channelPriceKey);
     }
+
 
     /**
      * 单品折扣价商品
      */
-    public List<ColumnCenterDataSetItemRuleDTO> getEntryPromotionPrice() {
-        String promotionPriceKey = getPromotionPriceKey();
-        tacLogger.info("promotionPriceKey:" + promotionPriceKey);
+    public List<ColumnCenterDataSetItemRuleDTO> getEntryPromotionPrice(String cacheKey) {
+        //String promotionPriceKey = getPromotionPriceKey();
+        String promotionPriceKey = cacheKey;
+        if (CommonConstant.DEBUG) {
+            tacLogger.info("promotionPriceKey:" + promotionPriceKey);
+        }
         return this.getTairColumnCenterDataSetItemRuleDTO(promotionPriceKey);
+    }
+
+
+    public DataSourceRequest buildDataSourceRequest(int version, String cacheKey, String tab) {
+        DataSourceRequest dataSourceRequest = new DataSourceRequest();
+        dataSourceRequest.setVersion(version);
+        dataSourceRequest.setTab(tab);
+        dataSourceRequest.setCacheKey(cacheKey);
+        return dataSourceRequest;
     }
 
 
@@ -264,11 +285,11 @@ public class TodayCrazyTairCacheService {
         return logicalArr[0];
     }
 
-    private String getChannelPriceNewKey() {//channelPrice_XN_pre
+    public String getChannelPriceNewKey() {//channelPrice_XN_pre
         return this.createKey(CommonConstant.channelPriceNewPrefix, getRandomLogical());
     }
 
-    private String getPromotionPriceKey() {//channelPrice_XN_pre
+    public String getPromotionPriceKey() {//channelPrice_XN_pre
         return this.createKey(CommonConstant.promotionPricePrefix, getRandomLogical());
     }
 
@@ -318,7 +339,53 @@ public class TodayCrazyTairCacheService {
      *
      * @return
      */
-    public List<String> getItemIdAndCacheKeyList(String tairKey) {
+    public List<String> getItemIdAndCacheKeyList(String tairKey, String appType) {
+        DataSourceRequest dataSourceRequest = buildDataSourceRequest(1, tairKey, appType);
+        try {
+            return topItemIdsIsChannelPriceNew.get(dataSourceRequest);
+        } catch (Exception e) {
+            HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                    .kv("method", "getItemIdAndCacheKeyList")
+                    .kv("dataSourceRequest", JSON.toJSONString(dataSourceRequest))
+                    .kv("Exception", JSON.toJSONString(e))
+                    .error();
+            return Lists.newArrayList();
+        }
+    }
+
+
+    /**
+     * 30ms从tair加载最新的值，此处使用LocalCache的目的是为了避免热点
+     */
+    private LoadingCache<DataSourceRequest, List<String>> topItemIdsIsChannelPriceNew = CacheBuilder
+            .newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(30, TimeUnit.SECONDS)
+            .build(new CacheLoader<DataSourceRequest, List<String>>() {
+                @Override
+                public List<String> load(DataSourceRequest dataSourceRequest) {
+                    try {
+                        List<String> stringList = doGetItemIdAndCacheKeyList(CommonConstant.CHANNEL_ITEM_IDS);
+                        if (CommonConstant.DEBUG) {
+                            tacLogger.info("topItemIdsIsChannelPriceNew_dataSourceRequest" + JSON.toJSONString(dataSourceRequest));
+                            tacLogger.info("topItemIdsIsChannelPrice" + JSON.toJSONString(stringList));
+                        }
+                        if (CollectionUtils.isEmpty(stringList)) {
+                            return Lists.newArrayList();
+                        } else {
+                            return stringList;
+                        }
+                    } catch (Exception e) {
+                        HadesLogUtil.stream(bizScenario.getUniqueIdentity())
+                                .kv("method", "topItemIdsIsChannelPriceNew")
+                                .kv("Exception", JSON.toJSONString(e))
+                                .error();
+                        return Lists.newArrayList();
+                    }
+                }
+            });
+
+    public List<String> doGetItemIdAndCacheKeyList(String tairKey) {
         List<String> itemIds = Lists.newArrayList();
         TairManager tairManager = tairFactorySpi.getOriginDataFailProcessTair();
         if (tairManager == null || tairManager.getMultiClusterTairManager() == null || tairManager.getNameSpace() <= 0) {
@@ -346,4 +413,6 @@ public class TodayCrazyTairCacheService {
         }
         return itemIds;
     }
+
+
 }

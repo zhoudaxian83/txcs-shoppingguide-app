@@ -45,4 +45,7 @@ public class DetailSwitch {
 
     @AppSwitch(des="详情菜谱推荐模块普通场景定制承接页URL",level= Switch.Level.p3)
     public static String reciptCommonContentJumpUrl="https://pages.tmall.com/wow/an/cs/act/wupr?spm=a3204.21125900.9715263030.d_b2cNormalContent_2020053220241_623375402419&wh_biz=tm&wh_pid=go-shopping%2F1774bde7dd7&disableNav=YES&recommendForUTab=true&position=0";
+
+    @AppSwitch(des="详情菜谱推荐模块是否出普通场景推荐开关",level= Switch.Level.p3)
+    public static boolean enablePlaceTair=true;
 }

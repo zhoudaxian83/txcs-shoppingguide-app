@@ -13,6 +13,8 @@ import com.tmall.tcls.gs.sdk.framework.model.Response;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
+import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
+import com.tmall.wireless.tac.biz.processor.huichang.common.utils.URLUtil;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +56,19 @@ public class GshItemRecommendBuildItemVoSdkExtPt extends DefaultBuildItemVoSdkEx
                     itemEntityVO.put(entry.getKey(), entry.getValue());
                 }
             }
+            itemEntityVO.put("locType", "");
+            //够实惠修改
+            Object itemUrl = itemEntityVO.get("itemUrl");
+            try {
+                if(itemUrl != null){
+                    String newItemUrl = PageUrlUtil.removeParam(String.valueOf(itemUrl), "locType");
+                    itemEntityVO.put("itemUrl", newItemUrl);
+                }
+            }catch (Exception e){
+                logger.error("去除locType异常, url:" + itemUrl);
+            }
+
+
         }
         return process;
     }

@@ -26,6 +26,7 @@ import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
+import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
@@ -126,7 +127,7 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
         }
         itemMap.put("itemUrl", itemDTO.getDetailUrl());
         itemMap.put("_areaSellable", !itemDTO.isSoldout());
-        itemMap.put("locType", itemDTO.getLocType().name());
+        //itemMap.put("locType", itemDTO.getLocType().name());
         itemMap.put("sellerId", itemDTO.getSellerId());
         itemMap.put("sellOut", itemDTO.isSoldout());
         itemMap.put("canBuy", itemDTO.isCanBuy());
@@ -137,6 +138,17 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
             itemMap.put("skuId",itemDTO.getTargetSkuId());
         }
         itemMap.put("attachments", itemDTO.getAttachments());
+
+        //够实惠修改
+        Object itemUrl = itemMap.get("itemUrl");
+        try {
+            if(itemUrl != null){
+                String newItemUrl = PageUrlUtil.removeParam(String.valueOf(itemUrl), "locType");
+                itemMap.put("itemUrl", newItemUrl);
+            }
+        }catch (Exception e){
+            logger.error("去除locType异常, url:" + itemUrl);
+        }
 
     }
 

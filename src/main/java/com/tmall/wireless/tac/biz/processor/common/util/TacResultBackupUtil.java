@@ -54,13 +54,15 @@ public class TacResultBackupUtil {
      * @return
      */
     public static TacResult tacResultBackupContentParam(TacResult<SgFrameworkResponse<ContentVO>> tacResult, BizScenario bizScenario
-            ,List<String> backupParams){
+            ,String backupParams){
         if(bizScenario == null || StringUtils.isEmpty(bizScenario.getUniqueIdentity())){
             /**打底参数**/
-            if(CollectionUtils.isNotEmpty(backupParams)){
+            if(StringUtils.isNotEmpty(backupParams)){
                 tacResult.getBackupMetaData().setBackupWithParam(true);
-                tacResult.getBackupMetaData().setBackupParams(backupParams);
+                tacResult.getBackupMetaData().setBackupKey(backupParams);
             }
+            /**不开启oss兜底**/
+            tacResult.getBackupMetaData().setUseOss(false);
             tacResult.getBackupMetaData().setUseBackup(true);
             return tacResult;
         }
@@ -78,14 +80,16 @@ public class TacResultBackupUtil {
                 .info();
         }
         /**打底参数**/
-        if(CollectionUtils.isNotEmpty(backupParams)){
+        if(StringUtils.isNotEmpty(backupParams)){
             tacResult.getBackupMetaData().setBackupWithParam(true);
-            tacResult.getBackupMetaData().setBackupParams(backupParams);
+            tacResult.getBackupMetaData().setBackupKey(backupParams);
             HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                 .kv("TacResultBackupUtil","tacResultBackupContentParam")
                 .kv("backupParams", JSON.toJSONString(backupParams))
                 .info();
         }
+        /**不开启oss兜底**/
+        tacResult.getBackupMetaData().setUseOss(false);
         tacResult.getBackupMetaData().setUseBackup(true);
         return tacResult;
     }

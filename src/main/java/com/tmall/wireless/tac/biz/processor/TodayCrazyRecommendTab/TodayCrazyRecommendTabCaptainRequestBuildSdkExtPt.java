@@ -1,12 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.item.constant.Channel;
 import com.tmall.aselfcaptain.item.model.ItemId;
 import com.tmall.aselfcaptain.item.model.ItemQueryDO;
 import com.tmall.aselfcaptain.item.model.QueryOptionDO;
-import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.iteminfo.CaptainRequestBuildRequest;
@@ -44,6 +42,10 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
+        if(CommonConstant.DEBUG){
+            tacLogger.info("TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt 执行了");
+
+        }
         RenderRequest renderRequest = new RenderRequest();
         ItemQueryDO query = new ItemQueryDO();
         SgFrameworkContextItem contextItem = captainRequestBuildRequest.getContextItem();
