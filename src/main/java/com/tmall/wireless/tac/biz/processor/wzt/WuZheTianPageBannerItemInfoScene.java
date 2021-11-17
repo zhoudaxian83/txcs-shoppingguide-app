@@ -24,6 +24,7 @@ import com.tmall.txcs.gs.model.biz.context.PmtParams;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import com.tmall.wireless.tac.biz.processor.wzt.utils.LimitItemUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -64,7 +65,7 @@ public class WuZheTianPageBannerItemInfoScene {
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
         sgFrameworkContextItem.setUserDO(userDO);
         sgFrameworkContextItem.setLocParams(
-            CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
+                CsaUtil.parseCsaObj(context.get(UserParamsKeyConstant.USER_PARAMS_KEY_CSA), smAreaId));
         sgFrameworkContextItem.setItemMetaInfo(getItemMetaInfo());
 
         EntitySetParams entitySetParams = new EntitySetParams();
@@ -85,19 +86,22 @@ public class WuZheTianPageBannerItemInfoScene {
         sgFrameworkContextItem.setUserPageInfo(pageInfoDO);
         sgFrameworkContextItem.setUserParams(context.getParams());
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
-            .map(TacResult::newResult).map(tacResult -> {
-                List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
-                    tacLogger.info("过滤前originalEntityVOList:"+ JSON.toJSONString(originalEntityVOList));
-                if (!CollectionUtils.isEmpty(originalEntityVOList)) {
-                    List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
-                    if (noLimitEntityVOList.size() != originalEntityVOList.size() && noLimitEntityVOList.size() != 0) {
-                        tacResult.getData().setItemAndContentList(noLimitEntityVOList);
+                .map(TacResult::newResult).map(tacResult -> {
+                    List<EntityVO> originalEntityVOList = tacResult.getData().getItemAndContentList();
+                    if (!CollectionUtils.isEmpty(originalEntityVOList)) {
+                        List<EntityVO> noLimitEntityVOList = LimitItemUtil.doLimitItems(originalEntityVOList);
+                        if (Constant.DEBUG) {
+                            tacLogger.info("限购信息originalEntityVOList:" + JSON.toJSONString(originalEntityVOList));
+                            tacLogger.info("限购信息noLimitEntityVOList:" + JSON.toJSONString(noLimitEntityVOList));
+                        }
+                        if (noLimitEntityVOList.size() != originalEntityVOList.size() && noLimitEntityVOList.size() != 0) {
+                            tacResult.getData().setItemAndContentList(noLimitEntityVOList);
+                        }
                     }
-                }
-                tacResult.setHasMore(tacResult.getData().isHasMore());
-                return tacResult;
-            })
-            .onErrorReturn(r -> TacResult.errorResult(""));
+                    tacResult.setHasMore(tacResult.getData().isHasMore());
+                    return tacResult;
+                })
+                .onErrorReturn(r -> TacResult.errorResult(""));
 
     }
 

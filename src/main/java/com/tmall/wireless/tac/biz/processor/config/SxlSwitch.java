@@ -4,7 +4,6 @@ import com.taobao.csp.switchcenter.annotation.AppSwitch;
 import com.taobao.csp.switchcenter.annotation.NameSpace;
 import com.taobao.csp.switchcenter.bean.Switch;
 import com.taobao.csp.switchcenter.bean.Switch.Level;
-import com.taobao.csp.switchcenter.core.SwitchManager;
 
 /**
  * @author haixiao.zhang
@@ -50,7 +49,8 @@ public class SxlSwitch {
     @AppSwitch(des = "上新了超市算法选品ab实验id", level = Switch.Level.p4)
     public static String SXL_ALG_ITEMSET_ID_AB = "129";
 
-
+    @AppSwitch(des = "上新了试用融和ab实验id", level = Switch.Level.p4)
+    public static String SXL_TRIAL_MERGE_ID_AB = "182";
 
 
 
