@@ -80,7 +80,7 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         if (!TxcsShoppingguideAppSwitch.openMostWorthBuy) {
             channelDataItemInfoSource.setOpenChannelFlag(Boolean.FALSE);
         }
-        channelDataItemInfoSource.setOpenChannelFlag(getAbData(context));
+        //channelDataItemInfoSource.setOpenChannelFlag(getAbData(context));
 
         List<String> e1 = Lists.newArrayList(new String[] {"supermarketPrice", "timesBot", "salesLast30d"});
         List<String> e2 = Lists.newArrayList(new String[] {"priceLabel", "timesBot", "salesLast30d"});
@@ -105,47 +105,47 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         return Lists.newArrayList(new ItemInfoNode[] {itemInfoNode});
     }
 
-    private boolean getAbData(Context context) {
-        StringBuilder itemSetIdType = new StringBuilder();
-        try {
-            if (context.getParams().get(AB_TEST_RESULT) == null
-                || StringUtils.isBlank(context.getParams().get(AB_TEST_RESULT).toString())) {
-                HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-                    .kv("ICON_ITEM context.getParams()", JSON.toJSONString(context.getParams()))
-                    .info();
-                return Boolean.TRUE;
-            }
-            List<Map<String, Object>> abTestRest = (List<Map<String, Object>>)context.getParams().get(AB_TEST_RESULT);
-            if (CollectionUtils.isEmpty(abTestRest)) {
-                HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-                    .kv("SxlItemRecService context.getParams().get(AB_TEST_RESULT)", JSON.toJSONString(context.getParams()))
-                    .info();
-                return Boolean.TRUE;
-            }
-            HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-                .kv("SxlItemRecService abTestRest", JSON.toJSONString(abTestRest))
-                .info();
-            for (Map<String, Object> variation : abTestRest) {
-                HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-                    .kv("icon", "getAbData")
-                    .kv("sxlAlgItemsetIdAb", "MAOCHAO_SHOPPINGGUIDE")
-                    .info();
-                if ("MAOCHAO_SHOPPINGGUIDE".equals(variation.get("bizType"))) {
-                    if (variation.get("mostWorthBuy") != null) {
-                        String flag = String.valueOf(variation.get("mostWorthBuy"));
-                        return Objects.equals("1", flag);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-                .kv("ICON_ITEM getAbData", JSON.toJSONString(context.getParams()))
-                .kv("e.getMessage()", JSON.toJSONString(e))
-                .info();
-        }
-        HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-            .kv("ICON_ITEM channelData", itemSetIdType.toString())
-            .info();
-        return Boolean.TRUE;
-    }
+    //private boolean getAbData(Context context) {
+    //    StringBuilder itemSetIdType = new StringBuilder();
+    //    try {
+    //        if (context.getParams().get(AB_TEST_RESULT) == null
+    //            || StringUtils.isBlank(context.getParams().get(AB_TEST_RESULT).toString())) {
+    //            HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
+    //                .kv("ICON_ITEM context.getParams()", JSON.toJSONString(context.getParams()))
+    //                .info();
+    //            return Boolean.TRUE;
+    //        }
+    //        List<Map<String, Object>> abTestRest = (List<Map<String, Object>>)context.getParams().get(AB_TEST_RESULT);
+    //        if (CollectionUtils.isEmpty(abTestRest)) {
+    //            HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
+    //                .kv("SxlItemRecService context.getParams().get(AB_TEST_RESULT)", JSON.toJSONString(context.getParams()))
+    //                .info();
+    //            return Boolean.TRUE;
+    //        }
+    //        HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
+    //            .kv("SxlItemRecService abTestRest", JSON.toJSONString(abTestRest))
+    //            .info();
+    //        for (Map<String, Object> variation : abTestRest) {
+    //            HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
+    //                .kv("icon", "getAbData")
+    //                .kv("sxlAlgItemsetIdAb", "MAOCHAO_SHOPPINGGUIDE")
+    //                .info();
+    //            if ("MAOCHAO_SHOPPINGGUIDE".equals(variation.get("bizType"))) {
+    //                if (variation.get("mostWorthBuy") != null) {
+    //                    String flag = String.valueOf(variation.get("mostWorthBuy"));
+    //                    return Objects.equals("1", flag);
+    //                }
+    //            }
+    //        }
+    //    } catch (Exception e) {
+    //        HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
+    //            .kv("ICON_ITEM getAbData", JSON.toJSONString(context.getParams()))
+    //            .kv("e.getMessage()", JSON.toJSONString(e))
+    //            .info();
+    //    }
+    //    HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
+    //        .kv("ICON_ITEM channelData", itemSetIdType.toString())
+    //        .info();
+    //    return Boolean.TRUE;
+    //}
 }
