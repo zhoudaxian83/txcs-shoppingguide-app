@@ -48,7 +48,8 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         ItemGroupMetaInfo itemGroupMetaInfoSmNextDay = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.O2ONextDay.name());
         itemGroupMetaInfoSmNextDay.setItemInfoNodes(this.buildDefaultItemInfoNodes(context));
         itemMetaInfo.setItemGroupRenderInfoList(Lists
-            .newArrayList(new ItemGroupMetaInfo[]{itemGroupMetaInfoSmB2c, itemGroupMetaInfoSmOneHour, itemGroupMetaInfoSmHalfDay, itemGroupMetaInfoSmNextDay}));
+            .newArrayList(new ItemGroupMetaInfo[] {itemGroupMetaInfoSmB2c, itemGroupMetaInfoSmOneHour, itemGroupMetaInfoSmHalfDay,
+                itemGroupMetaInfoSmNextDay}));
         return itemMetaInfo;
     }
 
@@ -79,19 +80,16 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         if (!TxcsShoppingguideAppSwitch.openMostWorthBuy) {
             channelDataItemInfoSource.setOpenChannelFlag(Boolean.FALSE);
         }
-         channelDataItemInfoSource.setOpenChannelFlag(getAbData(context));
+        channelDataItemInfoSource.setOpenChannelFlag(getAbData(context));
 
-
-
-
-        List<String> e1 = Lists.newArrayList(new String[]{"supermarketPrice", "timesBot", "salesLast30d"});
-        List<String> e2 = Lists.newArrayList(new String[]{"priceLabel", "timesBot", "salesLast30d"});
+        List<String> e1 = Lists.newArrayList(new String[] {"supermarketPrice", "timesBot", "salesLast30d"});
+        List<String> e2 = Lists.newArrayList(new String[] {"priceLabel", "timesBot", "salesLast30d"});
         List<List<String>> exclusiveMaterials = Lists.newArrayList();
         exclusiveMaterials.add(e1);
         exclusiveMaterials.add(e2);
         smartUiItemInfoSource.setExclusiveMaterials(exclusiveMaterials);
-        List<String> requireList = Lists.newArrayList(new String[]{"extVideo5S", "richPict", "whitePict"});
-        List<String> requireListPrice = Lists.newArrayList(new String[]{"pagePrice"});
+        List<String> requireList = Lists.newArrayList(new String[] {"extVideo5S", "richPict", "whitePict"});
+        List<String> requireListPrice = Lists.newArrayList(new String[] {"pagePrice"});
         List<List<String>> requireListList = Lists.newArrayList();
         requireListList.add(requireList);
         requireListList.add(requireListPrice);
@@ -104,50 +102,49 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
             metaInfos.add(smartUiItemInfoSource);
         }
         itemInfoNode.setItemInfoSourceMetaInfos(metaInfos);
-        return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
+        return Lists.newArrayList(new ItemInfoNode[] {itemInfoNode});
     }
 
-
-    private boolean getAbData(Context context){
+    private boolean getAbData(Context context) {
         StringBuilder itemSetIdType = new StringBuilder();
         try {
-            if(context.getParams().get(AB_TEST_RESULT) == null
-                || StringUtils.isBlank(context.getParams().get(AB_TEST_RESULT).toString())){
+            if (context.getParams().get(AB_TEST_RESULT) == null
+                || StringUtils.isBlank(context.getParams().get(AB_TEST_RESULT).toString())) {
                 HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-                    .kv("ICON_ITEM context.getParams()",JSON.toJSONString(context.getParams()))
+                    .kv("ICON_ITEM context.getParams()", JSON.toJSONString(context.getParams()))
                     .info();
                 return Boolean.TRUE;
             }
-            List<Map<String,Object>> abTestRest = (List<Map<String, Object>>)context.getParams().get(AB_TEST_RESULT);
-            if(CollectionUtils.isEmpty(abTestRest)){
+            List<Map<String, Object>> abTestRest = (List<Map<String, Object>>)context.getParams().get(AB_TEST_RESULT);
+            if (CollectionUtils.isEmpty(abTestRest)) {
                 HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-                    .kv("SxlItemRecService context.getParams().get(AB_TEST_RESULT)",JSON.toJSONString(context.getParams()))
+                    .kv("SxlItemRecService context.getParams().get(AB_TEST_RESULT)", JSON.toJSONString(context.getParams()))
                     .info();
                 return Boolean.TRUE;
             }
             HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-                .kv("SxlItemRecService abTestRest",JSON.toJSONString(abTestRest))
+                .kv("SxlItemRecService abTestRest", JSON.toJSONString(abTestRest))
                 .info();
-            abTestRest.forEach(variation ->{
+            for (Map<String, Object> variation : abTestRest) {
                 HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-                    .kv("icon","getAbData")
-                    .kv("sxlAlgItemsetIdAb","MAOCHAO_SHOPPINGGUIDE")
+                    .kv("icon", "getAbData")
+                    .kv("sxlAlgItemsetIdAb", "MAOCHAO_SHOPPINGGUIDE")
                     .info();
-                if("MAOCHAO_SHOPPINGGUIDE".equals(variation.get("bizType"))) {
-                    if(variation.get("mostWorthBuy") != null) {
-                        return Objects.equals("1", variation.get("mostWorthBuy");
+                if ("MAOCHAO_SHOPPINGGUIDE".equals(variation.get("bizType"))) {
+                    if (variation.get("mostWorthBuy") != null) {
+                        String flag = String.valueOf(variation.get("mostWorthBuy"));
+                        return Objects.equals("1", flag);
                     }
                 }
-
-            });
-        }catch (Exception e){
+            }
+        } catch (Exception e) {
             HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-                .kv("ICON_ITEM getAbData",JSON.toJSONString(context.getParams()))
-                .kv("e.getMessage()",JSON.toJSONString(e))
+                .kv("ICON_ITEM getAbData", JSON.toJSONString(context.getParams()))
+                .kv("e.getMessage()", JSON.toJSONString(e))
                 .info();
         }
         HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-            .kv("ICON_ITEM channelData",itemSetIdType.toString())
+            .kv("ICON_ITEM channelData", itemSetIdType.toString())
             .info();
         return Boolean.TRUE;
     }
