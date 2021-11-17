@@ -36,6 +36,10 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
 
     public static final String SCENE_CODE = "shoppingguide.category";
 
+    private static final String AB_TEST_CODE = "MAOCHAO_SHOPPINGGUIDE";
+
+    private static final String ICON_AB_TEST_ID = "209";
+
     @Override
     public ItemMetaInfo process(Context context) {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
@@ -128,10 +132,10 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
             for (Map<String, Object> variation : abTestRest) {
                 HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
                     .kv("icon", "getAbData")
-                    .kv("sxlAlgItemsetIdAb", "MAOCHAO_SHOPPINGGUIDE")
+                    .kv("iconABType", AB_TEST_CODE)
                     .info();
-                if ("MAOCHAO_SHOPPINGGUIDE".equals(variation.get("bizType")) &&
-                      Objects.equals("209", String.valueOf(variation.get("tclsExpId")))) {
+                if (AB_TEST_CODE.equals(variation.get("bizType")) &&
+                      Objects.equals(ICON_AB_TEST_ID, String.valueOf(variation.get("tclsExpId")))) {
                     if (variation.get("mostWorthBuy") != null) {
                         String flag = String.valueOf(variation.get("mostWorthBuy"));
                         return Objects.equals("1", flag);
