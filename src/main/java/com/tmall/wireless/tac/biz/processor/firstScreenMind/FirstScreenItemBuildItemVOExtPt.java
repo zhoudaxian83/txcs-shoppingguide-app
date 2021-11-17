@@ -3,13 +3,9 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 import java.util.Map;
 import java.util.Optional;
 import com.alibaba.cola.extension.Extension;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.captain.ItemInfoBySourceDTOMain;
-import com.tmall.txcs.biz.supermarket.iteminfo.source.captainChannel.ItemInfoBySourceCaptainChannelDTO;
 import com.tmall.txcs.biz.supermarket.iteminfo.source.origindate.ItemInfoBySourceDTOOrigin;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVOExtPt;
 import com.tmall.txcs.gs.framework.extensions.buildvo.BuildItemVoRequest;
@@ -20,8 +16,6 @@ import com.tmall.txcs.gs.model.spi.model.ItemDataDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoBySourceDTO;
 import com.tmall.txcs.gs.model.spi.model.ItemInfoDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.config.TxcsShoppingguideAppSwitch;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -33,7 +27,6 @@ import org.springframework.stereotype.Service;
     useCase = ScenarioConstantApp.LOC_TYPE_B2C,
     scenario = ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
 @Service
-@Slf4j
 public class FirstScreenItemBuildItemVOExtPt implements BuildItemVOExtPt {
 
     @Override
