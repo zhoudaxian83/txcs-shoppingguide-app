@@ -130,7 +130,8 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
                     .kv("icon", "getAbData")
                     .kv("sxlAlgItemsetIdAb", "MAOCHAO_SHOPPINGGUIDE")
                     .info();
-                if ("MAOCHAO_SHOPPINGGUIDE".equals(variation.get("bizType"))) {
+                if ("MAOCHAO_SHOPPINGGUIDE".equals(variation.get("bizType")) &&
+                      Objects.equals("209", String.valueOf(variation.get("tclsExpId")))) {
                     if (variation.get("mostWorthBuy") != null) {
                         String flag = String.valueOf(variation.get("mostWorthBuy"));
                         return Objects.equals("1", flag);
