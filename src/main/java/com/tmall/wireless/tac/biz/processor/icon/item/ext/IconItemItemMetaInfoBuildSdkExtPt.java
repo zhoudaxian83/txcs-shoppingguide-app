@@ -2,7 +2,6 @@ package com.tmall.wireless.tac.biz.processor.icon.item.ext;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import com.alibaba.fastjson.JSON;
 
@@ -23,8 +22,6 @@ import com.tmall.tcls.gs.sdk.framework.model.meta.node.ItemInfoNode;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.config.TxcsShoppingguideAppSwitch;
 import com.tmall.wireless.tac.client.domain.Context;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 
 @SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
     useCase = ScenarioConstantApp.LOC_TYPE_B2C
@@ -32,28 +29,25 @@ import org.apache.commons.lang3.StringUtils;
 )
 public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemMetaInfoBuildSdkExtPt {
 
-    private final static String AB_TEST_RESULT = "abTestVariationsResult";
 
     public static final String SCENE_CODE = "shoppingguide.category";
-
     @Override
     public ItemMetaInfo process(Context context) {
         ItemMetaInfo itemMetaInfo = new ItemMetaInfo();
         ItemGroupMetaInfo itemGroupMetaInfoSmB2c = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.B2C.name());
-        itemGroupMetaInfoSmB2c.setItemInfoNodes(this.buildDefaultItemInfoNodes(context));
+        itemGroupMetaInfoSmB2c.setItemInfoNodes(this.buildDefaultItemInfoNodes());
         ItemGroupMetaInfo itemGroupMetaInfoSmOneHour = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.O2OOneHour.name());
-        itemGroupMetaInfoSmOneHour.setItemInfoNodes(this.buildDefaultItemInfoNodes(context));
+        itemGroupMetaInfoSmOneHour.setItemInfoNodes(this.buildDefaultItemInfoNodes());
         ItemGroupMetaInfo itemGroupMetaInfoSmHalfDay = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.O2OHalfDay.name());
-        itemGroupMetaInfoSmHalfDay.setItemInfoNodes(this.buildDefaultItemInfoNodes(context));
+        itemGroupMetaInfoSmHalfDay.setItemInfoNodes(this.buildDefaultItemInfoNodes());
         ItemGroupMetaInfo itemGroupMetaInfoSmNextDay = ItemGroupMetaInfo.build(BizType.SM.getCode() + "_" + O2oType.O2ONextDay.name());
-        itemGroupMetaInfoSmNextDay.setItemInfoNodes(this.buildDefaultItemInfoNodes(context));
+        itemGroupMetaInfoSmNextDay.setItemInfoNodes(this.buildDefaultItemInfoNodes());
         itemMetaInfo.setItemGroupRenderInfoList(Lists
-            .newArrayList(new ItemGroupMetaInfo[] {itemGroupMetaInfoSmB2c, itemGroupMetaInfoSmOneHour, itemGroupMetaInfoSmHalfDay,
-                itemGroupMetaInfoSmNextDay}));
+            .newArrayList(new ItemGroupMetaInfo[]{itemGroupMetaInfoSmB2c, itemGroupMetaInfoSmOneHour, itemGroupMetaInfoSmHalfDay, itemGroupMetaInfoSmNextDay}));
         return itemMetaInfo;
     }
 
-    private List<ItemInfoNode> buildDefaultItemInfoNodes(Context context) {
+    private List<ItemInfoNode> buildDefaultItemInfoNodes() {
         ItemInfoNode itemInfoNode = new ItemInfoNode();
         ItemInfoSourceMetaInfo item = ItemInfoSourceMetaInfo.build("captain");
         item.setMktSceneCode(SCENE_CODE);
@@ -77,19 +71,18 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         extraMap.put("salePointType", "MOST_WORTH_BUYING");
         channelDataItemInfoSource.setExtraMap(extraMap);
         // 降级开关
-        if (!TxcsShoppingguideAppSwitch.openMostWorthBuy) {
-            channelDataItemInfoSource.setOpenChannelFlag(Boolean.FALSE);
-        }
-        //channelDataItemInfoSource.setOpenChannelFlag(getAbData(context));
+        channelDataItemInfoSource.setOpenChannelFlag(TxcsShoppingguideAppSwitch.openMostWorthBuy);
 
-        List<String> e1 = Lists.newArrayList(new String[] {"supermarketPrice", "timesBot", "salesLast30d"});
-        List<String> e2 = Lists.newArrayList(new String[] {"priceLabel", "timesBot", "salesLast30d"});
+
+
+        List<String> e1 = Lists.newArrayList(new String[]{"supermarketPrice", "timesBot", "salesLast30d"});
+        List<String> e2 = Lists.newArrayList(new String[]{"priceLabel", "timesBot", "salesLast30d"});
         List<List<String>> exclusiveMaterials = Lists.newArrayList();
         exclusiveMaterials.add(e1);
         exclusiveMaterials.add(e2);
         smartUiItemInfoSource.setExclusiveMaterials(exclusiveMaterials);
-        List<String> requireList = Lists.newArrayList(new String[] {"extVideo5S", "richPict", "whitePict"});
-        List<String> requireListPrice = Lists.newArrayList(new String[] {"pagePrice"});
+        List<String> requireList = Lists.newArrayList(new String[]{"extVideo5S", "richPict", "whitePict"});
+        List<String> requireListPrice = Lists.newArrayList(new String[]{"pagePrice"});
         List<List<String>> requireListList = Lists.newArrayList();
         requireListList.add(requireList);
         requireListList.add(requireListPrice);
@@ -102,50 +95,6 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
             metaInfos.add(smartUiItemInfoSource);
         }
         itemInfoNode.setItemInfoSourceMetaInfos(metaInfos);
-        return Lists.newArrayList(new ItemInfoNode[] {itemInfoNode});
+        return Lists.newArrayList(new ItemInfoNode[]{itemInfoNode});
     }
-
-    //private boolean getAbData(Context context) {
-    //    StringBuilder itemSetIdType = new StringBuilder();
-    //    try {
-    //        if (context.getParams().get(AB_TEST_RESULT) == null
-    //            || StringUtils.isBlank(context.getParams().get(AB_TEST_RESULT).toString())) {
-    //            HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-    //                .kv("ICON_ITEM context.getParams()", JSON.toJSONString(context.getParams()))
-    //                .info();
-    //            return Boolean.TRUE;
-    //        }
-    //        List<Map<String, Object>> abTestRest = (List<Map<String, Object>>)context.getParams().get(AB_TEST_RESULT);
-    //        if (CollectionUtils.isEmpty(abTestRest)) {
-    //            HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-    //                .kv("SxlItemRecService context.getParams().get(AB_TEST_RESULT)", JSON.toJSONString(context.getParams()))
-    //                .info();
-    //            return Boolean.TRUE;
-    //        }
-    //        HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-    //            .kv("SxlItemRecService abTestRest", JSON.toJSONString(abTestRest))
-    //            .info();
-    //        for (Map<String, Object> variation : abTestRest) {
-    //            HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-    //                .kv("icon", "getAbData")
-    //                .kv("sxlAlgItemsetIdAb", "MAOCHAO_SHOPPINGGUIDE")
-    //                .info();
-    //            if ("MAOCHAO_SHOPPINGGUIDE".equals(variation.get("bizType"))) {
-    //                if (variation.get("mostWorthBuy") != null) {
-    //                    String flag = String.valueOf(variation.get("mostWorthBuy"));
-    //                    return Objects.equals("1", flag);
-    //                }
-    //            }
-    //        }
-    //    } catch (Exception e) {
-    //        HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-    //            .kv("ICON_ITEM getAbData", JSON.toJSONString(context.getParams()))
-    //            .kv("e.getMessage()", JSON.toJSONString(e))
-    //            .info();
-    //    }
-    //    HadesLogUtil.stream(ScenarioConstantApp.ICON_ITEM)
-    //        .kv("ICON_ITEM channelData", itemSetIdType.toString())
-    //        .info();
-    //    return Boolean.TRUE;
-    //}
 }
