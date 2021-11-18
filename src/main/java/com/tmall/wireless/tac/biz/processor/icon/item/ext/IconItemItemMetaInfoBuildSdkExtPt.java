@@ -83,8 +83,9 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
         // 降级开关
         if (!TxcsShoppingguideAppSwitch.openMostWorthBuy) {
             channelDataItemInfoSource.setOpenChannelFlag(Boolean.FALSE);
+        } else {
+            channelDataItemInfoSource.setOpenChannelFlag(getAbData(context));
         }
-        channelDataItemInfoSource.setOpenChannelFlag(getAbData(context));
 
         List<String> e1 = Lists.newArrayList(new String[] {"supermarketPrice", "timesBot", "salesLast30d"});
         List<String> e2 = Lists.newArrayList(new String[] {"priceLabel", "timesBot", "salesLast30d"});
