@@ -38,7 +38,7 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
 
     private static final String AB_TEST_CODE = "MAOCHAO_SHOPPINGGUIDE";
 
-    private static final String ICON_AB_TEST_ID = "209";
+    private static final String ICON_AB_TEST_ID = "211";
 
     @Override
     public ItemMetaInfo process(Context context) {
