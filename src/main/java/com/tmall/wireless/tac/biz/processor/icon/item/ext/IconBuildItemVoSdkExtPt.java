@@ -45,7 +45,7 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
 
     public static final String MOST_WORTH_BUY_KEY = "mostWorthBuy";
 
-    private static final String MOST_WORTH_BUY_PIC = "https://img.alicdn.com/imgextra/i1/O1CN01kAxxAD1aO9GC7TSzp_!!6000000003319-2-tps-216-90.png";
+    private static final String MOST_WORTH_BUY_PIC = "https://img.alicdn.com/imgextra/i2/O1CN01lwyuwE1KBIIHRQ23z_!!6000000001125-2-tps-276-90.png";
 
 
     @Override
