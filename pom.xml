@@ -12,7 +12,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <common.rpm.version>1.0.20-SNAPSHOT</common.rpm.version>
+        <common.rpm.version>1.0.25</common.rpm.version>
         <spi.store.version>1.0.14</spi.store.version>
     </properties>
 
@@ -203,12 +203,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba.txcs</groupId>-->
-<!--            <artifactId>txcs-item-normalization-igraph-api</artifactId>-->
-<!--            <version>1.0.42</version>-->
-<!--        </dependency>-->
 
     </dependencies>
 
