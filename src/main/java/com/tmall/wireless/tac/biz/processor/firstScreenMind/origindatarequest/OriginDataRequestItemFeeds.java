@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind.origindatarequest;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContext;
 import com.tmall.txcs.gs.model.biz.context.LocParams;
@@ -10,6 +11,7 @@ import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.RenderContentTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.enums.TppItemBusinessTypeEnum;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.RenderLangUtil;
@@ -17,6 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * @author guijian
@@ -79,12 +83,23 @@ public class OriginDataRequestItemFeeds implements OriginDataRequest{
     }
 
     private String getModuleId(Optional<Map> requestParams) {
-
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("OriginDataRequestItemFeeds","getModuleId")
+            .kv("requestParams", JSON.toJSONString(requestParams))
+            .info();
         String moduleId = requestParams.map(entry -> entry.get("moduleId")).orElse("").toString();
-        if (StringUtils.isNotEmpty(moduleId)) {
+        String contentId = requestParams.map(entry -> entry.get("contentId")).orElse("").toString();
+        String exposureContentIds = requestParams.map(entry -> entry.get("exposureContentIds")).orElse("").toString();
+        if (StringUtils.isNotBlank(moduleId)) {
             return moduleId;
+        }else if(StringUtils.isNotBlank(contentId)){
+            return contentId;
+        }else if(StringUtils.isNotBlank(exposureContentIds)){
+            /**榜单更多承接页**/
+            String exposureContentId = exposureContentIds.split(",")[0];
+            return exposureContentId;
         }
-        return requestParams.map(entry -> entry.get("contentId")).orElse("").toString();
+        return contentId;
     }
 
     private boolean isO2oScene(SgFrameworkContext sgFrameworkContext) {

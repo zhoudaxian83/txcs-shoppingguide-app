@@ -77,6 +77,10 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 .kv("sKeyList",JSON.toJSONString(sKeyList))
                 .info();
             Result<List<DataEntry>> mgetResult = tairFactorySpi.getOriginDataFailProcessTair().getMultiClusterTairManager().mget(labelSceneNamespace, sKeyList);
+            /*HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+                .kv("sKeyList",JSON.toJSONString(sKeyList))
+                .kv("mgetResult.getValue()",JSON.toJSONString(mgetResult.getValue()))
+                .info();*/
             if(mgetResult != null && mgetResult.getValue() != null){
                 HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                     .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
@@ -162,17 +166,20 @@ public class FirstScreenMindContentInfoQueryExtPt implements ContentInfoQueryExt
                 contentDTO.setContentInfo(contentInfo);
                 contentDTOMap.put(contentId,contentDTO);
             }
-            HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+            /*HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                 .kv("userId",Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
                     Objects::toString).orElse("0"))
                 .kv("FirstScreenMindContentInfoQueryExtPt","process")
                 .kv("contentDTOMap",JSON.toJSONString(contentDTOMap))
-                .info();
+                .info();*/
         }catch (Exception e){
             LOGGER.info(RenderErrorEnum.contentBatchTairExc.getCode(), RenderErrorEnum.contentBatchTairExc.getMessage());
             return Flowable.just(Response.fail(RenderErrorEnum.contentBatchTairExc.getCode()));
         }
-        tacLogger.info("****FirstScreenMindContentInfoQueryExtPt contentDTOMap*****:"+contentDTOMap.toString());
+        /*HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+            .kv("FirstScreenMindContentInfoQueryExtPt","process")
+            .kv("contentDTOMap",JSON.toJSONString(contentDTOMap))
+            .info();*/
         return Flowable.just(Response.success(contentDTOMap));
     }
 

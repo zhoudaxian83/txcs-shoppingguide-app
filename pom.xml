@@ -12,11 +12,20 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <common.rpm.version>1.0.12</common.rpm.version>
+        <common.rpm.version>1.0.25</common.rpm.version>
+        <spi.store.version>1.0.14</spi.store.version>
     </properties>
 
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.tcls.shoppingguide</groupId>
+            <artifactId>shoppingguide-biz</artifactId>
+            <version>1.0.16-tmcs</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.tmall.txcs</groupId>
             <artifactId>txcs-sg-biz</artifactId>
@@ -25,6 +34,41 @@
                 <exclusion>
                     <groupId>org.jboss.logging</groupId>
                     <artifactId>jboss-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+
+        <!-- spi store-->
+        <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>render-part-spi</artifactId>
+            <version>${spi.store.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>data-part-spi</artifactId>
+            <version>${spi.store.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>third-part-spi</artifactId>
+            <version>${spi.store.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.tmall.aselfcaptain</groupId>
+            <artifactId>aselfcaptain-client</artifactId>
+            <version>3.6.17</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>hsf-app-api</artifactId>
+                    <groupId>com.taobao.hsf</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>hsf-app-spring</artifactId>
+                    <groupId>com.taobao.hsf</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -92,11 +136,11 @@
             <groupId>com.taobao.csp</groupId>
             <artifactId>switchcenter</artifactId>
             <version>2.1.1.2-fix-fastjson-noneautotype</version>
-<!--        <dependency>-->
-<!--            <groupId>com.tmall.aself</groupId>-->
-<!--            <artifactId>aselfmanager-client</artifactId>-->
-<!--            <version>1.0.26-RELEASE</version>-->
-<!--        </dependency>-->
+            <!--        <dependency>-->
+            <!--            <groupId>com.tmall.aself</groupId>-->
+            <!--            <artifactId>aselfmanager-client</artifactId>-->
+            <!--            <version>1.0.26-RELEASE</version>-->
+            <!--        </dependency>-->
         </dependency>
         <dependency>
             <groupId>com.tmall.aself</groupId>
@@ -122,6 +166,44 @@
             <artifactId>sdk-module-member-o2otbmc</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+
+        <!-- alipay begin -->
+        <dependency>
+            <groupId>com.alipay.recmixer</groupId>
+            <artifactId>recmixer-common-service-facade</artifactId>
+            <version>1.0.0.20210526</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.tradecsa</groupId>
+            <artifactId>tradecsa-common-service-spi</artifactId>
+            <version>1.0.0.2021071317</version>
+        </dependency>
+        <!-- alipay end-->
+
+        <dependency>
+            <groupId>com.tmall.wireless.store</groupId>
+            <artifactId>user-part</artifactId>
+            <version>${spi.store.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.tmall.promotion</groupId>
+            <artifactId>promotiontag-client</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.tmall.aself</groupId>
+            <artifactId>aselfcommon-util</artifactId>
+            <version>2.3.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>aliyun-sdk-oss</artifactId>
+                    <groupId>com.aliyun.oss</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -137,3 +219,4 @@
         </plugins>
     </build>
 </project>
+

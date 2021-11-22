@@ -4,7 +4,10 @@ package com.tmall.wireless.tac.biz.processor.firstScreenMind;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.taobao.eagleeye.EagleEye;
+import com.taobao.tair.json.Json;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -17,6 +20,8 @@ import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.common.util.TacResultBackupUtil;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.MindUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
@@ -24,6 +29,7 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -49,7 +55,6 @@ public class FirstScreenMindContentScene {
     public Flowable<TacResult<SgFrameworkResponse<ContentVO>>> recommend(Context context) {
 
         long startTime = System.currentTimeMillis();
-        tacLogger.info("***FirstScreenMindContentScene context***:"+ JSON.toJSONString(context));
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
         SgFrameworkContextContent sgFrameworkContextContent = new SgFrameworkContextContent();
@@ -68,11 +73,11 @@ public class FirstScreenMindContentScene {
         pageInfoDO.setPageSize(Integer.valueOf(MapUtil.getStringWithDefault(context.getParams(), "pageSize", "20")));
         sgFrameworkContextContent.setUserPageInfo(pageInfoDO);
 
-        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
+        /*HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                 .kv("step", "requestLog")
                 .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
                 .kv("sgFrameworkContextContent",JSON.toJSONString(sgFrameworkContextContent))
-                .info();
+                .info();*/
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> {
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
@@ -95,13 +100,14 @@ public class FirstScreenMindContentScene {
                             response.setHasMore(true);
 //                            response.setIndex(0);
                         }
-                    } else if(StringUtils.equalsIgnoreCase("false",String.valueOf(isFixPositionBanner))){
+                    } else{
                         propertyMap.put("isFixPositionBanner", false);
                     }
                     if (response.getExtInfos() == null) {
                         response.setExtInfos(Maps.newHashMap());
                     }
                     response.getExtInfos().put("propertyMap", propertyMap);
+                    response.getExtInfos().put("traceId", EagleEye.getTraceId());
                     HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT)
                             .kv("step", "requestLog")
                             .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
@@ -110,10 +116,16 @@ public class FirstScreenMindContentScene {
                     return response;
                 }).map(TacResult::newResult)
                 .map(tacResult -> {
-                    tacResult.getBackupMetaData().setUseBackup(true);
-                    if(tacResult.getData() == null || tacResult.getData().getItemAndContentList() == null || tacResult.getData().getItemAndContentList().isEmpty()){
-                        tacResult.setSuccess(false);
-                    }
+                    BizScenario b = BizScenario.valueOf(
+                        ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+                        ScenarioConstantApp.LOC_TYPE_B2C,
+                        ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT
+                    );
+                    /**取b2c普通场景集id打底**/
+                    Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
+                    String contentSetIdB2c = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_SCENE_CONTENT_SET_B2C, "");
+                    //tacResult = TacResultBackupUtil.tacResultBackupContentParam(tacResult,b,Lists.newArrayList(contentSetIdB2c));
+                    tacResult = TacResultBackupUtil.tacResultBackupContentParam(tacResult,b,contentSetIdB2c);
                     return tacResult;
                 }).onErrorReturn(r -> TacResult.errorResult(""));
     }
@@ -135,8 +147,6 @@ public class FirstScreenMindContentScene {
         UserDO userDO = new UserDO();
         userDO.setUserId(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getUserId).orElse(0L));
         userDO.setNick(Optional.of(context).map(Context::getUserInfo).map(UserInfo::getNick).orElse(""));
-        tacLogger.info("****FirstScreenMindContentScene context.getParams().get(\"cookies\"))***:"+context.getParams().get("cookies"));
-        LOGGER.info("****FirstScreenMindContentScene context.getParams().get(\"cookies\"))***:"+context.getParams().get("cookies"));
         if (MapUtils.isNotEmpty(context.getParams())) {
             Object cookies = context.getParams().get("cookies");
             if (cookies != null && cookies instanceof Map) {

@@ -1,7 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.config;
 
-import com.taobao.csp.switchcenter.core.SwitchManager;
-
+import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
+import com.tmall.wireless.tac.config.TacConfigManager;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch;
 
 /**
  * @author haixiao.zhang
@@ -14,9 +15,14 @@ public class SwitchConfigBean {
     public void init() {
         try {
 
-            SwitchManager.init(APP_NAME, SxlSwitch.class);
+            /*SwitchManager.init(APP_NAME, SxlSwitch.class);*/
+            TacConfigManager.switchRegister(SxlSwitch.class);
+            TacConfigManager.switchRegister(TxcsShoppingguideAppSwitch.class);
+            TacConfigManager.switchRegister(DetailSwitch.class);
+            TacConfigManager.switchRegister(SupermarketHallSwitch.class);
 
         } catch (Throwable e) {
+            throw new RuntimeException(e);
         }
     }
 }

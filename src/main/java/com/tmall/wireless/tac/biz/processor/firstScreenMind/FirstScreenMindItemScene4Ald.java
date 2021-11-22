@@ -5,7 +5,9 @@ import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.taobao.eagleeye.EagleEye;
 import com.tmall.hades.monitor.print.HadesLogUtil;
+import com.tmall.tcls.gs.sdk.ext.BizScenario;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
@@ -17,12 +19,16 @@ import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
 import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
+import com.tmall.txcs.gs.model.biz.context.LocParams;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.util.AldUrlParamUtil;
+import com.tmall.wireless.tac.biz.processor.common.util.TacResultBackupUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.ContentInfoSupport;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -30,10 +36,15 @@ import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -41,6 +52,8 @@ import java.util.Optional;
 
 @Service
 public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
+
+    Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindItemScene4Ald.class);
 
     @Autowired
     TacLogger tacLogger;
@@ -51,20 +64,42 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
     ContentInfoSupport contentInfoSupport;
 
     public Flowable<TacResult<List<GeneralItem>>> recommend4Ald(RequestContext4Ald requestContext4Ald) {
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("step", "requestLog")
+            .kv("requestContext4Ald", JSON.toJSONString(requestContext4Ald))
+            .info();
 
         Long smAreaId = MapUtil.getLongWithDefault(requestContext4Ald.getAldParam(), "smAreaId", 330100L);
-
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
 
         sgFrameworkContextItem.setRequestParams(AldUrlParamUtil.getAldUrlKv(requestContext4Ald));
 
+        /**兼容前端无效请求**/
+        String noProcess = MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(),
+            RequestKeyConstantApp.FIRST_SCREEN_NO_PROCESS,"false");
+        if(StringUtils.isNotBlank(noProcess) && "true".equals(noProcess)){
+            GeneralItem generalItem = new GeneralItem();
+            /*generalItem.put("noProcess",noProcess);*/
+            List<GeneralItem> generalItems = Lists.newArrayList(generalItem);
+            return Flowable.just(TacResult.newResult(generalItems));
+        }
+
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("step", "requestLog")
+            .kv("sgFrameworkContextItem1", JSON.toJSONString(sgFrameworkContextItem))
+            .info();
         sgFrameworkContextItem.setSceneInfo(getSceneInfo());
 
         sgFrameworkContextItem.setUserDO(getUserDO(requestContext4Ald.getUserInfo()));
         String csa = MapUtils.getString(requestContext4Ald.getAldParam(), UserParamsKeyConstant.USER_PARAMS_KEY_CSA);
         sgFrameworkContextItem.setLocParams(CsaUtil.parseCsaObj(csa, smAreaId));
-        sgFrameworkContextItem.setItemMetaInfo(this.getRecommendItemMetaInfo());
 
+        sgFrameworkContextItem.setItemMetaInfo(getRecommendItemMetaInfo(sgFrameworkContextItem));
+        
+        HadesLogUtil.stream(ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM)
+            .kv("step", "requestLog")
+            .kv("sgFrameworkContextItem3", JSON.toJSONString(sgFrameworkContextItem))
+            .info();
 
         PageInfoDO pageInfoDO = new PageInfoDO();
         pageInfoDO.setIndex(0);
@@ -74,7 +109,7 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
             .kv("step", "requestLog")
             .kv("userId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(
                 Objects::toString).orElse("0"))
-            .kv("sgFrameworkContextItem", JSON.toJSONString(sgFrameworkContextItem))
+            .kv("sgFrameworkContextItem3", JSON.toJSONString(sgFrameworkContextItem))
             .info();
 
         return sgFrameworkServiceItem.recommend(sgFrameworkContextItem)
@@ -86,6 +121,7 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
                         response.setExtInfos(Maps.newHashMap());
                     }
                     response.getExtInfos().put("contentModel", contentInfo);
+                    response.getExtInfos().put("traceId", EagleEye.getTraceId());
 
 
                     List<GeneralItem> re = Lists.newArrayList();
@@ -94,7 +130,12 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
                 })
                 .map(TacResult::newResult)
                 .map(tacResult -> {
-                    tacResult.getBackupMetaData().setUseBackup(true);
+                    BizScenario b = BizScenario.valueOf(
+                        ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+                        ScenarioConstantApp.LOC_TYPE_B2C,
+                        ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM
+                    );
+                    TacResultBackupUtil.tacResultBackupItemAld(tacResult,b);
                     return tacResult;
                 })
                 .onErrorReturn(r -> TacResult.errorResult(""));

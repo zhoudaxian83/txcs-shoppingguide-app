@@ -142,7 +142,8 @@ public class GulPromotionScene {
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoSmartUi);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoCaptain = new ItemInfoSourceMetaInfo();
         itemInfoSourceMetaInfoCaptain.setSourceName("captain");
-        itemInfoSourceMetaInfoCaptain.setSceneCode("index.guessULike");
+        /*itemInfoSourceMetaInfoCaptain.setSceneCode("index.guessULike");*/
+        itemInfoSourceMetaInfoCaptain.setSceneCode("conference.promotion");
         itemInfoSourceMetaInfoList.add(itemInfoSourceMetaInfoCaptain);
         itemMetaInfo.setItemGroupRenderInfoList(itemGroupMetaInfoList);
         ItemInfoSourceMetaInfo itemInfoSourceMetaInfoTpp = new ItemInfoSourceMetaInfo();

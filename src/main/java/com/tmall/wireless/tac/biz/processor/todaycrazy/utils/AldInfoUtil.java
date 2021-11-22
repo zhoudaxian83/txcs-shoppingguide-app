@@ -6,15 +6,16 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataSetItemRuleDTO;
+import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.txcs.gs.model.item.BizType;
 import com.tmall.txcs.gs.model.item.O2oType;
 import com.tmall.txcs.gs.model.model.dto.ItemEntity;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.model.LimitBuyDto;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import org.slf4j.Logger;
@@ -75,7 +76,10 @@ public class AldInfoUtil {
             return index;
         }
         if(params.get(ALD_PARAM) != null && params.get(ALD_PARAM) instanceof Map){
-            LOGGER.info("****AldInfoUtil getAldInfo ALD_PARAM***"+params.get(ALD_PARAM));
+            HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
+                .kv("AldInfoUtil","getIndex")
+                .kv("ALD_PARAM", JSON.toJSONString(ALD_PARAM))
+                .info();
             Map<String, Object> paramObj = (Map<String, Object>)params.get(ALD_PARAM);
 
             if(paramObj.get(EXTPARAM) != null){
@@ -87,7 +91,6 @@ public class AldInfoUtil {
         return index;
     }
     public List<ItemEntity> buildItemList(List<ColumnCenterDataSetItemRuleDTO> columnCenterDataSetItemRuleDTOS)  {
-        LOGGER.info("****AldInfoUtil buildItemList***"+columnCenterDataSetItemRuleDTOS.size());
         List<ItemEntity> result = Lists.newArrayList();
         if (CollectionUtils.isEmpty(columnCenterDataSetItemRuleDTOS)) {
             return result;

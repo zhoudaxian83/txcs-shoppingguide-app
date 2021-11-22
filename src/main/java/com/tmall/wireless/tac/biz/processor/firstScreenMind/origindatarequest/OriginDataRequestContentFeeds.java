@@ -86,7 +86,7 @@ public class OriginDataRequestContentFeeds implements OriginDataRequest{
         /**判断是否为纯榜单推荐，不为空则为纯榜单推荐**/
         if(CollectionUtils.isNotEmpty(ContentSetIdListUtil.getRankingList(requestParams))) {
             /**剔除首页曝光过滤内容数据**/
-            Map<String,Object> exposureDataMap = ContentSetIdListUtil.getExposureContentIds(requestParams);
+            /*Map<String,Object> exposureDataMap = ContentSetIdListUtil.getExposureContentIds(requestParams);
             if(exposureDataMap != null && !exposureDataMap.isEmpty()){
                 params.put("exposureDataParams", JSON.toJSONString(exposureDataMap));
             }
@@ -95,19 +95,27 @@ public class OriginDataRequestContentFeeds implements OriginDataRequest{
                 .kv("exposureDataMap",JSON.toJSONString(exposureDataMap))
                 .info();
             List<Long> rankingList = ContentSetIdListUtil.getRankingList(requestParams);
-            params.put("contentSetIdList", Joiner.on(",").join(rankingList));
+            params.put("contentSetIdList", Joiner.on(",").join(rankingList));*/
+            String exposureContentIds = MapUtil.getStringWithDefault(requestParams, RequestKeyConstantApp.FIRST_SCREEN_EXPOSURE_CONTENT_IDS, "");
+            if(StringUtils.isNotBlank(exposureContentIds))  {
+                params.put("exposedContentIds", exposureContentIds);
+            }
             tppRequest.setAppId(26548L);
         }else{
+            /**承接页内容推荐不进行场景的曝光数据清除-除了更多榜单承接页**/
+            if(isItemFeeds(requestParams)){
+                params.put("isFirstPage", "false");
+            }
             tppRequest.setAppId(25409L);
         }
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
         tppRequest.setUserId(Optional.ofNullable(sgFrameworkContext).map(SgFrameworkContext::getUserDO)
             .map(UserDO::getUserId).orElse(0L));
-        HadesLogUtil.stream(FirstScreenConstant.SUB_CONTENT_FEEDS)
+        /*HadesLogUtil.stream(FirstScreenConstant.SUB_CONTENT_FEEDS)
             .kv("OriginDataRequestContentFeeds","buildRecommendRequest")
             .kv("tppRequest", JSON.toJSONString(tppRequest))
-            .info();
+            .info();*/
         return tppRequest;
     }
 
