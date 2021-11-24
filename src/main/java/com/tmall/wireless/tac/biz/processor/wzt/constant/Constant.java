@@ -16,4 +16,7 @@ public class Constant {
     public static final Long INDEX = 10000L;
     public static final boolean DEBUG = false;
 
+    public static final String FIXED_ITEM = "fixedItem";
+
+
 }

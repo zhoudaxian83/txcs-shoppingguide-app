@@ -26,12 +26,17 @@ import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoBySourceDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.ItemInfoDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.O2oType;
+import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.captain.ItemInfoBySourceCaptainDTO;
 import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.channel.ItemInfoBySourceChannelDTO;
 import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.smartui.ItemInfoBySourceSmartUiDTOSdk;
 import com.tmall.tcls.gs.sdk.sm.iteminfo.bysource.tpp.ItemInfoBySourceTppDTO;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
+import com.tmall.wireless.tac.biz.processor.icon.model.IconFixedItemDTO;
+import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import org.apache.commons.collections.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author zhongwei
@@ -103,5 +108,4 @@ public class IconBuildItemVoSdkExtPt  extends DefaultBuildItemVoSdkExtPt impleme
             }
         )).limit(2).collect(Collectors.toList());
     }
-
 }
