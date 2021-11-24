@@ -56,6 +56,11 @@ public class ItemConfig {
      */
     private String itemImg;
 
+    /**
+     * 轮播文案
+     */
+    private String itemCarouselDesc;
+
     public static ItemConfig valueOf(Map<String, Object> stringObjectMap) {
         ItemConfig itemConfig = new ItemConfig();
         itemConfig.setItemId(Long.valueOf(String.valueOf(stringObjectMap.get("contentId"))));
@@ -94,6 +99,10 @@ public class ItemConfig {
         }
         if(stringObjectMap.get("itemImg") != null) {
             itemConfig.setItemImg(String.valueOf(stringObjectMap.get("itemImg")));
+        }
+
+        if(stringObjectMap.get("itemCarouselDesc") != null) {
+            itemConfig.setItemCarouselDesc(String.valueOf(stringObjectMap.get("itemCarouselDesc")));
         }
         return itemConfig;
     }

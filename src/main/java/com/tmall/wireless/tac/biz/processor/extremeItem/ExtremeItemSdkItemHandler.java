@@ -235,6 +235,10 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             itemMap.put("shortTitle", itemConfig.getItemName());
         }
 
+        if(StringUtils.isNotBlank(itemConfig.getItemCarouselDesc())) {
+            itemMap.put("itemCarouselDesc", itemConfig.getItemCarouselDesc());
+        }
+
         return itemMap;
     }
 
