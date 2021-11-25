@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.icon.item.ext;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -13,14 +14,15 @@ import com.tmall.aselfcommon.model.column.MaterialDTO;
 import com.tmall.aselfcommon.model.column.SubColumnDTO;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
+import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataPostProcessorSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.OriginDataProcessRequest;
+import com.tmall.tcls.gs.sdk.framework.model.context.BizType;
+import com.tmall.tcls.gs.sdk.framework.model.context.ItemEntity;
+import com.tmall.tcls.gs.sdk.framework.model.context.O2oType;
+import com.tmall.tcls.gs.sdk.framework.model.context.OriginDataDTO;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
-import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataDTO;
+import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
 import com.tmall.txcs.gs.framework.extensions.origindata.OriginDataPostProcessorExtPt;
-import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
-import com.tmall.txcs.gs.model.item.BizType;
-import com.tmall.txcs.gs.model.item.O2oType;
-import com.tmall.txcs.gs.model.model.dto.ItemEntity;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.icon.ColumnCacheService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
@@ -38,26 +40,27 @@ import org.springframework.util.CollectionUtils;
     useCase = ScenarioConstantApp.LOC_TYPE_B2C
     , scenario = ScenarioConstantApp.ICON_ITEM
 )
-public class IconItemOriginDataPostProcessorExtPt extends Register implements OriginDataPostProcessorExtPt {
+public class IconItemOriginDataPostProcessorExtPt extends Register implements ItemOriginDataPostProcessorSdkExtPt {
 
     @Resource
     private ColumnCacheService columnCacheService;
 
     @Override
-    public OriginDataDTO<ItemEntity> process(SgFrameworkContextItem context) {
-        OriginDataDTO<ItemEntity> originDataDTO = Optional.of(context).map(SgFrameworkContextItem::getItemEntityOriginDataDTO).orElse(null);
+    public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
+        OriginDataDTO<ItemEntity> originDataDTO = Optional.of(originDataProcessRequest).map(OriginDataProcessRequest::getItemEntityOriginDataDTO).orElse(null);
         // 如果是首页，增加定坑
-        int index = context.getUserPageInfo().getIndex();
+        int index = originDataProcessRequest.getItemEntityOriginDataDTO().getIndex();
         if (index != 0) {
             return originDataDTO;
         }
         // 较通用定坑场景
         // 1. 所见所得，请求中带的itemId，参考上新了超市做法, icon无；
-        Map<String, Object> requestParam = context.getRequestParams();
+        Map<String, Object> requestParam = originDataProcessRequest.getSgFrameworkContextItem().getRequestParams();
 
         // 2. 获取定坑商品数据
-        ItemRequest itemRequest = (ItemRequest)Optional.of(context)
-            .map(SgFrameworkContextItem::getRequestParams)
+        ItemRequest itemRequest = (ItemRequest)Optional.of(originDataProcessRequest)
+            .map(OriginDataProcessRequest::getSgFrameworkContextItem)
+            .map(SgFrameworkContextItem::getTacContext)
             .map(c -> c.get(ItemRecommendService.ITEM_REQUEST_KEY)).orElse(null);
         if (itemRequest == null) {
             return originDataDTO;
@@ -77,7 +80,7 @@ public class IconItemOriginDataPostProcessorExtPt extends Register implements Or
         if (CollectionUtils.isEmpty(fixedItemDTOList)) {
             return originDataDTO;
         }
-        context.getUserParams().put(Constant.FIXED_ITEM, fixedItemDTOList);
+        originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(Constant.FIXED_ITEM, fixedItemDTOList);
 
         List<Long> fixedItemIds = Lists.newArrayList();
         List<ItemEntity> finalFixedItems = fixedItemDTOList.stream()
@@ -102,6 +105,8 @@ public class IconItemOriginDataPostProcessorExtPt extends Register implements Or
         originDataDTO.setResult(finalItemEntities);
         return originDataDTO;
     }
+
+
 
     private String getFixedItemList(Long level2Id, Long level3Id) {
 
