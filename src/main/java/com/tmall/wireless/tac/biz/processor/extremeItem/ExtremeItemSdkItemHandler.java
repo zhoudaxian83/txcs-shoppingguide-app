@@ -49,6 +49,8 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     Logger logger = LoggerProxy.getLogger(ExtremeItemSdkItemHandler.class);
 
     private static final Integer tenThousand = 10000;
+    private static final String captainSceneCode = "conference.zhj";
+
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
     @Autowired
@@ -73,6 +75,9 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         try {
             //初始化SupermarketHallContext
             supermarketHallContext = SupermarketHallContext.init(requestContext4Ald);
+
+            //极致单品要使用折后价，设置祥云码
+            supermarketHallContext.setSceneCode(captainSceneCode);
 
             //构造运营配置商品列表领域对象
             ItemConfigs itemConfigs = ItemConfigs.valueOf(supermarketHallContext.getAldManualConfigDataList());
