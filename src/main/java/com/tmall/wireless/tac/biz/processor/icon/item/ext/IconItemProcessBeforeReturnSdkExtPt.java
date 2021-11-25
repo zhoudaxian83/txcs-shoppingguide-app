@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
+import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemProcessBeforeReturnSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
@@ -32,12 +33,11 @@ import org.slf4j.LoggerFactory;
     useCase = ScenarioConstantApp.LOC_TYPE_B2C,
     scenario = ScenarioConstantApp.ICON_ITEM
 )
-public class IconItemProcessBeforeReturnSdkExtPt  extends AbstractDetailItemBackUpSdkExtPt implements ItemProcessBeforeReturnSdkExtPt {
+public class IconItemProcessBeforeReturnSdkExtPt  extends Register implements ItemProcessBeforeReturnSdkExtPt {
 
     Logger logger = LoggerFactory.getLogger(IconItemProcessBeforeReturnSdkExtPt.class);
 
     public SgFrameworkContextItem process(SgFrameworkContextItem sgFrameworkContextItem) {
-        sgFrameworkContextItem = super.process(sgFrameworkContextItem);
         List<ItemEntityVO> itemEntityVOS = fixedItemRank(sgFrameworkContextItem.getEntityVOSgFrameworkResponse().getItemAndContentList(), sgFrameworkContextItem);
         sgFrameworkContextItem.getEntityVOSgFrameworkResponse().setItemAndContentList(itemEntityVOS);
         return sgFrameworkContextItem;
