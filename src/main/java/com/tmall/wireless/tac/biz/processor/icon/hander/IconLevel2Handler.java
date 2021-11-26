@@ -44,13 +44,18 @@ public class IconLevel2Handler extends RpmReactiveHandler<IconResponse> {
 
 
         Level3Request level3Request = new Level3Request();
-        level3Request.setLevel1Id(Optional.ofNullable(context.get("iconType")).map(Object::toString).orElse(""));
-        level3Request.setLevel2Id(Optional.ofNullable(context.get("level2Id")).map(Object::toString).orElse(""));
+        String level2Id = Optional.ofNullable( context.get("level2Id")).map(Object::toString).orElse("");
+        String level1Id = Optional.ofNullable(context.get("iconType")).map(Object::toString).orElse("");
+
+
+        level3Request.setLevel1Id(level1Id);
+        level3Request.setLevel2Id(level2Id);
         level3Request.setLevel2Business(Optional.ofNullable(context.get("business")).map(Object::toString).orElse(""));
 
 //        Map<String, Object> result = Maps.newHashMap();
 
         IconResponse iconResponse = new IconResponse();
+        String backupKey = String.format("%s-%s", level1Id, level2Id);
 
         return level3RecommendService.recommend(level3Request, context).map(level3TabDtoList -> {
 //                        LOGGER.info("level3RecommendService.recommend returnObj:{}", JSON.toJSONString(level3TabDtoList));
@@ -77,7 +82,7 @@ public class IconLevel2Handler extends RpmReactiveHandler<IconResponse> {
                         ScenarioConstantApp.LOC_TYPE_B2C,
                         ScenarioConstantApp.ICON_CONTENT_LEVEL3
                     );
-                    return tacResultBackup(tacResult,b);
+                    return tacResultBackup(tacResult,b, backupKey);
                 }).onErrorReturn(throwable -> {
                     LOGGER.error("IconLevel1Handler error:{}", JSON.toJSONString(level3Request), throwable);
 
@@ -89,11 +94,11 @@ public class IconLevel2Handler extends RpmReactiveHandler<IconResponse> {
                         ScenarioConstantApp.LOC_TYPE_B2C,
                         ScenarioConstantApp.ICON_CONTENT_LEVEL3
                     );
-                    return tacResultBackup(tacResult,b);
+                    return tacResultBackup(tacResult,b, backupKey);
                 });
 
     }
-    private TacResult<IconResponse> tacResultBackup(TacResult<IconResponse> tacResult, BizScenario b){
+    private TacResult<IconResponse> tacResultBackup(TacResult<IconResponse> tacResult, BizScenario b, String backupKey){
 
         if (tacResult.getData() == null || tacResult.getData() == null || tacResult.getData().getItemList() == null
             || CollectionUtils.isEmpty(tacResult.getData().getItemList().getItemAndContentList())
@@ -111,6 +116,8 @@ public class IconLevel2Handler extends RpmReactiveHandler<IconResponse> {
                 .info();
         }
         tacResult.getBackupMetaData().setUseBackup(true);
+        tacResult.getBackupMetaData().setBackupWithParam(true);
+        tacResult.getBackupMetaData().setBackupKey(backupKey);
         return tacResult;
     }
 

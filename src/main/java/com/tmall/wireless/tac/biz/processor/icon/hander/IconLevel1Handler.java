@@ -93,7 +93,7 @@ public class IconLevel1Handler extends RpmReactiveHandler<IconResponse> {
                         ScenarioConstantApp.LOC_TYPE_B2C,
                         ScenarioConstantApp.ICON_CONTENT_LEVEL2
                     );
-                    return tacResultBackup(tacResult,b);
+                    return tacResultBackup(tacResult,b, level2Request.getLevel1Id());
                     }).onErrorReturn(throwable -> {
                     LOGGER.error("IconLevel1Handler error:{}", JSON.toJSONString(level2Request), throwable);
 
@@ -105,11 +105,11 @@ public class IconLevel1Handler extends RpmReactiveHandler<IconResponse> {
                         ScenarioConstantApp.LOC_TYPE_B2C,
                         ScenarioConstantApp.ICON_CONTENT_LEVEL2
                     );
-                    return tacResultBackup(tacResult,b);
+                    return tacResultBackup(tacResult,b, level2Request.getLevel1Id());
                 });
 
     }
-    private TacResult<IconResponse> tacResultBackup(TacResult<IconResponse> tacResult, BizScenario b){
+    private TacResult<IconResponse> tacResultBackup(TacResult<IconResponse> tacResult, BizScenario b, String levelId){
         if (tacResult.getData() == null || tacResult.getData() == null || tacResult.getData().getItemList() == null
             || CollectionUtils.isEmpty(tacResult.getData().getItemList().getItemAndContentList())
             || CollectionUtils.isEmpty(tacResult.getData().getSecondList())
@@ -119,14 +119,18 @@ public class IconLevel1Handler extends RpmReactiveHandler<IconResponse> {
             HadesLogUtil.stream(b.getUniqueIdentity())
                 .kv("key","tacBackup")
                 .kv("tacResultBackup", "true")
+                .kv("levelId", levelId)
                 .info();
         } else {
             HadesLogUtil.stream(b.getUniqueIdentity())
                 .kv("key","tacBackup")
                 .kv("tacResultBackup", "false")
+                .kv("levelId", levelId)
                 .info();
         }
         tacResult.getBackupMetaData().setUseBackup(true);
+        tacResult.getBackupMetaData().setBackupWithParam(true);
+        tacResult.getBackupMetaData().setBackupKey(levelId);
         return tacResult;
     }
 
