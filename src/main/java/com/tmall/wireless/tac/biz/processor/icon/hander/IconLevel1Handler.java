@@ -130,6 +130,7 @@ public class IconLevel1Handler extends RpmReactiveHandler<IconResponse> {
         }
         tacResult.getBackupMetaData().setUseBackup(true);
         tacResult.getBackupMetaData().setBackupWithParam(true);
+        tacResult.getBackupMetaData().setUseOss(Boolean.FALSE);
         tacResult.getBackupMetaData().setBackupKey(levelId);
         return tacResult;
     }
