@@ -7,6 +7,9 @@ import com.google.common.collect.Lists;
 import com.taobao.mtop.api.agent.MtopContext;
 import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
 import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
+import com.tmall.aselfcommon.model.column.MainColumnDTO;
+import com.tmall.aselfcommon.model.column.MaterialDTO;
+import com.tmall.aselfcommon.model.column.SubColumnDTO;
 import com.tmall.crowd.guava.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -122,6 +125,7 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
 
         params.put("userNick", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getNick).orElse(""));
 
+        //columnCacheService.getColumnValue()
         return recommendRequest;
     }
     private Request buildAldRequest(String resourceId, SgFrameworkContextItem sgFrameworkContextItem) {
@@ -158,5 +162,7 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
 
         return request;
     }
+
+
 
 }
