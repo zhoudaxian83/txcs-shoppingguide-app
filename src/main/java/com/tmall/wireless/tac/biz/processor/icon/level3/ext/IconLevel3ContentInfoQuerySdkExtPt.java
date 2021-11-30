@@ -53,6 +53,9 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
 
     public static final String brdPrefix = "SG_TMCS_HALF_DAY_DS:";
 
+    public static final String ICON_BANNER_KEY = "icon_banner:";
+
+
     @Autowired
     private AldSpi aldSpi;
 
@@ -81,7 +84,7 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
         if (resResponse == null) {
             return Flowable.just(Response.success(contentInfoDTOMap));
         }
-
+        sgFrameworkContextContent.getTacContext().getParams().put(ICON_BANNER_KEY, resResponse);
         return Flowable.just(Response.success(contentInfoDTOMap));
     }
 

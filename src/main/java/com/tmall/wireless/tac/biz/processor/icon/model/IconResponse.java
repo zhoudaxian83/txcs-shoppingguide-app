@@ -12,5 +12,6 @@ public class IconResponse {
     List<LabelDTO> secondList;
     List<LabelDTO> thrirdList;
     SgFrameworkResponse<ItemEntityVO> itemList;
+    Object banner;
 
 }
