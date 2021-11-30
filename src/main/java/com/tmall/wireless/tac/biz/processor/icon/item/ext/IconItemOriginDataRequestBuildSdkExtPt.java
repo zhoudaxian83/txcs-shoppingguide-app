@@ -4,22 +4,13 @@ package com.tmall.wireless.tac.biz.processor.icon.item.ext;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.taobao.mtop.api.agent.MtopContext;
-import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
-import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
-import com.tmall.aselfcommon.model.column.MainColumnDTO;
-import com.tmall.aselfcommon.model.column.MaterialDTO;
-import com.tmall.aselfcommon.model.column.SubColumnDTO;
 import com.tmall.crowd.guava.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.context.*;
-import com.tmall.txcs.gs.spi.recommend.AldSpi;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
-import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallCommonAldConstant;
-import com.tmall.wireless.tac.biz.processor.icon.ColumnCacheService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRequest;
 import com.tmall.wireless.tac.biz.processor.icon.level2.BusinessTypeUtil;
@@ -27,16 +18,11 @@ import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.alibaba.aladdin.lamp.domain.request.Request;
-import com.alibaba.aladdin.lamp.domain.request.RequestItem;
-import com.alibaba.aladdin.lamp.domain.request.modules.LocationInfo;
-import com.alibaba.fastjson.JSONObject;
 
 @SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
         useCase = ScenarioConstantApp.LOC_TYPE_B2C
@@ -46,22 +32,13 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
 
     private static final String fullDomainGray = "fullDomainGray";
 
-    private static final String APP_NAME = "txcs-shoppingguide-app";
-
 
     public static final Long CATEGORY_RECOMMEND_ITEM_RECOMMEND_PLATEFORM = 18611L;
 
     // icon全域实验appid
     public static final Long RECOMMEND_PLATFORM_ICON_FULL_DOMAIN_APP_ID = 25682L;
 
-    public static final String yxsdPrefix = "SG_TMCS_1H_DS:";
-    public static final String brdPrefix = "SG_TMCS_HALF_DAY_DS:";
 
-    @Autowired
-    private AldSpi aldSpi;
-
-    @Autowired
-    private ColumnCacheService columnCacheService;
 
     @Override
     public RecommendRequest process(SgFrameworkContextItem sgFrameworkContextItem) {
@@ -125,44 +102,7 @@ public class IconItemOriginDataRequestBuildSdkExtPt extends Register implements 
 
         params.put("userNick", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getNick).orElse(""));
 
-        //columnCacheService.getColumnValue()
+
         return recommendRequest;
     }
-    private Request buildAldRequest(String resourceId, SgFrameworkContextItem sgFrameworkContextItem) {
-        Request request = new Request();
-
-        request.setCallSource(APP_NAME);
-        RequestItem item = new RequestItem();
-        item.setCount(50);
-        item.setResId(resourceId);
-        JSONObject data = new JSONObject();
-        item.setData(data);
-        request.setRequestItems(Lists.newArrayList(item));
-        //地址信息
-        LocationInfo locationInfo = request.getLocationInfo();
-        //四级地址
-
-        AddressDTO addressDto;
-        String csa = com.tmall.txcs.biz.supermarket.scene.util.MapUtil.getStringWithDefault(sgFrameworkContextItem.getRequestParams(), "csa", "");
-        if(StringUtils.isNotEmpty(csa)){
-            addressDto = AddressUtil.parseCSA(csa);
-            locationInfo.setCityLevel4(String.valueOf(addressDto.getDistrictId()));
-            List<String> wdkCodes = Lists.newArrayList();
-            if (addressDto.isRt1HourStoreCover()) {
-                wdkCodes.add(yxsdPrefix + addressDto.getRt1HourStoreId());
-            } else if(addressDto.isRtHalfDayStoreCover()){
-                wdkCodes.add(brdPrefix + addressDto.getRtHalfDayStoreId());
-            }
-            locationInfo.setWdkCodes(wdkCodes);
-        }
-        Long userId = Optional.of(sgFrameworkContextItem).
-            map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO)
-            .map(UserDO::getUserId).orElse(0L);
-        request.getUserProfile().setUserId(userId);
-
-        return request;
-    }
-
-
-
 }

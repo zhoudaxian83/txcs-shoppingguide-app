@@ -40,7 +40,6 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
 
         Map<Long, ContentInfoDTO> contentInfoDTOMap = processContentMap(sgFrameworkContextContent);
-
         return Flowable.just(Response.success(contentInfoDTOMap));
     }
 

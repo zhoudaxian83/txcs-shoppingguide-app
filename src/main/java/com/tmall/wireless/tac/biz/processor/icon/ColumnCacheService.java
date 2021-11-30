@@ -9,8 +9,6 @@ import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
 import com.tmall.aselfcommon.model.column.KeyUtil;
 import com.tmall.aselfcommon.model.column.MainColumnDTO;
-import com.tmall.aselfcommon.model.column.MaterialDTO;
-import com.tmall.aselfcommon.model.column.SubColumnDTO;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import org.apache.commons.collections4.MapUtils;
@@ -129,21 +127,4 @@ public class ColumnCacheService {
         return null;
     }
 
-    public String getColumnValue(Long level2Id, Long level3Id, String key) {
-
-        MainColumnDTO column = this.getColumn(level2Id);
-        if (column == null) {
-            return null;
-        }
-        SubColumnDTO subColumnDTO = column.getSubColumnDTOMap().get(level3Id);
-        if (subColumnDTO == null) {
-            return null;
-        }
-        MaterialDTO materialDTO = subColumnDTO.getMaterialDTOMap().get(key);
-        if (materialDTO == null) {
-            return null;
-        }
-        return materialDTO.getExtValue();
-
-    }
 }
