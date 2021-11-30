@@ -49,6 +49,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     Logger logger = LoggerProxy.getLogger(ExtremeItemSdkItemHandler.class);
 
     private static final Integer tenThousand = 10000;
+    private static final Integer oneBillion = 1000000;
     private static final String captainSceneCode = "conference.zhj";
 
     @Autowired
@@ -251,9 +252,16 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         if (Integer.valueOf(monthSalesAmount) < tenThousand) {
             return monthSalesAmount;
         }
+        if(Integer.valueOf(monthSalesAmount) < oneBillion) {
+
+            float tenThousands = Float.valueOf(monthSalesAmount) / Float.valueOf(tenThousand);
+            DecimalFormat decimalFormat = new DecimalFormat(".0");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+            String monthlySalesView = decimalFormat.format(tenThousands);
+            return monthlySalesView + "万";
+        }
 
         float tenThousands = Float.valueOf(monthSalesAmount) / Float.valueOf(tenThousand);
-        DecimalFormat decimalFormat = new DecimalFormat(".0");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+        DecimalFormat decimalFormat = new DecimalFormat("#");//超过100万不展示小数部分
         String monthlySalesView = decimalFormat.format(tenThousands);
         return monthlySalesView + "万";
     }
