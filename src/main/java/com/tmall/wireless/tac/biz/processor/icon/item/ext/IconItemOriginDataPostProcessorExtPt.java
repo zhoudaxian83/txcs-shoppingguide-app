@@ -49,8 +49,8 @@ public class IconItemOriginDataPostProcessorExtPt extends Register implements It
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
         OriginDataDTO<ItemEntity> originDataDTO = Optional.of(originDataProcessRequest).map(OriginDataProcessRequest::getItemEntityOriginDataDTO).orElse(null);
         // 如果是首页，增加定坑
-        Integer index = (Integer)originDataProcessRequest.getSgFrameworkContextItem().getRequestParams().getOrDefault("index", null);
-        if (index == null || index != 0) {
+        String index = (String)originDataProcessRequest.getSgFrameworkContextItem().getRequestParams().getOrDefault("index", null);
+        if (index == null || !Objects.equals("0", index)) {
             return originDataDTO;
         }
         // 较通用定坑场景
