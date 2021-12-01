@@ -65,7 +65,7 @@ public class IconItemProcessBeforeReturnSdkExtPt  extends Register implements It
                 }
             }
             for (int i = 0; i < originItemVOS.size(); i++) {
-                rankItemVO.add(Pair.of(i * 10L, itemEntityVOS.get(i)));
+                rankItemVO.add(Pair.of((i + 1) * 10L, originItemVOS.get(i)));
             }
             Integer pageSize = Optional.of(context).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getPageSize).orElse(20);
             itemEntityVOS = rankItemVO.stream()
