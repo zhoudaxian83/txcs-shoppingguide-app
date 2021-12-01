@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  * @date 2021/12/1
  */
 @Component
-public class GuiItemSetRecommendHandler extends TacReactiveHandler4Ald {
+public class GulItemSetRecommendHandler extends TacReactiveHandler4Ald {
 
     @Autowired
     private ShoppingguideSdkItemService shoppingguideSdkItemService;

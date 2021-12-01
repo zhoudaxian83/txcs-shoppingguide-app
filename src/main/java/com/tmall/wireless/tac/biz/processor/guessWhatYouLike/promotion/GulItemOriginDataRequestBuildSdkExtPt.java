@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.guessWhatYouLike.promotion;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.alibaba.cola.extension.Extension;
@@ -105,17 +106,24 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
 
             String itemSetId = "";
             String tacParams = MapUtil.getStringWithDefault(aldParams, "tacParams", "");
+            String locType = "";
             if (StringUtils.isNotBlank(tacParams)) {
                 JSONObject tacParamsMap = JSON.parseObject(tacParams);
                 itemSetId = Optional.ofNullable(tacParamsMap.getString(HallCommonAldConstant.ITEM_SET_ID)).orElse("");
+                locType = Optional.ofNullable(tacParamsMap.getString(HallCommonAldConstant.LOC_TYPE)).orElse("B2C");
+
             }
             if (StringUtils.isEmpty(itemSetId)) {
                 logger.error("-----GulItemOriginDataRequestBuildSdkExtPt.itemSetId is empty-------");
                 throw new Exception("itemSetId is empty");
             }
             params.put("itemSetIdList", itemSetId);
-            // todo  先写死
-            params.put("itemBusinessType","B2C");
+
+            if (Objects.equals("O2O", locType)) {
+                params.put("itemBusinessType", "OneHour,HalfDay,NextDay");
+            } else {
+                params.put("itemBusinessType", "B2C");
+            }
 
             recommendRequest.setAppId(ITEM_SET_RECOMMEND_APPID);
             recommendRequest.setUserId(
