@@ -52,6 +52,7 @@ public class IconItemProcessBeforeReturnSdkExtPt  extends Register implements It
             List<IconFixedItemDTO> fixedItemDTOList = ((List<IconFixedItemDTO>)context.getUserParams().getOrDefault(Constant.FIXED_ITEM, Lists.newArrayList()));
             Map<Long, List<IconFixedItemDTO>> fixItemIdMap = fixedItemDTOList.stream().collect(Collectors.groupingBy(IconFixedItemDTO::getItemId));
             List<Pair<Long, ItemEntityVO>> rankItemVO = Lists.newArrayList();
+            List<ItemEntityVO> originItemVOS = Lists.newArrayList();
             for (int i = 0; i < itemEntityVOS.size(); i++) {
                 long index = i * 10L;
                 Long itemId = itemEntityVOS.get(i).getItemId();
@@ -59,8 +60,12 @@ public class IconItemProcessBeforeReturnSdkExtPt  extends Register implements It
                     IconFixedItemDTO fixedItemDTO = fixItemIdMap.get(itemId).get(0);
                     rankItemVO.add(Pair.of(fixedItemDTO.getIndex() * 10 - 5, itemEntityVOS.get(i)));
                 } else {
-                    rankItemVO.add(Pair.of(index, itemEntityVOS.get(i)));
+                    originItemVOS.add(itemEntityVOS.get(i));
+                    //rankItemVO.add(Pair.of(index, itemEntityVOS.get(i)));
                 }
+            }
+            for (int i = 0; i < originItemVOS.size(); i++) {
+                rankItemVO.add(Pair.of(i * 10L, itemEntityVOS.get(i)));
             }
             Integer pageSize = Optional.of(context).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getPageSize).orElse(20);
             itemEntityVOS = rankItemVO.stream()
