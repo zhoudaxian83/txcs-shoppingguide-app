@@ -75,6 +75,7 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
             Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, DEFAULT_SMAREAID);
             params.put("smAreaId", String.valueOf(smAreaId));
             params.put("usingCrowd2I", "false");
+            params.put("pageSize", "200");
 
             Object csa = aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA);
             LocParams locParams = null;
