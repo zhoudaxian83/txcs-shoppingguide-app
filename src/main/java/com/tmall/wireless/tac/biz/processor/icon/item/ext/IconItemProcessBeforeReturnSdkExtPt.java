@@ -61,7 +61,6 @@ public class IconItemProcessBeforeReturnSdkExtPt  extends Register implements It
                     rankItemVO.put(fixedItemDTO.getIndex().intValue() - 1, itemEntityVOS.get(i));
                 } else {
                     originItemVOS.add(itemEntityVOS.get(i));
-                    //rankItemVO.add(Pair.of(index, itemEntityVOS.get(i)));
                 }
             }
             List<ItemEntityVO> finalItemVOs = Lists.newArrayList();
@@ -74,9 +73,7 @@ public class IconItemProcessBeforeReturnSdkExtPt  extends Register implements It
                     finalItemVOs.add(i + 1, item);
                 }
             }
-            Integer pageSize = Optional.of(context).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getPageSize).orElse(20);
-
-            return itemEntityVOS;
+            return finalItemVOs;
         } catch (Exception e) {
             logger.error("fixedItemRank", e);
             return itemEntityVOS;
