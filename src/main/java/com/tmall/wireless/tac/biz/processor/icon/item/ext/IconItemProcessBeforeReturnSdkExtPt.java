@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemProcessBeforeReturnSdkExtPt;
@@ -51,27 +52,30 @@ public class IconItemProcessBeforeReturnSdkExtPt  extends Register implements It
             }
             List<IconFixedItemDTO> fixedItemDTOList = ((List<IconFixedItemDTO>)context.getUserParams().getOrDefault(Constant.FIXED_ITEM, Lists.newArrayList()));
             Map<Long, List<IconFixedItemDTO>> fixItemIdMap = fixedItemDTOList.stream().collect(Collectors.groupingBy(IconFixedItemDTO::getItemId));
-            List<Pair<Long, ItemEntityVO>> rankItemVO = Lists.newArrayList();
+            Map<Integer, ItemEntityVO> rankItemVO = Maps.newHashMap();
             List<ItemEntityVO> originItemVOS = Lists.newArrayList();
             for (int i = 0; i < itemEntityVOS.size(); i++) {
-                long index = i * 10L;
                 Long itemId = itemEntityVOS.get(i).getItemId();
                 if (fixItemIdMap.containsKey(itemId)) {
                     IconFixedItemDTO fixedItemDTO = fixItemIdMap.get(itemId).get(0);
-                    rankItemVO.add(Pair.of(fixedItemDTO.getIndex() * 10 - 5, itemEntityVOS.get(i)));
+                    rankItemVO.put(fixedItemDTO.getIndex().intValue() - 1, itemEntityVOS.get(i));
                 } else {
                     originItemVOS.add(itemEntityVOS.get(i));
                     //rankItemVO.add(Pair.of(index, itemEntityVOS.get(i)));
                 }
             }
+            List<ItemEntityVO> finalItemVOs = Lists.newArrayList();
+            finalItemVOs.addAll(originItemVOS);
             for (int i = 0; i < originItemVOS.size(); i++) {
-                rankItemVO.add(Pair.of((i + 1) * 10L, originItemVOS.get(i)));
+                if (rankItemVO.containsKey((i))) {
+                    ItemEntityVO item = originItemVOS.get(i);
+                    finalItemVOs.remove(item);
+                    finalItemVOs.add(i, rankItemVO.get(i));
+                    finalItemVOs.add(i + 1, item);
+                }
             }
             Integer pageSize = Optional.of(context).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserPageInfo).map(PageInfoDO::getPageSize).orElse(20);
-            itemEntityVOS = rankItemVO.stream()
-                .sorted(Comparator.comparing(Pair::getLeft)).map(Pair::getRight)
-                .limit(pageSize)
-                .collect(Collectors.toList());
+
             return itemEntityVOS;
         } catch (Exception e) {
             logger.error("fixedItemRank", e);
