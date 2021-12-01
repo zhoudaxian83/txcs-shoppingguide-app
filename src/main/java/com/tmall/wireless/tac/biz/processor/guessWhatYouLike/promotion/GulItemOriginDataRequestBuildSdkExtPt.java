@@ -75,22 +75,28 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
             params.put("smAreaId", String.valueOf(smAreaId));
             params.put("usingCrowd2I", "false");
 
-            params.put("logicAreaId", Joiner.on(",").join(Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getLocParams).map(LocParams::getLogicIdByPriority).orElse(
+            Object csa = aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA);
+            LocParams locParams = null;
+            if (csa == null) {
+                tacLogger.debug("csa为空");
+            } else {
+                locParams = ParseCsa.parseCsaObj(csa, smAreaId);
+                if (locParams == null) {
+                    tacLogger.debug("csa解析异常");
+                }
+            }
+
+            params.put("logicAreaId", Joiner.on(",").join(Optional.ofNullable(locParams)
+                .map(LocParams::getLogicIdByPriority).orElse(
                     Lists.newArrayList())));
 
-            Integer index = 0;
-            if(MapUtils.isNotEmpty(sgFrameworkContextItem.getRequestParams())){
-                index = MapUtil.getIntWithDefault(sgFrameworkContextItem.getRequestParams(),"index",0);
-            }
-            params.put("isFirstPage", index > 0 ? "false" : "true");
+            int pageIndex = MapUtil.getIntWithDefault(aldParams, "pageIndex", 0);
+            params.put("isFirstPage", pageIndex > 0 ? "false" : "true");
 
-            Long rt1HourStoreId = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getLocParams).map(LocParams::getRt1HourStoreId).orElse(0L);
+            Long rt1HourStoreId = Optional.ofNullable(locParams).map(LocParams::getRt1HourStoreId).orElse(0L);
             params.put("rt1HourStoreId", String.valueOf(rt1HourStoreId));
 
-            Long rtHalfDayStoreId = Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
-                .map(CommonUserParams::getLocParams).map(LocParams::getRtHalfDayStoreId).orElse(0L);
+            Long rtHalfDayStoreId = Optional.ofNullable(locParams).map(LocParams::getRtHalfDayStoreId).orElse(0L);
             params.put("rtHalfDayStoreId", String.valueOf(rtHalfDayStoreId));
 
             params.put("closeSls", "0");
