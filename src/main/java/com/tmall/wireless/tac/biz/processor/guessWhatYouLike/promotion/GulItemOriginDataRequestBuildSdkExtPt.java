@@ -12,6 +12,7 @@ import com.ali.com.google.common.collect.Maps;
 import com.google.common.collect.Lists;
 import com.tmall.aselfcommon.util.StackTraceUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
+import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.origindata.ItemOriginDataRequestBuildSdkExtPt;
 import com.tmall.tcls.gs.sdk.framework.model.constant.RequestKeyConstant;
@@ -37,7 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author zhongwei
  * @date 2021/12/1
  */
-@Extension(
+@SdkExtension(
     bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
     useCase = ScenarioConstantApp.LOC_TYPE_B2C,
     scenario = ScenarioConstantApp.SCENARIO_SUB_PROMOTION_PAGE
