@@ -37,18 +37,18 @@ import com.alibaba.aladdin.lamp.domain.request.RequestItem;
 import com.alibaba.aladdin.lamp.domain.request.modules.LocationInfo;
 import com.alibaba.aladdin.lamp.domain.response.ResResponse;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 @Service
 @SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
-        useCase = ScenarioConstantApp.LOC_TYPE_B2C
-        , scenario = ScenarioConstantApp.ICON_CONTENT_LEVEL3
+    useCase = ScenarioConstantApp.LOC_TYPE_B2C
+    , scenario = ScenarioConstantApp.ICON_CONTENT_LEVEL3
 )
 public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements ContentInfoQuerySdkExtPt {
     Logger LOGGER = LoggerFactory.getLogger(IconLevel3ContentInfoQuerySdkExtPt.class);
 
     public static final String SUB_COLUMN_DTO_KEY = "SUB_COLUMN_DTO_KEY";
-
 
     private static final String APP_NAME = "txcs-shoppingguide-app";
 
@@ -58,17 +58,18 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
 
     public static final String ICON_BANNER_KEY = "icon_banner:";
 
-
     @Autowired
     private AldSpi aldSpi;
 
     @Autowired
     ColumnCacheService columnCacheService;
+
     @Override
     public Flowable<Response<Map<Long, ContentInfoDTO>>> process(SgFrameworkContextContent sgFrameworkContextContent) {
 
         Map<Long, ContentInfoDTO> contentInfoDTOMap = processContentMap(sgFrameworkContextContent);
-        Level3Request level3Request =(Level3Request) Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getTacContext).map(c -> c.get(Level3RecommendService.level3RequestKey)).orElse(null);
+        Level3Request level3Request = (Level3Request)Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getTacContext).map(
+            c -> c.get(Level3RecommendService.level3RequestKey)).orElse(null);
         Preconditions.checkArgument(level3Request != null);
         if (!StringUtils.isNumeric(level3Request.getLevel2Id())) {
             return Flowable.just(Response.success(contentInfoDTOMap));
@@ -91,7 +92,8 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
     }
 
     private Map<Long, ContentInfoDTO> processContentMap(SgFrameworkContextContent sgFrameworkContextContent) {
-        Level3Request level3Request =(Level3Request) Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getTacContext).map(c -> c.get(Level3RecommendService.level3RequestKey)).orElse(null);
+        Level3Request level3Request = (Level3Request)Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getTacContext).map(
+            c -> c.get(Level3RecommendService.level3RequestKey)).orElse(null);
         Preconditions.checkArgument(level3Request != null);
 
         OriginDataDTO<ContentEntity> contentEntityOriginDataDTO = sgFrameworkContextContent.getContentEntityOriginDataDTO();
@@ -112,7 +114,6 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
             }
         }
 
-
         return contentInfoDTOMap;
     }
 
@@ -120,30 +121,36 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
         return columnCacheService.getColumn(Long.valueOf(level3Request.getLevel2Id()));
     }
 
+    private Object getAldStaticDataByResourceId(String resourceId, SgFrameworkContextContent sgFrameworkContextContent) {
+        try {
 
-
-    private Object getAldStaticDataByResourceId(String resourceId, SgFrameworkContextContent sgFrameworkContextContent){
-        Request request = buildAldRequest(resourceId, sgFrameworkContextContent);
-        if (request == null) {
-            return null;
-        }
-        Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
-        if(org.apache.commons.collections.MapUtils.isNotEmpty(aldResponseMap)){
-            ResResponse resResponse = aldResponseMap.get(resourceId);
-            Object data = resResponse.getData();
-            if (data == null) {
+            Request request = buildAldRequest(resourceId, sgFrameworkContextContent);
+            if (request == null) {
                 return null;
             }
-            JSONObject res = (JSONObject)JSON.toJSON(data);
-            Long scheduleStartTime = MapUtil.getLongWithDefault(res, "scheduleStartTime", 0L);
-            Long scheduleEndTime = MapUtil.getLongWithDefault(res, "scheduleEndTime", 0L);
-            if (scheduleEndTime == 0L || scheduleStartTime == 0L) {
-                return null;
+            Map<String, ResResponse> aldResponseMap = aldSpi.queryAldInfoSync(request);
+            if (org.apache.commons.collections.MapUtils.isNotEmpty(aldResponseMap)) {
+                ResResponse resResponse = aldResponseMap.get(resourceId);
+                Object data = resResponse.getData();
+                if (data == null) {
+                    return null;
+                }
+                JSONArray resArray = (JSONArray)JSONArray.toJSON(data);
+                if (resArray == null || resArray.size() == 0) {
+                    return null;
+                }
+                JSONObject res = (JSONObject)resArray.get(0);
+                Long scheduleStartTime = MapUtil.getLongWithDefault(res, "scheduleStartTime", 0L);
+                Long scheduleEndTime = MapUtil.getLongWithDefault(res, "scheduleEndTime", 0L);
+                if (scheduleEndTime == 0L || scheduleStartTime == 0L) {
+                    return null;
+                }
+                if (!(System.currentTimeMillis() >= scheduleStartTime && System.currentTimeMillis() <= scheduleEndTime)) {
+                    return null;
+                }
+                return data;
             }
-            if (!(System.currentTimeMillis() >= scheduleStartTime &&  System.currentTimeMillis()<=scheduleEndTime)) {
-                return null;
-            }
-            return data;
+        } catch (Exception e) {
         }
         return null;
     }
@@ -167,13 +174,13 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
         if (StringUtils.isBlank(csa)) {
             return null;
         }
-        if(StringUtils.isNotEmpty(csa)){
+        if (StringUtils.isNotEmpty(csa)) {
             addressDto = AddressUtil.parseCSA(csa);
             locationInfo.setCityLevel4(String.valueOf(addressDto.getDistrictId()));
             List<String> wdkCodes = Lists.newArrayList();
             if (addressDto.isRt1HourStoreCover()) {
                 wdkCodes.add(yxsdPrefix + addressDto.getRt1HourStoreId());
-            } else if(addressDto.isRtHalfDayStoreCover()){
+            } else if (addressDto.isRtHalfDayStoreCover()) {
                 wdkCodes.add(brdPrefix + addressDto.getRtHalfDayStoreId());
             }
             locationInfo.setWdkCodes(wdkCodes);
@@ -185,8 +192,5 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
 
         return request;
     }
-
-
-
 
 }
