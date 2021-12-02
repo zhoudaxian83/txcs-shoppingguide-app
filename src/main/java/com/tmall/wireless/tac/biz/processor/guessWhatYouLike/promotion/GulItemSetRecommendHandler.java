@@ -1,8 +1,11 @@
 package com.tmall.wireless.tac.biz.processor.guessWhatYouLike.promotion;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.ext.BizScenario;
@@ -46,9 +49,13 @@ public class GulItemSetRecommendHandler extends TacReactiveHandler4Ald {
                     });
                     generalItemList.add(generalItem);
                 });
-                return generalItemList;
-            })
-            .map(TacResult::newResult)
-            .onErrorReturn(r -> TacResult.errorResult(""));
+                TacResult<List<GeneralItem>> tacResult = TacResult.newResult(generalItemList);
+                tacResult.setHasMore(response.isHasMore());
+                Map<String, Object> bizExtMap = new HashMap<>();
+                bizExtMap.put("hasMore", response.isHasMore());
+                bizExtMap.put("index", response.getIndex());
+                tacResult.setBizExtMap(bizExtMap);
+                return tacResult;
+            }).onErrorReturn(r -> TacResult.errorResult(""));
     }
 }
