@@ -20,7 +20,9 @@ import com.tmall.wireless.tac.biz.processor.icon.level2.Level2RecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.level2.Level2Request;
 import com.tmall.wireless.tac.biz.processor.icon.level3.Level3RecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.level3.Level3Request;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import io.reactivex.Flowable;
+import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -132,9 +134,12 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
             if (data == null) {
                 return null;
             }
-            JSONObject res = (JSONObject)JSON.toJSON(data);
-            Long scheduleStartTime =  res.getLong("scheduleStartTime");
-            Long scheduleEndTime =  res.getLong("scheduleEndTime");
+            Map<String, Object> res = new BeanMap(data);
+            Long scheduleStartTime = MapUtil.getLongWithDefault(res, "scheduleStartTime", 0L);
+            Long scheduleEndTime = MapUtil.getLongWithDefault(res, "scheduleEndTime", 0L);
+            if (scheduleEndTime == 0L || scheduleStartTime == 0L) {
+                return null;
+            }
             if (!(System.currentTimeMillis() >= scheduleStartTime &&  System.currentTimeMillis()<=scheduleEndTime)) {
                 return null;
             }
