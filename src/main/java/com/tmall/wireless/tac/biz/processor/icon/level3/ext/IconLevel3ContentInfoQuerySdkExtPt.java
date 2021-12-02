@@ -135,13 +135,8 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
                 if (data == null) {
                     return null;
                 }
-                JSONArray resArray = (JSONArray)JSONArray.toJSON(data);
-                if (resArray == null || resArray.size() == 0) {
-                    return null;
-                }
-                JSONObject res = (JSONObject)resArray.get(0);
-                Long scheduleStartTime = MapUtil.getLongWithDefault(res, "scheduleStartTime", 0L);
-                Long scheduleEndTime = MapUtil.getLongWithDefault(res, "scheduleEndTime", 0L);
+                Long scheduleStartTime = MapUtil.getLongWithDefault(resResponse, "scheduleStartTime", 0L);
+                Long scheduleEndTime = MapUtil.getLongWithDefault(resResponse, "scheduleEndTime", 0L);
                 if (scheduleEndTime == 0L || scheduleStartTime == 0L) {
                     return null;
                 }
