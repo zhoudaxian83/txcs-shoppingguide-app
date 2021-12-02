@@ -34,6 +34,7 @@ import com.alibaba.aladdin.lamp.domain.request.Request;
 import com.alibaba.aladdin.lamp.domain.request.RequestItem;
 import com.alibaba.aladdin.lamp.domain.request.modules.LocationInfo;
 import com.alibaba.aladdin.lamp.domain.response.ResResponse;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 @Service
@@ -131,7 +132,7 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
             if (data == null) {
                 return null;
             }
-            JSONObject res = (JSONObject)data;
+            JSONObject res = (JSONObject)JSON.toJSON(data);
             Long scheduleStartTime =  res.getLong("scheduleStartTime");
             Long scheduleEndTime =  res.getLong("scheduleEndTime");
             if (!(System.currentTimeMillis() >= scheduleStartTime &&  System.currentTimeMillis()<=scheduleEndTime)) {
