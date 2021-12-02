@@ -128,6 +128,15 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
         if(org.apache.commons.collections.MapUtils.isNotEmpty(aldResponseMap)){
             ResResponse resResponse = aldResponseMap.get(resourceId);
             Object data = resResponse.getData();
+            if (data == null) {
+                return null;
+            }
+            JSONObject res = (JSONObject)data;
+            Long scheduleStartTime =  res.getLong("scheduleStartTime");
+            Long scheduleEndTime =  res.getLong("scheduleEndTime");
+            if (!(System.currentTimeMillis() >= scheduleStartTime &&  System.currentTimeMillis()<=scheduleEndTime)) {
+                return null;
+            }
             return data;
         }
         return null;
