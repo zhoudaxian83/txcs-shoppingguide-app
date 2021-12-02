@@ -47,15 +47,14 @@ public class GulItemSetRecommendHandler extends TacReactiveHandler4Ald {
                     contentVO.keySet().forEach(key -> {
                         generalItem.put(key, contentVO.get(key));
                     });
+                    Map<String, Object> bizExtMap = new HashMap<>();
+                    bizExtMap.put("hasMore", response.isHasMore());
+                    bizExtMap.put("index", response.getIndex());
+                    generalItem.put("bizExtMap", bizExtMap);
                     generalItemList.add(generalItem);
                 });
-                TacResult<List<GeneralItem>> tacResult = TacResult.newResult(generalItemList);
-                tacResult.setHasMore(response.isHasMore());
-                Map<String, Object> bizExtMap = new HashMap<>();
-                bizExtMap.put("hasMore", response.isHasMore());
-                bizExtMap.put("index", response.getIndex());
-                tacResult.setBizExtMap(bizExtMap);
-                return tacResult;
-            }).onErrorReturn(r -> TacResult.errorResult(""));
+                return generalItemList;
+            }).map(TacResult::newResult)
+            .onErrorReturn(r -> TacResult.errorResult(""));
     }
 }
