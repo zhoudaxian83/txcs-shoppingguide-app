@@ -69,7 +69,7 @@ public class GulItemSetRecommendHandler extends TacReactiveHandler4Ald {
         generalItem.put("success", response.isSuccess());
         generalItem.put("errorCode", response.getErrorCode());
         generalItem.put("errorMsg", response.getErrorMsg());
-        generalItem.put("itemAndContentList", response.getItemAndContentList());
+        generalItem.put("items", response.getItemAndContentList());
         generalItem.put("extInfos", response.getExtInfos());
         generalItem.put("hasMore", response.isHasMore());
         generalItem.put("index", response.getIndex());
