@@ -134,7 +134,7 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
             if (data == null) {
                 return null;
             }
-            Map<String, Object> res = new BeanMap(data);
+            JSONObject res = (JSONObject)JSON.toJSON(data);
             Long scheduleStartTime = MapUtil.getLongWithDefault(res, "scheduleStartTime", 0L);
             Long scheduleEndTime = MapUtil.getLongWithDefault(res, "scheduleEndTime", 0L);
             if (scheduleEndTime == 0L || scheduleStartTime == 0L) {
