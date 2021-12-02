@@ -70,8 +70,7 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
         if (!StringUtils.isNumeric(level3Request.getLevel2Id())) {
             return Flowable.just(Response.success(contentInfoDTOMap));
         }
-        Long mockId = 24563L;
-        MainColumnDTO column = columnCacheService.getColumn(mockId/*Long.parseLong(level2Request.getLevel1Id())*/);
+        MainColumnDTO column = columnCacheService.getColumn(Long.parseLong(level3Request.getLevel2Id()));
         MaterialDTO materialDTO = column.getMaterialDTOMap().get("bannerAppId");
         if (materialDTO == null || StringUtils.isBlank(materialDTO.getExtValue())) {
             return Flowable.just(Response.success(contentInfoDTOMap));
