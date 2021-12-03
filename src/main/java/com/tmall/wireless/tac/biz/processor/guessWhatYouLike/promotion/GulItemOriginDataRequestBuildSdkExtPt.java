@@ -49,8 +49,6 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
 
     Logger logger = LoggerFactory.getLogger(GulItemOriginDataRequestBuildSdkExtPt.class);
 
-    private static final String ITEM_SET_PREFIX = "rb_";
-    public static final Long DEFAULT_LOGAREAID = 107L;
     public static final Long ITEM_SET_RECOMMEND_APPID = 29202L;
     public static final Long DEFAULT_SMAREAID = 330100L;
     public static final int PAGE_SIZE = 6;
@@ -121,6 +119,7 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
                 logger.error("-----GulItemOriginDataRequestBuildSdkExtPt.itemSetId is empty-------");
                 throw new Exception("itemSetId is empty");
             }
+            sgFrameworkContextItem.getUserParams().put("itemSetIdList", itemSetId);
             params.put("itemSetIdList", itemSetId);
 
             if (Objects.equals("O2O", locType)) {
@@ -128,6 +127,7 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
             } else {
                 params.put("itemBusinessType", "B2C");
             }
+            context.getParams().put("locType", locType);
 
             recommendRequest.setAppId(ITEM_SET_RECOMMEND_APPID);
             recommendRequest.setUserId(
