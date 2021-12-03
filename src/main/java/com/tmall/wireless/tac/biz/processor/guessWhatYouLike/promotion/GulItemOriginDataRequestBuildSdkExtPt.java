@@ -21,6 +21,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextItem;
+import com.tmall.tcls.gs.sdk.framework.model.context.UserDO;
 import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.gsh.itemsetrecommend.GshItemSetOriginDataRequestBuildSdkExtPt;
@@ -103,6 +104,9 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
             params.put("rtHalfDayStoreId", String.valueOf(rtHalfDayStoreId));
 
             params.put("closeSls", "0");
+
+            params.put("exposureDataUserId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
+                .map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
 
             String itemSetId = "";
             String tacParams = MapUtil.getStringWithDefault(aldParams, "tacParams", "");
