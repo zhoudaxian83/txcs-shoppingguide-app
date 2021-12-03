@@ -25,16 +25,15 @@ import org.slf4j.LoggerFactory;
 )
 public class GulItemSetCaptainRequestBuildSdkExtPt extends DefaultCaptainRequestBuildSdkExtPt implements CaptainRequestBuildSdkExtPt {
     Logger logger = LoggerFactory.getLogger(GshItemsetRecommendCaptainRequestBuildSdkExtPt.class);
-    private final String captainSceneCode = "conference.gsh.common";
+    private final String captainSceneCode = "conference.promotion";
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
-        //RenderRequest renderRequest = super.process(captainRequestBuildRequest);
-        //QueryOptionDO option = renderRequest.getOption();
-        //option.setSceneCode(captainSceneCode);
-        //renderRequest.setOption(option);
-        //return renderRequest;
-        return super.process(captainRequestBuildRequest);
+        RenderRequest renderRequest = super.process(captainRequestBuildRequest);
+        QueryOptionDO option = renderRequest.getOption();
+        option.setSceneCode(captainSceneCode);
+        renderRequest.setOption(option);
+        return renderRequest;
     }
 
 }
