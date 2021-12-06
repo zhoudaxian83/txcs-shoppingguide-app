@@ -135,14 +135,14 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
                 if (data == null) {
                     return null;
                 }
-                Long scheduleStartTime = MapUtil.getLongWithDefault(resResponse, "scheduleStartTime", 0L);
-                Long scheduleEndTime = MapUtil.getLongWithDefault(resResponse, "scheduleEndTime", 0L);
-                if (scheduleEndTime == 0L || scheduleStartTime == 0L) {
-                    return null;
-                }
-                if (!(System.currentTimeMillis() >= scheduleStartTime && System.currentTimeMillis() <= scheduleEndTime)) {
-                    return null;
-                }
+                //Long scheduleStartTime = MapUtil.getLongWithDefault(resResponse, "scheduleStartTime", 0L);
+                //Long scheduleEndTime = MapUtil.getLongWithDefault(resResponse, "scheduleEndTime", 0L);
+                //if (scheduleEndTime == 0L || scheduleStartTime == 0L) {
+                //    return null;
+                //}
+                //if (!(System.currentTimeMillis() >= scheduleStartTime && System.currentTimeMillis() <= scheduleEndTime)) {
+                //    return null;
+                //}
                 return data;
             }
         } catch (Exception e) {

@@ -21,11 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import com.alibaba.aladdin.lamp.domain.request.Request;
-import com.alibaba.aladdin.lamp.domain.request.RequestItem;
-import com.alibaba.aladdin.lamp.domain.request.modules.LocationInfo;
-import com.alibaba.aladdin.lamp.domain.response.ResResponse;
-import com.alibaba.fastjson.JSONObject;
 
 @Service
 @SdkExtension(bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
