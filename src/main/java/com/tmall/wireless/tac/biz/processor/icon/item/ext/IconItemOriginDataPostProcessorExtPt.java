@@ -30,6 +30,8 @@ import com.tmall.wireless.tac.biz.processor.icon.item.ItemRequest;
 import com.tmall.wireless.tac.biz.processor.icon.model.IconFixedItemDTO;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -42,68 +44,77 @@ import org.springframework.util.CollectionUtils;
 )
 public class IconItemOriginDataPostProcessorExtPt extends Register implements ItemOriginDataPostProcessorSdkExtPt {
 
+    Logger LOGGER = LoggerFactory.getLogger(IconItemOriginDataPostProcessorExtPt.class);
+
     @Resource
     private ColumnCacheService columnCacheService;
 
+
     @Override
     public OriginDataDTO<ItemEntity> process(OriginDataProcessRequest originDataProcessRequest) {
-        OriginDataDTO<ItemEntity> originDataDTO = Optional.of(originDataProcessRequest).map(OriginDataProcessRequest::getItemEntityOriginDataDTO).orElse(null);
-        // 如果是首页，增加定坑
-        String index = (String)originDataProcessRequest.getSgFrameworkContextItem().getRequestParams().getOrDefault("index", "");
-        if (StringUtils.isBlank(index) || !Objects.equals("0", index)) {
-            return originDataDTO;
-        }
-        // 较通用定坑场景
-        // 1. 所见所得，请求中带的itemId，参考上新了超市做法, icon无；
-        Map<String, Object> requestParam = originDataProcessRequest.getSgFrameworkContextItem().getRequestParams();
-
-        // 2. 获取定坑商品数据
-        ItemRequest itemRequest = (ItemRequest)Optional.of(originDataProcessRequest)
-            .map(OriginDataProcessRequest::getSgFrameworkContextItem)
-            .map(SgFrameworkContextItem::getTacContext)
-            .map(c -> c.get(ItemRecommendService.ITEM_REQUEST_KEY)).orElse(null);
-        if (itemRequest == null) {
-            return originDataDTO;
-        }
-        if (!StringUtils.isNumeric(itemRequest.getLevel2Id()) || !StringUtils.isNumeric(itemRequest.getLevel3Id())) {
-            return originDataDTO;
-        }
-        String fixedItemStr = getFixedItemList(Long.parseLong(itemRequest.getLevel2Id()), Long.parseLong((itemRequest.getLevel3Id())));
-        if (StringUtils.isBlank(fixedItemStr)) {
-            return originDataDTO;
-        }
-        List<IconFixedItemDTO> fixedItemDTOList = IconFixedItemDTO.getFixedItemByStr(fixedItemStr).stream()
-            .filter(v -> v.getBeginTime() != null && v.getEndTime() != null && v.getItemId() != null)
-            .filter(v -> v.getEndTime().getTime() > System.currentTimeMillis())
-            .filter(v -> v.getBeginTime().getTime() < System.currentTimeMillis())
-            .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(fixedItemDTOList)) {
-            return originDataDTO;
-        }
-        originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(Constant.FIXED_ITEM, fixedItemDTOList);
-
-        List<Long> fixedItemIds = Lists.newArrayList();
-        List<ItemEntity> finalFixedItems = fixedItemDTOList.stream()
-            .map(IconFixedItemDTO::getItemId)
-            .map(itemId -> {
-                fixedItemIds.add(itemId);
-                ItemEntity itemEntity = new ItemEntity();
-                itemEntity.setItemId(itemId);
-                itemEntity.setBizType(BizType.SM.getCode());
-                itemEntity.setO2oType(O2oType.B2C.name());
-                itemEntity.setBusinessType(O2oType.B2C.name());
-                return itemEntity;
-            }).collect(Collectors.toList());
-        List<ItemEntity> finalItemEntities = Lists.newArrayList();
-        finalItemEntities.addAll(finalFixedItems);
-        List<ItemEntity> originList = Optional.of(originDataDTO).map(OriginDataDTO::getResult).orElse(Lists.newArrayList());
-        originList.forEach(itemEntity -> {
-            if (!fixedItemIds.contains(itemEntity.getItemId())) {
-                finalItemEntities.add(itemEntity);
+        OriginDataDTO<ItemEntity> originDataDTO = Optional.of(originDataProcessRequest).map(OriginDataProcessRequest::getItemEntityOriginDataDTO)
+            .orElse(null);
+        try {
+            // 如果是首页，增加定坑
+            String index = (String)originDataProcessRequest.getSgFrameworkContextItem().getRequestParams().getOrDefault("index", "");
+            if (StringUtils.isBlank(index) || !Objects.equals("0", index)) {
+                return originDataDTO;
             }
-        });
-        originDataDTO.setResult(finalItemEntities);
-        return originDataDTO;
+            // 较通用定坑场景
+            // 1. 所见所得，请求中带的itemId，参考上新了超市做法, icon无；
+            Map<String, Object> requestParam = originDataProcessRequest.getSgFrameworkContextItem().getRequestParams();
+
+            // 2. 获取定坑商品数据
+            ItemRequest itemRequest = (ItemRequest)Optional.of(originDataProcessRequest)
+                .map(OriginDataProcessRequest::getSgFrameworkContextItem)
+                .map(SgFrameworkContextItem::getTacContext)
+                .map(c -> c.get(ItemRecommendService.ITEM_REQUEST_KEY)).orElse(null);
+            if (itemRequest == null) {
+                return originDataDTO;
+            }
+            if (!StringUtils.isNumeric(itemRequest.getLevel2Id()) || !StringUtils.isNumeric(itemRequest.getLevel3Id())) {
+                return originDataDTO;
+            }
+            String fixedItemStr = getFixedItemList(Long.parseLong(itemRequest.getLevel2Id()), Long.parseLong((itemRequest.getLevel3Id())));
+            if (StringUtils.isBlank(fixedItemStr)) {
+                return originDataDTO;
+            }
+            List<IconFixedItemDTO> fixedItemDTOList = IconFixedItemDTO.getFixedItemByStr(fixedItemStr).stream()
+                .filter(v -> v.getBeginTime() != null && v.getEndTime() != null && v.getItemId() != null)
+                .filter(v -> v.getEndTime().getTime() > System.currentTimeMillis())
+                .filter(v -> v.getBeginTime().getTime() < System.currentTimeMillis())
+                .collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(fixedItemDTOList)) {
+                return originDataDTO;
+            }
+            originDataProcessRequest.getSgFrameworkContextItem().getUserParams().put(Constant.FIXED_ITEM, fixedItemDTOList);
+
+            List<Long> fixedItemIds = Lists.newArrayList();
+            List<ItemEntity> finalFixedItems = fixedItemDTOList.stream()
+                .map(IconFixedItemDTO::getItemId)
+                .map(itemId -> {
+                    fixedItemIds.add(itemId);
+                    ItemEntity itemEntity = new ItemEntity();
+                    itemEntity.setItemId(itemId);
+                    itemEntity.setBizType(BizType.SM.getCode());
+                    itemEntity.setO2oType(O2oType.B2C.name());
+                    itemEntity.setBusinessType(O2oType.B2C.name());
+                    return itemEntity;
+                }).collect(Collectors.toList());
+            List<ItemEntity> finalItemEntities = Lists.newArrayList();
+            finalItemEntities.addAll(finalFixedItems);
+            List<ItemEntity> originList = Optional.of(originDataDTO).map(OriginDataDTO::getResult).orElse(Lists.newArrayList());
+            originList.forEach(itemEntity -> {
+                if (!fixedItemIds.contains(itemEntity.getItemId())) {
+                    finalItemEntities.add(itemEntity);
+                }
+            });
+            originDataDTO.setResult(finalItemEntities);
+            return originDataDTO;
+        } catch (Exception e) {
+            LOGGER.error("IconItemOriginDataPostProcessorExtPt.error{}", e);
+            return originDataDTO;
+        }
     }
 
 
