@@ -62,10 +62,6 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
         tacLogger.debug("GulItemOriginDataRequestBuildSdkExtPt");
         RecommendRequest recommendRequest = new RecommendRequest();
         try {
-
-            //String resourceId = MapUtil.getStringWithDefault(aldContext, HallCommonAldConstant.ALD_CURRENT_RES_ID, "0");
-            //params.put("resourceId", resourceId);
-
             recommendRequest.setLogResult(true);
             Context context = sgFrameworkContextItem.getTacContext();
             RequestContext4Ald requestContext4Ald = (RequestContext4Ald)context;
@@ -74,7 +70,6 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
             Map<String, String> params = Maps.newHashMap();
             Long smAreaId = MapUtil.getLongWithDefault(aldParams, RequestKeyConstant.SMAREAID, DEFAULT_SMAREAID);
             params.put("smAreaId", String.valueOf(smAreaId));
-            params.put("usingCrowd2I", "false"); // todo 确认下含义
             params.put("pageSize", "20");
 
             Object csa = aldParams.get(RequestKeyConstant.USER_PARAMS_KEY_CSA);
@@ -96,7 +91,6 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
             params.put("isFirstPage", pageIndex > 0 ? "false" : "true");
 
 
-            params.put("closeSls", "0"); // todo 确认，去掉
 
             params.put("exposureDataUserId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
@@ -118,20 +112,22 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
             params.put("itemSetIdList", itemSetId);
 
             if (Objects.equals("O2O", locType)) {
-                // todo  一小时达优先
-                //params.put("itemBusinessType", "OneHour,HalfDay,NextDay");
-                // if  rt1HourStoreId else rtHalfDayStoreId
                 Long rt1HourStoreId = Optional.ofNullable(locParams).map(LocParams::getRt1HourStoreId).orElse(0L);
-                params.put("rt1HourStoreId", String.valueOf(rt1HourStoreId));
-
                 Long rtHalfDayStoreId = Optional.ofNullable(locParams).map(LocParams::getRtHalfDayStoreId).orElse(0L);
-                params.put("rtHalfDayStoreId", String.valueOf(rtHalfDayStoreId));
+                if (rt1HourStoreId > 0) {
+                    params.put("rt1HourStoreId", String.valueOf(rt1HourStoreId));
+                    params.put("itemBusinessType", "OneHour");
+                } else if (rtHalfDayStoreId > 0) {
+                    params.put("rtHalfDayStoreId", String.valueOf(rtHalfDayStoreId));
+                    params.put("itemBusinessType", "HalfDay");
+                }
             } else {
                 params.put("itemBusinessType", "B2C");
             }
+
             sgFrameworkContextItem.getUserParams().put("locType", locType);
             // todo 增加resourceId  路由码
-            // params.put("uniqueIdentity", sgFrameworkContextItem.getBizScenario().getUniqueIdentity());
+            params.put("uniqueIdentity", sgFrameworkContextItem.getBizScenario().getUniqueIdentity());
             recommendRequest.setAppId(ITEM_SET_RECOMMEND_APPID);
             recommendRequest.setUserId(
                 MapUtil.getLongWithDefault(aldContext, HallCommonAldConstant.USER_ID, DefaultUserId));
