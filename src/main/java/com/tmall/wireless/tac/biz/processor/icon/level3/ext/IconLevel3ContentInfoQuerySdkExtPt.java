@@ -85,6 +85,7 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
         String resId = materialDTO.getExtValue();
         Object resResponse = getAldStaticDataByResourceId(resId, sgFrameworkContextContent);
         if (resResponse == null) {
+            //todo 日志
             return Flowable.just(Response.success(contentInfoDTOMap));
         }
         sgFrameworkContextContent.getTacContext().getParams().put(ICON_BANNER_KEY, resResponse);
