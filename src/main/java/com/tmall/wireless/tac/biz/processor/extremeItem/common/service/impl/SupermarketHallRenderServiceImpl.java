@@ -89,7 +89,7 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
     }
 
     private Map<Long, ItemDTO> queryItem(List<Long> itemIds, SupermarketHallContext supermarketHallContext) {
-        RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext.getSmAreaId(), supermarketHallContext.getPreviewTime(), supermarketHallContext.getUserId());
+        RenderRequest renderRequest = buildRenderRequest(itemIds, supermarketHallContext);
         SPIResult<List<ItemDTO>> itemDTOsResult = renderSpi.query(renderRequest);
         if(itemDTOsResult.isSuccess()) {
             return itemDTOsResult.getData().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
@@ -98,10 +98,10 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
         }
     }
 
-    RenderRequest buildRenderRequest(List<Long> itemIds, String smAreaId, String queryTime, Long userId) {
+    RenderRequest buildRenderRequest(List<Long> itemIds, SupermarketHallContext supermarketHallContext) {
         RenderRequest renderRequest = new RenderRequest();
         ItemQueryDO query = new ItemQueryDO();
-
+        String smAreaId = supermarketHallContext.getSmAreaId();
         if (StringUtils.isNotBlank(smAreaId) && !"0".equals(smAreaId)) {
             query.setAreaId(Long.valueOf(smAreaId));
         } else {
@@ -114,10 +114,12 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
         query.setItemIds(itemIdList);
 
         query.setChannel(Channel.WAP);
+        String queryTime = supermarketHallContext.getPreviewTime();
         if(StringUtils.isNotEmpty(queryTime)){
             query.setQueryTime(queryTime);
         }
 
+        Long userId = supermarketHallContext.getUserId();
         if (userId != null && userId != 0) {
             query.setBuyerId(userId);
         }
@@ -126,7 +128,12 @@ public class SupermarketHallRenderServiceImpl implements SupermarketHallRenderSe
 
         QueryOptionDO option = new QueryOptionDO();
         option.setOpenMkt(true);
-        option.setSceneCode("conference.promotion");
+        String sceneCode = supermarketHallContext.getSceneCode();
+        if(StringUtils.isNotBlank(sceneCode)) {
+            option.setSceneCode(sceneCode);
+        } else {
+            option.setSceneCode("conference.promotion");
+        }
         option.setIncludeQuantity(true);
         option.setIncludeSales(true);
         option.setIncludeMaiFanCard(true);
