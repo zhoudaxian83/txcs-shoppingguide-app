@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.tmall.wireless.tac.biz.processor.icon.level3.ext.IconLevel3ContentInfoQuerySdkExtPt.ICON_BANNER_KEY;
+
 @Service
 public class IconLevel2Handler extends RpmReactiveHandler<IconResponse> {
 
@@ -55,6 +57,10 @@ public class IconLevel2Handler extends RpmReactiveHandler<IconResponse> {
         return level3RecommendService.recommend(level3Request, context).map(level3TabDtoList -> {
 //                        LOGGER.info("level3RecommendService.recommend returnObj:{}", JSON.toJSONString(level3TabDtoList));
             iconResponse.setThrirdList(level3TabDtoList);
+            Object banner = Optional.ofNullable(context.getParams()).map(v ->v.get(ICON_BANNER_KEY)).orElse(null);
+            if (banner != null) {
+                iconResponse.setBanner(banner);
+            }
             return iconResponse;
         }).flatMap(re -> {
                     ItemRequest itemRequest = new ItemRequest();
