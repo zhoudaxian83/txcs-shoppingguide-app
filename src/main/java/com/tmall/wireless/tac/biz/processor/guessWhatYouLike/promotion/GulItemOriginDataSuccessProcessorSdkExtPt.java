@@ -53,7 +53,9 @@ public class GulItemOriginDataSuccessProcessorSdkExtPt  extends Register impleme
                 IconItemOriginDataFailProcessorSdkExtPt.SHOPPING_GUIDE_TAIR_USER_NAME,
                 IconItemOriginDataFailProcessorSdkExtPt.SHOPPING_GUIDE_NAME_SPACE,
                 tairKey,
-                JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult()));
+                JSON.toJSONString(originDataProcessRequest.getItemEntityOriginDataDTO().getResult())
+            , 60 * 60 * 24 * 2);
+            // 打底的超时时间
 
 
             return originDataProcessRequest.getItemEntityOriginDataDTO();

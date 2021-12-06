@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 public class GulItemSetCaptainRequestBuildSdkExtPt extends DefaultCaptainRequestBuildSdkExtPt implements CaptainRequestBuildSdkExtPt {
     Logger logger = LoggerFactory.getLogger(GshItemsetRecommendCaptainRequestBuildSdkExtPt.class);
     private final String captainSceneCode = "conference.promotion";
+    // 新的code
 
     @Override
     public RenderRequest process(CaptainRequestBuildRequest captainRequestBuildRequest) {
