@@ -48,7 +48,7 @@ public class GulItemOriginDataSuccessProcessorSdkExtPt  extends Register impleme
             // 圈品集+locType
             String itemSetId = MapUtil.getStringWithDefault(userParams, "itemSetIdList", "0");
             String locType = MapUtil.getStringWithDefault(userParams, "locType", "B2C");
-            String tairKey = String.format("%s_%s_%s","gulPromotionItemTairKey_", itemSetId, locType);
+            String tairKey = String.format("%s_%s_%s","gulPromotionItemTairKey", itemSetId, locType);
             tairSpi.put(
                 IconItemOriginDataFailProcessorSdkExtPt.SHOPPING_GUIDE_TAIR_USER_NAME,
                 IconItemOriginDataFailProcessorSdkExtPt.SHOPPING_GUIDE_NAME_SPACE,
