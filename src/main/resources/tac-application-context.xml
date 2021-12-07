@@ -206,6 +206,15 @@
     <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuBuildItemVoSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentOriginDataFailProcessorSdkExtPt"/>
 <!--    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentOriginDataPostProcessorSdkExtPt"/>-->
+
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLike.promotion.GulItemSetRecommendHandler"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLike.promotion.GulItemOriginDataRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLike.promotion.GulItemSetRecommendBuildItemVoSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLike.promotion.GulItemSetCaptainRequestBuildSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLike.promotion.GulItemOriginDataFailProcessorSdkExtPt"/>
+    <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLike.promotion.GulItemOriginDataSuccessProcessorSdkExtPt"/>
+
+
     <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentInfoQuerySdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentItemMetaInfoBuildSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.guessWhatYouLikeMenu.ext.GulMenuContentOriginDataRequestBuildSdkExtPt"/>
