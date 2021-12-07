@@ -90,8 +90,6 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
             int pageIndex = MapUtil.getIntWithDefault(aldParams, "pageIndex", 0);
             params.put("isFirstPage", pageIndex > 0 ? "false" : "true");
 
-
-
             params.put("exposureDataUserId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams)
                 .map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
 
@@ -126,7 +124,6 @@ public class GulItemOriginDataRequestBuildSdkExtPt extends Register implements I
             }
 
             sgFrameworkContextItem.getUserParams().put("locType", locType);
-            // todo 增加resourceId  路由码
             params.put("uniqueIdentity", sgFrameworkContextItem.getBizScenario().getUniqueIdentity());
             recommendRequest.setAppId(ITEM_SET_RECOMMEND_APPID);
             recommendRequest.setUserId(
