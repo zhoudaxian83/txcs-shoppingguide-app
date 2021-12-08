@@ -63,7 +63,6 @@ public class IconItemProcessBeforeReturnSdkExtPt  extends Register implements It
                     originItemVOS.add(itemEntityVOS.get(i));
                 }
             }
-            // 先对rank根据index从小到大排序 todo
             List<ItemEntityVO> finalItemVOs = Lists.newArrayList();
             finalItemVOs.addAll(originItemVOS);
             for (int i = 0; i < originItemVOS.size(); i++) {
