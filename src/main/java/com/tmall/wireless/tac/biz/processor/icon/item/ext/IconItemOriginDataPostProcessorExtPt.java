@@ -57,7 +57,7 @@ public class IconItemOriginDataPostProcessorExtPt extends Register implements It
         try {
             // 如果是首页，增加定坑
             String index = (String)originDataProcessRequest.getSgFrameworkContextItem().getRequestParams().getOrDefault("index", "");
-            if (StringUtils.isBlank(index) || !Objects.equals("0", index)) {
+            if (StringUtils.isNotBlank(index) && !Objects.equals("0", index)) {
                 return originDataDTO;
             }
             // 较通用定坑场景
