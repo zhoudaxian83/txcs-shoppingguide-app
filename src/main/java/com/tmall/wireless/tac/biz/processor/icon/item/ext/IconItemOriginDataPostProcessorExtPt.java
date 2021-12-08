@@ -56,6 +56,7 @@ public class IconItemOriginDataPostProcessorExtPt extends Register implements It
             .orElse(null);
         try {
             // 如果是首页，增加定坑
+            // level和level2取不到index
             String index = (String)originDataProcessRequest.getSgFrameworkContextItem().getRequestParams().getOrDefault("index", "");
             if (StringUtils.isNotBlank(index) && !Objects.equals("0", index)) {
                 return originDataDTO;
