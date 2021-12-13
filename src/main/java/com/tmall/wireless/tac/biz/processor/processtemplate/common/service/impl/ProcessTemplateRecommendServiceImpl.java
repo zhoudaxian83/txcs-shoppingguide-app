@@ -21,7 +21,7 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
     private RecommendSpi recommendSpi;
 
     @Override
-    public RecommendModel recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params, RecommendResponseHandler<RecommendContentEntityDTO> handler) {
+    public RecommendModel recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params, RecommendResponseHandler handler) {
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setAppId(appId);
         recommendRequest.setUserId(context.getUserId());

@@ -8,5 +8,5 @@ import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model
 import java.util.Map;
 
 public interface ProcessTemplateRecommendService {
-    RecommendModel recommendContent(Long appId, ProcessTemplateContext context, Map<String, String>params, RecommendResponseHandler<RecommendContentEntityDTO> handler);
+    RecommendModel recommendContent(Long appId, ProcessTemplateContext context, Map<String, String>params, RecommendResponseHandler handler);
 }

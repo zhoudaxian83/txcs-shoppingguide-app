@@ -9,15 +9,16 @@ import org.apache.commons.collections.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemSetRecommendModelHandler<T extends RecommendContentEntityDTO> implements RecommendResponseHandler<T>{
+public class ItemSetRecommendModelHandler implements RecommendResponseHandler {
 
-    public ItemSetRecommendModel handle(RecommendResponseEntity<T> responseEntity) {
+    @Override
+    public ItemSetRecommendModel handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity) {
         ItemSetRecommendModel itemSetRecommendModel = new ItemSetRecommendModel();
         List<ItemSetItems> itemSetItemsList = new ArrayList<>();
         itemSetRecommendModel.setItemSetItemsList(itemSetItemsList);
-        List<T> recommendContentEntityDTOList = responseEntity.getResult();
+        List<RecommendContentEntityDTO> recommendContentEntityDTOList = responseEntity.getResult();
         if(CollectionUtils.isNotEmpty(recommendContentEntityDTOList)) {
-            for (T recommendContentEntityDTO : recommendContentEntityDTOList) {
+            for (RecommendContentEntityDTO recommendContentEntityDTO : recommendContentEntityDTOList) {
                 ItemSetItems itemSetItems = new ItemSetItems();
                 itemSetItems.setItemSetId(recommendContentEntityDTO.getContentId());
                 List<RecommendItemEntityDTO> recommendItemEntityDTOs = recommendContentEntityDTO.getItems();
