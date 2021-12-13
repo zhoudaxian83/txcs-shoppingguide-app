@@ -21,7 +21,7 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
     private RecommendSpi recommendSpi;
 
     @Override
-    public RecommendModel recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params, RecommendResponseHandler<RecommendContentEntityDTO, ItemSetRecommendModel> handler) {
+    public RecommendModel recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params, RecommendResponseHandler<RecommendContentEntityDTO> handler) {
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setAppId(appId);
         recommendRequest.setUserId(context.getUserId());
@@ -29,7 +29,7 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
         recommendRequest.setLogResult(false);
         SPIResult<RecommendResponseEntity<RecommendContentEntityDTO>> spiResult = recommendSpi.recommendContent(recommendRequest);
         if(spiResult.isSuccess()) {
-            return (RecommendModel) handler.handle(spiResult.getData());
+            return handler.handle(spiResult.getData());
         } else {
             //TODO 加日志
             return null;
