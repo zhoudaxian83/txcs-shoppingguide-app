@@ -1,19 +1,13 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend;
 
 import com.tmall.wireless.store.spi.recommend.model.RecommendContentEntityDTO;
-import com.tmall.wireless.store.spi.recommend.model.RecommendEntityDTO;
-import com.tmall.wireless.store.spi.recommend.model.RecommendItemEntityDTO;
 import com.tmall.wireless.store.spi.recommend.model.RecommendResponseEntity;
-import org.apache.commons.collections.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ItemSetRecommendModelHandler implements RecommendResponseHandler {
 
     @Override
-    public ItemSetRecommendModel handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity) {
-        ItemSetRecommendModel itemSetRecommendModel = new ItemSetRecommendModel();
+    public ItemSetRecommendModel2 handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity) {
+        ItemSetRecommendModel2 itemSetRecommendModel = new ItemSetRecommendModel2();
         /*List<ItemSetItems> itemSetItemsList = new ArrayList<>();
         itemSetRecommendModel.setItemSetItemsList(itemSetItemsList);
         List<RecommendContentEntityDTO> recommendContentEntityDTOList = responseEntity.getResult();
