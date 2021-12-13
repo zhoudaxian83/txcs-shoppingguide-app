@@ -1,14 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
-import com.alibaba.fastjson.JSON;
-import com.tmall.wireless.store.spi.recommend.model.RecommendContentEntityDTO;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
-import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModel;
-import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModelHandler;
-import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
-import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendResponseHandler;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -24,8 +18,8 @@ import java.util.Map;
 @Component
 public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
-    @Autowired
-    private ProcessTemplateRecommendService recommendService;
+    /*@Autowired
+    private ProcessTemplateRecommendService recommendService;*/
     @Autowired
     private TacLogger tacLogger;
 
