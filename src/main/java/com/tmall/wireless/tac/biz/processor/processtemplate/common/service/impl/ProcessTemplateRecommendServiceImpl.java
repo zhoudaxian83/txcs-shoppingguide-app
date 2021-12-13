@@ -14,7 +14,7 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
     private RecommendSpi recommendSpi;
 
     @Override
-    public Item recommend() {
+    public Object recommend() {
         return null;
     }
 
