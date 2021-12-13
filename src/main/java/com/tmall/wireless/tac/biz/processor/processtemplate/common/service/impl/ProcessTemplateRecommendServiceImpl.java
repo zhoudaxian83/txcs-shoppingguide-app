@@ -3,12 +3,11 @@ package com.tmall.wireless.tac.biz.processor.processtemplate.common.service.impl
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.txcs.gs.spi.recommend.RecommendSpiV2;
 import com.tmall.wireless.store.spi.recommend.RecommendSpi;
-import com.tmall.wireless.store.spi.recommend.model.RecommendContentEntityDTO;
-import com.tmall.wireless.store.spi.recommend.model.RecommendItemEntityDTO;
-import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
-import com.tmall.wireless.store.spi.recommend.model.RecommendResponseEntity;
+import com.tmall.wireless.store.spi.recommend.model.*;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
     private RecommendSpi recommendSpi;
 
     @Override
-    public RecommendResponseEntity<RecommendContentEntityDTO> recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params) {
+    public RecommendModel recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params, RecommendResponseHandler<RecommendContentEntityDTO, RecommendModel> handler) {
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setAppId(appId);
         recommendRequest.setUserId(context.getUserId());
@@ -29,7 +28,7 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
         recommendRequest.setLogResult(false);
         SPIResult<RecommendResponseEntity<RecommendContentEntityDTO>> spiResult = recommendSpi.recommendContent(recommendRequest);
         if(spiResult.isSuccess()) {
-            return spiResult.getData();
+            return handler.handle(spiResult.getData());
         } else {
             //TODO 加日志
             return null;
