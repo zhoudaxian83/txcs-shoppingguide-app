@@ -7,5 +7,5 @@ import java.util.Map;
 
 public interface ProcessTemplateRecommendService {
     void recommend();
-    ItemSetRecommendModel recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params);
+    void recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params);
 }
