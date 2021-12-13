@@ -6,7 +6,6 @@ import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTempla
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRenderService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModel;
-import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendResponseHandler;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
