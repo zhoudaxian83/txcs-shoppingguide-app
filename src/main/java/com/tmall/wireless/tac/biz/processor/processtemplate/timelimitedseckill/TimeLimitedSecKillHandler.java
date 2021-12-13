@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRenderService;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
@@ -20,6 +21,10 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
     @Autowired
     private ProcessTemplateRenderService processTemplateRenderService;
+
+    @Autowired
+    private ProcessTemplateRecommendService processTemplateRecommendService;
+
     @Autowired
     private TacLogger tacLogger;
 
