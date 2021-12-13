@@ -25,8 +25,8 @@ import java.util.Map;
 @Component
 public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
-    @Autowired
-    private ProcessTemplateRecommendService recommendService;
+    //@Autowired
+    //private ProcessTemplateRecommendService recommendService;
     @Autowired
     private TacLogger tacLogger;
 
