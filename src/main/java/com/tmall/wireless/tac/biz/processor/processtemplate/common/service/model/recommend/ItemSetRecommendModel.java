@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 圈品集推荐模型，根据圈品集推商品的数据模型
  */
-public class ItemSetRecommendModel2 {
+public class ItemSetRecommendModel {
     private List<ItemSetItems> itemSetItemsList;
 
     public List<Long> getAllItemIds() {

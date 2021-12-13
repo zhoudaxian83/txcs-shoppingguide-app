@@ -6,8 +6,8 @@ import com.tmall.wireless.store.spi.recommend.model.RecommendResponseEntity;
 public class ItemSetRecommendModelHandler implements RecommendResponseHandler {
 
     @Override
-    public ItemSetRecommendModel2 handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity) {
-        ItemSetRecommendModel2 itemSetRecommendModel = new ItemSetRecommendModel2();
+    public ItemSetRecommendModel handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity) {
+        ItemSetRecommendModel itemSetRecommendModel = new ItemSetRecommendModel();
         /*List<ItemSetItems> itemSetItemsList = new ArrayList<>();
         itemSetRecommendModel.setItemSetItemsList(itemSetItemsList);
         List<RecommendContentEntityDTO> recommendContentEntityDTOList = responseEntity.getResult();

@@ -4,5 +4,5 @@ import com.tmall.wireless.store.spi.recommend.model.RecommendContentEntityDTO;
 import com.tmall.wireless.store.spi.recommend.model.RecommendResponseEntity;
 
 public interface RecommendResponseHandler {
-    ItemSetRecommendModel2 handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity);
+    ItemSetRecommendModel handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity);
 }
