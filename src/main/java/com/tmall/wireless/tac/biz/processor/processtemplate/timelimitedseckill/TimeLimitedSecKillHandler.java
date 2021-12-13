@@ -6,6 +6,7 @@ import com.tmall.wireless.store.spi.recommend.model.RecommendContentEntityDTO;
 import com.tmall.wireless.store.spi.recommend.model.RecommendResponseEntity;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModelHandler;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendResponseHandler;
@@ -36,7 +37,8 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
         Map<String, String> params = new HashMap<>();
         params.put("contentType", "3");
         params.put("itemSetIdList", "415609,415620");
-        RecommendResponseHandler handler = new ItemSetRecommendModelHandler();
+        RecommendResponseHandler<RecommendContentEntityDTO, ItemSetRecommendModel> handler = new ItemSetRecommendModelHandler<>();
+        tacLogger.warn("aaaa");
         RecommendModel recommendModel = recommendService.recommendContent(21557L, context, params, handler);
         tacLogger.warn("recommendResponse" + JSON.toJSONString(recommendModel.getAllItemIds()));
         return Flowable.just(TacResult.newResult(null));
