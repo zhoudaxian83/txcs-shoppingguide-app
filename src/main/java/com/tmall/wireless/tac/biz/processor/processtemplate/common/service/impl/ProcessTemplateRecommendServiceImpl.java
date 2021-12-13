@@ -1,8 +1,17 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.common.service.impl;
 
+import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.recommend.RecommendSpi;
+import com.tmall.wireless.store.spi.recommend.model.RecommendContentEntityDTO;
+import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
+import com.tmall.wireless.store.spi.recommend.model.RecommendResponseEntity;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 
 @Service
@@ -12,12 +21,7 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
     private RecommendSpi recommendSpi;
 
     @Override
-    public Item recommend() {
-        return null;
-    }
-
-    /*@Override
-    public ItemSetRecommendModel recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params) {
+    public Object recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params) {
         RecommendRequest recommendRequest = new RecommendRequest();
         recommendRequest.setAppId(appId);
         recommendRequest.setUserId(context.getUserId());
@@ -30,5 +34,5 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
             //TODO 加日志
             return null;
         }
-    }*/
+    }
 }
