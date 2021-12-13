@@ -1,7 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.common.service.impl;
 
 import com.tmall.wireless.store.spi.recommend.RecommendSpi;
-import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.Item;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
