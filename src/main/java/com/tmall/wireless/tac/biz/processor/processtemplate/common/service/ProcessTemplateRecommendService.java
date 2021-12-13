@@ -5,5 +5,5 @@ import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTempla
 import java.util.Map;
 
 public interface ProcessTemplateRecommendService {
-    Object recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params)
+    Object recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params);
 }
