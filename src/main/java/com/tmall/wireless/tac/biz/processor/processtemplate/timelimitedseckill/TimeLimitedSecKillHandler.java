@@ -37,7 +37,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
         Map<String, String> params = new HashMap<>();
         params.put("contentType", "3");
         params.put("itemSetIdList", "415609,415620");
-        RecommendResponseHandler<RecommendContentEntityDTO, ItemSetRecommendModel> handler = new ItemSetRecommendModelHandler<>();
+        //RecommendResponseHandler<RecommendContentEntityDTO, ItemSetRecommendModel> handler = new ItemSetRecommendModelHandler<>();
         tacLogger.warn("aaaa");
         //RecommendModel recommendModel = recommendService.recommendContent(21557L, context, params, handler);
         //tacLogger.warn("recommendResponse" + JSON.toJSONString(recommendModel.getAllItemIds()));
