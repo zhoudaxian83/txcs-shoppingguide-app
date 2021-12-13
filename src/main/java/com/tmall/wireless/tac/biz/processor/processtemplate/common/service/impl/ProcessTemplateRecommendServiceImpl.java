@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.common.service.impl;
 
 import com.tmall.wireless.store.spi.recommend.RecommendSpi;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.Item;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
     private RecommendSpi recommendSpi;
 
     @Override
-    public Object recommend() {
+    public Item recommend() {
         return null;
     }
 
