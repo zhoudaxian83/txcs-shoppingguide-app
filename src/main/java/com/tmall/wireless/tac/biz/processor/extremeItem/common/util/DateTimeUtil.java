@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.extremeItem.common.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -20,8 +22,30 @@ public final class DateTimeUtil {
         return dateTimeFormatter.format(LocalDateTime.ofInstant(instant, zoneId));
     }
 
+    /**
+     * 将"YYYY-MM-dd HH:mm:ss"字符串格式转化为LocalDateTime类型
+     *
+     * @param dateTimeStr "YYYY-MM-dd HH:mm:ss"格式的字符串
+     * @return LocalDateTime对象
+     */
+    public static LocalDateTime parseDateTime(String dateTimeStr) {
+        LocalDateTime result = null;
+        if(StringUtils.isBlank(dateTimeStr)) {
+            return null;
+        }
+        try {
+            result = LocalDateTime.parse(dateTimeStr, dateTimeFormatter);
+        } catch (Exception e) {
+            return null;
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
         String s = DateTimeUtil.formatTimestamp(1636632111000L);
         System.out.println("s = " + s);
+
+        LocalDateTime localDateTime = parseDateTime("2021-11-11 20:01:51");
+        System.out.println("localDateTime = " + localDateTime);
     }
 }
