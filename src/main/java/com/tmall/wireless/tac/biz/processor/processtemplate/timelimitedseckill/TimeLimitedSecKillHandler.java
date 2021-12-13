@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRenderService;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -19,7 +20,7 @@ import java.util.Map;
 public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
     @Autowired
-    private ProcessTemplateRecommendService processTemplateRecommendService;
+    private ProcessTemplateRenderService processTemplateRenderService;
     @Autowired
     private TacLogger tacLogger;
 
