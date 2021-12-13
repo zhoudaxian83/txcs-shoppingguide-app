@@ -14,7 +14,7 @@ public class ItemSetRecommendModelHandler implements RecommendResponseHandler {
     @Override
     public ItemSetRecommendModel handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity) {
         ItemSetRecommendModel itemSetRecommendModel = new ItemSetRecommendModel();
-        List<ItemSetItems> itemSetItemsList = new ArrayList<>();
+        /*List<ItemSetItems> itemSetItemsList = new ArrayList<>();
         itemSetRecommendModel.setItemSetItemsList(itemSetItemsList);
         List<RecommendContentEntityDTO> recommendContentEntityDTOList = responseEntity.getResult();
         if(CollectionUtils.isNotEmpty(recommendContentEntityDTOList)) {
@@ -33,7 +33,7 @@ public class ItemSetRecommendModelHandler implements RecommendResponseHandler {
                 }
                 itemSetItemsList.add(itemSetItems);
             }
-        }
+        }*/
         return itemSetRecommendModel;
     }
 }
