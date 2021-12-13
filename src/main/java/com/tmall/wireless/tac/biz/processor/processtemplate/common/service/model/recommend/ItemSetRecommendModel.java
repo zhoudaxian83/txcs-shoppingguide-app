@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend;
 
+import lombok.Data;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 /**
  * 圈品集推荐模型，根据圈品集推商品的数据模型
  */
+@Data
 public class ItemSetRecommendModel {
     private List<ItemSetItems> itemSetItemsList;
 

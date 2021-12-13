@@ -28,7 +28,7 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
         recommendRequest.setLogResult(false);
         SPIResult<RecommendResponseEntity<RecommendContentEntityDTO>> spiResult = recommendSpi.recommendContent(recommendRequest);
         if(spiResult.isSuccess()) {
-            return null;
+            return spiResult.getData();
         } else {
             //TODO 加日志
             return null;
