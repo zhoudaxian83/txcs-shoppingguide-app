@@ -2,6 +2,7 @@ package com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
+import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRenderService;
@@ -13,6 +14,7 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +26,7 @@ import java.util.Map;
 public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
     @Autowired
-    private ProcessTemplateRenderService processTemplateRenderService;
+    private ProcessTemplateRenderService renderService;
 
     @Autowired
     private ProcessTemplateRecommendService recommendService;
@@ -42,6 +44,10 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
         RecommendResponseHandler handler = new ItemSetRecommendModelHandler();
         RecommendModel recommendModel = recommendService.recommendContent(21557L, context, params, handler);
         tacLogger.warn("allItemIds" + JSON.toJSONString(recommendModel.getAllItemIds()));
+        if(CollectionUtils.isNotEmpty(recommendModel.getAllItemIds())) {
+            Map<Long, ItemDTO> longItemDTOMap = renderService.batchQueryItem(recommendModel.getAllItemIds(), context);
+            tacLogger.warn("longItemDTOMap: " + JSON.toJSONString(longItemDTOMap));
+        }
         return Flowable.just(TacResult.newResult(null));
     }
 }
