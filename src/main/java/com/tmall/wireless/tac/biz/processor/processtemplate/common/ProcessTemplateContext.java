@@ -40,56 +40,62 @@ public class ProcessTemplateContext {
      */
     private JSONObject tacParamsMap;
 
+    /**
+     * 来源类的简单类名，主要用于记日志时进行区分
+     */
+    private String sourceClassSimpleName;
 
-    public static ProcessTemplateContext init(RequestContext4Ald requestContext4Ald) {
+
+    public static ProcessTemplateContext init(RequestContext4Ald requestContext4Ald, Class clazz) {
         //logger.info("ProcessTemplateContext_requestContext4Ald" + JSON.toJSONString(requestContext4Ald));
 
-        ProcessTemplateContext supermarketHallContext = new ProcessTemplateContext();
+        ProcessTemplateContext context = new ProcessTemplateContext();
+        context.setSourceClassSimpleName(clazz.getSimpleName());
 
         //初始化用户信息
         if(requestContext4Ald.getUserInfo() != null) {
-            supermarketHallContext.setUserId(requestContext4Ald.getUserInfo().getUserId());
-            supermarketHallContext.setUserNick(requestContext4Ald.getUserInfo().getNick());
+            context.setUserId(requestContext4Ald.getUserInfo().getUserId());
+            context.setUserNick(requestContext4Ald.getUserInfo().getNick());
         }
         if(requestContext4Ald.getAldParam() != null) {
             //初始化区域ID
             String smAreaId = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "330100");
-            supermarketHallContext.setSmAreaId(smAreaId);
+            context.setSmAreaId(smAreaId);
 
             //初始化预览时间
             String previewTimeStampStr = PageUrlUtil.getParamFromCurPageUrl(requestContext4Ald.getAldParam(), "previewTime");
             if(StringUtils.isNotBlank(previewTimeStampStr)) {
                 try {
-                    supermarketHallContext.setPreviewTime(DateTimeUtil.formatTimestamp(Long.parseLong(previewTimeStampStr)));
+                    context.setPreviewTime(DateTimeUtil.formatTimestamp(Long.parseLong(previewTimeStampStr)));
                 } catch (Exception e) {
                     logger.error("ProcessTemplateContext.init error, traceId:" + EagleEye.getTraceId() + ", previewTimeStampStr" + previewTimeStampStr, e);
                     //ignore
-                    supermarketHallContext.setPreviewTime(null);
+                    context.setPreviewTime(null);
                 }
             }
 
         }
 
         //初始化当前资源位ID
-        supermarketHallContext.setCurrentResourceId(String.valueOf(requestContext4Ald.getAldContext().get(ALD_CURRENT_RES_ID)));
+        context.setCurrentResourceId(String.valueOf(requestContext4Ald.getAldContext().get(ALD_CURRENT_RES_ID)));
         //初始化当前排期ID
-        supermarketHallContext.setCurrentScheduleId(String.valueOf(requestContext4Ald.getAldContext().get(ALD_SCHEDULE_ID)));
+        context.setCurrentScheduleId(String.valueOf(requestContext4Ald.getAldContext().get(ALD_SCHEDULE_ID)));
 
         //初始化当前页面URL
         String curPageUrl = MapUtil.getStringWithDefault(requestContext4Ald.getAldParam(), CUR_PAGE_URL, "");
-        supermarketHallContext.setCurrentPageUrl(curPageUrl);
+        context.setCurrentPageUrl(curPageUrl);
 
         //初始化tac参数
         String tacParams = MapUtil.getStringWithDefault(requestContext4Ald.getAldParam(), TAC_PARAMS, "");
         if(StringUtils.isNotBlank(tacParams)){
             JSONObject tacParamsMap = JSON.parseObject(tacParams);
-            supermarketHallContext.setTacParamsMap(tacParamsMap);
+            context.setTacParamsMap(tacParamsMap);
         }
 
         //初始化运营手工配置的数据
-        supermarketHallContext.setAldManualConfigDataList((List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA));
+        context.setAldManualConfigDataList((List<Map<String, Object>>) requestContext4Ald.getAldContext().get(STATIC_SCHEDULE_DATA));
 
-        logger.info("SupermarketHallContext_ProcessTemplateContext" + JSON.toJSONString(supermarketHallContext));
-        return supermarketHallContext;
+        logger.info(context.getSourceClassSimpleName() + "_ProcessTemplateContext:" + JSON.toJSONString(context));
+        return context;
     }
 }
