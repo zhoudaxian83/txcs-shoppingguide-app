@@ -1,8 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain;
 
-import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.DateTimeUtil;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.DateTimeUtil;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 public class SecKillSession {
     /**
@@ -45,8 +47,46 @@ public class SecKillSession {
         return this.id;
     }
 
+    public String sessionText() {
+        return this.sessionText;
+    }
+
+    public Long startTimestamps() {
+        return this.startTime.toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
+    }
+
+    public Long endTimestamps() {
+        return this.endTime.toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
+    }
+
+    public String parseHHMMofStartTime() {
+        return DateTimeUtil.formatHH_MM(this.startTime);
+    }
+
     public String itemSetId() {
         return this.itemSetId;
+    }
+
+    public int status() {
+        return this.status;
+    }
+
+    /**
+     * 倒计时时间（毫秒）
+     * 如果秒杀场次状态为"未开始"，则为当前时间和开始时间的差值
+     * 如果秒杀场次状态为"秒杀中"，则为当前时间和结束时间的差值
+     * 如果秒杀场次状态为"已结束"，则返回无效值-1
+     *
+     * @return 倒计时时间
+     */
+    public long countDownMillis() {
+        if(status == 0) {
+            return Duration.between(LocalDateTime.now(), this.startTime).toMillis();
+        } else if(status == 1) {
+            return Duration.between(LocalDateTime.now(), this.endTime).toMillis();
+        } else {
+            return -1L;
+        }
     }
 
     /**

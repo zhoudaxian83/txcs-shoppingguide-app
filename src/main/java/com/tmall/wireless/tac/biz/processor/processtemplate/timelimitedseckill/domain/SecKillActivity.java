@@ -71,4 +71,8 @@ public class SecKillActivity {
 
         return result;
     }
+
+    public List<SecKillSession> validSecKillSessions() {
+        return this.validSecKillSessions;
+    }
 }
