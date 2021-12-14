@@ -73,13 +73,14 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
         //Captain渲染
         Map<Long, ItemDTO> longItemDTOMap = renderService.batchQueryItem(recommendModel.getAllItemIds(), context);
-        tacLogger.warn("longItemDTOMap: " + JSON.toJSONString(longItemDTOMap));
+        //tacLogger.warn("longItemDTOMap: " + JSON.toJSONString(longItemDTOMap));
 
         //结果组装
         //SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.valueOf(secKillActivity, selectedSecKillSession, recommendModel.getAllItemIds(), longItemDTOMap);
         List<Map<String, Object>> items = longItemDTOMap.values().stream().map(item -> buildItemMap(item)).collect(Collectors.toList());
         SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.mock(items);
         List<GeneralItem> generalItemList = secKillActivityDTO.toGeneralItemList();
+        tacLogger.warn("generalItemList" + JSON.toJSONString(generalItemList));
         return Flowable.just(TacResult.newResult(generalItemList));
     }
 
