@@ -1,9 +1,11 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.common.service;
 
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendResponseHandler;
 
 import java.util.Map;
 
 public interface ProcessTemplateRecommendService {
-    Object recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params);
+    RecommendModel recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params, RecommendResponseHandler handler);
 }

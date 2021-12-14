@@ -1,15 +1,19 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend;
 
 import com.tmall.wireless.store.spi.recommend.model.RecommendContentEntityDTO;
+import com.tmall.wireless.store.spi.recommend.model.RecommendItemEntityDTO;
 import com.tmall.wireless.store.spi.recommend.model.RecommendResponseEntity;
-import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.RecommendResponseHandler;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemSetRecommendModelHandler implements RecommendResponseHandler {
 
     @Override
-    public ItemSetRecommendModel handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity) {
+    public RecommendModel handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity) {
         ItemSetRecommendModel itemSetRecommendModel = new ItemSetRecommendModel();
-        /*List<ItemSetItems> itemSetItemsList = new ArrayList<>();
+        List<ItemSetItems> itemSetItemsList = new ArrayList<>();
         itemSetRecommendModel.setItemSetItemsList(itemSetItemsList);
         List<RecommendContentEntityDTO> recommendContentEntityDTOList = responseEntity.getResult();
         if(CollectionUtils.isNotEmpty(recommendContentEntityDTOList)) {
@@ -28,7 +32,7 @@ public class ItemSetRecommendModelHandler implements RecommendResponseHandler {
                 }
                 itemSetItemsList.add(itemSetItems);
             }
-        }*/
+        }
         return itemSetRecommendModel;
     }
 }
