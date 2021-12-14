@@ -1,9 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain;
 
-import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfig;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -40,6 +38,9 @@ public class SecKillSessionConfig {
 
     public static SecKillSessionConfig valueOf(Map<String, Object> stringObjectMap) {
         SecKillSessionConfig sessionConfig = new SecKillSessionConfig();
+        if(stringObjectMap.get("default_contentId") != null) {
+            sessionConfig.setId(Long.valueOf(String.valueOf(stringObjectMap.get("default_contentId"))));
+        }
         if(stringObjectMap.get("contentId") != null) {
             sessionConfig.setId(Long.valueOf(String.valueOf(stringObjectMap.get("contentId"))));
         }

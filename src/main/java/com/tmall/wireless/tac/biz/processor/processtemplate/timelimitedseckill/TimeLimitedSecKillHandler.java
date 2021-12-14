@@ -3,6 +3,8 @@ package com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRenderService;
@@ -27,6 +29,8 @@ import java.util.Map;
 @Component
 public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
+    private static Logger logger = LoggerProxy.getLogger(TimeLimitedSecKillHandler.class);
+
     @Autowired
     private ProcessTemplateRenderService renderService;
 
@@ -40,28 +44,34 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
         //初始化上下文
         ProcessTemplateContext context = ProcessTemplateContext.init(requestContext4Ald);
-        context.setUserId(1034513083L);
 
         //构造运营配置商品列表领域对象
         SecKillActivityConfig activityConfig = SecKillActivityConfig.valueOf(context.getAldManualConfigDataList());
         SecKillActivity secKillActivity = SecKillActivity.init(activityConfig);
 
+        logger.info("secKillActivity: " + JSON.toJSONString(secKillActivity));
+
         SelectedSecKillSession selectedSecKillSession = secKillActivity.select(null);
+
+        logger.info("selectedSecKillSession: " + JSON.toJSONString(selectedSecKillSession));
 
         //推荐召回
         Map<String, String> recommendParams = new HashMap<>();
         recommendParams.put("contentType", "3");
         recommendParams.put("itemSetIdList", selectedSecKillSession.itemSetId());
         RecommendModel recommendModel = recommendService.recommendContent(21557L, context, recommendParams, new ItemSetRecommendModelHandler());
+        logger.info("recommendModel: " + JSON.toJSONString(recommendModel));
         tacLogger.warn("allItemIds" + JSON.toJSONString(recommendModel.getAllItemIds()));
 
         //Captain渲染
         Map<Long, ItemDTO> longItemDTOMap = renderService.batchQueryItem(recommendModel.getAllItemIds(), context);
+        logger.info("longItemDTOMap.size: " + longItemDTOMap.size());
         tacLogger.warn("longItemDTOMap.size: " + longItemDTOMap.size());
 
         //结果组装
         SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.valueOf(secKillActivity, selectedSecKillSession, recommendModel.getAllItemIds(), longItemDTOMap);
         List<GeneralItem> generalItemList = secKillActivityDTO.toGeneralItemList();
+        logger.info("generalItemList: " + JSON.toJSONString(generalItemList));
         tacLogger.warn("generalItemList" + JSON.toJSONString(generalItemList));
         return Flowable.just(TacResult.newResult(generalItemList));
     }
