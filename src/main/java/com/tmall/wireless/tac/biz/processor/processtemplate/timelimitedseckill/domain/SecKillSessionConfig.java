@@ -53,8 +53,8 @@ public class SecKillSessionConfig {
         if(stringObjectMap.get("endTime") != null) {
             sessionConfig.setEndTime(String.valueOf(stringObjectMap.get("endTime")));
         }
-        if(stringObjectMap.get("itemSetId") != null) {
-            sessionConfig.setItemSetId(String.valueOf(stringObjectMap.get("itemSetId")));
+        if(stringObjectMap.get("itemSet") != null) {
+            sessionConfig.setItemSetId(String.valueOf(stringObjectMap.get("itemSet")));
         }
         return sessionConfig;
     }
