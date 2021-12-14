@@ -13,7 +13,6 @@ import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
-import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
