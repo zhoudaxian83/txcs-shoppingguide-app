@@ -9,12 +9,17 @@ import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfig;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroup;
 import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigGroups;
+import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfigs;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRenderService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModelHandler;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendResponseHandler;
+import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain.SecKillActivity;
+import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain.SecKillActivityConfig;
+import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain.SelectedSecKillSession;
+import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.dto.SecKillActivityDTO;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -31,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
@@ -46,39 +52,53 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
+        //初始化上下文
+        //ProcessTemplateContext context = ProcessTemplateContext.init(requestContext4Ald);
         ProcessTemplateContext context = new ProcessTemplateContext();
         context.setUserId(1034513083L);
-        Map<String, String> params = new HashMap<>();
-        params.put("contentType", "3");
-        params.put("itemSetIdList", "415609,415620");
-        RecommendResponseHandler handler = new ItemSetRecommendModelHandler();
-        RecommendModel recommendModel = recommendService.recommendContent(21557L, context, params, handler);
+
+        //构造运营配置商品列表领域对象
+        //SecKillActivityConfig activityConfig = SecKillActivityConfig.valueOf(context.getAldManualConfigDataList());
+        //SecKillActivity secKillActivity = SecKillActivity.init(activityConfig);
+
+        //SelectedSecKillSession selectedSecKillSession = secKillActivity.select(null);
+
+        //推荐召回
+        Map<String, String> recommendParams = new HashMap<>();
+        recommendParams.put("contentType", "3");
+        //recommendParams.put("itemSetIdList", selectedSecKillSession.itemSetId());
+        recommendParams.put("itemSetIdList", "415609");
+        RecommendModel recommendModel = recommendService.recommendContent(21557L, context, recommendParams, new ItemSetRecommendModelHandler());
         tacLogger.warn("allItemIds" + JSON.toJSONString(recommendModel.getAllItemIds()));
-        if(CollectionUtils.isNotEmpty(recommendModel.getAllItemIds())) {
-            Map<Long, ItemDTO> longItemDTOMap = renderService.batchQueryItem(recommendModel.getAllItemIds(), context);
-            tacLogger.warn("longItemDTOMap: " + JSON.toJSONString(longItemDTOMap));
-            List<GeneralItem> generalItemList = buildResult(recommendModel.getAllItemIds(), longItemDTOMap);
-            return Flowable.just(TacResult.newResult(generalItemList));
-        }
-        return Flowable.just(TacResult.newResult(null));
+
+        //Captain渲染
+        Map<Long, ItemDTO> longItemDTOMap = renderService.batchQueryItem(recommendModel.getAllItemIds(), context);
+        tacLogger.warn("longItemDTOMap: " + JSON.toJSONString(longItemDTOMap));
+
+        //结果组装
+        //SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.valueOf(secKillActivity, selectedSecKillSession, recommendModel.getAllItemIds(), longItemDTOMap);
+        List<Map<String, Object>> items = longItemDTOMap.values().stream().map(item -> buildItemMap(item)).collect(Collectors.toList());
+        SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.mock(items);
+        List<GeneralItem> generalItemList = secKillActivityDTO.toGeneralItemList();
+        return Flowable.just(TacResult.newResult(generalItemList));
     }
 
-    private List<GeneralItem> buildResult(List<Long> ids, Map<Long, ItemDTO> longItemDTOMap) {
+    /*private List<GeneralItem> buildResult(List<Long> ids, Map<Long, ItemDTO> longItemDTOMap) {
         List<GeneralItem> result = new ArrayList<>();
         for (Long itemId : ids) {
-            GeneralItem generalItem = buildItemMap(longItemDTOMap.get(itemId));
+            Map<String, Object> itemMap = buildItemMap(longItemDTOMap.get(itemId));
             if(generalItem != null) {
                 result.add(generalItem);
             }
         }
         return result;
-    }
+    }*/
 
-    public GeneralItem buildItemMap(ItemDTO itemDTO) {
+    public Map<String, Object> buildItemMap(ItemDTO itemDTO) {
+        Map<String, Object> itemMap = new HashMap<>();
         if(itemDTO == null) {
-            return null;
+            return itemMap;
         }
-        GeneralItem itemMap = new GeneralItem();
         itemMap.put("id", itemDTO.getItemId().getId());
         itemMap.put("itemId", itemDTO.getItemId().getId());
         //itemMap.put("storeId", tmcsContext.getStoreId());

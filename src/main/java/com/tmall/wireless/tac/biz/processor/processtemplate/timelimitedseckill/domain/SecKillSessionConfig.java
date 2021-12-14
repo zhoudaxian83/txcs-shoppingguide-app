@@ -1,8 +1,10 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain;
 
+import com.tmall.wireless.tac.biz.processor.extremeItem.domain.ItemConfig;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * 秒杀场次配置
@@ -35,4 +37,24 @@ public class SecKillSessionConfig {
      * 圈品集ID
      */
     private String itemSetId;
+
+    public static SecKillSessionConfig valueOf(Map<String, Object> stringObjectMap) {
+        SecKillSessionConfig sessionConfig = new SecKillSessionConfig();
+        if(stringObjectMap.get("contentId") != null) {
+            sessionConfig.setId(Long.valueOf(String.valueOf(stringObjectMap.get("contentId"))));
+        }
+        if(stringObjectMap.get("sessionText") != null) {
+            sessionConfig.setSessionText(String.valueOf(stringObjectMap.get("sessionConfig")));
+        }
+        if(stringObjectMap.get("startTime") != null) {
+            sessionConfig.setStartTime(String.valueOf(stringObjectMap.get("startTime")));
+        }
+        if(stringObjectMap.get("endTime") != null) {
+            sessionConfig.setEndTime(String.valueOf(stringObjectMap.get("endTime")));
+        }
+        if(stringObjectMap.get("itemSetId") != null) {
+            sessionConfig.setItemSetId(String.valueOf(stringObjectMap.get("itemSetId")));
+        }
+        return sessionConfig;
+    }
 }
