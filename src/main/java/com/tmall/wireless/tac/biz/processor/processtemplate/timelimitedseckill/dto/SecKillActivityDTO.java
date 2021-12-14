@@ -44,7 +44,7 @@ public class SecKillActivityDTO {
             secKillSessionDTO.setItemSet(secKillSession.itemSetId());
             secKillSessionDTOList.add(secKillSessionDTO);
         }
-        return null;
+        return activityDTO;
     }
 
     public List<GeneralItem> toGeneralItemList() {

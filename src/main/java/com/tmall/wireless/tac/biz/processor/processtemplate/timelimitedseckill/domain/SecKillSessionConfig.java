@@ -45,7 +45,7 @@ public class SecKillSessionConfig {
             sessionConfig.setId(Long.valueOf(String.valueOf(stringObjectMap.get("contentId"))));
         }
         if(stringObjectMap.get("sessionText") != null) {
-            sessionConfig.setSessionText(String.valueOf(stringObjectMap.get("sessionConfig")));
+            sessionConfig.setSessionText(String.valueOf(stringObjectMap.get("sessionText")));
         }
         if(stringObjectMap.get("startTime") != null) {
             sessionConfig.setStartTime(String.valueOf(stringObjectMap.get("startTime")));
