@@ -10,7 +10,7 @@ import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.IGraphResponseHandler;
-import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.SupermarketHallIGraphSearchService;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateIGraphSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class SupermarketHallIGraphSearchServiceImpl<T> implements SupermarketHallIGraphSearchService<T> {
-    private static Logger logger = LoggerProxy.getLogger(SupermarketHallIGraphSearchServiceImpl.class);
+public class ProcessTemplateIGraphSearchServiceImpl<T> implements ProcessTemplateIGraphSearchService<T> {
+    private static Logger logger = LoggerProxy.getLogger(ProcessTemplateIGraphSearchServiceImpl.class);
 
     @Autowired
     com.tmall.wireless.store.spi.third.IGraphSpi iGraphSpi;
