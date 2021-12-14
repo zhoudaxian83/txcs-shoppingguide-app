@@ -87,20 +87,20 @@ public class TodayCrazyRecommendTabSdkItemHandler extends RpmReactiveHandler<SgF
      * @return
      */
     private String getTodayCrazyItemPicUrlField(Context context) {
-        StringBuilder itemPicUrl = new StringBuilder();
+        StringBuilder todayCrazyItemPicUrlField = new StringBuilder();
         try {
             if (context.getParams().get(AB_TEST_RESULT) == null || StringUtils.isBlank(context.getParams().get(AB_TEST_RESULT).toString())) {
                 HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_TAB_ITEM)
                     .kv("TodayCrazyRecommendTabSdkItemHandler context.getParams()", JSON.toJSONString(context.getParams()))
                     .info();
-                return itemPicUrl.toString();
+                return todayCrazyItemPicUrlField.toString();
             }
             List<Map<String, Object>> abTestRest = (List<Map<String, Object>>)context.getParams().get(AB_TEST_RESULT);
             if (CollectionUtils.isEmpty(abTestRest)) {
                 HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_TAB_ITEM)
                     .kv("TodayCrazyRecommendTabSdkItemHandler context.getParams().get(AB_TEST_RESULT)", JSON.toJSONString(context.getParams()))
                     .info();
-                return itemPicUrl.toString();
+                return todayCrazyItemPicUrlField.toString();
             }
             HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_TAB_ITEM)
                 .kv("TodayCrazyRecommendTabSdkItemHandler abTestRest", JSON.toJSONString(abTestRest))
@@ -109,14 +109,14 @@ public class TodayCrazyRecommendTabSdkItemHandler extends RpmReactiveHandler<SgF
                 String todayCrazyAbTest = AB_TEST_CODE;
                 String todayCrazyItemPicUrlIdAb = SxlSwitch.TODAY_CRAZY_ITEM_PIC_URL_ID_AB;
                 HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_TAB_ITEM)
-                    .kv("TodayCrazyRecommendTabSdkItemHandler", "getSxlTrialMergeAbData")
-                    .kv("TODAY_CRAZY_AB_TEST", todayCrazyAbTest)
-                    .kv("sxlAlgItemsetIdAb", todayCrazyItemPicUrlIdAb)
+                    .kv("TodayCrazyRecommendTabSdkItemHandler", "getTodayCrazyItemPicUrlField")
+                    .kv("todayCrazyAbTest", todayCrazyAbTest)
+                    .kv("todayCrazyItemPicUrlIdAb", todayCrazyItemPicUrlIdAb)
                     .info();
                 if (todayCrazyAbTest.equals(variation.get("bizType")) &&
                     todayCrazyItemPicUrlIdAb.equals(variation.get("tclsExpId"))) {
-                    if (variation.get("hasTrialMoudle") != null) {
-                        itemPicUrl.append(variation.get("hasTrialMoudle"));
+                    if (variation.get("todayCrazyItemPicUrlField") != null) {
+                        todayCrazyItemPicUrlField.append(variation.get("todayCrazyItemPicUrlField"));
                     }
                 }
             });
@@ -127,8 +127,8 @@ public class TodayCrazyRecommendTabSdkItemHandler extends RpmReactiveHandler<SgF
                 .info();
         }
         HadesLogUtil.stream(ScenarioConstantApp.TODAY_CRAZY_TAB_ITEM)
-            .kv("TodayCrazyRecommendTabSdkItemHandler itemSetIdType", itemPicUrl.toString())
+            .kv("TodayCrazyRecommendTabSdkItemHandler todayCrazyItemPicUrlField", todayCrazyItemPicUrlField.toString())
             .info();
-        return itemPicUrl.toString();
+        return todayCrazyItemPicUrlField.toString();
     }
 }
