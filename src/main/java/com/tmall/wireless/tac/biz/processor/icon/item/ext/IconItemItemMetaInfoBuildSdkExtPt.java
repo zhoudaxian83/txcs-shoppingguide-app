@@ -10,7 +10,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.aselfcaptain.item.model.ChannelDataDO;
 import com.tmall.hades.monitor.print.HadesLogUtil;
-import com.tmall.tcls.gs.sdk.biz.iteminfo.bysource.ItemInfoSourceKey;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.contextbuild.ItemMetaInfoBuildSdkExtPt;
@@ -36,7 +35,7 @@ public class IconItemItemMetaInfoBuildSdkExtPt extends Register implements ItemM
 
     public static final String SCENE_CODE = "shoppingguide.category";
 
-    private static final String AB_TEST_CODE = "MAOCHAO_SHOPPINGGUIDE";
+    public static final String AB_TEST_CODE = "MAOCHAO_SHOPPINGGUIDE";
 
     private static final String ICON_AB_TEST_ID = "211";
 
