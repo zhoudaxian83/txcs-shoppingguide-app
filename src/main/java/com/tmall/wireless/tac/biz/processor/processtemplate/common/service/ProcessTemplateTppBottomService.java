@@ -9,6 +9,7 @@ import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.config.ProcessTemplateSwitch;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.MetricsUtil;
 import com.tmall.wireless.tac.client.domain.Enviroment;
@@ -66,7 +67,12 @@ public class ProcessTemplateTppBottomService {
             if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
                     && dataEntryResult.getValue().getValue() != null) {
                 MetricsUtil.tppBottomSuccess(READ_TPP_BOTTOM_ACTION, context, startTime, cacheKey);
-                return JSON.parseObject(String.valueOf(dataEntryResult.getValue().getValue()), RecommendModel.class);
+                Object value = dataEntryResult.getValue().getValue();
+                if(value instanceof ItemSetRecommendModel) {
+                    return JSON.parseObject(String.valueOf(dataEntryResult.getValue().getValue()), ItemSetRecommendModel.class);
+                } else {
+                    MetricsUtil.tppBottomFail(READ_TPP_BOTTOM_ACTION, context, "unsupported recommend model", cacheKey);
+                }
             } else {
                 MetricsUtil.tppBottomFail(READ_TPP_BOTTOM_ACTION, context, "value is null", cacheKey);
                 return null;
