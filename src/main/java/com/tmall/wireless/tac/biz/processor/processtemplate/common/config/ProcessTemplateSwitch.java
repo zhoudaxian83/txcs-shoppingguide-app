@@ -12,4 +12,10 @@ public class ProcessTemplateSwitch {
 
     @AppSwitch(des = "TPP采样打底逻辑是否开启", level = Switch.Level.p3)
     public static boolean openTPPSampleBottom = true;
+
+    @AppSwitch(des = "是否mock tpp挂了【生产环境禁用】", level = Switch.Level.p3)
+    public static boolean mockTppCrash = false;
+
+    @AppSwitch(des = "是否mock captain挂了【生产环境禁用】", level = Switch.Level.p3)
+    public static boolean mockCaptainCrash = false;
 }

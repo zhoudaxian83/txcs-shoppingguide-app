@@ -27,6 +27,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+import static com.tmall.wireless.tac.biz.processor.processtemplate.common.config.ProcessTemplateSwitch.mockCaptainCrash;
+import static com.tmall.wireless.tac.biz.processor.processtemplate.common.config.ProcessTemplateSwitch.mockTppCrash;
+
 @Component
 public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
@@ -54,22 +57,21 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             //构造运营配置商品列表领域对象
             SecKillActivityConfig activityConfig = SecKillActivityConfig.valueOf(context.getAldManualConfigDataList());
             SecKillActivity secKillActivity = SecKillActivity.init(activityConfig);
-            logger.info("secKillActivity: " + JSON.toJSONString(secKillActivity));
 
             //解析参数中的chooseId
             String chooseIdStr = (String)requestContext4Ald.getAldParam().getOrDefault("categoryId", null);
-            logger.info("chooseId:" + chooseIdStr);
             Long chooseId = Optional.ofNullable(chooseIdStr).map(Longs::tryParse).orElse(null);
 
             //获取选中的秒杀场次
             SelectedSecKillSession selectedSecKillSession = secKillActivity.select(chooseId);
-            logger.info("selectedSecKillSession: " + JSON.toJSONString(selectedSecKillSession));
 
             //推荐召回
             Map<String, String> recommendParams = buildTppParams(selectedSecKillSession, context);
             RecommendModel recommendModel = recommendService.recommendContent(APPID, context, recommendParams, new ItemSetRecommendModelHandler());
             logger.info("recommendModel: " + JSON.toJSONString(recommendModel));
-
+            if(mockTppCrash) {
+                recommendModel = null;
+            }
             //如果tpp返回为空，走打底
             if (recommendModel == null) {
                 recommendModel = tppBottomService.readBottomData(context, selectedSecKillSession.itemSetId());
@@ -86,6 +88,9 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
                 context.setPreviewTime(String.valueOf(timeOfFuturePrice));
             }
             Map<Long, ItemDTO> longItemDTOMap = renderService.batchQueryItem(recommendModel.getAllItemIds(), context);
+            if(mockCaptainCrash) {
+                longItemDTOMap = null;
+            }
 
             //结果组装
             SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.valueOf(secKillActivity, selectedSecKillSession, recommendModel.getAllItemIds(), longItemDTOMap);

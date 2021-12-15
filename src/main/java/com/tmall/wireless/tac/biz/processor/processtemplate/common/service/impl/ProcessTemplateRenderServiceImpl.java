@@ -37,6 +37,7 @@ public class ProcessTemplateRenderServiceImpl implements ProcessTemplateRenderSe
 
     @Override
     public Map<Long, ItemDTO> batchQueryItem(List<Long> itemIdList, ProcessTemplateContext processTemplateContext) {
+        String sourceClassName = processTemplateContext.getSourceClassSimpleName();
         Long captainStart = System.currentTimeMillis();
         Map<Long, ItemDTO> captainItemMap = Maps.newHashMap();
         try {
@@ -70,18 +71,18 @@ public class ProcessTemplateRenderServiceImpl implements ProcessTemplateRenderSe
                     .forEach(e -> captainItemMap.putAll(e));
             if(MapUtils.isNotEmpty(captainItemMap)) {
                 Long captainEnd = System.currentTimeMillis();
-                HadesLogUtil.stream("ExtremeItemSdkItemHandler|captain|" + Logger.isEagleEyeTest() + "|success|" + (captainEnd - captainStart))
+                HadesLogUtil.stream(sourceClassName + "|captain|" + Logger.isEagleEyeTest() + "|success|" + (captainEnd - captainStart))
                         .error();
                 return captainItemMap;
             }
         } catch (Exception e) {
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler|captain|" + Logger.isEagleEyeTest() + "|exception")
+            HadesLogUtil.stream(sourceClassName + "|captain|" + Logger.isEagleEyeTest() + "|exception")
                     .error();
             logger.error("SupermarketHallRenderServiceImpl.baItchQueryItem error, traceId:" + EagleEye.getTraceId(), e);
             return captainItemMap;
         }
         if(MapUtils.isEmpty(captainItemMap)) {
-            HadesLogUtil.stream("ExtremeItemSdkItemHandler|captain|" + Logger.isEagleEyeTest() + "|empty")
+            HadesLogUtil.stream(sourceClassName + "|captain|" + Logger.isEagleEyeTest() + "|empty")
                     .error();
         }
         return captainItemMap;

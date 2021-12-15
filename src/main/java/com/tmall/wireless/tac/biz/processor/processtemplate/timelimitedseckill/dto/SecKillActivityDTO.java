@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Data
 public class SecKillActivityDTO {
@@ -41,7 +42,8 @@ public class SecKillActivityDTO {
             secKillSessionDTO.setStatus(secKillSession.status());
             if(Objects.equals(secKillSession.id(), selectedSecKillSession.id())) {
                 secKillSessionDTO.setSelected(true);
-                secKillSessionDTO.setItems(ItemUtil.buildItems(allItemIds, longItemDTOMap));
+                List<Map<String, Object>> items = ItemUtil.buildItems(allItemIds, longItemDTOMap).stream().limit(10).collect(Collectors.toList());
+                secKillSessionDTO.setItems(items);
             } else {
                 secKillSessionDTO.setSelected(false);
             }

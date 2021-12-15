@@ -50,7 +50,6 @@ public class ProcessTemplateContext {
 
 
     public static ProcessTemplateContext init(RequestContext4Ald requestContext4Ald, Class clazz) {
-        logger.info("ProcessTemplateContext_requestContext4Ald" + JSON.toJSONString(requestContext4Ald));
 
         ProcessTemplateContext context = new ProcessTemplateContext();
         context.setSourceClassSimpleName(clazz.getSimpleName());

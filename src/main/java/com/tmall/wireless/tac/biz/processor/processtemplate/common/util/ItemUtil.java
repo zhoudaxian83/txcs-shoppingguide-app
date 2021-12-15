@@ -13,12 +13,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ItemUtil {
 
     public static List<Map<String, Object>> buildItems(List<Long> itemIds, Map<Long, ItemDTO> longItemDTOMap) {
         List<Map<String, Object>> result = new ArrayList<>();
+        if(MapUtils.isEmpty(longItemDTOMap)) {
+            return result;
+        }
         List<ItemDTO> sinkBottomItems = new ArrayList<>();
         for (Long itemId : itemIds) {
             ItemDTO itemDTO = longItemDTOMap.get(itemId);
@@ -35,7 +37,7 @@ public class ItemUtil {
         for (ItemDTO sinkBottomItem : sinkBottomItems) {
             result.add(ItemUtil.buildItemMap(sinkBottomItem));
         }
-        return result.stream().limit(10).collect(Collectors.toList());
+        return result;
     }
 
     public static Map<String, Object> buildItemMap(ItemDTO itemDTO) {
