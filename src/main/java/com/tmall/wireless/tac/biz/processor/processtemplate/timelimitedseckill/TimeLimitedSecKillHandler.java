@@ -59,6 +59,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
             //解析参数中的chooseId
             String chooseIdStr = PageUrlUtil.getParamFromCurPageUrl(requestContext4Ald.getAldParam(), "chooseId");
+            logger.info("chooseId:" + chooseIdStr);
             Long chooseId = Optional.ofNullable(chooseIdStr).map(Longs::tryParse).orElse(null);
 
             //获取选中的秒杀场次
