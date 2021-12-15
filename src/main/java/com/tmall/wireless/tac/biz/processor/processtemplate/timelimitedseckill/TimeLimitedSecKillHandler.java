@@ -57,7 +57,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             logger.info("secKillActivity: " + JSON.toJSONString(secKillActivity));
 
             //解析参数中的chooseId
-            String chooseIdStr = (String)requestContext4Ald.getAldParam().getOrDefault("chooseId", null);
+            String chooseIdStr = (String)requestContext4Ald.getAldParam().getOrDefault("categoryId", null);
             logger.info("chooseId:" + chooseIdStr);
             Long chooseId = Optional.ofNullable(chooseIdStr).map(Longs::tryParse).orElse(null);
 

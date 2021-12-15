@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ItemUtil {
 
@@ -34,7 +35,7 @@ public class ItemUtil {
         for (ItemDTO sinkBottomItem : sinkBottomItems) {
             result.add(ItemUtil.buildItemMap(sinkBottomItem));
         }
-        return result;
+        return result.stream().limit(10).collect(Collectors.toList());
     }
 
     public static Map<String, Object> buildItemMap(ItemDTO itemDTO) {
