@@ -67,7 +67,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
             //推荐召回
             Map<String, String> recommendParams = buildTppParams(selectedSecKillSession, context);
-            RecommendModel recommendModel = recommendService.recommendContent(21557L, context, recommendParams, new ItemSetRecommendModelHandler());
+            RecommendModel recommendModel = recommendService.recommendContent(APPID, context, recommendParams, new ItemSetRecommendModelHandler());
             logger.info("recommendModel: " + JSON.toJSONString(recommendModel));
             if (recommendModel == null) {
                 return Flowable.just(TacResult.newResult(new ArrayList<>()));
