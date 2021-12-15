@@ -6,7 +6,6 @@ import com.google.common.primitives.Longs;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
-import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRenderService;
@@ -58,7 +57,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             logger.info("secKillActivity: " + JSON.toJSONString(secKillActivity));
 
             //解析参数中的chooseId
-            String chooseIdStr = PageUrlUtil.getParamFromCurPageUrl(requestContext4Ald.getAldParam(), "chooseId");
+            String chooseIdStr = (String)requestContext4Ald.getAldParam().getOrDefault("chooseId", null);
             logger.info("chooseId:" + chooseIdStr);
             Long chooseId = Optional.ofNullable(chooseIdStr).map(Longs::tryParse).orElse(null);
 
