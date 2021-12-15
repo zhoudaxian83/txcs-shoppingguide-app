@@ -55,6 +55,7 @@ public class SxlSwitch {
     @AppSwitch(des = "今日疯抢出白底图/主图ab实验id", level = Switch.Level.p4)
     public static String TODAY_CRAZY_ITEM_PIC_URL_ID_AB = "232";
 
-
+    @AppSwitch(des = "今日疯抢重点品运营", level = Switch.Level.p4)
+    public static String TODAY_CRAZY_NO_FILTER_ITEMS = "20739895092";
 
 }
