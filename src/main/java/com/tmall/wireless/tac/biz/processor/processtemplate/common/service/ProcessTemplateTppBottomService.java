@@ -54,7 +54,7 @@ public class ProcessTemplateTppBottomService {
         }
     }
 
-    public RecommendModel readBottomData(ProcessTemplateContext context, String bottomKey) {
+    public RecommendModel readBottomData(ProcessTemplateContext context, String bottomKey, Class clazz) {
         long startTime = System.currentTimeMillis();
         String cacheKey = getCacheKey(context, bottomKey);
         try {
@@ -68,7 +68,7 @@ public class ProcessTemplateTppBottomService {
                     && dataEntryResult.getValue().getValue() != null) {
                 MetricsUtil.tppBottomSuccess(READ_TPP_BOTTOM_ACTION, context, startTime, cacheKey);
                 Object bottomData = dataEntryResult.getValue().getValue();
-                if(bottomData instanceof ItemSetRecommendModel) {
+                if(clazz == ItemSetRecommendModel.class) {
                     return JSON.parseObject(String.valueOf(bottomData), ItemSetRecommendModel.class);
                 } else {
                     MetricsUtil.tppBottomFail(READ_TPP_BOTTOM_ACTION, context, "unsupported recommend model", cacheKey);

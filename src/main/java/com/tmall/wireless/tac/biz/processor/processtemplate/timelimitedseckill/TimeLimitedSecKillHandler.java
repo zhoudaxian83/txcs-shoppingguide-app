@@ -10,6 +10,7 @@ import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTempla
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRenderService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateTppBottomService;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModelHandler;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.MetricsUtil;
@@ -74,7 +75,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             }
             //如果tpp返回为空，走打底
             if (recommendModel == null) {
-                recommendModel = tppBottomService.readBottomData(context, selectedSecKillSession.itemSetId());
+                recommendModel = tppBottomService.readBottomData(context, selectedSecKillSession.itemSetId(), ItemSetRecommendModel.class);
                 if(recommendModel == null) {
                     return Flowable.just(TacResult.newResult(new ArrayList<>()));
                 }
