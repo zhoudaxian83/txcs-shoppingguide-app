@@ -72,10 +72,59 @@ public class MetricsUtil {
                 .error();
     }
 
-    public static void recommendSuccess(ProcessTemplateContext context, long mainProcessStart) {
+    public static void recommendSuccess(ProcessTemplateContext context, long startTime) {
         String sourceClassName = context.getSourceClassSimpleName();
-        long mainProcessEnd = System.currentTimeMillis();
-        HadesLogUtil.stream(sourceClassName + "|recommend|" + Logger.isEagleEyeTest() + "|success|" + (mainProcessEnd - mainProcessStart))
+        long endTime = System.currentTimeMillis();
+        HadesLogUtil.stream(sourceClassName + "|recommend|" + Logger.isEagleEyeTest() + "|success|" + (endTime - startTime))
+                .info();
+    }
+
+    public static void tppBottomFail(String action, ProcessTemplateContext context, String errorMsg, String cacheKey) {
+        String sourceClassName = context.getSourceClassSimpleName();
+        HadesLogUtil.stream(sourceClassName + "|" + action + "|" + Logger.isEagleEyeTest() + "|fail")
+                .kv("errorMsg", errorMsg)
+                .kv("cacheKey", cacheKey)
+                .kv("curPageUrl", context.getCurrentPageUrl())
+                .kv("resourceId", context.getCurrentResourceId())
+                .kv("scheduleId", context.getCurrentScheduleId())
+                .kv("traceId", EagleEye.getTraceId())
+                .error();
+    }
+
+    public static void tppBottomSuccess(String action, ProcessTemplateContext context, long startTime, String cacheKey) {
+        String sourceClassName = context.getSourceClassSimpleName();
+        long endTime = System.currentTimeMillis();
+        HadesLogUtil.stream(sourceClassName + "|" + action + "|" + Logger.isEagleEyeTest() + "|success|" + (endTime - startTime))
+                .kv("cacheKey", cacheKey)
+                .kv("curPageUrl", context.getCurrentPageUrl())
+                .kv("resourceId", context.getCurrentResourceId())
+                .kv("scheduleId", context.getCurrentScheduleId())
+                .kv("traceId", EagleEye.getTraceId())
+                .info();
+    }
+
+    public static void tppBottomException(String action, ProcessTemplateContext context, Exception e, String cacheKey) {
+        String sourceClassName = context.getSourceClassSimpleName();
+        HadesLogUtil.stream(sourceClassName + "|" + action + "|" + Logger.isEagleEyeTest() + "|exception")
+                .kv("errorMsg", StackTraceUtil.stackTrace(e))
+                .kv("cacheKey", cacheKey)
+                .kv("curPageUrl", context.getCurrentPageUrl())
+                .kv("resourceId", context.getCurrentResourceId())
+                .kv("scheduleId", context.getCurrentScheduleId())
+                .kv("traceId", EagleEye.getTraceId())
+                .error();
+    }
+
+    public static void tppBottomSuccess(String action, ProcessTemplateContext context, long startTime, String cacheKey, String cacheValue) {
+        String sourceClassName = context.getSourceClassSimpleName();
+        long endTime = System.currentTimeMillis();
+        HadesLogUtil.stream(sourceClassName + "|" + action + "|" + Logger.isEagleEyeTest() + "|success|" + (endTime - startTime))
+                .kv("cacheKey", cacheKey)
+                .kv("cacheValue", cacheValue)
+                .kv("curPageUrl", context.getCurrentPageUrl())
+                .kv("resourceId", context.getCurrentResourceId())
+                .kv("scheduleId", context.getCurrentScheduleId())
+                .kv("traceId", EagleEye.getTraceId())
                 .info();
     }
 }

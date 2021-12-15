@@ -13,7 +13,6 @@ import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
-import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.impl.ProcessTemplateIGraphSearchServiceImpl;
 import com.tmall.wireless.tac.client.domain.Enviroment;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ import static com.tmall.wireless.tac.biz.processor.extremeItem.common.config.Sup
 
 @Service
 public class ProcessTemplateBottomService {
-    private static Logger logger = LoggerProxy.getLogger(ProcessTemplateIGraphSearchServiceImpl.class);
+    private static Logger logger = LoggerProxy.getLogger(ProcessTemplateBottomService.class);
 
     @Autowired
     TairFactorySpi tairFactorySpi;

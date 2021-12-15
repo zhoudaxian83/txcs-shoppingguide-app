@@ -9,6 +9,7 @@ import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRenderService;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateTppBottomService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModelHandler;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.MetricsUtil;
@@ -17,7 +18,6 @@ import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.d
 import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain.SelectedSecKillSession;
 import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.dto.SecKillActivityDTO;
 import com.tmall.wireless.tac.client.common.TacResult;
-import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
@@ -41,7 +41,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
     private ProcessTemplateRecommendService recommendService;
 
     @Autowired
-    private TacLogger tacLogger;
+    private ProcessTemplateTppBottomService tppBottomService;
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
@@ -69,8 +69,15 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             Map<String, String> recommendParams = buildTppParams(selectedSecKillSession, context);
             RecommendModel recommendModel = recommendService.recommendContent(APPID, context, recommendParams, new ItemSetRecommendModelHandler());
             logger.info("recommendModel: " + JSON.toJSONString(recommendModel));
+
+            //如果tpp返回为空，走打底
             if (recommendModel == null) {
-                return Flowable.just(TacResult.newResult(new ArrayList<>()));
+                recommendModel = tppBottomService.readBottomData(context, selectedSecKillSession.itemSetId());
+                if(recommendModel == null) {
+                    return Flowable.just(TacResult.newResult(new ArrayList<>()));
+                }
+            } else {
+                tppBottomService.writeBottomData(context, selectedSecKillSession.itemSetId(), recommendModel);
             }
 
             //Captain渲染

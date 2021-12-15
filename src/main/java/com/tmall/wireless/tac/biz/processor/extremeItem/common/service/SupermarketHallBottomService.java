@@ -6,14 +6,11 @@ import com.taobao.eagleeye.EagleEye;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
 import com.taobao.tair.ResultCode;
-import com.tmall.aselfcaptain.util.StackTraceUtil;
 import com.tmall.hades.monitor.print.HadesLogUtil;
-import com.tmall.txcs.gs.model.constant.RpmContants;
 import com.tmall.txcs.gs.spi.factory.CommonFactoryAbs;
 import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch;
-import com.tmall.wireless.tac.biz.processor.extremeItem.common.service.impl.SupermarketHallIGraphSearchServiceImpl;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.client.domain.Enviroment;
@@ -23,15 +20,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch.openSampleBottom;
 
 @Service
 public class SupermarketHallBottomService {
-    private static Logger logger = LoggerProxy.getLogger(SupermarketHallIGraphSearchServiceImpl.class);
+    private static Logger logger = LoggerProxy.getLogger(SupermarketHallBottomService.class);
 
     @Autowired
     TairFactorySpi tairFactorySpi;
