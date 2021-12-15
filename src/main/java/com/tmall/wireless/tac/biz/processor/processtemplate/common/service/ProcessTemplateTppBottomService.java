@@ -67,9 +67,9 @@ public class ProcessTemplateTppBottomService {
             if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null
                     && dataEntryResult.getValue().getValue() != null) {
                 MetricsUtil.tppBottomSuccess(READ_TPP_BOTTOM_ACTION, context, startTime, cacheKey);
-                Object value = dataEntryResult.getValue().getValue();
-                if(value instanceof ItemSetRecommendModel) {
-                    return JSON.parseObject(String.valueOf(dataEntryResult.getValue().getValue()), ItemSetRecommendModel.class);
+                Object bottomData = dataEntryResult.getValue().getValue();
+                if(bottomData instanceof ItemSetRecommendModel) {
+                    return JSON.parseObject(String.valueOf(bottomData), ItemSetRecommendModel.class);
                 } else {
                     MetricsUtil.tppBottomFail(READ_TPP_BOTTOM_ACTION, context, "unsupported recommend model", cacheKey);
                 }
