@@ -32,6 +32,7 @@ import java.util.*;
 public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
     private static Logger logger = LoggerProxy.getLogger(TimeLimitedSecKillHandler.class);
+    private static final String captainSceneCode = "conference.zhj";
 
     @Autowired
     private ProcessTemplateRenderService renderService;
@@ -48,6 +49,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
         //初始化上下文
         ProcessTemplateContext context = ProcessTemplateContext.init(requestContext4Ald, TimeLimitedSecKillHandler.class);
+        context.setSceneCode(captainSceneCode);
         try {
             //构造运营配置商品列表领域对象
             SecKillActivityConfig activityConfig = SecKillActivityConfig.valueOf(context.getAldManualConfigDataList());
@@ -71,6 +73,10 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             }
 
             //Captain渲染
+            Long timeOfFuturePrice = selectedSecKillSession.timeOfFuturePrice();
+            if(timeOfFuturePrice != null) {
+                context.setPreviewTime(String.valueOf(timeOfFuturePrice));
+            }
             Map<Long, ItemDTO> longItemDTOMap = renderService.batchQueryItem(recommendModel.getAllItemIds(), context);
 
             //结果组装

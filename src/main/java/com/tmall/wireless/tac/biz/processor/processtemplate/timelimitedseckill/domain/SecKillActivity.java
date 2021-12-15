@@ -59,13 +59,13 @@ public class SecKillActivity {
             result = this.validSecKillSessions.stream()
                     .filter(session -> chooseId.equals(session.id()))
                     .findFirst()
-                    .map(session -> new SelectedSecKillSession(session.id(), session.itemSetId()))
+                    .map(session -> new SelectedSecKillSession(session.id(), session.itemSetId(), session.status(), session.startTime()))
                     .orElse(null);
         }
         if(result == null) {
             result = this.validSecKillSessions.stream()
                     .findFirst()
-                    .map(session -> new SelectedSecKillSession(session.id(), session.itemSetId()))
+                    .map(session -> new SelectedSecKillSession(session.id(), session.itemSetId(), session.status(), session.startTime()))
                     .orElse(null);
         }
 
