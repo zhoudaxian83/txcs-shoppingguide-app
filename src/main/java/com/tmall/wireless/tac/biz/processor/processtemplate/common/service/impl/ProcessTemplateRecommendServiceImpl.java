@@ -9,6 +9,7 @@ import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTempla
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendResponseHandler;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.MetricsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,17 +24,23 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
 
     @Override
     public RecommendModel recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params, RecommendResponseHandler handler) {
-        RecommendRequest recommendRequest = new RecommendRequest();
-        recommendRequest.setAppId(appId);
-        recommendRequest.setUserId(context.getUserId());
-        recommendRequest.setParams(params);
-        recommendRequest.setLogResult(false);
-        SPIResult<RecommendResponseEntity<RecommendContentEntityDTO>> spiResult = recommendSpi.recommendContent(recommendRequest);
-        if(spiResult.isSuccess()) {
-            return handler.handle(spiResult.getData());
-        } else {
-            //TODO 加日志
-            return null;
+        long mainProcessStart = System.currentTimeMillis();
+        try {
+            RecommendRequest recommendRequest = new RecommendRequest();
+            recommendRequest.setAppId(appId);
+            recommendRequest.setUserId(context.getUserId());
+            recommendRequest.setParams(params);
+            recommendRequest.setLogResult(false);
+            SPIResult<RecommendResponseEntity<RecommendContentEntityDTO>> spiResult = recommendSpi.recommendContent(recommendRequest);
+            if (spiResult.isSuccess()) {
+                MetricsUtil.recommendSuccess(context, mainProcessStart);
+                return handler.handle(spiResult.getData(), context, Integer.valueOf(params.get("pageSize")), Integer.valueOf(params.get("itemCountPerContent")));
+            } else {
+                MetricsUtil.recommendFail(context, spiResult.getMsgInfo());
+            }
+        } catch (Exception e) {
+            MetricsUtil.recommendException(context, e);
         }
+        return null;
     }
 }

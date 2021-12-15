@@ -3,6 +3,8 @@ package com.tmall.wireless.tac.biz.processor.processtemplate.common;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.eagleeye.EagleEye;
+import com.tmall.aself.shoppingguide.client.loc.domain.AddressDTO;
+import com.tmall.aself.shoppingguide.client.loc.util.AddressUtil;
 import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.DateTimeUtil;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
@@ -24,6 +26,7 @@ public class ProcessTemplateContext {
     private Long userId;
     private String userNick;
     private String smAreaId;
+    private String logicAreaId;
     private String currentResourceId;
     private String currentScheduleId;
     private String currentPageUrl;
@@ -61,6 +64,12 @@ public class ProcessTemplateContext {
             //初始化区域ID
             String smAreaId = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "330100");
             context.setSmAreaId(smAreaId);
+
+            String csa = (String)requestContext4Ald.getAldParam().getOrDefault(CSA, "107");
+            if(StringUtils.isNotBlank(csa)) {
+                AddressDTO addressDTO = AddressUtil.parseCSA(csa);
+                context.setLogicAreaId(addressDTO.getRegionCode());
+            }
 
             //初始化预览时间
             String previewTimeStampStr = PageUrlUtil.getParamFromCurPageUrl(requestContext4Ald.getAldParam(), "previewTime");

@@ -18,9 +18,21 @@ public class ItemUtil {
 
     public static List<Map<String, Object>> buildItems(List<Long> itemIds, Map<Long, ItemDTO> longItemDTOMap) {
         List<Map<String, Object>> result = new ArrayList<>();
+        List<ItemDTO> sinkBottomItems = new ArrayList<>();
         for (Long itemId : itemIds) {
             ItemDTO itemDTO = longItemDTOMap.get(itemId);
-            result.add(ItemUtil.buildItemMap(itemDTO));
+            //有时候captain请求20个可能只返回少于20个品，因此从Map中获取的itemDTO可能为空，需要跳过
+            if(itemDTO == null) {
+                continue;
+            }
+            if(itemDTO.isSoldout() || !itemDTO.isCanBuy()) {
+                sinkBottomItems.add(itemDTO);
+            } else {
+                result.add(ItemUtil.buildItemMap(itemDTO));
+            }
+        }
+        for (ItemDTO sinkBottomItem : sinkBottomItems) {
+            result.add(ItemUtil.buildItemMap(sinkBottomItem));
         }
         return result;
     }

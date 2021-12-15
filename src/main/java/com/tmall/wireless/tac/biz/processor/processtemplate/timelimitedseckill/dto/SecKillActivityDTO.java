@@ -26,6 +26,8 @@ public class SecKillActivityDTO {
         if(CollectionUtils.isEmpty(secKillSessions)) {
             return activityDTO;
         }
+        //第一个秒杀场次
+        SecKillSession firstSecKillSession = secKillSessions.get(0);
         for (SecKillSession secKillSession : secKillSessions) {
             SecKillSessionDTO secKillSessionDTO = new SecKillSessionDTO();
             secKillSessionDTO.setContentId(String.valueOf(secKillSession.id()));
@@ -33,7 +35,10 @@ public class SecKillActivityDTO {
             secKillSessionDTO.setSessionText(secKillSession.sessionText());
             secKillSessionDTO.setStartTime(String.valueOf(secKillSession.startTimestamps()));
             secKillSessionDTO.setEndTime(String.valueOf(secKillSession.endTimestamps()));
-            secKillSessionDTO.setCountDownMillis(secKillSession.countDownMillis());
+            //如果选中的场次是第一个场次才有倒计时
+            if(Objects.equals(firstSecKillSession.id(), selectedSecKillSession.id())) {
+                secKillSessionDTO.setCountDownMillis(secKillSession.countDownMillis());
+            }
             secKillSessionDTO.setStatus(secKillSession.status());
             if(Objects.equals(secKillSession.id(), selectedSecKillSession.id())) {
                 secKillSessionDTO.setSelected(true);

@@ -33,6 +33,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
     private static Logger logger = LoggerProxy.getLogger(TimeLimitedSecKillHandler.class);
     private static final String captainSceneCode = "conference.zhj";
+    private static final Long APPID = 21557L;
 
     @Autowired
     private ProcessTemplateRenderService renderService;
@@ -65,7 +66,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             logger.info("selectedSecKillSession: " + JSON.toJSONString(selectedSecKillSession));
 
             //推荐召回
-            Map<String, String> recommendParams = buildTppParams(selectedSecKillSession);
+            Map<String, String> recommendParams = buildTppParams(selectedSecKillSession, context);
             RecommendModel recommendModel = recommendService.recommendContent(21557L, context, recommendParams, new ItemSetRecommendModelHandler());
             logger.info("recommendModel: " + JSON.toJSONString(recommendModel));
             if (recommendModel == null) {
@@ -92,11 +93,18 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
     }
 
     @NotNull
-    private Map<String, String> buildTppParams(SelectedSecKillSession selectedSecKillSession) {
-        Map<String, String> recommendParams = new HashMap<>();
-        recommendParams.put("contentType", "3");
-        recommendParams.put("itemSetIdList", selectedSecKillSession.itemSetId());
-        return recommendParams;
+    private Map<String, String> buildTppParams(SelectedSecKillSession selectedSecKillSession, ProcessTemplateContext context) {
+        Map<String, String> params = new HashMap<>();
+        params.put("smAreaId", context.getSmAreaId());
+        params.put("logicAreaId", context.getLogicAreaId());
+        params.put("userId", String.valueOf(context.getUserId()));
+        params.put("itemSetIds", selectedSecKillSession.itemSetId());
+        params.put("itemSetIdList", selectedSecKillSession.itemSetId());//进舟新版接口 字段名称变更
+        params.put("brandRec", "true");
+        params.put("pageSize", "1");
+        params.put("itemCountPerContent", "20");//进舟新版接口 单个圈品集下面挂的商品数量
+        params.put("contentType", "3"); //进舟新接口必填参数 需要写死3
+        return params;
     }
 
 }
