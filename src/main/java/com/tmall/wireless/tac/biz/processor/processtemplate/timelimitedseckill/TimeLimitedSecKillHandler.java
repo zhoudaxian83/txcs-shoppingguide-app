@@ -111,12 +111,11 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
         params.put("smAreaId", context.getSmAreaId());
         params.put("logicAreaId", context.getLogicAreaId());
         params.put("userId", String.valueOf(context.getUserId()));
-        params.put("itemSetIds", selectedSecKillSession.itemSetId());
         params.put("itemSetIdList", selectedSecKillSession.itemSetId());//进舟新版接口 字段名称变更
         params.put("brandRec", "true");
         params.put("pageSize", "1");
         params.put("itemCountPerContent", "20");//进舟新版接口 单个圈品集下面挂的商品数量
-        params.put("contentType", "3"); //进舟新接口必填参数 需要写死3
+        params.put("contentType", "3"); //进舟新接口必填参数 需要写死3，3指圈品集类型
         return params;
     }
 
