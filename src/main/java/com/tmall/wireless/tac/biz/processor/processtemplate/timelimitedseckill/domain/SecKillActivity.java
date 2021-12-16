@@ -35,8 +35,8 @@ public class SecKillActivity {
             }
         }
         //按照开始时间从早到晚排序
-        tmpSecKillSessions.stream().sorted(Comparator.comparing(SecKillSession::startTime)).collect(Collectors.toList());
-        secKillActivity.secKillSessions.addAll(tmpSecKillSessions);
+        List<SecKillSession> orderedSecKillSessions = tmpSecKillSessions.stream().sorted(Comparator.comparing(SecKillSession::startTime)).collect(Collectors.toList());
+        secKillActivity.secKillSessions.addAll(orderedSecKillSessions);
         secKillActivity.validSecKillSessions = secKillActivity.secKillSessions.stream()
                 .filter(SecKillSession::isValid).collect(Collectors.toList());
         return secKillActivity;
