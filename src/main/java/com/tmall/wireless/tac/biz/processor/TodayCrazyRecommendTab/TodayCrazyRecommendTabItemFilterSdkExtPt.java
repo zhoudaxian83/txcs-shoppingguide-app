@@ -60,11 +60,15 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
         for (ItemEntityVO entityVO : itemAndContentList) {
             if (entityVO != null) {
                 List<Long> noFilterItemIdList = Arrays.stream(SxlSwitch.TODAY_CRAZY_NO_FILTER_ITEMS.split(",")).map(Long::valueOf).collect(Collectors.toList());
-                if (!noFilterItemIdList.contains(entityVO.getItemId()) || !this.canBuy(entityVO) || !this.noLimitBuyV2(entityVO)) {
-                    tacLogger.info("被过滤数据：" + entityVO.getString("itemId"));
+                if (noFilterItemIdList.contains(entityVO.getItemId())){
+                    itemAndContentListAfterFilter.add(entityVO);
                 } else {
-                    if (checkField(entityVO)) {
-                        itemAndContentListAfterFilter.add(entityVO);
+                    if (!this.canBuy(entityVO) || !this.noLimitBuyV2(entityVO)) {
+                        tacLogger.info("被过滤数据：" + entityVO.getString("itemId"));
+                    } else {
+                        if (checkField(entityVO)) {
+                            itemAndContentListAfterFilter.add(entityVO);
+                        }
                     }
                 }
             }
