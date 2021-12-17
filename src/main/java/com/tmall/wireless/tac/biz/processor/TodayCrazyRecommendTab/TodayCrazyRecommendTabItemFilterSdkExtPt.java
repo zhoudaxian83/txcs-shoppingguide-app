@@ -1,13 +1,16 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
 
 import com.google.common.collect.Lists;
+import com.tmall.aselfcommon.util.StackTraceUtil;
 import com.tmall.hades.monitor.print.HadesLogUtil;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -21,6 +24,7 @@ import com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab.model.ItemLim
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.config.SxlSwitch;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
     useCase = ScenarioConstantApp.LOC_TYPE_B2C,
     scenario = ScenarioConstantApp.TODAY_CRAZY_RECOMMEND_TAB
 )
+@Slf4j
 public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implements ItemFilterSdkExtPt {
     @Autowired
     TacLoggerImpl tacLogger;
@@ -56,11 +61,16 @@ public class TodayCrazyRecommendTabItemFilterSdkExtPt extends Register implement
             return entityVOSgFrameworkResponse;
         }
         List<ItemEntityVO> itemAndContentListAfterFilter = Lists.newArrayList();
+        Set<Long> noFilterItemIdSet = new HashSet<>();
+        try{
+            noFilterItemIdSet = Arrays.stream(SxlSwitch.TODAY_CRAZY_NO_FILTER_ITEMS.split(",")).map(Long::valueOf).collect(Collectors.toSet());
+        }catch (Exception e) {
+            log.error("重点商品配置错误:{},{}",SxlSwitch.TODAY_CRAZY_NO_FILTER_ITEMS, StackTraceUtil.stackTrace(e));
+        }
 
         for (ItemEntityVO entityVO : itemAndContentList) {
             if (entityVO != null) {
-                List<Long> noFilterItemIdList = Arrays.stream(SxlSwitch.TODAY_CRAZY_NO_FILTER_ITEMS.split(",")).map(Long::valueOf).collect(Collectors.toList());
-                if (noFilterItemIdList.contains(entityVO.getItemId())){
+                if (noFilterItemIdSet.contains(entityVO.getItemId())){
                     entityVO.put("canBuy", Boolean.TRUE);
                     itemAndContentListAfterFilter.add(entityVO);
                 } else {
