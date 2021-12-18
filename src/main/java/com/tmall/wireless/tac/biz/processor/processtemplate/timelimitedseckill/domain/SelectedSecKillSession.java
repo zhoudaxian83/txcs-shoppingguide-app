@@ -12,6 +12,8 @@ public class SelectedSecKillSession {
     public SelectedSecKillSession(Long id, String itemSetId, int status, LocalDateTime startTime) {
         this.id = id;
         this.itemSetId = itemSetId;
+        this.status = status;
+        this.startTime = startTime;
     }
 
     public Long id() {
