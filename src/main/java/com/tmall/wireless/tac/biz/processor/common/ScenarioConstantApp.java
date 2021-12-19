@@ -42,6 +42,11 @@ public class ScenarioConstantApp extends ScenarioConstant {
      * 今日疯抢-限时抢购
      */
     public static final String SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY = "TODAY_CRAZY_LIMIT_TIME_BUY";
+
+    /**
+     * 今日疯抢
+     */
+    public static final String TODAY_CRAZY_TAB_ITEM = "TODAY_CRAZY_TAB_ITEM";
     /**
      * 五折天
      */

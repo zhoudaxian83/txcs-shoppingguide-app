@@ -1,6 +1,16 @@
 package com.tmall.wireless.tac.biz.processor.TodayCrazyRecommendTab;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import com.alibaba.fastjson.JSON;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
@@ -31,10 +41,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.*;
 
 @SdkExtension(
         bizId = ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
@@ -67,6 +73,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         String itemDesc = null;
         String originScm = "";
         String itemUrl = "";
+        String mainPic = "";
         String specifications = "";
         String reservePrice = "";
         Integer salesAmount = null;
@@ -84,6 +91,7 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
                         .map(ItemDTO::getDetailUrl).orElse("");
 
                 ItemDTO itemDTO = itemInfoBySourceCaptainDTO.getItemDTO();
+                mainPic = itemDTO.getMainPic();
                 singleFreeShipSet = itemDTO.getItemTags();
                 attachments = itemDTO.getAttachments();
                 salesAmount = itemDTO.getSalesAmount();
@@ -112,6 +120,8 @@ public class TodayCrazyRecommendTabBuildItemVoSdkExtPt extends Register implemen
         String cacheKey = this.getCacheKey(temIdAndCacheKeyMap, itemEntityVO.getItemId());
         itemEntityVO.put("scm", scm);
         itemEntityVO.put("itemUrl", itemUrl);
+        itemEntityVO.put("mainPic", mainPic);
+        itemEntityVO.put("", itemUrl);
         itemEntityVO.put("reservePrice", reservePrice);
         //单品包邮
         itemEntityVO.put("freeShipping", false);
