@@ -102,7 +102,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             }
 
             //结果组装
-            SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.valueOf(secKillActivity, selectedSecKillSession, recommendModel.getAllItemIds(), longItemDTOMap);
+            SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.valueOf(context.getCurrentResourceId(), secKillActivity, selectedSecKillSession, recommendModel.getAllItemIds(), longItemDTOMap);
             List<GeneralItem> generalItemList = secKillActivityDTO.toGeneralItemList();
 
             MetricsUtil.mainProcessSuccess(context, mainProcessStart);

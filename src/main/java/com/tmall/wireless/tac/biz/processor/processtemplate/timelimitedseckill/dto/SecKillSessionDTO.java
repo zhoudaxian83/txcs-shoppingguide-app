@@ -29,7 +29,7 @@ public class SecKillSessionDTO {
         this.status = status;
     }
 
-    public GeneralItem toGeneralItem() {
+    public GeneralItem toGeneralItem(String curResId) {
         GeneralItem generalItem = new GeneralItem();
         generalItem.put("contentId", contentId);
         generalItem.put("sessionTime", sessionTime);
@@ -41,6 +41,7 @@ public class SecKillSessionDTO {
         generalItem.put("selected", selected);
         generalItem.put("itemSet", itemSet);
         generalItem.put("items", items);
+        generalItem.put("curResId", curResId);
         return generalItem;
     }
 }

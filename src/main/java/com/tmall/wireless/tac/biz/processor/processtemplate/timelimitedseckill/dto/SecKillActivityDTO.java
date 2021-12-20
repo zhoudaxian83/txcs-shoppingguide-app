@@ -25,9 +25,11 @@ public class SecKillActivityDTO {
     }
 
     List<SecKillSessionDTO> secKillSessionDTOList = Lists.newArrayList();
+    private String curResId;
 
-    public static SecKillActivityDTO valueOf(SecKillActivity secKillActivity, SelectedSecKillSession selectedSecKillSession, List<Long> allItemIds, Map<Long, ItemDTO> longItemDTOMap) {
+    public static SecKillActivityDTO valueOf(String curResId, SecKillActivity secKillActivity, SelectedSecKillSession selectedSecKillSession, List<Long> allItemIds, Map<Long, ItemDTO> longItemDTOMap) {
         SecKillActivityDTO activityDTO = new SecKillActivityDTO();
+        activityDTO.setCurResId(curResId);
         List<SecKillSession> secKillSessions = secKillActivity.validSecKillSessions();
         if(CollectionUtils.isEmpty(secKillSessions)) {
             return PLACEHOLDER_SEC_KILL_ACTIVITY;
@@ -69,7 +71,7 @@ public class SecKillActivityDTO {
             return generalItemList;
         }
         for (SecKillSessionDTO secKillSessionDTO : secKillSessionDTOList) {
-            generalItemList.add(secKillSessionDTO.toGeneralItem());
+            generalItemList.add(secKillSessionDTO.toGeneralItem(this.getCurResId()));
         }
         return generalItemList;
     }
