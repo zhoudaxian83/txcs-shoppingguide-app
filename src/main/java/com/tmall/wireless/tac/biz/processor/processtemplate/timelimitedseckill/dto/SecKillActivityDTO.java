@@ -42,10 +42,7 @@ public class SecKillActivityDTO {
             secKillSessionDTO.setSessionText(secKillSession.sessionText());
             secKillSessionDTO.setStartTime(String.valueOf(secKillSession.startTimestamps()));
             secKillSessionDTO.setEndTime(String.valueOf(secKillSession.endTimestamps()));
-            //如果选中的场次是第一个场次才有倒计时
-            if(i == 0 && Objects.equals(secKillSession.id(), selectedSecKillSession.id())) {
-                secKillSessionDTO.setCountDownMillis(secKillSession.countDownMillis());
-            }
+            secKillSessionDTO.setCountDownMillis(secKillSession.countDownMillis());
             secKillSessionDTO.setStatus(secKillSession.statusVal());
             if(Objects.equals(secKillSession.id(), selectedSecKillSession.id())) {
                 secKillSessionDTO.setSelected(true);
