@@ -6,10 +6,10 @@ import java.time.ZoneOffset;
 public class SelectedSecKillSession {
     private Long id;
     private String itemSetId;
-    private int status;
+    private SecKillSessionStatus status;
     private LocalDateTime startTime;
 
-    public SelectedSecKillSession(Long id, String itemSetId, int status, LocalDateTime startTime) {
+    public SelectedSecKillSession(Long id, String itemSetId, SecKillSessionStatus status, LocalDateTime startTime) {
         this.id = id;
         this.itemSetId = itemSetId;
         this.status = status;
@@ -25,16 +25,14 @@ public class SelectedSecKillSession {
     }
 
     /**
-     * 未开始的才使用未来时间，秒杀中和已结束直接返回null，用当前时间
-     * 查询未来价格的时间，如果返回不为空，则查询未来时间的价格
-     * 如果返回为空，则查询当前价格
+     * 未开始的秒杀场次需要传递未来的时间去查询价格，已开始和已结束的秒杀场次返回null查询当前时间的价格
      *
      * @return 查询未来价格的时间
      */
     public Long timeOfFuturePrice() {
-        if(status == 1 || status == 2) {
-            return null;
+        if(this.status == SecKillSessionStatus.NOT_STARTED) {
+            return startTime.toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
         }
-        return startTime.toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
+        return null;
     }
 }

@@ -35,7 +35,7 @@ public class SecKillSession {
     /**
      * 秒杀场次状态，0-未开始，1-秒杀中，2-已结束
      */
-    private int status;
+    private SecKillSessionStatus status;
 
     private SecKillSession() {}
 
@@ -67,7 +67,7 @@ public class SecKillSession {
         return this.itemSetId;
     }
 
-    public int status() {
+    public SecKillSessionStatus status() {
         return this.status;
     }
 
@@ -80,9 +80,9 @@ public class SecKillSession {
      * @return 倒计时时间
      */
     public long countDownMillis() {
-        if(status == 0) {
+        if(status == SecKillSessionStatus.NOT_STARTED) {
             return Duration.between(LocalDateTime.now(), this.startTime).toMillis();
-        } else if(status == 1) {
+        } else if(status == SecKillSessionStatus.IN_PROCESS) {
             return Duration.between(LocalDateTime.now(), this.endTime).toMillis();
         } else {
             return -1L;
@@ -122,17 +122,17 @@ public class SecKillSession {
      * @param endTime 秒杀场次结束时间
      * @return 秒杀场次的状态
      */
-    private static int initStatus(LocalDateTime baseCurrentTime, LocalDateTime startTime, LocalDateTime endTime) {
+    private static SecKillSessionStatus initStatus(LocalDateTime baseCurrentTime, LocalDateTime startTime, LocalDateTime endTime) {
         if(startTime == null || endTime == null) {
             //正常不会发生，打底当作已结束处理
-            return 2;
+            return SecKillSessionStatus.OVER;
         }
         if(baseCurrentTime.isBefore(startTime)) {
-            return 0;
+            return SecKillSessionStatus.NOT_STARTED;
         } else if(baseCurrentTime.isBefore(endTime)) {
-            return 1;
+            return SecKillSessionStatus.IN_PROCESS;
         }
-        return 2;
+        return SecKillSessionStatus.OVER;
     }
 
     /**
@@ -141,6 +141,6 @@ public class SecKillSession {
      * @return true if status == 0 or status == 1 else return false.
      */
     public boolean isValid() {
-        return this.status == 0 || this.status == 1;
+        return this.status == SecKillSessionStatus.NOT_STARTED || this.status == SecKillSessionStatus.IN_PROCESS;
     }
 }
