@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.dto;
 
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+import com.google.common.collect.Lists;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.ItemUtil;
 import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain.SecKillActivity;
@@ -17,15 +18,19 @@ import java.util.stream.Collectors;
 
 @Data
 public class SecKillActivityDTO {
-    List<SecKillSessionDTO> secKillSessionDTOList;
+
+    private static final SecKillActivityDTO PLACEHOLDER_SEC_KILL_ACTIVITY = new SecKillActivityDTO();
+    static {
+        PLACEHOLDER_SEC_KILL_ACTIVITY.add(SecKillSessionDTO.PLACEHOLDER_SEC_KILL_SESSION);
+    }
+
+    List<SecKillSessionDTO> secKillSessionDTOList = Lists.newArrayList();
 
     public static SecKillActivityDTO valueOf(SecKillActivity secKillActivity, SelectedSecKillSession selectedSecKillSession, List<Long> allItemIds, Map<Long, ItemDTO> longItemDTOMap) {
         SecKillActivityDTO activityDTO = new SecKillActivityDTO();
-        List<SecKillSessionDTO> secKillSessionDTOList = new ArrayList<>();
-        activityDTO.setSecKillSessionDTOList(secKillSessionDTOList);
         List<SecKillSession> secKillSessions = secKillActivity.validSecKillSessions();
         if(CollectionUtils.isEmpty(secKillSessions)) {
-            return activityDTO;
+            return PLACEHOLDER_SEC_KILL_ACTIVITY;
         }
         for (int i=0; i<secKillSessions.size(); i++) {
             SecKillSession secKillSession = secKillSessions.get(i);
@@ -48,10 +53,15 @@ public class SecKillActivityDTO {
                 secKillSessionDTO.setSelected(false);
             }
             secKillSessionDTO.setItemSet(secKillSession.itemSetId());
-            secKillSessionDTOList.add(secKillSessionDTO);
+            activityDTO.add(secKillSessionDTO);
         }
         return activityDTO;
     }
+
+    private void add(SecKillSessionDTO secKillSessionDTO) {
+        this.secKillSessionDTOList.add(secKillSessionDTO);
+    }
+
 
     public List<GeneralItem> toGeneralItemList() {
         List<GeneralItem> generalItemList = new ArrayList<>();

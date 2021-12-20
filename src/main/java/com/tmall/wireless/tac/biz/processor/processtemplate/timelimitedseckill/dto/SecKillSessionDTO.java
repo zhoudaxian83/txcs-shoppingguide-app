@@ -8,6 +8,9 @@ import java.util.Map;
 
 @Data
 public class SecKillSessionDTO {
+
+    public static final SecKillSessionDTO PLACEHOLDER_SEC_KILL_SESSION = new SecKillSessionDTO(-1);
+
     private String contentId;
     private String sessionTime;
     private String sessionText;
@@ -18,6 +21,13 @@ public class SecKillSessionDTO {
     private boolean selected;
     private String itemSet;
     private List<Map<String, Object>> items;
+
+    public SecKillSessionDTO() {
+    }
+
+    public SecKillSessionDTO(int status) {
+        this.status = status;
+    }
 
     public GeneralItem toGeneralItem() {
         GeneralItem generalItem = new GeneralItem();
