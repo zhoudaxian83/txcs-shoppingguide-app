@@ -109,8 +109,10 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             return Flowable.just(TacResult.newResult(generalItemList));
         } catch (Exception e) {
             MetricsUtil.mainProcessException(context, e);
+            SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.PLACEHOLDER_SEC_KILL_ACTIVITY;
+            List<GeneralItem> generalItemList = secKillActivityDTO.toGeneralItemList();
+            return Flowable.just(TacResult.newResult(generalItemList));
         }
-        return Flowable.just(TacResult.newResult(new ArrayList<>()));
     }
 
     @NotNull
