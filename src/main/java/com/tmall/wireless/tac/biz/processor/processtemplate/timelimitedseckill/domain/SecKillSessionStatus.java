@@ -28,7 +28,7 @@ public enum SecKillSessionStatus {
         }
     }
 
-    public int status() {
+    public int statusVal() {
         return this.status;
     }
 }
