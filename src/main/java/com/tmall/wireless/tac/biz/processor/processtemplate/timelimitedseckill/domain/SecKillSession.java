@@ -112,6 +112,10 @@ public class SecKillSession {
         secKillSession.itemSetId = sessionConfig.getItemSetId();
         secKillSession.status = initStatus(baseCurrentTime, secKillSession.startTime, secKillSession.endTime);
 
+        if(secKillSession.startTime.isAfter(secKillSession.endTime)) {
+             return null;
+        }
+
         return secKillSession;
     }
 
