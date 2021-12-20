@@ -37,6 +37,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
     private static Logger logger = LoggerProxy.getLogger(TimeLimitedSecKillHandler.class);
     private static final String captainSceneCode = "conference.zhj";
     private static final Long APPID = 21557L;
+    private static final String NO_VALID_SEC_KILL_SESSION = "no_valid_sec_kill_session";
 
     @Autowired
     private ProcessTemplateRenderService renderService;
@@ -65,6 +66,13 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
             //获取选中的秒杀场次
             SelectedSecKillSession selectedSecKillSession = secKillActivity.select(chooseId);
+
+            if(selectedSecKillSession == null) {
+                SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.PLACEHOLDER_SEC_KILL_ACTIVITY;
+                List<GeneralItem> generalItemList = secKillActivityDTO.toGeneralItemList();
+                MetricsUtil.customProcessFail(NO_VALID_SEC_KILL_SESSION, context, "没有选中的秒杀场次");
+                return Flowable.just(TacResult.newResult(generalItemList));
+            }
 
             //推荐召回
             Map<String, String> recommendParams = buildTppParams(selectedSecKillSession, context);

@@ -26,6 +26,24 @@ public class MetricsUtil {
                 .info();
     }
 
+    /**
+     * 自定义流程失败埋点
+     *
+     * @param action 自定义的业务步骤
+     * @param context
+     * @param errorMsg
+     */
+    public static void customProcessFail(String action, ProcessTemplateContext context, String errorMsg) {
+        String sourceClassName = context.getSourceClassSimpleName();
+        HadesLogUtil.stream(sourceClassName + "|" + action + "|" + Logger.isEagleEyeTest() + "|fail")
+                .kv("errorMsg", errorMsg)
+                .kv("curPageUrl", context.getCurrentPageUrl())
+                .kv("resourceId", context.getCurrentResourceId())
+                .kv("scheduleId", context.getCurrentScheduleId())
+                .kv("traceId", EagleEye.getTraceId())
+                .error();
+    }
+
     public static void contentExceeded(ProcessTemplateContext context, Integer expected, Integer actual) {
         String sourceClassName = context.getSourceClassSimpleName();
         HadesLogUtil.stream(sourceClassName + "|contentExceeded|" + Logger.isEagleEyeTest() + "|error")

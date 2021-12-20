@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Data
 public class SecKillActivityDTO {
 
-    private static final SecKillActivityDTO PLACEHOLDER_SEC_KILL_ACTIVITY = new SecKillActivityDTO();
+    public static final SecKillActivityDTO PLACEHOLDER_SEC_KILL_ACTIVITY = new SecKillActivityDTO();
     static {
         PLACEHOLDER_SEC_KILL_ACTIVITY.add(SecKillSessionDTO.PLACEHOLDER_SEC_KILL_SESSION);
     }
