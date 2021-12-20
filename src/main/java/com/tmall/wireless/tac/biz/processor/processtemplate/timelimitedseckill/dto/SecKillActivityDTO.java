@@ -39,7 +39,7 @@ public class SecKillActivityDTO {
             if(i == 0 && Objects.equals(secKillSession.id(), selectedSecKillSession.id())) {
                 secKillSessionDTO.setCountDownMillis(secKillSession.countDownMillis());
             }
-            secKillSessionDTO.setStatus(secKillSession.status());
+            secKillSessionDTO.setStatus(secKillSession.statusVal());
             if(Objects.equals(secKillSession.id(), selectedSecKillSession.id())) {
                 secKillSessionDTO.setSelected(true);
                 List<Map<String, Object>> items = ItemUtil.buildItems(allItemIds, longItemDTOMap).stream().limit(10).collect(Collectors.toList());

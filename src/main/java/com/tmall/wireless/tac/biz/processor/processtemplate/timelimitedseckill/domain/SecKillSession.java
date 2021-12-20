@@ -71,6 +71,10 @@ public class SecKillSession {
         return this.status;
     }
 
+    public int statusVal() {
+        return this.status.statusVal();
+    }
+
     /**
      * 倒计时时间（毫秒）
      * 如果秒杀场次状态为"未开始"，则为当前时间和开始时间的差值
