@@ -1,5 +1,6 @@
 package com.tmall.wireless.tac.biz.processor.config;
 
+import com.tmall.tcls.gs.sdk.biz.config.TxcsShoppingguideSdkSwitch;
 import com.tmall.wireless.tac.biz.processor.detail.common.config.DetailSwitch;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.config.ProcessTemplateSwitch;
@@ -22,7 +23,7 @@ public class SwitchConfigBean {
             TacConfigManager.switchRegister(DetailSwitch.class);
             TacConfigManager.switchRegister(SupermarketHallSwitch.class);
             TacConfigManager.switchRegister(ProcessTemplateSwitch.class);
-
+            TacConfigManager.switchRegister(TxcsShoppingguideSdkSwitch.class);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
