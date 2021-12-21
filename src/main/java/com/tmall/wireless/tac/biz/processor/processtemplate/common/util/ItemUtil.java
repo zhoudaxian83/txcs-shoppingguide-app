@@ -6,6 +6,7 @@ import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.DecimalFormat;
@@ -18,7 +19,7 @@ public class ItemUtil {
 
     public static List<Map<String, Object>> buildItems(List<Long> itemIds, Map<Long, ItemDTO> longItemDTOMap) {
         List<Map<String, Object>> result = new ArrayList<>();
-        if(MapUtils.isEmpty(longItemDTOMap)) {
+        if(CollectionUtils.isEmpty(itemIds) || MapUtils.isEmpty(longItemDTOMap)) {
             return result;
         }
         List<ItemDTO> sinkBottomItems = new ArrayList<>();

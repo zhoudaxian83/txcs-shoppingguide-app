@@ -85,11 +85,13 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             //如果tpp返回为空，走打底
             if (recommendModel == null) {
                 recommendModel = tppBottomService.readBottomData(context, selectedSecKillSession.itemSetId(), ItemSetRecommendModel.class);
-                if(recommendModel == null) {
-                    return Flowable.just(TacResult.newResult(new ArrayList<>()));
-                }
             } else {
                 tppBottomService.writeBottomData(context, selectedSecKillSession.itemSetId(), recommendModel);
+            }
+
+            List<Long> itemIds = new ArrayList<>();
+            if(recommendModel != null) {
+                itemIds = recommendModel.getAllItemIds();
             }
 
             //Captain渲染
@@ -97,13 +99,13 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             if(timeOfFuturePrice != null) {
                 context.setPreviewTime(DateTimeUtil.formatTimestamp(timeOfFuturePrice));
             }
-            Map<Long, ItemDTO> longItemDTOMap = renderService.batchQueryItem(recommendModel.getAllItemIds(), context);
+            Map<Long, ItemDTO> longItemDTOMap = renderService.batchQueryItem(itemIds, context);
             if(mockCaptainCrash) {
                 longItemDTOMap = null;
             }
 
             //结果组装
-            SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.valueOf(context.getCurrentResourceId(), secKillActivity, selectedSecKillSession, recommendModel.getAllItemIds(), longItemDTOMap);
+            SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.valueOf(context.getCurrentResourceId(), secKillActivity, selectedSecKillSession, itemIds, longItemDTOMap);
             List<GeneralItem> generalItemList = secKillActivityDTO.toGeneralItemList();
 
             MetricsUtil.mainProcessSuccess(context, mainProcessStart);
