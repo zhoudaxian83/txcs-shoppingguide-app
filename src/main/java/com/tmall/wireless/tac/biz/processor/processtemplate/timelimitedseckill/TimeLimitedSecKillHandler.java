@@ -29,9 +29,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-import static com.tmall.wireless.tac.biz.processor.processtemplate.common.config.ProcessTemplateSwitch.mockCaptainCrash;
-import static com.tmall.wireless.tac.biz.processor.processtemplate.common.config.ProcessTemplateSwitch.mockTppCrash;
+import static com.tmall.wireless.tac.biz.processor.processtemplate.common.config.ProcessTemplateSwitch.*;
 
+/**
+ * 会场限时秒杀模块
+ * 核心功能点，针对未开始的秒杀场次，支持传递未来时间查询未来的价格和利益点
+ * Aone需求地址：https://aone.alibaba-inc.com/req/37876639
+ *
+ * @author 言武
+ */
 @Component
 public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
@@ -55,32 +61,36 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
         //初始化上下文
         ProcessTemplateContext context = ProcessTemplateContext.init(requestContext4Ald, TimeLimitedSecKillHandler.class);
+        //设置使用折后价的祥云码
         context.setSceneCode(captainSceneCode);
         try {
-            //构造运营配置商品列表领域对象
+            //根据运营在鸿雁填写的配置数据构造"秒杀活动配置"领域对象
             SecKillActivityConfig activityConfig = SecKillActivityConfig.valueOf(context.getAldManualConfigDataList());
+            //根据配置初始化"秒杀活动"领域对象
             SecKillActivity secKillActivity = SecKillActivity.init(activityConfig);
 
-            //解析参数中的chooseId
+            //解析参数中的categoryId，用于决策当前选中的秒杀场次
             String chooseIdStr = (String)requestContext4Ald.getAldParam().getOrDefault("categoryId", null);
             Long chooseId = Optional.ofNullable(chooseIdStr).map(Longs::tryParse).orElse(null);
-
             //获取选中的秒杀场次
             SelectedSecKillSession selectedSecKillSession = secKillActivity.select(chooseId);
 
+            //如果选中的秒杀场次为空，即没有有效的秒杀场次，则返回给前端一个特殊的占位秒杀场次，前端判断如果是该特殊的秒杀场次，则不展示秒杀模块
+            //目的是避免返回空数据导致ald识别为错误，从而走到打底逻辑，而秒杀模块是不允许使用打底的。
+            //ald本身是支持流程模板中指定不走打底的，但这需要在ald转调tac的总入口McTacHsfSolution中改造
             if(selectedSecKillSession == null) {
                 SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.PLACEHOLDER_SEC_KILL_ACTIVITY;
                 List<GeneralItem> generalItemList = secKillActivityDTO.toGeneralItemList();
-                MetricsUtil.customProcessFail(NO_VALID_SEC_KILL_SESSION, context, "没有选中的秒杀场次");
+                MetricsUtil.customProcessFail(NO_VALID_SEC_KILL_SESSION, context, "没有有效的秒杀场次");
                 return Flowable.just(TacResult.newResult(generalItemList));
             }
 
             //推荐召回
             Map<String, String> recommendParams = buildTppParams(selectedSecKillSession, context);
-            RecommendModel recommendModel = recommendService.recommendContent(APPID, context, recommendParams, new ItemSetRecommendModelHandler());
-            logger.info("recommendModel: " + JSON.toJSONString(recommendModel));
-            if(mockTppCrash) {
-                recommendModel = null;
+            RecommendModel recommendModel = null;
+            if(!mockTppCrash) {
+                recommendModel = recommendService.recommendContent(APPID, context, recommendParams, new ItemSetRecommendModelHandler());
+                logger.info("recommendModel: " + JSON.toJSONString(recommendModel));
             }
             //如果tpp返回为空，走打底
             if (recommendModel == null) {
@@ -89,19 +99,23 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
                 tppBottomService.writeBottomData(context, selectedSecKillSession.itemSetId(), recommendModel);
             }
 
+            //从推荐模型中获取商品ID列表
             List<Long> itemIds = new ArrayList<>();
             if(recommendModel != null) {
-                itemIds = recommendModel.getAllItemIds();
+                itemIds = recommendModel.fetchAllItemIds();
             }
 
-            //Captain渲染
-            Long timeOfFuturePrice = selectedSecKillSession.timeOfFuturePrice();
-            if(timeOfFuturePrice != null) {
-                context.setPreviewTime(DateTimeUtil.formatTimestamp(timeOfFuturePrice));
+            //如果开启了查询未来价格才给祥云传递未来的时间，查询未来价格会直连UMP，对性能有影响，需要加个开关，用于降级
+            if(openFuturePrice) {
+                Long timeOfFuturePrice = selectedSecKillSession.timeOfFuturePrice();
+                if (timeOfFuturePrice != null) {
+                    context.setPreviewTime(DateTimeUtil.formatTimestamp(timeOfFuturePrice));
+                }
             }
-            Map<Long, ItemDTO> longItemDTOMap = renderService.batchQueryItem(itemIds, context);
-            if(mockCaptainCrash) {
-                longItemDTOMap = null;
+            //Captain渲染
+            Map<Long, ItemDTO> longItemDTOMap = null;
+            if(!mockCaptainCrash) {
+                longItemDTOMap = renderService.batchQueryItem(itemIds, context);
             }
 
             //结果组装

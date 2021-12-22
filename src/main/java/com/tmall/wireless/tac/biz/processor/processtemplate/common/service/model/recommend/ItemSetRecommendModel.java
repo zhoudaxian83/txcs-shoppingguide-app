@@ -15,7 +15,7 @@ public class ItemSetRecommendModel implements RecommendModel {
     private List<ItemSetItems> itemSetItemsList;
 
     @Override
-    public List<Long> getAllItemIds() {
+    public List<Long> fetchAllItemIds() {
         if(CollectionUtils.isEmpty(itemSetItemsList)) {
             return new ArrayList<>();
         }
