@@ -57,6 +57,13 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
+        if(mockTacException) {
+            throw new RuntimeException("mock tac exception");
+        }
+        if(mockTacTimeout) {
+            Thread.sleep(10000);
+        }
+
         Long mainProcessStart = System.currentTimeMillis();
 
         //初始化上下文

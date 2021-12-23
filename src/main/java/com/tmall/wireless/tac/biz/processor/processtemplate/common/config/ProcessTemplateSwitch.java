@@ -19,6 +19,12 @@ public class ProcessTemplateSwitch {
     @AppSwitch(des = "是否mock captain挂了【生产环境禁用】", level = Switch.Level.p3)
     public static boolean mockCaptainCrash = false;
 
+    @AppSwitch(des = "是否mock tac抛异常【生产环境禁用】", level = Switch.Level.p3)
+    public static boolean mockTacException = false;
+
+    @AppSwitch(des = "是否mock tac超时【生产环境禁用】", level = Switch.Level.p3)
+    public static boolean mockTacTimeout = false;
+
     @AppSwitch(des = "是否开启查询未来价格和利益点【直连UMP有性能压力】", level = Switch.Level.p3)
     public static boolean openFuturePrice = true;
 }
