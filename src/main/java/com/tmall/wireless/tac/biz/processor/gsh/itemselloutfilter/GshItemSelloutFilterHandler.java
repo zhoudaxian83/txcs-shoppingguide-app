@@ -110,6 +110,7 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
                 && itemDTO.getItemPromotionResp().getUnifyPrice() != null
                 && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice() != null
                 && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice().getCent() < 0) {
+                logger.error("checkPrice is minus "+itemDTO.getItemId());
                 return false;
             }
         } catch (Exception e) {

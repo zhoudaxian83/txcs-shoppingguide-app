@@ -84,6 +84,7 @@ public class GshItemRecommendFilterSdkExtPt extends Register implements ItemFilt
                     && resp.getUnifyPrice() != null
                     && resp.getUnifyPrice().getShowPrice() != null
                     && resp.getUnifyPrice().getShowPrice().getCent() < 0) {
+                    LOGGER.error("checkPrice is minus " + entityVO.getItemId());
                     return false;
                 }
             }
