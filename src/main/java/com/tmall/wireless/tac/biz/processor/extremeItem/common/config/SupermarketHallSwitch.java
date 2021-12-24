@@ -12,4 +12,7 @@ public class SupermarketHallSwitch {
 
     @AppSwitch(des = "极致单品采样打底逻辑是否开启", level = Switch.Level.p3)
     public static boolean openSampleBottom = true;
+
+    @AppSwitch(des = "够实惠价格过滤开关", level = Switch.Level.p3)
+    public static boolean openGshPriceFilter = true;
 }

@@ -26,6 +26,7 @@ import com.tmall.tmallwireless.tac.spi.context.SPIResult;
 import com.tmall.wireless.store.spi.render.RenderSpi;
 import com.tmall.wireless.store.spi.render.model.RenderRequest;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.SupermarketHallContext;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
@@ -89,10 +90,7 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
                     itemMap.put(entry.getKey(), entry.getValue());
                 }
             }
-            if (itemDTO != null && itemDTO.getItemPromotionResp() != null
-                && itemDTO.getItemPromotionResp().getUnifyPrice() != null
-                && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice() != null
-                && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice().getCent() < 0) {
+            if (SupermarketHallSwitch.openGshPriceFilter && checkPrice(itemDTO)) {
                 continue;
             }
             if (itemDTO == null || itemDTO.isSoldout() || !itemDTO.isCanBuy()) {
@@ -106,6 +104,15 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
         return Flowable.just(TacResult.newResult(list));
     }
 
+    private boolean checkPrice(ItemDTO itemDTO) {
+        if (itemDTO != null && itemDTO.getItemPromotionResp() != null
+            && itemDTO.getItemPromotionResp().getUnifyPrice() != null
+            && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice() != null
+            && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice().getCent() < 0) {
+            return true;
+        }
+        return false;
+    }
 
     public void buildItemDTO(GeneralItem itemMap, ItemDTO itemDTO) {
         itemMap.put("id", itemDTO.getItemId().getId());
