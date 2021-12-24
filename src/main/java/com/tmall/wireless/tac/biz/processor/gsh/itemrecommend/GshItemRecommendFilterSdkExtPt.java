@@ -12,6 +12,7 @@ import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemFilterSdkExtPt
 import com.tmall.tcls.gs.sdk.framework.model.ErrorCode;
 import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch;
 import com.tmall.wireless.tac.biz.processor.huichang.common.constant.HallScenarioConstant;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -40,7 +41,7 @@ public class GshItemRecommendFilterSdkExtPt extends Register implements ItemFilt
         List<ItemEntityVO> itemAndContentListAfterFilter = Lists.newArrayList();
 
         for (ItemEntityVO entityVO : itemAndContentList) {
-            if (!checkPrice(entityVO)) {
+            if (SupermarketHallSwitch.openGshPriceFilter && !checkPrice(entityVO)) {
                 continue;
             }
             if (entityVO != null) {
