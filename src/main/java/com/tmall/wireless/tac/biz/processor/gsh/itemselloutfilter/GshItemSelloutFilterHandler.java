@@ -105,11 +105,15 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
     }
 
     private boolean checkPrice(ItemDTO itemDTO) {
-        if (itemDTO != null && itemDTO.getItemPromotionResp() != null
-            && itemDTO.getItemPromotionResp().getUnifyPrice() != null
-            && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice() != null
-            && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice().getCent() < 0) {
-            return true;
+        try {
+            if (itemDTO != null && itemDTO.getItemPromotionResp() != null
+                && itemDTO.getItemPromotionResp().getUnifyPrice() != null
+                && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice() != null
+                && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice().getCent() < 0) {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
         }
         return false;
     }
