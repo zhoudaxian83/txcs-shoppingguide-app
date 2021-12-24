@@ -90,7 +90,7 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
                     itemMap.put(entry.getKey(), entry.getValue());
                 }
             }
-            if (SupermarketHallSwitch.openGshPriceFilter && checkPrice(itemDTO)) {
+            if (SupermarketHallSwitch.openGshPriceFilter && !checkPrice(itemDTO)) {
                 continue;
             }
             if (itemDTO == null || itemDTO.isSoldout() || !itemDTO.isCanBuy()) {
@@ -110,12 +110,12 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
                 && itemDTO.getItemPromotionResp().getUnifyPrice() != null
                 && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice() != null
                 && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice().getCent() < 0) {
-                return true;
+                return false;
             }
         } catch (Exception e) {
-            return false;
+            return true;
         }
-        return false;
+        return true;
     }
 
     public void buildItemDTO(GeneralItem itemMap, ItemDTO itemDTO) {
