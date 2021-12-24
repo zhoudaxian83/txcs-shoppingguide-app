@@ -89,6 +89,12 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
                     itemMap.put(entry.getKey(), entry.getValue());
                 }
             }
+            if (itemDTO != null && itemDTO.getItemPromotionResp() != null
+                && itemDTO.getItemPromotionResp().getUnifyPrice() != null
+                && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice() != null
+                && itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice().getCent() < 0) {
+                continue;
+            }
             if (itemDTO == null || itemDTO.isSoldout() || !itemDTO.isCanBuy()) {
                 sellOutList.add(itemMap);
             }else {

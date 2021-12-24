@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.google.common.collect.Lists;
+import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemFilterRequest;
@@ -40,6 +41,9 @@ public class GshItemSetRecommendFilterSdkExtPt extends Register implements ItemF
         List<ItemEntityVO> itemAndContentListAfterFilter = Lists.newArrayList();
 
         for (ItemEntityVO entityVO : itemAndContentList) {
+            if (!checkPrice(entityVO)) {
+                continue;
+            }
             if (entityVO != null) {
                 if (checkField(entityVO)) {
                     itemAndContentListAfterFilter.add(entityVO);
@@ -51,7 +55,22 @@ public class GshItemSetRecommendFilterSdkExtPt extends Register implements ItemF
 
         return entityVOSgFrameworkResponse;
     }
-
+    private boolean checkPrice(ItemEntityVO entityVO) {
+        try {
+            if (entityVO.containsKey("itemPromotionResp")) {
+                ItemPromotionResp resp = (ItemPromotionResp)entityVO.get("itemPromotionResp");
+                if (resp != null
+                    && resp.getUnifyPrice() != null
+                    && resp.getUnifyPrice().getShowPrice() != null
+                    && resp.getUnifyPrice().getShowPrice().getCent() < 0) {
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            return true;
+        }
+        return true;
+    }
 
     protected boolean checkField(ItemEntityVO entityVO) {
         List<String> checkField = getFieldList();
