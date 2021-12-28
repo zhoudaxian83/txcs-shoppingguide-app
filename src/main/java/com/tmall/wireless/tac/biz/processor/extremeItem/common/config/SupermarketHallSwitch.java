@@ -15,4 +15,7 @@ public class SupermarketHallSwitch {
 
     @AppSwitch(des = "够实惠价格过滤开关", level = Switch.Level.p3)
     public static boolean openGshPriceFilter = true;
+
+    @AppSwitch(des = "是否开启价格模糊化", level = Switch.Level.p3)
+    public static boolean openPriceFuzzy = true;
 }

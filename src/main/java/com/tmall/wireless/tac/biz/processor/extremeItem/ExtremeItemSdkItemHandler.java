@@ -37,6 +37,8 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch.openPriceFuzzy;
+
 
 /**
  * Created from template by 言武 on 2021-09-10 14:36:48.
@@ -197,7 +199,11 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
         String monthlySales = itemDTO.getAttributes().get(BizAttributes.ATTR_SALES_AMOUNT);
         if (org.apache.commons.lang3.StringUtils.isNotBlank(monthlySales) && Integer.valueOf(monthlySales) > 0) {
-            itemMap.put("itemMonthSoldCount", toMonthlySalesView(monthlySales));
+            if(openPriceFuzzy && StringUtils.isNotBlank(itemDTO.getFuzzySellCount())) {
+                itemMap.put("itemMonthSoldCount", itemDTO.getFuzzySellCount());
+            } else {
+                itemMap.put("itemMonthSoldCount", toMonthlySalesView(monthlySales));
+            }
             itemMap.put("orignMonthSoldCount", monthlySales);
         }
         itemMap.put("itemUrl", itemDTO.getDetailUrl());
