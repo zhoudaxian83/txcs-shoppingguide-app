@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.google.common.primitives.Longs;
+import com.tcls.mkt.atmosphere.model.response.Price;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.DateTimeUtil;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.tmall.wireless.tac.biz.processor.processtemplate.common.config.ProcessTemplateSwitch.*;
 
@@ -125,6 +127,12 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
                 longItemDTOMap = renderService.batchQueryItem(itemIds, context);
             }
 
+            //过滤出有折扣价的品，业务@拾祎特定要求
+            if(longItemDTOMap != null) {
+                longItemDTOMap = longItemDTOMap.entrySet().stream().filter(e -> hasDiscountPrice(e.getValue()))
+                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+            }
+
             //结果组装
             SecKillActivityDTO secKillActivityDTO = SecKillActivityDTO.valueOf(context.getCurrentResourceId(), secKillActivity, selectedSecKillSession, itemIds, longItemDTOMap);
             List<GeneralItem> generalItemList = secKillActivityDTO.toGeneralItemList();
@@ -137,6 +145,27 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             List<GeneralItem> generalItemList = secKillActivityDTO.toGeneralItemList();
             return Flowable.just(TacResult.newResult(generalItemList));
         }
+    }
+
+    /**
+     * 如果chaoshiPrice和showPrice都存在，并且showPrice < chaoshiPrice返回true
+     *
+     * @param itemDTO
+     * @return
+     */
+    private boolean hasDiscountPrice(ItemDTO itemDTO) {
+        if(itemDTO == null
+                || itemDTO.getItemPromotionResp() == null
+                || itemDTO.getItemPromotionResp().getUnifyPrice() != null
+                || itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice() == null
+                || itemDTO.getItemPromotionResp().getUnifyPrice().getChaoShiPrice() == null)
+        return false;
+        Price showPrice = itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice();
+        Price chaoShiPrice = itemDTO.getItemPromotionResp().getUnifyPrice().getChaoShiPrice();
+        if(showPrice.getCent() == null || chaoShiPrice.getCent() == null) {
+            return false;
+        }
+        return showPrice.getCent() < chaoShiPrice.getCent();
     }
 
     @NotNull
