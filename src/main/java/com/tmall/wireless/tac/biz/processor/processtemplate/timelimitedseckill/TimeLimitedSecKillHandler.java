@@ -128,9 +128,11 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             }
 
             //过滤出有折扣价的品，业务@拾祎特定要求
-            if(longItemDTOMap != null) {
-                longItemDTOMap = longItemDTOMap.entrySet().stream().filter(e -> hasDiscountPrice(e.getValue()))
-                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+            if(openPriceFilter) {
+                if (longItemDTOMap != null) {
+                    longItemDTOMap = longItemDTOMap.entrySet().stream().filter(e -> hasDiscountPrice(e.getValue()))
+                            .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+                }
             }
 
             //结果组装
