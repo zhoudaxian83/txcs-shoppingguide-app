@@ -1,8 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend;
 
-import com.tmall.wireless.store.spi.recommend.model.RecommendContentEntityDTO;
-import com.tmall.wireless.store.spi.recommend.model.RecommendItemEntityDTO;
-import com.tmall.wireless.store.spi.recommend.model.RecommendResponseEntity;
+import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
+import com.tmall.txcs.gs.model.model.dto.tpp.RecommendContentEntityDTO;
+import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.MetricsUtil;
 import org.apache.commons.collections4.CollectionUtils;

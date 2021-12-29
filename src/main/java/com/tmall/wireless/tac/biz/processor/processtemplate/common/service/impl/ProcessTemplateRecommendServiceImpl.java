@@ -1,11 +1,11 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.common.service.impl;
 
-import com.tmall.tmallwireless.tac.spi.context.SPIResult;
-import com.tmall.wireless.store.spi.recommend.RecommendSpi;
-import com.tmall.wireless.store.spi.recommend.model.RecommendContentEntityDTO;
-import com.tmall.wireless.store.spi.recommend.model.RecommendItemEntityDTO;
-import com.tmall.wireless.store.spi.recommend.model.RecommendRequest;
-import com.tmall.wireless.store.spi.recommend.model.RecommendResponseEntity;
+import com.tmall.txcs.gs.model.Response;
+import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
+import com.tmall.txcs.gs.model.model.dto.tpp.RecommendContentEntityDTO;
+import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
+import com.tmall.txcs.gs.model.spi.model.RecommendRequest;
+import com.tmall.txcs.gs.spi.recommend.RecommendSpiV2;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ContentRecommendResponseHandler;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecommendService {
 
     @Autowired
-    private RecommendSpi recommendSpi;
+    private RecommendSpiV2 recommendSpiV2;
 
     @Override
     public RecommendModel recommendContent(Long appId, ProcessTemplateContext context, Map<String, String> params, ContentRecommendResponseHandler handler) {
@@ -33,12 +33,12 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
             recommendRequest.setUserId(context.getUserId());
             recommendRequest.setParams(params);
             recommendRequest.setLogResult(false);
-            SPIResult<RecommendResponseEntity<RecommendContentEntityDTO>> spiResult = recommendSpi.recommendContent(recommendRequest);
-            if (spiResult.isSuccess()) {
+            Response<RecommendResponseEntity<RecommendContentEntityDTO>> response = recommendSpiV2.recommendContent(recommendRequest).blockingFirst();
+            if (response.isSuccess()) {
                 MetricsUtil.recommendSuccess(context, mainProcessStart);
-                return handler.handle(spiResult.getData(), context, Integer.valueOf(params.get("pageSize")), Integer.valueOf(params.get("itemCountPerContent")));
+                return handler.handle(response.getValue(), context, Integer.valueOf(params.get("pageSize")), Integer.valueOf(params.get("itemCountPerContent")));
             } else {
-                MetricsUtil.recommendFail(context, spiResult.getMsgInfo());
+                MetricsUtil.recommendFail(context, response.getErrorMsg());
             }
         } catch (Exception e) {
             MetricsUtil.recommendException(context, e);
@@ -55,12 +55,12 @@ public class ProcessTemplateRecommendServiceImpl implements ProcessTemplateRecom
             recommendRequest.setUserId(context.getUserId());
             recommendRequest.setParams(params);
             recommendRequest.setLogResult(false);
-            SPIResult<RecommendResponseEntity<RecommendItemEntityDTO>> spiResult = recommendSpi.recommendItem(recommendRequest);
-            if (spiResult.isSuccess()) {
+            Response<RecommendResponseEntity<RecommendItemEntityDTO>> response = recommendSpiV2.recommendItem(recommendRequest).blockingFirst();
+            if (response.isSuccess()) {
                 MetricsUtil.recommendSuccess(context, mainProcessStart);
-                return handler.handle(spiResult.getData(), context, Integer.valueOf(params.get("pageSize")));
+                return handler.handle(response.getValue(), context, Integer.valueOf(params.get("pageSize")));
             } else {
-                MetricsUtil.recommendFail(context, spiResult.getMsgInfo());
+                MetricsUtil.recommendFail(context, response.getErrorMsg());
             }
         } catch (Exception e) {
             MetricsUtil.recommendException(context, e);
