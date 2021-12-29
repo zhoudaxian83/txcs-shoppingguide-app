@@ -10,7 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemSetRecommendModelHandler implements RecommendResponseHandler {
+public class ItemSetContentRecommendModelHandler implements ContentRecommendResponseHandler {
 
     @Override
     public RecommendModel handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity, ProcessTemplateContext context, Integer pageSize, Integer perContentSize) {

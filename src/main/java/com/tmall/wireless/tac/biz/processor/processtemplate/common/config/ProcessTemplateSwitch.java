@@ -26,5 +26,5 @@ public class ProcessTemplateSwitch {
     public static boolean mockTacTimeout = false;
 
     @AppSwitch(des = "是否开启查询未来价格和利益点【直连UMP有性能压力】", level = Switch.Level.p3)
-    public static boolean openFuturePrice = true;
+    public static boolean openFuturePrice = false;
 }

@@ -5,6 +5,6 @@ import com.tmall.wireless.store.spi.recommend.model.RecommendResponseEntity;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 
 @FunctionalInterface
-public interface RecommendResponseHandler {
+public interface ContentRecommendResponseHandler {
     RecommendModel handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity, ProcessTemplateContext context, Integer pageSize, Integer perContentSize);
 }

@@ -12,8 +12,8 @@ import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTempla
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRenderService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateTppBottomService;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetItemRecommendResponseHandler;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModel;
-import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModelHandler;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.MetricsUtil;
 import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain.SecKillActivity;
@@ -45,7 +45,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
 
     private static Logger logger = LoggerProxy.getLogger(TimeLimitedSecKillHandler.class);
     private static final String captainSceneCode = "conference.zhj";
-    private static final Long APPID = 21557L;
+    private static final Long APPID = 21690L;
     private static final String NO_VALID_SEC_KILL_SESSION = "no_valid_sec_kill_session";
 
     @Autowired
@@ -98,7 +98,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             Map<String, String> recommendParams = buildTppParams(selectedSecKillSession, context);
             RecommendModel recommendModel = null;
             if(!mockTppCrash) {
-                recommendModel = recommendService.recommendContent(APPID, context, recommendParams, new ItemSetRecommendModelHandler());
+                recommendModel = recommendService.recommendItem(APPID, context, recommendParams, new ItemSetItemRecommendResponseHandler());
                 logger.info("recommendModel: " + JSON.toJSONString(recommendModel));
             }
             //如果tpp返回为空，走打底
@@ -174,11 +174,12 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
         params.put("smAreaId", context.getSmAreaId());
         params.put("logicAreaId", context.getLogicAreaId());
         params.put("userId", String.valueOf(context.getUserId()));
-        params.put("itemSetIdList", selectedSecKillSession.itemSetId());//进舟新版接口 字段名称变更
+        params.put("userid", String.valueOf(context.getUserId()));
+        params.put("itemSetIdList", selectedSecKillSession.itemSetId());
         params.put("brandRec", "true");
-        params.put("pageSize", "1");
-        params.put("itemCountPerContent", "20");//进舟新版接口 单个圈品集下面挂的商品数量
-        params.put("contentType", "3"); //进舟新接口必填参数 需要写死3，3指圈品集类型
+        params.put("pageSize", "20");
+        params.put("index", "0");
+        params.put("appid", "21690");
         return params;
     }
 
