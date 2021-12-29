@@ -158,7 +158,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
     private boolean hasDiscountPrice(ItemDTO itemDTO) {
         if(itemDTO == null
                 || itemDTO.getItemPromotionResp() == null
-                || itemDTO.getItemPromotionResp().getUnifyPrice() != null
+                || itemDTO.getItemPromotionResp().getUnifyPrice() == null
                 || itemDTO.getItemPromotionResp().getUnifyPrice().getShowPrice() == null
                 || itemDTO.getItemPromotionResp().getUnifyPrice().getChaoShiPrice() == null)
         return false;
