@@ -4,6 +4,7 @@ import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.google.common.primitives.Longs;
 import com.tmall.aselfcaptain.item.model.ItemDTO;
+import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.DateTimeUtil;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
@@ -94,7 +95,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             //Captain渲染
             Long timeOfFuturePrice = selectedSecKillSession.timeOfFuturePrice();
             if(timeOfFuturePrice != null) {
-                context.setPreviewTime(String.valueOf(timeOfFuturePrice));
+                context.setPreviewTime(DateTimeUtil.formatTimestamp(timeOfFuturePrice));
             }
             Map<Long, ItemDTO> longItemDTOMap = renderService.batchQueryItem(recommendModel.getAllItemIds(), context);
             if(mockCaptainCrash) {
