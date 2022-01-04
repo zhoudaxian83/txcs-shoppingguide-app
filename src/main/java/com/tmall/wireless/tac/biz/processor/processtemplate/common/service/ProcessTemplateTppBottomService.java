@@ -9,6 +9,7 @@ import com.tmall.txcs.gs.spi.recommend.TairFactorySpi;
 import com.tmall.txcs.gs.spi.recommend.TairManager;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.config.ProcessTemplateSwitch;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemRecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.MetricsUtil;
@@ -70,6 +71,8 @@ public class ProcessTemplateTppBottomService {
                 Object bottomData = dataEntryResult.getValue().getValue();
                 if(clazz == ItemSetRecommendModel.class) {
                     return JSON.parseObject(String.valueOf(bottomData), ItemSetRecommendModel.class);
+                } else if(clazz == ItemRecommendModel.class) {
+                    return JSON.parseObject(String.valueOf(bottomData), ItemRecommendModel.class);
                 } else {
                     MetricsUtil.tppBottomFail(READ_TPP_BOTTOM_ACTION, context, "unsupported recommend model", cacheKey);
                 }

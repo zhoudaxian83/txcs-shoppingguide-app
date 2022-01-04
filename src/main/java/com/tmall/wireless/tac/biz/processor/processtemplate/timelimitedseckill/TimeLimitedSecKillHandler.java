@@ -12,8 +12,8 @@ import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTempla
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRecommendService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRenderService;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateTppBottomService;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemRecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetItemRecommendResponseHandler;
-import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetRecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.MetricsUtil;
 import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain.SecKillActivity;
@@ -103,7 +103,7 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
             }
             //如果tpp返回为空，走打底
             if (recommendModel == null) {
-                recommendModel = tppBottomService.readBottomData(context, selectedSecKillSession.itemSetId(), ItemSetRecommendModel.class);
+                recommendModel = tppBottomService.readBottomData(context, selectedSecKillSession.itemSetId(), ItemRecommendModel.class);
             } else {
                 tppBottomService.writeBottomData(context, selectedSecKillSession.itemSetId(), recommendModel);
             }
