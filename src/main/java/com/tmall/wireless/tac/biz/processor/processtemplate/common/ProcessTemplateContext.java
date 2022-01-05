@@ -25,8 +25,8 @@ public class ProcessTemplateContext {
 
     private Long userId;
     private String userNick;
-    private String smAreaId;
-    private String logicAreaId;
+    private String smAreaId = "330100";
+    private String logicAreaId = "107";
     private String currentResourceId;
     private String currentScheduleId;
     private String currentPageUrl;
@@ -64,10 +64,12 @@ public class ProcessTemplateContext {
             String smAreaId = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "330100");
             context.setSmAreaId(smAreaId);
 
-            String csa = (String)requestContext4Ald.getAldParam().getOrDefault(CSA, "107");
+            String csa = (String)requestContext4Ald.getAldParam().getOrDefault(CSA, "");
             if(StringUtils.isNotBlank(csa)) {
                 AddressDTO addressDTO = AddressUtil.parseCSA(csa);
-                context.setLogicAreaId(addressDTO.getRegionCode());
+                if(addressDTO != null && addressDTO.getRegionCode() != null && !"0".equals(addressDTO.getRegionCode())) {
+                    context.setLogicAreaId(addressDTO.getRegionCode());
+                }
             }
 
             //初始化预览时间

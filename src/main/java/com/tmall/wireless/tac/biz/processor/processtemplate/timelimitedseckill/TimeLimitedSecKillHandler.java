@@ -178,7 +178,6 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
         params.put("userId", String.valueOf(context.getUserId()));
         params.put("userid", String.valueOf(context.getUserId()));
         params.put("itemSetIdList", selectedSecKillSession.itemSetId());
-        params.put("brandRec", "true");
         params.put("pageSize", "20");
         params.put("index", "0");
         params.put("appid", "21690");
