@@ -15,6 +15,7 @@ import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.Proce
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemRecommendModel;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.ItemSetItemRecommendResponseHandler;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend.RecommendModel;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.CommonParamUtil;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.MetricsUtil;
 import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain.SecKillActivity;
 import com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain.SecKillActivityConfig;
@@ -32,6 +33,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.tmall.wireless.tac.biz.processor.processtemplate.common.config.ProcessTemplateSwitch.*;
+import static com.tmall.wireless.tac.biz.processor.processtemplate.common.util.CommonParamUtil.DEFAULT_LOGIC_AREA_ID;
+import static com.tmall.wireless.tac.biz.processor.processtemplate.common.util.CommonParamUtil.DEFAULT_SM_AREA_ID;
 
 /**
  * 会场限时秒杀模块
@@ -173,8 +176,16 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
     @NotNull
     private Map<String, String> buildTppParams(SelectedSecKillSession selectedSecKillSession, ProcessTemplateContext context) {
         Map<String, String> params = new HashMap<>();
-        params.put("smAreaId", context.getSmAreaId());
-        params.put("logicAreaId", context.getLogicAreaId());
+        if(CommonParamUtil.isValidSmAreaId(context.getSmAreaId())) {
+            params.put("smAreaId", context.getSmAreaId());
+        } else {
+            params.put("smAreaId", DEFAULT_SM_AREA_ID);
+        }
+        if(CommonParamUtil.isValidLogicAreaId(context.getLogicAreaId())) {
+            params.put("logicAreaId", context.getLogicAreaId());
+        } else {
+            params.put("logicAreaId", DEFAULT_LOGIC_AREA_ID);
+        }
         params.put("userId", String.valueOf(context.getUserId()));
         params.put("userid", String.valueOf(context.getUserId()));
         params.put("itemSetIdList", selectedSecKillSession.itemSetId());

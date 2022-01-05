@@ -17,6 +17,7 @@ import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.service.ProcessTemplateRenderService;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.CommonParamUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -98,14 +99,14 @@ public class ProcessTemplateRenderServiceImpl implements ProcessTemplateRenderSe
         }
     }
 
-    RenderRequest buildRenderRequest(List<Long> itemIds, ProcessTemplateContext processTemplateContext) {
+    RenderRequest buildRenderRequest(List<Long> itemIds, ProcessTemplateContext context) {
         RenderRequest renderRequest = new RenderRequest();
         ItemQueryDO query = new ItemQueryDO();
-        String smAreaId = processTemplateContext.getSmAreaId();
-        if (StringUtils.isNotBlank(smAreaId) && !"0".equals(smAreaId)) {
+        String smAreaId = context.getSmAreaId();
+        if (CommonParamUtil.isValidSmAreaId(smAreaId)) {
             query.setAreaId(Long.valueOf(smAreaId));
         } else {
-            logger.warn("smAreaId is null, use 330110" + smAreaId);
+            logger.warn("smAreaId is null, use 330110,smAreaId=" + smAreaId);
             query.setAreaId(330110L);
         }
         List<ItemId> itemIdList = itemIds.stream()
@@ -114,12 +115,12 @@ public class ProcessTemplateRenderServiceImpl implements ProcessTemplateRenderSe
         query.setItemIds(itemIdList);
 
         query.setChannel(Channel.WAP);
-        String queryTime = processTemplateContext.getPreviewTime();
+        String queryTime = context.getPreviewTime();
         if(StringUtils.isNotEmpty(queryTime)){
             query.setQueryTime(queryTime);
         }
 
-        Long userId = processTemplateContext.getUserId();
+        Long userId = context.getUserId();
         if (userId != null && userId != 0) {
             query.setBuyerId(userId);
         }
@@ -128,7 +129,7 @@ public class ProcessTemplateRenderServiceImpl implements ProcessTemplateRenderSe
 
         QueryOptionDO option = new QueryOptionDO();
         option.setOpenMkt(true);
-        String sceneCode = processTemplateContext.getSceneCode();
+        String sceneCode = context.getSceneCode();
         if(StringUtils.isNotBlank(sceneCode)) {
             option.setSceneCode(sceneCode);
         } else {

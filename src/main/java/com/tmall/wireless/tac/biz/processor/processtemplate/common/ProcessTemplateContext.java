@@ -25,8 +25,8 @@ public class ProcessTemplateContext {
 
     private Long userId;
     private String userNick;
-    private String smAreaId = "330100";
-    private String logicAreaId = "107";
+    private String smAreaId;
+    private String logicAreaId;
     private String currentResourceId;
     private String currentScheduleId;
     private String currentPageUrl;
@@ -61,7 +61,7 @@ public class ProcessTemplateContext {
         }
         if(requestContext4Ald.getAldParam() != null) {
             //初始化区域ID
-            String smAreaId = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "330100");
+            String smAreaId = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "");
             context.setSmAreaId(smAreaId);
 
             String csa = (String)requestContext4Ald.getAldParam().getOrDefault(CSA, "");
