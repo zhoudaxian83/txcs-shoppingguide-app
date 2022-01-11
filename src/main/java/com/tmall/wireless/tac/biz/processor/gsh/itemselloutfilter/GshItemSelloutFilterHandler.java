@@ -1,15 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.gsh.itemselloutfilter;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.taobao.eagleeye.EagleEye;
@@ -39,6 +31,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch.openPriceFuzzy;
 
 /**
  * @author wangguohui
@@ -142,6 +143,10 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
         if (StringUtils.isNotBlank(monthlySales) && Integer.valueOf(monthlySales) > 0) {
             itemMap.put("itemMonthSoldCount", toMonthlySalesView(monthlySales));
             itemMap.put("orignMonthSoldCount", monthlySales);
+        }
+        if(openPriceFuzzy && org.apache.commons.lang.StringUtils.isNotBlank(itemDTO.getFuzzySellCount()) && !"0".equals(itemDTO.getFuzzySellCount())) {
+            itemMap.put("itemMonthSoldCount", itemDTO.getFuzzySellCount());
+            itemMap.put("fuzzySellCount", itemDTO.getFuzzySellCount());
         }
         itemMap.put("itemUrl", itemDTO.getDetailUrl());
         itemMap.put("_areaSellable", !itemDTO.isSoldout());
