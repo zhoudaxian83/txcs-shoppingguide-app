@@ -1,8 +1,8 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.common.service.model.recommend;
 
-import com.tmall.wireless.store.spi.recommend.model.RecommendContentEntityDTO;
-import com.tmall.wireless.store.spi.recommend.model.RecommendItemEntityDTO;
-import com.tmall.wireless.store.spi.recommend.model.RecommendResponseEntity;
+import com.tmall.txcs.gs.model.model.dto.RecommendResponseEntity;
+import com.tmall.txcs.gs.model.model.dto.tpp.RecommendContentEntityDTO;
+import com.tmall.txcs.gs.model.model.dto.tpp.RecommendItemEntityDTO;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.ProcessTemplateContext;
 import com.tmall.wireless.tac.biz.processor.processtemplate.common.util.MetricsUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -10,7 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemSetRecommendModelHandler implements RecommendResponseHandler {
+public class ItemSetContentRecommendModelHandler implements ContentRecommendResponseHandler {
 
     @Override
     public RecommendModel handle(RecommendResponseEntity<RecommendContentEntityDTO> responseEntity, ProcessTemplateContext context, Integer pageSize, Integer perContentSize) {

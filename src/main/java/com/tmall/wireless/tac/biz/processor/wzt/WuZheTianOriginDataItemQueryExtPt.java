@@ -1,9 +1,18 @@
 package com.tmall.wireless.tac.biz.processor.wzt;
 
-import com.ali.com.google.common.base.Joiner;
-import com.ali.unit.rule.util.lang.CollectionUtils;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
+
+import com.ali.com.google.common.base.Joiner;
+import com.ali.unit.rule.util.lang.CollectionUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tmall.aselfmanager.client.columncenter.response.ColumnCenterDataRuleDTO;
@@ -31,9 +40,6 @@ import io.reactivex.Flowable;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author luojunchong
@@ -206,6 +212,8 @@ public class WuZheTianOriginDataItemQueryExtPt implements OriginDataItemQueryExt
         recommendRequest.setAppId(Constant.APP_ID);
         Map<String, String> params = Maps.newHashMap();
         params.put("userItemIdList", Joiner.on(",").join(itemIds));
+        params.put("pageSize","150");
+        params.put("isFirstPage", String.valueOf(Boolean.TRUE));
         recommendRequest.setParams(params);
         if (Constant.DEBUG) {
             tacLogger.info("tpp入参构建：" + JSON.toJSONString(recommendRequest));

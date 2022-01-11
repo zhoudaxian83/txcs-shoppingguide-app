@@ -61,13 +61,15 @@ public class ProcessTemplateContext {
         }
         if(requestContext4Ald.getAldParam() != null) {
             //初始化区域ID
-            String smAreaId = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "330100");
+            String smAreaId = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "");
             context.setSmAreaId(smAreaId);
 
-            String csa = (String)requestContext4Ald.getAldParam().getOrDefault(CSA, "107");
+            String csa = (String)requestContext4Ald.getAldParam().getOrDefault(CSA, "");
             if(StringUtils.isNotBlank(csa)) {
                 AddressDTO addressDTO = AddressUtil.parseCSA(csa);
-                context.setLogicAreaId(addressDTO.getRegionCode());
+                if(addressDTO != null && addressDTO.getRegionCode() != null && !"0".equals(addressDTO.getRegionCode())) {
+                    context.setLogicAreaId(addressDTO.getRegionCode());
+                }
             }
 
             //初始化预览时间
