@@ -199,13 +199,15 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
         String monthlySales = itemDTO.getAttributes().get(BizAttributes.ATTR_SALES_AMOUNT);
         if (org.apache.commons.lang3.StringUtils.isNotBlank(monthlySales) && Integer.valueOf(monthlySales) > 0) {
-            if(openPriceFuzzy && StringUtils.isNotBlank(itemDTO.getFuzzySellCount())) {
-                itemMap.put("itemMonthSoldCount", itemDTO.getFuzzySellCount());
-            } else {
-                itemMap.put("itemMonthSoldCount", toMonthlySalesView(monthlySales));
-            }
+            itemMap.put("itemMonthSoldCount", itemDTO.getFuzzySellCount());
             itemMap.put("orignMonthSoldCount", monthlySales);
         }
+
+        if(openPriceFuzzy && StringUtils.isNotBlank(itemDTO.getFuzzySellCount()) && !"0".equals(itemDTO.getFuzzySellCount())) {
+            itemMap.put("itemMonthSoldCount", itemDTO.getFuzzySellCount());
+            itemMap.put("fuzzySellCount", itemDTO.getFuzzySellCount());
+        }
+
         itemMap.put("itemUrl", itemDTO.getDetailUrl());
         //itemMap.put("scm", getScm1(tmcsContext, String.valueOf(itemDTO.getItemId().getId())));
         itemMap.put("_areaSellable", !itemDTO.isSoldout() && itemDTO.isCanBuy());
