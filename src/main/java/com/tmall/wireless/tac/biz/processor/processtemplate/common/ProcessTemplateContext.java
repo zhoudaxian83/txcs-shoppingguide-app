@@ -12,6 +12,7 @@ import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import lombok.Data;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public class ProcessTemplateContext {
         }
         if(requestContext4Ald.getAldParam() != null) {
             //初始化区域ID
-            String smAreaId = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "");
+            String smAreaId = MapUtils.getString(requestContext4Ald.getAldParam(), SM_AREAID, "330100");
             context.setSmAreaId(smAreaId);
 
             String csa = (String)requestContext4Ald.getAldParam().getOrDefault(CSA, "");

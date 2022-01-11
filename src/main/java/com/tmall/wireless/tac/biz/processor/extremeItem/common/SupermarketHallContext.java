@@ -10,8 +10,7 @@ import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
 import com.tmall.wireless.tac.biz.processor.huichang.common.utils.PageUrlUtil;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -55,7 +54,7 @@ public class SupermarketHallContext {
         }
         if(requestContext4Ald.getAldParam() != null) {
             //初始化区域ID
-            String smAreaId = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "330100");
+            String smAreaId = MapUtils.getString(requestContext4Ald.getAldParam(), SM_AREAID, "330100");
             supermarketHallContext.setSmAreaId(smAreaId);
 
             //初始化预览时间
