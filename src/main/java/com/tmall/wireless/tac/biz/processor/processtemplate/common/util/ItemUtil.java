@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch.openPriceFuzzy;
+
 public class ItemUtil {
 
     public static List<Map<String, Object>> buildItems(List<Long> itemIds, Map<Long, ItemDTO> longItemDTOMap) {
@@ -78,6 +80,10 @@ public class ItemUtil {
         if (org.apache.commons.lang3.StringUtils.isNotBlank(monthlySales) && Integer.valueOf(monthlySales) > 0) {
             itemMap.put("itemMonthSoldCount", toMonthlySalesView(monthlySales));
             itemMap.put("orignMonthSoldCount", monthlySales);
+        }
+        if(openPriceFuzzy && StringUtils.isNotBlank(itemDTO.getFuzzySellCount()) && !"0".equals(itemDTO.getFuzzySellCount())) {
+            itemMap.put("itemMonthSoldCount", itemDTO.getFuzzySellCount());
+            itemMap.put("fuzzySellCount", itemDTO.getFuzzySellCount());
         }
         itemMap.put("itemUrl", itemDTO.getDetailUrl());
         //itemMap.put("scm", getScm1(tmcsContext, String.valueOf(itemDTO.getItemId().getId())));

@@ -1,5 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.common.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 public final class CommonParamUtil {
 
     public static final String DEFAULT_SM_AREA_ID = "330100";
@@ -11,7 +13,7 @@ public final class CommonParamUtil {
      * @return
      */
     public static boolean isValidSmAreaId(String smAreaId) {
-        if(smAreaId != null && !"0".equals(smAreaId)) {
+        if(StringUtils.isNotBlank(smAreaId) && !"0".equals(smAreaId)) {
             return true;
         } else {
             return false;
@@ -24,7 +26,7 @@ public final class CommonParamUtil {
      * @return
      */
     public static boolean isValidLogicAreaId(String logicAreaId) {
-        if(logicAreaId != null && !"0".equals(logicAreaId)) {
+        if(StringUtils.isNotBlank(logicAreaId) && !"0".equals(logicAreaId)) {
             return true;
         } else {
             return false;
