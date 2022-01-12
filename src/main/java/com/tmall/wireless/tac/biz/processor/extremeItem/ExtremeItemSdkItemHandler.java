@@ -199,7 +199,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
 
         String monthlySales = itemDTO.getAttributes().get(BizAttributes.ATTR_SALES_AMOUNT);
         if (org.apache.commons.lang3.StringUtils.isNotBlank(monthlySales) && Integer.valueOf(monthlySales) > 0) {
-            itemMap.put("itemMonthSoldCount", itemDTO.getFuzzySellCount());
+            itemMap.put("itemMonthSoldCount", toMonthlySalesView(monthlySales));
             itemMap.put("orignMonthSoldCount", monthlySales);
         }
 
