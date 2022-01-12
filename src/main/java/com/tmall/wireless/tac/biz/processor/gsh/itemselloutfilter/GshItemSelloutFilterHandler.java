@@ -233,8 +233,8 @@ public class GshItemSelloutFilterHandler extends TacReactiveHandler4Ald {
         if (org.apache.commons.lang.StringUtils.isNotBlank(smAreaId) && !"0".equals(smAreaId)) {
             query.setAreaId(Long.valueOf(smAreaId));
         } else {
-            logger.debug("smAreaId is null" + smAreaId);
-            return null;
+            logger.error("smAreaId is null" + smAreaId);
+            query.setAreaId(330100L);
         }
         List<ItemId> itemIdList = itemIds.stream()
             .map(itemId -> ItemId.valueOf(itemId, ItemType.GSH))
