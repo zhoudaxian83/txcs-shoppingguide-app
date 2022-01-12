@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.extremeItem.common;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.eagleeye.EagleEye;
+import com.tmall.tcls.gs.sdk.biz.uti.MapUtil;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.DateTimeUtil;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.Logger;
 import com.tmall.wireless.tac.biz.processor.extremeItem.common.util.LoggerProxy;
@@ -56,8 +57,7 @@ public class SupermarketHallContext {
         if(requestContext4Ald.getAldParam() != null) {
             //初始化区域ID
             String smAreaId = MapUtils.getString(requestContext4Ald.getAldParam(), SM_AREAID, "330100");
-
-            //String smAreaId = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "330100");
+            //String smAreaIds = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "330100");
             supermarketHallContext.setSmAreaId(smAreaId);
 
             //初始化预览时间
