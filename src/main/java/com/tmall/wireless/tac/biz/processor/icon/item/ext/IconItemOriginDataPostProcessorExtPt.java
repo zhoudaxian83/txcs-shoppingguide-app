@@ -28,6 +28,7 @@ import com.tmall.wireless.tac.biz.processor.icon.ColumnCacheService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRecommendService;
 import com.tmall.wireless.tac.biz.processor.icon.item.ItemRequest;
 import com.tmall.wireless.tac.biz.processor.icon.model.IconFixedItemDTO;
+import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.MapUtil;
 import com.tmall.wireless.tac.biz.processor.wzt.constant.Constant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -57,7 +58,7 @@ public class IconItemOriginDataPostProcessorExtPt extends Register implements It
         try {
             // 如果是首页，增加定坑
             // level和level2取不到index
-            String index = (String)originDataProcessRequest.getSgFrameworkContextItem().getRequestParams().getOrDefault("index", "");
+            String index = MapUtil.getStringWithDefault(originDataProcessRequest.getSgFrameworkContextItem().getRequestParams(), "index", "");
             if (StringUtils.isNotBlank(index) && !Objects.equals("0", index)) {
                 return originDataDTO;
             }

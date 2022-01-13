@@ -166,7 +166,7 @@ public class IconLevel3ContentInfoQuerySdkExtPt extends Register implements Cont
         //四级地址
 
         AddressDTO addressDto;
-        String csa = (String)contextContent.getRequestParams().getOrDefault(RequestKeyConstant.USER_PARAMS_KEY_CSA, "");
+        String csa = MapUtil.getStringWithDefault(contextContent.getRequestParams(), RequestKeyConstant.USER_PARAMS_KEY_CSA,"");
         if (StringUtils.isBlank(csa)) {
             return null;
         }

@@ -55,6 +55,7 @@ public class SupermarketHallContext {
         if(requestContext4Ald.getAldParam() != null) {
             //初始化区域ID
             String smAreaId = MapUtils.getString(requestContext4Ald.getAldParam(), SM_AREAID, "330100");
+            //String smAreaIds = (String)requestContext4Ald.getAldParam().getOrDefault(SM_AREAID, "330100");
             supermarketHallContext.setSmAreaId(smAreaId);
 
             //初始化预览时间
