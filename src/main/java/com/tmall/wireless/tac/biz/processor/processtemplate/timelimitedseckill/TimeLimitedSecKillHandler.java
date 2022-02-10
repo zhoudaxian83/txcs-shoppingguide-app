@@ -117,6 +117,16 @@ public class TimeLimitedSecKillHandler extends TacReactiveHandler4Ald {
                 itemIds = recommendModel.fetchAllItemIds();
             }
 
+            //处理定坑操作
+            if(selectedSecKillSession.fixPitItemId() != null) {
+                if (!itemIds.contains(selectedSecKillSession.fixPitItemId())) {
+                    itemIds.remove(itemIds.size() - 1);
+                } else {
+                    itemIds.remove(selectedSecKillSession.fixPitItemId());
+                }
+                itemIds.add(0, selectedSecKillSession.fixPitItemId());
+            }
+
             //如果开启了查询未来价格才给祥云传递未来的时间，查询未来价格会直连UMP，对性能有影响，需要加个开关，用于降级
             if(openFuturePrice) {
                 Long timeOfFuturePrice = selectedSecKillSession.timeOfFuturePrice();

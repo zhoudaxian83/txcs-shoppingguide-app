@@ -8,12 +8,14 @@ public class SelectedSecKillSession {
     private String itemSetId;
     private SecKillSessionStatus status;
     private LocalDateTime startTime;
+    private Long fixPitItemId;
 
-    public SelectedSecKillSession(Long id, String itemSetId, SecKillSessionStatus status, LocalDateTime startTime) {
+    public SelectedSecKillSession(Long id, String itemSetId, SecKillSessionStatus status, LocalDateTime startTime, Long fixPitItemId) {
         this.id = id;
         this.itemSetId = itemSetId;
         this.status = status;
         this.startTime = startTime;
+        this.fixPitItemId = fixPitItemId;
     }
 
     public Long id() {
@@ -22,6 +24,10 @@ public class SelectedSecKillSession {
 
     public String itemSetId() {
         return itemSetId;
+    }
+
+    public Long fixPitItemId() {
+        return this.fixPitItemId;
     }
 
     /**
