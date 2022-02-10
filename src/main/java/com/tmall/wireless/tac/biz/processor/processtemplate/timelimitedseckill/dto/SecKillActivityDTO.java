@@ -46,7 +46,7 @@ public class SecKillActivityDTO {
             secKillSessionDTO.setStatus(secKillSession.statusVal());
             if(Objects.equals(secKillSession.id(), selectedSecKillSession.id())) {
                 secKillSessionDTO.setSelected(true);
-                List<Map<String, Object>> items = ItemUtil.buildItems(allItemIds, longItemDTOMap).stream().limit(10).collect(Collectors.toList());
+                List<Map<String, Object>> items = ItemUtil.buildItems(secKillSession.fixPitItemId(), allItemIds, longItemDTOMap).stream().limit(10).collect(Collectors.toList());
                 secKillSessionDTO.setItems(items);
             } else {
                 secKillSessionDTO.setSelected(false);

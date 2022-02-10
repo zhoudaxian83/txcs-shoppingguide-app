@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.processtemplate.timelimitedseckill.domain;
 
 import lombok.Data;
+import org.apache.commons.collections4.MapUtils;
 
 import java.util.Map;
 
@@ -36,6 +37,11 @@ public class SecKillSessionConfig {
      */
     private String itemSetId;
 
+    /**
+     * 定坑商品ID
+     */
+    private Long fixPitItemId;
+
     public static SecKillSessionConfig valueOf(Map<String, Object> stringObjectMap) {
         SecKillSessionConfig sessionConfig = new SecKillSessionConfig();
         if(stringObjectMap.get("default_contentId") != null) {
@@ -56,6 +62,7 @@ public class SecKillSessionConfig {
         if(stringObjectMap.get("itemSet") != null) {
             sessionConfig.setItemSetId(String.valueOf(stringObjectMap.get("itemSet")));
         }
+        sessionConfig.setFixPitItemId(MapUtils.getLong(stringObjectMap, "staticItemId"));
         return sessionConfig;
     }
 }

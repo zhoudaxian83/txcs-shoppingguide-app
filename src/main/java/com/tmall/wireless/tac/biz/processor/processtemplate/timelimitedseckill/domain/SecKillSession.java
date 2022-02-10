@@ -37,6 +37,11 @@ public class SecKillSession {
      */
     private SecKillSessionStatus status;
 
+    /**
+     * 定坑商品
+     */
+    private Long fixPitItemId;
+
     private SecKillSession() {}
 
     public LocalDateTime startTime() {
@@ -75,6 +80,10 @@ public class SecKillSession {
         return this.status.statusVal();
     }
 
+    public Long fixPitItemId() {
+        return this.fixPitItemId;
+    }
+
     /**
      * 倒计时时间（毫秒）
      * 如果秒杀场次状态为"未开始"，则为当前时间和开始时间的差值
@@ -111,7 +120,7 @@ public class SecKillSession {
         secKillSession.endTime = DateTimeUtil.parseDateTime(sessionConfig.getEndTime());
         secKillSession.itemSetId = sessionConfig.getItemSetId();
         secKillSession.status = initStatus(baseCurrentTime, secKillSession.startTime, secKillSession.endTime);
-
+        secKillSession.fixPitItemId = sessionConfig.getFixPitItemId();
         if(secKillSession.startTime.isAfter(secKillSession.endTime)) {
              return null;
         }

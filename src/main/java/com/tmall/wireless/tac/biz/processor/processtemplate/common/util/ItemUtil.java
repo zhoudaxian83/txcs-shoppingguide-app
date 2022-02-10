@@ -10,14 +10,30 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch.openPriceFuzzy;
 
 public class ItemUtil {
+
+    public static List<Map<String, Object>> buildItems(Long fixPitItemId, List<Long> itemIds, Map<Long, ItemDTO> longItemDTOMap) {
+        List<Map<String, Object>> items = buildItems(itemIds, longItemDTOMap);
+        List<Map<String, Object>> result = new ArrayList<>();
+        List<Map<String, Object>> tmp = new ArrayList<>();
+        Map<String, Object> targetItem = null;
+        for (Map<String, Object> item : items) {
+            if(Objects.equals(MapUtils.getInteger(item, "itemId"), fixPitItemId)) {
+                targetItem = item;
+            } else {
+                tmp.add(item);
+            }
+        }
+        if(targetItem != null) {
+            result.add(targetItem);
+        }
+        result.addAll(tmp);
+        return result;
+    }
 
     public static List<Map<String, Object>> buildItems(List<Long> itemIds, Map<Long, ItemDTO> longItemDTOMap) {
         List<Map<String, Object>> result = new ArrayList<>();
