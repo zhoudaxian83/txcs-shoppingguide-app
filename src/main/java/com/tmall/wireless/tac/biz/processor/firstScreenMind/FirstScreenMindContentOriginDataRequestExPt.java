@@ -6,6 +6,7 @@ import com.alibaba.cola.extension.BizScenario;
 import com.alibaba.cola.extension.Extension;
 import com.alibaba.fastjson.JSON;
 
+import com.taobao.eagleeye.EagleEye;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
 import com.tmall.txcs.gs.framework.extensions.origindata.request.ContentOriginDataRequestExtPt;
 import com.tmall.txcs.gs.framework.model.SgFrameworkContextContent;
@@ -51,7 +52,7 @@ public class FirstScreenMindContentOriginDataRequestExPt implements ContentOrigi
         }else if(FirstScreenConstant.GCS_ITEM_FEEDS.equals(requestFrom)){
             tppRequest = originDataRequestFactory.getRecommendRequest(FirstScreenConstant.GCS_SUB_CONTENT_FEEDS,sgFrameworkContextContent);
         }
-        log.error("FirstScreenMindContentOriginDataRequestExPt.biz:{},tppRequest:{}",bizScenario.getUniqueIdentity(), JSON.toJSONString(tppRequest));
+        log.error("FirstScreenMindContentOriginDataRequestExPt.Info.traceId:{},biz:{},tppRequest:{}", EagleEye.getTraceId(), bizScenario.getUniqueIdentity(), JSON.toJSONString(tppRequest));
         return tppRequest;
     }
 

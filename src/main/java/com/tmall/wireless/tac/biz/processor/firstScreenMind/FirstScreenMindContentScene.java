@@ -86,7 +86,7 @@ public class FirstScreenMindContentScene {
                 .kv("sgFrameworkContextContent",JSON.toJSONString(sgFrameworkContextContent))
                 .info();*/
         Object requestFrom = sgFrameworkContextContent.getRequestParams().get(FirstScreenConstant.REQUEST_FROM);
-        log.error("FirstScreenMindContentScene.biz:{},requestFrom:{}",bizScenario.getUniqueIdentity(), requestFrom);
+        log.error("FirstScreenMindContentScene.Info.traceId:{},biz:{},requestFrom:{}",EagleEye.getTraceId(),bizScenario.getUniqueIdentity(), requestFrom);
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> {
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
