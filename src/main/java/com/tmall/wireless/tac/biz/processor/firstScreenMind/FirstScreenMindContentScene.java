@@ -21,6 +21,7 @@ import com.tmall.txcs.gs.model.biz.context.UserDO;
 import com.tmall.wireless.tac.biz.processor.common.RequestKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.util.TacResultBackupUtil;
+import com.tmall.wireless.tac.biz.processor.firstScreenMind.common.FirstScreenConstant;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.ContentSetIdListUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.MindUtil;
 import com.tmall.wireless.tac.biz.processor.firstScreenMind.utils.PressureTestUtil;
@@ -29,6 +30,7 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +46,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class FirstScreenMindContentScene {
     Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindContentScene.class);
 
@@ -53,7 +56,11 @@ public class FirstScreenMindContentScene {
     TacLogger  tacLogger;
 
     public Flowable<TacResult<SgFrameworkResponse<ContentVO>>> recommend(Context context) {
-
+        BizScenario bizScenario = BizScenario.valueOf(
+            ScenarioConstantApp.BIZ_TYPE_SUPERMARKET,
+            ScenarioConstantApp.LOC_TYPE_B2C,
+            ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT
+        );
         long startTime = System.currentTimeMillis();
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
@@ -78,6 +85,8 @@ public class FirstScreenMindContentScene {
                 .kv("userId", Optional.of(sgFrameworkContextContent).map(SgFrameworkContext::getUserDO).map(UserDO::getUserId).map(Objects::toString).orElse("0"))
                 .kv("sgFrameworkContextContent",JSON.toJSONString(sgFrameworkContextContent))
                 .info();*/
+        Object requestFrom = sgFrameworkContextContent.getRequestParams().get(FirstScreenConstant.REQUEST_FROM);
+        log.error("FirstScreenMindContentScene.Info.traceId:{},biz:{},requestFrom:{}",EagleEye.getTraceId(),bizScenario.getUniqueIdentity(), requestFrom);
         return sgFrameworkServiceContent.recommend(sgFrameworkContextContent)
                 .map(response -> {
                     Map<String, Object> requestParams = sgFrameworkContextContent.getRequestParams();
