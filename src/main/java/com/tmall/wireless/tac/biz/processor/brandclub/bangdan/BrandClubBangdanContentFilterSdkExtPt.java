@@ -3,6 +3,9 @@ package com.tmall.wireless.tac.biz.processor.brandclub.bangdan;
 import com.alibaba.cola.dto.MultiResponse;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.taobao.tair.DataEntry;
+import com.taobao.tair.Result;
+import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tmall.aselfcaptain.cloudrec.api.EntityRenderService;
 import com.tmall.aselfcaptain.cloudrec.domain.Entity;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityId;
@@ -17,6 +20,7 @@ import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
+import com.tmall.wireless.tac.biz.processor.brandclub.bangdan.model.BrandBasicInfo;
 import com.tmall.wireless.tac.biz.processor.brandclub.bangdan.model.FuzzyUtil;
 import com.tmall.wireless.tac.biz.processor.brandclub.bangdan.model.ItemCustomerDTO;
 import com.tmall.wireless.tac.biz.processor.brandclub.fp.BrandClubFirstPageContentFilterSdkExtPt;
@@ -47,19 +51,23 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
 
     @Override
     public SgFrameworkResponse<ContentVO> process(SgFrameworkContextContent sgFrameworkContextContent) {
-        logger.debug("yanwu_sgFrameworkContextContent:" + JSON.toJSONString(sgFrameworkContextContent));
+        logger.info("yanwu_sgFrameworkContextContent:" + JSON.toJSONString(sgFrameworkContextContent));
         SgFrameworkResponse<ContentVO> response = super.process(sgFrameworkContextContent);
         String brandId = Optional.of(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams)
                 .map(m -> m.get("brandId"))
                 .map(Object::toString).orElse(null);
-        logger.debug("brandId:" + brandId);
+        logger.info("brandId:" + brandId);
+        BrandBasicInfo brandBasicInfo = queryBrandBasicInfo(brandId);
+        logger.info("brandBasicInfo:" + JSON.toJSONString(brandBasicInfo));
         String brandName = Optional.of(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getRequestParams)
                 .map(e-> MapUtils.getString(e, "brandName"))
                 .map(Object::toString).orElse(null);
-        logger.debug("brandName:" + brandName);
+        logger.info("brandName:" + brandName);
+
+
         List<ContentVO> itemAndContentList = response.getItemAndContentList();
         for (ContentVO contentVO : itemAndContentList) {
             String boardId = contentVO.getString("contentId");
@@ -73,8 +81,10 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
                     item.put("fuzzyRankValue", FuzzyUtil.fuzzy(longItemCustomerDTOMap.get(item.getItemId()).getItemRankValue()));
                 }
             }
-            contentVO.put("brandName", brandName);
-            contentVO.put("brandId", brandId);
+            if(brandBasicInfo != null) {
+                contentVO.put("brandName", brandBasicInfo.name());
+                contentVO.put("brandId", brandId);
+            }
         }
         return response;
     }
@@ -132,7 +142,7 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
         }
     }
 
-    /*public BrandBasicInfo queryBrandBasicInfo(String brandId) {
+    public BrandBasicInfo queryBrandBasicInfo(String brandId) {
         if(brandId == null) {
             return null;
         }
@@ -140,6 +150,10 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
         String tairKey = "online" + "_" + BRAND_INFO_KEY_PREFIX + brandId;
         logger.debug("brandInfoTairKey:{}", tairKey);
         try {
+            MultiClusterTairManager tairManager6508 = new MultiClusterTairManager();
+            tairManager6508.setUserName("72d8759c62674088");
+            // mcTairManager.setTimeout(500);  // 单位为 ms，默认 2000 ms
+            tairManager6508.init();
             Result<DataEntry> dataEntryResult = tairManager6508.get(NAME_SPACE, tairKey);
             if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null && dataEntryResult.getValue().getValue() != null) {
                 DataEntry value = dataEntryResult.getValue();
@@ -151,5 +165,5 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
             logger.error("queryBrandBasicInfo", e);
         }
         return brandBasicInfo;
-    }*/
+    }
 }
