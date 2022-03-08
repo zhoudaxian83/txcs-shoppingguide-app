@@ -22,6 +22,7 @@ import com.tmall.wireless.tac.biz.processor.brandclub.bangdan.model.ItemCustomer
 import com.tmall.wireless.tac.biz.processor.brandclub.fp.BrandClubFirstPageContentFilterSdkExtPt;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.domain.Context;
+import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,17 +47,19 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
 
     @Override
     public SgFrameworkResponse<ContentVO> process(SgFrameworkContextContent sgFrameworkContextContent) {
+        logger.debug("yanwu_sgFrameworkContextContent:" + JSON.toJSONString(sgFrameworkContextContent));
         SgFrameworkResponse<ContentVO> response = super.process(sgFrameworkContextContent);
-        String brandName = Optional.of(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getTacContext)
-                .map(Context::getParams)
-                .map(m -> m.get("brandName"))
-                .map(Object::toString).orElse(null);
         String brandId = Optional.of(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams)
                 .map(m -> m.get("brandId"))
                 .map(Object::toString).orElse(null);
+        logger.debug("brandId:" + brandId);
+        String brandName = Optional.of(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getRequestParams)
+                .map(e-> MapUtils.getString(e, "brandName"))
+                .map(Object::toString).orElse(null);
+        logger.debug("brandName:" + brandName);
         List<ContentVO> itemAndContentList = response.getItemAndContentList();
         for (ContentVO contentVO : itemAndContentList) {
             String boardId = contentVO.getString("contentId");
@@ -71,6 +74,7 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
                 }
             }
             contentVO.put("brandName", brandName);
+            contentVO.put("brandId", brandId);
         }
         return response;
     }
