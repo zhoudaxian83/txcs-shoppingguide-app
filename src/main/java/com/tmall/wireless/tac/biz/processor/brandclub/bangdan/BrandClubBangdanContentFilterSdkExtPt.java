@@ -53,12 +53,16 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
     @Override
     public SgFrameworkResponse<ContentVO> process(SgFrameworkContextContent sgFrameworkContextContent) {
         SgFrameworkResponse<ContentVO> response = super.process(sgFrameworkContextContent);
+        String brandName = Optional.of(sgFrameworkContextContent)
+                .map(SgFrameworkContext::getTacContext)
+                .map(Context::getParams)
+                .map(m -> m.get("brandName"))
+                .map(Object::toString).orElse(null);
         String brandId = Optional.of(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams)
                 .map(m -> m.get("brandId"))
                 .map(Object::toString).orElse(null);
-        BrandBasicInfo brandBasicInfo = queryBrandBasicInfo(brandId);
         List<ContentVO> itemAndContentList = response.getItemAndContentList();
         for (ContentVO contentVO : itemAndContentList) {
             String boardId = contentVO.getString("contentId");
@@ -72,9 +76,7 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
                     item.put("fuzzyRankValue", FuzzyUtil.fuzzy(longItemCustomerDTOMap.get(item.getItemId()).getItemRankValue()));
                 }
             }
-            if(brandBasicInfo != null) {
-                contentVO.put("brandName", brandBasicInfo.name());
-            }
+            contentVO.put("brandName", brandName);
         }
         return response;
     }
