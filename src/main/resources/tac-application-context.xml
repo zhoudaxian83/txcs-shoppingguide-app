@@ -260,4 +260,14 @@
     <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailItemBackUpSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailItemUserCommonParamsBuildSdkExtPt"/>
     <!--详情推荐接口结束-->
+
+    <bean id="tairManager6850" class="com.taobao.tair.impl.mc.MultiClusterTairManager" init-method="init">
+        <!-- 日常，预发和生产配置全部相同 -->
+        <property name='userName'>
+            <value>b6241830ca7f4b9d</value>
+        </property>
+        <property name="timeout">
+            <value>500</value>
+        </property>
+    </bean>
 </beans>
