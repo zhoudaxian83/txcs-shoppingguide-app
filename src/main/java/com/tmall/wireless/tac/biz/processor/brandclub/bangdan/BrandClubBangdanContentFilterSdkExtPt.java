@@ -47,8 +47,6 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
     private static final String BRAND_INFO_KEY_PREFIX = "brandPavilion_";
     @Resource
     EntityRenderService entityRenderService;
-    @Resource(name = "tairManager6508")
-    private MultiClusterTairManager tairManager6508;
 
     @Override
     public SgFrameworkResponse<ContentVO> process(SgFrameworkContextContent sgFrameworkContextContent) {
