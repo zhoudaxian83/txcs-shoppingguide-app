@@ -3,9 +3,6 @@ package com.tmall.wireless.tac.biz.processor.brandclub.bangdan;
 import com.alibaba.cola.dto.MultiResponse;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
-import com.taobao.tair.DataEntry;
-import com.taobao.tair.Result;
-import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tmall.aselfcaptain.cloudrec.api.EntityRenderService;
 import com.tmall.aselfcaptain.cloudrec.domain.Entity;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityId;
@@ -20,7 +17,6 @@ import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
-import com.tmall.wireless.tac.biz.processor.brandclub.bangdan.model.BrandBasicInfo;
 import com.tmall.wireless.tac.biz.processor.brandclub.bangdan.model.FuzzyUtil;
 import com.tmall.wireless.tac.biz.processor.brandclub.bangdan.model.ItemCustomerDTO;
 import com.tmall.wireless.tac.biz.processor.brandclub.fp.BrandClubFirstPageContentFilterSdkExtPt;
@@ -132,7 +128,7 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
         }
     }
 
-    public BrandBasicInfo queryBrandBasicInfo(String brandId) {
+    /*public BrandBasicInfo queryBrandBasicInfo(String brandId) {
         if(brandId == null) {
             return null;
         }
@@ -151,5 +147,5 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
             logger.error("queryBrandBasicInfo", e);
         }
         return brandBasicInfo;
-    }
+    }*/
 }
