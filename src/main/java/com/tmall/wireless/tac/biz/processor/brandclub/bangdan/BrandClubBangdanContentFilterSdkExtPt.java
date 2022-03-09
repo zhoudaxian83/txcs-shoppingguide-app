@@ -27,6 +27,7 @@ import com.tmall.wireless.tac.biz.processor.brandclub.fp.BrandClubFirstPageConte
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.domain.Context;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +47,13 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
     public static final String CHANNELNAME = "sceneLdb";
     private static final int NAME_SPACE = 6508;
     private static final String BRAND_INFO_KEY_PREFIX = "brandPavilion_";
+
+    private static final Map<String, String> rankTypeFormatterMap = new HashMap<String, String>(){{
+        put("SALE", "近30日售出%s件");
+        put("COMMENT", "已获得%s人好评");
+        put("REPURCHASE", "已有%s人回购");
+    }};
+
     @Resource
     EntityRenderService entityRenderService;
 
@@ -75,10 +83,13 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
             List<Long> itemIdList = items.stream().map(ItemEntityVO::getItemId).collect(Collectors.toList());
             Map<Long, ItemCustomerDTO> longItemCustomerDTOMap = queryItemCustomer(sgFrameworkContextContent, itemIdList, boardId);
             logger.debug("longItemCustomerDTOMap:{}", longItemCustomerDTOMap);
+            String rankType = contentVO.getString("rankType");
             for (ItemEntityVO item : items) {
                 if(longItemCustomerDTOMap.get(item.getItemId()) != null) {
                     item.put("rankValue", longItemCustomerDTOMap.get(item.getItemId()).getItemRankValue());
-                    item.put("fuzzyRankValue", FuzzyUtil.fuzzy(longItemCustomerDTOMap.get(item.getItemId()).getItemRankValue()));
+                    if(StringUtils.isNotBlank(rankTypeFormatterMap.get(rankType))) {
+                        item.put("fuzzyRankValue", String.format(rankTypeFormatterMap.get(rankType), FuzzyUtil.fuzzy(longItemCustomerDTOMap.get(item.getItemId()).getItemRankValue())));
+                    }
                 }
             }
             if(brandBasicInfo != null) {
