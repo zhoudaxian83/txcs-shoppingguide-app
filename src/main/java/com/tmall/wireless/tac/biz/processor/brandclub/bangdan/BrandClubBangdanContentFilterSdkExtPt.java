@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.taobao.tair.DataEntry;
 import com.taobao.tair.Result;
-import com.taobao.tair.impl.mc.MultiClusterTairManager;
 import com.tmall.aselfcaptain.cloudrec.api.EntityRenderService;
 import com.tmall.aselfcaptain.cloudrec.domain.Entity;
 import com.tmall.aselfcaptain.cloudrec.domain.EntityId;
@@ -20,6 +19,8 @@ import com.tmall.tcls.gs.sdk.framework.model.context.CommonUserParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.LocParams;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContext;
 import com.tmall.tcls.gs.sdk.framework.model.context.SgFrameworkContextContent;
+import com.tmall.tmallwireless.tac.spi.context.SPIResult;
+import com.tmall.wireless.store.spi.tair.TairSpi;
 import com.tmall.wireless.tac.biz.processor.brandclub.bangdan.model.BrandBasicInfo;
 import com.tmall.wireless.tac.biz.processor.brandclub.bangdan.model.FuzzyUtil;
 import com.tmall.wireless.tac.biz.processor.brandclub.bangdan.model.ItemCustomerDTO;
@@ -46,6 +47,7 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
     private static final String ACTIVITY_SCENE_PREFIX = "tcls_ugc_scene_v1_";
     public static final String CHANNELNAME = "sceneLdb";
     private static final int NAME_SPACE = 6508;
+    private static final String TAIR_USER_NAME = "72d8759c62674088";
     private static final String BRAND_INFO_KEY_PREFIX = "brandPavilion_";
 
     private static final Map<String, String> rankTypeFormatterMap = new HashMap<String, String>(){{
@@ -56,6 +58,9 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
 
     @Resource
     EntityRenderService entityRenderService;
+
+    @Resource
+    TairSpi tairSpi;
 
     @Override
     public SgFrameworkResponse<ContentVO> process(SgFrameworkContextContent sgFrameworkContextContent) {
@@ -161,17 +166,15 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
         String tairKey = "online" + "_" + BRAND_INFO_KEY_PREFIX + brandId;
         logger.debug("brandInfoTairKey:{}", tairKey);
         try {
-            MultiClusterTairManager tairManager6508 = new MultiClusterTairManager();
-            tairManager6508.setUserName("72d8759c62674088");
-            // mcTairManager.setTimeout(500);  // 单位为 ms，默认 2000 ms
-            tairManager6508.init();
-            Result<DataEntry> dataEntryResult = tairManager6508.get(NAME_SPACE, tairKey);
-            if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null && dataEntryResult.getValue().getValue() != null) {
-                DataEntry value = dataEntryResult.getValue();
-                Object data = value.getValue();
-                brandBasicInfo = JSON.parseObject((String) data, BrandBasicInfo.class);
+            SPIResult<Result<DataEntry>> resultSPIResult = tairSpi.get(TAIR_USER_NAME, NAME_SPACE, tairKey);
+            if(resultSPIResult.isSuccess()) {
+                Result<DataEntry> dataEntryResult = resultSPIResult.getData();
+                if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null && dataEntryResult.getValue().getValue() != null) {
+                    DataEntry value = dataEntryResult.getValue();
+                    Object data = value.getValue();
+                    brandBasicInfo = JSON.parseObject((String) data, BrandBasicInfo.class);
+                }
             }
-
         } catch (Exception e) {
             logger.error("queryBrandBasicInfo", e);
         }
