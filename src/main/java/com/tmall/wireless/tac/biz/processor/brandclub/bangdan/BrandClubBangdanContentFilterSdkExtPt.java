@@ -27,7 +27,6 @@ import com.tmall.wireless.tac.biz.processor.brandclub.bangdan.model.ItemCustomer
 import com.tmall.wireless.tac.biz.processor.brandclub.fp.BrandClubFirstPageContentFilterSdkExtPt;
 import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.domain.Context;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,22 +63,13 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
 
     @Override
     public SgFrameworkResponse<ContentVO> process(SgFrameworkContextContent sgFrameworkContextContent) {
-        logger.info("yanwu_sgFrameworkContextContent:" + JSON.toJSONString(sgFrameworkContextContent));
         SgFrameworkResponse<ContentVO> response = super.process(sgFrameworkContextContent);
         String brandId = Optional.of(sgFrameworkContextContent)
                 .map(SgFrameworkContext::getTacContext)
                 .map(Context::getParams)
                 .map(m -> m.get("brandId"))
                 .map(Object::toString).orElse(null);
-        logger.info("brandId:" + brandId);
         BrandBasicInfo brandBasicInfo = queryBrandBasicInfo(brandId);
-        logger.info("brandBasicInfo:" + JSON.toJSONString(brandBasicInfo));
-        String brandName = Optional.of(sgFrameworkContextContent)
-                .map(SgFrameworkContext::getRequestParams)
-                .map(e-> MapUtils.getString(e, "brandName"))
-                .map(Object::toString).orElse(null);
-        logger.info("brandName:" + brandName);
-
 
         List<ContentVO> itemAndContentList = response.getItemAndContentList();
         for (ContentVO contentVO : itemAndContentList) {
@@ -87,7 +77,6 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
             List<ItemEntityVO> items = (List<ItemEntityVO>)contentVO.get("items");
             List<Long> itemIdList = items.stream().map(ItemEntityVO::getItemId).collect(Collectors.toList());
             Map<Long, ItemCustomerDTO> longItemCustomerDTOMap = queryItemCustomer(sgFrameworkContextContent, itemIdList, boardId);
-            logger.debug("longItemCustomerDTOMap:{}", longItemCustomerDTOMap);
             String rankType = contentVO.getString("rankType");
             for (ItemEntityVO item : items) {
                 if(longItemCustomerDTOMap.get(item.getItemId()) != null) {
@@ -116,7 +105,6 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
                 EntityId entityId =  EntityId.of(dataKeyPrefix + e, "content");
                 ids.add(entityId);
             });
-            logger.debug("ids:{}", ids);
             EntityQueryOption entityQueryOption = new EntityQueryOption();
             entityQueryOption.setSmAreaId(smAreaId);
             List<ChannelDataDO> channelDataDOList = new ArrayList<>();
@@ -129,10 +117,8 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
                 channelDataDOList.add(channelDataDO);
             }
             entityQueryOption.setChannelDataDOS(channelDataDOList);
-            logger.debug("channelDataDOList:{}", channelDataDOList);
             try{
                 MultiResponse<Entity> render = entityRenderService.render(ids, entityQueryOption);
-                logger.debug("queryItemCustomer:{}", render.getData());
                 if(render.isSuccess()) {
                     itemCustomerFromCaptain = render.getData().stream()
                             .map(
@@ -142,10 +128,9 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
                                     e -> e,
                                     (a, b) -> a
                             ));
-                    logger.debug("itemCustomerFromCaptain:{}", itemCustomerFromCaptain);
                 }
                 else {
-                    logger.debug("queryItemCustomer请求tair失败");
+                    logger.warn("queryItemCustomer请求tair失败");
                 }
             } catch (Exception e) {
                 logger.error("queryItemCustomer, 请求tair出错", e);
@@ -164,11 +149,9 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
         }
         BrandBasicInfo brandBasicInfo = null;
         String tairKey = "online" + "_" + BRAND_INFO_KEY_PREFIX + brandId;
-        logger.info("brandInfoTairKey:{}", tairKey);
         try {
             SPIResult<Result<DataEntry>> resultSPIResult = tairSpi.get(TAIR_USER_NAME, NAME_SPACE, tairKey);
-            logger.info("resultSPIResult:" + JSON.toJSONString(resultSPIResult));
-            if(resultSPIResult.isSuccess()) {
+            if(resultSPIResult != null && resultSPIResult.isSuccess()) {
                 Result<DataEntry> dataEntryResult = resultSPIResult.getData();
                 if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null && dataEntryResult.getValue().getValue() != null) {
                     DataEntry value = dataEntryResult.getValue();
