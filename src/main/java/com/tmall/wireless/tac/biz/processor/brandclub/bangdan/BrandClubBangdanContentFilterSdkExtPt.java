@@ -164,9 +164,10 @@ public class BrandClubBangdanContentFilterSdkExtPt extends BrandClubFirstPageCon
         }
         BrandBasicInfo brandBasicInfo = null;
         String tairKey = "online" + "_" + BRAND_INFO_KEY_PREFIX + brandId;
-        logger.debug("brandInfoTairKey:{}", tairKey);
+        logger.info("brandInfoTairKey:{}", tairKey);
         try {
             SPIResult<Result<DataEntry>> resultSPIResult = tairSpi.get(TAIR_USER_NAME, NAME_SPACE, tairKey);
+            logger.info("resultSPIResult:" + JSON.toJSONString(resultSPIResult));
             if(resultSPIResult.isSuccess()) {
                 Result<DataEntry> dataEntryResult = resultSPIResult.getData();
                 if (dataEntryResult.isSuccess() && dataEntryResult.getValue() != null && dataEntryResult.getValue().getValue() != null) {
