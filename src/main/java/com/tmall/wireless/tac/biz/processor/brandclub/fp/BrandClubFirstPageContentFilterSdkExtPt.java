@@ -1,6 +1,5 @@
 package com.tmall.wireless.tac.biz.processor.brandclub.fp;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
@@ -16,7 +15,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -95,7 +93,7 @@ public class BrandClubFirstPageContentFilterSdkExtPt extends Register implements
     }
 
     private int getMinItemSizePerContent() {
-        return 6;
+        return 1;
     }
 
     /**
