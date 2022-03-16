@@ -93,7 +93,7 @@ public class BrandClubFirstPageContentFilterSdkExtPt extends Register implements
     }
 
     private int getMinItemSizePerContent() {
-        return 1;
+        return 6;
     }
 
     /**
