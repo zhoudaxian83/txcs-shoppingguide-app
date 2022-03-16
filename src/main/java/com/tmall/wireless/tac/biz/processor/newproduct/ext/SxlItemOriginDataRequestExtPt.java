@@ -63,6 +63,11 @@ public class SxlItemOriginDataRequestExtPt implements ItemOriginDataRequestExtPt
         params.put("exposureDataUserId",Optional.ofNullable(sgFrameworkContextItem).map(
             SgFrameworkContext::getUserDO).map(UserDO::getCna).orElse(""));
 
+        Object xRecommendContentClose = sgFrameworkContextItem.getRequestParams().get("xRecommendContentClose");
+        if(xRecommendContentClose != null){
+            params.put("x-recommend-content-close", String.valueOf(xRecommendContentClose));
+        }
+
         tppRequest.setParams(params);
         tppRequest.setLogResult(true);
         HadesLogUtil.stream(ScenarioConstantApp.SCENARIO_SHANG_XIN_ITEM)
