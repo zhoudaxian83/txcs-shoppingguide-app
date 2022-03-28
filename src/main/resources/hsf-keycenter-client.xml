@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+
+    <bean id="keyCenterProperties" class="com.alibaba.keycenter.client.properties.KeyCenterProperties">
+        <property name="hsfVersion" value="${keycenter.service.hsf.version}"/> <!--hsf服务版本-->
+        <property name="appPublishNum" value="${keycenter.publish.num}"/> <!--发放码-->
+        <property name="preferProtocal" value="hsf,http"/> <!--通信方式，如果hsf方式失败，会自动转到http的方式-->
+        <property name="httpServiceAddress" value="${keycenter.service.http.address}"/> <!--服务端Http地址-->
+    </bean>
+
+    <bean id="keyCenterReadService" class="com.taobao.hsf.app.spring.util.HSFSpringConsumerBean"
+          init-method="init">
+        <property name="interfaceName"
+                  value="com.taobao.keycenter.service.KeyCenterReadService" />
+        <property name="version" value="${keycenter.service.hsf.version}" /> <!--hsf服务版本-->
+    </bean>
+
+    <bean id="keyCenterWriteService" class="com.taobao.hsf.app.spring.util.HSFSpringConsumerBean"
+          init-method="init">
+        <property name="interfaceName"
+                  value="com.taobao.keycenter.service.KeyCenterWriteService" />
+        <property name="version" value="${keycenter.service.hsf.version}" /> <!--hsf服务版本-->
+    </bean>
+
+    <bean id="keyStore" class="com.taobao.common.keycenter.keystore.KeyStoreImpl" init-method="init"/>
+
+    <bean id="cryptograph" class="com.taobao.common.keycenter.security.CryptographImpl"/> <!-- 加密解密bean，按需选择是否引入 -->
+
+    <bean id="signer" class="com.taobao.common.keycenter.security.SignerImpl" />
+
+    <bean id="verifier" class="com.taobao.common.keycenter.security.VerifierImpl" />
+</beans>
+	
