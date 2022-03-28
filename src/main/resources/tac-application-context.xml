@@ -260,5 +260,5 @@
     <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailItemBackUpSdkExtPt"/>
     <bean class="com.tmall.wireless.tac.biz.processor.detail.o2o.item.O2ODetailItemUserCommonParamsBuildSdkExtPt"/>
     <!--详情推荐接口结束-->
-    <import resource="hsf-keycenter-client.xml"/>
+    <import resource="classpath*:hsf-keycenter-client.xml"/>
 </beans>
