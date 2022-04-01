@@ -247,7 +247,7 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             itemMap.put("sellerId", "725677994");
             String token = buildToken(itemConfig.getActivityId());
             itemMap.put("token", token);
-            itemMap.put("asac", extremeItemCouponAsac)
+            itemMap.put("asac", extremeItemCouponAsac);
         }
         if(StringUtils.isNotBlank(itemConfig.getItemDescCustom())) {
             itemMap.put("itemDescCustom", itemConfig.getItemDescCustom());
