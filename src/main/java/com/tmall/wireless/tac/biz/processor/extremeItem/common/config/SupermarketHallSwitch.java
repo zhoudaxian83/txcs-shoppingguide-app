@@ -18,4 +18,7 @@ public class SupermarketHallSwitch {
 
     @AppSwitch(des = "是否开启价格模糊化", level = Switch.Level.p3)
     public static boolean openPriceFuzzy = true;
+
+    @AppSwitch(des = "极致单品领券模块ASAC安全码", level = Switch.Level.p3)
+    public static String extremeItemCouponAsac = "1A177287JTQSNLFA8WVVIY";
 }
