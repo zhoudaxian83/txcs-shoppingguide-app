@@ -7,8 +7,10 @@ import com.google.common.collect.Maps;
 import com.tmall.txcs.biz.supermarket.scene.UserParamsKeyConstant;
 import com.tmall.txcs.biz.supermarket.scene.util.CsaUtil;
 import com.tmall.txcs.biz.supermarket.scene.util.MapUtil;
-import com.tmall.txcs.gs.framework.model.*;
-import com.tmall.txcs.gs.framework.model.constant.ScenarioConstant;
+import com.tmall.txcs.gs.framework.model.EntityVO;
+import com.tmall.txcs.gs.framework.model.ItemEntityVO;
+import com.tmall.txcs.gs.framework.model.SgFrameworkContextItem;
+import com.tmall.txcs.gs.framework.model.SgFrameworkResponse;
 import com.tmall.txcs.gs.framework.model.meta.ItemGroupMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemInfoSourceMetaInfo;
 import com.tmall.txcs.gs.framework.model.meta.ItemMetaInfo;
@@ -23,6 +25,7 @@ import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.Bann
 import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.BannerItemVO;
 import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.model.BannerVO;
 import com.tmall.wireless.tac.biz.processor.firstpage.banner.iteminfo.uitl.BannerUtil;
+import com.tmall.wireless.tac.biz.processor.processtemplate.common.config.ProcessTemplateSwitch;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
@@ -33,9 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by yangqing.byq on 2021/4/6.
@@ -98,12 +99,27 @@ public class FirstPageBannerItemInfoScene {
         Map<String, EntityVO> itemEntityVOMap = buildItemEntityVoMap(response);
 
         Map<String, List<BannerItemDTO>> bannerIndex2ItemList = BannerUtil.parseBannerItem(bannerInfo);
-
+        Set<Long> repeatItemIdSet = new HashSet<>();
         bannerIndex2ItemList.keySet().forEach(key -> {
             BannerVO bannerVO = new BannerVO();
             List<BannerItemDTO> bannerItemDTOList = bannerIndex2ItemList.get(key);
             if (CollectionUtils.isEmpty(bannerItemDTOList)) {
                 return;
+            }
+            if (ProcessTemplateSwitch.openBubbleItemReduplicate) {
+                if (CollectionUtils.isNotEmpty(bannerItemDTOList)) {
+                    for (int i = 0; i < bannerItemDTOList.size(); i++) {
+                        Long itemId = bannerItemDTOList.get(i).getItemId();
+                        if (repeatItemIdSet.contains(itemId)) {//如果已经包含了，就继续下一个商品
+                            continue;
+                        } else {
+                            //把当前不重复的商品换到第一个
+                            Collections.swap(bannerItemDTOList, i, 0);
+                            repeatItemIdSet.add(itemId);
+                            break;
+                        }
+                    }
+                }
             }
 
             List<Long> failItemList = Lists.newArrayList();

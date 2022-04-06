@@ -30,4 +30,7 @@ public class ProcessTemplateSwitch {
 
     @AppSwitch(des = "【会场秒杀组件】是否开启价格过滤", level = Switch.Level.p3)
     public static boolean openPriceFilter = true;
+
+    @AppSwitch(des = "【首焦商品信息】是否开启首焦商品去重", level = Switch.Level.p3)
+    public static boolean openBubbleItemReduplicate = true;
 }
