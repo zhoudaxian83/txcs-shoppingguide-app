@@ -3,6 +3,7 @@ package com.tmall.wireless.tac.biz.processor.extremeItem;
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.taobao.common.keycenter.security.Cryptograph;
 import com.taobao.eagleeye.EagleEye;
 import com.tcls.mkt.atmosphere.model.response.ItemPromotionResp;
 import com.tmall.aselfcaptain.item.constant.BizAttributes;
@@ -33,10 +34,14 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch.extremeItemCouponAsac;
 import static com.tmall.wireless.tac.biz.processor.extremeItem.common.config.SupermarketHallSwitch.openPriceFuzzy;
 
 
@@ -53,6 +58,10 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
     private static final Integer tenThousand = 10000;
     private static final Integer oneBillion = 1000000;
     private static final String captainSceneCode = "conference.zhj";
+    private static final String SELLER_ID = "725677994";
+    private static final String KEY_CENTER_KEY = "growth-os-service_ump_draw_key";
+    @Resource
+    private Cryptograph cryptograph;
 
     @Autowired
     ShoppingguideSdkItemService shoppingguideSdkItemService;
@@ -236,6 +245,9 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
             itemMap.put("activityId", itemConfig.getActivityId());
             itemMap.put("couponValue", itemConfig.getCouponValue());
             itemMap.put("sellerId", "725677994");
+            String token = buildToken(itemConfig.getActivityId());
+            itemMap.put("token", token);
+            itemMap.put("asac", extremeItemCouponAsac);
         }
         if(StringUtils.isNotBlank(itemConfig.getItemDescCustom())) {
             itemMap.put("itemDescCustom", itemConfig.getItemDescCustom());
@@ -254,6 +266,21 @@ public class ExtremeItemSdkItemHandler extends TacReactiveHandler4Ald {
         }
 
         return itemMap;
+    }
+
+    private String buildToken(String activityId) {
+        if(StringUtils.isBlank(activityId)) {
+            return null;
+        }
+        String rawToken = "sellerId=" + SELLER_ID + ";activityId=" + activityId  + ";asac=" + extremeItemCouponAsac;
+        logger.info("rawToken:" + rawToken);
+        return keyCenterEncrypt(rawToken);
+    }
+
+    private String keyCenterEncrypt(String rawToken) {
+        String cipherText = cryptograph.encrypt(rawToken, KEY_CENTER_KEY);
+        logger.info("cipherText:" + cipherText);
+        return cipherText;
     }
 
     public String toMonthlySalesView(String monthSalesAmount) {
