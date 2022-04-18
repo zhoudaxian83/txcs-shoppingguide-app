@@ -20,6 +20,7 @@ import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.biz.processor.common.VoKeyConstantApp;
 import com.tmall.wireless.tac.biz.processor.todaycrazy.utils.TairUtil;
 import com.tmall.wireless.tac.client.dataservice.TacLogger;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ import org.springframework.stereotype.Service;
     useCase = ScenarioConstantApp.LOC_TYPE_B2C,
     scenario = ScenarioConstantApp.SCENARIO_TODAY_CRAZY_LIMIT_TIME_BUY)
 @Service
+@Slf4j
 public class LimitTimeCaptainRequestExtPt implements CaptainRequestExtPt {
     
     Logger LOGGER = LoggerFactory.getLogger(LimitTimeCaptainRequestExtPt.class);
@@ -75,7 +77,7 @@ public class LimitTimeCaptainRequestExtPt implements CaptainRequestExtPt {
         String umpChannel = tairUtil.getChannelKey();
         itemDataRequest.setChannelKey(umpChannel);
         userParam.put(VoKeyConstantApp.UMP_CHANNEL,umpChannel);
-
+        log.error("LimitTimeCaptainRequestExtPt.itemDataRequest:{}", JSON.toJSONString(itemDataRequest));
         return itemDataRequest;
     }
 }
