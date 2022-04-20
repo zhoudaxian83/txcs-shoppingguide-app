@@ -86,6 +86,16 @@ public class IconItemOriginDataPostProcessorExtPt extends Register implements It
                 .filter(v -> v.getEndTime().getTime() > System.currentTimeMillis())
                 .filter(v -> v.getBeginTime().getTime() < System.currentTimeMillis())
                 .collect(Collectors.toList());
+            // todo test 624819914676，12239469343，624819790625
+            IconFixedItemDTO testItem = new IconFixedItemDTO();
+            testItem.setItemId(624819914676L);
+            IconFixedItemDTO testItem1 = new IconFixedItemDTO();
+            testItem1.setItemId(12239469343L);
+            IconFixedItemDTO testItem2 = new IconFixedItemDTO();
+            testItem2.setItemId(624819790625L);
+            fixedItemDTOList.add(testItem);
+            fixedItemDTOList.add(testItem1);
+            fixedItemDTOList.add(testItem2);
             if (CollectionUtils.isEmpty(fixedItemDTOList)) {
                 return originDataDTO;
             }
