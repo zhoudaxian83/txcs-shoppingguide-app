@@ -70,14 +70,21 @@ public class TodayCrazyRecommendTabItemOriginDataRequestBuildSdkExtPt extends Re
         }
         params.put("regionCode", regionCode);
         params.put("exposureDataUserId", Optional.of(sgFrameworkContextItem).map(SgFrameworkContext::getCommonUserParams).map(CommonUserParams::getUserDO).map(UserDO::getCna).orElse(""));
-        //算法需要根据appId区分埋点，故同一接口不同场景做区分
+        // 承接页
         if (AppTypeEnum.TAB_PAGE.getType().equals(appType)) {
-            params.put("appid", String.valueOf(AppIdEnum.TAB_APP_ID.getCode()));
-            recommendRequest.setAppId(AppIdEnum.TAB_APP_ID.getCode());
+            if (TabTypeEnum.TODAY_CHAO_SHENG.getType().equals(tabType)) {
+                params.put("appid", "21431");
+                recommendRequest.setAppId(21431L);
+            } else {
+                params.put("appid", "31438");
+                recommendRequest.setAppId(31438L);
+            }
+            // 首页
         } else {
-            params.put("appid", String.valueOf(AppIdEnum.INDEX_APP_ID.getCode()));
-            recommendRequest.setAppId(AppIdEnum.INDEX_APP_ID.getCode());
+            params.put("appid", "31439");
+            recommendRequest.setAppId(31439L);
         }
+
         recommendRequest.setUserId(userId);
         recommendRequest.setParams(params);
         recommendRequest.setLogResult(true);
