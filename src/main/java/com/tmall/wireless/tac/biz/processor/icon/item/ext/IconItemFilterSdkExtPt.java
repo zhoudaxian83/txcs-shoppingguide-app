@@ -1,6 +1,7 @@
 package com.tmall.wireless.tac.biz.processor.icon.item.ext;
 
 import com.google.common.collect.Lists;
+import com.tmall.tcls.gs.sdk.biz.model.ItemVoKeyConstant;
 import com.tmall.tcls.gs.sdk.ext.annotation.SdkExtension;
 import com.tmall.tcls.gs.sdk.ext.extension.Register;
 import com.tmall.tcls.gs.sdk.framework.extensions.item.filter.ItemFilterRequest;
@@ -47,6 +48,10 @@ public class IconItemFilterSdkExtPt extends Register implements ItemFilterSdkExt
             if (entityVO != null) {
                 if (!canBuy(entityVO)) {
                     LOGGER.error("itemFilter,{}, itemId:{}", ErrorCode.ITEM_FILTER_BY_CAN_BUY, entityVO.getString("itemId"));
+                    if (itemFilterRequest.getSgFrameworkContextItem().isEpidemicStockClose()) {
+                        entityVO.put(ItemVoKeyConstant.epidemicStock.name(), "true");
+                        itemAndContentListAfterFilter.add(entityVO);
+                    }
                 } else {
                     if (checkField(entityVO)) {
                         itemAndContentListAfterFilter.add(entityVO);

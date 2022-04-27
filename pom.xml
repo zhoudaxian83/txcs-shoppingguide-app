@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.tcls.shoppingguide</groupId>
             <artifactId>shoppingguide-biz</artifactId>
-            <version>1.0.18-tmcs</version>
+            <version>1.0.22-tmcs</version>
         </dependency>
 
 
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>com.tmall.aselfcaptain</groupId>
             <artifactId>aselfcaptain-client</artifactId>
-            <version>3.6.25</version>
+            <version>3.7.1</version>
             <exclusions>
                 <exclusion>
                     <artifactId>hsf-app-api</artifactId>

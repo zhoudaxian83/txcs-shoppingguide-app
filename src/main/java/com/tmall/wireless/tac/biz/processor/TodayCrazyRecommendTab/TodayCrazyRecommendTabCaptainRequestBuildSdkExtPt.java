@@ -78,6 +78,10 @@ public class TodayCrazyRecommendTabCaptainRequestBuildSdkExtPt extends Register 
         option.setIncludeTiming(true);
         option.setSceneCode(CommonConstant.SUPER_MARKET_TODAY_CRAZY);
         option.setOpenMkt(true);
+        //疫情期间新增逻辑，captain识别了限售模板 打开这个代表captain去查询限售模板
+        //option.setIncludeSaleArea(true);
+
+
 
 //        if (StringUtils.isNotEmpty(itemInfoSourceMetaInfo.getMktSceneCode())) {
 //            option.setSceneCode(itemInfoSourceMetaInfo.getMktSceneCode());
