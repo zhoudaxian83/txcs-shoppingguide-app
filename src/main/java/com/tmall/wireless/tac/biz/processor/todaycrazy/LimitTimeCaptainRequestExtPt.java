@@ -77,7 +77,7 @@ public class LimitTimeCaptainRequestExtPt implements CaptainRequestExtPt {
         String umpChannel = tairUtil.getChannelKey();
         itemDataRequest.setChannelKey(umpChannel);
         userParam.put(VoKeyConstantApp.UMP_CHANNEL,umpChannel);
-        log.error("LimitTimeCaptainRequestExtPt.itemDataRequest:{}", JSON.toJSONString(itemDataRequest));
+
         return itemDataRequest;
     }
 }
