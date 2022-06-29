@@ -17,10 +17,12 @@ import com.tmall.txcs.gs.framework.service.impl.SgFrameworkServiceItem;
 import com.tmall.txcs.gs.model.biz.context.PageInfoDO;
 import com.tmall.txcs.gs.model.biz.context.SceneInfo;
 import com.tmall.txcs.gs.model.biz.context.UserDO;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.UserInfo;
 import io.reactivex.Flowable;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,7 @@ import java.util.Optional;
  * Created by yangqing.byq on 2021/3/17.
  */
 @Service
+@Slf4j
 public class BrowseRecommendScene {
     Logger LOGGER = LoggerFactory.getLogger(BrowseRecommendScene.class);
 
@@ -40,7 +43,7 @@ public class BrowseRecommendScene {
     SgFrameworkServiceItem sgFrameworkServiceItem;
 
     public Flowable<TacResult<SgFrameworkResponse<EntityVO>>> recommend(Context context) {
-
+        log.error("entryContext." + ScenarioConstantApp.SCENARIO_GUL_BROWSE_RECOMMEND + ",context:{}", JSON.toJSONString(context));
         LOGGER.error("ITEM_REQUEST:{}", JSON.toJSONString(context));
 
 

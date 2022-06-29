@@ -35,7 +35,9 @@ import com.tmall.wireless.tac.client.dataservice.TacLogger;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.domain.UserInfo;
+
 import io.reactivex.Flowable;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -51,6 +53,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
 
     Logger LOGGER = LoggerFactory.getLogger(FirstScreenMindItemScene4Ald.class);
@@ -68,7 +71,7 @@ public class FirstScreenMindItemScene4Ald extends FirstScreenMindItemScene {
             .kv("step", "requestLog")
             .kv("requestContext4Ald", JSON.toJSONString(requestContext4Ald))
             .info();
-
+        log.error("entryContext." + ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_ITEM + ",context:{}", JSON.toJSONString(requestContext4Ald));
         Long smAreaId = MapUtil.getLongWithDefault(requestContext4Ald.getAldParam(), "smAreaId", 330100L);
         SgFrameworkContextItem sgFrameworkContextItem = new SgFrameworkContextItem();
 

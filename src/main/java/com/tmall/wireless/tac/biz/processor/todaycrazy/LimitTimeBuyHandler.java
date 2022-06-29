@@ -1,18 +1,21 @@
 package com.tmall.wireless.tac.biz.processor.todaycrazy;
 
-import java.util.List;
-
 import com.alibaba.aladdin.lamp.domain.response.GeneralItem;
+import com.alibaba.fastjson.JSON;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @author guijian
  */
+@Slf4j
 @Component
 public class LimitTimeBuyHandler extends TacReactiveHandler4Ald {
 
@@ -20,8 +23,8 @@ public class LimitTimeBuyHandler extends TacReactiveHandler4Ald {
     LimitTimeBuyScene limitTimeBuyScene;
 
     @Override
-    public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald)
-        throws Exception {
+    public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
+        log.error("LimitTimeBuyHandler.entry:{}", JSON.toJSONString(requestContext4Ald));
         return limitTimeBuyScene.recommend(requestContext4Ald);
     }
 }

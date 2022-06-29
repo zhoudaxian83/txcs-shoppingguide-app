@@ -61,6 +61,7 @@ public class FirstScreenMindContentScene {
             ScenarioConstantApp.LOC_TYPE_B2C,
             ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT
         );
+        log.error("entryContext." + ScenarioConstantApp.SCENE_FIRST_SCREEN_MIND_CONTENT + ",context:{}", JSON.toJSONString(context));
         long startTime = System.currentTimeMillis();
 
         Long smAreaId = MapUtil.getLongWithDefault(context.getParams(), "smAreaId", 330100L);
