@@ -19,6 +19,7 @@ import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.RequestContext4Ald;
 import com.tmall.wireless.tac.client.handler.TacReactiveHandler4Ald;
 import io.reactivex.Flowable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Component;
  * @author zhongwei
  * @date 2021/12/1
  */
+@Slf4j
 @Component
 public class GulItemSetRecommendHandler extends TacReactiveHandler4Ald {
 
@@ -39,6 +41,7 @@ public class GulItemSetRecommendHandler extends TacReactiveHandler4Ald {
             ScenarioConstantApp.LOC_TYPE_B2C,
             ScenarioConstantApp.SCENARIO_SUB_PROMOTION_PAGE);
         bizScenario.addProducePackage(HallScenarioConstant.HALL_ITEM_SDK_PACKAGE);
+        log.error("entryContext." + ScenarioConstantApp.SCENARIO_SUB_PROMOTION_PAGE + ",context:{}", JSON.toJSONString(requestContext4Ald));
 
         return shoppingguideSdkItemService.recommend(requestContext4Ald, bizScenario)
             .map(response -> {
