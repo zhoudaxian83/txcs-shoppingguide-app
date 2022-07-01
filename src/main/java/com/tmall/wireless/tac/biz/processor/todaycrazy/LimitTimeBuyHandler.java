@@ -24,7 +24,7 @@ public class LimitTimeBuyHandler extends TacReactiveHandler4Ald {
 
     @Override
     public Flowable<TacResult<List<GeneralItem>>> executeFlowable(RequestContext4Ald requestContext4Ald) throws Exception {
-        log.error("LimitTimeBuyHandler.entry:{}", JSON.toJSONString(requestContext4Ald));
+        log.error("entryContext." + "TODAY_CRAZY_LIMIT_TIME_BUY" + ",context:{}", JSON.toJSONString(requestContext4Ald));
         return limitTimeBuyScene.recommend(requestContext4Ald);
     }
 }

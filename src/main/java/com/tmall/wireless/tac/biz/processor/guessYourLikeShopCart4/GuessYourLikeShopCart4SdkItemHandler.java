@@ -7,10 +7,12 @@ import com.tmall.tcls.gs.sdk.framework.model.ItemEntityVO;
 import com.tmall.tcls.gs.sdk.framework.model.SgFrameworkResponse;
 import com.tmall.tcls.gs.sdk.framework.service.ShoppingguideSdkItemService;
 import com.tmall.txcs.gs.base.RpmReactiveHandler;
+import com.tmall.wireless.tac.biz.processor.common.ScenarioConstantApp;
 import com.tmall.wireless.tac.client.common.TacResult;
 import com.tmall.wireless.tac.client.domain.Context;
 import com.tmall.wireless.tac.dataservice.log.TacLoggerImpl;
 import io.reactivex.Flowable;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
+@Slf4j
 public class GuessYourLikeShopCart4SdkItemHandler extends RpmReactiveHandler<SgFrameworkResponse<ItemEntityVO>> {
 
     @Autowired
@@ -36,7 +39,7 @@ public class GuessYourLikeShopCart4SdkItemHandler extends RpmReactiveHandler<SgF
                 "b2c",
                 "guessYourLikeShopCart4"
         );
-
+        log.error("entryContext." + "guessYourLikeShopCart4" + ",context:{}", JSON.toJSONString(context));
         return shoppingguideSdkItemService.recommend(context, bizScenario)
                 .map(TacResult::newResult)
                 .map(tacResult -> {
